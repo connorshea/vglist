@@ -1,4 +1,6 @@
-const toggleDropdown = function(this: HTMLElement, event: MouseEvent) {
+import { getAll } from './utils';
+
+const toggleDropdown = function(this: HTMLElement, _event: MouseEvent) {
   // If the dropdown has the 'js-no-close-on-click' class,
   // it shouldn't be toggled when active.
   if (
@@ -13,7 +15,7 @@ const toggleDropdown = function(this: HTMLElement, event: MouseEvent) {
 // Make bulma's hamburger menu functional with some simple JavaScript.
 const initBulma = () => {
   // Get all "navbar-burger" elements
-  const navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
+  const navbarBurgers = getAll('a.navbar-burger');
 
   // Check if there are any navbar burgers
   if (navbarBurgers.length > 0) {
@@ -21,13 +23,13 @@ const initBulma = () => {
     navbarBurgers.forEach((el: HTMLElement) => {
       el.addEventListener('click', () => {
         // Get the target from the "data-target" attribute
-        const target = document.getElementById(el.dataset.target);
+        const target = document.getElementById(el.dataset.target!);
 
         // Toggle the "is-active" class on both the "navbar-burger" and the
         // "navbar-menu", and toggle the aria-expanded attribute.
         el.setAttribute('aria-expanded', (el.getAttribute('aria-expanded') === 'false').toString());
         el.classList.toggle('is-active');
-        target.classList.toggle('is-active');
+        target?.classList.toggle('is-active');
       });
     });
   }
@@ -67,20 +69,13 @@ const initBulma = () => {
     }
   });
 
-  // Functions
-  function getAll(selector: string) {
-    return Array.from(document.querySelectorAll(selector));
-  }
-
   // Close notifications when the delete button is clicked within a notification.
-  const closeNotificationButtons = Array.from(
-    document.querySelectorAll('.notification > .delete')
-  );
+  const closeNotificationButtons = getAll('.notification > .delete');
 
   closeNotificationButtons.forEach(el => {
     el.addEventListener('click', (event: MouseEvent) => {
       let notification = (event.target as HTMLElement).closest('.notification');
-      notification.parentNode.removeChild(notification);
+      notification?.parentNode?.removeChild(notification);
     });
   });
 };

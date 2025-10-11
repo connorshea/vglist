@@ -29,6 +29,8 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
+    "@types/rails__activestorage": "^8.0.1",
+    "@types/rails__ujs": "^6.0.4",
     "@types/turbolinks": "^5.2.2",
     "@types/vue-select": "^3.16.8",
     "graphql": "^16.11.0",

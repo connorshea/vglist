@@ -364,6 +364,16 @@
   dependencies:
     undici-types "~6.21.0"
 
+"@types/rails__activestorage@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@types/rails__activestorage/-/rails__activestorage-8.0.1.tgz#bd56c850755b58ca1c04f0394a153fb1c73582b1"
+  integrity sha512-gwUZjLHyllzSEmegCXfkL11PrpZ/3Z+vCXBbYWgIdtX0ChfjtZcKq7HGfXYO5v5UYGLYenjGH3u8U+PpnA3dhg==
+
+"@types/rails__ujs@^6.0.4":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@types/rails__ujs/-/rails__ujs-6.0.4.tgz#c5fc210e1a1fe186d9a4386280490f3ceb17d0e9"
+  integrity sha512-4A8+Xp+2bd4E/mLjfwldc46katQQJfLfwTRbhDBoQyj4timlpWfJ6uHqwyre/qwcapgjKtVd365pt9ovD/3tRw==
+
 "@types/turbolinks@^5.2.2":
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/@types/turbolinks/-/turbolinks-5.2.2.tgz#8f9f1d4bfb5e53ea599f79c393779ca8b92cf6e0"

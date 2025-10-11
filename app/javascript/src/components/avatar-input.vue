@@ -50,6 +50,12 @@ import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 import { defineComponent } from 'vue';
 
+type UserPayload = {
+  user: {
+    avatar?: string
+  }
+};
+
 export default defineComponent({
   name: 'avatar-input',
   components: {
@@ -115,9 +121,9 @@ export default defineComponent({
       });
     },
     onSubmit() {
-      let submittableData = { user: {} };
+      let submittableData: UserPayload = { user: {} };
       if (this.avatarBlob) {
-        submittableData['user']['avatar'] = this.avatarBlob;
+        submittableData.user.avatar = this.avatarBlob;
       }
 
       VglistUtils.authenticatedFetch(
@@ -129,9 +135,9 @@ export default defineComponent({
       }).catch(errors => {
         this.errors = errors;
         let submitButton = document.querySelector('.js-submit-button');
-        submitButton.classList.add('js-submit-button-error');
+        submitButton?.classList.add('js-submit-button-error');
         setTimeout(() => {
-          submitButton.classList.remove('js-submit-button-error');
+          submitButton?.classList.remove('js-submit-button-error');
         }, 2000);
       });
     },

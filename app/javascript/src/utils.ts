@@ -1,6 +1,20 @@
 import Rails from '@rails/ujs';
 
 /**
+ * A utility function to get all elements matching a selector as an array of HTMLElements.
+ *
+ * @example
+ * import { getAll } from './utils';
+ * const buttons = getAll('.my-button-class');
+ *
+ * @param {string} selector The CSS selector to match elements against.
+ * @return {HTMLElement[]} An array of HTMLElements matching the selector.
+ */
+export const getAll = (selector: string): HTMLElement[] => {
+  return Array.from(document.querySelectorAll(selector));
+};
+
+/**
  * A class for miscellaneous utility methods.
  */
 export default class VglistUtils {
@@ -17,7 +31,7 @@ export default class VglistUtils {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': Rails.csrfToken(),
+        'X-CSRF-Token': Rails.csrfToken()!,
         Accept: 'application/json'
       },
       credentials: 'same-origin'
@@ -36,18 +50,16 @@ export default class VglistUtils {
    * @param {string} route The URL path to send the request to.
    * @param {string} method The HTTP method to send the request with, e.g. 'GET', 'PUT', 'POST', 'DELETE'.
    * @param {string?} body The body of the request, optional.
-   * @return {Promise<any>} A promise that resolves to the JSON object after its been parsed.
+   * @return {Promise<T>} A promise that resolves to the JSON object after its been parsed.
    */
-  static async authenticatedFetch(route: string, method: 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE', body: string|null = null): Promise<any> {
-    // https://stackoverflow.com/questions/50041257/how-can-i-pass-json-body-of-fetch-response-to-throw-error-with-then
+  static async authenticatedFetch<T>(route: string, method: 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE', body: string | null = null): Promise<T> {
     return this.rawAuthenticatedFetch(route, method, body)
-      .then(response => {
-        return response.json().then(json => {
-          if (response.ok) {
-            return Promise.resolve(json);
-          }
-          return Promise.reject(json);
-        });
+      .then(async response => {
+        const json = await response.json();
+        if (response.ok) {
+          return Promise.resolve(json);
+        }
+        return await Promise.reject(json);
       });
   }
 }
