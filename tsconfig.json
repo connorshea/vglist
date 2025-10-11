@@ -8,8 +8,6 @@
     "skipLibCheck": false,
     "verbatimModuleSyntax": true,
     "strict": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
     // TS 6 defaults:
     "types": [],
     "allowSyntheticDefaultImports": true,
