@@ -111,8 +111,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import TextField from './fields/text-field.vue';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import TextArea from './fields/text-area.vue';
 import NumberField from './fields/number-field.vue';
 import DateField from './fields/date-field.vue';
@@ -120,7 +120,17 @@ import SingleSelect from './fields/single-select.vue';
 import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import VglistUtils from '../utils';
-import { defineComponent } from 'vue';
+import type { CompletionStatus } from '../types';
+
+const completionStatuses: Record<CompletionStatus, string> = {
+  unplayed: 'Unplayed',
+  in_progress: 'In Progress',
+  paused: 'Paused',
+  dropped: 'Dropped',
+  completed: 'Completed',
+  fully_completed: '100% Completed',
+  not_applicable: 'N/A'
+};
 
 interface GamePurchaseSubmittableData {
   game_purchase: {
@@ -138,296 +148,232 @@ interface GamePurchaseSubmittableData {
   };
 }
 
-export default defineComponent({
-  name: 'game-modal',
-  components: {
-    TextField,
-    TextArea,
-    NumberField,
-    DateField,
-    SingleSelect,
-    MultiSelect,
-    StaticSingleSelect
-  },
-  props: {
-    id: {
-      type: Number,
-      required: false
-    },
-    rating: {
-      type: [Number, String],
-      required: false,
-      default: ''
-    },
-    hours_played: {
-      type: [Number, String],
-      required: false,
-      default: ''
-    },
-    replay_count: {
-      type: [Number, String],
-      required: true,
-      default: 0
-    },
-    completion_status: {
-      type: Object,
-      required: false
-    },
-    start_date: {
-      type: String,
-      required: false
-    },
-    completion_date: {
-      type: String,
-      required: false
-    },
-    comments: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    platforms: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    stores: {
-      type: Array,
-      required: false,
-      default: function() {
-        return [];
-      }
-    },
-    game: {
-      type: Object,
-      required: false,
-      default: function() {
-        return {};
-      }
-    },
-    userId: {
-      type: Number,
-      required: true
-    },
-    isActive: {
-      type: Boolean,
-      required: true
-    },
-    gameModalState: {
-      type: String,
-      required: true,
-      validator: (val: string) => ['create', 'update', 'createWithGame'].includes(val)
-    }
-  },
-  data() {
-    return {
-      errors: [],
-      gamePurchase: {
-        comments: this.$props.comments,
-        rating: this.$props.rating,
-        game: this.$props.game,
-        userId: this.$props.userId,
-        completion_status: this.$props.completion_status,
-        start_date: this.$props.start_date,
-        hours_played: parseFloat(this.$props.hours_played),
-        replay_count: this.$props.replay_count,
-        completion_date: this.$props.completion_date,
-        platforms: this.$props.platforms,
-        stores: this.$props.stores
-      },
-      formData: {
-        class: 'game_purchase',
-        comments: {
-          label: 'Comments',
-          attribute: 'comments'
-        },
-        rating: {
-          label: 'Rating (out of 100)',
-          attribute: 'rating'
-        },
-        hoursPlayed: {
-          label: 'Hours Played',
-          attribute: 'hours_played'
-        },
-        replayCount: {
-          label: 'Replay Count',
-          attribute: 'replay_count'
-        },
-        completionStatus: {
-          label: 'Completion Status'
-        },
-        startDate: {
-          label: 'Start Date',
-          attribute: 'start_date'
-        },
-        completionDate: {
-          label: 'Completion Date',
-          attribute: 'completion_date'
-        },
-        platforms: {
-          label: 'Platforms'
-        },
-        stores: {
-          label: 'Stores'
-        },
-        game: {
-          label: 'Game'
-        }
-      },
-      gameSelected: this.$props.gameModalState !== 'create',
-      completionStatuses: {
-        unplayed: 'Unplayed',
-        in_progress: 'In Progress',
-        paused: 'Paused',
-        dropped: 'Dropped',
-        completed: 'Completed',
-        fully_completed: '100% Completed',
-        not_applicable: 'N/A'
-      }
-    };
-  },
-  methods: {
-    onClose() {
-      this.$emit('close');
-    },
-    onSave() {
-      const submittableData: GamePurchaseSubmittableData = {
-        game_purchase: {
-          game_id: this.gamePurchase.game.id,
-          user_id: this.gamePurchase.userId
-        }
-      };
+interface Props {
+  id?: number;
+  rating?: number | string;
+  hours_played?: number | string;
+  replay_count?: number | string;
+  completion_status?: Record<string, any>;
+  start_date?: string;
+  completion_date?: string;
+  comments?: string;
+  platforms?: Array<{ id: string | number }>;
+  stores?: Array<{ id: string | number }>;
+  // TODO: Improve this type.
+  game?: Record<string, any>;
+  userId: number;
+  isActive: boolean;
+  gameModalState: 'create' | 'update' | 'createWithGame';
+}
 
-      if (this.gamePurchase.comments) {
-        submittableData.game_purchase.comments = this.gamePurchase.comments;
-      }
-
-
-      if (
-        this.gamePurchase.rating !== '' &&
-        this.gamePurchase.rating !== null &&
-        typeof this.gamePurchase.rating !== 'undefined'
-      ) {
-        submittableData.game_purchase.rating = this.gamePurchase.rating;
-      }
-
-      if (
-        (typeof this.gamePurchase.hours_played === 'string' && this.gamePurchase.hours_played !== '') ||
-        (typeof this.gamePurchase.hours_played === 'number' && !isNaN(this.gamePurchase.hours_played))
-      ) {
-        submittableData.game_purchase.hours_played = this.gamePurchase.hours_played;
-      }
-
-      if (
-        this.gamePurchase.replay_count !== '' &&
-        this.gamePurchase.replay_count !== null &&
-        typeof this.gamePurchase.replay_count !== 'undefined'
-      ) {
-        submittableData.game_purchase.replay_count = this.gamePurchase.replay_count;
-      }
-
-      if (
-        this.gamePurchase.completion_status !== null &&
-        this.gamePurchase.completion_status !== '' &&
-        typeof this.gamePurchase.completion_status !== 'undefined'
-      ) {
-        submittableData.game_purchase.completion_status = this.gamePurchase.completion_status.value;
-      }
-
-      if (
-        this.gamePurchase.start_date !== '' &&
-        this.gamePurchase.start_date !== null
-      ) {
-        submittableData.game_purchase.start_date = this.gamePurchase.start_date;
-      }
-
-      if (
-        this.gamePurchase.completion_date !== '' &&
-        this.gamePurchase.completion_date !== null
-      ) {
-        submittableData.game_purchase.completion_date = this.gamePurchase.completion_date;
-      }
-
-      if (this.gamePurchase.platforms.length !== 0) {
-        submittableData.game_purchase.platform_ids = Array.from(
-          this.gamePurchase.platforms,
-          (platform: { id: string | number }) => platform.id
-        );
-      }
-
-      if (this.gamePurchase.stores.length !== 0) {
-        submittableData.game_purchase.store_ids = Array.from(
-          this.gamePurchase.stores,
-          (store: { id: string | number }) => store.id
-        );
-      }
-
-      // If any of these properties are undefined, set them to null.
-      (['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'] as Array<keyof GamePurchaseSubmittableData['game_purchase']>).forEach((property) => {
-        // Set it to a blank string if the property is comments, and null otherwise.
-        let value = property === 'comments' ? "" : null;
-        if (typeof submittableData.game_purchase[property] === 'undefined') {
-          submittableData.game_purchase[property] = value;
-        }
-      });
-
-      // Set replay_count to 0 if it's undefined.
-
-      if (typeof submittableData.game_purchase.replay_count === 'undefined') {
-        submittableData.game_purchase.replay_count = 0;
-      }
-
-      let method: 'POST' | 'PUT' = 'POST';
-      if (
-        this.gameModalState === 'create' ||
-        this.gameModalState === 'createWithGame'
-      ) {
-        method = 'POST';
-      } else if (this.gameModalState === 'update') {
-        method = 'PUT';
-      }
-
-      VglistUtils.authenticatedFetch(
-        this.gamePurchasesSubmitUrl,
-        method,
-        JSON.stringify(submittableData)
-      ).then(gamePurchase => {
-          this.$emit('create', gamePurchase);
-          this.$emit('closeAndRefresh');
-        })
-        .catch(errors => {
-          this.errors = errors;
-          const submitButton = document.querySelector('.js-submit-button');
-          if (submitButton) {
-            submitButton.classList.add('js-submit-button-error');
-            setTimeout(() => {
-              submitButton.classList.remove('js-submit-button-error');
-            }, 2000);
-          }
-        });
-    },
-    selectGame() {
-      this.gameSelected = true;
-    }
-  },
-  computed: {
-    gamePurchasesSubmitUrl: function() {
-      return this.gameModalState === 'update'
-        ? `/game_purchases/${this.id}`
-        : '/game_purchases';
-    },
-    modalTitle: function() {
-      return this.gamePurchase.game.name !== undefined
-        ? this.gamePurchase.game.name
-        : 'Add a game to your library';
-    },
-    formattedCompletionStatuses: function() {
-      return Object.entries(this.completionStatuses).map(status => {
-        return { label: status[1], value: status[0] };
-      });
-    }
-  }
+// TODO: replace withDefaults after Vue 3.5 upgrade.
+// https://vuejs.org/guide/components/props.html#reactive-props-destructure
+const props = withDefaults(defineProps<Props>(), {
+  rating: '',
+  hours_played: '',
+  replay_count: 0,
+  comments: '',
+  platforms: () => [],
+  stores: () => [],
+  game: () => ({}),
 });
+
+const emit = defineEmits(['close', 'create', 'closeAndRefresh']);
+
+const errors = ref<string[]>([]);
+
+const gamePurchase = ref({
+  comments: props.comments,
+  rating: props.rating,
+  game: props.game,
+  userId: props.userId,
+  completion_status: props.completion_status,
+  start_date: props.start_date,
+  hours_played: typeof props.hours_played === 'string' ? parseFloat(props.hours_played) : props.hours_played,
+  replay_count: props.replay_count,
+  completion_date: props.completion_date,
+  platforms: props.platforms as Array<{ id: string | number }>,
+  stores: props.stores as Array<{ id: string | number }>
+});
+
+const formData = {
+  class: 'game_purchase',
+  comments: {
+    label: 'Comments',
+    attribute: 'comments'
+  },
+  rating: {
+    label: 'Rating (out of 100)',
+    attribute: 'rating'
+  },
+  hoursPlayed: {
+    label: 'Hours Played',
+    attribute: 'hours_played'
+  },
+  replayCount: {
+    label: 'Replay Count',
+    attribute: 'replay_count'
+  },
+  completionStatus: {
+    label: 'Completion Status'
+  },
+  startDate: {
+    label: 'Start Date',
+    attribute: 'start_date'
+  },
+  completionDate: {
+    label: 'Completion Date',
+    attribute: 'completion_date'
+  },
+  platforms: {
+    label: 'Platforms'
+  },
+  stores: {
+    label: 'Stores'
+  },
+  game: {
+    label: 'Game'
+  }
+};
+
+const gameSelected = ref(props.gameModalState !== 'create');
+
+const gamePurchasesSubmitUrl = computed(() => {
+  return props.gameModalState === 'update'
+    ? `/game_purchases/${props.id}`
+    : '/game_purchases';
+});
+
+const modalTitle = computed(() => {
+  return gamePurchase.value.game.name !== undefined
+    ? gamePurchase.value.game.name
+    : 'Add a game to your library';
+});
+
+const formattedCompletionStatuses = computed(() => {
+  return Object.entries(completionStatuses).map(status => {
+    return { label: status[1], value: status[0] };
+  });
+});
+
+function onClose() {
+  emit('close');
+}
+
+function onSave() {
+  const gp = gamePurchase.value;
+  const submittableData: GamePurchaseSubmittableData = {
+    game_purchase: {
+      game_id: gp.game.id,
+      user_id: gp.userId
+    }
+  };
+
+  if (gp.comments) {
+    submittableData.game_purchase.comments = gp.comments;
+  }
+
+  if (
+    gp.rating !== '' &&
+    gp.rating !== null &&
+    typeof gp.rating !== 'undefined'
+  ) {
+    submittableData.game_purchase.rating = gp.rating;
+  }
+
+  if (
+    (typeof gp.hours_played === 'string' && gp.hours_played !== '') ||
+    (typeof gp.hours_played === 'number' && !isNaN(gp.hours_played))
+  ) {
+    submittableData.game_purchase.hours_played = gp.hours_played;
+  }
+
+  if (
+    gp.replay_count !== '' &&
+    gp.replay_count !== null &&
+    typeof gp.replay_count !== 'undefined'
+  ) {
+    submittableData.game_purchase.replay_count = gp.replay_count;
+  }
+
+  if (
+    gp.completion_status && typeof gp.completion_status.value !== 'undefined'
+  ) {
+    submittableData.game_purchase.completion_status = gp.completion_status.value;
+  }
+
+  if (
+    gp.start_date !== '' &&
+    gp.start_date !== null
+  ) {
+    submittableData.game_purchase.start_date = gp.start_date;
+  }
+
+  if (
+    gp.completion_date !== '' &&
+    gp.completion_date !== null
+  ) {
+    submittableData.game_purchase.completion_date = gp.completion_date;
+  }
+
+  if (gp.platforms.length !== 0) {
+    submittableData.game_purchase.platform_ids = Array.from(
+      gp.platforms as Array<{ id: string | number }>,
+      (platform) => platform.id
+    );
+  }
+
+  if (gp.stores.length !== 0) {
+    submittableData.game_purchase.store_ids = Array.from(
+      gp.stores as Array<{ id: string | number }>,
+      (store) => store.id
+    );
+  }
+
+  (['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'] as Array<keyof GamePurchaseSubmittableData['game_purchase']>).forEach((property) => {
+    let value = property === 'comments' ? "" : null;
+    if (typeof submittableData.game_purchase[property] === 'undefined') {
+      (submittableData.game_purchase as any)[property] = value;
+    }
+  });
+
+  if (typeof submittableData.game_purchase.replay_count === 'undefined') {
+    submittableData.game_purchase.replay_count = 0;
+  }
+
+  let method: 'POST' | 'PUT' = 'POST';
+  if (
+    props.gameModalState === 'create' ||
+    props.gameModalState === 'createWithGame'
+  ) {
+    method = 'POST';
+  } else if (props.gameModalState === 'update') {
+    method = 'PUT';
+  }
+
+  VglistUtils.authenticatedFetch(
+    gamePurchasesSubmitUrl.value,
+    method,
+    JSON.stringify(submittableData)
+  ).then(gamePurchase => {
+      emit('create', gamePurchase);
+      emit('closeAndRefresh');
+    })
+    .catch(errorsResp => {
+      errors.value = errorsResp;
+      const submitButton = document.querySelector('.js-submit-button');
+      if (submitButton) {
+        // Add a class to the button to indicate an error, then remove it.
+        submitButton.classList.add('js-submit-button-error');
+        setTimeout(() => {
+          submitButton.classList.remove('js-submit-button-error');
+        }, 2000);
+      }
+    });
+}
+
+function selectGame() {
+  gameSelected.value = true;
+}
+
 </script>
