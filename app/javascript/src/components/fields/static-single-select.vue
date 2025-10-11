@@ -21,7 +21,7 @@
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { snakeCase } from 'lodash-es';
-import { computed, withDefaults } from 'vue';
+import { computed } from 'vue';
 
 interface SelectOption {
   label: string;
