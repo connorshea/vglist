@@ -72,6 +72,7 @@ typescript:tsc:
   before_script: *no_db_necessary
   script:
     - yarn run tsc --noEmit
+    - yarn run vue-tsc --noEmit
 
 rubocop:
   before_script: *no_db_necessary
