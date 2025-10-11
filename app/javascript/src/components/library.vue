@@ -124,7 +124,7 @@ export default defineComponent({
         return;
       }
       let html = document.querySelector('html');
-      html.classList.add('is-clipped');
+      html?.classList.add('is-clipped');
 
       this.doesGamePurchaseExist =
         Object.entries(game).length > 0 ? false : true;
@@ -133,7 +133,7 @@ export default defineComponent({
     },
     deactivateModal() {
       let html = document.querySelector('html');
-      html.classList.remove('is-clipped');
+      html?.classList.remove('is-clipped');
 
       this.isModalActive = false;
     },

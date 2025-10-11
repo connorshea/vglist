@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": ["esnext", "dom"],
-    "module": "esNext",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "module": "esnext",
     "moduleResolution": "bundler",
-    "baseUrl": ".",
     "sourceMap": true,
-    "target": "esNext",
-    "allowSyntheticDefaultImports": true,
+    "target": "esnext",
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
+    "strict": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    // TS 6 defaults:
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "libReplacement": false,
+    "noUncheckedSideEffectImports": true,
+    "alwaysStrict": true
   },
   "exclude": [
     "**/*.spec.ts",
@@ -27,6 +31,8 @@
   },
   "vueCompilerOptions": {
     "target": 2.7,
-    "extensions": [".vue"]
+    "extensions": [".vue"],
+    "inferComponentDollarRefs": true,
+    "strictTemplates": true
   }
 }

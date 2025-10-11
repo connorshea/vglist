@@ -1,3 +1,5 @@
+import { getAll } from './utils';
+
 document.addEventListener('turbolinks:load', () => {
   const toggleableButtons = getAll('.js-is-toggleable');
 
@@ -16,29 +18,34 @@ document.addEventListener('turbolinks:load', () => {
         toggleControlEl.addEventListener(toggleControlEl.dataset.toggleControlEventType, togglePartner);
       } else {
         el.addEventListener('click', function(_event) {
-          const togglePartnerEl = document.getElementsByClassName(el.dataset.togglePartner)[0];
-          togglePartnerEl.classList.toggle('is-hidden');
+          const togglePartnerEl = document.getElementsByClassName(el.dataset.togglePartner!)[0];
+          togglePartnerEl?.classList.toggle('is-hidden');
           el.classList.toggle('is-hidden');
         });
       }
     });
   }
 
-  function getAll(selector: string): HTMLElement[] {
-    return Array.from(document.querySelectorAll(selector));
-  }
-
-  function togglePartner(event): void {
-    const [togglePartnerOnEl, togglePartnerOffEl] = getTogglePartners(event.target);
+  function togglePartner(event: PointerEvent): void {
+    const [togglePartnerOnEl, togglePartnerOffEl] = getTogglePartners(event.target as HTMLElement);
     togglePartnerOnEl.classList.toggle('is-hidden');
     togglePartnerOffEl.classList.toggle('is-hidden');
   }
 
   function getTogglePartners(toggleControlEl: HTMLElement): [Element, Element] {
     const { togglePartnerOn, togglePartnerOff } = toggleControlEl.dataset;
-    return [
-      document.getElementsByClassName(togglePartnerOn)[0],
-      document.getElementsByClassName(togglePartnerOff)[0]
-    ];
+
+    if (!togglePartnerOn || !togglePartnerOff) {
+      throw new Error('Toggle control element is missing data-toggle-partner-on or data-toggle-partner-off attributes.');
+    }
+
+    const togglePartnerOnEl = document.getElementsByClassName(togglePartnerOn)[0];
+    const togglePartnerOffEl = document.getElementsByClassName(togglePartnerOff)[0];
+
+    if (!togglePartnerOnEl || !togglePartnerOffEl) {
+      throw new Error('Toggle partner elements not found.');
+    }
+
+    return [togglePartnerOnEl, togglePartnerOffEl];
   }
 });

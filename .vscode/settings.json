@@ -4,5 +4,6 @@
       "useBundler": true // enable rubocop via bundler
     }
   },
-  "ruby.format": "rubocop"
+  "ruby.format": "rubocop",
+  "typescript.experimental.useTsgo": false
 }

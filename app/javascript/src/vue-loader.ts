@@ -8,7 +8,7 @@ import Vue, { h } from 'vue';
  */
 (async function() {
   const callback = () => {
-    const elems = Array.from(document.querySelectorAll('[data-vue-component]'));
+    const elems = Array.from(document.querySelectorAll('[data-vue-component]')) as HTMLElement[];
     elems.forEach(async (elem: HTMLElement) => {
       const el = elem;
       const compName = el.dataset.vueComponent;
