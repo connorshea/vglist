@@ -5,7 +5,7 @@
     "moduleResolution": "bundler",
     "sourceMap": true,
     "target": "esnext",
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "verbatimModuleSyntax": true,
     "strict": true,
     "jsx": "preserve",

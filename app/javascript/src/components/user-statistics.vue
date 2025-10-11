@@ -49,7 +49,7 @@
         <div
           :id="`popover-${i}`"
           class="tooltip"
-          popover
+          popover="auto"
           data-tooltip-placement="top"
         >
           <div class="tooltip-arrow"></div>
