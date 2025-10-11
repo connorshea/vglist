@@ -17,11 +17,6 @@
         v-model="updateData.completion_status"
         :options="formattedCompletionStatuses"
       ></static-single-select>
-      <multi-select
-        :placeholder="'Stores'"
-        v-model="updateData.stores"
-        :search-path-identifier="'stores'"
-      ></multi-select>
     </div>
     <div class="level-right">
       <button
@@ -58,7 +53,6 @@ const updateData = reactive({
   ids: [] as number[],
   completion_status: null as any,
   rating: undefined as number | string | undefined,
-  stores: [] as any[]
 });
 
 const completionStatuses = ref({
@@ -87,10 +81,6 @@ function updateGames(): void {
     delete (updateData as any).rating;
   }
 
-  if (updateData.stores.length !== 0) {
-    delete (updateData as any).stores;
-  }
-
   // Clone the object before we mess with the values.
   // This prevents the values in the edit bar from changing when these
   // values are changed.
@@ -98,11 +88,6 @@ function updateGames(): void {
 
   if (updateDataCopy.completion_status !== null) {
     (updateDataCopy as any).completion_status = updateDataCopy.completion_status.value;
-  }
-
-  if (updateDataCopy.stores.length !== 0) {
-    (updateDataCopy as any).store_ids = updateDataCopy.stores.map(store => store.id);
-    delete (updateDataCopy as any).stores;
   }
 
   VglistUtils.rawAuthenticatedFetch(
@@ -132,9 +117,9 @@ const updateButtonActive = computed((): boolean => {
 
   let returnBool = false;
 
-  // Check if rating, completion status, or stores have values.
+  // Check if rating or completion status have values.
   // If they do, return true. Otherwise, return false.
-  (['rating', 'completion_status', 'stores'] as const).forEach(attribute => {
+  (['rating', 'completion_status'] as const).forEach(attribute => {
     const value = updateData[attribute];
     if (
       typeof value !== 'undefined' &&
