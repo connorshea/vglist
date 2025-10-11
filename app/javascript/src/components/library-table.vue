@@ -1,5 +1,6 @@
 <template>
-  <vue-good-table
+  <p>TODO: Replace me once we have a Vue Good Table replacement/have redesigned this page</p>
+  <!-- <vue-good-table
     :theme="theme"
     ref="game-library-table"
     :columns="columns"
@@ -86,15 +87,12 @@
         </p>
       </span>
     </div>
-  </vue-good-table>
+  </vue-good-table> -->
 </template>
 
 <script setup lang="ts">
 import Rails from '@rails/ujs';
 import { ref, computed, onMounted } from 'vue';
-// @ts-expect-error - vue-good-table doesn't have TypeScript declarations
-import { VueGoodTable } from 'vue-good-table';
-import 'vue-good-table/dist/vue-good-table.css';
 
 interface Props {
   gamePurchasesUrl: string;
