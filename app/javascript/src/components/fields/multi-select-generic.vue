@@ -34,9 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue']);
 
-// Reactive data
-const options = ref<any[]>([]);
-
 // Methods
 function handleChange(selectedItems: any[]) {
   emit('update:modelValue', selectedItems);

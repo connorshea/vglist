@@ -395,15 +395,6 @@
     path-browserify "^1.0.1"
     vscode-uri "^3.0.8"
 
-"@vue/compat@~3.3.0":
-  version "3.3.13"
-  resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.3.13.tgz#495a659999b416496b37bbc137c43512101b4b14"
-  integrity sha512-JJ878anmzuqpBQtgxVhgmTGINWfHdRxslqDWhCp1Ogs7jcbS+nFNFjZkuFJYCvqpLE8nU9YbffCNsUcBDoiyYg==
-  dependencies:
-    "@babel/parser" "^7.23.5"
-    estree-walker "^2.0.2"
-    source-map-js "^1.0.2"
-
 "@vue/compiler-core@3.3.13":
   version "3.3.13"
   resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.3.13.tgz#b3d5f8f84caee5de3f31d95cb568d899fd19c599"

@@ -1,4 +1,5 @@
-import { createApp, h } from 'vue';
+import { createApp } from 'vue';
+import { getAll } from './utils';
 
 /**
  * This file is responsible for loading Vue components whenever we change pages
@@ -6,22 +7,14 @@ import { createApp, h } from 'vue';
  *
  * It is somewhat cursed.
  */
-(async function() {
-  const callback = () => {
-    const elems = Array.from(document.querySelectorAll('[data-vue-component]')) as HTMLElement[];
-    elems.forEach(async (elem: HTMLElement) => {
-      const el = elem;
-      const compName = el.dataset.vueComponent;
-      const comp$ = await import(`./components/${compName}.vue`);
-      const comp = comp$.default;
-      let props = {};
-      if (el.dataset.vueProps) {
-        props = JSON.parse(el.dataset.vueProps);
-      }
-      console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
-      createApp({ render: () => h(comp, { props: props }) }).mount(el);
-    });
-  };
-  document.addEventListener('turbolinks:load', callback);
-  callback();
-})();
+const initVue = function() {
+  getAll('[data-vue-component]').forEach(async (elem: HTMLElement) => {
+    const compName = elem.dataset.vueComponent;
+    const comp$ = await import(`./components/${compName}.vue`);
+    const props = JSON.parse(elem.dataset.vueProps ?? '{}');
+    console.log(`Loaded Vue "${compName}", rendering...`, { comp: comp$, compdef: comp$.default, props });
+    createApp(comp$.default, props).mount(elem);
+  });
+}
+
+document.addEventListener('turbolinks:load', initVue);

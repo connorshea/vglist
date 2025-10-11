@@ -20,7 +20,6 @@
     "turbolinks": "^5.2.0",
     "typescript": "^5.9.3",
     "vue": "~3.3.0",
-    "@vue/compat": "~3.3.0",
     "vue-loader": "^16.0.0",
     "vue-select": "^4.0.0-beta.6",
     "webpack": "^5.102.1",
