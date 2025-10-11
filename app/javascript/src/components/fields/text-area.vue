@@ -7,7 +7,7 @@
         v-bind:name="textAreaName"
         v-bind:id="textAreaId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', $event.target?.value)"
+        v-on:input="$emit('input', ($event.target as HTMLTextAreaElement).value)"
         :required="required"
       ></textarea>
     </div>

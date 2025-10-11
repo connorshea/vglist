@@ -10,7 +10,7 @@
         v-bind:name="dateFieldName"
         v-bind:id="dateFieldId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', $event.target?.value)"
+        v-on:input="$emit('input', ($event.target as HTMLInputElement).value)"
       >
     </div>
   </div>

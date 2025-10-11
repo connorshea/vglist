@@ -2,7 +2,6 @@
   <div class="game-library">
     <library-edit-bar
       v-if="isEditBarActive"
-      :isActive="isEditBarActive"
       :gamePurchases="selectedGamePurchases"
       @closeEditBar="closeEditBar"
     ></library-edit-bar>
@@ -13,7 +12,7 @@
       :isEditable="isEditable"
       :gamePurchasesUrl="gamePurchasesUrl"
       :isLoading="isLoading"
-      :chevronDownIcon="this.chevronDownIcon"
+      :chevronDownIcon="chevronDownIcon"
       @loaded="libraryLoaded"
       @edit="activateModal"
       @delete="refreshLibrary"

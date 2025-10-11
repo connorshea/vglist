@@ -13,7 +13,7 @@
         v-bind:name="numberFieldName"
         v-bind:id="numberFieldId"
         v-bind:value="dataValue"
-        v-on:input="$emit('input', $event.target?.value)"
+        v-on:input="$emit('input', ($event.target as HTMLInputElement).value)"
       />
     </div>
   </div>
