@@ -7,7 +7,7 @@
         :taggable="true"
         :inputId="inputId"
         :label="vSelectLabel"
-        @change="onChange"
+        @change="handleChange"
         v-bind:value="value"
         v-on:input="$emit('input', $event)"
       ></v-select>
@@ -15,47 +15,34 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { snakeCase } from 'lodash-es';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'multi-select-generic',
-  components: {
-    vSelect
-  },
-  props: {
-    label: {
-      type: String,
-      required: true
-    },
-    value: {
-      type: Array,
-      required: true
-    },
-    vSelectLabel: {
-      type: String,
-      required: false,
-      default: "name"
-    }
-  },
-  emit: ['input'],
-  data: function() {
-    return {
-      options: []
-    };
-  },
-  methods: {
-    onChange(selectedItems) {
-      this.$emit('input', selectedItems);
-    }
-  },
-  computed: {
-    inputId() {
-      return snakeCase(this.label);
-    }
-  }
+interface Props {
+  label: string;
+  value: any[];
+  vSelectLabel?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  vSelectLabel: "name"
+});
+
+const emit = defineEmits(['input']);
+
+// Reactive data
+const options = ref<any[]>([]);
+
+// Methods
+function handleChange(selectedItems: any[]) {
+  emit('input', selectedItems);
+}
+
+// Computed properties
+const inputId = computed(() => {
+  return snakeCase(props.label);
 });
 </script>
