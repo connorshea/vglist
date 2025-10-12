@@ -16,7 +16,7 @@
       <div class="user-avatar" v-if="existingAvatar">
         <img :src="existingAvatar" width="150px" height="150px">
       </div>
-      <file-select v-model="avatar" @input="onChange" :fileClass="'user-avatar'"></file-select>
+      <file-select v-model="avatar" @update:modelValue="onChange" :fileClass="'user-avatar'"></file-select>
     </div>
     <div class="field">
       <button

@@ -39,9 +39,8 @@ const emit = defineEmits(['update:modelValue']);
 const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
-function handleInput(event: Event) {
-  const target = event.target as HTMLInputElement;
-  emit('update:modelValue', target.value);
+function handleInput(event: InputEvent) {
+  emit('update:modelValue', (event.target as HTMLInputElement).value);
 }
 
 watch(() => props.modelValue, (newVal) => {
