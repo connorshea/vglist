@@ -145,6 +145,7 @@ RSpec.describe Game, type: :model do
     end
 
     it 'has an optional cover' do
+      game.save! # Ensure the game is persisted before testing attachment validation
       expect(game).not_to validate_attached_of(:cover)
       expect(game).to validate_content_type_of(:cover).rejecting([]).allowing('image/png', 'image/jpeg')
       expect(game).to validate_size_of(:cover).less_than(4.megabytes)

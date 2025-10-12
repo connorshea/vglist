@@ -89,11 +89,11 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  # Don't log any deprecations.
-  config.active_support.report_deprecations = false
+  # Report deprecations to registered listeners (sentry, generally).
+  config.active_support.report_deprecations = :report
 
-  # Log disallowed deprecations.
-  config.active_support.disallowed_deprecation = :log
+  # Report disallowed deprecations.
+  config.active_support.disallowed_deprecation = :report
 
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []

@@ -189,6 +189,12 @@ namespace :import do
         next
       end
 
+      # For each cover uploaded, process the variants of that cover so we store them in the database immediately,
+      # otherwise they'll be generated when the user hits them for the first time.
+      Game::COVER_SIZES.each_key do |size|
+        game.sized_cover(size)&.processed
+      end
+
       cover_added_count += 1
       progress_bar.log "#{game[:name].ljust(40)} | Cover added successfully."
       progress_bar.increment
