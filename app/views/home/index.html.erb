@@ -48,8 +48,10 @@
   </nav>
 
   <div class="game-card-list mt-20">
-    <% @games.each do |game| %>
-      <%= render 'shared/game_card', game: game %>
+    <% cache @games do %>
+      <% @games.each do |game| %>
+        <%= render 'shared/cacheable_game_card', game: game %>
+      <% end %>
     <% end %>
   </div>
 </div>

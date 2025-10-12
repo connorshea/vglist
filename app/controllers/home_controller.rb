@@ -15,10 +15,12 @@ class HomeController < ApplicationController
       }
     end
 
-    @games = Game.recently_updated
-                 .joins(:cover_attachment)
-                 .with_attached_cover
-                 .includes(:platforms, :developers)
-                 .limit(18)
+    @games = Rails.cache.fetch("home_page_games_#{ENV['GIT_COMMIT_SHA']}", expires_in: 15.minutes) do
+      Game.recently_updated
+          .joins(:cover_attachment)
+          .with_attached_cover
+          .includes(:platforms, :developers)
+          .limit(18)
+    end
   end
 end
