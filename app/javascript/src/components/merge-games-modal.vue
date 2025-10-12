@@ -29,7 +29,7 @@
       </section>
       <footer class="modal-card-foot">
         <button @click="onSave" class="button is-primary js-submit-button" :disabled="!gameSelected">Submit</button>
-        <button @click="onClose" class="button">Cancel</button>
+        <button @click="onClose" class="button ml-10">Cancel</button>
       </footer>
     </div>
   </div>
