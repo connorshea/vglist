@@ -1,2 +1,2 @@
 web: env RUBY_DEBUG_OPEN=true bin/rails server
-js: yarn build --watch
+js: NODE_ENV=development yarn build --watch

@@ -10,10 +10,10 @@ import { getAll } from './utils';
 const initVue = function() {
   getAll('[data-vue-component]').forEach(async (elem: HTMLElement) => {
     const compName = elem.dataset.vueComponent;
-    const comp$ = await import(`./components/${compName}.vue`);
+    const component = await import(`./components/${compName}.vue`);
     const props = JSON.parse(elem.dataset.vueProps ?? '{}');
-    // console.log(`Loaded Vue "${compName}", rendering...`, { comp: comp$, compdef: comp$.default, props });
-    createApp(comp$.default, props).mount(elem);
+    // console.log(`Loaded Vue "${compName}", rendering...`, { comp: component, compdef: component.default, props });
+    createApp(component.default, props).mount(elem);
   });
 }
 
