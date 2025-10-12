@@ -76,14 +76,18 @@ class User < ApplicationRecord
   # other external account types are added later.
   has_one :external_account, dependent: :destroy
 
-  has_one_attached :avatar
-
   # Only use one of the pre-set sizes for these images.
   AVATAR_SIZES = {
     small: [80, 80],
     medium: [150, 150],
     large: [300, 300]
   }.freeze
+
+  has_one_attached :avatar do |attachable|
+    attachable.variant :small, resize_to_limit: AVATAR_SIZES[:small], gravity: 'Center', crop: "#{AVATAR_SIZES[:small][0]}x#{AVATAR_SIZES[:small][1]}+0+0"
+    attachable.variant :medium, resize_to_limit: AVATAR_SIZES[:medium], gravity: 'Center', crop: "#{AVATAR_SIZES[:medium][0]}x#{AVATAR_SIZES[:medium][1]}+0+0"
+    attachable.variant :large, resize_to_limit: AVATAR_SIZES[:large], gravity: 'Center', crop: "#{AVATAR_SIZES[:large][0]}x#{AVATAR_SIZES[:large][1]}+0+0"
+  end
 
   friendly_id :username, use: [:slugged, :finders]
 
@@ -139,7 +143,7 @@ class User < ApplicationRecord
 
   validates :avatar,
     attached: false,
-    content_type: ['image/png', 'image/jpeg'],
+    content_type: { in: ActiveStorage.variable_content_types, spoofing_protection: true },
     size: { less_than: 3.megabytes },
     aspect_ratio: :square
 
@@ -181,12 +185,7 @@ class User < ApplicationRecord
   # Generate an avatar variant with a specific size, size must be a Symbol
   # matching one of the keys in `User::AVATAR_SIZES`.
   def sized_avatar(size)
-    width, height = AVATAR_SIZES[size]
-    avatar.variant(
-      resize_to_fill: [width, height],
-      gravity: 'Center',
-      crop: "#{width}x#{height}+0+0"
-    )
+    avatar.variant(size).processed
   end
 
   private

@@ -34,20 +34,26 @@ class Game < ApplicationRecord
 
   belongs_to :series, optional: true
 
-  has_one_attached :cover
-
-  # Track changes to the record, but ignore changes to the average rating.
-  has_paper_trail ignore: [:avg_rating, :updated_at, :created_at],
-                  versions: {
-                    class_name: 'Versions::GameVersion'
-                  }
-
   # Only use one of the pre-set sizes for these images.
   COVER_SIZES = {
     small: [200, 300],
     medium: [300, 500],
     large: [500, 800]
   }.freeze
+
+  has_one_attached :cover do |attachable|
+    attachable.variant :small, resize_to_limit: COVER_SIZES[:small]
+    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium]
+    attachable.variant :large, resize_to_limit: COVER_SIZES[:large]
+  end
+
+  # Use PaperTrail to track changes to the record.
+
+  # Track changes to the record, but ignore changes to the average rating.
+  has_paper_trail ignore: [:avg_rating, :updated_at, :created_at],
+                  versions: {
+                    class_name: 'Versions::GameVersion'
+                  }
 
   scope :newest, -> { order("created_at desc") }
   scope :oldest, -> { order("created_at asc") }
@@ -108,7 +114,10 @@ class Game < ApplicationRecord
 
   validates :cover,
     attached: false,
-    content_type: ['image/png', 'image/jpeg'],
+    content_type: {
+      in: ActiveStorage.variable_content_types,
+      spoofing_protection: true
+    },
     size: { less_than: 4.megabytes }
 
   validates :avg_rating,
@@ -180,9 +189,7 @@ class Game < ApplicationRecord
   # @param size [Symbol] One of :small, :medium, or :large.
   # @return [ActiveStorage::Variant] The variant of the cover image.
   def sized_cover(size)
-    cover.variant(
-      resize_to_limit: COVER_SIZES[size]
-    )
+    cover.variant(size).processed
   end
 
   protected
