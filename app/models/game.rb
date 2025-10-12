@@ -114,10 +114,7 @@ class Game < ApplicationRecord
 
   validates :cover,
     attached: false,
-    content_type: {
-      in: ActiveStorage.variable_content_types,
-      spoofing_protection: true
-    },
+    content_type: { in: ActiveStorage.variable_content_types, spoofing_protection: true },
     size: { less_than: 4.megabytes }
 
   validates :avg_rating,
@@ -189,7 +186,7 @@ class Game < ApplicationRecord
   # @param size [Symbol] One of :small, :medium, or :large.
   # @return [ActiveStorage::Variant] The variant of the cover image.
   def sized_cover(size)
-    cover.variant(size).processed
+    cover.variant(size)&.processed
   end
 
   protected

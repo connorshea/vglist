@@ -185,7 +185,7 @@ class User < ApplicationRecord
   # Generate an avatar variant with a specific size, size must be a Symbol
   # matching one of the keys in `User::AVATAR_SIZES`.
   def sized_avatar(size)
-    avatar.variant(size).processed
+    avatar.variant(size)&.processed
   end
 
   private

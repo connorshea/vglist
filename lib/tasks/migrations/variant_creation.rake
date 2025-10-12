@@ -41,7 +41,7 @@ namespace 'active_storage:vglist:variants' do
           begin
             image_sizes.each do |size|
               # Use .processed so it only processes if necessary (some of them may not need to be re-processed)
-              game.sized_cover(size).processed
+              game.sized_cover(size)&.processed
             end
           # Rescue MiniMagick errors if they occur so that they don't block the
           # task from continuing.
@@ -81,7 +81,7 @@ namespace 'active_storage:vglist:variants' do
           begin
             image_sizes.each do |size|
               # Use .processed so it only processes if necessary
-              user.sized_avatar(size).processed
+              user.sized_avatar(size)&.processed
             end
           # Rescue MiniMagick errors if they occur so that they don't block the
           # task from continuing.

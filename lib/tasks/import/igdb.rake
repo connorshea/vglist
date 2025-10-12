@@ -192,7 +192,7 @@ namespace :import do
       # For each cover uploaded, process the variants of that cover so we store them in the database immediately,
       # otherwise they'll be generated when the user hits them for the first time.
       Game::COVER_SIZES.each_key do |size|
-        game.sized_cover(size).processed
+        game.sized_cover(size)&.processed
       end
 
       cover_added_count += 1
