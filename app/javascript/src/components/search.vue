@@ -1,66 +1,68 @@
-<template :class="{ 'is-active': dropdownActive }">
-  <div class="control">
-    <div class="field mb-0">
-      <p class="control has-icons-left">
-        <input
-          v-model="query"
-          @input="onSearch"
-          @keyup.up.prevent="onUpArrow"
-          @keyup.down.prevent="onDownArrow"
-          @keyup.enter.prevent="onEnter"
-          class="input navbar-search-input"
-          type="search"
-          placeholder="Search"
-        />
-        <span class="icon is-small is-left" v-html="searchIcon"></span>
-      </p>
+<template>
+  <div class="navbar-item has-dropdown field my-10 mx-10" :class="{ 'is-active': dropdownActive }">
+    <div class="control">
+      <div class="field mb-0">
+        <p class="control has-icons-left">
+          <input
+            v-model="query"
+            @input="onSearch"
+            @keyup.up.prevent="onUpArrow"
+            @keyup.down.prevent="onDownArrow"
+            @keyup.enter.prevent="onEnter"
+            class="input navbar-search-input"
+            type="search"
+            placeholder="Search"
+          />
+          <span class="icon is-small is-left" v-html="searchIcon"></span>
+        </p>
+      </div>
     </div>
-  </div>
 
-  <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
-    <p class="navbar-item" v-if="!hasSearchResults">No results.</p>
-    <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
-      <hr v-if="index > 0" class="navbar-divider">
-      <p class="navbar-item navbar-dropdown-header">{{ capitalizedPlurals[type] }}</p>
-      <a
-        v-for="result in betterSearchResults[type]"
-        :key="result.id"
-        :href="result.url"
-        class="navbar-item"
-        :class="{
-          'is-active':
-            activeSearchResult !== -1 &&
-            flattenedSearchResults[activeSearchResult].searchable_id ===
-              result.searchable_id
-        }">
-        <div class="media">
-          <figure class="media-left image is-48x48" v-if="type === 'Game' || type === 'User'">
-            <img :src="result.image_url" width='48px' height='48px' class="game-cover">
-          </figure>
-          <div class="media-content">
-            <p v-if="type === 'Game'" class="has-text-weight-semibold">{{ result.content }}</p>
-            <p v-else>{{ result.content }}</p>
-            <p v-if="type === 'Game'">
-              <!-- Outputs "2009 · Nintendo", "Nintendo", or "2009" depending on what data it has. -->
-              {{ [
-                  result.release_date === null ? '' : result.release_date.slice(0, 4),
-                  result.developer === null ? '' : result.developer
-                ].filter(x => x !== '').join(' · ') }}
-            </p>
+    <div v-if="dropdownActive" class="navbar-search-dropdown navbar-dropdown">
+      <p class="navbar-item" v-if="!hasSearchResults">No results.</p>
+      <div v-for="(type, index) in Object.keys(betterSearchResults)" :key="type">
+        <hr v-if="index > 0" class="navbar-divider">
+        <p class="navbar-item navbar-dropdown-header">{{ capitalizedPlurals[type] }}</p>
+        <a
+          v-for="result in betterSearchResults[type]"
+          :key="result.id"
+          :href="result.url"
+          class="navbar-item"
+          :class="{
+            'is-active':
+              activeSearchResult !== -1 &&
+              flattenedSearchResults[activeSearchResult].searchable_id ===
+                result.searchable_id
+          }">
+          <div class="media">
+            <figure class="media-left image is-48x48" v-if="type === 'Game' || type === 'User'">
+              <img :src="result.image_url" width='48px' height='48px' class="game-cover">
+            </figure>
+            <div class="media-content">
+              <p v-if="type === 'Game'" class="has-text-weight-semibold">{{ result.content }}</p>
+              <p v-else>{{ result.content }}</p>
+              <p v-if="type === 'Game'">
+                <!-- Outputs "2009 · Nintendo", "Nintendo", or "2009" depending on what data it has. -->
+                {{ [
+                    result.release_date === null ? '' : result.release_date.slice(0, 4),
+                    result.developer === null ? '' : result.developer
+                  ].filter(x => x !== '').join(' · ') }}
+              </p>
+            </div>
           </div>
-        </div>
-      </a>
-      <!-- If there are a multiple of 15 games, we can potentially load another page of them. -->
-      <a class="navbar-item"
-          v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0 && !moreAlreadyLoaded"
-          @click="onMoreGames"
-      >
-        <div class="media">
-          <div class="media-content">
-            <p>More...</p>
+        </a>
+        <!-- If there are a multiple of 15 games, we can potentially load another page of them. -->
+        <a class="navbar-item"
+            v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0 && !moreAlreadyLoaded"
+            @click="onMoreGames"
+        >
+          <div class="media">
+            <div class="media-content">
+              <p>More...</p>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
     </div>
   </div>
 </template>

@@ -32,6 +32,9 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.SENTRY_DSN_JS': JSON.stringify(process.env.SENTRY_DSN_JS),
+      __VUE_PROD_DEVTOOLS__: 'false',
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
+      __VUE_OPTIONS_API__: 'true', // Set to false later if we move off vue-select.
     }),
     new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
