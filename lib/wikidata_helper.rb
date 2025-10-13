@@ -44,7 +44,7 @@ class WikidataHelper
 
     puts api_uri if ENV['DEBUG']
 
-    response = JSON.parse(URI.open(api_uri.to_s).read)
+    response = JSON.parse(URI.parse(api_uri.to_s).open.read)
 
     return response['entities'] if response['success'] && action == 'wbgetentities'
 

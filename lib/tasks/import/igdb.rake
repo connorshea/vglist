@@ -155,7 +155,7 @@ namespace :import do
         # Sleep between each attempt at pulling down the game cover, to avoid
         # hitting the IGDB website with a lot of load.
         sleep 0.25
-        cover_blob = URI.open(igdb_game.dig('cover', 'url'))
+        cover_blob = URI.parse(igdb_game.dig('cover', 'url')).open
       rescue OpenURI::HTTPError, URI::InvalidURIError, SocketError => e
         progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
         progress_bar.increment

@@ -159,7 +159,7 @@ namespace :import do
 
       # Catch the error if the PCGamingWiki cover image doesn't actually exist.
       begin
-        cover_blob = URI.open(cover_url)
+        cover_blob = URI.parse(cover_url).open
       rescue OpenURI::HTTPError, URI::InvalidURIError, SocketError => e
         progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
         progress_bar.increment

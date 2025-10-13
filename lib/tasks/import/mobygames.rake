@@ -161,7 +161,7 @@ namespace :import do
 
       # Catch the error if the MobyGames cover image doesn't actually exist.
       begin
-        cover_blob = URI.open(cover_url)
+        cover_blob = URI.parse(cover_url).open
       rescue OpenURI::HTTPError => e
         progress_bar.log "Error: #{e}"
         progress_bar.increment
