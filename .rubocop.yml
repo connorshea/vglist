@@ -36,6 +36,10 @@ Layout/EmptyLineAfterMagicComment:
 Layout/LineLength:
   Enabled: false
 
+Layout/LeadingCommentSpace:
+  Enabled: true
+  AllowRBSInlineAnnotation: true
+
 ###################### Lint ##############################
 
 Lint/MissingSuper:
