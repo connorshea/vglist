@@ -1,29 +1,27 @@
+# frozen_string_literal: true
 require "active_support/core_ext/integer/time"
 
 # Solution for muting the ActiveStorage logger from:
 # https://stackoverflow.com/a/57108948/7143763
 class ActiveStorageStfuLogFormatter
   def initialize
-    # Suppress is an array of request uuids. Each listed uuid means no messages from this request.
-    @suppress = []
+    # Suppress is a set of request uuids. Each listed uuid means no messages from this request.
+    # @returns [Set<String>]
+    @suppress = [].to_set
   end
 
   def call(_severity, _datetime, _progname, message)
     # Get uuid, which we need to properly distinguish between parallel requests.
     # Also remove uuid information from log (that's why we match the rest of message)
-    matches = /\[([0-9a-zA-Z\-_]+)\] (.*)/m.match(message)
+    _, uuid, parsed_message = /\[([0-9a-zA-Z\-_]+)\] (.*)/m.match(message)
 
-    # Return message as it is (including new line at the end)
-    return "#{message}\n" unless matches
+    # Return message as it is (including new line at the end) if we can't get the uuid or message.
+    return "#{message}\n" if !uuid || !parsed_message
 
-    uuid = matches[1]
-    message = matches[2]
-
-    if @suppress.include?(uuid) && message&.start_with?("Completed ")
+    if @suppress.include?(uuid) && parsed_message&.start_with?(/\s?Completed /)
       # Each request in Rails log ends with "Completed ..." message, so do suppressed messages.
-      @suppress.delete(uuid)
-      return nil
-    elsif message&.start_with?(
+      return "[#{uuid}] Completed ActiveStorage request (full output supressed)\n"
+    elsif parsed_message&.start_with?(
       "Processing by ActiveStorage::DiskController#show",
       "Processing by ActiveStorage::BlobsController#show",
       "Processing by ActiveStorage::RepresentationsController#show",
@@ -37,7 +35,7 @@ class ActiveStorageStfuLogFormatter
       return nil
     elsif @suppress.exclude?(uuid)
       # All messages, which are not suppressed, print. New line must be added here.
-      return "#{message}\n"
+      return "[#{uuid}] #{parsed_message}\n"
     end
   end
 end
@@ -109,7 +107,7 @@ Rails.application.configure do
   # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
-  # config.action_view.annotate_rendered_view_with_filenames = true
+  config.action_view.annotate_rendered_view_with_filenames = true
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = false
@@ -126,5 +124,5 @@ Rails.application.configure do
 
   # Make ActiveStorage stfu
   config.log_tags = [:uuid]
-  config.log_formatter = ActiveStorageStfuLogFormatter.new
+  config.log_formatter = ActiveStorageStfuLogFormatter.new if ENV['DEBUG_ACTIVE_STORAGE'].blank?
 end

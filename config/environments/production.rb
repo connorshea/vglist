@@ -69,6 +69,8 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
 
+  # NOTE: This is also used to set default_url_options for the whole rails app in another initializer.
+  # Be careful if you touch it.
   config.action_mailer.default_url_options = { host: 'vglist.co' }
 
   config.action_mailer.default_options = {
