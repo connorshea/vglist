@@ -10,3 +10,6 @@ Rails.application.config.active_storage.variable_content_types = ['image/png', '
 # converted to the fallback PNG format. This is set here explicitly to prevent
 # the usage of gifs or any other formats from future Rails versions.
 Rails.application.config.active_storage.web_image_content_types = ['image/png', 'image/jpeg']
+
+# TODO: The default is 5 minutes, but we want them to never expire, maybe?
+# Rails.application.config.active_storage.service_urls_expire_in = nil
