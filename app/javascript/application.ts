@@ -7,21 +7,21 @@ import Rails from '@rails/ujs';
 import Turbolinks from 'turbolinks';
 import * as ActiveStorage from '@rails/activestorage';
 import '../assets/stylesheets/application.scss';
-import Vue from 'vue';
-import * as Sentry from "@sentry/vue";
+// import Vue from 'vue';
+// import * as Sentry from "@sentry/vue";
 import './src/vue-loader';
 import './src/toggleable-buttons';
 import './src/bulma';
 import './src/settings';
 
-if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    Vue,
-    dsn: process.env.SENTRY_DSN_JS,
-    integrations: [],
-    environment: process.env.NODE_ENV
-  });
-}
+// if (process.env.NODE_ENV === 'production') {
+//   Sentry.init({
+//     Vue,
+//     dsn: process.env.SENTRY_DSN_JS,
+//     integrations: [],
+//     environment: process.env.NODE_ENV
+//   });
+// }
 
 Rails.start();
 Turbolinks.start();

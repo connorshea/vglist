@@ -8,22 +8,23 @@
         :inputId="inputId"
         :label="vSelectLabel"
         @change="handleChange"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
       ></v-select>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
+// @ts-expect-error No types available, replace vue-select with another component soon. vue3-select-component maybe.
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { snakeCase } from 'lodash-es';
 
 interface Props {
   label: string;
-  value: any[];
+  modelValue: any[];
   vSelectLabel?: string;
 }
 
@@ -31,14 +32,11 @@ const props = withDefaults(defineProps<Props>(), {
   vSelectLabel: "name"
 });
 
-const emit = defineEmits(['input']);
-
-// Reactive data
-const options = ref<any[]>([]);
+const emit = defineEmits(['update:modelValue']);
 
 // Methods
 function handleChange(selectedItems: any[]) {
-  emit('input', selectedItems);
+  emit('update:modelValue', selectedItems);
 }
 
 // Computed properties

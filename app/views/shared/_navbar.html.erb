@@ -15,26 +15,26 @@
   <div class="navbar-menu is-shadowless" id="navMenu">
     <div class="navbar-start">
       <%# Placeholder search input until the Vue component loads. %>
-      <div class="navbar-item has-dropdown field mt-10"
-        data-vue-component="search"
+      <div data-vue-component="search"
         data-vue-props="<%=
           {
             searchIcon: svg_icon('search', height: 16, aria: false),
             # To allow for a search param to pre-fill the input.
             searchParam: params[:search] || ''
           }.to_json
-        %>"
-      >
-        <p class="control">
-          <div class="field mb-0">
-            <p class="control has-icons-left">
-              <input type="search" placeholder="Search" class="input navbar-search-input">
-              <span class="icon is-small is-left">
-                <%= svg_icon('search', height: 16, aria: false) %>
-              </span>
-            </p>
+        %>">
+        <div class="navbar-item has-dropdown field my-10 mx-10">
+          <div class="control">
+            <div class="field mb-0">
+              <p class="control has-icons-left">
+                <input type="search" placeholder="Search" class="input navbar-search-input">
+                <span class="icon is-small is-left">
+                  <%= svg_icon('search', height: 16, aria: false) %>
+                </span>
+              </p>
+            </div>
           </div>
-        </p>
+        </div>
       </div>
 
       <%# Link to the global activity if the user isn't logged in. %>

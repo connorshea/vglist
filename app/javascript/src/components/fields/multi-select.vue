@@ -10,8 +10,8 @@
         label="name"
         :placeholder="placeholder"
         @change="handleChange"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
+        :modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
       />
     </div>
   </div>
@@ -19,20 +19,21 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+// @ts-expect-error No types available, replace vue-select with another component soon. vue3-select-component maybe.
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import { debounce, snakeCase } from 'lodash-es';
 
 interface Props {
   label?: string;
-  value: any[];
+  modelValue: any[];
   searchPathIdentifier: string;
   placeholder?: string;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
 const options = ref<any[]>([]);
@@ -40,7 +41,7 @@ const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/sear
 
 // Methods
 function handleChange(selectedItems: any[]) {
-  emit('input', selectedItems);
+  emit('update:modelValue', selectedItems);
 }
 
 /*

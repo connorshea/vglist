@@ -5,7 +5,7 @@
       <!-- We can't use a normal button element here, as it would become the target of the label. -->
       <div class="button">
         <!-- Display the filename if a file has been selected. -->
-        <span v-if="value">Selected File: {{ value.name }}</span>
+        <span v-if="modelValue">Selected File: {{ modelValue.name }}</span>
         <span v-else>Select File</span>
       </div>
       <!-- We hide this file input. -->
@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 
 interface Props {
-  value?: File;
+  modelValue?: File;
   label?: string;
   fileClass?: string;
 }
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   fileClass: 'game-cover'
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 const image = ref<string | null>(null);
 
@@ -45,8 +45,8 @@ const handleFileChange = (e: Event) => {
     };
     reader.readAsDataURL(file);
 
-    // Whenever the file changes, emit the 'input' event with the file data.
-    emit('input', file);
+    // Whenever the file changes, emit the 'update:modelValue' event with the file data.
+    emit('update:modelValue', file);
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="field" :class="fieldClass">
-    <label v-if="label" class="label" v-bind:for="numberFieldId">{{ label }}</label>
+    <label v-if="label" class="label" :for="numberFieldId">{{ label }}</label>
     <div class="control">
       <input
         autocomplete="off"
@@ -10,10 +10,10 @@
         :min="min"
         :max="max"
         :required="required"
-        v-bind:name="numberFieldName"
-        v-bind:id="numberFieldId"
-        v-bind:value="dataValue"
-        v-on:input="handleInput"
+        :name="numberFieldName"
+        :id="numberFieldId"
+        :value="dataValue"
+        @input="handleInput"
         :style="{ width: width ?? '100%' }"
       />
     </div>
@@ -30,7 +30,7 @@ interface Props {
   attribute: string;
   label?: string;
   placeholder?: string;
-  value?: number | string;
+  modelValue?: number | string;
   required?: boolean;
   min?: number;
   max?: number;
@@ -42,22 +42,21 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   fieldClass: '',
   placeholder: '',
-  value: '',
+  modelValue: '',
   required: false,
   min: 0
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
-const dataValue = ref(props.value);
+const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
-function handleInput(event: Event) {
-  const target = event.target as HTMLInputElement;
-  emit('input', target.value);
+function handleInput(event: InputEvent) {
+  emit('update:modelValue', (event.target as HTMLInputElement).value);
 }
 
-watch(() => props.value, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
   dataValue.value = newVal;
 });
 

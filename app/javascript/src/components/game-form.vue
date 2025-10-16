@@ -11,7 +11,7 @@
       </ul>
     </div>
 
-    <file-select :label="formData.cover.label" v-model="game.cover" @input="onChange"></file-select>
+    <file-select :label="formData.cover.label" v-model="game.cover" @update:model-value="onChange" />
 
     <text-field
       :form-class="formData.class"
