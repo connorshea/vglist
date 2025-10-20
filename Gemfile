@@ -98,7 +98,7 @@ group :development, :test do
   gem 'rubocop', '~> 1.81', require: false
 
   # rubocop extensions
-  gem 'rubocop-performance', '~> 1.26.0', require: false
+  gem 'rubocop-performance', '~> 1.26.1', require: false
   gem 'rubocop-rspec', '~> 3.7.0', require: false
   gem 'rubocop-rspec_rails', '~> 2.31', require: false
   gem 'rubocop-capybara', '~> 2.22', require: false
