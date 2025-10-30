@@ -152,7 +152,7 @@ group :test do
   gem 'capybara', '~> 3.40'
   gem 'selenium-webdriver', '~> 4.36'
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
-  gem 'webmock', '~> 3.25'
+  gem 'webmock', '~> 3.26'
   # Retry failed tests to reduce flakiness.
   gem 'rspec-rebound', '~> 0.2.1'
 end
