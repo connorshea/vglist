@@ -2,29 +2,28 @@
   <div class="field">
     <label class="label" :for="inputId">{{ label }}</label>
     <div class="control">
-      <v-select
-        multiple
-        :taggable="true"
+      <!-- TODO: Handle changes -->
+      <vue-select
+        :is-multi="true"
+        :is-taggable="true"
         :inputId="inputId"
         :label="vSelectLabel"
-        @change="handleChange"
         :modelValue="modelValue"
         @update:modelValue="$emit('update:modelValue', $event)"
-      ></v-select>
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-// @ts-expect-error No types available, replace vue-select with another component soon. vue3-select-component maybe.
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
+import VueSelect from 'vue3-select-component';
 import { snakeCase } from 'lodash-es';
 
 interface Props {
   label: string;
   modelValue: any[];
+  // TODO: I think we just need to map the value to this in the option?
   vSelectLabel?: string;
 }
 

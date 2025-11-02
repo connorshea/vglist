@@ -98,7 +98,7 @@ function selectGame() {
 // Include the vglist ID in the dropdown to help distinguish between games
 // that have the same name.
 // TODO: May need to fix this for the new select library.
-function customOptionLabel(item: Record<string, any>) {
+function customOptionLabel(item: any) {
   item.name = `${item.name} (${item.id})`;
   return item;
 }

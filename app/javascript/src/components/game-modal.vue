@@ -154,7 +154,7 @@ interface Props {
   hours_played?: number | string;
   replay_count?: number | string;
   // TODO: Need to improve this type so we can pass typechecking.
-  completion_status?: Record<string, any>;
+  completion_status?: { value: CompletionStatus, label: string };
   start_date?: string;
   completion_date?: string;
   comments?: string;
@@ -196,6 +196,8 @@ const gamePurchase = ref({
   platforms: props.platforms as Array<{ id: string | number }>,
   stores: props.stores as Array<{ id: string | number }>
 });
+
+console.log(`props.completion_status:`, props.completion_status);
 
 const formData = {
   class: 'game_purchase',

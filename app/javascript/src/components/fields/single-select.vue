@@ -30,7 +30,7 @@ interface Props {
   grandparentClass?: string;
   parentClass?: string;
   placeholder?: string;
-  customOptionFunc?: (item: any) => Option<any>;
+  customOptionFunc?: (item: any) => Option<string | number>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
