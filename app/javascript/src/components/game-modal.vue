@@ -153,6 +153,7 @@ interface Props {
   rating?: number | string;
   hours_played?: number | string;
   replay_count?: number | string;
+  // TODO: Need to improve this type so we can pass typechecking.
   completion_status?: Record<string, any>;
   start_date?: string;
   completion_date?: string;

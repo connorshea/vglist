@@ -2,15 +2,18 @@
   <div class="field">
     <label v-if="label" class="label" :for="inputId">{{ label }}</label>
     <div class="control">
-      <v-select
-        multiple
+      <!-- TODO: Make this work by adding events for state changes -->
+      <vue-select
+        :is-multi="true"
         :options="options"
         @search="onSearch"
+        :isLoading="isLoading"
         :inputId="inputId"
-        label="name"
         :placeholder="placeholder"
-        @change="handleChange"
-        :modelValue="modelValue"
+        @optionSelected="optionSelected"
+        @optionDeselected="optionDeselected"
+        :isClearable="true"
+        v-model="modelValue"
         @update:modelValue="$emit('update:modelValue', $event)"
       />
     </div>
@@ -19,15 +22,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-// @ts-expect-error No types available, replace vue-select with another component soon. vue3-select-component maybe.
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
+import VueSelect, { type Option } from 'vue3-select-component';
 import { debounce, snakeCase } from 'lodash-es';
 
 interface Props {
   label?: string;
   modelValue: any[];
-  searchPathIdentifier: string;
+  searchPathIdentifier: 'genres' | 'platforms' | 'engines' | 'series' | 'companies' | 'stores';
   placeholder?: string;
 }
 
@@ -36,36 +37,48 @@ const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
-const options = ref<any[]>([]);
-const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/search.json`;
+const options = ref<Option<string>[]>([]);
+const searchPath = computed(() => {
+  return `${window.location.origin}/${props.searchPathIdentifier}/search.json`;
+});
 
 // Methods
 function handleChange(selectedItems: any[]) {
   emit('update:modelValue', selectedItems);
 }
 
+const isLoading = ref(false);
+
 /*
- * @param {search}  String   Current search text
- * @param {loading} Function Toggle loading class
+ * @param search Current search text
  */
-const onSearch = debounce((search: string, loading: (state: boolean) => void) => {
-  loading(true);
-  let searchUrl = new URL(searchPath);
+const onSearch = debounce(async (search: string) => {
+  isLoading.value = true;
+  const searchUrl = new URL(searchPath.value);
   searchUrl.searchParams.append('query', search);
-  // TODO: Add error handling.
-  fetch(searchUrl.toString(), {
+  const response = await fetch(searchUrl.toString(), {
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(items => {
-      options.value = items;
-      loading(false);
-    });
+  });
+  
+  // TODO: Add error handling.
+  const data = await response.json();
+
+  // Map the returned objects to the format vue-select likes (objects with label and value keys).
+  options.value = data.map((item: { id: number; name: string }) => ({ label: item.name, value: item.id })) ?? [];
+  isLoading.value = false;
 }, 250);
+
+const optionDeselected = (option: Option<string>) => {
+  const newValue = props.modelValue.filter((item: any) => item.id !== option.value);
+  handleChange(newValue);
+};
+
+const optionSelected = (option: Option<string>) => {
+  const newValue = [...props.modelValue, { id: option.value, name: option.label }];
+  handleChange(newValue);
+};
 
 // Computed properties
 const inputId = computed(() => {

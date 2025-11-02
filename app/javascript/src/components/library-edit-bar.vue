@@ -38,7 +38,9 @@ import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
 import NumberField from './fields/number-field.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
+import { type Option } from 'vue3-select-component';
 import { computed, reactive } from 'vue';
+import type { CompletionStatus } from '../types';
 
 interface Props {
   gamePurchases: any[];
@@ -120,7 +122,7 @@ const updateButtonActive = computed((): boolean => {
   return returnBool;
 });
 
-const FORMATTED_COMPLETION_STATUSES = [
+const FORMATTED_COMPLETION_STATUSES: Option<CompletionStatus>[] = [
   { label: 'Unplayed', value: 'unplayed' },
   { label: 'In Progress', value: 'in_progress' },
   { label: 'Paused', value: 'paused' },

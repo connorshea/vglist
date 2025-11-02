@@ -2,37 +2,29 @@
   <div :class="grandparentClass">
     <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div class="control">
-      <v-select
+      <vue-select
         :options="options"
-        :disabled="disabled"
-        label="label"
+        :isDisabled="disabled"
         :placeholder="placeholder"
         :inputId="inputId"
-        :modelValue="modelValue"
+        v-model="modelValue"
         @update:modelValue="$emit('update:modelValue', $event)"
-      ></v-select>
+      />
     </div>
   </div>
 </template>
 
 
 <script setup lang="ts">
-// @ts-expect-error No types available, replace vue-select with another component soon. vue3-select-component maybe.
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
+import VueSelect, { type Option } from 'vue3-select-component';
 import { snakeCase } from 'lodash-es';
 import { computed } from 'vue';
-
-interface SelectOption {
-  label: string;
-  value: unknown;
-}
 
 interface Props {
   label?: string;
   placeholder?: string;
-  modelValue?: object | string;
-  options: number[] | SelectOption[];
+  options: Option<string>[];
+  modelValue: string | null;
   grandparentClass?: string;
   disabled?: boolean;
 }

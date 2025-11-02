@@ -132,7 +132,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import TextArea from './fields/text-area.vue';
 import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
 import NumberField from './fields/number-field.vue';
@@ -147,12 +146,12 @@ import { difference } from 'lodash-es';
 
 interface Props {
   name?: string;
-  releaseDate?: Date;
-  genres?: Array<any>;
-  engines?: Array<any>;
-  developers?: Array<any>;
-  publishers?: Array<any>;
-  platforms?: Array<any>;
+  releaseDate?: Date | string;
+  genres?: Array<{ id: string; }>;
+  engines?: Array<{ id: string; }>;
+  developers?: Array<{ id: string; }>;
+  publishers?: Array<{ id: string; }>;
+  platforms?: Array<{ id: string; }>;
   series?: Record<string, any>;
   steamAppIds?: Array<any>;
   epicGamesStoreId?: string;
@@ -316,24 +315,26 @@ function onSubmit() {
     (platform: { id: string }) => platform.id
   );
 
-  const steamAppIds: any[] = [];
+  const steamAppIds: { id?: string; app_id: string; _destroy?: boolean }[] = [];
   const appIdDifference = difference(
     props.steamAppIds,
     game.value.steamAppIds
   );
   // These can be either the steamAppId itself or the full record with ID and everything.
   // If its just been added to the select, it's an integer.
-  game.value.steamAppIds.forEach((steamAppIdRecordOrInteger: any) => {
-    if (steamAppIdRecordOrInteger.id !== undefined) {
-      steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
-    } else {
+  game.value.steamAppIds.forEach((steamAppIdRecordOrInteger: string | { id: string; app_id: string; }) => {
+    if (typeof steamAppIdRecordOrInteger === 'string') {
       steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
+    } else if (steamAppIdRecordOrInteger.id) {
+      steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
     }
   });
-  appIdDifference.forEach((appId: any) => {
+
+  appIdDifference.forEach((appId: { id?: string; app_id: string; }) => {
     steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
   });
 
+  // TODO: properly type this
   const submittableData: any = {
     game: {
       name: game.value.name,
@@ -350,7 +351,8 @@ function onSubmit() {
       wikidata_id: game.value.wikidataId,
       pcgamingwiki_id: game.value.pcgamingwikiId,
       mobygames_id: game.value.mobygamesId,
-      giantbomb_id: game.value.giantbombId
+      giantbomb_id: game.value.giantbombId,
+      series_id: null
     }
   };
 
@@ -364,8 +366,6 @@ function onSubmit() {
 
   if (game.value.series) {
     submittableData.game.series_id = game.value.series.id;
-  } else {
-    submittableData.game.series_id = null;
   }
 
   if (game.value.coverBlob) {
