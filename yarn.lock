@@ -177,59 +177,59 @@
   resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-7.1.3-4.tgz#1dddea99d5c042e8513973ea709b2cb7e840dc2d"
   integrity sha512-z0ckI5jrAJfImcObjMT1RBz2IxH6I5q6ZTMFex6AfxSQKZuuL8JxAXvg2CvBuodGCxKvybFVolDyMHXlBLeYAA==
 
-"@sentry-internal/browser-utils@10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry-internal/browser-utils/-/browser-utils-10.17.0.tgz#1593d19f8785b3ccc6d4da9381871fbd34b44f85"
-  integrity sha512-jXC7dtItZYNGP+K9Lo+3MWaWaGVI6uDIPGB9BAZkZntc/1lGfhMPm7Fo2qb1N1bUP0vOTJ2TmSUA8GNxyxgekQ==
+"@sentry-internal/browser-utils@10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/browser-utils/-/browser-utils-10.23.0.tgz#738a07ed99168cdf69d0cdb5a152289ed049de81"
+  integrity sha512-FUak8FH51TnGrx2i31tgqun0VsbDCVQS7dxWnUZHdi+0hpnFoq9+wBHY+qrOQjaInZSz3crIifYv3z7SEzD0Jg==
   dependencies:
-    "@sentry/core" "10.17.0"
+    "@sentry/core" "10.23.0"
 
-"@sentry-internal/feedback@10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry-internal/feedback/-/feedback-10.17.0.tgz#0464ee29d00550731645b774c7f47eaae6463ef5"
-  integrity sha512-KIIF/dDQqYENbx4vn6B0evy/qx1QtEZsSZRvXNX6tUm14CCyrZeDymBMyEzu8RQ5PeZXibbPEkz7xOXiG3q+eQ==
+"@sentry-internal/feedback@10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/feedback/-/feedback-10.23.0.tgz#4b9ade29f1d96309eea83cc513c4a73e3992c4d7"
+  integrity sha512-+HWC9VTPICsFX/lIPoBU9GxTaJZVXJcukP+qGxj+j/8q/Dy1w22JHDWcJbZiaW4kWWlz7VbA0KVKS3grD+e9aA==
   dependencies:
-    "@sentry/core" "10.17.0"
+    "@sentry/core" "10.23.0"
 
-"@sentry-internal/replay-canvas@10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry-internal/replay-canvas/-/replay-canvas-10.17.0.tgz#92eb9978d5d6b5e88d5105dd6ead67798b23f1b7"
-  integrity sha512-GXKZIraXrboP03+XS+KwkkKVJO+cSlM0HrfjePSfFqiNbbnjRhOLekoLuDvvH/ZEXPUoUJD1We5IPBg+sZZQfQ==
+"@sentry-internal/replay-canvas@10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/replay-canvas/-/replay-canvas-10.23.0.tgz#236916fb9d40637d8c9f86c52b2b1619b1170854"
+  integrity sha512-GLNY8JPcMI6xhQ5FHiYO/W/3flrwZMt4CI/E3jDRNujYWbCrca60MRke6k7Zm1qi9rZ1FuhVWZ6BAFc4vwXnSg==
   dependencies:
-    "@sentry-internal/replay" "10.17.0"
-    "@sentry/core" "10.17.0"
+    "@sentry-internal/replay" "10.23.0"
+    "@sentry/core" "10.23.0"
 
-"@sentry-internal/replay@10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry-internal/replay/-/replay-10.17.0.tgz#6732170946ba5f26b387fc640aef17af442a8704"
-  integrity sha512-9kirOPp3wbf+TMyHmA8iStKAysklZPcrPlB0v2zh0qRj1zNFY0xAD2WSgxuCvD9rEo5qKhmAKcaT7Ujin64uSw==
+"@sentry-internal/replay@10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/replay/-/replay-10.23.0.tgz#7a6075e2c2e1d0a371764d7c2e5dad578bb7b1fe"
+  integrity sha512-5yPD7jVO2JY8+JEHXep0Bf/ugp4rmxv5BkHIcSAHQsKSPhziFks2x+KP+6M8hhbF1WydqAaDYlGjrkL2yspHqA==
   dependencies:
-    "@sentry-internal/browser-utils" "10.17.0"
-    "@sentry/core" "10.17.0"
+    "@sentry-internal/browser-utils" "10.23.0"
+    "@sentry/core" "10.23.0"
 
-"@sentry/browser@10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-10.17.0.tgz#e7593d55efb1fb3349d94df1ddf1973411d4a93c"
-  integrity sha512-X4OiGECzkp6tIyAKXB/9beBC2oX1xKOEkDo4v/phIKGPzrmQ4o55j2a6/V20jSfSN7w+kfZ56ILE71SzC9w1aQ==
+"@sentry/browser@10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-10.23.0.tgz#aa85f9c21c9a6c80b8952ee15307997fb34edbb3"
+  integrity sha512-9hViLfYONxRJykOhJQ3ZHQ758t1wQIsxEC7mTsydbDm+m12LgbBtXbfgcypWHlom5Yvb+wg6W+31bpdGnATglw==
   dependencies:
-    "@sentry-internal/browser-utils" "10.17.0"
-    "@sentry-internal/feedback" "10.17.0"
-    "@sentry-internal/replay" "10.17.0"
-    "@sentry-internal/replay-canvas" "10.17.0"
-    "@sentry/core" "10.17.0"
+    "@sentry-internal/browser-utils" "10.23.0"
+    "@sentry-internal/feedback" "10.23.0"
+    "@sentry-internal/replay" "10.23.0"
+    "@sentry-internal/replay-canvas" "10.23.0"
+    "@sentry/core" "10.23.0"
 
-"@sentry/core@10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-10.17.0.tgz#ea0851532bd6e407e9332e0200d90b34b556c3f5"
-  integrity sha512-UVIvxSzS0n5QbIDPyFf0WX9I77Of1bcr6a0sCEKfjhJGmGQ8mFWoWgR2gF4wcPw60XUrzbryCr79eOsIHLQ5cw==
+"@sentry/core@10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-10.23.0.tgz#7d4eb4d2c7b9ecc88872975a916f44e0b9fec78a"
+  integrity sha512-4aZwu6VnSHWDplY5eFORcVymhfvS/P6BRfK81TPnG/ReELaeoykKjDwR+wC4lO7S0307Vib9JGpszjsEZw245g==
 
-"@sentry/vue@^10.17.0":
-  version "10.17.0"
-  resolved "https://registry.yarnpkg.com/@sentry/vue/-/vue-10.17.0.tgz#ca70fb2c56ea650d918548d5ece975fdf5179331"
-  integrity sha512-yHx+0OmI8t3YTj9catJUPP/idWlizWPA/yUhufDFeb2gYnzo6NyZEljGbKSoWOsHAp7x78hcrdek0+MROoPlvQ==
+"@sentry/vue@^10.23.0":
+  version "10.23.0"
+  resolved "https://registry.yarnpkg.com/@sentry/vue/-/vue-10.23.0.tgz#4bba9291319773ff2785d6c7473aa288fa5b472c"
+  integrity sha512-xOBysMZnAUNovbw0feqNGunGL3BChULsm7mJCPm0lWmsuCAwLHFPdbKV1M7+6Tx4kCVn+5s8VDmnhWrj6pgZDg==
   dependencies:
-    "@sentry/browser" "10.17.0"
-    "@sentry/core" "10.17.0"
+    "@sentry/browser" "10.23.0"
+    "@sentry/core" "10.23.0"
 
 "@swc/core-darwin-arm64@1.13.20":
   version "1.13.20"
