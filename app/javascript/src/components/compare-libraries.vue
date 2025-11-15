@@ -1,5 +1,6 @@
 <template>
-  <vue-good-table
+  <p>TODO: Replace me once we have a Vue Good Table replacement</p>
+  <!-- <vue-good-table
     :theme="theme"
     :columns="columns"
     :rows="rows"
@@ -35,13 +36,11 @@
       <span v-if="isLoading">Loading...</span>
       <span v-else-if="!isLoading" class="vgt-text-disabled">No games to compare.</span>
     </div>
-  </vue-good-table>
+  </vue-good-table> -->
 </template>
 
 <script setup lang="ts">
-// @ts-expect-error - vue-good-table doesn't have TypeScript declarations
-import { VueGoodTable } from 'vue-good-table';
-import 'vue-good-table/dist/vue-good-table.css';
+
 import { concat } from 'lodash-es';
 import { ref, computed, onMounted } from 'vue';
 

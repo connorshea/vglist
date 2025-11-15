@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-item has-dropdown field mt-10 mx-10" v-bind:class="{ 'is-active': dropdownActive }">
+  <div class="navbar-item has-dropdown field my-10 mx-10" :class="{ 'is-active': dropdownActive }">
     <div class="control">
       <div class="field mb-0">
         <p class="control has-icons-left">
@@ -53,8 +53,8 @@
         </a>
         <!-- If there are a multiple of 15 games, we can potentially load another page of them. -->
         <a class="navbar-item"
-           v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0 && !moreAlreadyLoaded"
-           @click="onMoreGames"
+            v-if="type === 'Game' && betterSearchResults[type].length % 15 === 0 && !moreAlreadyLoaded"
+            @click="onMoreGames"
         >
           <div class="media">
             <div class="media-content">

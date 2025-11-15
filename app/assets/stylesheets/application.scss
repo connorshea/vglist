@@ -199,8 +199,9 @@ nav.navbar {
 .navbar-search-dropdown {
   max-height: 400px;
   height: auto;
-  overflow: scroll;
-  // Don't display a horizontal scrollbar.
+  // only display the overflow when necessary.
+  overflow: auto;
+  // Don't display a horizontal scrollbar ever.
   overflow-x: hidden;
 }
 

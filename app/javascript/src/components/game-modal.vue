@@ -23,7 +23,7 @@
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
             :disabled="true"
-            @input="selectGame"
+            @update:modelValue="selectGame"
           ></single-select>
 
           <static-single-select
@@ -99,7 +99,7 @@
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
-            @input="selectGame"
+            @update:modelValue="selectGame"
           ></single-select>
         </div>
       </section>
@@ -153,7 +153,8 @@ interface Props {
   rating?: number | string;
   hours_played?: number | string;
   replay_count?: number | string;
-  completion_status?: Record<string, any>;
+  // TODO: Need to improve this type so we can pass typechecking.
+  completion_status?: { value: CompletionStatus, label: string };
   start_date?: string;
   completion_date?: string;
   comments?: string;
@@ -195,6 +196,8 @@ const gamePurchase = ref({
   platforms: props.platforms as Array<{ id: string | number }>,
   stores: props.stores as Array<{ id: string | number }>
 });
+
+console.log(`props.completion_status:`, props.completion_status);
 
 const formData = {
   class: 'game_purchase',
