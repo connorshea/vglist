@@ -55,7 +55,7 @@ gem 'sparql', '~> 3.3.2', require: false
 gem 'addressable', '~> 2.8.6', require: false
 
 # Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
-gem 'aws-sdk-s3', '~> 1.66', require: false
+gem 'aws-sdk-s3', '~> 1.208', require: false
 
 # A CLI progress bar for use with the import rake tasks.
 gem 'ruby-progressbar', '~> 1.13', require: false
