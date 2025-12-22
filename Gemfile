@@ -65,7 +65,7 @@ gem 'sentry-ruby', '~> 5.28.0'
 gem 'sentry-rails', '~> 5.28.1'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 2.5.14'
+gem 'graphql', '~> 2.5.16'
 
 # Doorkeeper for OAuth API tokens
 gem "doorkeeper", "~> 5.8.2"
