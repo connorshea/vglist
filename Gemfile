@@ -46,7 +46,7 @@ gem 'image_processing', '~> 1.14'
 gem 'active_storage_validations', '~> 3.0.2'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
-gem 'friendly_id', '~> 5.5.1'
+gem 'friendly_id', '~> 5.6.0'
 
 # Use SPARQL for querying Wikidata in imports.
 gem 'sparql', '~> 3.3.2', require: false
