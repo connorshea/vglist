@@ -1,5 +1,5 @@
 # Dockerfile for running the application in a CI environment.
-FROM ruby:3.4.6
+FROM ruby:4.0.0
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg > /dev/null
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash -
