@@ -144,7 +144,7 @@ group :development do
   # https://github.com/jetruby/graphql-rails_logger
   gem 'graphql-rails_logger', '~> 1.2.5'
   # Enable dotenv for local environment variables.
-  gem 'dotenv-rails', '~> 3.1'
+  gem 'dotenv-rails', '~> 3.2'
 end
 
 group :test do
