@@ -91,7 +91,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :windows]
 
   # Pry for debugging.
-  gem 'pry', '~> 0.15'
+  gem 'pry', '~> 0.16'
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
