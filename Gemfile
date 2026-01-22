@@ -10,7 +10,7 @@ gem 'rails', '~> 7.2.2'
 gem 'pg', '~> 1.6'
 
 # Use Puma as the app server
-gem 'puma', '~> 7.1'
+gem 'puma', '~> 7.2'
 
 # Asset pipeline
 gem 'propshaft', '~> 1.3'
