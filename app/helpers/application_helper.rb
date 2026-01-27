@@ -45,11 +45,20 @@ module ApplicationHelper
     width, height = Game::COVER_SIZES[size]
 
     if game.cover.attached? && game.cover.variable?
-      image_tag game.sized_cover(size),
-        width: "#{width}px",
-        height: "#{height}px",
-        alt: "Cover for #{game.name}.",
-        **options
+      begin
+        image_tag game.sized_cover(size),
+          width: "#{width}px",
+          height: "#{height}px",
+          alt: "Cover for #{game.name}.",
+          **options
+      rescue MiniMagick::Error
+        Rails.logger.error("Failed to process cover variant for game #{game.id} (#{game.name})")
+        image_tag 'no-cover.png',
+          width: "#{width}px",
+          height: "#{height}px",
+          alt: "Placeholder cover for #{game.name}.",
+          **options
+      end
     elsif game.cover.attached? && !game.cover.variable?
       image_tag game.cover,
         width: "#{width}px",
