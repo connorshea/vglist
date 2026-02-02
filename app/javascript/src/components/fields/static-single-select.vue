@@ -2,57 +2,40 @@
   <div :class="grandparentClass">
     <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div class="control">
-      <v-select
-        :options="options"
-        :disabled="disabled"
-        label="label"
+      <vue-select
+        :options="(options as any)"
+        :isDisabled="disabled"
         :placeholder="placeholder"
         :inputId="inputId"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
-      ></v-select>
+        :modelValue="(modelValue as any)"
+        @update:modelValue="$emit('update:modelValue', $event)"
+      />
     </div>
   </div>
 </template>
 
 
 <script setup lang="ts">
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
+import VueSelect, { type Option } from 'vue3-select-component';
 import { snakeCase } from 'lodash-es';
 import { computed } from 'vue';
 
-const props = defineProps({
-  label: {
-    type: String,
-    required: false
-  },
-  placeholder: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  value: {
-    type: [Object, String],
-    required: false
-  },
-  options: {
-    type: Array,
-    required: true
-  },
-  grandparentClass: {
-    type: String,
-    required: false,
-    default: 'field'
-  },
-  disabled: {
-    type: Boolean,
-    required: false,
-    default: false
-  }
+interface Props {
+  label?: string;
+  placeholder?: string;
+  modelValue?: Option<string | number> | null;
+  options: Option<string | number>[];
+  grandparentClass?: string;
+  disabled?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  placeholder: '',
+  grandparentClass: 'field',
+  disabled: false
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 const inputId = computed(() => snakeCase(props.label));
 </script>

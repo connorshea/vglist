@@ -5,7 +5,7 @@
       :search-path-identifier="'platforms'"
       :grandparent-class="'games-filter'"
       :placeholder="'Filter by platform'"
-      @input="onPlatformInput"
+      @update:modelValue="onPlatformInput"
     ></single-select>
 
     <static-single-select
@@ -13,26 +13,27 @@
       :placeholder="'Filter by year'"
       :grandparent-class="'year-filter'"
       :options="yearOptions"
-      @input="onYearInput"
+      @update:modelValue="onYearInput"
     ></static-single-select>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import type { Option } from 'vue3-select-component';
 import SingleSelect from './fields/single-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import Turbolinks from 'turbolinks';
 import { range, reverse } from 'lodash-es';
 
-const platform = ref<{ id: string } | undefined>(undefined);
-const year = ref<string | undefined>(undefined);
+const platform = ref<Option<number> | null>(null);
+const year = ref<Option<number> | null>(null);
 
-function onPlatformInput(newPlatform: { id: string } | undefined) {
+function onPlatformInput(newPlatform: Option<number> | null) {
   const currentUrl = new URL(window.location.href);
   const currentUrlParams = currentUrl.searchParams;
   if (newPlatform) {
-    currentUrlParams.set('platform_filter', newPlatform.id);
+    currentUrlParams.set('platform_filter', String(newPlatform.value));
     Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
   } else {
     currentUrlParams.delete('platform_filter');
@@ -40,11 +41,11 @@ function onPlatformInput(newPlatform: { id: string } | undefined) {
   }
 }
 
-function onYearInput(newYear: string | undefined) {
+function onYearInput(newYear: Option<number> | null) {
   const currentUrl = new URL(window.location.href);
   const currentUrlParams = currentUrl.searchParams;
   if (newYear) {
-    currentUrlParams.set('by_year', newYear);
+    currentUrlParams.set('by_year', String(newYear.value));
     Turbolinks.visit(`/games?${currentUrlParams.toString()}`);
   } else {
     currentUrlParams.delete('by_year');
@@ -60,21 +61,23 @@ onMounted(() => {
   if (platformId) {
     fetch(`/platforms/${platformId}.json`)
       .then(response => response.json())
-      .then(data => {
-        platform.value = data;
+      .then((data: { id: number; name: string }) => {
+        platform.value = { value: data.id, label: data.name };
       });
   }
 
   const byYear = currentUrlParams.get('by_year');
   if (byYear) {
-    year.value = byYear;
+    const yearNum = parseInt(byYear, 10);
+    year.value = { value: yearNum, label: byYear };
   }
 });
 
-const yearOptions = computed(() => {
+const yearOptions = computed((): Option<number>[] => {
   const currentYear = new Date().getFullYear();
   // Create an array from 1950 to the current year + 2.
   // (it's +3 because the range ends before the end number)
-  return reverse(range(1950, currentYear + 3));
+  const years = reverse(range(1950, currentYear + 3));
+  return years.map(y => ({ value: y, label: String(y) }));
 });
 </script>

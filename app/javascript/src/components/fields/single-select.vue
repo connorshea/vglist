@@ -2,35 +2,35 @@
   <div :class="grandparentClass">
     <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div :class="parentClass">
-      <v-select
-        :options="options"
-        :disabled="disabled"
+      <vue-select
+        :options="(options as any)"
+        :isDisabled="disabled"
         @search="onSearch"
-        label="name"
         :inputId="inputId"
-        v-bind:value="value"
         :placeholder="placeholder"
-        v-on:input="$emit('input', $event)"
-      ></v-select>
+        :isClearable="true"
+        :isLoading="isLoading"
+        :modelValue="(modelValue as any)"
+        @update:modelValue="$emit('update:modelValue', $event)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
+import VueSelect, { type Option } from 'vue3-select-component';
 import { debounce, snakeCase } from 'lodash-es';
 
 interface Props {
   label?: string;
-  value?: any;
+  modelValue?: Option<number> | null;
   disabled?: boolean;
-  searchPathIdentifier: string;
+  searchPathIdentifier: 'games' | 'series' | 'platforms' | 'genres' | 'engines' | 'companies' | 'stores';
   grandparentClass?: string;
   parentClass?: string;
   placeholder?: string;
-  customOptionFunc?: (item: any) => any;
+  customOptionFunc?: (item: { id: number; name: string }) => Option<number>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,37 +39,36 @@ const props = withDefaults(defineProps<Props>(), {
   parentClass: 'control'
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
-const options = ref<any[]>([]);
-const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/search.json`;
+const options = ref<Option<number>[]>([]);
+const searchPath = computed(() => `${window.location.origin}/${props.searchPathIdentifier}/search.json`);
+const isLoading = ref(false);
+
+const defaultOptionFunc = (item: { id: number; name: string }): Option<number> => ({
+  label: item.name,
+  value: item.id
+});
 
 /*
  * @param {search} String Current search text
- * @param {loading} Function Toggle loading class
  */
-const onSearch = debounce((search: string, loading: (state: boolean) => void) => {
-  loading(true);
-  let searchUrl = new URL(searchPath);
+const onSearch = debounce(async (search: string) => {
+  isLoading.value = true;
+  const searchUrl = new URL(searchPath.value);
   searchUrl.searchParams.append('query', search);
   // TODO: Add error handling.
-  fetch(searchUrl.toString(), {
+  const response = await fetch(searchUrl.toString(), {
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(items => {
-      // Apply the customOptionFunc if it exists.
-      if (props.customOptionFunc) {
-        items = items.map(props.customOptionFunc);
-      }
-      options.value = items;
-      loading(false);
-    });
+  });
+
+  const data: { id: number; name: string }[] = await response.json();
+  const optionFunc = props.customOptionFunc ?? defaultOptionFunc;
+  options.value = data.map(optionFunc);
+  isLoading.value = false;
 }, 250);
 
 // Computed properties

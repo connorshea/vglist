@@ -22,7 +22,7 @@
             :label="'Game'"
             v-model="gameA"
             :search-path-identifier="'games'"
-            @input="selectGame"
+            @update:modelValue="selectGame"
             :customOptionFunc="customOptionLabel"
           ></single-select>
         </div>
@@ -37,36 +37,40 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { Option } from 'vue3-select-component';
 import SingleSelect from './fields/single-select.vue';
 import VglistUtils from '../utils';
 import Turbolinks from 'turbolinks';
 
 interface Props {
-  game: Record<string, any>;
+  game: { id: number; name: string };
   isActive: boolean;
 }
 
-// TODO: replace withDefaults after Vue 3.5 upgrade.
-// https://vuejs.org/guide/components/props.html#reactive-props-destructure
 const props = withDefaults(defineProps<Props>(), {
-  game: () => ({})
+  game: () => ({ id: 0, name: '' })
 });
 
 const emit = defineEmits(['close', 'save']);
 
 const errors = ref<string[]>([]);
 const gameSelected = ref(false);
-const gameA = ref<Record<string, any> | undefined>(undefined);
+const gameA = ref<Option<number> | null>(null);
 
 function onClose() {
   emit('close');
 }
 
 function onSave() {
-  const gameAId = gameA.value?.id;
+  if (!gameA.value) {
+    errors.value = ['Please select a game'];
+    return;
+  }
+
+  const gameAId = gameA.value.value; // Extract ID from Option format
   const gameBId = props.game.id;
   const mergePath = `/games/${gameAId}/merge/${gameBId}.json`;
-  
+
   VglistUtils.rawAuthenticatedFetch(
     mergePath,
     'POST'
@@ -97,8 +101,7 @@ function selectGame() {
 
 // Include the vglist ID in the dropdown to help distinguish between games
 // that have the same name.
-function customOptionLabel(item: Record<string, any>) {
-  item.name = `${item.name} (${item.id})`;
-  return item;
+function customOptionLabel(item: { id: number; name: string }): Option<number> {
+  return { value: item.id, label: `${item.name} (${item.id})` };
 }
 </script>

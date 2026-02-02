@@ -22,22 +22,22 @@ interface Props {
   formClass: string;
   attribute: string;
   label: string;
-  value: string;
+  modelValue: string;
   required?: boolean;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
-const dataValue = ref(props.value);
+const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
 function handleInput(event: Event) {
   const target = event.target as HTMLTextAreaElement;
-  emit('input', target.value);
+  emit('update:modelValue', target.value);
 }
 
-watch(() => props.value, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
   dataValue.value = newVal;
 });
 

@@ -32,6 +32,10 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.SENTRY_DSN_JS': JSON.stringify(process.env.SENTRY_DSN_JS),
+      // Vue 3 feature flags
+      '__VUE_OPTIONS_API__': JSON.stringify(true),
+      '__VUE_PROD_DEVTOOLS__': JSON.stringify(false),
+      '__VUE_PROD_HYDRATION_MISMATCH_DETAILS__': JSON.stringify(false),
     }),
     new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
@@ -46,7 +50,7 @@ const config = {
         loader: 'vue-loader',
         options: {
           compilerOptions: {
-            preserveWhitespace: false
+            whitespace: 'condense'
           }
         }
       },

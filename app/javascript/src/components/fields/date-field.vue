@@ -23,27 +23,25 @@ interface Props {
   formClass: string;
   attribute: string;
   label: string;
-  value?: string;
+  modelValue?: string;
   required?: boolean;
 }
 
-// TODO: replace withDefaults after Vue 3.5 upgrade.
-// https://vuejs.org/guide/components/props.html#reactive-props-destructure
 const props = withDefaults(defineProps<Props>(), {
   required: false
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
-const dataValue = ref(props.value);
+const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
 function handleInput(event: Event) {
   const target = event.target as HTMLInputElement;
-  emit('input', target.value);
+  emit('update:modelValue', target.value);
 }
 
-watch(() => props.value, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
   dataValue.value = newVal;
 });
 

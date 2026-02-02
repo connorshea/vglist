@@ -2,16 +2,15 @@
   <div class="field">
     <label v-if="label" class="label" :for="inputId">{{ label }}</label>
     <div class="control">
-      <v-select
-        multiple
-        :options="options"
+      <vue-select
+        :isMulti="true"
+        :options="(options as any)"
         @search="onSearch"
         :inputId="inputId"
-        label="name"
         :placeholder="placeholder"
-        @change="handleChange"
-        v-bind:value="value"
-        v-on:input="$emit('input', $event)"
+        :isLoading="isLoading"
+        :modelValue="(modelValue as any)"
+        @update:modelValue="(val: any) => handleChange(val)"
       />
     </div>
   </div>
@@ -19,51 +18,52 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import vSelect from 'vue-select';
-import 'vue-select/dist/vue-select.css';
+import VueSelect, { type Option } from 'vue3-select-component';
 import { debounce, snakeCase } from 'lodash-es';
 
 interface Props {
   label?: string;
-  value: any[];
-  searchPathIdentifier: string;
+  modelValue: Option<number>[];
+  searchPathIdentifier: 'games' | 'series' | 'platforms' | 'genres' | 'engines' | 'companies' | 'stores';
   placeholder?: string;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
-const options = ref<any[]>([]);
-const searchPath = `${window.location.origin}/${props.searchPathIdentifier}/search.json`;
+const options = ref<Option<number>[]>([]);
+const searchPath = computed(() => `${window.location.origin}/${props.searchPathIdentifier}/search.json`);
+const isLoading = ref(false);
+
+const defaultOptionFunc = (item: { id: number; name: string }): Option<number> => ({
+  label: item.name,
+  value: item.id
+});
 
 // Methods
-function handleChange(selectedItems: any[]) {
-  emit('input', selectedItems);
+function handleChange(selectedItems: Option<number>[]) {
+  emit('update:modelValue', selectedItems);
 }
 
 /*
  * @param {search}  String   Current search text
- * @param {loading} Function Toggle loading class
  */
-const onSearch = debounce((search: string, loading: (state: boolean) => void) => {
-  loading(true);
-  let searchUrl = new URL(searchPath);
+const onSearch = debounce(async (search: string) => {
+  isLoading.value = true;
+  const searchUrl = new URL(searchPath.value);
   searchUrl.searchParams.append('query', search);
   // TODO: Add error handling.
-  fetch(searchUrl.toString(), {
+  const response = await fetch(searchUrl.toString(), {
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(items => {
-      options.value = items;
-      loading(false);
-    });
+  });
+
+  const data: { id: number; name: string }[] = await response.json();
+  options.value = data.map(defaultOptionFunc);
+  isLoading.value = false;
 }, 250);
 
 // Computed properties
