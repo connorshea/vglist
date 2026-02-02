@@ -4,20 +4,20 @@
     <div class="control">
       <vue-select
         :isMulti="true"
-        :options="(options as any)"
+        :options="(allOptions as any)"
         @search="onSearch"
         :inputId="inputId"
         :placeholder="placeholder"
         :isLoading="isLoading"
-        :modelValue="(modelValue as any)"
-        @update:modelValue="(val: any) => handleChange(val)"
+        :modelValue="selectedValues"
+        @update:modelValue="handleValueChange"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import VueSelect, { type Option } from 'vue3-select-component';
 import { debounce, snakeCase } from 'lodash-es';
 
@@ -33,9 +33,28 @@ const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
 
 // Reactive data
-const options = ref<Option<number>[]>([]);
+// Store search results separately from pre-selected values
+const searchOptions = ref<Option<number>[]>([]);
 const searchPath = computed(() => `${window.location.origin}/${props.searchPathIdentifier}/search.json`);
 const isLoading = ref(false);
+
+// Combine pre-selected values with search results for the options list
+// This ensures selected values can always be looked up by the component
+const allOptions = computed(() => {
+  const selected = props.modelValue;
+  const searched = searchOptions.value;
+  // Merge, avoiding duplicates by value
+  const merged = [...selected];
+  for (const opt of searched) {
+    if (!merged.some(s => s.value === opt.value)) {
+      merged.push(opt);
+    }
+  }
+  return merged;
+});
+
+// Extract just the values for modelValue (vue3-select-component expects values, not Options)
+const selectedValues = computed(() => props.modelValue.map(opt => opt.value));
 
 const defaultOptionFunc = (item: { id: number; name: string }): Option<number> => ({
   label: item.name,
@@ -43,8 +62,14 @@ const defaultOptionFunc = (item: { id: number; name: string }): Option<number> =
 });
 
 // Methods
-function handleChange(selectedItems: Option<number>[]) {
-  emit('update:modelValue', selectedItems);
+// When values change, look up full Option objects and emit
+function handleValueChange(values: number | number[]) {
+  // vue3-select-component emits array for isMulti
+  const valuesArray = Array.isArray(values) ? values : [values];
+  const selectedOptions = valuesArray
+    .map(v => allOptions.value.find(opt => opt.value === v))
+    .filter((opt): opt is Option<number> => opt !== undefined);
+  emit('update:modelValue', selectedOptions);
 }
 
 /*
@@ -62,7 +87,7 @@ const onSearch = debounce(async (search: string) => {
   });
 
   const data: { id: number; name: string }[] = await response.json();
-  options.value = data.map(defaultOptionFunc);
+  searchOptions.value = data.map(defaultOptionFunc);
   isLoading.value = false;
 }, 250);
 
