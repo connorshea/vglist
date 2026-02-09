@@ -15,7 +15,7 @@
     "lodash-es": "^4.17.23",
     "mini-css-extract-plugin": "^2.10.0",
     "sass-embedded": "^1.97.3",
-    "sass-loader": "^16.0.6",
+    "sass-loader": "^16.0.7",
     "swc-loader": "^0.2.7",
     "turbolinks": "^5.2.0",
     "typescript": "^5.9.3",
