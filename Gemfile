@@ -62,7 +62,7 @@ gem 'ruby-progressbar', '~> 1.13', require: false
 
 # Use Sentry for error tracking in production.
 gem 'sentry-ruby', '~> 6.3.0'
-gem 'sentry-rails', '~> 6.3.0'
+gem 'sentry-rails', '~> 6.3.1'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 2.5.18'
