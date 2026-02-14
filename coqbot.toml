@@ -1,3 +1,0 @@
-# Config for syncing to gitlab https://github.com/coq/bot
-[mapping]
-gitlab = "vglist/vglist"
