@@ -1,10 +1,10 @@
-@use 'bulma-variables' as bv;
-@use 'bulma/sass/utilities/mixins';
-@use 'sass:color';
-@use 'padding-and-margins';
-@use 'utilities';
-@use 'home';
-@use 'tooltip';
+@use "bulma-variables" as bv;
+@use "bulma/sass/utilities/mixins";
+@use "sass:color";
+@use "padding-and-margins";
+@use "utilities";
+@use "home";
+@use "tooltip";
 
 :root {
   color-scheme: light dark;
@@ -20,7 +20,11 @@
   --bulma-background-l: 98%;
   --bulma-text-l: 29%;
 
-  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  --bulma-scheme-main: hsl(
+    var(--bulma-scheme-h),
+    var(--bulma-scheme-s),
+    var(--bulma-scheme-main-l)
+  );
   --bulma-background: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-background-l));
   --bulma-text: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-text-l));
 
@@ -48,7 +52,10 @@
     --bulma-tabs-border-bottom-color: var(--bulma-border-hover);
   }
 
-  .control, .input, .textarea, .select {
+  .control,
+  .input,
+  .textarea,
+  .select {
     --bulma-input-background-l-delta: 6%;
     --bulma-input-border-l-delta: -20%;
   }
@@ -67,7 +74,11 @@
     --bulma-scheme-main-bis-l: 27%;
     --bulma-scheme-main-ter-l: 30%;
 
-    --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+    --bulma-scheme-main: hsl(
+      var(--bulma-scheme-h),
+      var(--bulma-scheme-s),
+      var(--bulma-scheme-main-l)
+    );
     --bulma-background-l: 20%;
     --bulma-text-l: 100%;
 
@@ -92,13 +103,18 @@
       --bulma-box-background-color: var(--bulma-scheme-main-ter);
     }
 
-    .control, .input, .textarea, .select {
+    .control,
+    .input,
+    .textarea,
+    .select {
       --bulma-input-background-l-delta: 6%;
       --bulma-input-border-l-delta: 20%;
     }
 
     // Override the menu list items in dark mode to match the background color of the menu box container.
-    .menu-list a, .menu-list button, .menu-list .menu-item {
+    .menu-list a,
+    .menu-list button,
+    .menu-list .menu-item {
       --bulma-menu-item-h: var(--bulma-scheme-h);
       --bulma-menu-item-s: var(--bulma-scheme-s);
       --bulma-menu-item-background-l: var(--bulma-scheme-main-ter-l);
@@ -141,7 +157,8 @@ nav.navbar {
       transition: border-bottom 200ms;
       --bulma-navbar-item-background-a: 0;
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         --bulma-navbar-item-background-a: 0.05;
         border-bottom: 2px solid rgba(255, 255, 255, 0.8);
       }
@@ -154,14 +171,17 @@ nav.navbar {
         transition: color 0ms;
         border-bottom: 0;
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           border-bottom: 0;
         }
 
-        &:hover, &:focus, &.is-active {
+        &:hover,
+        &:focus,
+        &.is-active {
           // On focus (e.g. via arrow key navigation), use dark text in light mode, light text in dark mode.
           --bulma-navbar-item-color: hsl(0, 0%, var(--bulma-text-l));
-          --bulma-navbar-item-background-a: 0.10;
+          --bulma-navbar-item-background-a: 0.1;
 
           @media (prefers-color-scheme: dark) {
             // Need more of a difference in dark mode for it to be visible.
@@ -285,7 +305,7 @@ nav.navbar {
   }
 }
 
-.file-select > input[type='file'] {
+.file-select > input[type="file"] {
   display: none;
 }
 
@@ -328,7 +348,7 @@ nav.navbar {
       max-width: 100%;
       object-fit: contain;
       object-position: top left;
-      
+
       @include mixins.touch {
         object-position: top center;
         max-height: 300px;
@@ -682,25 +702,30 @@ nav.navbar {
 // Turn the button red and add a shaking animation when there's an error.
 .js-submit-button-error {
   background-color: #ff3860 !important;
-  animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
 }
 
 @keyframes shake {
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
-  
-  20%, 80% {
+
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-4px, 0, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(4px, 0, 0);
   }
 }
@@ -759,7 +784,9 @@ nav.navbar {
   background-color: rgba(255, 255, 255, 0.25);
   border: 0;
   border-radius: 3px;
-  transition: background-color 250ms, color 250ms;
+  transition:
+    background-color 250ms,
+    color 250ms;
 
   &::placeholder {
     // Force it to be while when not-focused so it's visible on the light-purple background.
@@ -815,15 +842,20 @@ nav.navbar {
   .vs__dropdown-toggle {
     border: 1px solid var(--bulma-input-border-color);
     border-radius: var(--bulma-input-radius);
-    background-color: hsl(var(--bulma-input-h), var(--bulma-input-s), calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta)));
+    background-color: hsl(
+      var(--bulma-input-h),
+      var(--bulma-input-s),
+      calc(var(--bulma-input-background-l) + var(--bulma-input-background-l-delta))
+    );
 
     &:hover {
       --bulma-input-border-l-delta: var(--bulma-input-hover-border-l-delta);
     }
-    
+
     &:focus,
     &.vs--open {
-      border: 1px solid hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
+      border: 1px solid
+        hsl(var(--bulma-input-focus-h), var(--bulma-input-focus-s), var(--bulma-input-focus-l));
     }
   }
 

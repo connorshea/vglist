@@ -78,7 +78,7 @@ Similar tracking sites for movies/television/anime:
     - Some games can't be completed (e.g. Overwatch, Counter-Strike, etc.), should that have a specific status?
     - What about games that are in development, like Early Access games?
     - Also worth noting that you can rent or borrow games, so you may not own them but _have_ completed them.
-    - Maybe also have Completed*, which is "Essentially Completed" for games where you didn't _quite_ complete it, but you feel you're finished with it?
+    - Maybe also have Completed\*, which is "Essentially Completed" for games where you didn't _quite_ complete it, but you feel you're finished with it?
   - [x] Start Date / Completion Date
   - [x] Comments (any notes you want to add about the game, essentially a mini review)
   - [ ] Replayed (A counter for the number of times you've replayed a game)

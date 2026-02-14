@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "typecheck": "tsc --noEmit",
+    "typecheck:vue": "vue-tsc --noEmit",
+    "typecheck:full": "yarn run typecheck && yarn run typecheck:vue",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
   "dependencies": {
     "@rails/activestorage": "~7.2.2",
     "@rails/ujs": "7.1.3-4",
@@ -33,15 +41,8 @@
     "@types/turbolinks": "^5.2.2",
     "graphql": "^16.12.0",
     "graphql-schema-linter": "^3.0.1",
-    "prettier": "3.8.1",
+    "oxfmt": "^0.32.0",
     "vue-tsc": "^3.2.4"
-  },
-  "scripts": {
-    "prettier": "prettier --write './app/javascript/**/*.{js,ts,vue,scss}'",
-    "build": "webpack --config webpack.config.js",
-    "typecheck": "tsc --noEmit",
-    "typecheck:vue": "vue-tsc --noEmit",
-    "typecheck:full": "yarn run typecheck && yarn run typecheck:vue"
   },
   "browserslist": [
     "baseline widely available"

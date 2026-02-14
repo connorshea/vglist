@@ -6,7 +6,7 @@
         :isMulti="true"
         :isTaggable="true"
         :inputId="inputId"
-        :options="(modelValue as any)"
+        :options="modelValue as any"
         :modelValue="selectedValues"
         @update:modelValue="handleValueChange"
       />
@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import VueSelect, { type Option } from 'vue3-select-component';
-import { snakeCase } from 'lodash-es';
+import { computed } from "vue";
+import VueSelect, { type Option } from "vue3-select-component";
+import { snakeCase } from "lodash-es";
 
 interface Props {
   label: string;
@@ -26,22 +26,22 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 // Extract just the values for modelValue (vue3-select-component expects values, not Options)
-const selectedValues = computed(() => props.modelValue.map(opt => opt.value));
+const selectedValues = computed(() => props.modelValue.map((opt) => opt.value));
 
 // Methods
 // For taggable selects, new values are strings that become both value and label
 function handleValueChange(values: string | string[]) {
   // vue3-select-component emits array for isMulti
   const valuesArray = Array.isArray(values) ? values : [values];
-  const selectedOptions = valuesArray.map(v => {
+  const selectedOptions = valuesArray.map((v) => {
     // Try to find existing option, or create new one for tagged values
-    const existing = props.modelValue.find(opt => opt.value === v);
+    const existing = props.modelValue.find((opt) => opt.value === v);
     return existing ?? { value: v, label: v };
   });
-  emit('update:modelValue', selectedOptions);
+  emit("update:modelValue", selectedOptions);
 }
 
 // Computed properties

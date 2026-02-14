@@ -19,9 +19,20 @@ jobs:
       - uses: actions/checkout@v6.0.2
       - uses: ruby/setup-ruby@v1.288.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
       - run: bundle exec rubocop
+
+  oxfmt:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-node@v6.2.0
+        with:
+          node-version: "22"
+      - run: corepack enable
+      - run: yarn install --frozen-lockfile
+      - run: yarn run fmt:check
 
   typescript:
     runs-on: ubuntu-slim
@@ -29,7 +40,7 @@ jobs:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-node@v6.2.0
         with:
-          node-version: '22'
+          node-version: "22"
       - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn run tsc --noEmit
@@ -43,7 +54,7 @@ jobs:
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
@@ -56,11 +67,11 @@ jobs:
       - uses: actions/checkout@v6.0.2
       - uses: ruby/setup-ruby@v1.288.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
       - uses: actions/setup-node@v6.2.0
         with:
-          node-version: '22'
+          node-version: "22"
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
@@ -77,7 +88,7 @@ jobs:
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
@@ -92,11 +103,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
       - uses: ruby/setup-ruby@v1.288.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
@@ -107,14 +118,14 @@ jobs:
   rspec:
     runs-on: ubuntu-latest
     env:
-      COVERAGE_COMMAND_NAME: 'RSpec:Unit'
+      COVERAGE_COMMAND_NAME: "RSpec:Unit"
     services:
       postgres:
         image: postgres:17
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
@@ -129,11 +140,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
       - uses: ruby/setup-ruby@v1.288.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
       - uses: actions/setup-node@v6.2.0
         with:
-          node-version: '22'
+          node-version: "22"
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
@@ -161,14 +172,14 @@ jobs:
   rspec_features:
     runs-on: ubuntu-latest
     env:
-      COVERAGE_COMMAND_NAME: 'RSpec:Features'
+      COVERAGE_COMMAND_NAME: "RSpec:Features"
     services:
       postgres:
         image: postgres:17
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
@@ -183,11 +194,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
       - uses: ruby/setup-ruby@v1.288.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
       - uses: actions/setup-node@v6.2.0
         with:
-          node-version: '22'
+          node-version: "22"
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
@@ -219,7 +230,7 @@ jobs:
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
@@ -232,11 +243,11 @@ jobs:
       - uses: actions/checkout@v6.0.2
       - uses: ruby/setup-ruby@v1.288.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
       - uses: actions/setup-node@v6.2.0
         with:
-          node-version: '22'
+          node-version: "22"
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml

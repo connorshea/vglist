@@ -10,8 +10,7 @@
         <!-- Display errors if there are any. -->
         <div class="notification errors-notification is-danger" v-if="errors.length > 0">
           <p>
-            {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented this game from
-            being merged:
+            {{ errors.length > 1 ? "Errors" : "An error" }} prevented this game from being merged:
           </p>
           <ul>
             <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -28,7 +27,13 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button @click="onSave" class="button is-primary js-submit-button" :disabled="!gameSelected">Submit</button>
+        <button
+          @click="onSave"
+          class="button is-primary js-submit-button"
+          :disabled="!gameSelected"
+        >
+          Submit
+        </button>
         <button @click="onClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -36,11 +41,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Option } from 'vue3-select-component';
-import SingleSelect from './fields/single-select.vue';
-import VglistUtils from '../utils';
-import Turbolinks from 'turbolinks';
+import { ref } from "vue";
+import type { Option } from "vue3-select-component";
+import SingleSelect from "./fields/single-select.vue";
+import VglistUtils from "../utils";
+import Turbolinks from "turbolinks";
 
 interface Props {
   game: { id: number; name: string };
@@ -48,22 +53,22 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  game: () => ({ id: 0, name: '' })
+  game: () => ({ id: 0, name: "" }),
 });
 
-const emit = defineEmits(['close', 'save']);
+const emit = defineEmits(["close", "save"]);
 
 const errors = ref<string[]>([]);
 const gameSelected = ref(false);
 const gameA = ref<Option<number> | null>(null);
 
 function onClose() {
-  emit('close');
+  emit("close");
 }
 
 function onSave() {
   if (!gameA.value) {
-    errors.value = ['Please select a game'];
+    errors.value = ["Please select a game"];
     return;
   }
 
@@ -71,24 +76,21 @@ function onSave() {
   const gameBId = props.game.id;
   const mergePath = `/games/${gameAId}/merge/${gameBId}.json`;
 
-  VglistUtils.rawAuthenticatedFetch(
-    mergePath,
-    'POST'
-  ).then(response => {
+  VglistUtils.rawAuthenticatedFetch(mergePath, "POST").then((response) => {
     // HTTP 301 response
     if (response.redirected) {
       Turbolinks.clearCache();
       Turbolinks.visit(response.url);
-    // If it's not a redirect, check it for errors and display them.
+      // If it's not a redirect, check it for errors and display them.
     } else {
-      response.json().then(json => {
+      response.json().then((json) => {
         errors.value = json.errors;
       });
-      const submitButton = document.querySelector('.js-submit-button');
+      const submitButton = document.querySelector(".js-submit-button");
       if (submitButton) {
-        submitButton.classList.add('js-submit-button-error');
+        submitButton.classList.add("js-submit-button-error");
         setTimeout(() => {
-          submitButton.classList.remove('js-submit-button-error');
+          submitButton.classList.remove("js-submit-button-error");
         }, 2000);
       }
     }

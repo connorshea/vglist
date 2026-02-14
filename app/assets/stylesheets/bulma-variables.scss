@@ -1,22 +1,21 @@
-@forward 'bulma/sass/utilities' with (
+@forward "bulma/sass/utilities" with (
   // Fix Bulma's usage of css variables causing postcss to spam warnings.
   // https://github.com/jgthms/bulma/issues/1190#issuecomment-356672849
   $variable-columns: false,
   $control-height: 2.25em,
   $control-padding-vertical: calc(0.375em - 1px),
   $control-padding-horizontal: calc(0.625em - 1px),
-
   $link: hsl(217.1, 70.8%, 52.9%),
   $primary: hsl(204, 86%, 53%),
-  $danger: hsl(347.8, 85.8%, 58.4%),
+  $danger: hsl(347.8, 85.8%, 58.4%)
 );
 
-@forward 'bulma/sass/elements' with (
+@forward "bulma/sass/elements" with (
   $button-padding-vertical: calc(0.375em - 1px),
   $button-padding-horizontal: 0.75em
 );
 
-@forward 'bulma/sass/components' with (
+@forward "bulma/sass/components" with (
   // Ensure the text is white.
   $navbar-item-color-l: 100%,
   $navbar-item-color: hsl(0, 0%, 100%),
@@ -28,47 +27,47 @@
 
   $navbar-divider-height: 1px,
 
-  $navbar-dropdown-boxed-shadow: 'rgba(10, 10, 10, 0.1) 0px 8px 8px 0px',
+  $navbar-dropdown-boxed-shadow: "rgba(10, 10, 10, 0.1) 0px 8px 8px 0px",
 
   // Revert to the old, better shadow style from Bulma pre-0.8.0.
-  $panel-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+  $panel-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
   // $shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
-  $card-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
-  $dropdown-content-shadow: '0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)',
+  $card-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
+  $dropdown-content-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
 
   // Reduce the radius a bit from 0.75rem.
-  $card-radius: 0.5rem,
+  $card-radius: 0.5rem
 );
 
-@forward 'bulma/sass/form' with (
+@forward "bulma/sass/form" with (
   // Remove shadows from inputs.
   $input-shadow: none,
   $input-focus-shadow-size: 0,
-  $input-radius: 4px,
+  $input-radius: 4px
 );
 
-@forward 'bulma/sass/helpers' with (
+@forward "bulma/sass/helpers" with (
   // Customize the spacing values for Bulma so the margin and padding classes get created with the right values.
   $spacing-values: (
-    "0": 0,
-    "5": 5px,
-    "10": 10px,
-    "15": 15px,
-    "20": 20px,
-    "25": 25px,
-    "30": 30px,
-    "35": 35px,
-    "40": 40px,
-    "45": 45px,
-    "50": 50px,
-    "75": 75px,
-    "100": 100px
-  )
+      "0": 0,
+      "5": 5px,
+      "10": 10px,
+      "15": 15px,
+      "20": 20px,
+      "25": 25px,
+      "30": 30px,
+      "35": 35px,
+      "40": 40px,
+      "45": 45px,
+      "50": 50px,
+      "75": 75px,
+      "100": 100px
+    )
 );
 
-@forward 'bulma/sass/base';
-@forward 'bulma/sass/grid';
-@forward 'bulma/sass/layout';
+@forward "bulma/sass/base";
+@forward "bulma/sass/grid";
+@forward "bulma/sass/layout";
 
 // Import the themes so that all CSS variables have a value
-@forward 'bulma/sass/themes';
+@forward "bulma/sass/themes";

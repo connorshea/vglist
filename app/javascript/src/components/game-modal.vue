@@ -10,8 +10,8 @@
         <!-- Display errors if there are any. -->
         <div class="notification errors-notification is-danger" v-if="errors.length > 0">
           <p>
-            {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented this game from
-            being added to your library:
+            {{ errors.length > 1 ? "Errors" : "An error" }} prevented this game from being added to
+            your library:
           </p>
           <ul>
             <li v-for="error in errors" :key="error">{{ error }}</li>
@@ -112,16 +112,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { Option } from 'vue3-select-component';
-import TextArea from './fields/text-area.vue';
-import NumberField from './fields/number-field.vue';
-import DateField from './fields/date-field.vue';
-import SingleSelect from './fields/single-select.vue';
-import MultiSelect from './fields/multi-select.vue';
-import StaticSingleSelect from './fields/static-single-select.vue';
-import VglistUtils from '../utils';
-import type { CompletionStatus } from '../types';
+import { ref, computed } from "vue";
+import type { Option } from "vue3-select-component";
+import TextArea from "./fields/text-area.vue";
+import NumberField from "./fields/number-field.vue";
+import DateField from "./fields/date-field.vue";
+import SingleSelect from "./fields/single-select.vue";
+import MultiSelect from "./fields/multi-select.vue";
+import StaticSingleSelect from "./fields/static-single-select.vue";
+import VglistUtils from "../utils";
+import type { CompletionStatus } from "../types";
 
 // Helper to convert { id, name } to { value, label } for vue3-select-component
 function toOption(item: { id: number; name: string }): Option<number> {
@@ -134,13 +134,13 @@ function toOptions(items: Array<{ id: number; name: string }>): Option<number>[]
 }
 
 const completionStatuses: Record<CompletionStatus, string> = {
-  unplayed: 'Unplayed',
-  in_progress: 'In Progress',
-  paused: 'Paused',
-  dropped: 'Dropped',
-  completed: 'Completed',
-  fully_completed: '100% Completed',
-  not_applicable: 'N/A'
+  unplayed: "Unplayed",
+  in_progress: "In Progress",
+  paused: "Paused",
+  dropped: "Dropped",
+  completed: "Completed",
+  fully_completed: "100% Completed",
+  not_applicable: "N/A",
 };
 
 interface GamePurchaseSubmittableData {
@@ -173,110 +173,109 @@ interface Props {
   game?: { id: number; name: string } | null;
   userId: number;
   isActive: boolean;
-  gameModalState: 'create' | 'update' | 'createWithGame';
+  gameModalState: "create" | "update" | "createWithGame";
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  rating: '',
-  hours_played: '',
+  rating: "",
+  hours_played: "",
   replay_count: 0,
-  comments: '',
+  comments: "",
   platforms: () => [],
   stores: () => [],
 });
 
-const emit = defineEmits(['close', 'create', 'closeAndRefresh']);
+const emit = defineEmits(["close", "create", "closeAndRefresh"]);
 
 const errors = ref<string[]>([]);
 
 const gamePurchase = ref({
   comments: props.comments,
   rating: props.rating,
-  game: props.game ? toOption(props.game) : null as Option<number> | null,
+  game: props.game ? toOption(props.game) : (null as Option<number> | null),
   userId: props.userId,
   completion_status: props.completion_status as Option<CompletionStatus> | null,
   start_date: props.start_date,
-  hours_played: typeof props.hours_played === 'string' ? parseFloat(props.hours_played) : props.hours_played,
+  hours_played:
+    typeof props.hours_played === "string" ? parseFloat(props.hours_played) : props.hours_played,
   replay_count: props.replay_count,
   completion_date: props.completion_date,
   platforms: toOptions(props.platforms),
-  stores: toOptions(props.stores)
+  stores: toOptions(props.stores),
 });
 
 const formData = {
-  class: 'game_purchase',
+  class: "game_purchase",
   comments: {
-    label: 'Comments',
-    attribute: 'comments'
+    label: "Comments",
+    attribute: "comments",
   },
   rating: {
-    label: 'Rating (out of 100)',
-    attribute: 'rating'
+    label: "Rating (out of 100)",
+    attribute: "rating",
   },
   hoursPlayed: {
-    label: 'Hours Played',
-    attribute: 'hours_played'
+    label: "Hours Played",
+    attribute: "hours_played",
   },
   replayCount: {
-    label: 'Replay Count',
-    attribute: 'replay_count'
+    label: "Replay Count",
+    attribute: "replay_count",
   },
   completionStatus: {
-    label: 'Completion Status'
+    label: "Completion Status",
   },
   startDate: {
-    label: 'Start Date',
-    attribute: 'start_date'
+    label: "Start Date",
+    attribute: "start_date",
   },
   completionDate: {
-    label: 'Completion Date',
-    attribute: 'completion_date'
+    label: "Completion Date",
+    attribute: "completion_date",
   },
   platforms: {
-    label: 'Platforms'
+    label: "Platforms",
   },
   stores: {
-    label: 'Stores'
+    label: "Stores",
   },
   game: {
-    label: 'Game'
-  }
+    label: "Game",
+  },
 };
 
-const gameSelected = ref(props.gameModalState !== 'create');
+const gameSelected = ref(props.gameModalState !== "create");
 
 const gamePurchasesSubmitUrl = computed(() => {
-  return props.gameModalState === 'update'
-    ? `/game_purchases/${props.id}`
-    : '/game_purchases';
+  return props.gameModalState === "update" ? `/game_purchases/${props.id}` : "/game_purchases";
 });
 
 const modalTitle = computed(() => {
-  return gamePurchase.value.game?.label ?? 'Add a game to your library';
+  return gamePurchase.value.game?.label ?? "Add a game to your library";
 });
 
 const formattedCompletionStatuses = computed(() => {
-  return Object.entries(completionStatuses).map(status => {
+  return Object.entries(completionStatuses).map((status) => {
     return { label: status[1], value: status[0] };
   });
 });
 
 function onClose() {
-  emit('close');
+  emit("close");
 }
 
 function onSave() {
   const gp = gamePurchase.value;
   if (!gp.game) {
-    errors.value = ['Please select a game'];
+    errors.value = ["Please select a game"];
     return;
   }
 
   const submittableData: GamePurchaseSubmittableData = {
     game_purchase: {
       game_id: gp.game.value, // Extract ID from Option format
-      user_id: gp.userId
-    }
+      user_id: gp.userId,
+    },
   };
 
   if (gp.comments) {
@@ -288,16 +287,16 @@ function onSave() {
   }
 
   if (
-    (typeof gp.hours_played === 'string' && gp.hours_played !== '') ||
-    (typeof gp.hours_played === 'number' && !isNaN(gp.hours_played))
+    (typeof gp.hours_played === "string" && gp.hours_played !== "") ||
+    (typeof gp.hours_played === "number" && !isNaN(gp.hours_played))
   ) {
     submittableData.game_purchase.hours_played = gp.hours_played;
   }
 
   if (
-    gp.replay_count !== '' &&
+    gp.replay_count !== "" &&
     gp.replay_count !== null &&
-    typeof gp.replay_count !== 'undefined'
+    typeof gp.replay_count !== "undefined"
   ) {
     submittableData.game_purchase.replay_count = gp.replay_count;
   }
@@ -306,32 +305,35 @@ function onSave() {
     submittableData.game_purchase.completion_status = gp.completion_status.value;
   }
 
-  if (
-    gp.start_date !== '' &&
-    gp.start_date !== null
-  ) {
+  if (gp.start_date !== "" && gp.start_date !== null) {
     submittableData.game_purchase.start_date = gp.start_date;
   }
 
-  if (
-    gp.completion_date !== '' &&
-    gp.completion_date !== null
-  ) {
+  if (gp.completion_date !== "" && gp.completion_date !== null) {
     submittableData.game_purchase.completion_date = gp.completion_date;
   }
 
   // Extract IDs from Option format (value property contains the ID)
   if (gp.platforms.length !== 0) {
-    submittableData.game_purchase.platform_ids = gp.platforms.map(p => p.value);
+    submittableData.game_purchase.platform_ids = gp.platforms.map((p) => p.value);
   }
 
   if (gp.stores.length !== 0) {
-    submittableData.game_purchase.store_ids = gp.stores.map(s => s.value);
+    submittableData.game_purchase.store_ids = gp.stores.map((s) => s.value);
   }
 
-  (['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'] as Array<keyof GamePurchaseSubmittableData['game_purchase']>).forEach((property) => {
-    let value = property === 'comments' ? "" : null;
-    if (typeof submittableData.game_purchase[property] === 'undefined') {
+  (
+    [
+      "comments",
+      "rating",
+      "hours_played",
+      "completion_status",
+      "start_date",
+      "completion_date",
+    ] as Array<keyof GamePurchaseSubmittableData["game_purchase"]>
+  ).forEach((property) => {
+    let value = property === "comments" ? "" : null;
+    if (typeof submittableData.game_purchase[property] === "undefined") {
       (submittableData.game_purchase as any)[property] = value;
     }
   });
@@ -340,32 +342,30 @@ function onSave() {
     submittableData.game_purchase.replay_count = 0;
   }
 
-  let method: 'POST' | 'PUT' = 'POST';
-  if (
-    props.gameModalState === 'create' ||
-    props.gameModalState === 'createWithGame'
-  ) {
-    method = 'POST';
-  } else if (props.gameModalState === 'update') {
-    method = 'PUT';
+  let method: "POST" | "PUT" = "POST";
+  if (props.gameModalState === "create" || props.gameModalState === "createWithGame") {
+    method = "POST";
+  } else if (props.gameModalState === "update") {
+    method = "PUT";
   }
 
   VglistUtils.authenticatedFetch(
     gamePurchasesSubmitUrl.value,
     method,
-    JSON.stringify(submittableData)
-  ).then(gamePurchase => {
-      emit('create', gamePurchase);
-      emit('closeAndRefresh');
+    JSON.stringify(submittableData),
+  )
+    .then((gamePurchase) => {
+      emit("create", gamePurchase);
+      emit("closeAndRefresh");
     })
-    .catch(errorsResp => {
+    .catch((errorsResp) => {
       errors.value = errorsResp;
-      const submitButton = document.querySelector('.js-submit-button');
+      const submitButton = document.querySelector(".js-submit-button");
       if (submitButton) {
         // Add a class to the button to indicate an error, then remove it.
-        submitButton.classList.add('js-submit-button-error');
+        submitButton.classList.add("js-submit-button-error");
         setTimeout(() => {
-          submitButton.classList.remove('js-submit-button-error');
+          submitButton.classList.remove("js-submit-button-error");
         }, 2000);
       }
     });
@@ -374,5 +374,4 @@ function onSave() {
 function selectGame() {
   gameSelected.value = true;
 }
-
 </script>

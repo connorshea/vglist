@@ -30,7 +30,7 @@ development:
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user that initialized the database.
   username: postgres
-  
+
   # The password associated with the postgres role (username).
   password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'password' %>
 
@@ -59,10 +59,9 @@ test:
   <<: *default
   database: vglist_test
   username: postgres
-  
+
   host: <%= ENV['VGLIST_DATABASE_HOST'] || 'localhost' %>
   password: <%= ENV['VGLIST_DATABASE_PASSWORD'] || 'password' %>
-  
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

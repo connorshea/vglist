@@ -3,7 +3,7 @@
     <label v-if="label" :for="inputId" class="label">{{ label }}</label>
     <div :class="parentClass">
       <vue-select
-        :options="(allOptions as any)"
+        :options="allOptions as any"
         :isDisabled="disabled"
         @search="onSearch"
         :inputId="label ? inputId : undefined"
@@ -18,15 +18,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import VueSelect, { type Option } from 'vue3-select-component';
-import { debounce, snakeCase } from 'lodash-es';
+import { ref, computed } from "vue";
+import VueSelect, { type Option } from "vue3-select-component";
+import { debounce, snakeCase } from "lodash-es";
 
 interface Props {
   label?: string;
   modelValue?: Option<number> | null;
   disabled?: boolean;
-  searchPathIdentifier: 'games' | 'series' | 'platforms' | 'genres' | 'engines' | 'companies' | 'stores';
+  searchPathIdentifier:
+    | "games"
+    | "series"
+    | "platforms"
+    | "genres"
+    | "engines"
+    | "companies"
+    | "stores";
   grandparentClass?: string;
   parentClass?: string;
   placeholder?: string;
@@ -35,16 +42,18 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
-  grandparentClass: 'field',
-  parentClass: 'control'
+  grandparentClass: "field",
+  parentClass: "control",
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 // Reactive data
 // Store search results separately from pre-selected value
 const searchOptions = ref<Option<number>[]>([]);
-const searchPath = computed(() => `${window.location.origin}/${props.searchPathIdentifier}/search.json`);
+const searchPath = computed(
+  () => `${window.location.origin}/${props.searchPathIdentifier}/search.json`,
+);
 const isLoading = ref(false);
 
 // Combine pre-selected value with search results for the options list
@@ -54,7 +63,7 @@ const allOptions = computed(() => {
   const searched = searchOptions.value;
   if (!selected) return searched;
   // Include selected option if not already in search results
-  if (searched.some(opt => opt.value === selected.value)) {
+  if (searched.some((opt) => opt.value === selected.value)) {
     return searched;
   }
   return [selected, ...searched];
@@ -65,19 +74,19 @@ const selectedValue = computed(() => props.modelValue?.value ?? null);
 
 const defaultOptionFunc = (item: { id: number; name: string }): Option<number> => ({
   label: item.name,
-  value: item.id
+  value: item.id,
 });
 
 // When value changes, look up full Option object and emit
 function handleValueChange(value: number | (number | null)[] | null) {
   // vue3-select-component can emit array for some edge cases, handle both
-  const singleValue = Array.isArray(value) ? value[0] ?? null : value;
+  const singleValue = Array.isArray(value) ? (value[0] ?? null) : value;
   if (singleValue === null) {
-    emit('update:modelValue', null);
+    emit("update:modelValue", null);
     return;
   }
-  const selectedOption = allOptions.value.find(opt => opt.value === singleValue);
-  emit('update:modelValue', selectedOption ?? null);
+  const selectedOption = allOptions.value.find((opt) => opt.value === singleValue);
+  emit("update:modelValue", selectedOption ?? null);
 }
 
 /*
@@ -86,12 +95,12 @@ function handleValueChange(value: number | (number | null)[] | null) {
 const onSearch = debounce(async (search: string) => {
   isLoading.value = true;
   const searchUrl = new URL(searchPath.value);
-  searchUrl.searchParams.append('query', search);
+  searchUrl.searchParams.append("query", search);
   try {
     const response = await fetch(searchUrl.toString(), {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     const data: { id: number; name: string }[] = await response.json();

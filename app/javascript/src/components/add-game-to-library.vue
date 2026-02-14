@@ -39,10 +39,10 @@
 </template>
 
 <script setup lang="ts">
-import GameModal from './game-modal.vue';
-import Rails from '@rails/ujs';
-import Turbolinks from 'turbolinks';
-import { ref, computed, onMounted } from 'vue';
+import GameModal from "./game-modal.vue";
+import Rails from "@rails/ujs";
+import Turbolinks from "turbolinks";
+import { ref, computed, onMounted } from "vue";
 
 interface Props {
   userId: number;
@@ -59,12 +59,12 @@ const props = defineProps<Props>();
 // Reactive data
 const mutableGamePurchase = ref<any>({});
 const isModalActive = ref(false);
-const gameModalState = computed(() => props.gamePurchaseExists ? 'update' : 'createWithGame');
+const gameModalState = computed(() => (props.gamePurchaseExists ? "update" : "createWithGame"));
 
 // Methods
 // TODO: Add a proper type here?
 function activateModal(game: any = {}) {
-  document.documentElement.classList.add('is-clipped');
+  document.documentElement.classList.add("is-clipped");
 
   // TODO: Cursed, do this better.
   if (Object.keys(mutableGamePurchase.value).length === 0) {
@@ -74,7 +74,7 @@ function activateModal(game: any = {}) {
 }
 
 function deactivateModal() {
-  document.documentElement.classList.remove('is-clipped');
+  document.documentElement.classList.remove("is-clipped");
   isModalActive.value = false;
 }
 
@@ -85,8 +85,8 @@ function closeAndRefresh() {
 async function addGameToLibrary() {
   const response = await fetch(`/games/${props.gameId}.json`, {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   });
 
   if (!response.ok) {
@@ -107,21 +107,21 @@ async function removeGameFromLibrary() {
   let removeGameFromLibraryPath = `/games/${props.gameId}/remove_game_from_library`;
 
   const headers: HeadersInit = {
-    Accept: 'application/json',
-    'X-CSRF-Token': Rails.csrfToken()!
+    Accept: "application/json",
+    "X-CSRF-Token": Rails.csrfToken()!,
   };
 
   const response = await fetch(removeGameFromLibraryPath, {
-    method: 'DELETE',
+    method: "DELETE",
     headers,
-    credentials: 'same-origin'
+    credentials: "same-origin",
   });
 
   if (response.ok) {
     Turbolinks.visit(window.location.href);
   } else {
     // Handle error
-    console.error('Failed to remove game from library');
+    console.error("Failed to remove game from library");
   }
 }
 
@@ -135,18 +135,18 @@ onMounted(() => {
     // TODO: Make this use async/await, although I'm not 100% sure if that's allowed here.
     fetch(`/game_purchases/${props.gamePurchaseId}.json`, {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => {
-        return response.json().then(json => {
+      .then((response) => {
+        return response.json().then((json) => {
           if (response.ok) {
             return Promise.resolve(json);
           }
           return Promise.reject(json);
         });
       })
-      .then(gamePurchase => {
+      .then((gamePurchase) => {
         mutableGamePurchase.value = gamePurchase;
       });
   }

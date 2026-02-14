@@ -33,29 +33,26 @@
         </div>
       </div>
     </nav>
-    <hr v-if="completionRateExists">
-    <div v-if="completionRateExists" class="has-text-centered has-text-weight-bold mb-5">Completion</div>
+    <hr v-if="completionRateExists" />
+    <div v-if="completionRateExists" class="has-text-centered has-text-weight-bold mb-5">
+      Completion
+    </div>
     <div v-if="completionRateExists" class="percentage-bar">
       <div
         v-for="(v, k, i) in statistics.completion_statuses"
         :key="k"
         :id="`completion-status-${i}`"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
-        :style="{ 'max-width': (completionStatusesCount ? ((v / completionStatusesCount) * 100) : 0) + '%' }"
+        :style="{
+          'max-width': (completionStatusesCount ? (v / completionStatusesCount) * 100 : 0) + '%',
+        }"
         @mouseenter="showPopover(i)"
         @mouseleave="hidePopover(i)"
         :aria-label="`${startCase(k)}: ${v}`"
       >
-        <div
-          :id="`popover-${i}`"
-          class="tooltip"
-          popover="auto"
-          data-tooltip-placement="top"
-        >
+        <div :id="`popover-${i}`" class="tooltip" popover="auto" data-tooltip-placement="top">
           <div class="tooltip-arrow"></div>
-          <div class="tooltip-inner">
-            {{ startCase(k) }} ({{ v }})
-          </div>
+          <div class="tooltip-inner">{{ startCase(k) }} ({{ v }})</div>
         </div>
       </div>
     </div>
@@ -63,9 +60,9 @@
 </template>
 
 <script setup lang="ts">
-import Rails from '@rails/ujs';
-import { startCase } from 'lodash-es';
-import { computed, onBeforeMount, ref } from 'vue';
+import Rails from "@rails/ujs";
+import { startCase } from "lodash-es";
+import { computed, onBeforeMount, ref } from "vue";
 
 type Statistics = {
   games_count: number;
@@ -90,10 +87,10 @@ const isLoading = ref(true);
 
 const getStatistics = () => {
   fetch(`/users/${props.userId}/statistics.json`)
-    .then(response => {
+    .then((response) => {
       return response.json();
     })
-    .then(stats => {
+    .then((stats) => {
       statistics.value = stats;
       isLoading.value = false;
     });
@@ -102,7 +99,7 @@ const getStatistics = () => {
 const showPopover = (i: number) => {
   // Do not display the popovers if the browser doesn't support anchoring.
   // TODO: Remove this check when Firefox fully supports CSS Anchoring.
-  if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+  if (!CSS.supports("anchor-name: none") || !CSS.supports("position-anchor: auto")) {
     return;
   }
   const pop = document.getElementById(`popover-${i}`);
@@ -111,20 +108,20 @@ const showPopover = (i: number) => {
     status.style.anchorName = `--popover-anchor`;
     pop.showPopover?.();
   }
-}
+};
 
 const hidePopover = (i: number) => {
   // Do not display the popovers if the browser doesn't support anchoring.
-  if (!CSS.supports('anchor-name: none') || !CSS.supports('position-anchor: auto')) {
+  if (!CSS.supports("anchor-name: none") || !CSS.supports("position-anchor: auto")) {
     return;
   }
   const pop = document.getElementById(`popover-${i}`);
   const status = document.getElementById(`completion-status-${i}`);
   if (pop && status) {
-    status.style.anchorName = 'none';
+    status.style.anchorName = "none";
     pop.hidePopover?.();
   }
-}
+};
 
 const completionStatusesCount = computed(() => {
   if (statistics.value) {

@@ -1,23 +1,28 @@
-import VglistUtils from './utils';
+import VglistUtils from "./utils";
 
 // This renders the user's API token on the Settings page when requested.
-document.addEventListener('turbolinks:load', () => {
-  let viewTokenButton = document.querySelector<HTMLButtonElement>('button.js-view-token-button');
+document.addEventListener("turbolinks:load", () => {
+  let viewTokenButton = document.querySelector<HTMLButtonElement>("button.js-view-token-button");
 
   if (viewTokenButton !== null) {
-    viewTokenButton.addEventListener('click', () => {
+    viewTokenButton.addEventListener("click", () => {
       const tokenPath = viewTokenButton.dataset.tokenPath;
-      if (!tokenPath) { return; }
+      if (!tokenPath) {
+        return;
+      }
 
-      VglistUtils.authenticatedFetch<string>(tokenPath, 'GET').then(token => {
+      VglistUtils.authenticatedFetch<string>(tokenPath, "GET")
+        .then((token) => {
           // Display the token and disable the "View Token" button.
-          const tokenHolder = document.querySelector<HTMLElement>('.js-token-holder');
-          if (!tokenHolder) { return; }
+          const tokenHolder = document.querySelector<HTMLElement>(".js-token-holder");
+          if (!tokenHolder) {
+            return;
+          }
           tokenHolder.innerHTML = token;
-          tokenHolder.classList.remove('is-hidden');
+          tokenHolder.classList.remove("is-hidden");
           viewTokenButton.disabled = true;
         })
-        .catch(errors => {
+        .catch((errors) => {
           // TODO: Actually handle the errors here somehow.
           console.log(errors);
         });

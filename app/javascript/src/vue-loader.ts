@@ -1,4 +1,4 @@
-import { createApp, h, type App } from 'vue';
+import { createApp, h, type App } from "vue";
 
 /**
  * This file is responsible for loading Vue components whenever we change pages
@@ -10,9 +10,9 @@ import { createApp, h, type App } from 'vue';
 // Store mounted apps to allow cleanup on Turbolinks navigation
 const mountedApps = new Map<HTMLElement, App>();
 
-(async function() {
+(async function () {
   const callback = () => {
-    const elems = Array.from(document.querySelectorAll('[data-vue-component]')) as HTMLElement[];
+    const elems = Array.from(document.querySelectorAll("[data-vue-component]")) as HTMLElement[];
     elems.forEach(async (elem: HTMLElement) => {
       // Skip if already mounted
       if (mountedApps.has(elem)) {
@@ -29,7 +29,7 @@ const mountedApps = new Map<HTMLElement, App>();
       // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
 
       const app = createApp({
-        render: () => h(comp, props)
+        render: () => h(comp, props),
       });
 
       // Mount directly on the element. Vue 3's mount() replaces the
@@ -50,7 +50,7 @@ const mountedApps = new Map<HTMLElement, App>();
     mountedApps.clear();
   };
 
-  document.addEventListener('turbolinks:before-cache', cleanup);
-  document.addEventListener('turbolinks:load', callback);
+  document.addEventListener("turbolinks:before-cache", cleanup);
+  document.addEventListener("turbolinks:load", callback);
   callback();
 })();

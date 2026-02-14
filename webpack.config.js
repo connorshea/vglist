@@ -1,23 +1,20 @@
-import { resolve } from 'path';
-import { VueLoaderPlugin } from 'vue-loader';
+import { resolve } from "path";
+import { VueLoaderPlugin } from "vue-loader";
 import webpack from "webpack";
 
 // Extracts CSS into .css file
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
-const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
+const mode = process.env.NODE_ENV === "development" ? "development" : "production";
 
 /**
  * @type {import('webpack').Configuration}
  */
 const config = {
   mode: mode,
-  devtool: mode === 'development' ? false : "source-map",
+  devtool: mode === "development" ? false : "source-map",
   entry: {
-    application: [
-      "./app/javascript/application.ts",
-      "./app/assets/stylesheets/application.scss",
-    ]
+    application: ["./app/javascript/application.ts", "./app/assets/stylesheets/application.scss"],
   },
   output: {
     filename: "[name].js",
@@ -26,46 +23,46 @@ const config = {
     path: resolve(import.meta.dirname, "app/assets/builds"),
   },
   optimization: {
-    moduleIds: 'deterministic',
+    moduleIds: "deterministic",
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(mode),
-      'process.env.SENTRY_DSN_JS': JSON.stringify(process.env.SENTRY_DSN_JS),
+      "process.env.NODE_ENV": JSON.stringify(mode),
+      "process.env.SENTRY_DSN_JS": JSON.stringify(process.env.SENTRY_DSN_JS),
       // Vue 3 feature flags
-      '__VUE_OPTIONS_API__': JSON.stringify(true),
-      '__VUE_PROD_DEVTOOLS__': JSON.stringify(false),
-      '__VUE_PROD_HYDRATION_MISMATCH_DETAILS__': JSON.stringify(false),
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
     }),
     new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1
+      maxChunks: 1,
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
   ],
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: "vue-loader",
         options: {
           compilerOptions: {
-            whitespace: 'condense'
-          }
-        }
+            whitespace: "condense",
+          },
+        },
       },
       {
         test: /(\.min)?\.s?[ac]ss$/i,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          "css-loader",
           {
-            loader: 'sass-loader',
+            loader: "sass-loader",
             options: {
-              api: 'modern-compiler',
-              implementation: 'sass-embedded'
-            }
-          }
+              api: "modern-compiler",
+              implementation: "sass-embedded",
+            },
+          },
         ],
       },
       {
@@ -78,20 +75,20 @@ const config = {
               jsc: {
                 parser: {
                   syntax: "typescript",
-                  tsx: false
-                }
-              }
+                  tsx: false,
+                },
+              },
             },
           },
-          resolve('./custom-loader'),
+          resolve("./custom-loader"),
         ],
-      }
-    ]
+      },
+    ],
   },
   resolve: {
     // Add additional file types
-    extensions: ['.ts', '.vue', '.js', '.scss', '.css', '.min.css'],
+    extensions: [".ts", ".vue", ".js", ".scss", ".css", ".min.css"],
   },
-}
+};
 
 export default config;

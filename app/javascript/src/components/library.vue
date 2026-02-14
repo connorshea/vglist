@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import LibraryTable from './library-table.vue';
-import GameModal from './game-modal.vue';
-import LibraryEditBar from './library-edit-bar.vue';
-import { ref, computed, onMounted } from 'vue';
+import LibraryTable from "./library-table.vue";
+import GameModal from "./game-modal.vue";
+import LibraryEditBar from "./library-edit-bar.vue";
+import { ref, computed, onMounted } from "vue";
 
 interface Props {
   gamePurchasesUrl: string;
@@ -44,7 +44,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isEditable: false
+  isEditable: false,
 });
 
 // Reactive data
@@ -60,32 +60,32 @@ const isLoading = ref(true);
 function loadGames(): void {
   fetch(props.gamePurchasesUrl, {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   })
-    .then(response => {
-      return response.json().then(json => {
+    .then((response) => {
+      return response.json().then((json) => {
         if (response.ok) {
           return Promise.resolve(json);
         }
         return Promise.reject(json);
       });
     })
-    .then(purchasedGames => {
+    .then((purchasedGames) => {
       games.value = purchasedGames;
       isLoading.value = false;
 
       // Make sure to trigger bulma:init, even if the load event has already fired.
       // This can theoretically trigger a race condtion because readyState
       // will be set to complete right before the load event is fired, but yolo.
-      if (document.readyState === 'complete') {
+      if (document.readyState === "complete") {
         // Emit a bulma init event to make sure that the filter dropdown is initialized.
-        let event = new Event('bulma:init');
+        let event = new Event("bulma:init");
         document.body.dispatchEvent(event);
       } else {
-        window.addEventListener('load', (_loadEvent) => {
+        window.addEventListener("load", (_loadEvent) => {
           // Emit a bulma init event to make sure that the filter dropdown is initialized.
-          let event = new Event('bulma:init');
+          let event = new Event("bulma:init");
           document.body.dispatchEvent(event);
         });
       }
@@ -100,7 +100,7 @@ function activateModal(game: any = {}) {
   if (!props.isEditable) {
     return;
   }
-  document.documentElement.classList.add('is-clipped');
+  document.documentElement.classList.add("is-clipped");
 
   // TODO: Probably replace this with a check for null/undefined?
   doesGamePurchaseExist.value = Object.entries(game).length > 0 ? false : true;
@@ -109,7 +109,7 @@ function activateModal(game: any = {}) {
 }
 
 function deactivateModal() {
-  document.documentElement.classList.remove('is-clipped');
+  document.documentElement.classList.remove("is-clipped");
 
   isModalActive.value = false;
 }
@@ -143,7 +143,7 @@ function closeAndRefresh() {
 // Computed properties
 const gameModalState = computed(() => {
   let currentGameExists = Object.keys(currentGame.value).length > 0;
-  return currentGameExists ? 'update' : 'create';
+  return currentGameExists ? "update" : "create";
 });
 
 // Lifecycle

@@ -1,12 +1,12 @@
-@use 'bulma/sass/utilities/mixins';
-@use 'bulma/sass/utilities/initial-variables' as iv;
+@use "bulma/sass/utilities/mixins";
+@use "bulma/sass/utilities/initial-variables" as iv;
 
 .home-section {
   padding-bottom: 100px;
   display: block;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;

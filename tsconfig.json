@@ -15,12 +15,7 @@
     "app/javascript/src/**/*.d.ts",
     "app/javascript/src/**/*.vue"
   ],
-  "exclude": [
-    "**/*.spec.ts",
-    "node_modules",
-    "vendor",
-    "public"
-  ],
+  "exclude": ["**/*.spec.ts", "node_modules", "vendor", "public"],
   "compileOnSave": false,
   "vueCompilerOptions": {
     "target": 3.5,
