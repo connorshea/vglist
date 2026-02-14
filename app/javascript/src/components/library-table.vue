@@ -118,7 +118,6 @@ interface GamePurchaseRow {
 }
 
 interface Props {
-  gamePurchasesUrl: string;
   isEditable: boolean;
   rows: GamePurchaseRow[];
   isLoading: boolean;
@@ -127,10 +126,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['edit', 'delete', 'addGame', 'loaded', 'selectedGamePurchasesChanged']);
+const emit = defineEmits(['edit', 'delete', 'addGame', 'selectedGamePurchasesChanged']);
 
 // Reactive state
-const games = ref<GamePurchaseRow[]>([]);
 const sorting = ref<SortingState>([]);
 const rowSelection = ref<RowSelectionState>({});
 const columnVisibility = ref<VisibilityState>({});
@@ -341,26 +339,6 @@ function onDelete(row: GamePurchaseRow) {
   }
 }
 
-function loadGames() {
-  fetch(props.gamePurchasesUrl, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => {
-      return response.json().then(json => {
-        if (response.ok) {
-          return Promise.resolve(json);
-        }
-        return Promise.reject(json);
-      });
-    })
-    .then(purchasedGames => {
-      games.value = purchasedGames;
-      emit('loaded');
-    });
-}
-
 function addGame() {
   emit('addGame');
 }
@@ -397,8 +375,6 @@ onMounted(() => {
     sorting.value = [{ id: 'rating', desc: true }];
   }
 
-  // Load games
-  loadGames();
 });
 </script>
 

@@ -6,7 +6,7 @@
         :isMulti="true"
         :options="(allOptions as any)"
         @search="onSearch"
-        :inputId="inputId"
+        :inputId="label ? inputId : undefined"
         :placeholder="placeholder"
         :isLoading="isLoading"
         :modelValue="selectedValues"
