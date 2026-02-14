@@ -1,7 +1,6 @@
 # vglist
 
-[![pipeline status](https://gitlab.com/vglist/vglist/badges/main/pipeline.svg)](https://gitlab.com/vglist/vglist/commits/main)
-[![coverage report](https://gitlab.com/vglist/vglist/badges/main/coverage.svg?job=rspec)](https://gitlab.com/vglist/vglist/commits/main)
+[![CI](https://github.com/connorshea/vglist/actions/workflows/ci.yml/badge.svg)](https://github.com/connorshea/vglist/actions/workflows/ci.yml)
 
 This is a Rails application for tracking your video game library. If you just want to use the site, visit [vglist.co](https://vglist.co)!
 
