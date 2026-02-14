@@ -23,7 +23,7 @@
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
             :disabled="true"
-            @input="selectGame"
+            @update:modelValue="selectGame"
           ></single-select>
 
           <static-single-select
@@ -99,7 +99,7 @@
             :label="formData.game.label"
             v-model="gamePurchase.game"
             :search-path-identifier="'games'"
-            @input="selectGame"
+            @update:modelValue="selectGame"
           ></single-select>
         </div>
       </section>
@@ -113,6 +113,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import type { Option } from 'vue3-select-component';
 import TextArea from './fields/text-area.vue';
 import NumberField from './fields/number-field.vue';
 import DateField from './fields/date-field.vue';
@@ -121,6 +122,16 @@ import MultiSelect from './fields/multi-select.vue';
 import StaticSingleSelect from './fields/static-single-select.vue';
 import VglistUtils from '../utils';
 import type { CompletionStatus } from '../types';
+
+// Helper to convert { id, name } to { value, label } for vue3-select-component
+function toOption(item: { id: number; name: string }): Option<number> {
+  return { value: item.id, label: item.name };
+}
+
+// Helper to convert array of { id, name } to Option[]
+function toOptions(items: Array<{ id: number; name: string }>): Option<number>[] {
+  return items.map(toOption);
+}
 
 const completionStatuses: Record<CompletionStatus, string> = {
   unplayed: 'Unplayed',
@@ -153,21 +164,18 @@ interface Props {
   rating?: number | string;
   hours_played?: number | string;
   replay_count?: number | string;
-  completion_status?: Record<string, any>;
+  completion_status?: { value: CompletionStatus; label: string } | null;
   start_date?: string;
   completion_date?: string;
   comments?: string;
-  platforms?: Array<{ id: string | number }>;
-  stores?: Array<{ id: string | number }>;
-  // TODO: Improve this type.
-  game?: Record<string, any>;
+  platforms?: Array<{ id: number; name: string }>;
+  stores?: Array<{ id: number; name: string }>;
+  game?: { id: number; name: string } | null;
   userId: number;
   isActive: boolean;
   gameModalState: 'create' | 'update' | 'createWithGame';
 }
 
-// TODO: replace withDefaults after Vue 3.5 upgrade.
-// https://vuejs.org/guide/components/props.html#reactive-props-destructure
 const props = withDefaults(defineProps<Props>(), {
   rating: '',
   hours_played: '',
@@ -175,7 +183,6 @@ const props = withDefaults(defineProps<Props>(), {
   comments: '',
   platforms: () => [],
   stores: () => [],
-  game: () => ({}),
 });
 
 const emit = defineEmits(['close', 'create', 'closeAndRefresh']);
@@ -185,15 +192,15 @@ const errors = ref<string[]>([]);
 const gamePurchase = ref({
   comments: props.comments,
   rating: props.rating,
-  game: props.game,
+  game: props.game ? toOption(props.game) : null as Option<number> | null,
   userId: props.userId,
-  completion_status: props.completion_status,
+  completion_status: props.completion_status as Option<CompletionStatus> | null,
   start_date: props.start_date,
   hours_played: typeof props.hours_played === 'string' ? parseFloat(props.hours_played) : props.hours_played,
   replay_count: props.replay_count,
   completion_date: props.completion_date,
-  platforms: props.platforms as Array<{ id: string | number }>,
-  stores: props.stores as Array<{ id: string | number }>
+  platforms: toOptions(props.platforms),
+  stores: toOptions(props.stores)
 });
 
 const formData = {
@@ -245,9 +252,7 @@ const gamePurchasesSubmitUrl = computed(() => {
 });
 
 const modalTitle = computed(() => {
-  return gamePurchase.value.game.name !== undefined
-    ? gamePurchase.value.game.name
-    : 'Add a game to your library';
+  return gamePurchase.value.game?.label ?? 'Add a game to your library';
 });
 
 const formattedCompletionStatuses = computed(() => {
@@ -262,9 +267,14 @@ function onClose() {
 
 function onSave() {
   const gp = gamePurchase.value;
+  if (!gp.game) {
+    errors.value = ['Please select a game'];
+    return;
+  }
+
   const submittableData: GamePurchaseSubmittableData = {
     game_purchase: {
-      game_id: gp.game.id,
+      game_id: gp.game.value, // Extract ID from Option format
       user_id: gp.userId
     }
   };
@@ -292,9 +302,7 @@ function onSave() {
     submittableData.game_purchase.replay_count = gp.replay_count;
   }
 
-  if (
-    gp.completion_status && typeof gp.completion_status.value !== 'undefined'
-  ) {
+  if (gp.completion_status?.value !== undefined) {
     submittableData.game_purchase.completion_status = gp.completion_status.value;
   }
 
@@ -312,18 +320,13 @@ function onSave() {
     submittableData.game_purchase.completion_date = gp.completion_date;
   }
 
+  // Extract IDs from Option format (value property contains the ID)
   if (gp.platforms.length !== 0) {
-    submittableData.game_purchase.platform_ids = Array.from(
-      gp.platforms as Array<{ id: string | number }>,
-      (platform) => platform.id
-    );
+    submittableData.game_purchase.platform_ids = gp.platforms.map(p => p.value);
   }
 
   if (gp.stores.length !== 0) {
-    submittableData.game_purchase.store_ids = Array.from(
-      gp.stores as Array<{ id: string | number }>,
-      (store) => store.id
-    );
+    submittableData.game_purchase.store_ids = gp.stores.map(s => s.value);
   }
 
   (['comments', 'rating', 'hours_played', 'completion_status', 'start_date', 'completion_date'] as Array<keyof GamePurchaseSubmittableData['game_purchase']>).forEach((property) => {

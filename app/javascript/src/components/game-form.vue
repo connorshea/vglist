@@ -11,7 +11,7 @@
       </ul>
     </div>
 
-    <file-select :label="formData.cover.label" v-model="game.cover" @input="onChange"></file-select>
+    <file-select :label="formData.cover.label" v-model="game.cover" @update:modelValue="onChange"></file-select>
 
     <text-field
       :form-class="formData.class"
@@ -74,7 +74,6 @@
 
     <multi-select-generic
       :label="formData.steamAppIds.label"
-      :v-select-label="'app_id'"
       v-model="game.steamAppIds"
     ></multi-select-generic>
 
@@ -132,6 +131,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { Option } from 'vue3-select-component';
 import TextArea from './fields/text-area.vue';
 import TextField from './fields/text-field.vue';
 import SingleSelect from './fields/single-select.vue';
@@ -145,16 +145,26 @@ import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
 import { difference } from 'lodash-es';
 
+// Helper to convert { id, name } to { value, label } for vue3-select-component
+function toOption(item: { id: number; name: string }): Option<number> {
+  return { value: item.id, label: item.name };
+}
+
+// Helper to convert array of { id, name } to Option[]
+function toOptions(items: Array<{ id: number; name: string }>): Option<number>[] {
+  return items.map(toOption);
+}
+
 interface Props {
   name?: string;
   releaseDate?: Date;
-  genres?: Array<any>;
-  engines?: Array<any>;
-  developers?: Array<any>;
-  publishers?: Array<any>;
-  platforms?: Array<any>;
-  series?: Record<string, any>;
-  steamAppIds?: Array<any>;
+  genres?: Array<{ id: number; name: string }>;
+  engines?: Array<{ id: number; name: string }>;
+  developers?: Array<{ id: number; name: string }>;
+  publishers?: Array<{ id: number; name: string }>;
+  platforms?: Array<{ id: number; name: string }>;
+  series?: { id: number; name: string } | null;
+  steamAppIds?: Array<{ id?: number; app_id: string }>;
   epicGamesStoreId?: string;
   gogId?: string;
   igdbId?: string;
@@ -167,7 +177,7 @@ interface Props {
   successPath?: string;
   cancelPath: string;
   create: boolean;
-  cover?: any;
+  cover?: File;
   coverBlob?: string;
 }
 
@@ -178,22 +188,22 @@ const props = withDefaults(defineProps<Props>(), {
   developers: () => [],
   publishers: () => [],
   platforms: () => [],
-  series: () => ({ name: '' }),
   steamAppIds: () => []
 });
 
 const errors = ref<string[]>([]);
 
+// Convert incoming { id, name } data to { value, label } format for vue3-select-component
 const game = ref({
   name: props.name,
   releaseDate: props.releaseDate ? props.releaseDate.toString() : undefined,
-  genres: props.genres,
-  engines: props.engines,
-  developers: props.developers,
-  publishers: props.publishers,
-  platforms: props.platforms,
-  series: props.series,
-  steamAppIds: props.steamAppIds,
+  genres: toOptions(props.genres),
+  engines: toOptions(props.engines),
+  developers: toOptions(props.developers),
+  publishers: toOptions(props.publishers),
+  platforms: toOptions(props.platforms),
+  series: props.series ? toOption(props.series) : null,
+  steamAppIds: props.steamAppIds.map(s => ({ value: s.app_id, label: s.app_id })) as Option<string>[],
   epicGamesStoreId: props.epicGamesStoreId,
   gogId: props.gogId,
   igdbId: props.igdbId,
@@ -295,46 +305,36 @@ function uploadFile(file: File) {
 }
 
 function onSubmit() {
-  const genreIds = Array.from(
-    game.value.genres,
-    (genre: { id: string }) => genre.id
-  );
-  const engineIds = Array.from(
-    game.value.engines,
-    (engine: { id: string }) => engine.id
-  );
-  const developerIds = Array.from(
-    game.value.developers,
-    (developer: { id: string }) => developer.id
-  );
-  const publisherIds = Array.from(
-    game.value.publishers,
-    (publisher: { id: string }) => publisher.id
-  );
-  const platformIds = Array.from(
-    game.value.platforms,
-    (platform: { id: string }) => platform.id
-  );
+  // Extract IDs from Option<number> format (value property contains the ID)
+  const genreIds = game.value.genres.map(g => g.value);
+  const engineIds = game.value.engines.map(e => e.value);
+  const developerIds = game.value.developers.map(d => d.value);
+  const publisherIds = game.value.publishers.map(p => p.value);
+  const platformIds = game.value.platforms.map(p => p.value);
 
-  const steamAppIds: any[] = [];
-  const appIdDifference = difference(
-    props.steamAppIds,
-    game.value.steamAppIds
-  );
-  // These can be either the steamAppId itself or the full record with ID and everything.
-  // If its just been added to the select, it's an integer.
-  game.value.steamAppIds.forEach((steamAppIdRecordOrInteger: any) => {
-    if (steamAppIdRecordOrInteger.id !== undefined) {
-      steamAppIds.push({ id: steamAppIdRecordOrInteger.id, app_id: steamAppIdRecordOrInteger.app_id });
+  // Handle Steam App IDs - compare current vs original to detect deletions
+  const steamAppIds: Array<{ id?: number; app_id: string; _destroy?: boolean }> = [];
+  const currentAppIds = game.value.steamAppIds.map(s => s.value);
+  const originalAppIds = props.steamAppIds.map(s => s.app_id);
+
+  // Add current steam app IDs
+  game.value.steamAppIds.forEach((option) => {
+    const originalRecord = props.steamAppIds.find(s => s.app_id === option.value);
+    if (originalRecord?.id !== undefined) {
+      steamAppIds.push({ id: originalRecord.id, app_id: option.value });
     } else {
-      steamAppIds.push({ app_id: steamAppIdRecordOrInteger });
+      steamAppIds.push({ app_id: option.value });
     }
   });
-  appIdDifference.forEach((appId: any) => {
-    steamAppIds.push({ id: appId.id, app_id: appId.app_id, _destroy: true });
+
+  // Mark removed steam app IDs for destruction
+  props.steamAppIds.forEach((original) => {
+    if (!currentAppIds.includes(original.app_id) && original.id !== undefined) {
+      steamAppIds.push({ id: original.id, app_id: original.app_id, _destroy: true });
+    }
   });
 
-  const submittableData: any = {
+  const submittableData: Record<string, any> = {
     game: {
       name: game.value.name,
       release_date: game.value.releaseDate,
@@ -362,8 +362,9 @@ function onSubmit() {
     }
   });
 
+  // Extract series ID from Option format (value property contains the ID)
   if (game.value.series) {
-    submittableData.game.series_id = game.value.series.id;
+    submittableData.game.series_id = game.value.series.value;
   } else {
     submittableData.game.series_id = null;
   }

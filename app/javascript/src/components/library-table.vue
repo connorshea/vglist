@@ -1,154 +1,154 @@
 <template>
-  <vue-good-table
-    :theme="theme"
-    ref="game-library-table"
-    :columns="columns"
-    :rows="rows"
-    :sort-options="{
-      enabled: true,
-      initialSortBy: { field: sortColumn, type: sortDirection }
-    }"
-    :search-options="{
-      enabled: false
-    }"
-    :selectOptions="{
-      enabled: isEditable,
-      selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
-      selectionInfoClass: 'selection-info-bar',
-      selectionText: 'rows selected',
-      clearSelectionText: 'clear',
-      disableSelectInfo: true
-    }"
-    @on-selected-rows-change="selectionChanged"
-    @on-sort-change="onSortChange"
-  >
-    <div slot="table-actions">
-      <div class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
-        <div class="dropdown-trigger is-fullwidth-mobile">
-          <button
-            class="button is-fullwidth-mobile"
-            aria-haspopup="true"
-            aria-controls="dropdown-menu"
-          >
-            <span>Display columns</span>
-            <span class="icon" v-html="chevronDownIcon"></span>
-          </button>
-        </div>
-        <div class="dropdown-menu is-fullwidth-mobile" role="menu">
-          <div class="dropdown-content">
-            <div
-              class="dropdown-item no-link-highlight"
-              v-for="column in columns.filter(column => column.hideable !== false)"
-              :key="column.index"
+  <div class="library-table-container">
+    <!-- Table Actions -->
+    <div class="library-table-actions level mb-10">
+      <div class="level-left">
+        <div class="dropdown is-right is-fullwidth-mobile mr-5 mr-0-mobile js-no-close-on-click">
+          <div class="dropdown-trigger is-fullwidth-mobile">
+            <button
+              class="button is-fullwidth-mobile"
+              aria-haspopup="true"
+              aria-controls="dropdown-menu"
             >
-              <a @click="toggleColumn(column.index, $event)">
-                <input :checked="!column.hidden" type="checkbox" />
-                {{ column.label }}
-              </a>
+              <span>Display columns</span>
+              <span class="icon" v-html="chevronDownIcon"></span>
+            </button>
+          </div>
+          <div class="dropdown-menu is-fullwidth-mobile" role="menu">
+            <div class="dropdown-content">
+              <div
+                class="dropdown-item no-link-highlight"
+                v-for="column in table.getAllLeafColumns().filter(col => col.getCanHide())"
+                :key="column.id"
+              >
+                <a @click="column.toggleVisibility()">
+                  <input :checked="column.getIsVisible()" type="checkbox" />
+                  {{ column.columnDef.header }}
+                </a>
+              </div>
             </div>
           </div>
         </div>
+        <button
+          v-if="isEditable"
+          @click="addGame()"
+          class="button is-fullwidth-mobile mr-5 mr-0-mobile"
+        >Add a game to your library</button>
       </div>
-      <button
-        v-if="isEditable"
-        @click="addGame()"
-        class="button is-fullwidth-mobile mr-5 mr-0-mobile"
-      >Add a game to your library</button>
     </div>
-    <div slot="selected-row-actions"></div>
-    <template #table-row="props">
-      <span v-if="props.column.field == 'after'">
-        <a class="mr-5" @click="onEdit(props.row)">Edit</a>
-        <a class="has-text-danger" @click="onDelete(props.row)">Remove</a>
-      </span>
-      <span v-else-if="props.column.field == 'game.name'">
-        <a :href="props.row.game_url">{{ props.row.game.name }}</a>
-      </span>
-      <span v-else-if="props.column.field == 'platforms'">
-        <p v-for="platform in props.row.platforms" :key="platform.id">
-          <a :href="`/platforms/${platform.id}`">{{ platform.name }}</a>
-        </p>
-      </span>
-      <span v-else-if="props.column.field == 'stores'">
-        <p v-for="store in props.row.stores" :key="store.id">
-          <a :href="`/stores/${store.id}`">{{ store.name }}</a>
-        </p>
-      </span>
-      <span v-else>{{ props.formattedRow[props.column.field] }}</span>
-    </template>
-    <div slot="emptystate" class="vgt-center-align">
-      <span v-if="isLoading">Loading...</span>
-      <span v-else-if="!isLoading" class="vgt-text-disabled">This library is empty.</span>
-      <span v-if="!isLoading && isEditable" class="vgt-text-disabled">
-        <p>
-          Want to get a headstart?
-          <a href="/settings/import">Connect your Steam account</a> and import your games to get started.
-        </p>
-      </span>
-    </div>
-  </vue-good-table>
+
+    <!-- Table -->
+    <table class="table is-fullwidth is-striped library-table" :class="{ 'is-dark': isDarkMode }">
+      <thead>
+        <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <th
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+            :class="{ 'is-sortable': header.column.getCanSort(), 'cursor-pointer': header.column.getCanSort() }"
+            @click="header.column.getCanSort() ? header.column.toggleSorting() : null"
+          >
+            <FlexRender
+              v-if="!header.isPlaceholder"
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
+            />
+            <span v-if="header.column.getIsSorted()" class="ml-5">
+              {{ header.column.getIsSorted() === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-if="table.getRowModel().rows.length > 0">
+          <tr v-for="row in table.getRowModel().rows" :key="row.id">
+            <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <FlexRender
+                :render="cell.column.columnDef.cell"
+                :props="cell.getContext()"
+              />
+            </td>
+          </tr>
+        </template>
+        <tr v-else>
+          <td :colspan="table.getAllLeafColumns().length" class="has-text-centered py-20">
+            <span v-if="isLoading">Loading...</span>
+            <template v-else>
+              <span class="has-text-grey">This library is empty.</span>
+              <p v-if="isEditable" class="has-text-grey mt-10">
+                Want to get a headstart?
+                <a href="/settings/import">Connect your Steam account</a> and import your games to get started.
+              </p>
+            </template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">
 import Rails from '@rails/ujs';
-import { ref, computed, onMounted } from 'vue';
-// @ts-expect-error - vue-good-table doesn't have TypeScript declarations
-import { VueGoodTable } from 'vue-good-table';
-import 'vue-good-table/dist/vue-good-table.css';
+import { ref, computed, onMounted, watch, h } from 'vue';
+import {
+  useVueTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  FlexRender,
+  createColumnHelper,
+  type SortingState,
+  type ColumnDef,
+  type RowSelectionState,
+  type VisibilityState,
+} from '@tanstack/vue-table';
+
+interface GamePurchaseRow {
+  id: number;
+  url: string;
+  game_url: string;
+  game: { id: number; name: string };
+  rating: number | null;
+  hours_played: string | null;
+  completion_status: { label: string; value: string } | null;
+  replay_count: number | null;
+  start_date: string | null;
+  completion_date: string | null;
+  platforms: Array<{ id: number; name: string }>;
+  stores: Array<{ id: number; name: string }>;
+  comments: string | null;
+}
 
 interface Props {
   gamePurchasesUrl: string;
   isEditable: boolean;
-  rows: any[];
+  rows: GamePurchaseRow[];
   isLoading: boolean;
   chevronDownIcon: string;
-}
-
-interface Column {
-  label: string;
-  field: string;
-  type: 'text' | 'number' | 'decimal' | 'date';
-  hideable?: boolean;
-  index: number;
-  hidden?: boolean;
-  formatFn?: (value: any) => string;
-  sortable?: boolean;
-  dateInputFormat?: string;
-  dateOutputFormat?: string;
-  sortFn?: (x: any, y: any, col: any, rowX: any, rowY: any) => number;
-  width?: string;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits(['edit', 'delete', 'addGame', 'loaded', 'selectedGamePurchasesChanged']);
 
-// Reactive data
-const games = ref<any[]>([]);
+// Reactive state
+const games = ref<GamePurchaseRow[]>([]);
+const sorting = ref<SortingState>([]);
+const rowSelection = ref<RowSelectionState>({});
+const columnVisibility = ref<VisibilityState>({});
 
-// Methods
+// Dark mode detection
+const isDarkMode = computed(() => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+});
 
-/**
- * Formats the hours played from a string representation of a float.
- *
- * This assumes the float has only one digit after the decimal point.
- * It will break if that changes.
- * 
- * @param value The string representation of the float to format.
- * @returns The formatted hours played string, e.g. '3h', '1h30m', or '5m'. Will return empty
- *   string for some cases, or if given an invalid value.
- */
+// Helper functions
 function formatHoursPlayed(value: string | null): string {
-  // If the value is null, 0, or in the format of '123.1', return an empty string.
   if (value === null || parseFloat(value) === 0 || !/^\d+\.\d$/.test(value)) {
     return '';
   }
 
-  // Split the float between the whole number and the decimals.
   const [hours, numMinutes] = value.split('.').map(s => parseInt(s)) as [number, number];
   const minutes = Math.floor((numMinutes / 10) * 60);
 
-  // Render 1h if there are 0 minutes, 1m if there are 0 hours, or 1h1m if there are both.
   if (minutes === 0) {
     return `${hours}h`;
   } else if (hours === 0) {
@@ -158,125 +158,172 @@ function formatHoursPlayed(value: string | null): string {
   }
 }
 
-// x - row1 value for column
-// y - row2 value for column
-function sortMultiselectColumn(x: any, y: any, col: any, rowX: any, rowY: any): number {
-  let xEmpty = x.length === 0;
-  let yEmpty = y.length === 0;
-
-  if (xEmpty && yEmpty) {
-    return 0;
-  } else if (yEmpty) {
-    return 1;
-  } else if (xEmpty) {
-    return -1;
-  } else {
-    let xName = x[0].name.toLowerCase();
-    let yName = y[0].name.toLowerCase();
-    return (xName < yName ? -1 : (xName > yName ? 1 : 0));
-  }
+function formatDate(value: string | null): string {
+  if (!value) return '';
+  const date = new Date(value);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-const columns = ref<Column[]>([
-  {
-    label: 'Name',
-    field: 'game.name',
-    type: 'text',
-    hideable: false,
-    index: 0
-  },
-  {
-    label: 'Rating',
-    field: 'rating',
-    type: 'number',
-    hidden: false,
-    index: 1
-  },
-  {
-    label: 'Hours Played',
-    field: 'hours_played',
-    type: 'decimal',
-    formatFn: formatHoursPlayed,
-    hidden: false,
-    index: 2
-  },
-  {
-    label: 'Completion Status',
-    field: 'completion_status.label',
-    type: 'text',
-    hidden: false,
-    index: 3
-  },
-  {
-    label: 'Replay Count',
-    field: 'replay_count',
-    type: 'number',
-    hidden: true,
-    sortable: true,
-    index: 4
-  },
-  {
-    label: 'Start Date',
-    field: 'start_date',
-    type: 'date',
-    dateInputFormat: 'yyyy-MM-dd',
-    dateOutputFormat: 'MMMM d, yyyy',
-    hidden: true,
-    index: 5
-  },
-  {
-    label: 'Completion Date',
-    field: 'completion_date',
-    type: 'date',
-    dateInputFormat: 'yyyy-MM-dd',
-    dateOutputFormat: 'MMMM d, yyyy',
-    hidden: true,
-    index: 6
-  },
-  {
-    label: 'Platforms',
-    field: 'platforms',
-    type: 'text',
-    hidden: true,
-    sortable: true,
-    sortFn: sortMultiselectColumn,
-    index: 7
-  },
-  {
-    label: 'Stores',
-    field: 'stores',
-    type: 'text',
-    hidden: true,
-    sortable: true,
-    sortFn: sortMultiselectColumn,
-    index: 8
-  },
-  {
-    label: 'Comments',
-    field: 'comments',
-    type: 'text',
-    hidden: false,
-    index: 9
-  }
-]);
+// Column definitions
+const columnHelper = createColumnHelper<GamePurchaseRow>();
 
-type SortDirection = 'asc' | 'desc';
-const sortDirection = ref<SortDirection>((localStorage.getItem('vglist:librarySortDirection') as SortDirection | null) ?? 'desc');
-const sortColumn = ref(localStorage.getItem('vglist:librarySortColumn') ?? 'rating');
+const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
+  // Checkbox column for selection (if editable)
+  ...(props.isEditable ? [columnHelper.display({
+    id: 'select',
+    header: ({ table }) => h('input', {
+      type: 'checkbox',
+      checked: table.getIsAllRowsSelected(),
+      indeterminate: table.getIsSomeRowsSelected(),
+      onChange: table.getToggleAllRowsSelectedHandler(),
+    }),
+    cell: ({ row }) => h('input', {
+      type: 'checkbox',
+      checked: row.getIsSelected(),
+      disabled: !row.getCanSelect(),
+      onChange: row.getToggleSelectedHandler(),
+    }),
+    enableSorting: false,
+    enableHiding: false,
+  })] : []),
 
-// Computed
-const theme = computed(() => {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? "nocturnal" : "default";
+  columnHelper.accessor(row => row.game.name, {
+    id: 'game.name',
+    header: 'Name',
+    cell: info => h('a', { href: info.row.original.game_url }, info.getValue()),
+    enableHiding: false,
+  }),
+
+  columnHelper.accessor('rating', {
+    header: 'Rating',
+    cell: info => info.getValue() ?? '',
+  }),
+
+  columnHelper.accessor('hours_played', {
+    header: 'Hours Played',
+    cell: info => formatHoursPlayed(info.getValue()),
+  }),
+
+  columnHelper.accessor(row => row.completion_status?.label ?? '', {
+    id: 'completion_status.label',
+    header: 'Completion Status',
+    cell: info => info.getValue(),
+  }),
+
+  columnHelper.accessor('replay_count', {
+    header: 'Replay Count',
+    cell: info => info.getValue() ?? '',
+  }),
+
+  columnHelper.accessor('start_date', {
+    header: 'Start Date',
+    cell: info => formatDate(info.getValue()),
+  }),
+
+  columnHelper.accessor('completion_date', {
+    header: 'Completion Date',
+    cell: info => formatDate(info.getValue()),
+  }),
+
+  columnHelper.accessor('platforms', {
+    header: 'Platforms',
+    cell: info => {
+      const platforms = info.getValue();
+      if (!platforms || platforms.length === 0) return '';
+      return h('div', platforms.map((p: { id: number; name: string }) =>
+        h('p', { key: p.id }, h('a', { href: `/platforms/${p.id}` }, p.name))
+      ));
+    },
+    sortingFn: (rowA, rowB) => {
+      const a = rowA.original.platforms;
+      const b = rowB.original.platforms;
+      if (a.length === 0 && b.length === 0) return 0;
+      if (b.length === 0) return 1;
+      if (a.length === 0) return -1;
+      return a[0]!.name.toLowerCase().localeCompare(b[0]!.name.toLowerCase());
+    },
+  }),
+
+  columnHelper.accessor('stores', {
+    header: 'Stores',
+    cell: info => {
+      const stores = info.getValue();
+      if (!stores || stores.length === 0) return '';
+      return h('div', stores.map((s: { id: number; name: string }) =>
+        h('p', { key: s.id }, h('a', { href: `/stores/${s.id}` }, s.name))
+      ));
+    },
+    sortingFn: (rowA, rowB) => {
+      const a = rowA.original.stores;
+      const b = rowB.original.stores;
+      if (a.length === 0 && b.length === 0) return 0;
+      if (b.length === 0) return 1;
+      if (a.length === 0) return -1;
+      return a[0]!.name.toLowerCase().localeCompare(b[0]!.name.toLowerCase());
+    },
+  }),
+
+  columnHelper.accessor('comments', {
+    header: 'Comments',
+    cell: info => info.getValue() ?? '',
+  }),
+
+  // Actions column (if editable)
+  ...(props.isEditable ? [columnHelper.display({
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => h('span', [
+      h('a', { class: 'mr-5', onClick: () => onEdit(row.original) }, 'Edit'),
+      h('a', { class: 'has-text-danger', onClick: () => onDelete(row.original) }, 'Remove'),
+    ]),
+    enableSorting: false,
+    enableHiding: false,
+  })] : []),
+];
+
+// Initialize table
+const table = useVueTable({
+  get data() { return props.rows; },
+  columns: baseColumns,
+  state: {
+    get sorting() { return sorting.value; },
+    get rowSelection() { return rowSelection.value; },
+    get columnVisibility() { return columnVisibility.value; },
+  },
+  onSortingChange: updaterOrValue => {
+    sorting.value = typeof updaterOrValue === 'function'
+      ? updaterOrValue(sorting.value)
+      : updaterOrValue;
+    // Save to localStorage
+    if (sorting.value[0]) {
+      localStorage.setItem('vglist:librarySortColumn', sorting.value[0].id);
+      localStorage.setItem('vglist:librarySortDirection', sorting.value[0].desc ? 'desc' : 'asc');
+    }
+  },
+  onRowSelectionChange: updaterOrValue => {
+    rowSelection.value = typeof updaterOrValue === 'function'
+      ? updaterOrValue(rowSelection.value)
+      : updaterOrValue;
+    emit('selectedGamePurchasesChanged', table.getSelectedRowModel().rows.map(r => r.original));
+  },
+  onColumnVisibilityChange: updaterOrValue => {
+    columnVisibility.value = typeof updaterOrValue === 'function'
+      ? updaterOrValue(columnVisibility.value)
+      : updaterOrValue;
+    localStorage.setItem('vglist:libraryColumns', JSON.stringify(columnVisibility.value));
+  },
+  getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  enableRowSelection: props.isEditable,
 });
 
 // Methods
-function onEdit(row: any) {
+function onEdit(row: GamePurchaseRow) {
   emit('edit', row);
 }
 
-function onDelete(row: any) {
+function onDelete(row: GamePurchaseRow) {
   if (window.confirm(`Remove ${row.game.name} from your library?`)) {
-    // Post a delete request to the game purchase endpoint to delete the game from the library.
     const headers: HeadersInit = {
       Accept: 'application/json',
       'X-CSRF-Token': Rails.csrfToken()!
@@ -288,7 +335,6 @@ function onDelete(row: any) {
       credentials: 'same-origin'
     }).then(response => {
       if (response.ok) {
-        // Emit a delete event to force the parent library component torefresh.
         emit('delete');
       }
     });
@@ -319,80 +365,74 @@ function addGame() {
   emit('addGame');
 }
 
-function toggleColumn(index: number, _event: Event) {
-  const column = columns.value[index];
-  if (column) {
-    // Set hidden to the inverse of whatever it currently is.
-    column.hidden = !column.hidden;
-    
-    const columnVisibility: Record<string, boolean> = {};
-    // Filter this down to only columns that can be toggled.
-    columns.value.filter(column => column.hideable === undefined).forEach(column => {
-      columnVisibility[column.field] = !column.hidden;
-    });
-    localStorage.setItem('vglist:libraryColumns', JSON.stringify(columnVisibility));
-  }
-}
-
-function selectionChanged(params: any) {
-  emit('selectedGamePurchasesChanged', params.selectedRows);
-}
-
-function onSortChange(params: any) {
-  // type is either 'asc' or 'desc'
-  localStorage.setItem('vglist:librarySortDirection', params[0].type);
-  localStorage.setItem('vglist:librarySortColumn', params[0].field);
-}
-
-// Initialize component
-function initializeComponent() {
-  loadGames();
-  if (props.isEditable) {
-    columns.value.push({
-      label: 'Actions',
-      field: 'after',
-      width: '140px',
-      hideable: false,
-      sortable: false,
-      index: 10,
-      type: 'text'
-    });
-  }
-}
-
 // Lifecycle
 onMounted(() => {
-  // When the component is mounted, set the column visibility values
-  // based on the libraryColumns value stored in localStorage.
-  // Don't do anything if the value isn't defined.
+  // Initialize column visibility from localStorage
   const libraryColumnsData = localStorage.getItem('vglist:libraryColumns');
   if (libraryColumnsData !== null) {
-    // Update the visible columns to match the defined localStorage value.
     const libraryColumns = JSON.parse(libraryColumnsData);
-    Object.entries(libraryColumns).forEach(([key, value]) => {
-      const index = columns.value.findIndex(col => col.field === key);
-      // Flip the value since the visibility value is stored as "whether
-      // it's visible" but the hidden value is stored as "whether it's
-      // hidden".
-      if (index !== -1 && columns.value[index]) {
-        columns.value[index].hidden = !(value as boolean);
-      }
-    });
+    columnVisibility.value = libraryColumns;
+  } else {
+    // Set default visibility (hide some columns by default)
+    columnVisibility.value = {
+      'replay_count': false,
+      'start_date': false,
+      'completion_date': false,
+      'platforms': false,
+      'stores': false,
+    };
   }
 
+  // Initialize sorting from localStorage
   const sortColumnData = localStorage.getItem('vglist:librarySortColumn');
-  const sortDirectionData = localStorage.getItem('vglist:librarySortDirection') as SortDirection | null;
+  const sortDirectionData = localStorage.getItem('vglist:librarySortDirection');
 
-  if (sortDirectionData !== null || sortColumnData !== null) {
-    if (sortColumnData) {
-      sortColumn.value = sortColumnData;
-    }
-    if (sortDirectionData) {
-      sortDirection.value = sortDirectionData;
-    }
+  if (sortColumnData) {
+    sorting.value = [{
+      id: sortColumnData,
+      desc: sortDirectionData === 'desc'
+    }];
+  } else {
+    // Default sort by rating descending
+    sorting.value = [{ id: 'rating', desc: true }];
   }
 
-  // Initialize the component
-  initializeComponent();
+  // Load games
+  loadGames();
 });
 </script>
+
+<style scoped>
+.library-table-container {
+  width: 100%;
+}
+
+.library-table {
+  width: 100%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.is-sortable:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.library-table.is-dark .is-sortable:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.py-20 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+</style>

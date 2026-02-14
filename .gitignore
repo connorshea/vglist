@@ -58,3 +58,5 @@ sbin/
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+.playwright-mcp/

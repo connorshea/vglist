@@ -22,12 +22,10 @@ import MergeGamesModal from './merge-games-modal.vue';
 import Turbolinks from 'turbolinks';
 
 interface Props {
-  game: Record<string, any>;
+  game: { id: number; name: string };
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  game: () => ({})
-});
+const props = defineProps<Props>();
 
 const isModalActive = ref(false);
 
