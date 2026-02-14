@@ -114,7 +114,7 @@ GEM
     bindex (0.8.1)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
-    bootsnap (1.21.1)
+    bootsnap (1.23.0)
       msgpack (~> 1.2)
     builder (3.3.0)
     byebug (13.0.0)
@@ -188,7 +188,7 @@ GEM
       ruby-progressbar (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    graphql (2.5.18)
+    graphql (2.5.19)
       base64
       fiber-storage
       logger
@@ -210,8 +210,9 @@ GEM
     invisible_captcha (2.1.0)
       rails (>= 5.2)
     io-console (0.8.2)
-    irb (1.16.0)
+    irb (1.17.0)
       pp (>= 0.6.0)
+      prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jbuilder (2.14.1)
@@ -298,7 +299,7 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.8.0)
+    prism (1.9.0)
     propshaft (1.3.1)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -382,7 +383,7 @@ GEM
     rdf-xsd (3.3.0)
       rdf (~> 3.3)
       rexml (~> 3.2)
-    rdoc (7.1.0)
+    rdoc (7.2.0)
       erb
       psych (>= 4.0.0)
       tsort
@@ -467,12 +468,13 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sentry-rails (6.3.0)
+    sentry-rails (6.3.1)
       railties (>= 5.2.0)
-      sentry-ruby (~> 6.3.0)
-    sentry-ruby (6.3.0)
+      sentry-ruby (~> 6.3.1)
+    sentry-ruby (6.3.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
+      logger
     shoulda-matchers (7.0.1)
       activesupport (>= 7.1)
     simplecov (0.22.0)
@@ -554,7 +556,7 @@ DEPENDENCIES
   faker (~> 3.6.0)
   friendly_id (~> 5.6.0)
   fuubar (~> 2.5.1)
-  graphql (~> 2.5.18)
+  graphql (~> 2.5.19)
   graphql-rails_logger (~> 1.2.5)
   image_processing (~> 1.14)
   inline_svg (~> 1.10)
@@ -587,7 +589,7 @@ DEPENDENCIES
   rubocop-rspec_rails (~> 2.32)
   ruby-progressbar (~> 1.13)
   selenium-webdriver (~> 4.40)
-  sentry-rails (~> 6.3.0)
+  sentry-rails (~> 6.3.1)
   sentry-ruby (~> 6.3.0)
   shoulda-matchers (= 7.0.1)
   simplecov (~> 0.22)
