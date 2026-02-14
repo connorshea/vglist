@@ -106,6 +106,8 @@ jobs:
 
   rspec:
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_COMMAND_NAME: 'RSpec:Unit'
     services:
       postgres:
         image: postgres:17
@@ -145,19 +147,21 @@ jobs:
         run: |
           if [ -f coverage/.last_run.json ]; then
             covered=$(ruby -rjson -e 'puts JSON.parse(File.read("coverage/.last_run.json"))["result"]["line"]')
-            echo "## Code Coverage" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Code Coverage (Unit Tests)" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
           fi
       - uses: actions/upload-artifact@v6.0.0
         if: always()
         with:
-          name: coverage-report
+          name: coverage-report-unit
           path: coverage/
           retention-days: 10
 
   rspec_features:
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_COMMAND_NAME: 'RSpec:Features'
     services:
       postgres:
         image: postgres:17
@@ -191,6 +195,21 @@ jobs:
       - run: bundle exec rails db:schema:load
       - run: bundle exec rake assets:precompile
       - run: bundle exec rspec spec/features
+      - name: Coverage summary
+        if: always()
+        run: |
+          if [ -f coverage/.last_run.json ]; then
+            covered=$(ruby -rjson -e 'puts JSON.parse(File.read("coverage/.last_run.json"))["result"]["line"]')
+            echo "## Code Coverage (Feature Tests)" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v6.0.0
+        if: always()
+        with:
+          name: coverage-report-features
+          path: coverage/
+          retention-days: 10
 
   db_seed:
     runs-on: ubuntu-latest
