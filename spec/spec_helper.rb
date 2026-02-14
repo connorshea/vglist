@@ -17,6 +17,12 @@ require 'simplecov'
 SimpleCov.start :rails do
   add_group "Policies", "app/policies"
   add_group "GraphQL", "app/graphql"
+  
+  # Enable result merging for parallel CI jobs
+  merge_timeout 3600
+  
+  # Set command name based on environment variable to distinguish unit vs feature tests in CI
+  command_name ENV.fetch('COVERAGE_COMMAND_NAME', 'RSpec')
 end
 require 'pundit/rspec'
 require 'pundit/matchers'
