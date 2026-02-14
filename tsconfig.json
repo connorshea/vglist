@@ -8,14 +8,7 @@
     "skipLibCheck": false,
     "verbatimModuleSyntax": true,
     "strict": true,
-    // TS 6 defaults:
-    "types": [],
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "noUncheckedIndexedAccess": true,
-    "libReplacement": false,
-    "noUncheckedSideEffectImports": true,
-    "alwaysStrict": true
+    "noUncheckedIndexedAccess": true
   },
   "include": [
     "app/javascript/src/**/*.ts",

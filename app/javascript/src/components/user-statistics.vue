@@ -108,7 +108,6 @@ const showPopover = (i: number) => {
   const pop = document.getElementById(`popover-${i}`);
   const status = document.getElementById(`completion-status-${i}`);
   if (pop && status) {
-    // @ts-expect-error Ignore because TypeScript doesn't know about anchorName yet, can re-enable when we upgrade TypeScript in the future.
     status.style.anchorName = `--popover-anchor`;
     pop.showPopover?.();
   }
@@ -122,7 +121,6 @@ const hidePopover = (i: number) => {
   const pop = document.getElementById(`popover-${i}`);
   const status = document.getElementById(`completion-status-${i}`);
   if (pop && status) {
-    // @ts-expect-error Ditto
     status.style.anchorName = 'none';
     pop.hidePopover?.();
   }
