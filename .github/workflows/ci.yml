@@ -24,38 +24,35 @@ jobs:
       - run: bundle exec rubocop
 
   oxfmt:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn run fmt:check
 
   oxlint:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn lint
 
   typescript:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn run tsc --noEmit
       - run: yarn run vue-tsc --noEmit
@@ -87,7 +84,6 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -124,7 +120,6 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -162,7 +157,6 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -217,7 +211,6 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -267,7 +260,6 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
-      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
