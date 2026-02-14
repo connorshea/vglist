@@ -31,6 +31,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn run fmt:check
 
@@ -42,6 +43,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn lint
 
@@ -53,6 +55,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn run tsc --noEmit
       - run: yarn run vue-tsc --noEmit
@@ -84,6 +87,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -120,6 +124,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -157,6 +162,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -211,6 +217,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -260,6 +267,7 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
