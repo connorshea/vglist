@@ -140,6 +140,15 @@ jobs:
       - run: bundle exec rails zeitwerk:check
       - run: bundle exec rake assets:precompile
       - run: bundle exec rspec
+      - name: Coverage summary
+        if: always()
+        run: |
+          if [ -f coverage/.last_run.json ]; then
+            covered=$(ruby -rjson -e 'puts JSON.parse(File.read("coverage/.last_run.json"))["result"]["line"]')
+            echo "## Code Coverage" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/upload-artifact@v6.0.0
         if: always()
         with:
