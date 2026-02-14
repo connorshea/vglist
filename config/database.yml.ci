@@ -4,6 +4,6 @@ test:
   encoding: unicode
   pool: 5
   timeout: 5000
-  host: postgres
-  username: runner
+  host: localhost
+  username: postgres
   password: ""
