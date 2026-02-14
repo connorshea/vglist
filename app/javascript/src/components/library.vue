@@ -44,7 +44,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isEditable: false,
+  isEditable: false
 });
 
 // Reactive data
@@ -60,8 +60,8 @@ const isLoading = ref(true);
 function loadGames(): void {
   fetch(props.gamePurchasesUrl, {
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   })
     .then((response) => {
       return response.json().then((json) => {

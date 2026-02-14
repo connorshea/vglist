@@ -44,7 +44,7 @@
         :id="`completion-status-${i}`"
         :class="['percentage-bar-portion', `color-${i + 1}`]"
         :style="{
-          'max-width': (completionStatusesCount ? (v / completionStatusesCount) * 100 : 0) + '%',
+          'max-width': (completionStatusesCount ? (v / completionStatusesCount) * 100 : 0) + '%'
         }"
         @mouseenter="showPopover(i)"
         @mouseleave="hidePopover(i)"

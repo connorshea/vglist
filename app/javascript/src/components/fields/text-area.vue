@@ -40,7 +40,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     dataValue.value = newVal;
-  },
+  }
 );
 
 const textAreaName = computed(() => `${props.formClass}[${props.attribute}]`);

@@ -114,16 +114,16 @@ const sortDirection = ref<"asc" | "desc">("desc");
 const columns = computed(() => [
   {
     id: "game.name",
-    label: "Game",
+    label: "Game"
   },
   {
     id: "userOneRating",
-    label: props.user1.username,
+    label: props.user1.username
   },
   {
     id: "userTwoRating",
-    label: props.user2.username,
-  },
+    label: props.user2.username
+  }
 ]);
 
 // Dark mode detection
@@ -135,8 +135,8 @@ const isDarkMode = computed(() => {
 function loadLibraries() {
   fetch(props.user1LibraryUrl, {
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   })
     .then((response) => {
       return response.json().then((json) => {
@@ -153,8 +153,8 @@ function loadLibraries() {
 
   fetch(props.user2LibraryUrl, {
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   })
     .then((response) => {
       return response.json().then((json) => {
@@ -207,7 +207,7 @@ function getGamePurchases(): GroupedGameRow[] {
       let gameRow: GameRow = {
         game: gamePurchase.game,
         userOneRating: undefined,
-        userTwoRating: undefined,
+        userTwoRating: undefined
       };
       if (isFirstUser) {
         gameRow.userOneRating = gamePurchase.rating;
@@ -259,16 +259,16 @@ function groupGameRows(metaLibrary: GameRow[]): GroupedGameRow[] {
   return [
     {
       label: "Shared",
-      children: sharedRows,
+      children: sharedRows
     },
     {
       label: `Unique to ${props.user1.username}`,
-      children: user1Rows,
+      children: user1Rows
     },
     {
       label: `Unique to ${props.user2.username}`,
-      children: user2Rows,
-    },
+      children: user2Rows
+    }
   ];
 }
 

@@ -28,7 +28,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  required: false,
+  required: false
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -45,7 +45,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     dataValue.value = newVal;
-  },
+  }
 );
 
 const dateFieldName = computed(() => `${props.formClass}[${props.attribute}]`);

@@ -85,8 +85,8 @@ function closeAndRefresh() {
 async function addGameToLibrary() {
   const response = await fetch(`/games/${props.gameId}.json`, {
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   });
 
   if (!response.ok) {
@@ -108,13 +108,13 @@ async function removeGameFromLibrary() {
 
   const headers: HeadersInit = {
     Accept: "application/json",
-    "X-CSRF-Token": Rails.csrfToken()!,
+    "X-CSRF-Token": Rails.csrfToken()!
   };
 
   const response = await fetch(removeGameFromLibraryPath, {
     method: "DELETE",
     headers,
-    credentials: "same-origin",
+    credentials: "same-origin"
   });
 
   if (response.ok) {
@@ -135,8 +135,8 @@ onMounted(() => {
     // TODO: Make this use async/await, although I'm not 100% sure if that's allowed here.
     fetch(`/game_purchases/${props.gamePurchaseId}.json`, {
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     })
       .then((response) => {
         return response.json().then((json) => {

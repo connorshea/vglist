@@ -17,7 +17,7 @@ document.addEventListener("turbolinks:load", () => {
         }
         toggleControlEl.addEventListener(
           toggleControlEl.dataset.toggleControlEventType,
-          togglePartner,
+          togglePartner
         );
       } else {
         el.addEventListener("click", function (_event) {
@@ -40,7 +40,7 @@ document.addEventListener("turbolinks:load", () => {
 
     if (!togglePartnerOn || !togglePartnerOff) {
       throw new Error(
-        "Toggle control element is missing data-toggle-partner-on or data-toggle-partner-off attributes.",
+        "Toggle control element is missing data-toggle-partner-on or data-toggle-partner-off attributes."
       );
     }
 

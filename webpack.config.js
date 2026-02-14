@@ -14,16 +14,16 @@ const config = {
   mode: mode,
   devtool: mode === "development" ? false : "source-map",
   entry: {
-    application: ["./app/javascript/application.ts", "./app/assets/stylesheets/application.scss"],
+    application: ["./app/javascript/application.ts", "./app/assets/stylesheets/application.scss"]
   },
   output: {
     filename: "[name].js",
     sourceMapFilename: "[file].map",
     chunkFormat: "module",
-    path: resolve(import.meta.dirname, "app/assets/builds"),
+    path: resolve(import.meta.dirname, "app/assets/builds")
   },
   optimization: {
-    moduleIds: "deterministic",
+    moduleIds: "deterministic"
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -32,13 +32,13 @@ const config = {
       // Vue 3 feature flags
       __VUE_OPTIONS_API__: JSON.stringify(true),
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
     }),
     new MiniCssExtractPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
+      maxChunks: 1
     }),
-    new VueLoaderPlugin(),
+    new VueLoaderPlugin()
   ],
   module: {
     rules: [
@@ -47,9 +47,9 @@ const config = {
         loader: "vue-loader",
         options: {
           compilerOptions: {
-            whitespace: "condense",
-          },
-        },
+            whitespace: "condense"
+          }
+        }
       },
       {
         test: /(\.min)?\.s?[ac]ss$/i,
@@ -60,10 +60,10 @@ const config = {
             loader: "sass-loader",
             options: {
               api: "modern-compiler",
-              implementation: "sass-embedded",
-            },
-          },
-        ],
+              implementation: "sass-embedded"
+            }
+          }
+        ]
       },
       {
         test: /\.([cm]?ts)$/,
@@ -75,20 +75,20 @@ const config = {
               jsc: {
                 parser: {
                   syntax: "typescript",
-                  tsx: false,
-                },
-              },
-            },
+                  tsx: false
+                }
+              }
+            }
           },
-          resolve("./custom-loader"),
-        ],
-      },
-    ],
+          resolve("./custom-loader")
+        ]
+      }
+    ]
   },
   resolve: {
     // Add additional file types
-    extensions: [".ts", ".vue", ".js", ".scss", ".css", ".min.css"],
-  },
+    extensions: [".ts", ".vue", ".js", ".scss", ".css", ".min.css"]
+  }
 };
 
 export default config;
