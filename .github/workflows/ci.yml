@@ -138,8 +138,7 @@ jobs:
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load
       - run: bundle exec rails zeitwerk:check
-      - run: bundle exec rake assets:precompile
-      - run: bundle exec rspec
+      - run: bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb"
       - name: Coverage summary
         if: always()
         run: |
@@ -155,6 +154,42 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 10
+
+  rspec_features:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
+      - uses: ruby/setup-ruby@v1.288.0
+        with:
+          ruby-version: '3.4.6'
+          bundler-cache: true
+      - uses: actions/setup-node@v6.2.0
+        with:
+          node-version: '22'
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: cp config/database.yml.ci config/database.yml
+      - run: bundle exec rails db:create
+      - run: bundle exec rails db:schema:load
+      - run: bundle exec rake assets:precompile
+      - run: bundle exec rspec spec/features
 
   db_seed:
     runs-on: ubuntu-latest
