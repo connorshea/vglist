@@ -10,7 +10,7 @@ import { createApp, h, type App } from "vue";
 // Store mounted apps to allow cleanup on Turbolinks navigation
 const mountedApps = new Map<HTMLElement, App>();
 
-(async function () {
+(function () {
   const callback = () => {
     const elems = Array.from(document.querySelectorAll("[data-vue-component]")) as HTMLElement[];
     elems.forEach(async (elem: HTMLElement) => {
