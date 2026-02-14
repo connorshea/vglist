@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: "",
   modelValue: "",
   required: false,
-  min: 0,
+  min: 0
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -58,7 +58,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     dataValue.value = newVal;
-  },
+  }
 );
 
 const numberFieldName = computed(() => `${props.formClass}[${props.attribute}]`);

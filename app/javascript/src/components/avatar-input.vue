@@ -93,7 +93,7 @@ function uploadFile(file: File) {
       // uploaded with the correct header. Otherwise they will end up being
       // private files.
       xhr.setRequestHeader("x-amz-acl", "public-read");
-    },
+    }
   });
 
   upload.create((error, blob) => {

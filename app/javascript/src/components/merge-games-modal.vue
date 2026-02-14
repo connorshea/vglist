@@ -53,7 +53,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  game: () => ({ id: 0, name: "" }),
+  game: () => ({ id: 0, name: "" })
 });
 
 const emit = defineEmits(["close", "save"]);

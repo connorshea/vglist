@@ -29,7 +29,7 @@ en:
           "Monolith Soft",
           "Naughty Dog",
           "Obsidian Entertainment",
-          "Rare",
+          "Rare"
         ]
       engine:
         [
@@ -46,7 +46,7 @@ en:
           "Godot",
           "XNA",
           "FNA",
-          "CryEngine",
+          "CryEngine"
         ]
       series:
         [
@@ -73,7 +73,7 @@ en:
           "Fallout",
           "Assassin's Creed",
           "Mass Effect",
-          "Dragon Age",
+          "Dragon Age"
         ]
       store:
         [
@@ -88,5 +88,5 @@ en:
           "itch.io",
           "Battle.net",
           "App Store",
-          "Google Play Store",
+          "Google Play Store"
         ]

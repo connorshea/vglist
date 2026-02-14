@@ -53,7 +53,7 @@ const emit = defineEmits(["closeEditBar"]);
 const updateData = reactive({
   ids: [] as number[],
   completion_status: null as any,
-  rating: undefined as number | string | undefined,
+  rating: undefined as number | string | undefined
 });
 
 // Methods
@@ -81,7 +81,7 @@ function updateGames(): void {
   VglistUtils.rawAuthenticatedFetch(
     "/game_purchases/bulk_update.json",
     "POST",
-    JSON.stringify(updateDataCopy),
+    JSON.stringify(updateDataCopy)
   ).then((response) => {
     if (response.ok) {
       // Redirects to self.
@@ -124,6 +124,6 @@ const FORMATTED_COMPLETION_STATUSES = [
   { label: "Dropped", value: "dropped" },
   { label: "Completed", value: "completed" },
   { label: "100% Completed", value: "fully_completed" },
-  { label: "N/A", value: "not_applicable" },
+  { label: "N/A", value: "not_applicable" }
 ];
 </script>

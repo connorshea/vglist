@@ -31,7 +31,7 @@
           :class="{
             'is-active':
               activeSearchResult !== -1 &&
-              flattenedSearchResults[activeSearchResult].searchable_id === result.searchable_id,
+              flattenedSearchResults[activeSearchResult].searchable_id === result.searchable_id
           }"
         >
           <div class="media">
@@ -46,7 +46,7 @@
                 {{
                   [
                     result.release_date === null ? "" : result.release_date.slice(0, 4),
-                    result.developer === null ? "" : result.developer,
+                    result.developer === null ? "" : result.developer
                   ]
                     .filter((x) => x !== "")
                     .join(" · ")
@@ -85,7 +85,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  searchParam: "",
+  searchParam: ""
 });
 
 const searchUrl = "/search.json";
@@ -98,7 +98,7 @@ const plurals = {
   Platform: "platforms",
   Engine: "engines",
   Genre: "genres",
-  User: "users",
+  User: "users"
 };
 const activeSearchResult = ref(-1);
 const currentPage = ref(1);
@@ -142,7 +142,7 @@ function onDownArrow() {
 // On enter, have turbolinks navigate to the active item's linked page.
 function onEnter() {
   const activeItem: HTMLLinkElement | null = document.querySelector(
-    ".navbar-search-dropdown .navbar-item.is-active",
+    ".navbar-search-dropdown .navbar-item.is-active"
   );
   if (activeItem !== null) {
     Turbolinks.visit(activeItem.href);
@@ -152,7 +152,7 @@ function onEnter() {
 function scrollToActiveItem() {
   // Select the current active item and the searchDropdown.
   const activeItem: HTMLElement | null = document.querySelector(
-    ".navbar-search-dropdown .navbar-item.is-active",
+    ".navbar-search-dropdown .navbar-item.is-active"
   );
   const searchDropdown: HTMLElement | null = document.querySelector(".navbar-search-dropdown");
   // If the activeItem exists, scroll to it as the user moves through the dropdown options.

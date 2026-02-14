@@ -49,7 +49,7 @@ function onClick(event: Event) {
         isActive.value = true;
         closeDropdownOnClick();
         hasCheckedFavorited.value = true;
-      },
+      }
     );
   } else {
     isActive.value = true;
@@ -78,7 +78,7 @@ function favoriteGame() {
       if (response.ok) {
         favorited.value = true;
       }
-    },
+    }
   );
 }
 
@@ -88,7 +88,7 @@ function unfavoriteGame() {
       if (response.ok) {
         favorited.value = false;
       }
-    },
+    }
   );
 }
 </script>

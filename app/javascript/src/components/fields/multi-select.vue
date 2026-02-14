@@ -43,7 +43,7 @@ const emit = defineEmits(["update:modelValue"]);
 // Store search results separately from pre-selected values
 const searchOptions = ref<Option<number>[]>([]);
 const searchPath = computed(
-  () => `${window.location.origin}/${props.searchPathIdentifier}/search.json`,
+  () => `${window.location.origin}/${props.searchPathIdentifier}/search.json`
 );
 const isLoading = ref(false);
 
@@ -67,7 +67,7 @@ const selectedValues = computed(() => props.modelValue.map((opt) => opt.value));
 
 const defaultOptionFunc = (item: { id: number; name: string }): Option<number> => ({
   label: item.name,
-  value: item.id,
+  value: item.id
 });
 
 // Methods
@@ -91,8 +91,8 @@ const onSearch = debounce(async (search: string) => {
   try {
     const response = await fetch(searchUrl.toString(), {
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
 
     const data: { id: number; name: string }[] = await response.json();

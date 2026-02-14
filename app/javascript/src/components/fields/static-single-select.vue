@@ -31,7 +31,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   placeholder: "",
   grandparentClass: "field",
-  disabled: false,
+  disabled: false
 });
 
 const emit = defineEmits(["update:modelValue"]);

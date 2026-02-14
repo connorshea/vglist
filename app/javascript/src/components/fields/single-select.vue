@@ -43,7 +43,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   grandparentClass: "field",
-  parentClass: "control",
+  parentClass: "control"
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -52,7 +52,7 @@ const emit = defineEmits(["update:modelValue"]);
 // Store search results separately from pre-selected value
 const searchOptions = ref<Option<number>[]>([]);
 const searchPath = computed(
-  () => `${window.location.origin}/${props.searchPathIdentifier}/search.json`,
+  () => `${window.location.origin}/${props.searchPathIdentifier}/search.json`
 );
 const isLoading = ref(false);
 
@@ -74,7 +74,7 @@ const selectedValue = computed(() => props.modelValue?.value ?? null);
 
 const defaultOptionFunc = (item: { id: number; name: string }): Option<number> => ({
   label: item.name,
-  value: item.id,
+  value: item.id
 });
 
 // When value changes, look up full Option object and emit
@@ -99,8 +99,8 @@ const onSearch = debounce(async (search: string) => {
   try {
     const response = await fetch(searchUrl.toString(), {
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
 
     const data: { id: number; name: string }[] = await response.json();

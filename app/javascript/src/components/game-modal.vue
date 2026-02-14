@@ -140,7 +140,7 @@ const completionStatuses: Record<CompletionStatus, string> = {
   dropped: "Dropped",
   completed: "Completed",
   fully_completed: "100% Completed",
-  not_applicable: "N/A",
+  not_applicable: "N/A"
 };
 
 interface GamePurchaseSubmittableData {
@@ -182,7 +182,7 @@ const props = withDefaults(defineProps<Props>(), {
   replay_count: 0,
   comments: "",
   platforms: () => [],
-  stores: () => [],
+  stores: () => []
 });
 
 const emit = defineEmits(["close", "create", "closeAndRefresh"]);
@@ -201,47 +201,47 @@ const gamePurchase = ref({
   replay_count: props.replay_count,
   completion_date: props.completion_date,
   platforms: toOptions(props.platforms),
-  stores: toOptions(props.stores),
+  stores: toOptions(props.stores)
 });
 
 const formData = {
   class: "game_purchase",
   comments: {
     label: "Comments",
-    attribute: "comments",
+    attribute: "comments"
   },
   rating: {
     label: "Rating (out of 100)",
-    attribute: "rating",
+    attribute: "rating"
   },
   hoursPlayed: {
     label: "Hours Played",
-    attribute: "hours_played",
+    attribute: "hours_played"
   },
   replayCount: {
     label: "Replay Count",
-    attribute: "replay_count",
+    attribute: "replay_count"
   },
   completionStatus: {
-    label: "Completion Status",
+    label: "Completion Status"
   },
   startDate: {
     label: "Start Date",
-    attribute: "start_date",
+    attribute: "start_date"
   },
   completionDate: {
     label: "Completion Date",
-    attribute: "completion_date",
+    attribute: "completion_date"
   },
   platforms: {
-    label: "Platforms",
+    label: "Platforms"
   },
   stores: {
-    label: "Stores",
+    label: "Stores"
   },
   game: {
-    label: "Game",
-  },
+    label: "Game"
+  }
 };
 
 const gameSelected = ref(props.gameModalState !== "create");
@@ -274,8 +274,8 @@ function onSave() {
   const submittableData: GamePurchaseSubmittableData = {
     game_purchase: {
       game_id: gp.game.value, // Extract ID from Option format
-      user_id: gp.userId,
-    },
+      user_id: gp.userId
+    }
   };
 
   if (gp.comments) {
@@ -329,7 +329,7 @@ function onSave() {
       "hours_played",
       "completion_status",
       "start_date",
-      "completion_date",
+      "completion_date"
     ] as Array<keyof GamePurchaseSubmittableData["game_purchase"]>
   ).forEach((property) => {
     let value = property === "comments" ? "" : null;
@@ -352,7 +352,7 @@ function onSave() {
   VglistUtils.authenticatedFetch(
     gamePurchasesSubmitUrl.value,
     method,
-    JSON.stringify(submittableData),
+    JSON.stringify(submittableData)
   )
     .then((gamePurchase) => {
       emit("create", gamePurchase);

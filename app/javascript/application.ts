@@ -16,7 +16,7 @@ import "./src/settings";
 if (process.env.NODE_ENV === "production") {
   Sentry.init({
     dsn: process.env.SENTRY_DSN_JS,
-    environment: process.env.NODE_ENV,
+    environment: process.env.NODE_ENV
   });
 }
 

@@ -27,7 +27,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  fileClass: "game-cover",
+  fileClass: "game-cover"
 });
 
 const emit = defineEmits(["update:modelValue"]);

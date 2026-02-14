@@ -190,7 +190,7 @@ const props = withDefaults(defineProps<Props>(), {
   developers: () => [],
   publishers: () => [],
   platforms: () => [],
-  steamAppIds: () => [],
+  steamAppIds: () => []
 });
 
 const errors = ref<string[]>([]);
@@ -207,7 +207,7 @@ const game = ref({
   series: props.series ? toOption(props.series) : null,
   steamAppIds: props.steamAppIds.map((s) => ({
     value: s.app_id,
-    label: s.app_id,
+    label: s.app_id
   })) as Option<string>[],
   epicGamesStoreId: props.epicGamesStoreId,
   gogId: props.gogId,
@@ -217,71 +217,71 @@ const game = ref({
   mobygamesId: props.mobygamesId?.toString(),
   giantbombId: props.giantbombId,
   cover: props.cover,
-  coverBlob: props.coverBlob,
+  coverBlob: props.coverBlob
 });
 
 const formData = {
   class: "game",
   cover: {
-    label: "Cover",
+    label: "Cover"
   },
   name: {
     label: "Game title",
-    attribute: "name",
+    attribute: "name"
   },
   releaseDate: {
     label: "Release Date",
-    attribute: "release_date",
+    attribute: "release_date"
   },
   genres: {
-    label: "Genres",
+    label: "Genres"
   },
   engines: {
-    label: "Engines",
+    label: "Engines"
   },
   developers: {
-    label: "Developers",
+    label: "Developers"
   },
   publishers: {
-    label: "Publishers",
+    label: "Publishers"
   },
   platforms: {
-    label: "Platforms",
+    label: "Platforms"
   },
   series: {
-    label: "Series",
+    label: "Series"
   },
   steamAppIds: {
-    label: "Steam Application IDs",
+    label: "Steam Application IDs"
   },
   epicGamesStoreId: {
     label: "Epic Games Store ID",
-    attribute: "epic_games_store_id",
+    attribute: "epic_games_store_id"
   },
   gogId: {
     label: "GOG.com ID",
-    attribute: "gog_id",
+    attribute: "gog_id"
   },
   igdbId: {
     label: "IGDB ID",
-    attribute: "igdb_id",
+    attribute: "igdb_id"
   },
   wikidataId: {
     label: "Wikidata ID",
-    attribute: "wikidata_id",
+    attribute: "wikidata_id"
   },
   pcgamingwikiId: {
     label: "PCGamingWiki ID",
-    attribute: "pcgamingwiki_id",
+    attribute: "pcgamingwiki_id"
   },
   mobygamesId: {
     label: "MobyGames ID",
-    attribute: "mobygames_id",
+    attribute: "mobygames_id"
   },
   giantbombId: {
     label: "Giant Bomb ID",
-    attribute: "giantbomb_id",
-  },
+    attribute: "giantbomb_id"
+  }
 };
 
 function onChange(file: File) {
@@ -296,7 +296,7 @@ function uploadFile(file: File) {
       // uploaded with the correct header. Otherwise they will end up being
       // private files.
       xhr.setRequestHeader("x-amz-acl", "public-read");
-    },
+    }
   });
 
   upload.create((error, blob) => {
@@ -354,8 +354,8 @@ function onSubmit() {
       wikidata_id: game.value.wikidataId,
       pcgamingwiki_id: game.value.pcgamingwikiId,
       mobygames_id: game.value.mobygamesId,
-      giantbomb_id: game.value.giantbombId,
-    },
+      giantbomb_id: game.value.giantbombId
+    }
   };
 
   // If the attribute's value is an empty string, replace it with null so
@@ -367,7 +367,7 @@ function onSubmit() {
     "wikidata_id",
     "pcgamingwiki_id",
     "mobygames_id",
-    "giantbomb_id",
+    "giantbomb_id"
   ].forEach((attr) => {
     if (submittableData.game[attr] === "") {
       submittableData.game[attr] = null;
@@ -388,7 +388,7 @@ function onSubmit() {
   VglistUtils.authenticatedFetch(
     props.submitPath,
     props.create ? "POST" : "PUT",
-    JSON.stringify(submittableData),
+    JSON.stringify(submittableData)
   )
     .then((gameResponse: any) => {
       if (props.create) {

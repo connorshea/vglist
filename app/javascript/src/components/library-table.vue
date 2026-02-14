@@ -48,7 +48,7 @@
             :key="header.id"
             :class="{
               'is-sortable': header.column.getCanSort(),
-              'cursor-pointer': header.column.getCanSort(),
+              'cursor-pointer': header.column.getCanSort()
             }"
             @click="header.column.getCanSort() ? header.column.toggleSorting() : null"
           >
@@ -101,7 +101,7 @@ import {
   type SortingState,
   type ColumnDef,
   type RowSelectionState,
-  type VisibilityState,
+  type VisibilityState
 } from "@tanstack/vue-table";
 
 interface GamePurchaseRow {
@@ -179,18 +179,18 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
               type: "checkbox",
               checked: table.getIsAllRowsSelected(),
               indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
+              onChange: table.getToggleAllRowsSelectedHandler()
             }),
           cell: ({ row }) =>
             h("input", {
               type: "checkbox",
               checked: row.getIsSelected(),
               disabled: !row.getCanSelect(),
-              onChange: row.getToggleSelectedHandler(),
+              onChange: row.getToggleSelectedHandler()
             }),
           enableSorting: false,
-          enableHiding: false,
-        }),
+          enableHiding: false
+        })
       ]
     : []),
 
@@ -198,38 +198,38 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
     id: "game.name",
     header: "Name",
     cell: (info) => h("a", { href: info.row.original.game_url }, info.getValue()),
-    enableHiding: false,
+    enableHiding: false
   }),
 
   columnHelper.accessor("rating", {
     header: "Rating",
-    cell: (info) => info.getValue() ?? "",
+    cell: (info) => info.getValue() ?? ""
   }),
 
   columnHelper.accessor("hours_played", {
     header: "Hours Played",
-    cell: (info) => formatHoursPlayed(info.getValue()),
+    cell: (info) => formatHoursPlayed(info.getValue())
   }),
 
   columnHelper.accessor((row) => row.completion_status?.label ?? "", {
     id: "completion_status.label",
     header: "Completion Status",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()
   }),
 
   columnHelper.accessor("replay_count", {
     header: "Replay Count",
-    cell: (info) => info.getValue() ?? "",
+    cell: (info) => info.getValue() ?? ""
   }),
 
   columnHelper.accessor("start_date", {
     header: "Start Date",
-    cell: (info) => formatDate(info.getValue()),
+    cell: (info) => formatDate(info.getValue())
   }),
 
   columnHelper.accessor("completion_date", {
     header: "Completion Date",
-    cell: (info) => formatDate(info.getValue()),
+    cell: (info) => formatDate(info.getValue())
   }),
 
   columnHelper.accessor("platforms", {
@@ -240,8 +240,8 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
       return h(
         "div",
         platforms.map((p: { id: number; name: string }) =>
-          h("p", { key: p.id }, h("a", { href: `/platforms/${p.id}` }, p.name)),
-        ),
+          h("p", { key: p.id }, h("a", { href: `/platforms/${p.id}` }, p.name))
+        )
       );
     },
     sortingFn: (rowA, rowB) => {
@@ -251,7 +251,7 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
       if (b.length === 0) return 1;
       if (a.length === 0) return -1;
       return a[0]!.name.toLowerCase().localeCompare(b[0]!.name.toLowerCase());
-    },
+    }
   }),
 
   columnHelper.accessor("stores", {
@@ -262,8 +262,8 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
       return h(
         "div",
         stores.map((s: { id: number; name: string }) =>
-          h("p", { key: s.id }, h("a", { href: `/stores/${s.id}` }, s.name)),
-        ),
+          h("p", { key: s.id }, h("a", { href: `/stores/${s.id}` }, s.name))
+        )
       );
     },
     sortingFn: (rowA, rowB) => {
@@ -273,12 +273,12 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
       if (b.length === 0) return 1;
       if (a.length === 0) return -1;
       return a[0]!.name.toLowerCase().localeCompare(b[0]!.name.toLowerCase());
-    },
+    }
   }),
 
   columnHelper.accessor("comments", {
     header: "Comments",
-    cell: (info) => info.getValue() ?? "",
+    cell: (info) => info.getValue() ?? ""
   }),
 
   // Actions column (if editable)
@@ -290,13 +290,13 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
           cell: ({ row }) =>
             h("span", [
               h("a", { class: "mr-5", onClick: () => onEdit(row.original) }, "Edit"),
-              h("a", { class: "has-text-danger", onClick: () => onDelete(row.original) }, "Remove"),
+              h("a", { class: "has-text-danger", onClick: () => onDelete(row.original) }, "Remove")
             ]),
           enableSorting: false,
-          enableHiding: false,
-        }),
+          enableHiding: false
+        })
       ]
-    : []),
+    : [])
 ];
 
 // Initialize table
@@ -314,7 +314,7 @@ const table = useVueTable({
     },
     get columnVisibility() {
       return columnVisibility.value;
-    },
+    }
   },
   onSortingChange: (updaterOrValue) => {
     sorting.value =
@@ -330,7 +330,7 @@ const table = useVueTable({
       typeof updaterOrValue === "function" ? updaterOrValue(rowSelection.value) : updaterOrValue;
     emit(
       "selectedGamePurchasesChanged",
-      table.getSelectedRowModel().rows.map((r) => r.original),
+      table.getSelectedRowModel().rows.map((r) => r.original)
     );
   },
   onColumnVisibilityChange: (updaterOrValue) => {
@@ -342,7 +342,7 @@ const table = useVueTable({
   },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
-  enableRowSelection: props.isEditable,
+  enableRowSelection: props.isEditable
 });
 
 // Methods
@@ -354,13 +354,13 @@ function onDelete(row: GamePurchaseRow) {
   if (window.confirm(`Remove ${row.game.name} from your library?`)) {
     const headers: HeadersInit = {
       Accept: "application/json",
-      "X-CSRF-Token": Rails.csrfToken()!,
+      "X-CSRF-Token": Rails.csrfToken()!
     };
 
     fetch(row.url, {
       method: "DELETE",
       headers,
-      credentials: "same-origin",
+      credentials: "same-origin"
     }).then((response) => {
       if (response.ok) {
         emit("delete");
@@ -387,7 +387,7 @@ onMounted(() => {
       start_date: false,
       completion_date: false,
       platforms: false,
-      stores: false,
+      stores: false
     };
   }
 
@@ -399,8 +399,8 @@ onMounted(() => {
     sorting.value = [
       {
         id: sortColumnData,
-        desc: sortDirectionData === "desc",
-      },
+        desc: sortDirectionData === "desc"
+      }
     ];
   } else {
     // Default sort by rating descending

@@ -29,7 +29,7 @@
 $extra-colors: (
   "dark-grey": bv.$grey-dark,
   "grey": bv.$grey,
-  "light-grey": bv.$grey-light,
+  "light-grey": bv.$grey-light
 );
 
 @each $name, $pair in $extra-colors {

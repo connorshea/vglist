@@ -29,7 +29,7 @@ const mountedApps = new Map<HTMLElement, App>();
       // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
 
       const app = createApp({
-        render: () => h(comp, props),
+        render: () => h(comp, props)
       });
 
       // Mount directly on the element. Vue 3's mount() replaces the

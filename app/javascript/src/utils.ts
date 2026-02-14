@@ -29,16 +29,16 @@ export default class VglistUtils {
   static async rawAuthenticatedFetch(
     route: string,
     method: string,
-    body: string | null = null,
+    body: string | null = null
   ): Promise<Response> {
     let requestBody: RequestInit = {
       method: method,
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": Rails.csrfToken()!,
-        Accept: "application/json",
+        Accept: "application/json"
       },
-      credentials: "same-origin",
+      credentials: "same-origin"
     };
 
     if (body !== null) {
@@ -59,7 +59,7 @@ export default class VglistUtils {
   static async authenticatedFetch<T>(
     route: string,
     method: "GET" | "PUT" | "POST" | "PATCH" | "DELETE",
-    body: string | null = null,
+    body: string | null = null
   ): Promise<T> {
     return this.rawAuthenticatedFetch(route, method, body).then(async (response) => {
       const json = await response.json();
