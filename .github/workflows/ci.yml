@@ -16,7 +16,7 @@ jobs:
   rubocop:
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1.288.0
         with:
           ruby-version: "3.4.6"
@@ -24,35 +24,35 @@ jobs:
       - run: bundle exec rubocop
 
   oxfmt:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
-      - run: corepack enable
+          cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn run fmt:check
 
   oxlint:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
-      - run: corepack enable
+          cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn lint
 
   typescript:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
-      - run: corepack enable
+          cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn run tsc --noEmit
       - run: yarn run vue-tsc --noEmit
@@ -75,12 +75,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1.288.0
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
@@ -109,14 +109,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
       - uses: ruby/setup-ruby@v1.288.0
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
@@ -146,14 +146,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
       - uses: ruby/setup-ruby@v1.288.0
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
@@ -200,14 +200,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
       - uses: ruby/setup-ruby@v1.288.0
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
@@ -226,7 +226,7 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
           fi
-      - uses: actions/upload-artifact@v6.0.0
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: coverage-report-features
@@ -251,12 +251,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1.288.0
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6.2.0
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
