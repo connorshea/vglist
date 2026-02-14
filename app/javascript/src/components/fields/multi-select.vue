@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import VueSelect, { type Option } from 'vue3-select-component';
 import { debounce, snakeCase } from 'lodash-es';
 
@@ -79,16 +79,20 @@ const onSearch = debounce(async (search: string) => {
   isLoading.value = true;
   const searchUrl = new URL(searchPath.value);
   searchUrl.searchParams.append('query', search);
-  // TODO: Add error handling.
-  const response = await fetch(searchUrl.toString(), {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+  try {
+    const response = await fetch(searchUrl.toString(), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-  const data: { id: number; name: string }[] = await response.json();
-  searchOptions.value = data.map(defaultOptionFunc);
-  isLoading.value = false;
+    const data: { id: number; name: string }[] = await response.json();
+    searchOptions.value = data.map(defaultOptionFunc);
+  } catch (e) {
+    console.error(`Error searching ${props.searchPathIdentifier}:`, e);
+  } finally {
+    isLoading.value = false;
+  }
 }, 250);
 
 // Computed properties
