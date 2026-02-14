@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-item has-dropdown field mt-10 mx-10" v-bind:class="{ 'is-active': dropdownActive }">
+  <div v-bind:class="{ 'is-active': dropdownActive }">
     <div class="control">
       <div class="field mb-0">
         <p class="control has-icons-left">

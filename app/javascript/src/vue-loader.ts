@@ -32,13 +32,9 @@ const mountedApps = new Map<HTMLElement, App>();
         render: () => h(comp, props)
       });
 
-      // Clear placeholder content and create a wrapper div to mount into
-      // (Vue 3 replaces the mount target)
-      elem.innerHTML = '';
-      const wrapper = document.createElement('div');
-      elem.appendChild(wrapper);
-
-      app.mount(wrapper);
+      // Mount directly on the element. Vue 3's mount() replaces the
+      // element's innerHTML, which removes any placeholder content.
+      app.mount(elem);
       mountedApps.set(elem, app);
     });
   };
