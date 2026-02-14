@@ -39,7 +39,10 @@ const mountedApps = new Map<HTMLElement, App>();
     });
   };
 
-  // Cleanup on Turbolinks navigation to prevent memory leaks
+  // Cleanup before Turbolinks caches the page. This runs right before
+  // the DOM is swapped, so unmounting won't cause a visible flash.
+  // It also ensures the cached page has clean placeholder state for
+  // back/forward navigation.
   const cleanup = () => {
     mountedApps.forEach((app) => {
       app.unmount();
@@ -47,7 +50,7 @@ const mountedApps = new Map<HTMLElement, App>();
     mountedApps.clear();
   };
 
-  document.addEventListener('turbolinks:before-visit', cleanup);
+  document.addEventListener('turbolinks:before-cache', cleanup);
   document.addEventListener('turbolinks:load', callback);
   callback();
 })();
