@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="{ 'is-active': dropdownActive }">
+  <div>
     <div class="control">
       <div class="field mb-0">
         <p class="control has-icons-left">
@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import Turbolinks from 'turbolinks';
 import { debounce } from 'lodash-es';
 
@@ -102,6 +102,7 @@ onMounted(() => {
     onSearch();
   }
 });
+
 
 // Debounce the search for 400ms before showing results, to prevent
 // searching from sending a ton of requests.
@@ -180,6 +181,15 @@ function onMoreGames() {
 // Determine if the dropdown is active so we can display it when it is.
 const dropdownActive = computed(() => {
   return query.value.length > 1;
+});
+
+// Toggle is-active on the mount target element, since Bulma requires
+// it on the .has-dropdown element for the dropdown to display.
+watch(dropdownActive, (active) => {
+  const mountTarget = document.querySelector('[data-vue-component="search"]');
+  if (mountTarget) {
+    mountTarget.classList.toggle('is-active', active);
+  }
 });
 
 const hasSearchResults = computed(() => {
