@@ -1,11 +1,6 @@
-# Fetches an avatar image from Faker, or uses an image from the test suite
-# if in CI, to avoid external HTTP requests.
+# Uses an image from the test suite.
 def avatar_fetcher
-  if ENV['CI']
-    File.open('./spec/factories/images/avatar.jpg')
-  else
-    URI.parse(Faker::Image.unsplash(width: 400, height: 400)).open
-  end
+  File.open('./spec/factories/images/avatar.jpg')
 end
 
 puts "Creating Users..."

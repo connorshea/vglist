@@ -1,12 +1,6 @@
-# Fetches a cover image from LoremPixel, or uses an image from the test suite
-# if in CI, to avoid external HTTP requests.
+# Uses a cover image from the test suite.
 def cover_fetcher
-  if ENV['CI']
-    File.open('./spec/factories/images/crysis.jpg')
-  else
-    # TODO: Make the dimensions more random.
-    URI.parse(Faker::Image.unsplash(width: 560, height: 800)).open
-  end
+  File.open('./spec/factories/images/crysis.jpg')
 end
 
 puts "Creating Games..."
