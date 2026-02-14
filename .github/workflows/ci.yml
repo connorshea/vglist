@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6.0.2
+      - run: corepack enable
       - uses: actions/setup-node@v6.2.0
         with:
           node-version: '22'
@@ -36,7 +37,7 @@ jobs:
       - run: yarn run vue-tsc --noEmit
 
   graphql_lint:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:17
@@ -148,7 +149,7 @@ jobs:
           retention-days: 10
 
   db_seed:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:17
