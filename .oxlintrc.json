@@ -1,18 +1,13 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "eslint",
-    "typescript",
-    "import",
-    "vue"
-  ],
+  "plugins": ["eslint", "typescript", "import", "vue"],
   "categories": {
     "correctness": "error"
   },
   "rules": {},
   "env": {
     "builtin": true,
-    "es2024": true,
+    "es2024": true
   },
   "ignorePatterns": []
 }
