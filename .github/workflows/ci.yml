@@ -14,7 +14,7 @@ env:
 
 jobs:
   rubocop:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1.288.0
@@ -24,7 +24,7 @@ jobs:
       - run: bundle exec rubocop
 
   typescript:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,7 +36,7 @@ jobs:
       - run: yarn run vue-tsc --noEmit
 
   graphql_lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     services:
       postgres:
         image: postgres:17
@@ -148,7 +148,7 @@ jobs:
           retention-days: 10
 
   db_seed:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     services:
       postgres:
         image: postgres:17
