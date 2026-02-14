@@ -140,7 +140,7 @@ jobs:
       - run: bundle exec rails zeitwerk:check
       - run: bundle exec rake assets:precompile
       - run: bundle exec rspec
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6.0.0
         if: always()
         with:
           name: coverage-report
