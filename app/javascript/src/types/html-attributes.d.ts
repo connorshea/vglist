@@ -6,7 +6,7 @@
 declare module "@vue/runtime-dom" {
   interface HTMLAttributes {
     // Popover API attributes
-    popover?: boolean | string | "auto" | "manual";
+    popover?: boolean | "auto" | "manual";
     popovertarget?: string;
     popovertargetaction?: "show" | "hide" | "toggle";
 
