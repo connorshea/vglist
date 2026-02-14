@@ -32,7 +32,9 @@ const mountedApps = new Map<HTMLElement, App>();
         render: () => h(comp, props)
       });
 
-      // Create a wrapper div to mount into (Vue 3 replaces the mount target)
+      // Clear placeholder content and create a wrapper div to mount into
+      // (Vue 3 replaces the mount target)
+      elem.innerHTML = '';
       const wrapper = document.createElement('div');
       elem.appendChild(wrapper);
 
