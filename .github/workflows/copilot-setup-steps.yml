@@ -40,7 +40,7 @@ jobs:
 
     env:
       RAILS_ENV: development
-      BUNDLER_VERSION: '2.7.1'
+      BUNDLER_VERSION: "2.7.1"
 
     steps:
       - name: Checkout repository
@@ -49,14 +49,14 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.260.0
         with:
-          ruby-version: '3.4.6'
+          ruby-version: "3.4.6"
           bundler-cache: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v5.0.0
         with:
-          node-version: '22'
-          cache: 'yarn'
+          node-version: "22"
+          cache: "yarn"
 
       - name: Install Yarn dependencies
         run: yarn install --frozen-lockfile

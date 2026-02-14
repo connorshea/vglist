@@ -1,26 +1,30 @@
 <template>
-  <div class="dropdown dropdown-dynamic game-card-dropdown is-right" :class="{ 'is-active': isActive }">
+  <div
+    class="dropdown dropdown-dynamic game-card-dropdown is-right"
+    :class="{ 'is-active': isActive }"
+  >
     <div class="dropdown-trigger">
-      <button class="button is-borderless is-shadowless" aria-haspopup="true" aria-controls="dropdown-menu" @click="onClick">
+      <button
+        class="button is-borderless is-shadowless"
+        aria-haspopup="true"
+        aria-controls="dropdown-menu"
+        @click="onClick"
+      >
         <span class="icon" v-html="chevronDownIcon"></span>
       </button>
     </div>
     <div class="dropdown-menu" id="dropdown-menu" role="menu">
       <div class="dropdown-content">
-        <a v-if="!favorited" class="dropdown-item" @click="favoriteGame">
-          Favorite
-        </a>
-        <a v-else class="dropdown-item" @click="unfavoriteGame">
-          Unfavorite
-        </a>
+        <a v-if="!favorited" class="dropdown-item" @click="favoriteGame"> Favorite </a>
+        <a v-else class="dropdown-item" @click="unfavoriteGame"> Unfavorite </a>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import VglistUtils from '../utils';
+import { ref } from "vue";
+import VglistUtils from "../utils";
 
 interface Props {
   gameId: number;
@@ -37,17 +41,16 @@ function onClick(event: Event) {
   if (!hasCheckedFavorited.value) {
     // Check whether the user has favorited the game before rendering the
     // dropdown buttons.
-    VglistUtils.authenticatedFetch(
-      `/games/${props.gameId}/favorited.json`,
-      'GET'
-    ).then(parsedJson => {
-      if (parsedJson === true || parsedJson === false) {
-        favorited.value = parsedJson;
-      }
-      isActive.value = true;
-      closeDropdownOnClick();
-      hasCheckedFavorited.value = true;
-    });
+    VglistUtils.authenticatedFetch(`/games/${props.gameId}/favorited.json`, "GET").then(
+      (parsedJson) => {
+        if (parsedJson === true || parsedJson === false) {
+          favorited.value = parsedJson;
+        }
+        isActive.value = true;
+        closeDropdownOnClick();
+        hasCheckedFavorited.value = true;
+      },
+    );
   } else {
     isActive.value = true;
     closeDropdownOnClick();
@@ -56,13 +59,13 @@ function onClick(event: Event) {
 
 function closeDropdownOnClick() {
   // Close the dropdown if the user clicks outside the dropdown.
-  document.addEventListener('click', (event) => {
+  document.addEventListener("click", (event) => {
     // If the user is clicking on something other than an element, return early.
     if (!(event.target instanceof Element) && !(event.target instanceof HTMLDocument)) {
       return;
     }
     // If the user clicks on the dropdown itself, don't close the dropdown.
-    if ((event.target as Element).closest('.dropdown-dynamic')) {
+    if ((event.target as Element).closest(".dropdown-dynamic")) {
       return;
     }
     isActive.value = false;
@@ -70,24 +73,22 @@ function closeDropdownOnClick() {
 }
 
 function favoriteGame() {
-  VglistUtils.rawAuthenticatedFetch(
-    `/games/${props.gameId}/favorite.json`,
-    'POST'
-  ).then(response => {
-    if (response.ok) {
-      favorited.value = true;
-    }
-  });
+  VglistUtils.rawAuthenticatedFetch(`/games/${props.gameId}/favorite.json`, "POST").then(
+    (response) => {
+      if (response.ok) {
+        favorited.value = true;
+      }
+    },
+  );
 }
 
 function unfavoriteGame() {
-  VglistUtils.rawAuthenticatedFetch(
-    `/games/${props.gameId}/unfavorite.json`,
-    'DELETE'
-  ).then(response => {
-    if (response.ok) {
-      favorited.value = false;
-    }
-  });
+  VglistUtils.rawAuthenticatedFetch(`/games/${props.gameId}/unfavorite.json`, "DELETE").then(
+    (response) => {
+      if (response.ok) {
+        favorited.value = false;
+      }
+    },
+  );
 }
 </script>

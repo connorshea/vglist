@@ -7,7 +7,7 @@ For example, rather than needing to make one request that gets a game's informat
 Example query:
 
 ```graphql
-query($id: ID!) {
+query ($id: ID!) {
   game(id: $id) {
     name
     id
@@ -128,7 +128,7 @@ All endpoints which return lists of items (for example, if you query for all the
 For example, you can get a user's game purchases (games in a user's library) with a query like this:
 
 ```graphql
-query($id: ID!) {
+query ($id: ID!) {
   user(id: $id) {
     gamePurchases {
       nodes {
@@ -151,7 +151,7 @@ The `nodes` represent the items in the paginated list, so in this case `nodes` r
 In this case, the return value of `endCursor` is `"Mw"`, and we can resubmit the same query with `gamePurchases(after: "Mw")` to get all the items on the next page.
 
 ```graphql
-query($id: ID!) {
+query ($id: ID!) {
   user(id: $id) {
     gamePurchases(after: "Mw") {
       nodes {
@@ -209,12 +209,12 @@ In GraphQL, API requests that are intended to change the data in the API (e.g. a
 Mutations in the vglist API look like the following:
 
 ```graphql
-mutation($id: ID!) {
+mutation ($id: ID!) {
   addGameToLibrary(
-    gameId: $id,
-    hoursPlayed: 150,
-    comments: "Pretty good",
-    completionStatus: COMPLETED,
+    gameId: $id
+    hoursPlayed: 150
+    comments: "Pretty good"
+    completionStatus: COMPLETED
     rating: 100
   ) {
     gamePurchase {

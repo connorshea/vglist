@@ -103,7 +103,7 @@ Rails/RequestReferer:
 Rails/HelperInstanceVariable:
   Enabled: true
   Exclude:
-    - 'app/helpers/settings_helper.rb'
+    - "app/helpers/settings_helper.rb"
 
 # This cop is buggy.
 Rails/BulkChangeTable:
@@ -122,7 +122,7 @@ Style/AccessorGrouping:
 Style/BlockDelimiters:
   Enabled: true
   Exclude:
-    - 'spec/requests/**/*_spec.rb'
+    - "spec/requests/**/*_spec.rb"
 
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -191,7 +191,7 @@ RSpec/HookArgument:
 
 RSpec/ImplicitExpect:
   Enabled: true
-  EnforcedStyle: 'should'
+  EnforcedStyle: "should"
 
 RSpec/MultipleExpectations:
   Enabled: true
@@ -582,4 +582,4 @@ Rails/WhereEquals:
 
 # I don't like this rule.
 Style/HashSyntax:
- Enabled: false
+  Enabled: false

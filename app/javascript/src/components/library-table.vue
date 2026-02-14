@@ -18,7 +18,7 @@
             <div class="dropdown-content">
               <div
                 class="dropdown-item no-link-highlight"
-                v-for="column in table.getAllLeafColumns().filter(col => col.getCanHide())"
+                v-for="column in table.getAllLeafColumns().filter((col) => col.getCanHide())"
                 :key="column.id"
               >
                 <a @click="column.toggleVisibility()">
@@ -33,7 +33,9 @@
           v-if="isEditable"
           @click="addGame()"
           class="button is-fullwidth-mobile mr-5 mr-0-mobile"
-        >Add a game to your library</button>
+        >
+          Add a game to your library
+        </button>
       </div>
     </div>
 
@@ -44,7 +46,10 @@
           <th
             v-for="header in headerGroup.headers"
             :key="header.id"
-            :class="{ 'is-sortable': header.column.getCanSort(), 'cursor-pointer': header.column.getCanSort() }"
+            :class="{
+              'is-sortable': header.column.getCanSort(),
+              'cursor-pointer': header.column.getCanSort(),
+            }"
             @click="header.column.getCanSort() ? header.column.toggleSorting() : null"
           >
             <FlexRender
@@ -53,7 +58,7 @@
               :props="header.getContext()"
             />
             <span v-if="header.column.getIsSorted()" class="ml-5">
-              {{ header.column.getIsSorted() === 'asc' ? '▲' : '▼' }}
+              {{ header.column.getIsSorted() === "asc" ? "▲" : "▼" }}
             </span>
           </th>
         </tr>
@@ -62,10 +67,7 @@
         <template v-if="table.getRowModel().rows.length > 0">
           <tr v-for="row in table.getRowModel().rows" :key="row.id">
             <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </td>
           </tr>
         </template>
@@ -76,7 +78,8 @@
               <span class="has-text-grey">This library is empty.</span>
               <p v-if="isEditable" class="has-text-grey mt-10">
                 Want to get a headstart?
-                <a href="/settings/import">Connect your Steam account</a> and import your games to get started.
+                <a href="/settings/import">Connect your Steam account</a> and import your games to
+                get started.
               </p>
             </template>
           </td>
@@ -87,8 +90,8 @@
 </template>
 
 <script setup lang="ts">
-import Rails from '@rails/ujs';
-import { ref, computed, onMounted, watch, h } from 'vue';
+import Rails from "@rails/ujs";
+import { ref, computed, onMounted, watch, h } from "vue";
 import {
   useVueTable,
   getCoreRowModel,
@@ -99,7 +102,7 @@ import {
   type ColumnDef,
   type RowSelectionState,
   type VisibilityState,
-} from '@tanstack/vue-table';
+} from "@tanstack/vue-table";
 
 interface GamePurchaseRow {
   id: number;
@@ -126,7 +129,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['edit', 'delete', 'addGame', 'selectedGamePurchasesChanged']);
+const emit = defineEmits(["edit", "delete", "addGame", "selectedGamePurchasesChanged"]);
 
 // Reactive state
 const sorting = ref<SortingState>([]);
@@ -135,16 +138,16 @@ const columnVisibility = ref<VisibilityState>({});
 
 // Dark mode detection
 const isDarkMode = computed(() => {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
 });
 
 // Helper functions
 function formatHoursPlayed(value: string | null): string {
   if (value === null || parseFloat(value) === 0 || !/^\d+\.\d$/.test(value)) {
-    return '';
+    return "";
   }
 
-  const [hours, numMinutes] = value.split('.').map(s => parseInt(s)) as [number, number];
+  const [hours, numMinutes] = value.split(".").map((s) => parseInt(s)) as [number, number];
   const minutes = Math.floor((numMinutes / 10) * 60);
 
   if (minutes === 0) {
@@ -157,9 +160,9 @@ function formatHoursPlayed(value: string | null): string {
 }
 
 function formatDate(value: string | null): string {
-  if (!value) return '';
+  if (!value) return "";
   const date = new Date(value);
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
 // Column definitions
@@ -167,70 +170,79 @@ const columnHelper = createColumnHelper<GamePurchaseRow>();
 
 const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
   // Checkbox column for selection (if editable)
-  ...(props.isEditable ? [columnHelper.display({
-    id: 'select',
-    header: ({ table }) => h('input', {
-      type: 'checkbox',
-      checked: table.getIsAllRowsSelected(),
-      indeterminate: table.getIsSomeRowsSelected(),
-      onChange: table.getToggleAllRowsSelectedHandler(),
-    }),
-    cell: ({ row }) => h('input', {
-      type: 'checkbox',
-      checked: row.getIsSelected(),
-      disabled: !row.getCanSelect(),
-      onChange: row.getToggleSelectedHandler(),
-    }),
-    enableSorting: false,
+  ...(props.isEditable
+    ? [
+        columnHelper.display({
+          id: "select",
+          header: ({ table }) =>
+            h("input", {
+              type: "checkbox",
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }),
+          cell: ({ row }) =>
+            h("input", {
+              type: "checkbox",
+              checked: row.getIsSelected(),
+              disabled: !row.getCanSelect(),
+              onChange: row.getToggleSelectedHandler(),
+            }),
+          enableSorting: false,
+          enableHiding: false,
+        }),
+      ]
+    : []),
+
+  columnHelper.accessor((row) => row.game.name, {
+    id: "game.name",
+    header: "Name",
+    cell: (info) => h("a", { href: info.row.original.game_url }, info.getValue()),
     enableHiding: false,
-  })] : []),
-
-  columnHelper.accessor(row => row.game.name, {
-    id: 'game.name',
-    header: 'Name',
-    cell: info => h('a', { href: info.row.original.game_url }, info.getValue()),
-    enableHiding: false,
   }),
 
-  columnHelper.accessor('rating', {
-    header: 'Rating',
-    cell: info => info.getValue() ?? '',
+  columnHelper.accessor("rating", {
+    header: "Rating",
+    cell: (info) => info.getValue() ?? "",
   }),
 
-  columnHelper.accessor('hours_played', {
-    header: 'Hours Played',
-    cell: info => formatHoursPlayed(info.getValue()),
+  columnHelper.accessor("hours_played", {
+    header: "Hours Played",
+    cell: (info) => formatHoursPlayed(info.getValue()),
   }),
 
-  columnHelper.accessor(row => row.completion_status?.label ?? '', {
-    id: 'completion_status.label',
-    header: 'Completion Status',
-    cell: info => info.getValue(),
+  columnHelper.accessor((row) => row.completion_status?.label ?? "", {
+    id: "completion_status.label",
+    header: "Completion Status",
+    cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor('replay_count', {
-    header: 'Replay Count',
-    cell: info => info.getValue() ?? '',
+  columnHelper.accessor("replay_count", {
+    header: "Replay Count",
+    cell: (info) => info.getValue() ?? "",
   }),
 
-  columnHelper.accessor('start_date', {
-    header: 'Start Date',
-    cell: info => formatDate(info.getValue()),
+  columnHelper.accessor("start_date", {
+    header: "Start Date",
+    cell: (info) => formatDate(info.getValue()),
   }),
 
-  columnHelper.accessor('completion_date', {
-    header: 'Completion Date',
-    cell: info => formatDate(info.getValue()),
+  columnHelper.accessor("completion_date", {
+    header: "Completion Date",
+    cell: (info) => formatDate(info.getValue()),
   }),
 
-  columnHelper.accessor('platforms', {
-    header: 'Platforms',
-    cell: info => {
+  columnHelper.accessor("platforms", {
+    header: "Platforms",
+    cell: (info) => {
       const platforms = info.getValue();
-      if (!platforms || platforms.length === 0) return '';
-      return h('div', platforms.map((p: { id: number; name: string }) =>
-        h('p', { key: p.id }, h('a', { href: `/platforms/${p.id}` }, p.name))
-      ));
+      if (!platforms || platforms.length === 0) return "";
+      return h(
+        "div",
+        platforms.map((p: { id: number; name: string }) =>
+          h("p", { key: p.id }, h("a", { href: `/platforms/${p.id}` }, p.name)),
+        ),
+      );
     },
     sortingFn: (rowA, rowB) => {
       const a = rowA.original.platforms;
@@ -242,14 +254,17 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
     },
   }),
 
-  columnHelper.accessor('stores', {
-    header: 'Stores',
-    cell: info => {
+  columnHelper.accessor("stores", {
+    header: "Stores",
+    cell: (info) => {
       const stores = info.getValue();
-      if (!stores || stores.length === 0) return '';
-      return h('div', stores.map((s: { id: number; name: string }) =>
-        h('p', { key: s.id }, h('a', { href: `/stores/${s.id}` }, s.name))
-      ));
+      if (!stores || stores.length === 0) return "";
+      return h(
+        "div",
+        stores.map((s: { id: number; name: string }) =>
+          h("p", { key: s.id }, h("a", { href: `/stores/${s.id}` }, s.name)),
+        ),
+      );
     },
     sortingFn: (rowA, rowB) => {
       const a = rowA.original.stores;
@@ -261,54 +276,69 @@ const baseColumns: ColumnDef<GamePurchaseRow, any>[] = [
     },
   }),
 
-  columnHelper.accessor('comments', {
-    header: 'Comments',
-    cell: info => info.getValue() ?? '',
+  columnHelper.accessor("comments", {
+    header: "Comments",
+    cell: (info) => info.getValue() ?? "",
   }),
 
   // Actions column (if editable)
-  ...(props.isEditable ? [columnHelper.display({
-    id: 'actions',
-    header: 'Actions',
-    cell: ({ row }) => h('span', [
-      h('a', { class: 'mr-5', onClick: () => onEdit(row.original) }, 'Edit'),
-      h('a', { class: 'has-text-danger', onClick: () => onDelete(row.original) }, 'Remove'),
-    ]),
-    enableSorting: false,
-    enableHiding: false,
-  })] : []),
+  ...(props.isEditable
+    ? [
+        columnHelper.display({
+          id: "actions",
+          header: "Actions",
+          cell: ({ row }) =>
+            h("span", [
+              h("a", { class: "mr-5", onClick: () => onEdit(row.original) }, "Edit"),
+              h("a", { class: "has-text-danger", onClick: () => onDelete(row.original) }, "Remove"),
+            ]),
+          enableSorting: false,
+          enableHiding: false,
+        }),
+      ]
+    : []),
 ];
 
 // Initialize table
 const table = useVueTable({
-  get data() { return props.rows; },
+  get data() {
+    return props.rows;
+  },
   columns: baseColumns,
   state: {
-    get sorting() { return sorting.value; },
-    get rowSelection() { return rowSelection.value; },
-    get columnVisibility() { return columnVisibility.value; },
+    get sorting() {
+      return sorting.value;
+    },
+    get rowSelection() {
+      return rowSelection.value;
+    },
+    get columnVisibility() {
+      return columnVisibility.value;
+    },
   },
-  onSortingChange: updaterOrValue => {
-    sorting.value = typeof updaterOrValue === 'function'
-      ? updaterOrValue(sorting.value)
-      : updaterOrValue;
+  onSortingChange: (updaterOrValue) => {
+    sorting.value =
+      typeof updaterOrValue === "function" ? updaterOrValue(sorting.value) : updaterOrValue;
     // Save to localStorage
     if (sorting.value[0]) {
-      localStorage.setItem('vglist:librarySortColumn', sorting.value[0].id);
-      localStorage.setItem('vglist:librarySortDirection', sorting.value[0].desc ? 'desc' : 'asc');
+      localStorage.setItem("vglist:librarySortColumn", sorting.value[0].id);
+      localStorage.setItem("vglist:librarySortDirection", sorting.value[0].desc ? "desc" : "asc");
     }
   },
-  onRowSelectionChange: updaterOrValue => {
-    rowSelection.value = typeof updaterOrValue === 'function'
-      ? updaterOrValue(rowSelection.value)
-      : updaterOrValue;
-    emit('selectedGamePurchasesChanged', table.getSelectedRowModel().rows.map(r => r.original));
+  onRowSelectionChange: (updaterOrValue) => {
+    rowSelection.value =
+      typeof updaterOrValue === "function" ? updaterOrValue(rowSelection.value) : updaterOrValue;
+    emit(
+      "selectedGamePurchasesChanged",
+      table.getSelectedRowModel().rows.map((r) => r.original),
+    );
   },
-  onColumnVisibilityChange: updaterOrValue => {
-    columnVisibility.value = typeof updaterOrValue === 'function'
-      ? updaterOrValue(columnVisibility.value)
-      : updaterOrValue;
-    localStorage.setItem('vglist:libraryColumns', JSON.stringify(columnVisibility.value));
+  onColumnVisibilityChange: (updaterOrValue) => {
+    columnVisibility.value =
+      typeof updaterOrValue === "function"
+        ? updaterOrValue(columnVisibility.value)
+        : updaterOrValue;
+    localStorage.setItem("vglist:libraryColumns", JSON.stringify(columnVisibility.value));
   },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
@@ -317,64 +347,65 @@ const table = useVueTable({
 
 // Methods
 function onEdit(row: GamePurchaseRow) {
-  emit('edit', row);
+  emit("edit", row);
 }
 
 function onDelete(row: GamePurchaseRow) {
   if (window.confirm(`Remove ${row.game.name} from your library?`)) {
     const headers: HeadersInit = {
-      Accept: 'application/json',
-      'X-CSRF-Token': Rails.csrfToken()!
+      Accept: "application/json",
+      "X-CSRF-Token": Rails.csrfToken()!,
     };
 
     fetch(row.url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers,
-      credentials: 'same-origin'
-    }).then(response => {
+      credentials: "same-origin",
+    }).then((response) => {
       if (response.ok) {
-        emit('delete');
+        emit("delete");
       }
     });
   }
 }
 
 function addGame() {
-  emit('addGame');
+  emit("addGame");
 }
 
 // Lifecycle
 onMounted(() => {
   // Initialize column visibility from localStorage
-  const libraryColumnsData = localStorage.getItem('vglist:libraryColumns');
+  const libraryColumnsData = localStorage.getItem("vglist:libraryColumns");
   if (libraryColumnsData !== null) {
     const libraryColumns = JSON.parse(libraryColumnsData);
     columnVisibility.value = libraryColumns;
   } else {
     // Set default visibility (hide some columns by default)
     columnVisibility.value = {
-      'replay_count': false,
-      'start_date': false,
-      'completion_date': false,
-      'platforms': false,
-      'stores': false,
+      replay_count: false,
+      start_date: false,
+      completion_date: false,
+      platforms: false,
+      stores: false,
     };
   }
 
   // Initialize sorting from localStorage
-  const sortColumnData = localStorage.getItem('vglist:librarySortColumn');
-  const sortDirectionData = localStorage.getItem('vglist:librarySortDirection');
+  const sortColumnData = localStorage.getItem("vglist:librarySortColumn");
+  const sortDirectionData = localStorage.getItem("vglist:librarySortDirection");
 
   if (sortColumnData) {
-    sorting.value = [{
-      id: sortColumnData,
-      desc: sortDirectionData === 'desc'
-    }];
+    sorting.value = [
+      {
+        id: sortColumnData,
+        desc: sortDirectionData === "desc",
+      },
+    ];
   } else {
     // Default sort by rating descending
-    sorting.value = [{ id: 'rating', desc: true }];
+    sorting.value = [{ id: "rating", desc: true }];
   }
-
 });
 </script>
 

@@ -2,16 +2,17 @@
   <div id="game-form">
     <!-- Display errors if there are any. -->
     <div class="notification errors-notification is-danger" v-if="errors.length > 0">
-      <p>
-        {{ errors.length > 1 ? 'Errors' : 'An error' }} prevented this game from
-        being saved:
-      </p>
+      <p>{{ errors.length > 1 ? "Errors" : "An error" }} prevented this game from being saved:</p>
       <ul>
         <li v-for="error in errors" :key="error">{{ error }}</li>
       </ul>
     </div>
 
-    <file-select :label="formData.cover.label" v-model="game.cover" @update:modelValue="onChange"></file-select>
+    <file-select
+      :label="formData.cover.label"
+      v-model="game.cover"
+      @update:modelValue="onChange"
+    ></file-select>
 
     <text-field
       :form-class="formData.class"
@@ -123,27 +124,28 @@
       class="button is-primary mr-10 mr-0-mobile is-fullwidth-mobile js-submit-button"
       value="Submit"
       @click.prevent="onSubmit"
-    >Submit</button>
+    >
+      Submit
+    </button>
 
     <a class="button is-fullwidth-mobile mt-5-mobile" :href="cancelPath">Cancel</a>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Option } from 'vue3-select-component';
-import TextArea from './fields/text-area.vue';
-import TextField from './fields/text-field.vue';
-import SingleSelect from './fields/single-select.vue';
-import NumberField from './fields/number-field.vue';
-import MultiSelect from './fields/multi-select.vue';
-import MultiSelectGeneric from './fields/multi-select-generic.vue';
-import FileSelect from './fields/file-select.vue';
-import DateField from './fields/date-field.vue';
-import VglistUtils from '../utils';
-import { DirectUpload } from '@rails/activestorage';
-import Turbolinks from 'turbolinks';
-
+import { ref } from "vue";
+import type { Option } from "vue3-select-component";
+import TextArea from "./fields/text-area.vue";
+import TextField from "./fields/text-field.vue";
+import SingleSelect from "./fields/single-select.vue";
+import NumberField from "./fields/number-field.vue";
+import MultiSelect from "./fields/multi-select.vue";
+import MultiSelectGeneric from "./fields/multi-select-generic.vue";
+import FileSelect from "./fields/file-select.vue";
+import DateField from "./fields/date-field.vue";
+import VglistUtils from "../utils";
+import { DirectUpload } from "@rails/activestorage";
+import Turbolinks from "turbolinks";
 
 // Helper to convert { id, name } to { value, label } for vue3-select-component
 function toOption(item: { id: number; name: string }): Option<number> {
@@ -182,13 +184,13 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  name: '',
+  name: "",
   genres: () => [],
   engines: () => [],
   developers: () => [],
   publishers: () => [],
   platforms: () => [],
-  steamAppIds: () => []
+  steamAppIds: () => [],
 });
 
 const errors = ref<string[]>([]);
@@ -203,7 +205,10 @@ const game = ref({
   publishers: toOptions(props.publishers),
   platforms: toOptions(props.platforms),
   series: props.series ? toOption(props.series) : null,
-  steamAppIds: props.steamAppIds.map(s => ({ value: s.app_id, label: s.app_id })) as Option<string>[],
+  steamAppIds: props.steamAppIds.map((s) => ({
+    value: s.app_id,
+    label: s.app_id,
+  })) as Option<string>[],
   epicGamesStoreId: props.epicGamesStoreId,
   gogId: props.gogId,
   igdbId: props.igdbId,
@@ -212,71 +217,71 @@ const game = ref({
   mobygamesId: props.mobygamesId?.toString(),
   giantbombId: props.giantbombId,
   cover: props.cover,
-  coverBlob: props.coverBlob
+  coverBlob: props.coverBlob,
 });
 
 const formData = {
-  class: 'game',
+  class: "game",
   cover: {
-    label: 'Cover'
+    label: "Cover",
   },
   name: {
-    label: 'Game title',
-    attribute: 'name'
+    label: "Game title",
+    attribute: "name",
   },
   releaseDate: {
-    label: 'Release Date',
-    attribute: 'release_date'
+    label: "Release Date",
+    attribute: "release_date",
   },
   genres: {
-    label: 'Genres'
+    label: "Genres",
   },
   engines: {
-    label: 'Engines'
+    label: "Engines",
   },
   developers: {
-    label: 'Developers'
+    label: "Developers",
   },
   publishers: {
-    label: 'Publishers'
+    label: "Publishers",
   },
   platforms: {
-    label: 'Platforms'
+    label: "Platforms",
   },
   series: {
-    label: 'Series'
+    label: "Series",
   },
   steamAppIds: {
-    label: 'Steam Application IDs',
+    label: "Steam Application IDs",
   },
   epicGamesStoreId: {
-    label: 'Epic Games Store ID',
-    attribute: 'epic_games_store_id'
+    label: "Epic Games Store ID",
+    attribute: "epic_games_store_id",
   },
   gogId: {
-    label: 'GOG.com ID',
-    attribute: 'gog_id'
+    label: "GOG.com ID",
+    attribute: "gog_id",
   },
   igdbId: {
-    label: 'IGDB ID',
-    attribute: 'igdb_id'
+    label: "IGDB ID",
+    attribute: "igdb_id",
   },
   wikidataId: {
-    label: 'Wikidata ID',
-    attribute: 'wikidata_id'
+    label: "Wikidata ID",
+    attribute: "wikidata_id",
   },
   pcgamingwikiId: {
-    label: 'PCGamingWiki ID',
-    attribute: 'pcgamingwiki_id'
+    label: "PCGamingWiki ID",
+    attribute: "pcgamingwiki_id",
   },
   mobygamesId: {
-    label: 'MobyGames ID',
-    attribute: 'mobygames_id'
+    label: "MobyGames ID",
+    attribute: "mobygames_id",
   },
   giantbombId: {
-    label: 'Giant Bomb ID',
-    attribute: 'giantbomb_id'
-  }
+    label: "Giant Bomb ID",
+    attribute: "giantbomb_id",
+  },
 };
 
 function onChange(file: File) {
@@ -290,8 +295,8 @@ function uploadFile(file: File) {
       // Use this workaround to make sure that Direct Upload-ed images are
       // uploaded with the correct header. Otherwise they will end up being
       // private files.
-      xhr.setRequestHeader('x-amz-acl', 'public-read');
-    }
+      xhr.setRequestHeader("x-amz-acl", "public-read");
+    },
   });
 
   upload.create((error, blob) => {
@@ -306,19 +311,19 @@ function uploadFile(file: File) {
 
 function onSubmit() {
   // Extract IDs from Option<number> format (value property contains the ID)
-  const genreIds = game.value.genres.map(g => g.value);
-  const engineIds = game.value.engines.map(e => e.value);
-  const developerIds = game.value.developers.map(d => d.value);
-  const publisherIds = game.value.publishers.map(p => p.value);
-  const platformIds = game.value.platforms.map(p => p.value);
+  const genreIds = game.value.genres.map((g) => g.value);
+  const engineIds = game.value.engines.map((e) => e.value);
+  const developerIds = game.value.developers.map((d) => d.value);
+  const publisherIds = game.value.publishers.map((p) => p.value);
+  const platformIds = game.value.platforms.map((p) => p.value);
 
   // Handle Steam App IDs - compare current vs original to detect deletions
   const steamAppIds: Array<{ id?: number; app_id: string; _destroy?: boolean }> = [];
-  const currentAppIds = game.value.steamAppIds.map(s => s.value);
+  const currentAppIds = game.value.steamAppIds.map((s) => s.value);
 
   // Add current steam app IDs
   game.value.steamAppIds.forEach((option) => {
-    const originalRecord = props.steamAppIds.find(s => s.app_id === option.value);
+    const originalRecord = props.steamAppIds.find((s) => s.app_id === option.value);
     if (originalRecord?.id !== undefined) {
       steamAppIds.push({ id: originalRecord.id, app_id: option.value });
     } else {
@@ -349,14 +354,22 @@ function onSubmit() {
       wikidata_id: game.value.wikidataId,
       pcgamingwiki_id: game.value.pcgamingwikiId,
       mobygames_id: game.value.mobygamesId,
-      giantbomb_id: game.value.giantbombId
-    }
+      giantbomb_id: game.value.giantbombId,
+    },
   };
 
   // If the attribute's value is an empty string, replace it with null so
   // it's nullified when sent to the backend.
-  ['epic_games_store_id', 'gog_id', 'igdb_id', 'wikidata_id', 'pcgamingwiki_id', 'mobygames_id', 'giantbomb_id'].forEach(attr => {
-    if (submittableData.game[attr] === '') {
+  [
+    "epic_games_store_id",
+    "gog_id",
+    "igdb_id",
+    "wikidata_id",
+    "pcgamingwiki_id",
+    "mobygames_id",
+    "giantbomb_id",
+  ].forEach((attr) => {
+    if (submittableData.game[attr] === "") {
       submittableData.game[attr] = null;
     }
   });
@@ -374,22 +387,23 @@ function onSubmit() {
 
   VglistUtils.authenticatedFetch(
     props.submitPath,
-    props.create ? 'POST' : 'PUT',
-    JSON.stringify(submittableData)
-  ).then((gameResponse: any) => {
+    props.create ? "POST" : "PUT",
+    JSON.stringify(submittableData),
+  )
+    .then((gameResponse: any) => {
       if (props.create) {
         Turbolinks.visit(`${window.location.origin}/games/${gameResponse.id}`);
       } else {
-        Turbolinks.visit(props.successPath || '/');
+        Turbolinks.visit(props.successPath || "/");
       }
     })
-    .catch(errorsResp => {
+    .catch((errorsResp) => {
       errors.value = errorsResp;
-      const submitButton = document.querySelector('.js-submit-button');
+      const submitButton = document.querySelector(".js-submit-button");
       if (submitButton) {
-        submitButton.classList.add('js-submit-button-error');
+        submitButton.classList.add("js-submit-button-error");
         setTimeout(() => {
-          submitButton.classList.remove('js-submit-button-error');
+          submitButton.classList.remove("js-submit-button-error");
         }, 2000);
       }
     });

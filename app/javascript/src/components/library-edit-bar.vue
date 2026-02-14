@@ -20,25 +20,26 @@
       ></static-single-select>
     </div>
     <div class="level-right">
-      <button
-        class="button is-fullwidth-mobile mr-5 mr-0-mobile"
-        @click="closeEditBar"
-      >Cancel</button>
+      <button class="button is-fullwidth-mobile mr-5 mr-0-mobile" @click="closeEditBar">
+        Cancel
+      </button>
       <button
         class="button is-fullwidth-mobile is-primary mr-5 mr-0-mobile"
         :disabled="!updateButtonActive"
         @click="updateGames"
-      >Update</button>
+      >
+        Update
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import VglistUtils from '../utils';
-import Turbolinks from 'turbolinks';
-import NumberField from './fields/number-field.vue';
-import StaticSingleSelect from './fields/static-single-select.vue';
-import { computed, reactive } from 'vue';
+import VglistUtils from "../utils";
+import Turbolinks from "turbolinks";
+import NumberField from "./fields/number-field.vue";
+import StaticSingleSelect from "./fields/static-single-select.vue";
+import { computed, reactive } from "vue";
 
 interface Props {
   gamePurchases: any[];
@@ -46,7 +47,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['closeEditBar']);
+const emit = defineEmits(["closeEditBar"]);
 
 // Reactive data
 const updateData = reactive({
@@ -57,12 +58,12 @@ const updateData = reactive({
 
 // Methods
 function closeEditBar() {
-  emit('closeEditBar');
+  emit("closeEditBar");
 }
 
 function updateGames(): void {
   // Reset the array to the currently-selected gamePurchases.
-  updateData.ids = props.gamePurchases.map(gp => gp.id);
+  updateData.ids = props.gamePurchases.map((gp) => gp.id);
 
   if (updateData.rating === undefined || updateData.rating === null) {
     delete (updateData as any).rating;
@@ -78,15 +79,15 @@ function updateGames(): void {
   }
 
   VglistUtils.rawAuthenticatedFetch(
-    '/game_purchases/bulk_update.json',
-    'POST',
-    JSON.stringify(updateDataCopy)
-  ).then(response => {
+    "/game_purchases/bulk_update.json",
+    "POST",
+    JSON.stringify(updateDataCopy),
+  ).then((response) => {
     if (response.ok) {
       // Redirects to self.
       Turbolinks.visit(window.location.href);
     } else {
-      console.log('Add error handling, doofus.');
+      console.log("Add error handling, doofus.");
     }
   });
 }
@@ -94,7 +95,7 @@ function updateGames(): void {
 // Computed properties
 const selectedGamesString = computed((): string => {
   let gpLength = props.gamePurchases.length;
-  return `${gpLength} game${gpLength > 1 ? 's' : ''} selected`;
+  return `${gpLength} game${gpLength > 1 ? "s" : ""} selected`;
 });
 
 const updateButtonActive = computed((): boolean => {
@@ -106,13 +107,9 @@ const updateButtonActive = computed((): boolean => {
 
   // Check if rating or completion status have values.
   // If they do, return true. Otherwise, return false.
-  (['rating', 'completion_status'] as const).forEach(attribute => {
+  (["rating", "completion_status"] as const).forEach((attribute) => {
     const value = updateData[attribute];
-    if (
-      value !== undefined &&
-      value !== '' &&
-      value !== null
-    ) {
+    if (value !== undefined && value !== "" && value !== null) {
       returnBool = true;
     }
   });
@@ -121,12 +118,12 @@ const updateButtonActive = computed((): boolean => {
 });
 
 const FORMATTED_COMPLETION_STATUSES = [
-  { label: 'Unplayed', value: 'unplayed' },
-  { label: 'In Progress', value: 'in_progress' },
-  { label: 'Paused', value: 'paused' },
-  { label: 'Dropped', value: 'dropped' },
-  { label: 'Completed', value: 'completed' },
-  { label: '100% Completed', value: 'fully_completed' },
-  { label: 'N/A', value: 'not_applicable' },
+  { label: "Unplayed", value: "unplayed" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Paused", value: "paused" },
+  { label: "Dropped", value: "dropped" },
+  { label: "Completed", value: "completed" },
+  { label: "100% Completed", value: "fully_completed" },
+  { label: "N/A", value: "not_applicable" },
 ];
 </script>

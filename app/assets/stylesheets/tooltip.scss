@@ -25,7 +25,7 @@
     border-color: rgba(#333, 0.9);
   }
 
-  &[data-tooltip-placement^='top'] {
+  &[data-tooltip-placement^="top"] {
     margin-bottom: 5px;
     bottom: anchor(top);
 
@@ -41,7 +41,7 @@
     }
   }
 
-  &[data-tooltip-placement^='bottom'] {
+  &[data-tooltip-placement^="bottom"] {
     margin-top: 5px;
     top: anchor(bottom);
 
@@ -57,7 +57,7 @@
     }
   }
 
-  &[data-tooltip-placement^='right'] {
+  &[data-tooltip-placement^="right"] {
     margin-left: 5px;
     right: anchor(right);
 
@@ -73,7 +73,7 @@
     }
   }
 
-  &[data-tooltip-placement^='left'] {
+  &[data-tooltip-placement^="left"] {
     margin-right: 5px;
     left: anchor(left);
 

@@ -14,9 +14,8 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from "vue";
 
 interface Props {
   formClass: string;
@@ -27,19 +26,22 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
 function handleInput(event: Event) {
   const target = event.target as HTMLTextAreaElement;
-  emit('update:modelValue', target.value);
+  emit("update:modelValue", target.value);
 }
 
-watch(() => props.modelValue, (newVal) => {
-  dataValue.value = newVal;
-});
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    dataValue.value = newVal;
+  },
+);
 
 const textAreaName = computed(() => `${props.formClass}[${props.attribute}]`);
 const textAreaId = computed(() => `${props.formClass}_${props.attribute}`);

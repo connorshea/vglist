@@ -20,9 +20,8 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from "vue";
 
 interface Props {
   formClass: string;
@@ -38,26 +37,29 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  fieldClass: '',
-  placeholder: '',
-  modelValue: '',
+  fieldClass: "",
+  placeholder: "",
+  modelValue: "",
   required: false,
-  min: 0
+  min: 0,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 const dataValue = ref(props.modelValue);
 
 // Handle input events with proper typing
 function handleInput(event: Event) {
   const target = event.target as HTMLInputElement;
-  emit('update:modelValue', target.value);
+  emit("update:modelValue", target.value);
 }
 
-watch(() => props.modelValue, (newVal) => {
-  dataValue.value = newVal;
-});
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    dataValue.value = newVal;
+  },
+);
 
 const numberFieldName = computed(() => `${props.formClass}[${props.attribute}]`);
 const numberFieldId = computed(() => `${props.formClass}_${props.attribute}`);

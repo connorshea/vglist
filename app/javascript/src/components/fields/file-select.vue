@@ -9,16 +9,16 @@
         <span v-else>Select File</span>
       </div>
       <!-- We hide this file input. -->
-      <input type="file" @change="handleFileChange">
+      <input type="file" @change="handleFileChange" />
     </label>
     <div :class="['pt-5', fileClass]">
-      <img v-if="image" :src="image">
+      <img v-if="image" :src="image" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 interface Props {
   modelValue?: File;
@@ -27,10 +27,10 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  fileClass: 'game-cover'
+  fileClass: "game-cover",
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 const image = ref<string | null>(null);
 
@@ -46,7 +46,7 @@ const handleFileChange = (e: Event) => {
     reader.readAsDataURL(file);
 
     // Whenever the file changes, emit the 'update:modelValue' event with the file data.
-    emit('update:modelValue', file);
+    emit("update:modelValue", file);
   }
 };
 </script>
