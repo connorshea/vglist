@@ -28,7 +28,7 @@
     "sass-loader": "^16.0.7",
     "swc-loader": "^0.2.7",
     "turbolinks": "^5.2.0",
-    "typescript": "6.0.0-beta",
+    "typescript": "6.0.0-dev.20260214",
     "vue": "^3.5.13",
     "vue-loader": "^17.4.2",
     "vue3-select-component": "^0.12.3",

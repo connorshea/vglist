@@ -2196,10 +2196,10 @@ turbolinks@^5.2.0:
   resolved "https://registry.yarnpkg.com/turbolinks/-/turbolinks-5.2.0.tgz#e6877a55ea5c1cb3bb225f0a4ae303d6d32ff77c"
   integrity sha512-pMiez3tyBo6uRHFNNZoYMmrES/IaGgMhQQM+VFF36keryjb5ms0XkVpmKHkfW/4Vy96qiGW3K9bz0tF5sK9bBw==
 
-typescript@6.0.0-beta:
-  version "6.0.0-beta"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.0-beta.tgz#2f87bd0cd1a291f675b3414a02a00bd4f7b48357"
-  integrity sha512-CldZdztDpQRLM1HC6WDQjQkQN5Ub5zRau737a1diGh3lPmb9oRsaWHk1y5iqK0o7+1bNJ0oXfEGRkAogFZBL+Q==
+typescript@6.0.0-dev.20260214:
+  version "6.0.0-dev.20260214"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.0-dev.20260214.tgz#231ef197fa8ad35e8f9058682ca3715d9f244edc"
+  integrity sha512-jYIRAACPpgz3L5PtENqVT87myfbpCt0uUaCKS4ftsTs1Xk5dnCFVcSq6QbtkAXlD2bf/CY8dVvwD6BsSRteIaA==
 
 undici-types@~6.21.0:
   version "6.21.0"
