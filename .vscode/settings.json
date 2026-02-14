@@ -1,3 +1,6 @@
 {
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "oxc.lint.run": "onSave",
+  "oxc.typeAware": true,
+  "oxc.unusedDisableDirectives": "deny"
 }

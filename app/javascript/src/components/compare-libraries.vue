@@ -209,9 +209,11 @@ function getGamePurchases(): GroupedGameRow[] {
         userOneRating: undefined,
         userTwoRating: undefined,
       };
-      isFirstUser
-        ? (gameRow.userOneRating = gamePurchase.rating)
-        : (gameRow.userTwoRating = gamePurchase.rating);
+      if (isFirstUser) {
+        gameRow.userOneRating = gamePurchase.rating;
+      } else {
+        gameRow.userTwoRating = gamePurchase.rating;
+      }
       betterMetaLibrary.push(gameRow);
     } else {
       // If the game is already represented in the meta library, we need to modify it rather

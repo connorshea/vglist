@@ -123,7 +123,11 @@ function deactivateEditBar() {
 }
 
 function selectedGamePurchasesChanged(gamePurchases: any[]) {
-  gamePurchases.length > 0 ? activateEditBar() : deactivateEditBar();
+  if (gamePurchases.length > 0) {
+    activateEditBar();
+  } else {
+    deactivateEditBar();
+  }
   selectedGamePurchases.value = gamePurchases;
 }
 
