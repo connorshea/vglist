@@ -9,10 +9,8 @@
     <library-table
       :rows="games"
       :isEditable="isEditable"
-      :gamePurchasesUrl="gamePurchasesUrl"
       :isLoading="isLoading"
       :chevronDownIcon="chevronDownIcon"
-      @loaded="libraryLoaded"
       @edit="activateModal"
       @delete="refreshLibrary"
       @addGame="activateModal({})"
@@ -140,10 +138,6 @@ function closeAndRefresh() {
   setTimeout(() => {
     refreshLibrary();
   }, 750);
-}
-
-function libraryLoaded() {
-  isLoading.value = false;
 }
 
 // Computed properties

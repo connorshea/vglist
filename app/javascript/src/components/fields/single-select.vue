@@ -6,7 +6,7 @@
         :options="(allOptions as any)"
         :isDisabled="disabled"
         @search="onSearch"
-        :inputId="inputId"
+        :inputId="label ? inputId : undefined"
         :placeholder="placeholder"
         :isClearable="true"
         :isLoading="isLoading"

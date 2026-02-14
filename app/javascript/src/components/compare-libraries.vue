@@ -293,9 +293,14 @@ function sortRows(rows: GameRow[]): GameRow[] {
       bVal = b.userTwoRating;
     }
 
-    // Handle null/undefined values - put them at the end
-    if (aVal === null || aVal === undefined) return sortDirection.value === 'asc' ? 1 : -1;
-    if (bVal === null || bVal === undefined) return sortDirection.value === 'asc' ? -1 : 1;
+    // Handle null/undefined values - always put them at the end
+    if (aVal === null || aVal === undefined) {
+      if (bVal === null || bVal === undefined) return 0;
+      return 1;
+    }
+    if (bVal === null || bVal === undefined) {
+      return -1;
+    }
 
     if (aVal < bVal) return sortDirection.value === 'asc' ? -1 : 1;
     if (aVal > bVal) return sortDirection.value === 'asc' ? 1 : -1;

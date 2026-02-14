@@ -6,7 +6,7 @@
         :options="(options as any)"
         :isDisabled="disabled"
         :placeholder="placeholder"
-        :inputId="inputId"
+        :inputId="label ? inputId : undefined"
         :modelValue="selectedValue"
         @update:modelValue="handleValueChange"
       />

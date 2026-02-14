@@ -143,7 +143,7 @@ import DateField from './fields/date-field.vue';
 import VglistUtils from '../utils';
 import { DirectUpload } from '@rails/activestorage';
 import Turbolinks from 'turbolinks';
-import { difference } from 'lodash-es';
+
 
 // Helper to convert { id, name } to { value, label } for vue3-select-component
 function toOption(item: { id: number; name: string }): Option<number> {
@@ -315,7 +315,6 @@ function onSubmit() {
   // Handle Steam App IDs - compare current vs original to detect deletions
   const steamAppIds: Array<{ id?: number; app_id: string; _destroy?: boolean }> = [];
   const currentAppIds = game.value.steamAppIds.map(s => s.value);
-  const originalAppIds = props.steamAppIds.map(s => s.app_id);
 
   // Add current steam app IDs
   game.value.steamAppIds.forEach((option) => {
