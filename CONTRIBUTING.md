@@ -49,7 +49,7 @@ This is a list of libraries used for various functionality across the app. It's 
 - [FactoryBot](https://github.com/thoughtbot/factory_bot): Factories for seeding the database and writing tests.
 - [GraphQL](https://graphql.org) via [graphql-ruby](https://graphql-ruby.org): GraphQL is a query language that is used for the vglist API.
 - [TypeScript](https://www.typescriptlang.org): Dialect of JavaScript with static types, most of the JavaScript in the application is written in TypeScript.
-- [Vue.js 2.x](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
+- [Vue.js 3.x](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
 - [Font Awesome](https://fontawesome.com): Icons used in the application mostly come from Font Awesome.
 - [Bulma](https://bulma.io/): CSS Framework used for styling the application.
 
@@ -69,15 +69,6 @@ Rake tasks are Ruby code for performing tasks. For vglist, most of these are for
   - `rake deploy:production` - Deploys the website in production mode, for use on the production server.
 - Development
   - `rake db:seed` - Creates fake data, mostly for development.
-
-## GitLab CI
-
-To update the Docker container used by GitLab CI:
-
-- Log into the GitLab CI Docker registry with `docker login registry.gitlab.com` (you'll need to use a Personal Access Token as your password).
-- Build the container with `docker build --platform=linux/amd64 -f Dockerfile -t registry.gitlab.com/vglist/vglist .`
-  - You may want to add `--no-cache` to fully rebuild the container from scratch.
-- Then use `docker push registry.gitlab.com/vglist/vglist` to push the container to the GitLab Container Registry.
 
 ## Design Document
 
