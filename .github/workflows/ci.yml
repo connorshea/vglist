@@ -34,6 +34,17 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn run fmt:check
 
+  oxlint:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-node@v6.2.0
+        with:
+          node-version: "22"
+      - run: corepack enable
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+
   typescript:
     runs-on: ubuntu-slim
     steps:
