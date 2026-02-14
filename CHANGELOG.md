@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2026.02.13
+
+### Changed
+
+- Upgrade to Vue 3. ([#4319])
+- Switch to GitHub Actions. ([#4321])
+- Add Oxlint for linting. ([#4329])
+
 ## v2025.09.28
 
 ### Changed
@@ -1344,3 +1352,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4183]: https://github.com/connorshea/vglist/pull/4183
 [#4184]: https://github.com/connorshea/vglist/pull/4184
 [#4186]: https://github.com/connorshea/vglist/pull/4186
+[#4319]: https://github.com/connorshea/vglist/pull/4319
+[#4321]: https://github.com/connorshea/vglist/pull/4321
+[#4329]: https://github.com/connorshea/vglist/pull/4329
