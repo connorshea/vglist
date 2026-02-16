@@ -112,7 +112,7 @@ GEM
       rouge (>= 1.0.0)
     bigdecimal (3.3.1)
     bindex (0.8.1)
-    binding_of_caller (1.0.1)
+    binding_of_caller (2.0.0)
       debug_inspector (>= 1.2.0)
     bootsnap (1.23.0)
       msgpack (~> 1.2)
@@ -544,7 +544,7 @@ DEPENDENCIES
   addressable (~> 2.8.8)
   aws-sdk-s3 (~> 1.208)
   better_errors (~> 2.10)
-  binding_of_caller (~> 1.0)
+  binding_of_caller (~> 2.0)
   bootsnap (>= 1.1.0)
   byebug
   capybara (~> 3.40)
