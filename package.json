@@ -44,7 +44,7 @@
     "graphql-schema-linter": "^3.0.1",
     "oxfmt": "^0.34.0",
     "oxlint": "^1.47.0",
-    "oxlint-tsgolint": "^0.12.2",
+    "oxlint-tsgolint": "^0.14.2",
     "vue-tsc": "^3.2.5"
   },
   "browserslist": [
