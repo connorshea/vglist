@@ -61,8 +61,8 @@ gem 'aws-sdk-s3', '~> 1.208', require: false
 gem 'ruby-progressbar', '~> 1.13', require: false
 
 # Use Sentry for error tracking in production.
-gem 'sentry-ruby', '~> 6.3.0'
-gem 'sentry-rails', '~> 6.3.1'
+gem 'sentry-ruby', '~> 6.4.0'
+gem 'sentry-rails', '~> 6.4.0'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 2.5.19'
