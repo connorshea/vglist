@@ -6,8 +6,8 @@
 import Rails from "@rails/ujs";
 import Turbolinks from "turbolinks";
 import * as ActiveStorage from "@rails/activestorage";
-import "../assets/stylesheets/application.scss";
 import "vue3-select-component/styles";
+import "../assets/stylesheets/application.scss";
 import * as Sentry from "@sentry/vue";
 import "./src/vue-loader";
 import "./src/toggleable-buttons";
