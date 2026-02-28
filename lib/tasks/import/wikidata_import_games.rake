@@ -357,6 +357,10 @@ namespace 'import:wikidata' do
               rdfs:label ?label .
           FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
           FILTER(!CONTAINS(LCASE(?label), "playtest")) # exclude games with "Playtest" in the name
+          FILTER(!CONTAINS(LCASE(?label), "hentai")) # exclude adult games
+          FILTER(!CONTAINS(LCASE(?label), "futanari")) # exclude adult games
+          FILTER(!CONTAINS(LCASE(?label), "porn")) # exclude adult games
+          FILTER(!CONTAINS(LCASE(?label), "eroge")) # exclude adult games
       }
       GROUP BY ?item
       HAVING (COUNT(?label) > 0)
@@ -374,6 +378,10 @@ namespace 'import:wikidata' do
               rdfs:label ?label .
         FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
         FILTER(!CONTAINS(LCASE(?label), "playtest")) # exclude games with "Playtest" in the name
+        FILTER(!CONTAINS(LCASE(?label), "hentai")) # exclude adult games
+        FILTER(!CONTAINS(LCASE(?label), "futanari")) # exclude adult games
+        FILTER(!CONTAINS(LCASE(?label), "porn")) # exclude adult games
+        FILTER(!CONTAINS(LCASE(?label), "eroge")) # exclude adult games
         ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
             psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
