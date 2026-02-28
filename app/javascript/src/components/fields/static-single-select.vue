@@ -42,9 +42,9 @@ const inputId = computed(() => snakeCase(props.label));
 const selectedValue = computed(() => props.modelValue?.value ?? null);
 
 // When value changes, look up full Option object and emit
-function handleValueChange(value: string | number | (string | number | null)[] | null) {
+function handleValueChange(value: string | number | (string | number)[] | null | undefined) {
   // vue3-select-component can emit array for some edge cases, handle both
-  const singleValue = Array.isArray(value) ? (value[0] ?? null) : value;
+  const singleValue = Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
   if (singleValue === null) {
     emit("update:modelValue", null);
     return;

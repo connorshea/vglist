@@ -78,9 +78,9 @@ const defaultOptionFunc = (item: { id: number; name: string }): Option<number> =
 });
 
 // When value changes, look up full Option object and emit
-function handleValueChange(value: number | (number | null)[] | null) {
+function handleValueChange(value: number | number[] | null | undefined) {
   // vue3-select-component can emit array for some edge cases, handle both
-  const singleValue = Array.isArray(value) ? (value[0] ?? null) : value;
+  const singleValue = Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
   if (singleValue === null) {
     emit("update:modelValue", null);
     return;

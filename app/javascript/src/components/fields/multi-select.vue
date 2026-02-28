@@ -72,7 +72,11 @@ const defaultOptionFunc = (item: { id: number; name: string }): Option<number> =
 
 // Methods
 // When values change, look up full Option objects and emit
-function handleValueChange(values: number | number[]) {
+function handleValueChange(values: number | number[] | null | undefined) {
+  if (values == null) {
+    emit("update:modelValue", []);
+    return;
+  }
   // vue3-select-component emits array for isMulti
   const valuesArray = Array.isArray(values) ? values : [values];
   const selectedOptions = valuesArray
