@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Rails/TimeZone
 LANGUAGE_CODES_FOR_LABELS = ['en', 'mul'].freeze
+ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 
 namespace 'import:wikidata' do
   require 'sparql/client'
@@ -357,10 +358,7 @@ namespace 'import:wikidata' do
               rdfs:label ?label .
           FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
           FILTER(!CONTAINS(LCASE(?label), "playtest")) # exclude games with "Playtest" in the name
-          FILTER(!CONTAINS(LCASE(?label), "hentai")) # exclude adult games
-          FILTER(!CONTAINS(LCASE(?label), "futanari")) # exclude adult games
-          FILTER(!CONTAINS(LCASE(?label), "porn")) # exclude adult games
-          FILTER(!CONTAINS(LCASE(?label), "eroge")) # exclude adult games
+          #{adult_label_filter} # exclude adult games
       }
       GROUP BY ?item
       HAVING (COUNT(?label) > 0)
@@ -378,15 +376,23 @@ namespace 'import:wikidata' do
               rdfs:label ?label .
         FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
         FILTER(!CONTAINS(LCASE(?label), "playtest")) # exclude games with "Playtest" in the name
-        FILTER(!CONTAINS(LCASE(?label), "hentai")) # exclude adult games
-        FILTER(!CONTAINS(LCASE(?label), "futanari")) # exclude adult games
-        FILTER(!CONTAINS(LCASE(?label), "porn")) # exclude adult games
-        FILTER(!CONTAINS(LCASE(?label), "eroge")) # exclude adult games
+        #{adult_label_filter} # exclude adult games
         ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
             psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
         SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
       }
     SPARQL
+  end
+
+  # Returns a SPARQL FILTER NOT EXISTS clause that excludes any item where
+  # any of its en/mul labels contains an adult-content keyword. Using
+  # FILTER NOT EXISTS rather than per-row FILTER ensures the item is excluded
+  # even when it has multiple labels and only one of them contains the keyword.
+  def adult_label_filter
+    contains_clauses = ADULT_GAME_BLOCKLIST_TERMS
+      .map { |term| "CONTAINS(LCASE(?adultLabel), #{term.inspect})" }
+      .join(' || ')
+    "FILTER NOT EXISTS { ?item rdfs:label ?adultLabel . FILTER(lang(?adultLabel) IN (\"en\", \"mul\")) FILTER(#{contains_clauses}) }"
   end
 
   # Return the formatting to use for the progress bar.
