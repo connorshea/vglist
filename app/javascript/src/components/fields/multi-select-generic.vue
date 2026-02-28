@@ -9,6 +9,7 @@
         :options="modelValue as any"
         :modelValue="selectedValues"
         @update:modelValue="handleValueChange"
+        @optionCreated="handleOptionCreated"
       />
     </div>
   </div>
@@ -32,6 +33,10 @@ const emit = defineEmits(["update:modelValue"]);
 const selectedValues = computed(() => props.modelValue.map((opt) => opt.value));
 
 // Methods
+function handleOptionCreated(value: string) {
+  emit("update:modelValue", [...props.modelValue, { value, label: value }]);
+}
+
 // For taggable selects, new values are strings that become both value and label
 function handleValueChange(values: string | string[] | null | undefined) {
   if (values == null) {
