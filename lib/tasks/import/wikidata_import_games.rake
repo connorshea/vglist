@@ -64,6 +64,9 @@ namespace 'import:wikidata' do
         url = row.to_h[:item].to_s
         wikidata_id = url.gsub('http://www.wikidata.org/entity/', '')
 
+        # We're hitting 429s on Wikidata so I guess this is necessary.
+        sleep 4
+
         wikidata_json = WikidataHelper.get_claims(
           entity: wikidata_id
         )
