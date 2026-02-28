@@ -33,7 +33,11 @@ const selectedValues = computed(() => props.modelValue.map((opt) => opt.value));
 
 // Methods
 // For taggable selects, new values are strings that become both value and label
-function handleValueChange(values: string | string[]) {
+function handleValueChange(values: string | string[] | null | undefined) {
+  if (values == null) {
+    emit("update:modelValue", []);
+    return;
+  }
   // vue3-select-component emits array for isMulti
   const valuesArray = Array.isArray(values) ? values : [values];
   const selectedOptions = valuesArray.map((v) => {
