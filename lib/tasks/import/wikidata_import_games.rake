@@ -390,8 +390,8 @@ namespace 'import:wikidata' do
   # even when it has multiple labels and only one of them contains the keyword.
   def adult_label_filter
     contains_clauses = ADULT_GAME_BLOCKLIST_TERMS
-      .map { |term| "CONTAINS(LCASE(?adultLabel), #{term.inspect})" }
-      .join(' || ')
+                       .map { |term| "CONTAINS(LCASE(?adultLabel), #{term.inspect})" }
+                       .join(' || ')
     "FILTER NOT EXISTS { ?item rdfs:label ?adultLabel . FILTER(lang(?adultLabel) IN (\"en\", \"mul\")) FILTER(#{contains_clauses}) }"
   end
 
