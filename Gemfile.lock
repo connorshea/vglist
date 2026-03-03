@@ -473,7 +473,7 @@ GEM
     sentry-rails (6.4.0)
       railties (>= 5.2.0)
       sentry-ruby (~> 6.4.0)
-    sentry-ruby (6.4.0)
+    sentry-ruby (6.4.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
@@ -592,7 +592,7 @@ DEPENDENCIES
   ruby-progressbar (~> 1.13)
   selenium-webdriver (~> 4.41)
   sentry-rails (~> 6.4.0)
-  sentry-ruby (~> 6.4.0)
+  sentry-ruby (~> 6.4.1)
   shoulda-matchers (= 7.0.1)
   simplecov (~> 0.22)
   sparql (~> 3.3.2)
