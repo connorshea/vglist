@@ -11,9 +11,10 @@
     "noUncheckedIndexedAccess": true
   },
   "include": [
-    "app/javascript/src/**/*.ts",
-    "app/javascript/src/**/*.d.ts",
-    "app/javascript/src/**/*.vue"
+    "app/javascript/**/*.ts",
+    "app/javascript/**/*.d.ts",
+    "app/javascript/src/**/*.vue",
+    "vite.config.ts"
   ],
   "exclude": ["**/*.spec.ts", "node_modules", "vendor", "public"],
   "compileOnSave": false,

@@ -10,6 +10,11 @@ import { createApp, h, type App } from "vue";
 // Store mounted apps to allow cleanup on Turbolinks navigation
 const mountedApps = new Map<HTMLElement, App>();
 
+// Use Vite's import.meta.glob for dynamic component imports.
+const componentModules = import.meta.glob<{
+  default: ReturnType<(typeof import("vue"))["defineComponent"]>;
+}>("./components/**/*.vue");
+
 (function () {
   const callback = () => {
     const elems = Array.from(document.querySelectorAll("[data-vue-component]")) as HTMLElement[];
@@ -20,13 +25,20 @@ const mountedApps = new Map<HTMLElement, App>();
       }
 
       const compName = elem.dataset.vueComponent;
-      const comp$ = await import(`./components/${compName}.vue`);
+      const modulePath = `./components/${compName}.vue`;
+      const loader = componentModules[modulePath];
+
+      if (!loader) {
+        console.error(`Vue component "${compName}" not found at ${modulePath}`);
+        return;
+      }
+
+      const comp$ = await loader();
       const comp = comp$.default;
       let props = {};
       if (elem.dataset.vueProps) {
         props = JSON.parse(elem.dataset.vueProps);
       }
-      // console.log(`Loaded Vue "${compName}", rendering...`, { comp, props });
 
       const app = createApp({
         render: () => h(comp, props)
