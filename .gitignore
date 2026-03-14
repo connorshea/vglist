@@ -61,3 +61,4 @@ sbin/
 !/app/assets/builds/.keep
 
 .playwright-mcp/
+.claude/worktrees/
