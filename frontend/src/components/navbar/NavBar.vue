@@ -39,8 +39,6 @@
             <router-link class="navbar-item" to="/engines">Engines</router-link>
             <router-link class="navbar-item" to="/series">Series</router-link>
             <router-link class="navbar-item" to="/stores">Stores</router-link>
-            <hr class="navbar-divider" />
-            <router-link class="navbar-item" to="/about">About</router-link>
           </div>
         </div>
       </div>

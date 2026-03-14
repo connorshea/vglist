@@ -34,10 +34,10 @@
               <template v-if="avgRating > 0"> · avg {{ avgRating }} </template>
             </p>
             <div class="profile-social">
-              <router-link :to="`/users/${route.params.id}/followers`" class="social-link">
+              <router-link :to="`/users/${route.params.slug}/followers`" class="social-link">
                 <strong>{{ user.followers.totalCount }}</strong> followers
               </router-link>
-              <router-link :to="`/users/${route.params.id}/following`" class="social-link">
+              <router-link :to="`/users/${route.params.slug}/following`" class="social-link">
                 <strong>{{ user.following.totalCount }}</strong> following
               </router-link>
             </div>
@@ -224,7 +224,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const { data, loading, error, refetch } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string })
+  variables: () => ({ slug: route.params.slug as string })
 });
 
 const user = computed(() => data.value?.user ?? null);
@@ -342,7 +342,7 @@ const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_
 
 async function handleFollow() {
   try {
-    await followUser({ userId: route.params.id as string });
+    await followUser({ userId: user.value!.id });
     await refetch();
   } catch (err) {
     console.error("Failed to follow user:", err);
@@ -351,7 +351,7 @@ async function handleFollow() {
 
 async function handleUnfollow() {
   try {
-    await unfollowUser({ userId: route.params.id as string });
+    await unfollowUser({ userId: user.value!.id });
     await refetch();
   } catch (err) {
     console.error("Failed to unfollow user:", err);

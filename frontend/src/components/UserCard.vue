@@ -20,7 +20,7 @@ import { computed } from "vue";
 
 const props = withDefaults(
   defineProps<{
-    id: string;
+    slug: string;
     username: string;
     avatarUrl?: string | null;
     size?: number;
@@ -31,7 +31,7 @@ const props = withDefaults(
   }
 );
 
-const userPath = computed(() => `/users/${props.id}`);
+const userPath = computed(() => `/users/${props.slug}`);
 
 const userInitial = computed(() => props.username.charAt(0).toUpperCase());
 

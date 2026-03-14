@@ -67,27 +67,27 @@ const router = createRouter({
       component: () => import("@/pages/users/UserListPage.vue")
     },
     {
-      path: "/users/:id",
+      path: "/users/:slug",
       name: "user",
       component: () => import("@/pages/users/UserShowPage.vue")
     },
     {
-      path: "/users/:id/favorites",
+      path: "/users/:slug/favorites",
       name: "userFavorites",
       component: () => import("@/pages/users/UserFavoritesPage.vue")
     },
     {
-      path: "/users/:id/following",
+      path: "/users/:slug/following",
       name: "userFollowing",
       component: () => import("@/pages/users/UserFollowingPage.vue")
     },
     {
-      path: "/users/:id/followers",
+      path: "/users/:slug/followers",
       name: "userFollowers",
       component: () => import("@/pages/users/UserFollowersPage.vue")
     },
     {
-      path: "/users/:id/activity",
+      path: "/users/:slug/activity",
       name: "userActivity",
       component: () => import("@/pages/users/UserActivityPage.vue")
     },

@@ -10,7 +10,7 @@
 
     <div v-if="user">
       <h1 class="title">
-        <router-link :to="`/users/${route.params.id}`">{{ user.username }}</router-link>
+        <router-link :to="`/users/${route.params.slug}`">{{ user.username }}</router-link>
         &rsaquo; Followers
       </h1>
 
@@ -23,7 +23,7 @@
       <div class="columns is-multiline">
         <div v-for="follower in followerUsers" :key="follower.id" class="column is-3">
           <UserCard
-            :id="follower.id"
+            :slug="follower.slug"
             :username="follower.username"
             :avatar-url="follower.avatarUrl"
             :size="64"
@@ -45,7 +45,7 @@ import UserCard from "@/components/UserCard.vue";
 const route = useRoute();
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string })
+  variables: () => ({ slug: route.params.slug as string })
 });
 
 const user = computed(() => data.value?.user ?? null);

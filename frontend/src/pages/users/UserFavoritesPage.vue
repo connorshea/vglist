@@ -10,7 +10,7 @@
 
     <div v-if="user">
       <h1 class="title">
-        <router-link :to="`/users/${route.params.id}`">{{ user.username }}</router-link>
+        <router-link :to="`/users/${route.params.slug}`">{{ user.username }}</router-link>
         &rsaquo; Favorite Games
       </h1>
 
@@ -47,7 +47,7 @@ import type { GetUserQuery } from "@/types/graphql";
 const route = useRoute();
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string })
+  variables: () => ({ slug: route.params.slug as string })
 });
 
 const user = computed(() => data.value?.user ?? null);
