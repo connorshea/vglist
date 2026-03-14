@@ -4,8 +4,17 @@
       <div v-if="isOpen" class="search-overlay" @click.self="close">
         <div class="search-header">
           <div class="search-bar-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <svg
+              class="search-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <input
               ref="searchInputRef"
@@ -17,12 +26,20 @@
               @keydown.escape="close"
               @keydown.enter="goToFirstResult"
             />
-            <div class="search-hint">
-              <kbd class="kbd">Esc</kbd> to close
-            </div>
+            <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
             <button class="search-close" aria-label="Close search" @click="close">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
           </div>
@@ -31,8 +48,17 @@
         <div class="search-results">
           <!-- Empty state -->
           <div v-if="!query || query.length < 2" class="search-empty">
-            <svg class="search-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <svg
+              class="search-empty-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <p>Start typing to search games, companies, users, and more.</p>
           </div>
@@ -60,11 +86,25 @@
             <!-- Games column -->
             <div v-if="gameResults.length" class="category">
               <div class="category-header">
-                <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="6" width="20" height="12" rx="2" /><line x1="6" y1="12" x2="10" y2="12" /><line x1="8" y1="10" x2="8" y2="14" /><circle cx="17" cy="11" r="1" /><circle cx="15" cy="13" r="1" />
+                <svg
+                  class="category-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="6" width="20" height="12" rx="2" />
+                  <line x1="6" y1="12" x2="10" y2="12" />
+                  <line x1="8" y1="10" x2="8" y2="14" />
+                  <circle cx="17" cy="11" r="1" />
+                  <circle cx="15" cy="13" r="1" />
                 </svg>
                 <span class="category-title">Games</span>
-                <span class="category-count">{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span>
+                <span class="category-count"
+                  >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
+                >
               </div>
 
               <a
@@ -76,13 +116,19 @@
               >
                 <div class="result-thumb">
                   <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.content" />
-                  <div v-else class="result-thumb-placeholder">{{ gameInitials(game.content) }}</div>
+                  <div v-else class="result-thumb-placeholder">
+                    {{ gameInitials(game.content) }}
+                  </div>
                 </div>
                 <div class="result-info">
                   <div class="result-title">{{ game.content }}</div>
                   <div class="result-meta">
-                    <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
-                    <span v-if="game.developerName" class="result-developer">{{ game.developerName }}</span>
+                    <span v-if="game.releaseDate" class="result-year">{{
+                      releaseYear(game.releaseDate)
+                    }}</span>
+                    <span v-if="game.developerName" class="result-developer">{{
+                      game.developerName
+                    }}</span>
                   </div>
                 </div>
               </a>
@@ -91,11 +137,22 @@
             <!-- Other resources column -->
             <div v-if="otherResults.length" class="category">
               <div class="category-header">
-                <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                <svg
+                  class="category-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
                 </svg>
                 <span class="category-title">Other</span>
-                <span class="category-count">{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span>
+                <span class="category-count"
+                  >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
+                >
               </div>
 
               <a
@@ -106,7 +163,9 @@
                 @click.prevent="goToResult(item)"
               >
                 <div class="result-thumb">
-                  <div class="result-thumb-placeholder">{{ item.content.charAt(0).toUpperCase() }}</div>
+                  <div class="result-thumb-placeholder">
+                    {{ item.content.charAt(0).toUpperCase() }}
+                  </div>
                 </div>
                 <div class="result-info">
                   <div class="result-title">{{ item.content }}</div>
@@ -120,11 +179,24 @@
             <!-- Users column -->
             <div v-if="userResults.length" class="category">
               <div class="category-header">
-                <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                <svg
+                  class="category-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
                 <span class="category-title">Users</span>
-                <span class="category-count">{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span>
+                <span class="category-count"
+                  >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+                >
               </div>
 
               <a
@@ -136,7 +208,9 @@
               >
                 <div class="result-thumb">
                   <img v-if="user.avatarUrl" :src="user.avatarUrl" :alt="user.content" />
-                  <div v-else class="result-thumb-placeholder">{{ user.content.charAt(0).toUpperCase() }}</div>
+                  <div v-else class="result-thumb-placeholder">
+                    {{ user.content.charAt(0).toUpperCase() }}
+                  </div>
                 </div>
                 <div class="result-info">
                   <div class="result-title">{{ user.content }}</div>
@@ -180,9 +254,11 @@ const totalResults = computed(() => results.value.length);
 
 // Dynamically set grid columns based on which categories have results
 const gridColumnsClass = computed(() => {
-  const cols = [gameResults.value.length > 0, otherResults.value.length > 0, userResults.value.length > 0].filter(
-    Boolean
-  ).length;
+  const cols = [
+    gameResults.value.length > 0,
+    otherResults.value.length > 0,
+    userResults.value.length > 0
+  ].filter(Boolean).length;
   return `grid-cols-${cols}`;
 });
 
@@ -324,7 +400,9 @@ function releaseYear(date: string): string {
     0 0 0 1px rgba(123, 94, 167, 0.08),
     0 8px 40px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .search-bar-wrap:focus-within {
@@ -395,7 +473,9 @@ function releaseYear(date: string): string {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .search-close:hover {
@@ -529,7 +609,9 @@ function releaseYear(date: string): string {
   padding: 0.6rem 0.7rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition:
+    background 0.15s,
+    transform 0.1s;
   position: relative;
   animation: itemSlideIn 0.25s ease-out both;
   text-decoration: none;

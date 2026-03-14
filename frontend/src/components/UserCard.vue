@@ -2,12 +2,7 @@
   <div class="card user-card has-text-centered">
     <div class="card-content">
       <figure class="image is-inline-block mb-3" :style="avatarSizeStyle">
-        <img
-          v-if="avatarUrl"
-          class="is-rounded"
-          :src="avatarUrl"
-          :alt="username"
-        />
+        <img v-if="avatarUrl" class="is-rounded" :src="avatarUrl" :alt="username" />
         <div v-else class="user-avatar-placeholder is-rounded" :style="avatarSizeStyle">
           <span :style="initialFontStyle">{{ userInitial }}</span>
         </div>
@@ -23,15 +18,18 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = withDefaults(defineProps<{
-  id: string;
-  username: string;
-  avatarUrl?: string | null;
-  size?: number;
-}>(), {
-  avatarUrl: null,
-  size: 96
-});
+const props = withDefaults(
+  defineProps<{
+    id: string;
+    username: string;
+    avatarUrl?: string | null;
+    size?: number;
+  }>(),
+  {
+    avatarUrl: null,
+    size: 96
+  }
+);
 
 const userPath = computed(() => `/users/${props.id}`);
 

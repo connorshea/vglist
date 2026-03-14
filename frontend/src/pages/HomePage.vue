@@ -111,7 +111,8 @@ interface GameNode {
 
 const stats = computed(() => {
   if (!statsData.value) return [];
-  const s = (statsData.value as { basicSiteStatistics: Record<string, number> }).basicSiteStatistics;
+  const s = (statsData.value as { basicSiteStatistics: Record<string, number> })
+    .basicSiteStatistics;
   return [
     { label: "GAMES", value: s.games, path: "/games" },
     { label: "SERIES", value: s.series, path: "/series" },
@@ -221,7 +222,13 @@ const mosaicTiles = ref<MosaicTile[]>(
 
 // Compute rows from flat tile array — each row scrolls in alternating directions
 const mosaicRows = computed(() => {
-  const rows: { id: number; tiles: MosaicTile[]; reverse: boolean; speed: number; delay: number }[] = [];
+  const rows: {
+    id: number;
+    tiles: MosaicTile[];
+    reverse: boolean;
+    speed: number;
+    delay: number;
+  }[] = [];
   for (let r = 0; r < ROWS; r++) {
     rows.push({
       id: r,
@@ -306,7 +313,9 @@ function flipTile() {
     } else {
       const newIdx = Math.floor(Math.random() * PALETTES.length);
       const angle = 110 + Math.floor(Math.random() * 70);
-      tile.style = { background: `linear-gradient(${angle}deg, ${PALETTES[newIdx][0]}, ${PALETTES[newIdx][1]})` };
+      tile.style = {
+        background: `linear-gradient(${angle}deg, ${PALETTES[newIdx][0]}, ${PALETTES[newIdx][1]})`
+      };
     }
   }, 400);
 

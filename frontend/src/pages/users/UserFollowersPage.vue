@@ -22,7 +22,12 @@
 
       <div class="columns is-multiline">
         <div v-for="follower in followerUsers" :key="follower.id" class="column is-3">
-          <UserCard :id="follower.id" :username="follower.username" :avatar-url="follower.avatarUrl" :size="64" />
+          <UserCard
+            :id="follower.id"
+            :username="follower.username"
+            :avatar-url="follower.avatarUrl"
+            :size="64"
+          />
         </div>
       </div>
     </div>

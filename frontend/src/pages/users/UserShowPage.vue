@@ -224,7 +224,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const { data, loading, error, refetch } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string }),
+  variables: () => ({ id: route.params.id as string })
 });
 
 const user = computed(() => data.value?.user ?? null);
@@ -233,18 +233,18 @@ const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
 
 // Stats
 const totalHoursPlayed = computed(() =>
-  gamePurchases.value.reduce((sum, p) => sum + (p.hoursPlayed ?? 0), 0),
+  gamePurchases.value.reduce((sum, p) => sum + (p.hoursPlayed ?? 0), 0)
 );
 const completedCount = computed(
   () =>
     gamePurchases.value.filter(
-      (p) => p.completionStatus === "completed" || p.completionStatus === "fully_completed",
-    ).length,
+      (p) => p.completionStatus === "completed" || p.completionStatus === "fully_completed"
+    ).length
 );
 const completionPct = computed(() =>
   gamePurchases.value.length
     ? Math.round((completedCount.value / gamePurchases.value.length) * 100)
-    : 0,
+    : 0
 );
 const avgRating = computed(() => {
   const rated = gamePurchases.value.filter((p) => p.rating !== null);
@@ -265,7 +265,7 @@ const statuses = [
   { key: "fully_completed", label: "100%" },
   { key: "paused", label: "Paused" },
   { key: "dropped", label: "Dropped" },
-  { key: "unplayed", label: "Unplayed" },
+  { key: "unplayed", label: "Unplayed" }
 ];
 
 function statusCount(key: string): number {
@@ -296,7 +296,7 @@ const STATUS_COLORS: Record<string, string> = {
   paused: "#f59e0b",
   dropped: "#ef4444",
   unplayed: "#a855f7",
-  not_applicable: "#6b7280",
+  not_applicable: "#6b7280"
 };
 
 function statusColor(status: string): string {
@@ -318,7 +318,7 @@ function formatStatus(status: string): string {
     paused: "Paused",
     dropped: "Dropped",
     unplayed: "Unplayed",
-    not_applicable: "N/A",
+    not_applicable: "N/A"
   };
   return labels[status] ?? status;
 }
