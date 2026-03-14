@@ -42,7 +42,7 @@ module Api
           message: "Account created successfully. Please check your email to confirm your account."
         }, status: :created
       else
-        render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: user.errors.full_messages }, status: :unprocessable_content
       end
     end
 

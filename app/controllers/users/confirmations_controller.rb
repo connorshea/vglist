@@ -8,7 +8,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if successfully_sent?(resource)
       render json: { message: "Confirmation instructions sent." }
     else
-      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: resource.errors.full_messages }, status: :unprocessable_content
     end
   end
 
