@@ -3,18 +3,7 @@
     <div v-if="isOpen" class="search-overlay" @click.self="close">
       <div class="search-header">
         <div class="search-bar-wrap">
-          <svg
-            class="search-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+          <SearchIcon class="search-icon" stroke-width="2" />
           <input
             ref="searchInputRef"
             v-model="query"
@@ -26,19 +15,7 @@
           />
           <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
           <button class="search-close" aria-label="Close search" @click="close">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <CloseIcon width="16" height="16" stroke-width="2" />
           </button>
         </div>
       </div>
@@ -46,18 +23,7 @@
       <div class="search-results">
         <!-- Empty state -->
         <div v-if="!query || query.length < 2" class="search-empty">
-          <svg
-            class="search-empty-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+          <SearchIcon class="search-empty-icon" stroke-width="1.5" />
           <p>Start typing to search games, companies, users, and more.</p>
         </div>
 
@@ -84,21 +50,7 @@
           <!-- Games column -->
           <div v-if="gameResults.length" class="category">
             <div class="category-header">
-              <svg
-                class="category-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="6" width="20" height="12" rx="2" />
-                <line x1="6" y1="12" x2="10" y2="12" />
-                <line x1="8" y1="10" x2="8" y2="14" />
-                <circle cx="17" cy="11" r="1" />
-                <circle cx="15" cy="13" r="1" />
-              </svg>
+              <GamepadIcon class="category-icon" />
               <span class="category-title">Games</span>
               <span class="category-count"
                 >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
@@ -135,18 +87,7 @@
           <!-- Companies column -->
           <div v-if="companyResults.length" class="category">
             <div class="category-header">
-              <svg
-                class="category-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-              </svg>
+              <BriefcaseIcon class="category-icon" />
               <span class="category-title">Companies</span>
               <span class="category-count"
                 >{{ companyResults.length }} result{{
@@ -176,19 +117,7 @@
           <!-- Platforms column -->
           <div v-if="platformResults.length" class="category">
             <div class="category-header">
-              <svg
-                class="category-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                <line x1="8" y1="21" x2="16" y2="21" />
-                <line x1="12" y1="17" x2="12" y2="21" />
-              </svg>
+              <MonitorIcon class="category-icon" />
               <span class="category-title">Platforms</span>
               <span class="category-count"
                 >{{ platformResults.length }} result{{
@@ -218,18 +147,7 @@
           <!-- Other resources column -->
           <div v-if="otherResults.length" class="category">
             <div class="category-header">
-              <svg
-                class="category-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-              </svg>
+              <BriefcaseIcon class="category-icon" />
               <span class="category-title">Other</span>
               <span class="category-count"
                 >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
@@ -262,20 +180,7 @@
           <!-- Users column -->
           <div v-if="userResults.length" class="category">
             <div class="category-header">
-              <svg
-                class="category-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
+              <UsersIcon class="category-icon" />
               <span class="category-title">Users</span>
               <span class="category-count"
                 >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
@@ -314,6 +219,12 @@ import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import type { SearchResultNode } from "@/types/graphql";
+import SearchIcon from "@/components/icons/SearchIcon.vue";
+import CloseIcon from "@/components/icons/CloseIcon.vue";
+import GamepadIcon from "@/components/icons/GamepadIcon.vue";
+import BriefcaseIcon from "@/components/icons/BriefcaseIcon.vue";
+import MonitorIcon from "@/components/icons/MonitorIcon.vue";
+import UsersIcon from "@/components/icons/UsersIcon.vue";
 
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();
