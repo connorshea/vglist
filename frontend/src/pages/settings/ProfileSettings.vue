@@ -73,6 +73,7 @@ import { ref, watch } from 'vue'
 import { useQuery, useMutation } from '@/composables/useGraphQL'
 import { UPDATE_USER } from '@/graphql/mutations/users'
 import gql from 'graphql-tag'
+import type { GetCurrentUserProfileData, UpdateUserData } from '@/types/graphql'
 
 const GET_CURRENT_USER_PROFILE = gql`
   query GetCurrentUserProfile {
@@ -91,7 +92,7 @@ const hideDaysPlayed = ref(false)
 const saveError = ref('')
 const saveSuccess = ref(false)
 
-const { data, loading, error } = useQuery(GET_CURRENT_USER_PROFILE)
+const { data, loading, error } = useQuery<GetCurrentUserProfileData>(GET_CURRENT_USER_PROFILE)
 
 watch(data, (val) => {
   if (val?.currentUser) {
@@ -101,7 +102,7 @@ watch(data, (val) => {
   }
 }, { immediate: true })
 
-const { mutate, loading: saving } = useMutation(UPDATE_USER)
+const { mutate, loading: saving } = useMutation<UpdateUserData>(UPDATE_USER)
 
 async function saveProfile() {
   saveError.value = ''

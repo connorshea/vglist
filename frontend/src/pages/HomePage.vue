@@ -24,8 +24,9 @@
 import { computed } from 'vue'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_BASIC_SITE_STATISTICS } from '@/graphql/queries/resources'
+import type { GetBasicSiteStatisticsData } from '@/types/graphql'
 
-const { data } = useQuery(GET_BASIC_SITE_STATISTICS)
+const { data } = useQuery<GetBasicSiteStatisticsData>(GET_BASIC_SITE_STATISTICS)
 
 const stats = computed(() => {
   if (!data.value) return []

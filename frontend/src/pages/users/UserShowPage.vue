@@ -168,11 +168,12 @@ import { useQuery, useMutation } from '@/composables/useGraphQL'
 import { useAuthStore } from '@/stores/auth'
 import { GET_USER } from '@/graphql/queries/users'
 import { FOLLOW_USER, UNFOLLOW_USER } from '@/graphql/mutations/users'
+import type { GetUserData } from '@/types/graphql'
 
 const route = useRoute()
 const authStore = useAuthStore()
 
-const { data, loading, error, refetch } = useQuery(GET_USER, {
+const { data, loading, error, refetch } = useQuery<GetUserData>(GET_USER, {
   variables: () => ({ id: route.params.id as string }),
 })
 

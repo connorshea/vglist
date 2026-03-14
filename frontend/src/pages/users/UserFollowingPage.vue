@@ -54,10 +54,11 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_USER } from '@/graphql/queries/users'
+import type { GetUserData } from '@/types/graphql'
 
 const route = useRoute()
 
-const { data, loading, error } = useQuery(GET_USER, {
+const { data, loading, error } = useQuery<GetUserData>(GET_USER, {
   variables: () => ({ id: route.params.id as string }),
 })
 

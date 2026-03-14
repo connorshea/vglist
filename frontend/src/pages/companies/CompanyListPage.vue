@@ -37,12 +37,15 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_COMPANIES } from '@/graphql/queries/resources'
+import type { GetCompaniesData } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery(GET_COMPANIES, {
+const { data, loading, error, fetchMore } = useQuery<GetCompaniesData>(GET_COMPANIES, {
   variables: { first: 25 },
 })
 
 function loadMore() {
+  if (!data.value) return
+
   fetchMore(
     { first: 25, after: data.value.companies.pageInfo.endCursor },
     (prev, next) => ({
