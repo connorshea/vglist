@@ -27,9 +27,12 @@
         >
           <router-link :to="`/games/${game.id}`" class="home-game-card">
             <div class="media">
-              <div class="media-left" v-if="game.coverUrl">
+              <div class="media-left">
                 <figure class="image" style="width: 100px">
-                  <img :src="game.coverUrl" :alt="game.name" />
+                  <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
+                  <div v-else class="home-cover-placeholder">
+                    <span>{{ gameInitials(game.name) }}</span>
+                  </div>
                 </figure>
               </div>
               <div class="media-content">
@@ -85,6 +88,15 @@ const recentGames = computed(() => {
   if (!recentGamesData.value) return [];
   return recentGamesData.value.games.nodes as GameNode[];
 });
+
+function gameInitials(name: string): string {
+  return name
+    .split(/[\s:]+/)
+    .filter((w) => w.length > 0)
+    .slice(0, 3)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
 
 function platformNames(game: GameNode): string {
   const names = game.platforms.nodes.map((p) => p.name);
@@ -158,5 +170,22 @@ function developerNames(game: GameNode): string {
 
 .home-game-card .subtitle {
   margin-bottom: 0.25rem;
+}
+
+.home-cover-placeholder {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-cover-placeholder span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
 }
 </style>

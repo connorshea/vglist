@@ -12,11 +12,16 @@
 
     <div v-if="data" class="columns is-multiline">
       <div v-for="game in data.games.nodes" :key="game.id" class="column is-3">
-        <div class="card">
+        <div class="card game-list-card">
           <div class="card-image" v-if="game.coverUrl">
             <figure class="image is-3by4">
               <img :src="game.coverUrl" :alt="game.name" />
             </figure>
+          </div>
+          <div class="card-image" v-else>
+            <div class="game-cover-placeholder">
+              <span>{{ gameInitials(game.name) }}</span>
+            </div>
           </div>
           <div class="card-content">
             <p class="title is-5">
@@ -55,6 +60,15 @@ const { data, loading, error, fetchMore } = useQuery<GetGamesQuery>(GET_GAMES, {
   variables: { first: 20 }
 });
 
+function gameInitials(name: string): string {
+  return name
+    .split(/[\s:]+/)
+    .filter((w) => w.length > 0)
+    .slice(0, 3)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
 function loadMore() {
   if (!data.value) return;
 
@@ -66,3 +80,26 @@ function loadMore() {
   }));
 }
 </script>
+
+<style scoped>
+.game-list-card {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.game-cover-placeholder {
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-cover-placeholder span {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+</style>
