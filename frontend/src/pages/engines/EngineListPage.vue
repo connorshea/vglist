@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_ENGINES } from '@/graphql/queries/resources'
-import type { GetEnginesData } from '@/types/graphql'
+import type { GetEnginesQuery } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery<GetEnginesData>(GET_ENGINES, {
+const { data, loading, error, fetchMore } = useQuery<GetEnginesQuery>(GET_ENGINES, {
   variables: { first: 25 },
 })
 

@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_SERIES_LIST } from '@/graphql/queries/resources'
-import type { GetSeriesListData } from '@/types/graphql'
+import type { GetSeriesListQuery } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery<GetSeriesListData>(GET_SERIES_LIST, {
+const { data, loading, error, fetchMore } = useQuery<GetSeriesListQuery>(GET_SERIES_LIST, {
   variables: { first: 25 },
 })
 

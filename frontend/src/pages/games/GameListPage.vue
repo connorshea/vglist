@@ -56,9 +56,9 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_GAMES } from '@/graphql/queries/games'
-import type { GetGamesData } from '@/types/graphql'
+import type { GetGamesQuery } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery<GetGamesData>(GET_GAMES, {
+const { data, loading, error, fetchMore } = useQuery<GetGamesQuery>(GET_GAMES, {
   variables: { first: 20 },
 })
 

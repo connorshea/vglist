@@ -1,46 +1,52 @@
+// This file is a placeholder that will be overwritten by graphql-codegen.
+// Run `yarn codegen` to regenerate from the GraphQL schema and queries.
+//
+// Type names follow graphql-codegen conventions:
+//   - Query results: {OperationName}Query
+//   - Mutation results: {OperationName}Mutation
+
 import type { PageInfo } from './index'
 
-// Connection helper for paginated GraphQL responses
-export interface Connection<T> {
+// Helper for paginated connections
+interface Connection<T> {
   nodes: T[]
   pageInfo: PageInfo
 }
 
-// Shared node types matching GraphQL selection sets
-export interface BasicNode {
+interface BasicNode {
   id: string
   name: string
 }
 
-export interface GameCardNode {
+interface GameCardNode {
   id: string
   name: string
   coverUrl: string | null
 }
 
-// Activity
-export interface ActivityEventNode {
+interface UserBasicNode {
   id: string
-  eventCategory: string
-  createdAt: string
-  user: {
+  username: string
+  slug: string
+  avatarUrl: string | null
+}
+
+// Query types
+
+export interface GetActivityQuery {
+  activity: Connection<{
     id: string
-    username: string
-    slug: string
-    avatarUrl: string | null
-  }
+    eventCategory: string
+    createdAt: string
+    user: UserBasicNode
+  }>
 }
 
-export interface GetActivityData {
-  activity: Connection<ActivityEventNode>
-}
-
-// Companies
-export interface GetCompaniesData {
+export interface GetCompaniesQuery {
   companies: Connection<BasicNode>
 }
 
-export interface GetCompanyData {
+export interface GetCompanyQuery {
   company: {
     id: string
     name: string
@@ -50,12 +56,11 @@ export interface GetCompanyData {
   }
 }
 
-// Engines
-export interface GetEnginesData {
+export interface GetEnginesQuery {
   engines: Connection<BasicNode>
 }
 
-export interface GetEngineData {
+export interface GetEngineQuery {
   engine: {
     id: string
     name: string
@@ -64,20 +69,17 @@ export interface GetEngineData {
   }
 }
 
-// Games
-export interface GameListNode {
-  id: string
-  name: string
-  releaseDate: string | null
-  coverUrl: string | null
-  developers: { nodes: BasicNode[] }
+export interface GetGamesQuery {
+  games: Connection<{
+    id: string
+    name: string
+    releaseDate: string | null
+    coverUrl: string | null
+    developers: { nodes: BasicNode[] }
+  }>
 }
 
-export interface GetGamesData {
-  games: Connection<GameListNode>
-}
-
-export interface GetGameData {
+export interface GetGameQuery {
   game: {
     id: string
     name: string
@@ -101,12 +103,11 @@ export interface GetGameData {
   }
 }
 
-// Genres
-export interface GetGenresData {
+export interface GetGenresQuery {
   genres: Connection<BasicNode>
 }
 
-export interface GetGenreData {
+export interface GetGenreQuery {
   genre: {
     id: string
     name: string
@@ -115,12 +116,11 @@ export interface GetGenreData {
   }
 }
 
-// Platforms
-export interface GetPlatformsData {
+export interface GetPlatformsQuery {
   platforms: Connection<BasicNode>
 }
 
-export interface GetPlatformData {
+export interface GetPlatformQuery {
   platform: {
     id: string
     name: string
@@ -129,12 +129,11 @@ export interface GetPlatformData {
   }
 }
 
-// Series
-export interface GetSeriesListData {
+export interface GetSeriesListQuery {
   seriesList: Connection<BasicNode>
 }
 
-export interface GetSeriesData {
+export interface GetSeriesQuery {
   series: {
     id: string
     name: string
@@ -143,38 +142,28 @@ export interface GetSeriesData {
   }
 }
 
-// Stores
-export interface GetStoresData {
+export interface GetStoresQuery {
   stores: Connection<BasicNode>
 }
 
-export interface GetStoreData {
+export interface GetStoreQuery {
   store: {
     id: string
     name: string
   }
 }
 
-// Users
-export interface UserListNode {
-  id: string
-  username: string
-  slug: string
-  avatarUrl: string | null
-  gamePurchases: { totalCount: number }
+export interface GetUsersQuery {
+  users: Connection<{
+    id: string
+    username: string
+    slug: string
+    avatarUrl: string | null
+    gamePurchases: { totalCount: number }
+  }>
 }
 
-export interface GetUsersData {
-  users: Connection<UserListNode>
-}
-
-interface UserBasicNode {
-  id: string
-  username: string
-  avatarUrl: string | null
-}
-
-export interface GetUserData {
+export interface GetUserQuery {
   user: {
     id: string
     username: string
@@ -194,40 +183,40 @@ export interface GetUserData {
       completionStatus: string | null
       rating: number | null
     }>
-    followers: { totalCount: number; nodes?: UserBasicNode[] }
-    following: { totalCount: number; nodes?: UserBasicNode[] }
+    followers: {
+      totalCount: number
+      nodes: UserBasicNode[]
+    }
+    following: {
+      totalCount: number
+      nodes: UserBasicNode[]
+    }
     favoritedGames: { nodes: GameCardNode[] }
   }
 }
 
-// Search
-export interface SearchResultNode {
-  searchableId: string
-  searchableType: string
-  content: string
-}
-
-export interface GlobalSearchData {
-  globalSearch: { nodes: SearchResultNode[] }
-}
-
-// Statistics
-export interface GetBasicSiteStatisticsData {
-  basicSiteStatistics: {
-    gamesCount: number
-    platformsCount: number
-    seriesCount: number
-    enginesCount: number
-    companiesCount: number
-    genresCount: number
-    storesCount: number
-    usersCount: number
-    gamePurchasesCount: number
+export interface GlobalSearchQuery {
+  globalSearch: {
+    nodes: {
+      searchableId: string
+      searchableType: string
+      content: string
+    }[]
   }
 }
 
-// Settings
-export interface GetCurrentUserProfileData {
+export interface GetBasicSiteStatisticsQuery {
+  basicSiteStatistics: {
+    games: number
+    platforms: number
+    series: number
+    engines: number
+    companies: number
+    genres: number
+  }
+}
+
+export interface GetCurrentUserProfileQuery {
   currentUser: {
     id: string
     bio: string | null
@@ -236,22 +225,23 @@ export interface GetCurrentUserProfileData {
   }
 }
 
-// Mutation responses
-export interface UpdateUserData {
+// Mutation types
+
+export interface UpdateUserMutation {
   updateUser: {
     user: { id: string; bio: string | null; privacy: string; hideDaysPlayed: boolean }
     errors: string[]
   }
 }
 
-export interface ExportLibraryData {
+export interface ExportLibraryMutation {
   exportLibrary: {
     libraryJson: string
     errors: string[]
   }
 }
 
-export interface ResetApiTokenData {
+export interface ResetApiTokenMutation {
   resetApiToken: {
     apiToken: string
     errors: string[]
