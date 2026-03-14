@@ -4,6 +4,12 @@
 # In production, the built frontend is copied to public/.
 class SpaController < ActionController::API
   def index
+    if Rails.env.development?
+      vite_port = ENV.fetch('VITE_PORT', '5173')
+      redirect_to "http://localhost:#{vite_port}#{request.fullpath}", allow_other_host: true
+      return
+    end
+
     index_path = Rails.root.join("public/index.html")
 
     if File.exist?(index_path)
