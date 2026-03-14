@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import type { UserRole } from "@/types";
+import type { UserRole } from "@/types/graphql";
 
 interface AuthUser {
   id: string;
@@ -24,9 +24,9 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref<AuthUser | null>(loadStoredUser());
 
   const isAuthenticated = computed(() => token.value !== null);
-  const isAdmin = computed(() => user.value?.role === "admin");
+  const isAdmin = computed(() => user.value?.role === "ADMIN");
   const isModerator = computed(
-    () => user.value?.role === "moderator" || user.value?.role === "admin"
+    () => user.value?.role === "MODERATOR" || user.value?.role === "ADMIN"
   );
 
   function setAuth(newToken: string, newUser: AuthUser) {

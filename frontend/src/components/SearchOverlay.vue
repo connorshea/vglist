@@ -231,7 +231,7 @@ import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
-import type { SearchResultNode } from "@/types/graphql";
+import type { GameSearchResult, SearchResultUnion, UserSearchResult } from "@/types/graphql";
 import SearchIcon from "@/components/icons/SearchIcon.vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
 import GamepadIcon from "@/components/icons/GamepadIcon.vue";
@@ -279,19 +279,23 @@ onBeforeUnmount(() => {
 });
 
 const query = ref("");
-const results = ref<SearchResultNode[]>([]);
+const results = ref<SearchResultUnion[]>([]);
 const loading = ref(false);
 const hasSearched = ref(false);
 const error = ref<string | null>(null);
 
 // Group results by type
 const dedicatedTypes = new Set(["GAME", "COMPANY", "PLATFORM", "USER"]);
-const gameResults = computed(() => results.value.filter((r) => r.searchableType === "GAME"));
+const gameResults = computed(() =>
+  results.value.filter((r): r is GameSearchResult => r.searchableType === "GAME")
+);
 const companyResults = computed(() => results.value.filter((r) => r.searchableType === "COMPANY"));
 const platformResults = computed(() =>
   results.value.filter((r) => r.searchableType === "PLATFORM")
 );
-const userResults = computed(() => results.value.filter((r) => r.searchableType === "USER"));
+const userResults = computed(() =>
+  results.value.filter((r): r is UserSearchResult => r.searchableType === "USER")
+);
 const otherResults = computed(() =>
   results.value.filter((r) => !dedicatedTypes.has(r.searchableType))
 );
@@ -340,7 +344,7 @@ const performSearch = debounce(async () => {
   error.value = null;
   try {
     const data = await gqlClient.request<{
-      globalSearch: { nodes: SearchResultNode[] };
+      globalSearch: { nodes: SearchResultUnion[] };
     }>(GLOBAL_SEARCH, { query: query.value });
 
     results.value = data.globalSearch.nodes;
@@ -377,14 +381,15 @@ const typeRouteMap: Record<string, string> = {
   STORE: "stores"
 };
 
-function resultHref(result: SearchResultNode): string {
+function resultHref(result: SearchResultUnion): string {
   const path = typeRouteMap[result.searchableType];
   if (!path) return "#";
-  const id = result.searchableType === "USER" && result.slug ? result.slug : result.searchableId;
+  const id =
+    result.searchableType === "USER" ? (result as UserSearchResult).slug : result.searchableId;
   return `/${path}/${id}`;
 }
 
-function goToResult(result: SearchResultNode) {
+function goToResult(result: SearchResultUnion) {
   const href = resultHref(result);
   if (href !== "#") {
     router.push(href);
