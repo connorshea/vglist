@@ -4,12 +4,10 @@ export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
     signIn(email: $email, password: $password) {
       token
-      user {
-        id
-        username
-        slug
-        role
-      }
+      userId
+      username
+      slug
+      role
       errors
     }
   }
@@ -28,10 +26,7 @@ export const SIGN_UP = gql`
       password: $password
       passwordConfirmation: $passwordConfirmation
     ) {
-      user {
-        id
-        username
-      }
+      message
       errors
     }
   }
