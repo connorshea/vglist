@@ -29,7 +29,7 @@ export function useAuth() {
         id: result.userId,
         username: result.username,
         email,
-        role: result.role as "MEMBER" | "MODERATOR" | "ADMIN",
+        role: result.role.toUpperCase() as "MEMBER" | "MODERATOR" | "ADMIN",
         slug: result.slug
       });
 

@@ -43,9 +43,9 @@
             </div>
           </div>
         </div>
-        <div v-if="canFollowOrUnfollow" class="profile-header-right">
+        <div v-if="canFollowOrUnfollow || hasAdminActions" class="profile-header-right">
           <button
-            v-if="user.isFollowed"
+            v-if="canFollowOrUnfollow && user.isFollowed"
             class="follow-btn follow-btn-secondary"
             :disabled="unfollowLoading"
             @click="handleUnfollow"
@@ -53,15 +53,72 @@
             Unfollow
           </button>
           <button
-            v-else
+            v-else-if="canFollowOrUnfollow"
             class="follow-btn follow-btn-primary"
             :disabled="followLoading"
             @click="handleFollow"
           >
             Follow
           </button>
+
+          <!-- Admin Actions dropdown -->
+          <div v-if="hasAdminActions" class="actions-dropdown">
+            <button class="actions-dropdown-toggle" @click="actionsOpen = !actionsOpen">
+              Actions
+              <span class="actions-caret">{{ actionsOpen ? "\u25B2" : "\u25BC" }}</span>
+            </button>
+            <div v-if="actionsOpen" class="actions-dropdown-menu">
+              <button
+                v-if="canUpdateRole && user.role !== 'MODERATOR'"
+                class="actions-dropdown-item"
+                @click="handleUpdateRole('MODERATOR')"
+              >
+                Make moderator
+              </button>
+              <button
+                v-if="canUpdateRole && user.role === 'MODERATOR'"
+                class="actions-dropdown-item"
+                @click="handleUpdateRole('MEMBER')"
+              >
+                Demote to member
+              </button>
+              <button
+                v-if="canUpdateRole && user.role !== 'ADMIN'"
+                class="actions-dropdown-item"
+                @click="handleUpdateRole('ADMIN')"
+              >
+                Make admin
+              </button>
+              <button
+                v-if="canRemoveAvatar && user.avatarUrl"
+                class="actions-dropdown-item actions-dropdown-item-danger"
+                @click="handleRemoveAvatar"
+              >
+                Remove avatar
+              </button>
+              <button
+                v-if="canBan && !user.banned"
+                class="actions-dropdown-item actions-dropdown-item-danger"
+                @click="handleBan"
+              >
+                Ban user
+              </button>
+              <button
+                v-if="canUnban && user.banned"
+                class="actions-dropdown-item"
+                @click="handleUnban"
+              >
+                Unban user
+              </button>
+            </div>
+          </div>
         </div>
       </header>
+
+      <!-- Banned notice -->
+      <div v-if="user.banned" class="notification is-danger is-light">
+        This user has been banned.
+      </div>
 
       <!-- Private account notice -->
       <div v-if="isPrivateProfile" class="private-notice">
@@ -219,16 +276,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
+import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_USER } from "@/graphql/queries/users";
-import { FOLLOW_USER, UNFOLLOW_USER } from "@/graphql/mutations/users";
+import {
+  FOLLOW_USER,
+  UNFOLLOW_USER,
+  BAN_USER,
+  UNBAN_USER,
+  UPDATE_USER_ROLE,
+  REMOVE_USER_AVATAR
+} from "@/graphql/mutations/users";
 import type { GetUserQuery } from "@/types/graphql";
 
 const route = useRoute();
 const authStore = useAuthStore();
+const { show: showSnackbar } = useSnackbar();
 
 const { data, loading, error, refetch } = useQuery<GetUserQuery>(GET_USER, {
   variables: () => ({ slug: route.params.slug as string })
@@ -372,6 +438,92 @@ async function handleUnfollow() {
     console.error("Failed to unfollow user:", err);
   }
 }
+
+// ── Admin actions ──
+const actionsOpen = ref(false);
+
+const currentRole = computed(() => authStore.user?.role);
+const isNotSelf = computed(
+  () => authStore.isAuthenticated && user.value && authStore.user?.id !== user.value.id
+);
+
+const canBan = computed(
+  () =>
+    isNotSelf.value &&
+    (currentRole.value === "ADMIN" ||
+      (currentRole.value === "MODERATOR" && user.value?.role === "MEMBER"))
+);
+const canUnban = computed(
+  () => isNotSelf.value && (currentRole.value === "ADMIN" || currentRole.value === "MODERATOR")
+);
+const canUpdateRole = computed(() => isNotSelf.value && currentRole.value === "ADMIN");
+const canRemoveAvatar = computed(
+  () => isNotSelf.value && (currentRole.value === "ADMIN" || currentRole.value === "MODERATOR")
+);
+const hasAdminActions = computed(
+  () => canBan.value || canUnban.value || canUpdateRole.value || canRemoveAvatar.value
+);
+
+const { mutate: banUserMutate } = useMutation(BAN_USER);
+const { mutate: unbanUserMutate } = useMutation(UNBAN_USER);
+const { mutate: updateUserRoleMutate } = useMutation(UPDATE_USER_ROLE);
+const { mutate: removeUserAvatarMutate } = useMutation(REMOVE_USER_AVATAR);
+
+async function handleBan() {
+  if (!confirm(`Are you sure you want to ban ${user.value!.username}?`)) return;
+  actionsOpen.value = false;
+  try {
+    await banUserMutate({ userId: user.value!.id });
+    await refetch();
+    showSnackbar(`${user.value!.username} has been banned.`, "success");
+  } catch {
+    showSnackbar("Failed to ban user.", "error");
+  }
+}
+
+async function handleUnban() {
+  actionsOpen.value = false;
+  try {
+    await unbanUserMutate({ userId: user.value!.id });
+    await refetch();
+    showSnackbar(`${user.value!.username} has been unbanned.`, "success");
+  } catch {
+    showSnackbar("Failed to unban user.", "error");
+  }
+}
+
+async function handleUpdateRole(role: string) {
+  const roleLabel = role === "MODERATOR" ? "moderator" : role === "ADMIN" ? "admin" : "member";
+  actionsOpen.value = false;
+  try {
+    await updateUserRoleMutate({ userId: user.value!.id, role });
+    await refetch();
+    showSnackbar(`${user.value!.username} is now a ${roleLabel}.`, "success");
+  } catch {
+    showSnackbar("Failed to update user role.", "error");
+  }
+}
+
+async function handleRemoveAvatar() {
+  actionsOpen.value = false;
+  try {
+    await removeUserAvatarMutate({ userId: user.value!.id });
+    await refetch();
+    showSnackbar("Avatar removed.", "success");
+  } catch {
+    showSnackbar("Failed to remove avatar.", "error");
+  }
+}
+
+function closeActionsOnClickOutside(e: MouseEvent) {
+  const target = e.target as HTMLElement;
+  if (!target.closest(".actions-dropdown")) {
+    actionsOpen.value = false;
+  }
+}
+
+onMounted(() => document.addEventListener("click", closeActionsOnClickOutside));
+onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickOutside));
 </script>
 
 <style scoped>
@@ -544,6 +696,76 @@ async function handleUnfollow() {
 
 .follow-btn-secondary:hover {
   border-color: var(--vglist-theme);
+}
+
+/* ── Profile header right ── */
+.profile-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Actions dropdown ── */
+.actions-dropdown {
+  position: relative;
+}
+
+.actions-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--up-border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.actions-dropdown-toggle:hover {
+  border-color: var(--vglist-theme);
+}
+
+.actions-caret {
+  font-size: 0.6rem;
+}
+
+.actions-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid var(--up-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  padding: 4px 0;
+}
+
+.actions-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.actions-dropdown-item:hover {
+  background: #f4f3ef;
+}
+
+.actions-dropdown-item-danger {
+  color: #f14668;
+}
+
+.actions-dropdown-item-danger:hover {
+  background: #fff0f0;
 }
 
 /* ── Section Labels ── */
