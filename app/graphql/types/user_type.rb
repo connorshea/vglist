@@ -1,4 +1,5 @@
 module Types
+  # NOTE: We intentionally do not expose the email field here, as it is considered sensitive information.
   class UserType < Types::BaseObject
     description "User accounts on vglist"
 
