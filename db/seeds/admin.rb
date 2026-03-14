@@ -14,6 +14,20 @@ admin = User.find_by!(email: "admin@example.com")
 # Confirm the admin's email.
 admin.confirm
 
+puts "Creating agent account..."
+
+# Create an agent test account with a known password.
+User.create_with(
+  password: "agent12345",
+  role: :admin
+).find_or_create_by!(
+  email: "agent@example.com",
+  username: "agent",
+  bio: "I'm a test account for local dev with Claude."
+)
+
+User.find_by!(email: "agent@example.com").confirm
+
 # Exit early if there aren't at least 10 games in the db.
 return if Game.count < 10
 
