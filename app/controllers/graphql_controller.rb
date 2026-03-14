@@ -10,7 +10,7 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    graphql_current_user = @jwt_user || api_user || doorkeeper_user
+    graphql_current_user = @jwt_user || @api_token_user || doorkeeper_user
 
     context = {
       current_user: graphql_current_user,
@@ -98,10 +98,6 @@ class GraphqlController < ApplicationController
     true
   end
 
-  def api_user
-    User.find_by(email: request.headers['X-User-Email'])
-  end
-
   # Handle doorkeeper's unauthorized errors so they return valid JSON.
   def doorkeeper_unauthorized_render_options(error: nil)
     {
@@ -129,9 +125,12 @@ class GraphqlController < ApplicationController
       @jwt_user = User.find(decoded.first['user_id'])
     elsif user_using_oauth?
       doorkeeper_authorize!
-    elsif request.headers.key?('X-User-Email')
-      # Token auth — validate but don't block if invalid (GraphQL will handle it)
-      @token_user_valid = api_user&.verify_api_token!(request.headers['X-User-Token'])
+    elsif request.headers.key?('X-User-Email') && request.headers.key?('X-User-Token')
+      # Token auth — only authenticate if both email and token are provided and valid
+      user = User.find_by(email: request.headers['X-User-Email'])
+      if user&.verify_api_token!(request.headers['X-User-Token'])
+        @api_token_user = user
+      end
     end
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
     # Invalid JWT — continue without authentication, let the schema handle it
