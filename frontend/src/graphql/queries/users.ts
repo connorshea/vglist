@@ -16,8 +16,8 @@ export const GET_CURRENT_USER = gql`
 `;
 
 export const GET_USER = gql`
-  query GetUser($id: ID!) {
-    user(id: $id) {
+  query GetUser($slug: String!) {
+    user(slug: $slug) {
       id
       username
       bio
