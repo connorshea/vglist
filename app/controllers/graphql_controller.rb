@@ -23,7 +23,11 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    graphql_current_user = api_user || doorkeeper_user
+    graphql_current_user = if user_using_oauth?
+                             doorkeeper_user
+                           else
+                             api_user
+                           end
     if graphql_current_user.nil?
       handle_user_not_logged_in
       return

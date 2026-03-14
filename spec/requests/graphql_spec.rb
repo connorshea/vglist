@@ -151,5 +151,16 @@ RSpec.describe "GraphQL", type: :request do
       post graphql_path(format: :json), headers: headers
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it 'responds with http unauthorized when both Authorization and X-User-Email headers are sent without a valid token' do
+      headers = {
+        'User-Agent': 'GraphQL Test',
+        'Authorization': 'Bearer fake',
+        'X-User-Email': user.email
+      }
+
+      post graphql_path(format: :json), headers: headers
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 end
