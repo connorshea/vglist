@@ -12,7 +12,7 @@
       <h1 class="title">{{ data.series.name }}</h1>
 
       <p v-if="data.series.wikidataId" class="subtitle is-6">
-        Wikidata ID: {{ data.series.wikidataId }}
+        <a :href="`https://www.wikidata.org/wiki/Q${data.series.wikidataId}`" target="_blank" rel="noopener noreferrer">Wikidata</a>
       </p>
 
       <h2 class="title is-4 mt-5">Games</h2>
