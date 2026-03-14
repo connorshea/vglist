@@ -37,12 +37,15 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_SERIES_LIST } from '@/graphql/queries/resources'
+import type { GetSeriesListData } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery(GET_SERIES_LIST, {
+const { data, loading, error, fetchMore } = useQuery<GetSeriesListData>(GET_SERIES_LIST, {
   variables: { first: 25 },
 })
 
 function loadMore() {
+  if (!data.value) return
+
   fetchMore(
     { first: 25, after: data.value.seriesList.pageInfo.endCursor },
     (prev, next) => ({

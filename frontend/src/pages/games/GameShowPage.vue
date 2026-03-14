@@ -115,13 +115,14 @@ import { useAuthStore } from '@/stores/auth'
 import { gqlClient } from '@/graphql/client'
 import { GET_GAME } from '@/graphql/queries/games'
 import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME } from '@/graphql/mutations/games'
+import type { GetGameData } from '@/types/graphql'
 
 const route = useRoute()
 const authStore = useAuthStore()
 
 const gameId = computed(() => route.params.id as string)
 
-const { data, loading, error } = useQuery(GET_GAME, {
+const { data, loading, error } = useQuery<GetGameData>(GET_GAME, {
   variables: () => ({ id: gameId.value }),
 })
 

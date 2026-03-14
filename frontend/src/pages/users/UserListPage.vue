@@ -56,8 +56,9 @@
 import { computed } from 'vue'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_USERS } from '@/graphql/queries/users'
+import type { GetUsersData } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery(GET_USERS, {
+const { data, loading, error, fetchMore } = useQuery<GetUsersData>(GET_USERS, {
   variables: { first: 20 },
 })
 

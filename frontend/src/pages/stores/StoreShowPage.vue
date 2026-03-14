@@ -18,10 +18,11 @@
 import { useRoute } from 'vue-router'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_STORE } from '@/graphql/queries/resources'
+import type { GetStoreData } from '@/types/graphql'
 
 const route = useRoute()
 
-const { data, loading, error } = useQuery(GET_STORE, {
+const { data, loading, error } = useQuery<GetStoreData>(GET_STORE, {
   variables: { id: route.params.id },
 })
 </script>

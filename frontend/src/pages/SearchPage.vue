@@ -38,12 +38,13 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuery } from '@/composables/useGraphQL'
 import { GLOBAL_SEARCH } from '@/graphql/queries/resources'
+import type { GlobalSearchData } from '@/types/graphql'
 
 const route = useRoute()
 
 const query = computed(() => (route.query.q as string) ?? '')
 
-const { data, loading, error } = useQuery(GLOBAL_SEARCH, {
+const { data, loading, error } = useQuery<GlobalSearchData>(GLOBAL_SEARCH, {
   variables: () => ({ query: query.value }),
   enabled: () => query.value.length > 0,
 })

@@ -37,12 +37,15 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_PLATFORMS } from '@/graphql/queries/resources'
+import type { GetPlatformsData } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery(GET_PLATFORMS, {
+const { data, loading, error, fetchMore } = useQuery<GetPlatformsData>(GET_PLATFORMS, {
   variables: { first: 25 },
 })
 
 function loadMore() {
+  if (!data.value) return
+
   fetchMore(
     { first: 25, after: data.value.platforms.pageInfo.endCursor },
     (prev, next) => ({

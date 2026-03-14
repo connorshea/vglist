@@ -45,10 +45,11 @@
 import { useRoute } from 'vue-router'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_PLATFORM } from '@/graphql/queries/resources'
+import type { GetPlatformData } from '@/types/graphql'
 
 const route = useRoute()
 
-const { data, loading, error } = useQuery(GET_PLATFORM, {
+const { data, loading, error } = useQuery<GetPlatformData>(GET_PLATFORM, {
   variables: { id: route.params.id },
 })
 </script>

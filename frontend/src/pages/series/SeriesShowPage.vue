@@ -45,10 +45,11 @@
 import { useRoute } from 'vue-router'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_SERIES } from '@/graphql/queries/resources'
+import type { GetSeriesData } from '@/types/graphql'
 
 const route = useRoute()
 
-const { data, loading, error } = useQuery(GET_SERIES, {
+const { data, loading, error } = useQuery<GetSeriesData>(GET_SERIES, {
   variables: { id: route.params.id },
 })
 </script>
