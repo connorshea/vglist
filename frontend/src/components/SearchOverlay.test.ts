@@ -172,7 +172,7 @@ describe("SearchOverlay", () => {
 
   describe("escape key", () => {
     it("calls close when Escape is pressed", async () => {
-      const wrapper = mountOverlay();
+      mountOverlay();
 
       mockIsOpen.value = true;
       await nextTick();
