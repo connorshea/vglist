@@ -84,6 +84,30 @@ export const GET_GAMES = gql`
   }
 `;
 
+export const GET_RECENT_GAMES = gql`
+  query GetRecentGames($first: Int) {
+    games(first: $first, sortBy: RECENTLY_UPDATED) {
+      nodes {
+        id
+        name
+        coverUrl(size: SMALL)
+        platforms {
+          nodes {
+            id
+            name
+          }
+        }
+        developers {
+          nodes {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const SEARCH_GAMES = gql`
   query SearchGames($query: String!) {
     gameSearch(query: $query) {
