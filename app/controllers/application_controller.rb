@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::API
   include Pundit::Authorization
 
-  # In devise-related pages, permit a username parameter.
-  before_action :configure_permitted_parameters, if: :devise_controller?
   # If the user has been banned, sign them out.
   before_action :sign_out_banned_users
   # Send context with error messages to Sentry.
@@ -25,11 +23,6 @@ class ApplicationController < ActionController::API
 
     sign_out
     render json: { error: "Your account has been banned." }, status: :forbidden
-  end
-
-  # Add username as an accepted key during sign up.
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
   end
 
   private

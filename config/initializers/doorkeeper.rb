@@ -20,7 +20,7 @@ Doorkeeper.configure do
     if current_user
       head :forbidden unless current_user.admin?
     else
-      redirect_to new_user_session_url
+      render json: { error: "You must be an admin to access this resource." }, status: :unauthorized
     end
   end
 
@@ -114,7 +114,10 @@ Doorkeeper.configure do
   # +ActionController::API+. The return value of this option must be a stringified class name.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-base-controller
   #
-  base_controller 'ApplicationController'
+  # Use ActionController::API directly for Doorkeeper controllers to avoid
+  # Pundit's verify_authorized/verify_policy_scoped after-actions, which
+  # Doorkeeper controllers don't satisfy.
+  base_controller 'ActionController::API'
 
   # Reuse access token for the same resource owner within an application (disabled by default).
   #

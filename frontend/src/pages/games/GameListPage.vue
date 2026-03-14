@@ -62,6 +62,8 @@ const { data, loading, error, fetchMore } = useQuery(GET_GAMES, {
 })
 
 function loadMore() {
+  if (!data.value) return
+
   fetchMore(
     { first: 20, after: data.value.games.pageInfo.endCursor },
     (prev, next) => ({
