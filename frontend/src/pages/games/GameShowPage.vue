@@ -21,19 +21,40 @@
 
           <div class="game-hero-info">
             <h1 class="game-title">{{ game.name }}</h1>
+            <p class="game-year">{{ releaseYear ?? "\u2014" }}</p>
 
-            <div class="game-hero-tags">
-              <span
-                v-for="platform in game.platforms.nodes"
-                :key="'p-' + platform.id"
-                class="hero-tag"
-              >
-                {{ platform.name }}
-              </span>
-              <span v-for="genre in game.genres.nodes" :key="'g-' + genre.id" class="hero-tag">
-                {{ genre.name }}
-              </span>
-              <span v-if="releaseYear" class="hero-tag">{{ releaseYear }}</span>
+            <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
+              <h2 class="hero-tag-label">Genres</h2>
+              <div class="hero-tag-list">
+                <router-link
+                  v-for="genre in visibleGenres"
+                  :key="'g-' + genre.id"
+                  :to="`/genres/${genre.id}`"
+                  class="hero-tag"
+                >
+                  {{ genre.name }}
+                </router-link>
+                <span v-if="hiddenGenreCount > 0" class="hero-tag hero-tag-more">
+                  +{{ hiddenGenreCount }} more
+                </span>
+              </div>
+            </div>
+
+            <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
+              <h2 class="hero-tag-label">Platforms</h2>
+              <div class="hero-tag-list">
+                <router-link
+                  v-for="platform in visiblePlatforms"
+                  :key="'p-' + platform.id"
+                  :to="`/platforms/${platform.id}`"
+                  class="hero-tag"
+                >
+                  {{ platform.name }}
+                </router-link>
+                <span v-if="hiddenPlatformCount > 0" class="hero-tag hero-tag-more">
+                  +{{ hiddenPlatformCount }} more
+                </span>
+              </div>
             </div>
 
             <div v-if="authStore.isAuthenticated" class="game-hero-actions">
@@ -174,6 +195,78 @@
               </div>
             </div>
 
+            <div class="sidebar-card">
+              <div class="community-section">
+                <div class="community-header">
+                  <h4 class="community-title">Owners</h4>
+                  <span v-if="game.owners.totalCount > 0" class="community-count">
+                    {{ game.owners.totalCount }} total
+                  </span>
+                </div>
+                <div v-if="game.owners.nodes.length > 0" class="avatar-stack">
+                  <router-link
+                    v-for="owner in game.owners.nodes"
+                    :key="owner.id"
+                    :to="`/users/${owner.slug}`"
+                    class="avatar-circle"
+                    :title="owner.username"
+                  >
+                    <img v-if="owner.avatarUrl" :src="owner.avatarUrl" :alt="owner.username" />
+                    <span
+                      v-else
+                      class="avatar-initials"
+                      :style="{ background: avatarColor(owner.username) }"
+                    >
+                      {{ userInitials(owner.username) }}
+                    </span>
+                  </router-link>
+                  <span
+                    v-if="game.owners.totalCount > game.owners.nodes.length"
+                    class="avatar-overflow"
+                  >
+                    +{{ game.owners.totalCount - game.owners.nodes.length }}
+                  </span>
+                </div>
+                <p v-else class="community-empty">No owners yet.</p>
+              </div>
+
+              <hr class="community-divider" />
+
+              <div class="community-section">
+                <div class="community-header">
+                  <h4 class="community-title">Favorited by</h4>
+                  <span v-if="game.favoriters.totalCount > 0" class="community-count">
+                    {{ game.favoriters.totalCount }} total
+                  </span>
+                </div>
+                <div v-if="game.favoriters.nodes.length > 0" class="avatar-stack">
+                  <router-link
+                    v-for="fav in game.favoriters.nodes"
+                    :key="fav.id"
+                    :to="`/users/${fav.slug}`"
+                    class="avatar-circle"
+                    :title="fav.username"
+                  >
+                    <img v-if="fav.avatarUrl" :src="fav.avatarUrl" :alt="fav.username" />
+                    <span
+                      v-else
+                      class="avatar-initials"
+                      :style="{ background: avatarColor(fav.username) }"
+                    >
+                      {{ userInitials(fav.username) }}
+                    </span>
+                  </router-link>
+                  <span
+                    v-if="game.favoriters.totalCount > game.favoriters.nodes.length"
+                    class="avatar-overflow"
+                  >
+                    +{{ game.favoriters.totalCount - game.favoriters.nodes.length }}
+                  </span>
+                </div>
+                <p v-else class="community-empty">No favorites yet.</p>
+              </div>
+            </div>
+
             <div v-if="externalLinks.length" class="sidebar-card">
               <h4 class="sidebar-card-title">External links</h4>
               <ul class="external-links-list">
@@ -231,6 +324,18 @@ const releaseYear = computed(() => {
   return new Date(game.value.releaseDate).getFullYear();
 });
 
+const HERO_TAG_LIMIT = 3;
+
+const visibleGenres = computed(() => game.value?.genres.nodes.slice(0, HERO_TAG_LIMIT) ?? []);
+const hiddenGenreCount = computed(() =>
+  Math.max(0, (game.value?.genres.nodes.length ?? 0) - HERO_TAG_LIMIT)
+);
+
+const visiblePlatforms = computed(() => game.value?.platforms.nodes.slice(0, HERO_TAG_LIMIT) ?? []);
+const hiddenPlatformCount = computed(() =>
+  Math.max(0, (game.value?.platforms.nodes.length ?? 0) - HERO_TAG_LIMIT)
+);
+
 const CIRCLE_RADIUS = 52;
 const ratingCircumference = 2 * Math.PI * CIRCLE_RADIUS;
 
@@ -243,6 +348,29 @@ const ratingOffset = computed(() => {
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
   return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
+
+function userInitials(username: string): string {
+  return username.slice(0, 2).toUpperCase();
+}
+
+const AVATAR_COLORS = [
+  "#6c5ce7",
+  "#00b894",
+  "#e17055",
+  "#0984e3",
+  "#e84393",
+  "#00a862",
+  "#d63031",
+  "#fdcb6e"
+];
+
+function avatarColor(username: string): string {
+  let hash = 0;
+  for (const ch of username) {
+    hash = ((hash << 5) - hash + ch.charCodeAt(0)) | 0;
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
 interface ExternalLink {
@@ -464,14 +592,32 @@ async function favoriteGame() {
   font-weight: 700;
   color: #fff;
   line-height: 1.15;
+  margin-bottom: 0.25rem;
+}
+
+.game-year {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.65);
   margin-bottom: 1.25rem;
 }
 
-.game-hero-tags {
+.hero-tag-group {
+  margin-bottom: 1rem;
+}
+
+.hero-tag-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+
+.hero-tag-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 
 .hero-tag {
@@ -482,6 +628,21 @@ async function favoriteGame() {
   color: #fff;
   font-size: 0.85rem;
   font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+a.hero-tag:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+}
+
+.hero-tag-more {
+  color: rgba(255, 255, 255, 0.65);
+  border-style: dashed;
+  cursor: default;
 }
 
 .game-hero-actions {
@@ -671,6 +832,91 @@ async function favoriteGame() {
   background: hsla(240, 60%, 65%, 0.1);
 }
 
+/* Community card (owners/favoriters) */
+.community-section {
+  padding: 0.25rem 0;
+}
+
+.community-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+
+.community-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.community-count {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.community-divider {
+  border: none;
+  border-top: 1px solid var(--game-border-light);
+  margin: 0.75rem 0;
+}
+
+.community-empty {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.avatar-stack {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+
+.avatar-circle:not(:first-child) {
+  margin-left: -10px;
+}
+
+.avatar-circle:hover {
+  transform: scale(1.15);
+  z-index: 1;
+}
+
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.avatar-overflow {
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.45);
+  font-weight: 500;
+}
+
 /* External links */
 .external-links-list {
   list-style: none;
@@ -734,7 +980,7 @@ async function favoriteGame() {
     font-size: 1.75rem;
   }
 
-  .game-hero-tags {
+  .hero-tag-list {
     justify-content: center;
   }
 
