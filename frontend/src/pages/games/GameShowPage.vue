@@ -1011,7 +1011,7 @@ async function toggleFavorite() {
   margin-left: -50vw;
   margin-right: -50vw;
   margin-top: -3rem;
-  background: var(--vglist-theme);
+  background: #4b46af;
   padding: 3rem 0;
 }
 
