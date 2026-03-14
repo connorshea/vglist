@@ -1,0 +1,36 @@
+{
+  "name": "vglist-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "oxlint --tsconfig tsconfig.json",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1",
+    "@apollo/client": "^3.13.8",
+    "@vue/apollo-composable": "^4.2.1",
+    "graphql": "^16.13.1",
+    "graphql-tag": "^2.12.6",
+    "pinia": "^3.0.2",
+    "bulma": "^1.0.4",
+    "sass-embedded": "^1.97.3",
+    "lodash-es": "^4.17.23"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "vite": "^6.3.5",
+    "typescript": "~5.8.3",
+    "vue-tsc": "^3.2.5",
+    "@types/lodash-es": "^4.17.12",
+    "oxlint": "^1.51.0",
+    "oxfmt": "^0.36.0"
+  }
+}
