@@ -5,10 +5,6 @@
         <img src="@/assets/images/vglist-logo.svg" alt="vglist" style="height: 24px" />
       </router-link>
 
-      <div class="navbar-item is-hidden-touch">
-        <NavSearch />
-      </div>
-
       <a
         role="button"
         class="navbar-burger"
@@ -50,6 +46,9 @@
       </div>
 
       <div class="navbar-end">
+        <div class="navbar-item is-hidden-touch">
+          <NavSearch />
+        </div>
         <template v-if="authStore.isAuthenticated">
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
