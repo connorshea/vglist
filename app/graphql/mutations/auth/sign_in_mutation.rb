@@ -23,18 +23,7 @@ class Mutations::Auth::SignInMutation < GraphQL::Schema::Mutation
       return { token: nil, user: nil, errors: ["You must confirm your email address before signing in."] }
     end
 
-    token = generate_jwt(user)
+    token = JwtService.encode(user)
     { token: token, user: user, errors: [] }
-  end
-
-  private
-
-  def generate_jwt(user)
-    payload = {
-      user_id: user.id,
-      exp: 30.days.from_now.to_i,
-      iat: Time.current.to_i
-    }
-    JWT.encode(payload, Rails.application.credentials.secret_key_base, 'HS256')
   end
 end

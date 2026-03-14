@@ -23,8 +23,7 @@ interface UseQueryReturn<TData> {
   fetchMore: (variables: Record<string, unknown>, merge: (prev: TData, next: TData) => TData) => Promise<void>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useQuery<TData = any, TVariables = Record<string, unknown>>(
+export function useQuery<TData = Record<string, unknown>, TVariables = Record<string, unknown>>(
   query: DocumentNode,
   options?: UseQueryOptions<TVariables>,
 ): UseQueryReturn<TData> {
@@ -97,8 +96,7 @@ interface UseMutationReturn<TData, TVariables> {
   error: Ref<Error | null>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useMutation<TData = any, TVariables = Record<string, unknown>>(
+export function useMutation<TData = Record<string, unknown>, TVariables = Record<string, unknown>>(
   mutation: DocumentNode,
 ): UseMutationReturn<TData, TVariables> {
   const data = ref<TData | null>(null) as Ref<TData | null>

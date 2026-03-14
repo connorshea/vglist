@@ -187,6 +187,10 @@ const router = createRouter({
       children: [
         {
           path: '',
+          redirect: { name: 'settingsProfile' },
+        },
+        {
+          path: 'profile',
           name: 'settingsProfile',
           component: () => import('@/pages/settings/ProfileSettings.vue'),
         },

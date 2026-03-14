@@ -17,7 +17,7 @@ module Api
           return
         end
 
-        token = generate_jwt(user)
+        token = JwtService.encode(user)
         render json: {
           token: token,
           user: {
@@ -47,14 +47,15 @@ module Api
     end
 
     def me
-      if current_user
+      user = current_user || jwt_user
+      if user
         render json: {
           user: {
-            id: current_user.id,
-            username: current_user.username,
-            email: current_user.email,
-            role: current_user.role,
-            slug: current_user.slug
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            slug: user.slug
           }
         }
       else
@@ -68,13 +69,16 @@ module Api
       params.permit(:username, :email, :password, :password_confirmation)
     end
 
-    def generate_jwt(user)
-      payload = {
-        user_id: user.id,
-        exp: 30.days.from_now.to_i,
-        iat: Time.current.to_i
-      }
-      JWT.encode(payload, Rails.application.credentials.secret_key_base, 'HS256')
+    # Decode JWT from Authorization header for the /me endpoint.
+    def jwt_user
+      auth_header = request.headers['Authorization']
+      return nil unless auth_header&.start_with?('Bearer ')
+
+      token = auth_header.sub(/^Bearer\s+/i, '')
+      decoded = JwtService.decode(token)
+      User.find(decoded.first['user_id'])
+    rescue JWT::DecodeError, ActiveRecord::RecordNotFound
+      nil
     end
   end
 end

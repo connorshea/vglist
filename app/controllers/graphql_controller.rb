@@ -121,7 +121,7 @@ class GraphqlController < ApplicationController
   def authenticate_user_if_possible
     if user_using_jwt?
       token = request.headers['Authorization']&.sub(/^Bearer\s+/i, '')
-      decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
+      decoded = JwtService.decode(token)
       user = User.find(decoded.first['user_id'])
       @jwt_user = user unless user.banned?
     elsif user_using_oauth?
