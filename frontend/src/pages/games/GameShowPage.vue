@@ -115,7 +115,7 @@
                             :key="opt.value"
                             type="button"
                             class="form-pill"
-                            :class="formStatus === opt.value ? 'form-pill-on-green' : 'form-pill-off'"
+                            :class="formStatus === opt.value ? 'form-pill-on' : 'form-pill-off'"
                             @click="formStatus = formStatus === opt.value ? null : opt.value"
                           >
                             {{ opt.label }}
@@ -1297,8 +1297,8 @@ a.hero-tag:hover {
 }
 
 .form-pill-off:hover {
-  border-color: #aaa;
-  color: #555;
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 
 .form-pill-on {
@@ -1308,16 +1308,9 @@ a.hero-tag:hover {
   border: 1px solid transparent;
 }
 
-.form-pill-on-green {
-  background: var(--p-200);
-  color: var(--p-700);
-  font-weight: 500;
-  border: 1px solid transparent;
-}
-
 .form-empty-hint {
   font-size: 0.75rem;
-  color: #aaa;
+  color: var(--color-text-tertiary);
   font-style: italic;
 }
 
@@ -1347,14 +1340,14 @@ a.hero-tag:hover {
   flex: 1;
   height: 6px;
   border-radius: 3px;
-  background: var(--color-bg-subtle);
+  background: var(--p-100);
   overflow: hidden;
 }
 
 .form-rating-fill {
   height: 100%;
   border-radius: 3px;
-  background: #27500a;
+  background: var(--p-500);
   transition: width 0.15s;
 }
 
@@ -1475,7 +1468,7 @@ a.hero-tag:hover {
 }
 
 .form-btn-save {
-  background: var(--color-text-primary);
+  background: var(--p-500);
   color: #fff;
   font-size: 0.8rem;
   border: none;
@@ -1486,7 +1479,7 @@ a.hero-tag:hover {
 }
 
 .form-btn-save:hover {
-  background: #444441;
+  background: var(--p-600);
 }
 
 .form-btn-save:disabled {
@@ -1834,5 +1827,55 @@ a.hero-tag:hover {
 .remove-confirm-footer .button:focus-visible {
   outline: 2px solid var(--vglist-theme);
   outline-offset: 2px;
+}
+
+/* ── Dark mode: form overrides ── */
+@media (prefers-color-scheme: dark) {
+  .form-card {
+    border: 1px solid var(--s-300);
+  }
+
+  .form-pill-on {
+    background: rgba(206, 203, 246, 0.12);
+    color: var(--p-200);
+  }
+
+  .form-rating-track {
+    background: rgba(157, 153, 224, 0.15);
+  }
+
+  .form-rating-fill {
+    background: var(--p-400);
+  }
+
+  .form-rating-input,
+  .form-hours-input,
+  .form-date-input,
+  .form-textarea {
+    background: var(--s-600);
+    color: var(--s-50);
+  }
+
+  .form-rating-input::placeholder,
+  .form-hours-input::placeholder,
+  .form-date-input::placeholder,
+  .form-textarea::placeholder {
+    color: var(--s-300);
+  }
+
+  .form-btn-remove {
+    background: rgba(226, 75, 74, 0.15);
+    color: var(--r-200);
+    border-color: transparent;
+  }
+
+  .form-btn-remove:hover {
+    background: rgba(226, 75, 74, 0.25);
+    border-color: transparent;
+  }
+
+  .form-date-error {
+    color: var(--r-200);
+  }
 }
 </style>
