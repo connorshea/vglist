@@ -40,164 +40,178 @@
             </div>
           </div>
 
-          <div class="game-hero-info">
+          <div ref="heroInfoRef" class="game-hero-info">
             <h1 class="game-title">{{ game.name }}</h1>
             <p class="game-year">{{ releaseYear ?? "\u2014" }}</p>
 
-            <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
-              <h2 class="hero-tag-label">Genres</h2>
-              <div class="hero-tag-list">
-                <router-link
-                  v-for="genre in visibleGenres"
-                  :key="'g-' + genre.id"
-                  :to="`/genres/${genre.id}`"
-                  class="hero-tag"
-                >
-                  {{ genre.name }}
-                </router-link>
-                <span v-if="hiddenGenreCount > 0" class="hero-tag hero-tag-more">
-                  +{{ hiddenGenreCount }} more
-                </span>
-              </div>
-            </div>
-
-            <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
-              <h2 class="hero-tag-label">Platforms</h2>
-              <div class="hero-tag-list">
-                <router-link
-                  v-for="platform in visiblePlatforms"
-                  :key="'p-' + platform.id"
-                  :to="`/platforms/${platform.id}`"
-                  class="hero-tag"
-                >
-                  {{ platform.name }}
-                </router-link>
-                <span v-if="hiddenPlatformCount > 0" class="hero-tag hero-tag-more">
-                  +{{ hiddenPlatformCount }} more
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide-up Add to Library form -->
-        <div class="form-area" :class="{ open: showAddForm }">
-          <div class="form-area-inner">
-            <div class="form-card">
-              <div class="form-grid">
-                <!-- Left column: Status, Rating, Dates -->
-                <div class="form-col form-col-left">
-                  <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <div class="form-pills">
-                      <button
-                        v-for="opt in statusOptions"
-                        :key="opt.value"
-                        type="button"
-                        class="form-pill"
-                        :class="formStatus === opt.value ? 'form-pill-on-green' : 'form-pill-off'"
-                        @click="formStatus = formStatus === opt.value ? null : opt.value"
-                      >
-                        {{ opt.label }}
-                      </button>
-                    </div>
+            <Transition
+              name="hero-swap"
+              mode="out-in"
+              @before-leave="onHeroBeforeLeave"
+              @enter="onHeroEnter"
+              @after-enter="onHeroAfterEnter"
+            >
+              <!-- Show tags when form is closed -->
+              <div v-if="!showAddForm" key="tags">
+                <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
+                  <h2 class="hero-tag-label">Genres</h2>
+                  <div class="hero-tag-list">
+                    <router-link
+                      v-for="genre in visibleGenres"
+                      :key="'g-' + genre.id"
+                      :to="`/genres/${genre.id}`"
+                      class="hero-tag"
+                    >
+                      {{ genre.name }}
+                    </router-link>
+                    <span v-if="hiddenGenreCount > 0" class="hero-tag hero-tag-more">
+                      +{{ hiddenGenreCount }} more
+                    </span>
                   </div>
+                </div>
 
-                  <div class="form-group">
-                    <label class="form-label">Rating (out of 100)</label>
-                    <div class="form-rating-row">
-                      <input
-                        v-model.number="formRating"
-                        type="number"
-                        min="0"
-                        max="100"
-                        class="form-rating-input"
-                      />
-                      <div class="form-rating-track">
-                        <div
-                          class="form-rating-fill"
-                          :style="{ width: (formRating ?? 0) + '%' }"
-                        ></div>
+                <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
+                  <h2 class="hero-tag-label">Platforms</h2>
+                  <div class="hero-tag-list">
+                    <router-link
+                      v-for="platform in visiblePlatforms"
+                      :key="'p-' + platform.id"
+                      :to="`/platforms/${platform.id}`"
+                      class="hero-tag"
+                    >
+                      {{ platform.name }}
+                    </router-link>
+                    <span v-if="hiddenPlatformCount > 0" class="hero-tag hero-tag-more">
+                      +{{ hiddenPlatformCount }} more
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inline form replaces tags when open -->
+              <div v-else key="form">
+                <hr class="hero-form-divider" />
+                <div class="form-card">
+                  <div class="form-grid">
+                    <!-- Left column: Status, Rating, Dates -->
+                    <div class="form-col form-col-left">
+                      <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="form-pills">
+                          <button
+                            v-for="opt in statusOptions"
+                            :key="opt.value"
+                            type="button"
+                            class="form-pill"
+                            :class="
+                              formStatus === opt.value ? 'form-pill-on-green' : 'form-pill-off'
+                            "
+                            @click="formStatus = formStatus === opt.value ? null : opt.value"
+                          >
+                            {{ opt.label }}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">Rating (out of 100)</label>
+                        <div class="form-rating-row">
+                          <input
+                            v-model.number="formRating"
+                            type="number"
+                            min="0"
+                            max="100"
+                            class="form-rating-input"
+                          />
+                          <div class="form-rating-track">
+                            <div
+                              class="form-rating-fill"
+                              :style="{ width: (formRating ?? 0) + '%' }"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-dates">
+                        <div class="form-date-field">
+                          <label class="form-label">Started</label>
+                          <input v-model="formStartDate" type="date" class="form-date-input" />
+                        </div>
+                        <div class="form-date-field">
+                          <label class="form-label">Finished</label>
+                          <input v-model="formCompletionDate" type="date" class="form-date-input" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Right column: Platforms, Store, Notes, Actions -->
+                    <div class="form-col form-col-right">
+                      <div class="form-group">
+                        <label class="form-label">Platforms played</label>
+                        <div class="form-pills">
+                          <button
+                            v-for="plat in game.platforms.nodes"
+                            :key="plat.id"
+                            type="button"
+                            class="form-pill"
+                            :class="formPlatformIds.has(plat.id) ? 'form-pill-on' : 'form-pill-off'"
+                            @click="toggleFormPlatform(plat.id)"
+                          >
+                            {{ plat.name }}
+                          </button>
+                          <span v-if="game.platforms.nodes.length === 0" class="form-empty-hint">
+                            No platforms listed for this game.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">Store</label>
+                        <div class="form-pills">
+                          <button
+                            v-for="store in allStores"
+                            :key="store.id"
+                            type="button"
+                            class="form-pill"
+                            :class="formStoreIds.has(store.id) ? 'form-pill-on' : 'form-pill-off'"
+                            @click="toggleFormStore(store.id)"
+                          >
+                            {{ store.name }}
+                          </button>
+                          <span v-if="storesLoading" class="form-empty-hint">
+                            Loading stores...
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="form-group form-notes-group">
+                        <label class="form-label">Review / notes</label>
+                        <textarea
+                          v-model="formComments"
+                          class="form-textarea"
+                          placeholder="What did you think?"
+                          maxlength="2000"
+                        ></textarea>
+                      </div>
+
+                      <div class="form-actions">
+                        <button type="button" class="form-btn-cancel" @click="cancelAddForm">
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          class="form-btn-save"
+                          :disabled="addingToLibrary"
+                          @click="submitAddForm"
+                        >
+                          {{ addingToLibrary ? "Saving\u2026" : "Save" }}
+                        </button>
                       </div>
                     </div>
                   </div>
-
-                  <div class="form-dates">
-                    <div class="form-date-field">
-                      <label class="form-label">Started</label>
-                      <input v-model="formStartDate" type="date" class="form-date-input" />
-                    </div>
-                    <div class="form-date-field">
-                      <label class="form-label">Finished</label>
-                      <input v-model="formCompletionDate" type="date" class="form-date-input" />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Right column: Platforms, Store, Notes, Actions -->
-                <div class="form-col form-col-right">
-                  <div class="form-group">
-                    <label class="form-label">Platforms played</label>
-                    <div class="form-pills">
-                      <button
-                        v-for="plat in game.platforms.nodes"
-                        :key="plat.id"
-                        type="button"
-                        class="form-pill"
-                        :class="formPlatformIds.has(plat.id) ? 'form-pill-on' : 'form-pill-off'"
-                        @click="toggleFormPlatform(plat.id)"
-                      >
-                        {{ plat.name }}
-                      </button>
-                      <span v-if="game.platforms.nodes.length === 0" class="form-empty-hint">
-                        No platforms listed for this game.
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Store</label>
-                    <div class="form-pills">
-                      <button
-                        v-for="store in allStores"
-                        :key="store.id"
-                        type="button"
-                        class="form-pill"
-                        :class="formStoreIds.has(store.id) ? 'form-pill-on' : 'form-pill-off'"
-                        @click="toggleFormStore(store.id)"
-                      >
-                        {{ store.name }}
-                      </button>
-                      <span v-if="storesLoading" class="form-empty-hint">Loading stores...</span>
-                    </div>
-                  </div>
-
-                  <div class="form-group form-notes-group">
-                    <label class="form-label">Review / notes</label>
-                    <textarea
-                      v-model="formComments"
-                      class="form-textarea"
-                      placeholder="What did you think?"
-                      maxlength="2000"
-                    ></textarea>
-                  </div>
-
-                  <div class="form-actions">
-                    <button type="button" class="form-btn-cancel" @click="cancelAddForm">
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      class="form-btn-save"
-                      :disabled="addingToLibrary"
-                      @click="submitAddForm"
-                    >
-                      {{ addingToLibrary ? "Saving\u2026" : "Save" }}
-                    </button>
-                  </div>
                 </div>
               </div>
-            </div>
+            </Transition>
           </div>
         </div>
       </section>
@@ -418,7 +432,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
@@ -582,6 +596,47 @@ const formCompletionDate = ref("");
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formComments = ref("");
+
+// ── Hero height animation (smooth expand/collapse) ──
+const heroInfoRef = ref<HTMLElement | null>(null);
+let savedInfoHeight = 0;
+
+function onHeroBeforeLeave() {
+  const el = heroInfoRef.value;
+  if (el) {
+    savedInfoHeight = el.getBoundingClientRect().height;
+    el.style.height = savedInfoHeight + "px";
+    el.style.overflow = "hidden";
+  }
+}
+
+function onHeroEnter() {
+  const el = heroInfoRef.value;
+  if (!el) return;
+
+  nextTick(() => {
+    // Measure new natural height
+    el.style.height = "auto";
+    const newHeight = el.getBoundingClientRect().height;
+
+    // Snap back to saved height
+    el.style.height = savedInfoHeight + "px";
+    void el.offsetHeight; // force reflow
+
+    // Animate to new height
+    el.style.transition = "height 0.35s ease";
+    el.style.height = newHeight + "px";
+  });
+}
+
+function onHeroAfterEnter() {
+  const el = heroInfoRef.value;
+  if (el) {
+    el.style.height = "";
+    el.style.overflow = "";
+    el.style.transition = "";
+  }
+}
 
 function resetForm() {
   formStatus.value = null;
@@ -924,25 +979,34 @@ a.hero-tag:hover {
   border-color: rgba(255, 255, 255, 0.8);
 }
 
-/* ── Slide-up form area ── */
-.form-area {
-  max-height: 0;
-  overflow: hidden;
+/* ── Hero swap transition ── */
+.hero-swap-enter-active {
   transition:
-    max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.35s;
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.hero-swap-leave-active {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.hero-swap-enter-from {
   opacity: 0;
+  transform: translateY(16px);
 }
 
-.form-area.open {
-  max-height: 800px;
-  opacity: 1;
+.hero-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 
-.form-area-inner {
-  max-width: 1152px;
-  margin: 0 auto;
-  padding: 1.5rem 1.5rem 0;
+/* ── Inline form (replaces tags in hero) ── */
+.hero-form-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 0.25rem 0 1rem;
 }
 
 .form-card {
