@@ -85,14 +85,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
 import NavSearch from "./NavSearch.vue";
 
+const route = useRoute();
 const authStore = useAuthStore();
 const { signOut } = useAuth();
 const isBurgerActive = ref(false);
+
+watch(() => route.path, () => {
+  isBurgerActive.value = false;
+});
 
 function handleSignOut() {
   signOut();
