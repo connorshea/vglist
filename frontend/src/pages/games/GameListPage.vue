@@ -38,26 +38,41 @@
       </div>
     </div>
 
-    <div v-if="data?.games.pageInfo.hasNextPage" class="has-text-centered mt-5">
-      <button
-        class="button is-primary"
-        :class="{ 'is-loading': loading }"
-        :disabled="loading"
-        @click="loadMore"
-      >
-        Load More
-      </button>
-    </div>
+    <PaginationNav
+      v-if="data && (currentPage > 1 || hasNextPage)"
+      :current-page="currentPage"
+      :has-next-page="hasNextPage"
+      :loading="loading"
+      @prev="prevPage"
+      @next="nextPage"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
+import { ref, watch, computed } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_GAMES } from "@/graphql/queries/games";
 import type { GetGamesQuery } from "@/types/graphql";
+import PaginationNav from "@/components/PaginationNav.vue";
 
-const { data, loading, error, fetchMore } = useQuery<GetGamesQuery>(GET_GAMES, {
-  variables: { first: 20 }
+const PAGE_SIZE = 20;
+const currentPage = ref(1);
+const pageCursors = ref<(string | null)[]>([null]);
+
+const { data, loading, error } = useQuery<GetGamesQuery>(GET_GAMES, {
+  variables: () => ({
+    first: PAGE_SIZE,
+    after: pageCursors.value[currentPage.value - 1],
+  }),
+});
+
+const hasNextPage = computed(() => data.value?.games.pageInfo.hasNextPage ?? false);
+
+watch(data, (val) => {
+  if (val?.games.pageInfo.endCursor) {
+    pageCursors.value[currentPage.value] = val.games.pageInfo.endCursor;
+  }
 });
 
 function gameInitials(name: string): string {
@@ -69,15 +84,12 @@ function gameInitials(name: string): string {
     .join("");
 }
 
-function loadMore() {
-  if (!data.value) return;
+function nextPage() {
+  if (hasNextPage.value) currentPage.value++;
+}
 
-  fetchMore({ first: 20, after: data.value.games.pageInfo.endCursor }, (prev, next) => ({
-    games: {
-      ...next.games,
-      nodes: [...prev.games.nodes, ...next.games.nodes]
-    }
-  }));
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--;
 }
 </script>
 

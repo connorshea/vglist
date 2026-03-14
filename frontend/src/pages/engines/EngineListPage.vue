@@ -18,36 +18,48 @@
       </ul>
     </div>
 
-    <div v-if="data?.engines.pageInfo.hasNextPage" class="has-text-centered mt-5">
-      <button
-        class="button is-primary"
-        :class="{ 'is-loading': loading }"
-        :disabled="loading"
-        @click="loadMore"
-      >
-        Load More
-      </button>
-    </div>
+    <PaginationNav
+      v-if="data && (currentPage > 1 || hasNextPage)"
+      :current-page="currentPage"
+      :has-next-page="hasNextPage"
+      :loading="loading"
+      @prev="prevPage"
+      @next="nextPage"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
+import { ref, watch, computed } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_ENGINES } from "@/graphql/queries/resources";
 import type { GetEnginesQuery } from "@/types/graphql";
+import PaginationNav from "@/components/PaginationNav.vue";
 
-const { data, loading, error, fetchMore } = useQuery<GetEnginesQuery>(GET_ENGINES, {
-  variables: { first: 25 }
+const PAGE_SIZE = 25;
+const currentPage = ref(1);
+const pageCursors = ref<(string | null)[]>([null]);
+
+const { data, loading, error } = useQuery<GetEnginesQuery>(GET_ENGINES, {
+  variables: () => ({
+    first: PAGE_SIZE,
+    after: pageCursors.value[currentPage.value - 1],
+  }),
 });
 
-function loadMore() {
-  if (!data.value) return;
+const hasNextPage = computed(() => data.value?.engines.pageInfo.hasNextPage ?? false);
 
-  fetchMore({ first: 25, after: data.value.engines.pageInfo.endCursor }, (prev, next) => ({
-    engines: {
-      ...next.engines,
-      nodes: [...prev.engines.nodes, ...next.engines.nodes]
-    }
-  }));
+watch(data, (val) => {
+  if (val?.engines.pageInfo.endCursor) {
+    pageCursors.value[currentPage.value] = val.engines.pageInfo.endCursor;
+  }
+});
+
+function nextPage() {
+  if (hasNextPage.value) currentPage.value++;
+}
+
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--;
 }
 </script>

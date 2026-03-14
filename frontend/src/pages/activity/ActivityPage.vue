@@ -5,10 +5,10 @@
     <div class="tabs">
       <ul>
         <li :class="{ 'is-active': feedType === 'GLOBAL' }">
-          <a @click="feedType = 'GLOBAL'">Global</a>
+          <a @click="switchFeed('GLOBAL')">Global</a>
         </li>
         <li :class="{ 'is-active': feedType === 'FOLLOWING' }">
-          <a @click="feedType = 'FOLLOWING'">Following</a>
+          <a @click="switchFeed('FOLLOWING')">Following</a>
         </li>
       </ul>
     </div>
@@ -48,51 +48,57 @@
         </article>
       </div>
 
-      <div v-if="data.activity.pageInfo.hasNextPage" class="has-text-centered mt-5">
-        <button
-          class="button is-primary"
-          :class="{ 'is-loading': loading }"
-          :disabled="loading"
-          @click="loadMore"
-        >
-          Load More
-        </button>
-      </div>
+      <PaginationNav
+        v-if="currentPage > 1 || hasNextPage"
+        :current-page="currentPage"
+        :has-next-page="hasNextPage"
+        :loading="loading"
+        @prev="prevPage"
+        @next="nextPage"
+      />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
 import type { GetActivityQuery } from "@/types/graphql";
+import PaginationNav from "@/components/PaginationNav.vue";
 
+const PAGE_SIZE = 25;
 const feedType = ref<"GLOBAL" | "FOLLOWING">("GLOBAL");
+const currentPage = ref(1);
+const pageCursors = ref<(string | null)[]>([null]);
 
-const { data, loading, error, fetchMore, refetch } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
-  variables: () => ({ feedType: feedType.value, first: 25 })
+const { data, loading, error } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
+  variables: () => ({
+    feedType: feedType.value,
+    first: PAGE_SIZE,
+    after: pageCursors.value[currentPage.value - 1],
+  }),
 });
 
-watch(feedType, () => {
-  refetch();
+const hasNextPage = computed(() => data.value?.activity.pageInfo.hasNextPage ?? false);
+
+watch(data, (val) => {
+  if (val?.activity.pageInfo.endCursor) {
+    pageCursors.value[currentPage.value] = val.activity.pageInfo.endCursor;
+  }
 });
 
-function loadMore() {
-  if (!data.value) return;
+function switchFeed(type: "GLOBAL" | "FOLLOWING") {
+  feedType.value = type;
+  currentPage.value = 1;
+  pageCursors.value = [null];
+}
 
-  fetchMore(
-    {
-      feedType: feedType.value,
-      first: 25,
-      after: data.value.activity.pageInfo.endCursor
-    },
-    (prev, next) => ({
-      activity: {
-        ...next.activity,
-        nodes: [...prev.activity.nodes, ...next.activity.nodes]
-      }
-    })
-  );
+function nextPage() {
+  if (hasNextPage.value) currentPage.value++;
+}
+
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--;
 }
 </script>
