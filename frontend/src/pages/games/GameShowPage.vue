@@ -31,20 +31,20 @@
                 <th>Release Date</th>
                 <td>{{ game.releaseDate }}</td>
               </tr>
-              <tr v-if="game.developers.length">
+              <tr v-if="game.developers.nodes.length">
                 <th>Developers</th>
-                <td>{{ game.developers.map((d: { name: string }) => d.name).join(', ') }}</td>
+                <td>{{ game.developers.nodes.map((d: { name: string }) => d.name).join(', ') }}</td>
               </tr>
-              <tr v-if="game.publishers.length">
+              <tr v-if="game.publishers.nodes.length">
                 <th>Publishers</th>
-                <td>{{ game.publishers.map((p: { name: string }) => p.name).join(', ') }}</td>
+                <td>{{ game.publishers.nodes.map((p: { name: string }) => p.name).join(', ') }}</td>
               </tr>
-              <tr v-if="game.platforms.length">
+              <tr v-if="game.platforms.nodes.length">
                 <th>Platforms</th>
                 <td>
                   <div class="tags">
                     <span
-                      v-for="platform in game.platforms"
+                      v-for="platform in game.platforms.nodes"
                       :key="platform.id"
                       class="tag"
                     >
@@ -53,12 +53,12 @@
                   </div>
                 </td>
               </tr>
-              <tr v-if="game.genres.length">
+              <tr v-if="game.genres.nodes.length">
                 <th>Genres</th>
                 <td>
                   <div class="tags">
                     <span
-                      v-for="genre in game.genres"
+                      v-for="genre in game.genres.nodes"
                       :key="genre.id"
                       class="tag is-primary is-light"
                     >
@@ -67,9 +67,9 @@
                   </div>
                 </td>
               </tr>
-              <tr v-if="game.engines.length">
+              <tr v-if="game.engines.nodes.length">
                 <th>Engines</th>
-                <td>{{ game.engines.map((e: { name: string }) => e.name).join(', ') }}</td>
+                <td>{{ game.engines.nodes.map((e: { name: string }) => e.name).join(', ') }}</td>
               </tr>
               <tr v-if="game.series">
                 <th>Series</th>

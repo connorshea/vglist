@@ -150,7 +150,7 @@ export const GLOBAL_SEARCH = gql`
 `
 
 export const GET_ACTIVITY = gql`
-  query GetActivity($feedType: ActivityFeedType, $first: Int, $after: String) {
+  query GetActivity($feedType: ActivityFeed, $first: Int, $after: String) {
     activity(feedType: $feedType, first: $first, after: $after) {
       nodes {
         id
