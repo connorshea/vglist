@@ -22,7 +22,6 @@
             type="text"
             placeholder="Search games, companies, users…"
             @input="onSearch"
-            @keydown.escape="close"
             @keydown.enter="goToFirstResult"
           />
           <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
@@ -223,7 +222,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, computed, watch, nextTick, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
@@ -234,6 +233,17 @@ import type { SearchResultNode } from "@/types/graphql";
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();
 const searchInputRef = ref<HTMLInputElement | null>(null);
+
+// Close overlay on Escape regardless of focus
+function onDocumentKeydown(e: KeyboardEvent) {
+  if (e.key === "Escape") {
+    close();
+  }
+}
+
+onBeforeUnmount(() => {
+  document.removeEventListener("keydown", onDocumentKeydown);
+});
 
 const query = ref("");
 const results = ref<SearchResultNode[]>([]);
@@ -260,14 +270,16 @@ const gridColumnsClass = computed(() => {
   return `grid-cols-${cols}`;
 });
 
-// Focus input when overlay opens
+// Focus input when overlay opens, and listen for Escape globally
 watch(isOpen, async (open) => {
   if (open) {
     await nextTick();
     searchInputRef.value?.focus();
     document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onDocumentKeydown);
   } else {
     document.body.style.overflow = "";
+    document.removeEventListener("keydown", onDocumentKeydown);
     query.value = "";
     results.value = [];
     hasSearched.value = false;
