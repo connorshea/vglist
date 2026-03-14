@@ -30,9 +30,9 @@
         <router-link class="navbar-item" to="/games">Games</router-link>
         <router-link class="navbar-item" to="/users">Users</router-link>
 
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">More</a>
-          <div class="navbar-dropdown">
+        <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
+          <a class="navbar-link" tabindex="0">More</a>
+          <div v-show="!dropdownsClosed" class="navbar-dropdown">
             <router-link class="navbar-item" to="/platforms">Platforms</router-link>
             <router-link class="navbar-item" to="/genres">Genres</router-link>
             <router-link class="navbar-item" to="/companies">Companies</router-link>
@@ -48,11 +48,11 @@
           <NavSearch />
         </div>
         <template v-if="authStore.isAuthenticated">
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
+          <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
+            <a class="navbar-link" tabindex="0">
               {{ authStore.user?.username }}
             </a>
-            <div class="navbar-dropdown is-right">
+            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right">
               <router-link class="navbar-item" :to="`/users/${authStore.user?.slug}`">
                 Profile
               </router-link>
@@ -68,9 +68,9 @@
         <template v-else>
           <router-link class="navbar-item" to="/signup">Sign up</router-link>
           <router-link class="navbar-item" to="/login">Sign in</router-link>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">More</a>
-            <div class="navbar-dropdown is-right">
+          <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
+            <a class="navbar-link" tabindex="0">More</a>
+            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right">
               <router-link class="navbar-item" to="/about">About</router-link>
               <a
                 class="navbar-item"
@@ -105,11 +105,13 @@ const route = useRoute();
 const authStore = useAuthStore();
 const { signOut } = useAuth();
 const isBurgerActive = ref(false);
+const dropdownsClosed = ref(false);
 
 watch(
   () => route.path,
   () => {
     isBurgerActive.value = false;
+    dropdownsClosed.value = true;
   }
 );
 

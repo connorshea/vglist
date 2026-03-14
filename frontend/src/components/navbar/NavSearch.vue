@@ -5,7 +5,13 @@
     @click="open"
   >
     <div class="control">
-      <input class="input is-small" type="search" placeholder="Search..." readonly @focus="open" />
+      <input
+        class="input is-small"
+        type="search"
+        placeholder="Search..."
+        readonly
+        @keydown="handleKeydown"
+      />
     </div>
   </div>
 </template>
@@ -14,4 +20,11 @@
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 
 const { open, isOpen } = useSearchOverlay();
+
+function handleKeydown(e: KeyboardEvent) {
+  if (e.key === "Enter" || (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey)) {
+    e.preventDefault();
+    open();
+  }
+}
 </script>
