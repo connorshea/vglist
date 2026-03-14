@@ -7,7 +7,7 @@
         <li :class="{ 'is-active': feedType === 'GLOBAL' }">
           <a @click="switchFeed('GLOBAL')">Global</a>
         </li>
-        <li :class="{ 'is-active': feedType === 'FOLLOWING' }">
+        <li v-if="authStore.isAuthenticated" :class="{ 'is-active': feedType === 'FOLLOWING' }">
           <a @click="switchFeed('FOLLOWING')">Following</a>
         </li>
       </ul>
@@ -22,6 +22,13 @@
     </div>
 
     <div v-if="data">
+      <div
+        v-if="data.activity && data.activity.nodes.length === 0"
+        class="has-text-centered has-text-grey py-6"
+      >
+        <p>No activity yet.</p>
+      </div>
+
       <div v-for="event in data?.activity?.nodes" :key="event.id" class="box">
         <article class="media">
           <figure class="media-left">
@@ -45,7 +52,48 @@
                     {{ event.user.username }}
                   </router-link>
                 </strong>
-                <span class="has-text-grey ml-2">{{ event.eventCategory }}</span>
+                {{ " " }}
+                <template
+                  v-if="event.eventCategory === 'ADD_TO_LIBRARY' && 'game' in event.eventable"
+                >
+                  added
+                  <router-link :to="`/games/${event.eventable.game.id}`">
+                    {{ event.eventable.game.name }}
+                  </router-link>
+                  to their library
+                </template>
+                <template
+                  v-else-if="
+                    event.eventCategory === 'CHANGE_COMPLETION_STATUS' && 'game' in event.eventable
+                  "
+                >
+                  changed the completion status of
+                  <router-link :to="`/games/${event.eventable.game.id}`">
+                    {{ event.eventable.game.name }}
+                  </router-link>
+                  <template
+                    v-if="'completionStatus' in event.eventable && event.eventable.completionStatus"
+                  >
+                    to {{ completionStatusLabel(event.eventable.completionStatus) }}
+                  </template>
+                </template>
+                <template
+                  v-else-if="event.eventCategory === 'FAVORITE_GAME' && 'game' in event.eventable"
+                >
+                  favorited
+                  <router-link :to="`/games/${event.eventable.game.id}`">
+                    {{ event.eventable.game.name }}
+                  </router-link>
+                </template>
+                <template
+                  v-else-if="event.eventCategory === 'FOLLOWING' && 'followed' in event.eventable"
+                >
+                  started following
+                  <router-link :to="`/users/${event.eventable.followed.slug}`">
+                    {{ event.eventable.followed.username }}
+                  </router-link>
+                </template>
+                <template v-else-if="event.eventCategory === 'NEW_USER'"> joined vglist </template>
                 <br />
                 <small class="has-text-grey">{{
                   new Date(event.createdAt).toLocaleString()
@@ -72,8 +120,11 @@
 import { ref, watch, computed } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
-import type { GetActivityQuery } from "@/types/graphql";
+import type { GetActivityQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
+import { useAuthStore } from "@/stores/auth";
+
+const authStore = useAuthStore();
 
 const PAGE_SIZE = 25;
 const feedType = ref<"GLOBAL" | "FOLLOWING">("GLOBAL");
@@ -108,6 +159,20 @@ function nextPage() {
 
 function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
+}
+
+const completionStatusLabels: Record<GamePurchaseCompletionStatus, string> = {
+  UNPLAYED: "Unplayed",
+  IN_PROGRESS: "In Progress",
+  DROPPED: "Dropped",
+  COMPLETED: "Completed",
+  FULLY_COMPLETED: "Fully Completed",
+  NOT_APPLICABLE: "Not Applicable",
+  PAUSED: "Paused"
+};
+
+function completionStatusLabel(status: GamePurchaseCompletionStatus): string {
+  return completionStatusLabels[status];
 }
 </script>
 
