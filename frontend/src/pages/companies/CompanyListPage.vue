@@ -43,8 +43,8 @@ const pageCursors = ref<(string | null)[]>([null]);
 const { data, loading, error } = useQuery<GetCompaniesQuery>(GET_COMPANIES, {
   variables: () => ({
     first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1],
-  }),
+    after: pageCursors.value[currentPage.value - 1]
+  })
 });
 
 const hasNextPage = computed(() => data.value?.companies.pageInfo.hasNextPage ?? false);

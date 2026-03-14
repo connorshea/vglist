@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import type { User, UserRole } from "@/types";
+import type { UserRole } from "@/types";
 
 interface AuthUser {
   id: string;

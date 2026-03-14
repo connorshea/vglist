@@ -62,8 +62,8 @@ const pageCursors = ref<(string | null)[]>([null]);
 const { data, loading, error } = useQuery<GetUsersQuery>(GET_USERS, {
   variables: () => ({
     first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1],
-  }),
+    after: pageCursors.value[currentPage.value - 1]
+  })
 });
 
 const users = computed(() => data.value?.users?.nodes ?? []);

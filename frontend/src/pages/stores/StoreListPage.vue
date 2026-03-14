@@ -43,8 +43,8 @@ const pageCursors = ref<(string | null)[]>([null]);
 const { data, loading, error } = useQuery<GetStoresQuery>(GET_STORES, {
   variables: () => ({
     first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1],
-  }),
+    after: pageCursors.value[currentPage.value - 1]
+  })
 });
 
 const hasNextPage = computed(() => data.value?.stores.pageInfo.hasNextPage ?? false);
