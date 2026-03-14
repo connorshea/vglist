@@ -531,9 +531,9 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
 <style scoped>
 /* ── Theme tokens ── */
 .user-profile {
-  --up-border: hsl(0, 0%, 88%);
-  --up-text-dim: hsl(0, 0%, 50%);
-  --up-text-faint: hsl(0, 0%, 65%);
+  --up-border: var(--color-border);
+  --up-text-dim: var(--color-text-secondary);
+  --up-text-faint: var(--color-text-tertiary);
   --up-hover-overlay: rgba(0, 0, 0, 0.65);
   --up-name-gradient: linear-gradient(
     to top,
@@ -545,9 +545,9 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
 
 @media (prefers-color-scheme: dark) {
   .user-profile {
-    --up-border: hsl(217, 20%, 32%);
-    --up-text-dim: hsl(217, 10%, 62%);
-    --up-text-faint: hsl(217, 10%, 45%);
+    --up-border: var(--color-border);
+    --up-text-dim: var(--color-text-secondary);
+    --up-text-faint: var(--color-text-tertiary);
     --up-hover-overlay: rgba(0, 0, 0, 0.75);
     --up-name-gradient: linear-gradient(
       to top,
@@ -719,7 +719,8 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
   padding: 0.5rem 1rem;
   border: 1px solid var(--up-border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   font-size: 0.9rem;
   cursor: pointer;
   font-family: inherit;
@@ -738,7 +739,7 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
   right: 0;
   top: calc(100% + 4px);
   min-width: 180px;
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--up-border);
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -759,7 +760,7 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
 }
 
 .actions-dropdown-item:hover {
-  background: #f4f3ef;
+  background: var(--color-bg-subtle);
 }
 
 .actions-dropdown-item-danger {

@@ -11,6 +11,24 @@
 
   --vglist-theme: #5957d6;
 
+  /* Shared neutral palette */
+  --color-text-primary: #2c2c2a;
+  --color-text-secondary: #888780;
+  --color-text-tertiary: #b4b2a9;
+  --color-border: #d3d1c7;
+  --color-bg-subtle: #f4f3ef;
+  --color-surface: #fff;
+
+  /* Shared radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 20px;
+
+  /* Shared transitions */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.2s;
+
   --bulma-scheme-main: hsl(0, 0%, 100%);
   --bulma-scheme-h: 0;
   --bulma-scheme-s: 0%;
@@ -87,6 +105,14 @@
 
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
+
+    /* Shared neutral palette (dark) */
+    --color-text-primary: hsl(0, 0%, 95%);
+    --color-text-secondary: hsl(217, 10%, 65%);
+    --color-text-tertiary: hsl(217, 10%, 55%);
+    --color-border: hsl(217, 20%, 38%);
+    --color-bg-subtle: hsl(217, 20%, 30%);
+    --color-surface: hsl(217, 28%, 27%);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
