@@ -129,6 +129,7 @@
                             min="0"
                             max="100"
                             class="form-rating-input"
+                            @input="clampRating"
                           />
                           <div class="form-rating-track">
                             <div
@@ -137,6 +138,18 @@
                             ></div>
                           </div>
                         </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">Hours played</label>
+                        <input
+                          v-model.number="formHoursPlayed"
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          class="form-hours-input"
+                          placeholder="0"
+                        />
                       </div>
 
                       <div class="form-dates">
@@ -149,6 +162,9 @@
                           <input v-model="formCompletionDate" type="date" class="form-date-input" />
                         </div>
                       </div>
+                      <p v-if="dateValidationError" class="form-date-error">
+                        {{ dateValidationError }}
+                      </p>
                     </div>
 
                     <!-- Right column: Platforms, Store, Notes, Actions -->
@@ -218,7 +234,7 @@
                           <button
                             type="button"
                             class="form-btn-save"
-                            :disabled="addingToLibrary"
+                            :disabled="addingToLibrary || !!dateValidationError"
                             @click="submitAddForm"
                           >
                             {{ addingToLibrary ? "Saving\u2026" : "Save" }}
@@ -608,7 +624,7 @@ const externalLinks = computed<ExternalLink[]>(() => {
 
 // ── Add to Library form state ──
 const statusOptions: { value: GamePurchaseCompletionStatus; label: string }[] = [
-  { value: "UNPLAYED", label: "Planned" },
+  { value: "UNPLAYED", label: "Unplayed" },
   { value: "IN_PROGRESS", label: "Playing" },
   { value: "PAUSED", label: "Paused" },
   { value: "DROPPED", label: "Dropped" },
@@ -625,6 +641,7 @@ const formStartDate = ref("");
 const formCompletionDate = ref("");
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
+const formHoursPlayed = ref<number | null>(null);
 const formComments = ref("");
 const inLibraryHovered = ref(false);
 
@@ -672,6 +689,7 @@ function onHeroAfterEnter() {
 function resetForm() {
   formStatus.value = null;
   formRating.value = null;
+  formHoursPlayed.value = null;
   formStartDate.value = "";
   formCompletionDate.value = "";
   formPlatformIds.value = new Set();
@@ -710,6 +728,7 @@ async function openEditForm() {
 
     formStatus.value = (gp.completionStatus as GamePurchaseCompletionStatus) ?? null;
     formRating.value = gp.rating ?? null;
+    formHoursPlayed.value = gp.hoursPlayed ?? null;
     formStartDate.value = gp.startDate ?? "";
     formCompletionDate.value = gp.completionDate ?? "";
     formComments.value = gp.comments ?? "";
@@ -753,6 +772,21 @@ function toggleFormStore(id: string) {
   formStoreIds.value = next;
 }
 
+function clampRating() {
+  if (formRating.value == null) return;
+  if (formRating.value > 100) formRating.value = 100;
+  if (formRating.value < 0) formRating.value = 0;
+}
+
+const dateValidationError = computed(() => {
+  if (formStartDate.value && formCompletionDate.value) {
+    if (formStartDate.value > formCompletionDate.value) {
+      return "Start date must be on or before the completion date.";
+    }
+  }
+  return "";
+});
+
 // ── Action state ──
 const addingToLibrary = ref(false);
 const removingFromLibrary = ref(false);
@@ -770,6 +804,9 @@ function buildFormVariables(): Record<string, unknown> {
   }
   if (formRating.value != null && formRating.value >= 0) {
     variables.rating = Math.round(Math.min(100, Math.max(0, formRating.value)));
+  }
+  if (formHoursPlayed.value != null && formHoursPlayed.value >= 0) {
+    variables.hoursPlayed = formHoursPlayed.value;
   }
   if (formStartDate.value) {
     variables.startDate = formStartDate.value;
@@ -793,6 +830,12 @@ function buildFormVariables(): Record<string, unknown> {
 async function submitAddForm() {
   if (!authStore.isAuthenticated) {
     actionMessage.value = "You must be signed in to add games to your library.";
+    actionIsError.value = true;
+    return;
+  }
+
+  if (dateValidationError.value) {
+    actionMessage.value = dateValidationError.value;
     actionIsError.value = true;
     return;
   }
@@ -1249,6 +1292,27 @@ a.hero-tag:hover {
 }
 
 .form-date-input:focus {
+  border-color: #888780;
+}
+
+.form-date-error {
+  color: #cc0000;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Hours played input */
+.form-hours-input {
+  width: 80px;
+  font-size: 0.8rem;
+  border: 1px solid #d3d1c7;
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-hours-input:focus {
   border-color: #888780;
 }
 
