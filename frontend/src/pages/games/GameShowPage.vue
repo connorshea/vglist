@@ -430,42 +430,24 @@
       </div>
 
       <!-- Remove from library confirmation modal -->
-      <Teleport to="body">
-        <div
-          v-if="showRemoveConfirm"
-          class="modal is-active"
-          role="dialog"
-          aria-modal="true"
-          :aria-label="`Confirm removing ${game.name} from your library`"
-          @keydown="onRemoveModalKeydown"
-        >
-          <div class="modal-background" @click="showRemoveConfirm = false"></div>
-          <div ref="removeModalRef" class="modal-card remove-confirm-modal" tabindex="-1">
-            <header class="modal-card-head">
-              <p class="modal-card-title">Remove from library</p>
-              <button class="delete" aria-label="Close" @click="showRemoveConfirm = false"></button>
-            </header>
-            <section class="modal-card-body">
-              <p>
-                Are you sure you want to remove <strong>{{ game.name }}</strong> from your library? This will delete
-                your rating, status, and notes for this game.
-              </p>
-            </section>
-            <footer class="modal-card-foot remove-confirm-footer">
-              <button class="button" @click="showRemoveConfirm = false">Cancel</button>
-              <button class="button is-danger" :disabled="removingFromLibrary" @click="confirmRemoveFromLibrary">
-                {{ removingFromLibrary ? "Removing\u2026" : "Remove" }}
-              </button>
-            </footer>
-          </div>
-        </div>
-      </Teleport>
+      <ConfirmDialog
+        v-model="showRemoveConfirm"
+        title="Remove game?"
+        :loading="removingFromLibrary"
+        @confirm="confirmRemoveFromLibrary"
+      >
+        <template #icon>
+          <CircleAlert :size="22" :stroke-width="1.8" />
+        </template>
+        <strong>{{ game.name }}</strong> will be removed from your library. Your rating, status, and notes will be
+        deleted.
+      </ConfirmDialog>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
@@ -480,9 +462,10 @@ import {
   UNFAVORITE_GAME
 } from "@/graphql/mutations/games";
 import type { GetGameQuery, GetGamePurchaseQuery, GetStoresQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
-import { Heart } from "lucide-vue-next";
+import { Heart, CircleAlert } from "lucide-vue-next";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -630,62 +613,6 @@ const formHoursPlayed = ref<number | null>(null);
 const formComments = ref("");
 const inLibraryHovered = ref(false);
 const showRemoveConfirm = ref(false);
-const removeModalRef = ref<HTMLElement | null>(null);
-
-// ── Remove confirmation modal: focus management ──
-function getFocusableElements(): HTMLElement[] {
-  if (!removeModalRef.value) return [];
-  return Array.from(
-    removeModalRef.value.querySelectorAll<HTMLElement>(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
-  );
-}
-
-function onRemoveModalKeydown(e: KeyboardEvent) {
-  if (e.key === "Escape") {
-    showRemoveConfirm.value = false;
-    return;
-  }
-
-  if (e.key === "Tab") {
-    const focusable = getFocusableElements();
-    if (focusable.length === 0) return;
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (e.shiftKey) {
-      if (document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      }
-    } else {
-      if (document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-  }
-}
-
-let previouslyFocusedElement: HTMLElement | null = null;
-
-watch(showRemoveConfirm, (isOpen) => {
-  if (isOpen) {
-    previouslyFocusedElement = document.activeElement as HTMLElement | null;
-    nextTick(() => {
-      removeModalRef.value?.focus();
-    });
-  } else {
-    previouslyFocusedElement?.focus();
-    previouslyFocusedElement = null;
-  }
-});
-
-onBeforeUnmount(() => {
-  showRemoveConfirm.value = false;
-});
 
 // ── Hero height animation (smooth expand/collapse) ──
 const heroInfoRef = ref<HTMLElement | null>(null);
@@ -1807,26 +1734,6 @@ a.hero-tag:hover {
   .details-grid {
     grid-template-columns: 1fr;
   }
-}
-
-/* ── Remove confirmation modal ── */
-.remove-confirm-modal {
-  max-width: 480px;
-}
-
-.remove-confirm-modal:focus-visible {
-  outline: 2px solid var(--vglist-theme);
-  outline-offset: 2px;
-}
-
-.remove-confirm-footer {
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-.remove-confirm-footer .button:focus-visible {
-  outline: 2px solid var(--vglist-theme);
-  outline-offset: 2px;
 }
 
 /* ── Dark mode: form overrides ── */
