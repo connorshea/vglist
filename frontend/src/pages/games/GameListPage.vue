@@ -11,8 +11,8 @@
     </div>
 
     <div v-if="data" class="columns is-multiline">
-      <div v-for="game in data.games.nodes" :key="game.id" class="column is-3">
-        <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl">
+      <div v-for="game in data?.games?.nodes" :key="game.id" class="column is-3">
+        <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null">
           <p class="subtitle is-6" v-if="game.releaseDate">
             {{ game.releaseDate }}
           </p>
@@ -53,10 +53,10 @@ const { data, loading, error } = useQuery<GetGamesQuery>(GET_GAMES, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.games.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.games?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.games.pageInfo.endCursor) {
+  if (val?.games?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.games.pageInfo.endCursor;
   }
 });

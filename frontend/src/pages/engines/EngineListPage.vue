@@ -12,7 +12,7 @@
 
     <div v-if="data" class="content">
       <ul>
-        <li v-for="engine in data.engines.nodes" :key="engine.id">
+        <li v-for="engine in data?.engines?.nodes" :key="engine.id">
           <router-link :to="`/engines/${engine.id}`">{{ engine.name }}</router-link>
         </li>
       </ul>
@@ -47,10 +47,10 @@ const { data, loading, error } = useQuery<GetEnginesQuery>(GET_ENGINES, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.engines.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.engines?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.engines.pageInfo.endCursor) {
+  if (val?.engines?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.engines.pageInfo.endCursor;
   }
 });

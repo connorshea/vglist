@@ -12,7 +12,7 @@
 
     <div v-if="data" class="content">
       <ul>
-        <li v-for="platform in data.platforms.nodes" :key="platform.id">
+        <li v-for="platform in data?.platforms?.nodes" :key="platform.id">
           <router-link :to="`/platforms/${platform.id}`">{{ platform.name }}</router-link>
         </li>
       </ul>
@@ -47,10 +47,10 @@ const { data, loading, error } = useQuery<GetPlatformsQuery>(GET_PLATFORMS, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.platforms.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.platforms?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.platforms.pageInfo.endCursor) {
+  if (val?.platforms?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.platforms.pageInfo.endCursor;
   }
 });

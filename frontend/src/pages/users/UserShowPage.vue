@@ -21,8 +21,8 @@
           <div class="profile-info">
             <div class="profile-name-row">
               <h1 class="profile-name">{{ user.username }}</h1>
-              <span v-if="user.role === 'admin'" class="role-badge role-admin">Admin</span>
-              <span v-else-if="user.role === 'moderator'" class="role-badge role-mod">Mod</span>
+              <span v-if="user.role === 'ADMIN'" class="role-badge role-admin">Admin</span>
+              <span v-else-if="user.role === 'MODERATOR'" class="role-badge role-mod">Mod</span>
             </div>
             <p v-if="user.bio" class="profile-bio">{{ user.bio }}</p>
             <p v-if="!isPrivateProfile" class="profile-stats-line">
@@ -170,7 +170,7 @@
               <div
                 v-if="purchase.rating !== null"
                 class="gallery-rating"
-                :class="ratingClass(purchase.rating)"
+                :class="ratingClass(purchase.rating ?? 0)"
               >
                 {{ purchase.rating }}
               </div>
