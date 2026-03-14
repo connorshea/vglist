@@ -59,9 +59,16 @@ module VideoGameList
     config.active_storage.variant_processor = :mini_magick
 
     # Allow cross-origin requests from the Vue SPA frontend.
+    # FRONTEND_URL must be set in production to avoid permissive CORS.
+    frontend_url = if Rails.env.production?
+                     ENV.fetch('FRONTEND_URL')
+                   else
+                     ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
+                   end
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
+        origins frontend_url
         resource '*',
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
