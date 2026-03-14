@@ -11,17 +11,11 @@ class Mutations::Auth::SignInMutation < GraphQL::Schema::Mutation
   def resolve(email:, password:)
     user = User.find_by(email: email)
 
-    unless user&.valid_password?(password)
-      return { token: nil, user: nil, errors: ["Invalid email or password."] }
-    end
+    return { token: nil, user: nil, errors: ["Invalid email or password."] } unless user&.valid_password?(password)
 
-    if user.banned?
-      return { token: nil, user: nil, errors: ["Your account has been banned."] }
-    end
+    return { token: nil, user: nil, errors: ["Your account has been banned."] } if user.banned?
 
-    unless user.confirmed?
-      return { token: nil, user: nil, errors: ["You must confirm your email address before signing in."] }
-    end
+    return { token: nil, user: nil, errors: ["You must confirm your email address before signing in."] } unless user.confirmed?
 
     token = JwtService.encode(user)
     { token: token, user: user, errors: [] }
