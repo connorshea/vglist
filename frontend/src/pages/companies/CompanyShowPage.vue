@@ -13,10 +13,7 @@
 
       <!-- TODO: Figure out how to do this without the style tag. -->
       <p v-if="data.company.wikidataId" class="subtitle is-6" style="margin-bottom: 1.5rem">
-        <a
-          :href="`https://www.wikidata.org/wiki/Q${data.company.wikidataId}`"
-          target="_blank"
-          rel="noopener noreferrer"
+        <a :href="`https://www.wikidata.org/wiki/Q${data.company.wikidataId}`" target="_blank" rel="noopener noreferrer"
           >Wikidata</a
         >
       </p>

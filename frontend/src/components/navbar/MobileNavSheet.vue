@@ -4,12 +4,7 @@
     <div class="mn-backdrop" :class="{ visible: isOpen }" @click="close" />
 
     <!-- Bottom sheet -->
-    <div
-      ref="sheetEl"
-      class="mn-sheet"
-      :class="{ open: isOpen, dragging: isDragging }"
-      :style="dragStyle"
-    >
+    <div ref="sheetEl" class="mn-sheet" :class="{ open: isOpen, dragging: isDragging }" :style="dragStyle">
       <div class="mn-handle-area" @pointerdown="onPointerDown">
         <div class="mn-handle" />
       </div>
@@ -150,12 +145,8 @@
 
         <!-- Auth buttons (not authenticated) -->
         <div v-else class="mn-auth-buttons mn-stagger">
-          <router-link class="mn-auth-btn mn-auth-signin" to="/login" @click="close">
-            Sign in
-          </router-link>
-          <router-link class="mn-auth-btn mn-auth-signup" to="/signup" @click="close">
-            Create account
-          </router-link>
+          <router-link class="mn-auth-btn mn-auth-signin" to="/login" @click="close"> Sign in </router-link>
+          <router-link class="mn-auth-btn mn-auth-signup" to="/signup" @click="close"> Create account </router-link>
         </div>
       </div>
     </div>

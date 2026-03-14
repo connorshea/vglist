@@ -68,10 +68,7 @@ function mountOverlay() {
  * Opens the overlay, types a query, waits for debounce, and returns wrapper
  * with search results rendered.
  */
-async function mountWithSearchResults(
-  results: Record<string, unknown>[],
-  query = "test"
-): Promise<VueWrapper> {
+async function mountWithSearchResults(results: Record<string, unknown>[], query = "test"): Promise<VueWrapper> {
   mockRequest.mockResolvedValueOnce({
     globalSearch: { nodes: results }
   });

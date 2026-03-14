@@ -25,9 +25,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isAuthenticated = computed(() => token.value !== null);
   const isAdmin = computed(() => user.value?.role === "ADMIN");
-  const isModerator = computed(
-    () => user.value?.role === "MODERATOR" || user.value?.role === "ADMIN"
-  );
+  const isModerator = computed(() => user.value?.role === "MODERATOR" || user.value?.role === "ADMIN");
 
   function setAuth(newToken: string, newUser: AuthUser) {
     token.value = newToken;

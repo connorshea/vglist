@@ -2,9 +2,7 @@
   <div>
     <h2 class="title is-4">API Token</h2>
 
-    <p class="mb-4">
-      Reset your API token. This will invalidate your current token and generate a new one.
-    </p>
+    <p class="mb-4">Reset your API token. This will invalidate your current token and generate a new one.</p>
 
     <div v-if="resetError" class="notification is-danger">
       <p>{{ resetError }}</p>
@@ -18,12 +16,7 @@
       </p>
     </div>
 
-    <button
-      class="button is-warning"
-      :class="{ 'is-loading': resetting }"
-      :disabled="resetting"
-      @click="resetToken"
-    >
+    <button class="button is-warning" :class="{ 'is-loading': resetting }" :disabled="resetting" @click="resetToken">
       Reset API Token
     </button>
   </div>

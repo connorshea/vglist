@@ -14,13 +14,7 @@
         <div class="field">
           <label class="label">Username</label>
           <div class="control">
-            <input
-              v-model="username"
-              class="input"
-              type="text"
-              placeholder="Username (3-20 characters)"
-              required
-            />
+            <input v-model="username" class="input" type="text" placeholder="Username (3-20 characters)" required />
           </div>
         </div>
 
@@ -89,16 +83,10 @@ async function handleSubmit() {
   isLoading.value = true;
   errors.value = [];
 
-  const result = await signUp(
-    username.value,
-    email.value,
-    password.value,
-    passwordConfirmation.value
-  );
+  const result = await signUp(username.value, email.value, password.value, passwordConfirmation.value);
 
   if (result.success) {
-    successMessage.value =
-      "Account created successfully! Please check your email to confirm your account.";
+    successMessage.value = "Account created successfully! Please check your email to confirm your account.";
   } else {
     errors.value = result.errors;
   }

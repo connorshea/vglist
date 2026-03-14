@@ -39,12 +39,7 @@ export function useAuth() {
     }
   }
 
-  async function signUp(
-    username: string,
-    email: string,
-    password: string,
-    passwordConfirmation: string
-  ) {
+  async function signUp(username: string, email: string, password: string, passwordConfirmation: string) {
     try {
       const data = await gqlClient.request<{
         signUp: { message: string | null; errors: string[] };

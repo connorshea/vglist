@@ -12,12 +12,7 @@
             :style="{ animationDuration: row.speed + 's', animationDelay: row.delay + 's' }"
           >
             <!-- Original tiles -->
-            <div
-              v-for="tile in row.tiles"
-              :key="tile.id"
-              class="cover-tile"
-              :class="{ flipping: tile.flipping }"
-            >
+            <div v-for="tile in row.tiles" :key="tile.id" class="cover-tile" :class="{ flipping: tile.flipping }">
               <div class="tile-face" :style="tile.style"></div>
             </div>
             <!-- Duplicate tiles for seamless loop -->
@@ -41,9 +36,7 @@
       <!-- Hero content -->
       <div class="hero-body has-text-centered hero-content">
         <img src="@/assets/images/vglist-logo.svg" alt="vglist" class="home-logo" />
-        <p class="subtitle is-4">
-          Track your entire video game library across every store and platform.
-        </p>
+        <p class="subtitle is-4">Track your entire video game library across every store and platform.</p>
 
         <div v-if="statsData" class="home-stats-bar">
           <div class="home-stats-container">
@@ -111,8 +104,7 @@ interface GameNode {
 
 const stats = computed(() => {
   if (!statsData.value) return [];
-  const s = (statsData.value as { basicSiteStatistics: Record<string, number> })
-    .basicSiteStatistics;
+  const s = (statsData.value as { basicSiteStatistics: Record<string, number> }).basicSiteStatistics;
   return [
     { label: "GAMES", value: s.games, path: "/games" },
     { label: "SERIES", value: s.series, path: "/series" },

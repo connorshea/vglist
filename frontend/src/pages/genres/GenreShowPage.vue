@@ -12,10 +12,7 @@
       <h1 class="title">{{ data.genre.name }}</h1>
 
       <p v-if="data.genre.wikidataId" class="subtitle is-6">
-        <a
-          :href="`https://www.wikidata.org/wiki/Q${data.genre.wikidataId}`"
-          target="_blank"
-          rel="noopener noreferrer"
+        <a :href="`https://www.wikidata.org/wiki/Q${data.genre.wikidataId}`" target="_blank" rel="noopener noreferrer"
           >Wikidata</a
         >
       </p>

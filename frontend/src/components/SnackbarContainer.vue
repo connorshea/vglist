@@ -9,9 +9,7 @@
         :role="msg.type === 'error' ? 'alert' : 'status'"
       >
         <span class="snackbar-text">{{ msg.text }}</span>
-        <button class="snackbar-close" aria-label="Dismiss" @click="dismiss(msg.id)">
-          &times;
-        </button>
+        <button class="snackbar-close" aria-label="Dismiss" @click="dismiss(msg.id)">&times;</button>
       </div>
     </TransitionGroup>
   </div>

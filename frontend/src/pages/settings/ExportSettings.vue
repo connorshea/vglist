@@ -15,12 +15,7 @@
       <pre class="box" style="max-height: 400px; overflow: auto">{{ exportData }}</pre>
     </div>
 
-    <button
-      class="button is-primary"
-      :class="{ 'is-loading': exporting }"
-      :disabled="exporting"
-      @click="exportLibrary"
-    >
+    <button class="button is-primary" :class="{ 'is-loading': exporting }" :disabled="exporting" @click="exportLibrary">
       Export Library
     </button>
   </div>

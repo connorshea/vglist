@@ -79,11 +79,7 @@
   --bulma-background-l: 98%;
   --bulma-text-l: 29%;
 
-  --bulma-scheme-main: hsl(
-    var(--bulma-scheme-h),
-    var(--bulma-scheme-s),
-    var(--bulma-scheme-main-l)
-  );
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
   --bulma-background: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-background-l));
   --bulma-text: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-text-l));
 
@@ -131,11 +127,7 @@
     --bulma-scheme-main-bis-l: 25%;
     --bulma-scheme-main-ter-l: 29%;
 
-    --bulma-scheme-main: hsl(
-      var(--bulma-scheme-h),
-      var(--bulma-scheme-s),
-      var(--bulma-scheme-main-l)
-    );
+    --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
     --bulma-background-l: 20%;
     --bulma-text-l: 100%;
 

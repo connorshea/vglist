@@ -1,17 +1,7 @@
 <template>
-  <div
-    class="navbar-search"
-    :style="{ viewTransitionName: isOpen ? 'none' : 'search-bar' }"
-    @click="open"
-  >
+  <div class="navbar-search" :style="{ viewTransitionName: isOpen ? 'none' : 'search-bar' }" @click="open">
     <div class="control">
-      <input
-        class="input is-small"
-        type="search"
-        placeholder="Search..."
-        readonly
-        @keydown="handleKeydown"
-      />
+      <input class="input is-small" type="search" placeholder="Search..." readonly @keydown="handleKeydown" />
     </div>
   </div>
 </template>

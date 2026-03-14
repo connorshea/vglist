@@ -6,9 +6,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never;
 };
-export type Incremental<T> =
-  | T
-  | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
   ID: { input: string; output: string };
@@ -2349,12 +2347,8 @@ export type AddGameToLibraryMutationVariables = Exact<{
   comments?: InputMaybe<Scalars["String"]["input"]>;
   startDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
   completionDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
-  platforms?: InputMaybe<
-    Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>
-  >;
-  stores?: InputMaybe<
-    Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>
-  >;
+  platforms?: InputMaybe<Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>>;
+  stores?: InputMaybe<Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>>;
 }>;
 
 export type AddGameToLibraryMutation = {
@@ -2379,12 +2373,8 @@ export type UpdateGameInLibraryMutationVariables = Exact<{
   startDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
   completionDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
   replayCount?: InputMaybe<Scalars["Int"]["input"]>;
-  platforms?: InputMaybe<
-    Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>
-  >;
-  stores?: InputMaybe<
-    Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>
-  >;
+  platforms?: InputMaybe<Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>>;
+  stores?: InputMaybe<Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>>;
 }>;
 
 export type UpdateGameInLibraryMutation = {
