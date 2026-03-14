@@ -33,6 +33,7 @@
 import { ref } from "vue";
 import { useMutation } from "@/composables/useGraphQL";
 import { RESET_API_TOKEN } from "@/graphql/mutations/users-settings";
+import { extractGqlError } from "@/utils/graphql-errors";
 interface ResetApiTokenResult {
   resetApiToken?: {
     apiToken?: string | null;
@@ -59,7 +60,7 @@ async function resetToken() {
       newToken.value = result.apiToken;
     }
   } catch (e) {
-    resetError.value = e instanceof Error ? e.message : "An unexpected error occurred.";
+    resetError.value = extractGqlError(e);
   }
 }
 </script>

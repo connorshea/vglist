@@ -304,6 +304,7 @@ import { gqlClient } from "@/graphql/client";
 import { GET_GAME } from "@/graphql/queries/games";
 import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME, UNFAVORITE_GAME } from "@/graphql/mutations/games";
 import type { GetGameQuery } from "@/types/graphql";
+import { extractGqlError } from "@/utils/graphql-errors";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -432,17 +433,6 @@ const externalLinks = computed<ExternalLink[]>(() => {
 
   return links;
 });
-
-function extractGqlError(err: unknown): string {
-  if (err && typeof err === "object" && "response" in err) {
-    const response = (err as { response: { errors?: { message: string }[] } }).response;
-    if (response.errors?.length) {
-      return response.errors.map((e) => e.message).join(", ");
-    }
-  }
-  if (err instanceof Error) return err.message;
-  return String(err);
-}
 
 // Action state
 const addingToLibrary = ref(false);
