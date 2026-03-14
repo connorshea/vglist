@@ -2,24 +2,16 @@
 @use "bulma/sass/utilities/initial-variables" as iv;
 
 .home-section {
-  padding-bottom: 100px;
-  display: block;
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    max-height: 375px;
-    filter: brightness(var(--home-section-background-brightness));
-    display: block;
-    background: no-repeat center center / cover var(--home-section-background-color);
-  }
+  // Break out of the .section > .container wrapper to be full-width.
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  // Pull up into the parent .section padding so there's no white gap.
+  margin-top: -3rem;
+  background: var(--home-section-background-color);
 
   .subtitle {
     color: var(--home-page-subtitle-text);
@@ -28,11 +20,13 @@
   .home-logo {
     width: auto;
     height: 60px;
+    margin-top: 2rem;
   }
 
   @include mixins.from(iv.$desktop) {
     .home-logo {
       height: 100px;
+      margin-top: 3rem;
     }
   }
 }
