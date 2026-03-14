@@ -62,5 +62,9 @@ sbin/
 
 .playwright-mcp/
 
+# Ignore credential keys, but keep test key for development and testing.
 /config/credentials/*.key
 !/config/credentials/test.key
+
+# Claude
+.claude/worktrees/
