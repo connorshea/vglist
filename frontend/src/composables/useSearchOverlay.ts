@@ -1,18 +1,39 @@
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 
 const isOpen = ref(false);
 
+function withViewTransition(callback: () => void): void {
+  if ("startViewTransition" in document) {
+    (document as { startViewTransition: (cb: () => Promise<void>) => void }).startViewTransition(
+      async () => {
+        callback();
+        await nextTick();
+      }
+    );
+  } else {
+    callback();
+  }
+}
+
 export function useSearchOverlay() {
   function open() {
-    isOpen.value = true;
+    withViewTransition(() => {
+      isOpen.value = true;
+    });
   }
 
   function close() {
-    isOpen.value = false;
+    withViewTransition(() => {
+      isOpen.value = false;
+    });
   }
 
   function toggle() {
-    isOpen.value = !isOpen.value;
+    if (isOpen.value) {
+      close();
+    } else {
+      open();
+    }
   }
 
   return { isOpen, open, close, toggle };
