@@ -49,7 +49,10 @@
 
         <!-- No results -->
         <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
-          <p>No results found for "{{ query }}"</p>
+          <p>
+            No results found for "<span class="search-query-highlight">{{ query }}</span
+            >"
+          </p>
           <p class="search-empty-hint">Try a different search term</p>
         </div>
 
@@ -567,6 +570,11 @@ function releaseYear(date: string): string {
 .search-empty-hint {
   font-size: 13px;
   color: var(--s-200);
+}
+
+.search-query-highlight {
+  color: var(--p-300);
+  font-weight: 500;
 }
 
 .search-error-text {
