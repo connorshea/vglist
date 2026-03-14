@@ -62,11 +62,11 @@
               <div class="rating-circle-wrapper">
                 <svg class="rating-circle-svg" viewBox="0 0 120 120">
                   <circle
+                    class="rating-circle-bg"
                     cx="60"
                     cy="60"
                     r="52"
                     fill="none"
-                    stroke="hsl(0, 0%, 85%)"
                     stroke-width="5"
                   />
                   <circle
@@ -352,6 +352,47 @@ async function favoriteGame() {
 </script>
 
 <style scoped>
+/* ── Dark mode custom properties ── */
+.game-show {
+  --game-border: hsl(0, 0%, 85%);
+  --game-border-light: hsl(0, 0%, 92%);
+  --game-text-muted: hsl(0, 0%, 45%);
+  --game-text-label: hsl(0, 0%, 55%);
+  --game-track-bg: hsl(0, 0%, 85%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .game-show {
+    --game-border: hsl(217, 20%, 38%);
+    --game-border-light: hsl(217, 20%, 34%);
+    --game-text-muted: hsl(217, 10%, 65%);
+    --game-text-label: hsl(217, 10%, 60%);
+    --game-track-bg: hsl(217, 20%, 35%);
+    --game-link-color: hsl(240, 70%, 75%);
+  }
+
+  .detail-link,
+  .sidebar-tag {
+    color: var(--game-link-color);
+  }
+
+  .sidebar-tag {
+    border-color: var(--game-link-color);
+  }
+
+  .sidebar-tag:hover {
+    background: hsla(240, 60%, 65%, 0.2);
+  }
+
+  .rating-circle-value {
+    color: var(--game-link-color);
+  }
+
+  .details-heading {
+    color: var(--game-link-color);
+  }
+}
+
 /* ── Hero: full-width breakout ── */
 .game-hero {
   width: 100vw;
@@ -509,17 +550,21 @@ async function favoriteGame() {
   flex: 1;
 }
 
+.rating-circle-bg {
+  stroke: var(--game-track-bg);
+}
+
 .rating-bar-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: hsl(0, 0%, 45%);
+  color: var(--game-text-muted);
 }
 
 .rating-bar-track {
   height: 10px;
-  background: hsl(0, 0%, 85%);
+  background: var(--game-track-bg);
   border-radius: 5px;
   overflow: hidden;
 }
@@ -547,7 +592,7 @@ async function favoriteGame() {
 }
 
 .detail-card {
-  border: 1px solid hsl(0, 0%, 85%);
+  border: 1px solid var(--game-border);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   display: flex;
@@ -559,7 +604,7 @@ async function favoriteGame() {
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: hsl(0, 0%, 55%);
+  color: var(--game-text-label);
   text-transform: uppercase;
 }
 
@@ -580,7 +625,7 @@ async function favoriteGame() {
 
 /* ── Sidebar ── */
 .sidebar-card {
-  border: 1px solid hsl(0, 0%, 85%);
+  border: 1px solid var(--game-border);
   border-radius: 8px;
   padding: 1.25rem;
   margin-bottom: 1rem;
@@ -623,7 +668,7 @@ async function favoriteGame() {
 
 .external-links-list li {
   padding: 0.6rem 0;
-  border-bottom: 1px solid hsl(0, 0%, 92%);
+  border-bottom: 1px solid var(--game-border-light);
   display: flex;
   align-items: center;
   gap: 0.75rem;

@@ -12,7 +12,7 @@
       <h1 class="title">{{ data.company.name }}</h1>
 
       <p v-if="data.company.wikidataId" class="subtitle is-6">
-        Wikidata ID: {{ data.company.wikidataId }}
+        <a :href="`https://www.wikidata.org/wiki/Q${data.company.wikidataId}`" target="_blank" rel="noopener noreferrer">Wikidata</a>
       </p>
 
       <div v-if="data.company.developedGames.nodes.length">
