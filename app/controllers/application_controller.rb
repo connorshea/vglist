@@ -1,10 +1,5 @@
-class ApplicationController < ActionController::Base
+class ApplicationController < ActionController::API
   include Pundit::Authorization
-
-  # Require a valid CSRF token, throw an exception if there isn't one.
-  protect_from_forgery with: :exception, unless: -> {
-    request.format.json?
-  }
 
   # In devise-related pages, permit a username parameter.
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -22,8 +17,6 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  add_flash_types :success, :error
-
   protected
 
   # Sign out the current user if they've been banned.
@@ -31,7 +24,7 @@ class ApplicationController < ActionController::Base
     return unless current_user&.banned?
 
     sign_out
-    redirect_to root_path
+    render json: { error: "Your account has been banned." }, status: :forbidden
   end
 
   # Add username as an accepted key during sign up.
@@ -42,8 +35,7 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    redirect_to(request.referrer || root_path)
+    render json: { error: "You are not authorized to perform this action." }, status: :forbidden
   end
 
   # Send user id and username to Sentry on-error.

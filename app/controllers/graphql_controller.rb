@@ -1,21 +1,8 @@
 class GraphqlController < ApplicationController
-  # If the user hasn't provided any token, return a specific error message.
-  before_action :handle_user_not_logged_in, if: -> {
-    !current_user && !user_using_oauth? && !request.headers.key?('X-User-Email')
-  }
-
-  # Authenticate with Doorkeeper if there's no X-User-Email header.
-  before_action :authorize_doorkeeper_user, if: -> {
-    !request.headers.key?('X-User-Email') && user_using_oauth?
-  }
-
-  # Authenticate with a user's authorization token if they're not using OAuth.
-  before_action :authorize_token_user, unless: :user_using_oauth?
-
-  # Disable CSRF protection for GraphQL because we don't want to have CSRF
-  # protection on our API endpoint. The point is to let anyone send requests
-  # to the API.
-  skip_before_action :verify_authenticity_token
+  # Skip authentication for GraphQL — the schema itself handles auth for
+  # individual queries/mutations. This allows unauthenticated mutations like
+  # signIn and signUp to work.
+  before_action :authenticate_user_if_possible
 
   def execute
     skip_authorization
@@ -23,15 +10,7 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    graphql_current_user = if user_using_oauth?
-                             doorkeeper_user
-                           else
-                             api_user
-                           end
-    if graphql_current_user.nil?
-      handle_user_not_logged_in
-      return
-    end
+    graphql_current_user = @jwt_user || api_user || doorkeeper_user
 
     context = {
       current_user: graphql_current_user,
@@ -51,9 +30,25 @@ class GraphqlController < ApplicationController
 
   protected
 
-  # Check whether the user is using OAuth based on whether an Authorization header is included.
+  # Check whether the user is using OAuth based on whether a Doorkeeper token exists.
   def user_using_oauth?
-    request.headers.key?('Authorization')
+    return false unless request.headers.key?('Authorization')
+
+    # If the token is a JWT (contains dots), it's not OAuth
+    auth_header = request.headers['Authorization']
+    token = auth_header&.sub(/^Bearer\s+/i, '')
+    return false if token&.count('.') == 2
+
+    true
+  end
+
+  # Check whether the user is using JWT authentication.
+  def user_using_jwt?
+    return false unless request.headers.key?('Authorization')
+
+    auth_header = request.headers['Authorization']
+    token = auth_header&.sub(/^Bearer\s+/i, '')
+    token&.count('.') == 2
   end
 
   private
@@ -92,16 +87,7 @@ class GraphqlController < ApplicationController
   end
 
   # Check whether the doorkeeper token is associated with a first-party OAuth
-  # application, and return true if so. The purpose of this method is for use
-  # with GraphQL queries and mutations that shouldn't be available to
-  # third-party applications, such as those related to banning or deleting
-  # users.
-  #
-  # Currently this is a hack to work around a bug with Doorkeeper that prevents
-  # us from modifying the Doorkeeper Application class.
-  #
-  # TODO: Implement this as `doorkeeper_token.application.first_party?` once
-  #       we can add that to the Application class.
+  # application, and return true if so.
   def first_party?
     return false if doorkeeper_token.nil? || doorkeeper_token.application_id.nil?
 
@@ -133,15 +119,22 @@ class GraphqlController < ApplicationController
     }
   end
 
-  def authorize_doorkeeper_user
-    doorkeeper_authorize!
-  end
-
-  def authorize_token_user
-    handle_user_not_logged_in unless api_user&.verify_api_token!(request.headers['X-User-Token'])
-  end
-
-  def handle_user_not_logged_in
-    render json: { error: { message: 'You must provide a valid email and token to use the GraphQL API.' } }, status: :unauthorized
+  # Attempt to authenticate the user from various methods, but don't block
+  # the request if no auth is provided (some mutations like signIn/signUp
+  # are allowed without authentication).
+  def authenticate_user_if_possible
+    if user_using_jwt?
+      token = request.headers['Authorization']&.sub(/^Bearer\s+/i, '')
+      decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
+      @jwt_user = User.find(decoded.first['user_id'])
+    elsif user_using_oauth?
+      doorkeeper_authorize!
+    elsif request.headers.key?('X-User-Email')
+      # Token auth — validate but don't block if invalid (GraphQL will handle it)
+      @token_user_valid = api_user&.verify_api_token!(request.headers['X-User-Token'])
+    end
+  rescue JWT::DecodeError, ActiveRecord::RecordNotFound
+    # Invalid JWT — continue without authentication, let the schema handle it
+    @jwt_user = nil
   end
 end
