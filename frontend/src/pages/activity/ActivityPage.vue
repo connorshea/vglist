@@ -652,4 +652,30 @@ async function deleteEvent(eventId: string) {
   font-size: 12px;
   color: var(--color-text-secondary);
 }
+
+/* ── Mobile layout ── */
+@media (max-width: 768px) {
+  .a-card {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .a-cover-link {
+    display: none;
+  }
+
+  .a-row1 {
+    gap: 6px;
+  }
+
+  .a-status-badge {
+    order: 1;
+  }
+
+  .a-delete-btn {
+    order: 2;
+    opacity: 1;
+  }
+}
 </style>
