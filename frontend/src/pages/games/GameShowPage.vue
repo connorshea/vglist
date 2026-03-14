@@ -27,7 +27,15 @@
               >
                 {{ showAddForm ? "Adding\u2026" : "+ Add to library" }}
               </button>
-              <span v-else class="hero-btn hero-cover-btn hero-btn-active">In library</span>
+              <button
+                v-else
+                class="hero-btn hero-cover-btn hero-btn-active"
+                @click="toggleEditForm"
+                @mouseenter="inLibraryHovered = true"
+                @mouseleave="inLibraryHovered = false"
+              >
+                {{ showAddForm ? "Editing\u2026" : inLibraryHovered ? "Edit\u2026" : "In library" }}
+              </button>
               <button
                 class="hero-btn hero-cover-btn hero-fav-btn"
                 :class="{ 'hero-btn-active': game.isFavorited }"
@@ -90,7 +98,6 @@
 
               <!-- Inline form replaces tags when open -->
               <div v-else key="form">
-                <hr class="hero-form-divider" />
                 <div class="form-card">
                   <div class="form-grid">
                     <!-- Left column: Status, Rating, Dates -->
@@ -195,17 +202,28 @@
                       </div>
 
                       <div class="form-actions">
-                        <button type="button" class="form-btn-cancel" @click="cancelAddForm">
-                          Cancel
-                        </button>
                         <button
+                          v-if="isEditing"
                           type="button"
-                          class="form-btn-save"
-                          :disabled="addingToLibrary"
-                          @click="submitAddForm"
+                          class="form-btn-remove"
+                          :disabled="removingFromLibrary"
+                          @click="removeFromLibrary"
                         >
-                          {{ addingToLibrary ? "Saving\u2026" : "Save" }}
+                          {{ removingFromLibrary ? "Removing\u2026" : "Remove" }}
                         </button>
+                        <div class="form-actions-right">
+                          <button type="button" class="form-btn-cancel" @click="cancelAddForm">
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            class="form-btn-save"
+                            :disabled="addingToLibrary"
+                            @click="submitAddForm"
+                          >
+                            {{ addingToLibrary ? "Saving\u2026" : "Save" }}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -437,10 +455,21 @@ import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { gqlClient } from "@/graphql/client";
-import { GET_GAME } from "@/graphql/queries/games";
+import { GET_GAME, GET_GAME_PURCHASE } from "@/graphql/queries/games";
 import { GET_STORES } from "@/graphql/queries/resources";
-import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME, UNFAVORITE_GAME } from "@/graphql/mutations/games";
-import type { GetGameQuery, GetStoresQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
+import {
+  ADD_GAME_TO_LIBRARY,
+  UPDATE_GAME_IN_LIBRARY,
+  REMOVE_GAME_FROM_LIBRARY,
+  FAVORITE_GAME,
+  UNFAVORITE_GAME
+} from "@/graphql/mutations/games";
+import type {
+  GetGameQuery,
+  GetGamePurchaseQuery,
+  GetStoresQuery,
+  GamePurchaseCompletionStatus
+} from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const route = useRoute();
@@ -589,6 +618,7 @@ const statusOptions: { value: GamePurchaseCompletionStatus; label: string }[] = 
 ];
 
 const showAddForm = ref(false);
+const isEditing = ref(false);
 const formStatus = ref<GamePurchaseCompletionStatus | null>(null);
 const formRating = ref<number | null>(null);
 const formStartDate = ref("");
@@ -596,6 +626,7 @@ const formCompletionDate = ref("");
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formComments = ref("");
+const inLibraryHovered = ref(false);
 
 // ── Hero height animation (smooth expand/collapse) ──
 const heroInfoRef = ref<HTMLElement | null>(null);
@@ -646,6 +677,7 @@ function resetForm() {
   formPlatformIds.value = new Set();
   formStoreIds.value = new Set();
   formComments.value = "";
+  isEditing.value = false;
 }
 
 function openAddForm() {
@@ -658,6 +690,42 @@ function toggleAddForm() {
     showAddForm.value = false;
   } else {
     openAddForm();
+  }
+}
+
+async function openEditForm() {
+  const purchaseId = game.value?.gamePurchaseId;
+  if (!purchaseId) return;
+
+  resetForm();
+  isEditing.value = true;
+  showAddForm.value = true;
+
+  try {
+    const result = await gqlClient.request<GetGamePurchaseQuery>(GET_GAME_PURCHASE, {
+      id: purchaseId
+    });
+    const gp = result.gamePurchase;
+    if (!gp) return;
+
+    formStatus.value = (gp.completionStatus as GamePurchaseCompletionStatus) ?? null;
+    formRating.value = gp.rating ?? null;
+    formStartDate.value = gp.startDate ?? "";
+    formCompletionDate.value = gp.completionDate ?? "";
+    formComments.value = gp.comments ?? "";
+    formPlatformIds.value = new Set(gp.platforms.nodes.map((p) => p.id));
+    formStoreIds.value = new Set(gp.stores.nodes.map((s) => s.id));
+  } catch {
+    actionMessage.value = "Failed to load game purchase details.";
+    actionIsError.value = true;
+  }
+}
+
+function toggleEditForm() {
+  if (showAddForm.value) {
+    showAddForm.value = false;
+  } else {
+    openEditForm();
   }
 }
 
@@ -687,23 +755,15 @@ function toggleFormStore(id: string) {
 
 // ── Action state ──
 const addingToLibrary = ref(false);
+const removingFromLibrary = ref(false);
 const favoriting = ref(false);
 const actionMessage = ref("");
 const actionIsError = ref(false);
 
 const actionMessageClass = computed(() => (actionIsError.value ? "is-danger" : "is-success"));
 
-async function submitAddForm() {
-  if (!authStore.isAuthenticated) {
-    actionMessage.value = "You must be signed in to add games to your library.";
-    actionIsError.value = true;
-    return;
-  }
-
-  addingToLibrary.value = true;
-  actionMessage.value = "";
-
-  const variables: Record<string, unknown> = { gameId: gameId.value };
+function buildFormVariables(): Record<string, unknown> {
+  const variables: Record<string, unknown> = {};
 
   if (formStatus.value) {
     variables.completionStatus = formStatus.value;
@@ -727,17 +787,61 @@ async function submitAddForm() {
     variables.comments = formComments.value.trim();
   }
 
+  return variables;
+}
+
+async function submitAddForm() {
+  if (!authStore.isAuthenticated) {
+    actionMessage.value = "You must be signed in to add games to your library.";
+    actionIsError.value = true;
+    return;
+  }
+
+  addingToLibrary.value = true;
+  actionMessage.value = "";
+
+  const variables = buildFormVariables();
+
   try {
-    await gqlClient.request(ADD_GAME_TO_LIBRARY, variables);
-    actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
+    if (isEditing.value) {
+      variables.gamePurchaseId = game.value?.gamePurchaseId;
+      await gqlClient.request(UPDATE_GAME_IN_LIBRARY, variables);
+      actionMessage.value = `${game.value?.name ?? "Game"} has been updated in your library.`;
+    } else {
+      variables.gameId = gameId.value;
+      await gqlClient.request(ADD_GAME_TO_LIBRARY, variables);
+      actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
+    }
     actionIsError.value = false;
     showAddForm.value = false;
     refetch();
   } catch (err) {
-    actionMessage.value = `Failed to add game to library: ${extractGqlError(err)}`;
+    const action = isEditing.value ? "update" : "add";
+    actionMessage.value = `Failed to ${action} game in library: ${extractGqlError(err)}`;
     actionIsError.value = true;
   } finally {
     addingToLibrary.value = false;
+  }
+}
+
+async function removeFromLibrary() {
+  const purchaseId = game.value?.gamePurchaseId;
+  if (!purchaseId) return;
+
+  removingFromLibrary.value = true;
+  actionMessage.value = "";
+
+  try {
+    await gqlClient.request(REMOVE_GAME_FROM_LIBRARY, { gamePurchaseId: purchaseId });
+    actionMessage.value = `${game.value?.name ?? "Game"} has been removed from your library.`;
+    actionIsError.value = false;
+    showAddForm.value = false;
+    refetch();
+  } catch (err) {
+    actionMessage.value = `Failed to remove game from library: ${extractGqlError(err)}`;
+    actionIsError.value = true;
+  } finally {
+    removingFromLibrary.value = false;
   }
 }
 
@@ -1003,12 +1107,6 @@ a.hero-tag:hover {
 }
 
 /* ── Inline form (replaces tags in hero) ── */
-.hero-form-divider {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  margin: 0.25rem 0 1rem;
-}
-
 .form-card {
   background: #fff;
   border-radius: 12px;
@@ -1182,8 +1280,35 @@ a.hero-tag:hover {
 .form-actions {
   display: flex;
   gap: 0.5rem;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   padding-top: 0.75rem;
+}
+
+.form-actions-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form-btn-remove {
+  color: #c0392b;
+  font-size: 0.8rem;
+  background: none;
+  border: 1px solid #e8c4c0;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.form-btn-remove:hover {
+  background: #fdf0ef;
+  border-color: #c0392b;
+}
+
+.form-btn-remove:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .form-btn-cancel {

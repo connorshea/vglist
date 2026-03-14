@@ -2526,6 +2526,25 @@ export type GetHeroCoversQuery = {
   games?: { nodes: Array<{ id: string; coverUrl?: string | null }> } | null;
 };
 
+export type GetGamePurchaseQueryVariables = Exact<{
+  id: Scalars["ID"]["input"];
+}>;
+
+export type GetGamePurchaseQuery = {
+  gamePurchase?: {
+    id: string;
+    completionStatus?: GamePurchaseCompletionStatus | null;
+    rating?: number | null;
+    hoursPlayed?: number | null;
+    replayCount: number;
+    comments?: string | null;
+    startDate?: string | null;
+    completionDate?: string | null;
+    platforms: { nodes: Array<{ id: string; name: string }> };
+    stores: { nodes: Array<{ id: string; name: string }> };
+  } | null;
+};
+
 export type SearchGamesQueryVariables = Exact<{
   query: Scalars["String"]["input"];
 }>;

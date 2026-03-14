@@ -140,6 +140,33 @@ export const GET_HERO_COVERS = gql`
   }
 `;
 
+export const GET_GAME_PURCHASE = gql`
+  query GetGamePurchase($id: ID!) {
+    gamePurchase(id: $id) {
+      id
+      completionStatus
+      rating
+      hoursPlayed
+      replayCount
+      comments
+      startDate
+      completionDate
+      platforms {
+        nodes {
+          id
+          name
+        }
+      }
+      stores {
+        nodes {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
 export const SEARCH_GAMES = gql`
   query SearchGames($query: String!) {
     gameSearch(query: $query) {
