@@ -11,7 +11,7 @@
     >
       <div class="search-header">
         <div class="search-bar-wrap">
-          <SearchIcon class="search-icon" stroke-width="2" />
+          <Search class="search-icon" :stroke-width="2" />
           <input
             ref="searchInputRef"
             v-model="query"
@@ -23,7 +23,7 @@
           />
           <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
           <button class="search-close" aria-label="Close search" @click="close">
-            <CloseIcon width="16" height="16" stroke-width="2" />
+            <X :size="16" :stroke-width="2" />
           </button>
         </div>
       </div>
@@ -31,7 +31,7 @@
       <div class="search-results">
         <!-- Empty state -->
         <div v-if="!query || query.length < 2" class="search-empty">
-          <SearchIcon class="search-empty-icon" stroke-width="1.5" />
+          <Search class="search-empty-icon" :stroke-width="1.5" />
           <p>Start typing to search games, companies, users, and more.</p>
         </div>
 
@@ -61,7 +61,7 @@
           <!-- Games column -->
           <div v-if="gameResults.length" class="category">
             <div class="category-header">
-              <GamepadIcon class="category-icon" />
+              <Gamepad2 class="category-icon" />
               <span class="category-title">Games</span>
               <span class="category-count"
                 >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
@@ -95,7 +95,7 @@
           <!-- Companies column -->
           <div v-if="companyResults.length" class="category">
             <div class="category-header">
-              <BriefcaseIcon class="category-icon" />
+              <Briefcase class="category-icon" />
               <span class="category-title">Companies</span>
               <span class="category-count"
                 >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
@@ -124,7 +124,7 @@
           <!-- Platforms column -->
           <div v-if="platformResults.length" class="category">
             <div class="category-header">
-              <MonitorIcon class="category-icon" />
+              <Monitor class="category-icon" />
               <span class="category-title">Platforms</span>
               <span class="category-count"
                 >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
@@ -153,7 +153,7 @@
           <!-- Other resources column -->
           <div v-if="otherResults.length" class="category">
             <div class="category-header">
-              <BriefcaseIcon class="category-icon" />
+              <Briefcase class="category-icon" />
               <span class="category-title">Other</span>
               <span class="category-count"
                 >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
@@ -187,7 +187,7 @@
           <!-- Users column -->
           <div v-if="userResults.length" class="category">
             <div class="category-header">
-              <UsersIcon class="category-icon" />
+              <Users class="category-icon" />
               <span class="category-title">Users</span>
               <span class="category-count"
                 >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
@@ -227,12 +227,7 @@ import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import type { GameSearchResult, SearchResultUnion, UserSearchResult } from "@/types/graphql";
-import SearchIcon from "@/components/icons/SearchIcon.vue";
-import CloseIcon from "@/components/icons/CloseIcon.vue";
-import GamepadIcon from "@/components/icons/GamepadIcon.vue";
-import BriefcaseIcon from "@/components/icons/BriefcaseIcon.vue";
-import MonitorIcon from "@/components/icons/MonitorIcon.vue";
-import UsersIcon from "@/components/icons/UsersIcon.vue";
+import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "lucide-vue-next";
 
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();
