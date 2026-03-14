@@ -30,4 +30,12 @@ Rails.application.routes.draw do
 
   # For exposing the OpenSearch XML definition
   get '/opensearch', to: 'static_pages#opensearch', defaults: { format: :xml }
+
+  # SPA fallback — serve the Vue frontend's index.html for all unmatched routes.
+  # This must be the last route. In production, Rails serves the built frontend
+  # from public/. In development, the Vite dev server handles frontend routes.
+  get '*path', to: 'spa#index', constraints: ->(req) {
+    !req.xhr? && req.format.html?
+  }
+  root to: 'spa#index'
 end
