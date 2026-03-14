@@ -7,11 +7,11 @@ export const GAME_FIELDS = gql`
     releaseDate
     avgRating
     coverUrl(size: MEDIUM)
-    developers { id name }
-    publishers { id name }
-    platforms { id name }
-    genres { id name }
-    engines { id name }
+    developers { nodes { id name } }
+    publishers { nodes { id name } }
+    platforms { nodes { id name } }
+    genres { nodes { id name } }
+    engines { nodes { id name } }
     series { id name }
   }
 `
@@ -41,7 +41,7 @@ export const GET_GAMES = gql`
         name
         releaseDate
         coverUrl(size: SMALL)
-        developers { id name }
+        developers { nodes { id name } }
       }
       pageInfo {
         hasNextPage
@@ -59,7 +59,7 @@ export const SEARCH_GAMES = gql`
         name
         releaseDate
         coverUrl(size: SMALL)
-        developers { id name }
+        developers { nodes { id name } }
       }
     }
   }

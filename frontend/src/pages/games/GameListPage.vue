@@ -29,8 +29,8 @@
             <p class="subtitle is-6" v-if="game.releaseDate">
               {{ game.releaseDate }}
             </p>
-            <p v-if="game.developers.length" class="is-size-7 has-text-grey">
-              {{ game.developers.map((d: { name: string }) => d.name).join(', ') }}
+            <p v-if="game.developers.nodes.length" class="is-size-7 has-text-grey">
+              {{ game.developers.nodes.map((d: { name: string }) => d.name).join(', ') }}
             </p>
           </div>
         </div>

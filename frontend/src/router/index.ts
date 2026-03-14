@@ -184,11 +184,8 @@ const router = createRouter({
       name: 'settings',
       component: () => import('@/pages/settings/SettingsPage.vue'),
       meta: { requiresAuth: true },
+      redirect: { name: 'settingsProfile' },
       children: [
-        {
-          path: '',
-          redirect: { name: 'settingsProfile' },
-        },
         {
           path: 'profile',
           name: 'settingsProfile',
