@@ -131,6 +131,16 @@
             >
               {{ eventBadge(event)!.label }}
             </span>
+
+            <button
+              v-if="canDeleteEvent(event)"
+              class="a-delete-btn"
+              aria-label="Delete event"
+              :disabled="deletingEventId === event.id"
+              @click="deleteEvent(event.id)"
+            >
+              &times;
+            </button>
           </div>
 
           <div class="a-meta">
@@ -157,13 +167,22 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import { useQuery } from "@/composables/useGraphQL";
+import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
-import type { GetActivityQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
+import { DELETE_EVENT } from "@/graphql/mutations/events";
+import type {
+  GetActivityQuery,
+  GamePurchaseCompletionStatus,
+  DeleteEventMutation
+} from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
 import { useAuthStore } from "@/stores/auth";
+import { useSnackbar } from "@/composables/useSnackbar";
 
 const authStore = useAuthStore();
+const { show: showSnackbar } = useSnackbar();
+const { mutate: deleteEventMutate } = useMutation<DeleteEventMutation>(DELETE_EVENT);
+const deletingEventId = ref<string | null>(null);
 
 const PAGE_SIZE = 25;
 const feedType = ref<"GLOBAL" | "FOLLOWING">(authStore.isAuthenticated ? "FOLLOWING" : "GLOBAL");
@@ -307,6 +326,34 @@ function timeAgo(dateStr: string): string {
   if (diffMonth === 1) return "1 month ago";
   if (diffMonth < 12) return `${diffMonth} months ago`;
   return date.toLocaleDateString();
+}
+
+function canDeleteEvent(event: ActivityEvent): boolean {
+  if (!authStore.user) return false;
+  const role = authStore.user.role;
+  if (role === "MODERATOR" || role === "ADMIN") return true;
+  return event.user.id === authStore.user.id;
+}
+
+async function deleteEvent(eventId: string) {
+  deletingEventId.value = eventId;
+  try {
+    await deleteEventMutate({ eventId });
+    if (data.value?.activity) {
+      data.value = {
+        ...data.value,
+        activity: {
+          ...data.value.activity,
+          nodes: data.value.activity.nodes.filter((e) => e.id !== eventId)
+        }
+      };
+    }
+    showSnackbar("Event deleted.", "success");
+  } catch {
+    showSnackbar("Failed to delete event.", "error");
+  } finally {
+    deletingEventId.value = null;
+  }
 }
 </script>
 
@@ -545,6 +592,35 @@ function timeAgo(dateStr: string): string {
   border-radius: 50%;
   background: #d3d1c7;
   flex-shrink: 0;
+}
+
+/* Delete button */
+.a-delete-btn {
+  background: none;
+  border: none;
+  color: #b4b2a9;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+}
+
+.a-card:hover .a-delete-btn {
+  opacity: 1;
+}
+
+.a-delete-btn:hover {
+  color: #f14668;
+}
+
+.a-delete-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .a-rating {
