@@ -3,7 +3,9 @@
     <section class="home-section hero">
       <div class="hero-body has-text-centered">
         <img src="@/assets/images/vglist-logo.svg" alt="vglist" class="home-logo" />
-        <p class="subtitle is-4">Track your entire video game library across every store and platform.</p>
+        <p class="subtitle is-4">
+          Track your entire video game library across every store and platform.
+        </p>
 
         <div v-if="statsData" class="home-stats-bar">
           <div class="home-stats-container">
@@ -20,11 +22,7 @@
       <h2 class="title is-4">Recently Added Games</h2>
 
       <div class="columns is-multiline">
-        <div
-          v-for="game in recentGames"
-          :key="game.id"
-          class="column is-4"
-        >
+        <div v-for="game in recentGames" :key="game.id" class="column is-4">
           <router-link :to="`/games/${game.id}`" class="home-game-card">
             <div class="media">
               <div class="media-left">
@@ -60,7 +58,7 @@ import { GET_RECENT_GAMES } from "@/graphql/queries/games";
 
 const { data: statsData } = useQuery(GET_BASIC_SITE_STATISTICS);
 const { data: recentGamesData } = useQuery(GET_RECENT_GAMES, {
-  variables: { first: 6 },
+  variables: { first: 6 }
 });
 
 interface GameNode {
@@ -80,7 +78,7 @@ const stats = computed(() => {
     { label: "PLATFORMS", value: s.platforms, path: "/platforms" },
     { label: "COMPANIES", value: s.companies, path: "/companies" },
     { label: "ENGINES", value: s.engines, path: "/engines" },
-    { label: "GENRES", value: s.genres, path: "/genres" },
+    { label: "GENRES", value: s.genres, path: "/genres" }
   ];
 });
 

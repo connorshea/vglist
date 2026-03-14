@@ -76,8 +76,8 @@ const { data, loading, error } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
   variables: () => ({
     feedType: feedType.value,
     first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1],
-  }),
+    after: pageCursors.value[currentPage.value - 1]
+  })
 });
 
 const hasNextPage = computed(() => data.value?.activity.pageInfo.hasNextPage ?? false);

@@ -19,18 +19,7 @@
 
       <div class="columns is-multiline">
         <div v-for="game in data.series.games.nodes" :key="game.id" class="column is-3">
-          <div class="card">
-            <div class="card-image" v-if="game.coverUrl">
-              <figure class="image is-3by4">
-                <img :src="game.coverUrl" :alt="game.name" />
-              </figure>
-            </div>
-            <div class="card-content">
-              <p class="title is-5">
-                <router-link :to="`/games/${game.id}`">{{ game.name }}</router-link>
-              </p>
-            </div>
-          </div>
+          <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl" />
         </div>
       </div>
     </div>
@@ -42,6 +31,7 @@ import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_SERIES } from "@/graphql/queries/resources";
 import type { GetSeriesQuery } from "@/types/graphql";
+import GameCard from "@/components/GameCard.vue";
 
 const route = useRoute();
 

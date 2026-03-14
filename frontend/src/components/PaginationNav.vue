@@ -7,11 +7,7 @@
     >
       Previous
     </button>
-    <button
-      class="pagination-next"
-      :disabled="!hasNextPage || loading"
-      @click="$emit('next')"
-    >
+    <button class="pagination-next" :disabled="!hasNextPage || loading" @click="$emit('next')">
       Next page
     </button>
     <ul class="pagination-list">

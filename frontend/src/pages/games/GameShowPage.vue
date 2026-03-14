@@ -91,10 +91,7 @@
                   <span>{{ game.avgRating.toFixed(1) }} / 100</span>
                 </div>
                 <div class="rating-bar-track">
-                  <div
-                    class="rating-bar-fill"
-                    :style="{ width: game.avgRating + '%' }"
-                  ></div>
+                  <div class="rating-bar-fill" :style="{ width: game.avgRating + '%' }"></div>
                 </div>
               </div>
             </div>
@@ -181,9 +178,7 @@
               <h4 class="sidebar-card-title">External links</h4>
               <ul class="external-links-list">
                 <li v-for="link in externalLinks" :key="link.label">
-                  <a :href="link.url" target="_blank" rel="noopener noreferrer">{{
-                    link.label
-                  }}</a>
+                  <a :href="link.url" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
                 </li>
               </ul>
             </div>
@@ -216,7 +211,7 @@ const authStore = useAuthStore();
 const gameId = computed(() => route.params.id as string);
 
 const { data, loading, error } = useQuery<GetGameQuery>(GET_GAME, {
-  variables: () => ({ id: gameId.value }),
+  variables: () => ({ id: gameId.value })
 });
 
 const game = computed(() => data.value?.game ?? null);
@@ -266,13 +261,13 @@ const externalLinks = computed<ExternalLink[]>(() => {
   if (g.mobygamesId) {
     links.push({
       label: "MobyGames",
-      url: `https://www.mobygames.com/game/${g.mobygamesId}`,
+      url: `https://www.mobygames.com/game/${g.mobygamesId}`
     });
   }
   if (g.giantbombId) {
     links.push({
       label: "GiantBomb",
-      url: `https://www.giantbomb.com/game/${g.giantbombId}/`,
+      url: `https://www.giantbomb.com/game/${g.giantbombId}/`
     });
   }
   if (g.igdbId) {
@@ -281,19 +276,19 @@ const externalLinks = computed<ExternalLink[]>(() => {
   if (g.steamAppIds && g.steamAppIds.length > 0) {
     links.push({
       label: "Steam",
-      url: `https://store.steampowered.com/app/${g.steamAppIds[0]}`,
+      url: `https://store.steampowered.com/app/${g.steamAppIds[0]}`
     });
   }
   if (g.pcgamingwikiId) {
     links.push({
       label: "PCGamingWiki",
-      url: `https://www.pcgamingwiki.com/wiki/${g.pcgamingwikiId}`,
+      url: `https://www.pcgamingwiki.com/wiki/${g.pcgamingwikiId}`
     });
   }
   if (g.epicGamesStoreId) {
     links.push({
       label: "Epic Games Store",
-      url: `https://store.epicgames.com/p/${g.epicGamesStoreId}`,
+      url: `https://store.epicgames.com/p/${g.epicGamesStoreId}`
     });
   }
   if (g.gogId) {
