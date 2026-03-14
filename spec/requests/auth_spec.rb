@@ -81,7 +81,7 @@ RSpec.describe "Api::Auth", type: :request do
         password_confirmation: "mismatch"
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)
       expect(json['errors']).to be_present
     end
@@ -95,7 +95,7 @@ RSpec.describe "Api::Auth", type: :request do
         password_confirmation: "password123"
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = JSON.parse(response.body)
       expect(json['errors']).to be_present
     end
