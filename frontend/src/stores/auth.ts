@@ -10,11 +10,18 @@ interface AuthUser {
   slug: string
 }
 
+function loadStoredUser(): AuthUser | null {
+  try {
+    return JSON.parse(localStorage.getItem('auth_user') || 'null')
+  } catch {
+    localStorage.removeItem('auth_user')
+    return null
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem('auth_token'))
-  const user = ref<AuthUser | null>(
-    JSON.parse(localStorage.getItem('auth_user') || 'null'),
-  )
+  const user = ref<AuthUser | null>(loadStoredUser())
 
   const isAuthenticated = computed(() => token.value !== null)
   const isAdmin = computed(() => user.value?.role === 'admin')
