@@ -25,7 +25,7 @@
               <span v-else-if="user.role === 'moderator'" class="role-badge role-mod">Mod</span>
             </div>
             <p v-if="user.bio" class="profile-bio">{{ user.bio }}</p>
-            <p class="profile-stats-line">
+            <p v-if="!isPrivateProfile" class="profile-stats-line">
               {{ gamePurchases.length }} games
               <template v-if="totalHoursPlayed > 0 && !user.hideDaysPlayed">
                 · {{ totalHoursPlayed.toLocaleString() }}h played
@@ -63,150 +63,157 @@
         </div>
       </header>
 
-      <!-- Favorited Games (horizontal scroll) -->
-      <div v-if="favoritedGames.length" class="favorites-section">
-        <h2 class="section-label">FAVORITES</h2>
-        <div class="favorites-row">
-          <router-link
-            v-for="game in favoritedGames"
-            :key="game.id"
-            :to="`/games/${game.id}`"
-            class="favorite-tile"
-          >
-            <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
-            <div v-else class="favorite-placeholder">
-              <span>{{ gameInitials(game.name) }}</span>
-            </div>
-            <div class="favorite-name">{{ game.name }}</div>
-          </router-link>
-        </div>
+      <!-- Private account notice -->
+      <div v-if="isPrivateProfile" class="private-notice">
+        <p class="private-notice-text">This user's account is private.</p>
       </div>
 
-      <!-- Library Section -->
-      <div class="library-section">
-        <h2 class="section-label">LIBRARY</h2>
-
-        <!-- Status filter pills -->
-        <div class="status-pills">
-          <button
-            v-for="s in statuses"
-            :key="s.key"
-            class="status-pill"
-            :class="{ 'is-active': activeStatus === s.key }"
-            @click="activeStatus = s.key"
-          >
-            <span
-              v-if="s.key !== 'all'"
-              class="status-dot"
-              :style="{ background: statusColor(s.key) }"
-            ></span>
-            {{ s.label }}
-            <span class="pill-count">{{
-              s.key === "all" ? gamePurchases.length : statusCount(s.key)
-            }}</span>
-          </button>
-        </div>
-
-        <!-- Search + sort row -->
-        <div class="library-controls">
-          <div class="library-search">
-            <input
-              v-model="search"
-              type="text"
-              placeholder="Search library..."
-              class="input is-small"
-            />
-          </div>
-          <div class="library-sort">
-            <div class="select is-small">
-              <select v-model="sortBy">
-                <option value="name">A → Z</option>
-                <option value="rating">Rating</option>
-                <option value="hours">Hours</option>
-              </select>
-            </div>
-          </div>
-          <span class="library-count">
-            {{ filteredGames.length }} game{{ filteredGames.length !== 1 ? "s" : "" }}
-          </span>
-        </div>
-
-        <!-- Empty state -->
-        <div v-if="filteredGames.length === 0 && gamePurchases.length > 0" class="library-empty">
-          <p class="library-empty-title">No games found</p>
-          <p class="library-empty-sub">Try adjusting your filters</p>
-        </div>
-
-        <div v-else-if="gamePurchases.length === 0" class="library-empty">
-          <p class="library-empty-title">No games in library yet</p>
-        </div>
-
-        <!-- Gallery Grid -->
-        <div v-else class="gallery-grid">
-          <router-link
-            v-for="purchase in filteredGames"
-            :key="purchase.id"
-            :to="`/games/${purchase.game.id}`"
-            class="gallery-tile"
-          >
-            <!-- Cover -->
-            <img
-              v-if="purchase.game.coverUrl"
-              :src="purchase.game.coverUrl"
-              :alt="purchase.game.name"
-              class="gallery-cover"
-            />
-            <div v-else class="gallery-cover-placeholder">
-              <span>{{ gameInitials(purchase.game.name) }}</span>
-            </div>
-
-            <!-- Rating badge -->
-            <div
-              v-if="purchase.rating !== null"
-              class="gallery-rating"
-              :class="ratingClass(purchase.rating)"
+      <template v-if="!isPrivateProfile">
+        <!-- Favorited Games (horizontal scroll) -->
+        <div v-if="favoritedGames.length" class="favorites-section">
+          <h2 class="section-label">FAVORITES</h2>
+          <div class="favorites-row">
+            <router-link
+              v-for="game in favoritedGames"
+              :key="game.id"
+              :to="`/games/${game.id}`"
+              class="favorite-tile"
             >
-              {{ purchase.rating }}
+              <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
+              <div v-else class="favorite-placeholder">
+                <span>{{ gameInitials(game.name) }}</span>
+              </div>
+              <div class="favorite-name">{{ game.name }}</div>
+            </router-link>
+          </div>
+        </div>
+
+        <!-- Library Section -->
+        <div class="library-section">
+          <h2 class="section-label">LIBRARY</h2>
+
+          <!-- Status filter pills -->
+          <div class="status-pills">
+            <button
+              v-for="s in statuses"
+              :key="s.key"
+              class="status-pill"
+              :class="{ 'is-active': activeStatus === s.key }"
+              @click="activeStatus = s.key"
+            >
+              <span
+                v-if="s.key !== 'all'"
+                class="status-dot"
+                :style="{ background: statusColor(s.key) }"
+              ></span>
+              {{ s.label }}
+              <span class="pill-count">{{
+                s.key === "all" ? gamePurchases.length : statusCount(s.key)
+              }}</span>
+            </button>
+          </div>
+
+          <!-- Search + sort row -->
+          <div class="library-controls">
+            <div class="library-search">
+              <input
+                v-model="search"
+                type="text"
+                placeholder="Search library..."
+                class="input is-small"
+              />
             </div>
-
-            <!-- Status dot -->
-            <div
-              v-if="purchase.completionStatus"
-              class="gallery-status-dot"
-              :class="{ 'is-playing': purchase.completionStatus === 'in_progress' }"
-              :style="{ background: statusColor(purchase.completionStatus) }"
-            ></div>
-
-            <!-- Bottom gradient + name -->
-            <div class="gallery-name-overlay">
-              <p class="gallery-name">{{ purchase.game.name }}</p>
-            </div>
-
-            <!-- Hover overlay -->
-            <div class="gallery-hover">
-              <p class="gallery-hover-name">{{ purchase.game.name }}</p>
-              <div class="gallery-hover-meta">
-                <span
-                  v-if="purchase.completionStatus"
-                  class="gallery-hover-status"
-                  :style="{ background: statusColor(purchase.completionStatus) }"
-                >
-                  {{ formatStatus(purchase.completionStatus) }}
-                </span>
-                <span
-                  v-if="purchase.hoursPlayed && !user.hideDaysPlayed"
-                  class="gallery-hover-hours"
-                >
-                  {{ purchase.hoursPlayed }}h
-                </span>
-                <span v-if="purchase.rating !== null" class="gallery-hover-rating">
-                  {{ purchase.rating }}/100
-                </span>
+            <div class="library-sort">
+              <div class="select is-small">
+                <select v-model="sortBy">
+                  <option value="name">A → Z</option>
+                  <option value="rating">Rating</option>
+                  <option value="hours">Hours</option>
+                </select>
               </div>
             </div>
-          </router-link>
+            <span class="library-count">
+              {{ filteredGames.length }} game{{ filteredGames.length !== 1 ? "s" : "" }}
+            </span>
+          </div>
+
+          <!-- Empty state -->
+          <div v-if="filteredGames.length === 0 && gamePurchases.length > 0" class="library-empty">
+            <p class="library-empty-title">No games found</p>
+            <p class="library-empty-sub">Try adjusting your filters</p>
+          </div>
+
+          <div v-else-if="gamePurchases.length === 0" class="library-empty">
+            <p class="library-empty-title">No games in library yet</p>
+          </div>
+
+          <!-- Gallery Grid -->
+          <div v-else class="gallery-grid">
+            <router-link
+              v-for="purchase in filteredGames"
+              :key="purchase.id"
+              :to="`/games/${purchase.game.id}`"
+              class="gallery-tile"
+            >
+              <!-- Cover -->
+              <img
+                v-if="purchase.game.coverUrl"
+                :src="purchase.game.coverUrl"
+                :alt="purchase.game.name"
+                class="gallery-cover"
+              />
+              <div v-else class="gallery-cover-placeholder">
+                <span>{{ gameInitials(purchase.game.name) }}</span>
+              </div>
+
+              <!-- Rating badge -->
+              <div
+                v-if="purchase.rating !== null"
+                class="gallery-rating"
+                :class="ratingClass(purchase.rating)"
+              >
+                {{ purchase.rating }}
+              </div>
+
+              <!-- Status dot -->
+              <div
+                v-if="purchase.completionStatus"
+                class="gallery-status-dot"
+                :class="{ 'is-playing': purchase.completionStatus === 'in_progress' }"
+                :style="{ background: statusColor(purchase.completionStatus) }"
+              ></div>
+
+              <!-- Bottom gradient + name -->
+              <div class="gallery-name-overlay">
+                <p class="gallery-name">{{ purchase.game.name }}</p>
+              </div>
+
+              <!-- Hover overlay -->
+              <div class="gallery-hover">
+                <p class="gallery-hover-name">{{ purchase.game.name }}</p>
+                <div class="gallery-hover-meta">
+                  <span
+                    v-if="purchase.completionStatus"
+                    class="gallery-hover-status"
+                    :style="{ background: statusColor(purchase.completionStatus) }"
+                  >
+                    {{ formatStatus(purchase.completionStatus) }}
+                  </span>
+                  <span
+                    v-if="purchase.hoursPlayed && !user.hideDaysPlayed"
+                    class="gallery-hover-hours"
+                  >
+                    {{ purchase.hoursPlayed }}h
+                  </span>
+                  <span v-if="purchase.rating !== null" class="gallery-hover-rating">
+                    {{ purchase.rating }}/100
+                  </span>
+                </div>
+              </div>
+            </router-link>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </section>
 </template>
@@ -331,6 +338,14 @@ function gameInitials(name: string): string {
     .map((w) => w[0].toUpperCase())
     .join("");
 }
+
+// Privacy: hide library details if the profile is private and the viewer is not the owner.
+const isOwnProfile = computed(() => {
+  return authStore.isAuthenticated && user.value !== null && authStore.user?.id === user.value.id;
+});
+const isPrivateProfile = computed(() => {
+  return user.value?.privacy === "PRIVATE_ACCOUNT" && !isOwnProfile.value;
+});
 
 // Follow / Unfollow
 const canFollowOrUnfollow = computed(() => {
@@ -538,6 +553,21 @@ async function handleUnfollow() {
   letter-spacing: 0.1em;
   color: var(--vglist-theme);
   margin-bottom: 0.75rem;
+}
+
+/* ── Private Notice ── */
+.private-notice {
+  text-align: center;
+  padding: 3rem 1rem;
+  border: 1px dashed var(--up-border);
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+.private-notice-text {
+  font-size: 0.95rem;
+  color: var(--up-text-dim);
+  font-weight: 500;
 }
 
 /* ── Favorites Row ── */
