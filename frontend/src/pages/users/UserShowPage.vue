@@ -425,8 +425,9 @@ async function handleFollow() {
   try {
     await followUser({ userId: user.value!.id });
     await refetch();
-  } catch (err) {
-    console.error("Failed to follow user:", err);
+    showSnackbar(`You are now following ${user.value!.username}.`);
+  } catch {
+    showSnackbar("Failed to follow user.", "error");
   }
 }
 
@@ -434,8 +435,9 @@ async function handleUnfollow() {
   try {
     await unfollowUser({ userId: user.value!.id });
     await refetch();
-  } catch (err) {
-    console.error("Failed to unfollow user:", err);
+    showSnackbar(`You have unfollowed ${user.value!.username}.`);
+  } catch {
+    showSnackbar("Failed to unfollow user.", "error");
   }
 }
 

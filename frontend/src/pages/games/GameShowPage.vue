@@ -523,9 +523,11 @@ import type {
   GamePurchaseCompletionStatus
 } from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { useSnackbar } from "@/composables/useSnackbar";
 
 const route = useRoute();
 const authStore = useAuthStore();
+const { show: showSnackbar } = useSnackbar();
 
 const gameId = computed(() => route.params.id as string);
 
@@ -942,12 +944,13 @@ async function submitAddForm() {
     if (isEditing.value) {
       variables.gamePurchaseId = game.value?.gamePurchaseId;
       await gqlClient.request(UPDATE_GAME_IN_LIBRARY, variables);
-      actionMessage.value = `${game.value?.name ?? "Game"} has been updated in your library.`;
+      showSnackbar(`${game.value?.name ?? "Game"} has been updated in your library.`);
     } else {
       variables.gameId = gameId.value;
       await gqlClient.request(ADD_GAME_TO_LIBRARY, variables);
-      actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
+      showSnackbar(`${game.value?.name ?? "Game"} has been added to your library.`);
     }
+    actionMessage.value = "";
     actionIsError.value = false;
     showAddForm.value = false;
     refetch();
@@ -969,7 +972,8 @@ async function removeFromLibrary() {
 
   try {
     await gqlClient.request(REMOVE_GAME_FROM_LIBRARY, { gamePurchaseId: purchaseId });
-    actionMessage.value = `${game.value?.name ?? "Game"} has been removed from your library.`;
+    showSnackbar(`${game.value?.name ?? "Game"} has been removed from your library.`);
+    actionMessage.value = "";
     actionIsError.value = false;
     showAddForm.value = false;
     showRemoveConfirm.value = false;
@@ -1001,11 +1005,12 @@ async function toggleFavorite() {
   try {
     if (currentlyFavorited) {
       await gqlClient.request(UNFAVORITE_GAME, { gameId: gameId.value });
-      actionMessage.value = `${game.value?.name ?? "Game"} has been unfavorited.`;
+      showSnackbar(`${game.value?.name ?? "Game"} has been unfavorited.`);
     } else {
       await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value });
-      actionMessage.value = `${game.value?.name ?? "Game"} has been favorited.`;
+      showSnackbar(`${game.value?.name ?? "Game"} has been favorited.`);
     }
+    actionMessage.value = "";
     actionIsError.value = false;
     refetch();
   } catch (err) {
