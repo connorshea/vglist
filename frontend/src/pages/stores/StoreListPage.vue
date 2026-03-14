@@ -12,7 +12,7 @@
 
     <div v-if="data" class="content">
       <ul>
-        <li v-for="store in data.stores.nodes" :key="store.id">
+        <li v-for="store in data?.stores?.nodes" :key="store.id">
           <router-link :to="`/stores/${store.id}`">{{ store.name }}</router-link>
         </li>
       </ul>
@@ -47,10 +47,10 @@ const { data, loading, error } = useQuery<GetStoresQuery>(GET_STORES, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.stores.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.stores?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.stores.pageInfo.endCursor) {
+  if (val?.stores?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.stores.pageInfo.endCursor;
   }
 });

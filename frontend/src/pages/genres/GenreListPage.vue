@@ -12,7 +12,7 @@
 
     <div v-if="data" class="content">
       <ul>
-        <li v-for="genre in data.genres.nodes" :key="genre.id">
+        <li v-for="genre in data?.genres?.nodes" :key="genre.id">
           <router-link :to="`/genres/${genre.id}`">{{ genre.name }}</router-link>
         </li>
       </ul>
@@ -47,10 +47,10 @@ const { data, loading, error } = useQuery<GetGenresQuery>(GET_GENRES, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.genres.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.genres?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.genres.pageInfo.endCursor) {
+  if (val?.genres?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.genres.pageInfo.endCursor;
   }
 });

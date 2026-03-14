@@ -12,7 +12,7 @@
 
     <div v-if="data" class="content">
       <ul>
-        <li v-for="s in data.seriesList.nodes" :key="s.id">
+        <li v-for="s in data?.seriesList?.nodes" :key="s.id">
           <router-link :to="`/series/${s.id}`">{{ s.name }}</router-link>
         </li>
       </ul>
@@ -47,10 +47,10 @@ const { data, loading, error } = useQuery<GetSeriesListQuery>(GET_SERIES_LIST, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.seriesList.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.seriesList?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.seriesList.pageInfo.endCursor) {
+  if (val?.seriesList?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.seriesList.pageInfo.endCursor;
   }
 });

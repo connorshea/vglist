@@ -8,7 +8,7 @@
       <p>Failed to load company: {{ error.message }}</p>
     </div>
 
-    <div v-if="data">
+    <div v-if="data?.company">
       <h1 class="title">{{ data.company.name }}</h1>
 
       <p v-if="data.company.wikidataId" class="subtitle is-6">
@@ -25,7 +25,7 @@
 
         <div class="columns is-multiline">
           <div v-for="game in data.company.developedGames.nodes" :key="game.id" class="column is-3">
-            <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl" />
+            <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
 
         <div class="columns is-multiline">
           <div v-for="game in data.company.publishedGames.nodes" :key="game.id" class="column is-3">
-            <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl" />
+            <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
           </div>
         </div>
       </div>

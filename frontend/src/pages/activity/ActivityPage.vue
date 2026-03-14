@@ -22,7 +22,7 @@
     </div>
 
     <div v-if="data">
-      <div v-for="event in data.activity.nodes" :key="event.id" class="box">
+      <div v-for="event in data?.activity?.nodes" :key="event.id" class="box">
         <article class="media">
           <figure class="media-left">
             <p class="image is-48x48">
@@ -88,10 +88,10 @@ const { data, loading, error } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
   })
 });
 
-const hasNextPage = computed(() => data.value?.activity.pageInfo.hasNextPage ?? false);
+const hasNextPage = computed(() => data.value?.activity?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  if (val?.activity.pageInfo.endCursor) {
+  if (val?.activity?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.activity.pageInfo.endCursor;
   }
 });

@@ -33,12 +33,17 @@
 import { ref } from "vue";
 import { useMutation } from "@/composables/useGraphQL";
 import { RESET_API_TOKEN } from "@/graphql/mutations/users-settings";
-import type { ResetApiTokenMutation } from "@/types/graphql";
+interface ResetApiTokenResult {
+  resetApiToken?: {
+    apiToken?: string | null;
+    errors: string[];
+  } | null;
+}
 
 const newToken = ref("");
 const resetError = ref("");
 
-const { mutate, loading: resetting } = useMutation<ResetApiTokenMutation>(RESET_API_TOKEN);
+const { mutate, loading: resetting } = useMutation<ResetApiTokenResult>(RESET_API_TOKEN);
 
 async function resetToken() {
   resetError.value = "";

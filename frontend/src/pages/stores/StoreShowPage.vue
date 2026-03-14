@@ -9,7 +9,7 @@
     </div>
 
     <div v-if="data">
-      <h1 class="title">{{ data.store.name }}</h1>
+      <h1 class="title">{{ data?.store?.name }}</h1>
     </div>
   </section>
 </template>

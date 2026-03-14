@@ -8,7 +8,7 @@
       <p>Failed to load platform: {{ error.message }}</p>
     </div>
 
-    <div v-if="data">
+    <div v-if="data?.platform">
       <h1 class="title">{{ data.platform.name }}</h1>
 
       <p v-if="data.platform.wikidataId" class="subtitle is-6">
@@ -24,7 +24,7 @@
 
       <div class="columns is-multiline">
         <div v-for="game in data.platform.games.nodes" :key="game.id" class="column is-3">
-          <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl" />
+          <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
         </div>
       </div>
     </div>

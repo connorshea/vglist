@@ -73,7 +73,19 @@ import { ref, watch } from "vue";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { UPDATE_USER } from "@/graphql/mutations/users-settings";
 import { GET_CURRENT_USER_PROFILE } from "@/graphql/queries/users";
-import type { GetCurrentUserProfileQuery, UpdateUserMutation } from "@/types/graphql";
+import type { GetCurrentUserProfileQuery } from "@/types/graphql";
+
+interface UpdateUserResult {
+  updateUser?: {
+    user?: {
+      id: string;
+      bio?: string | null;
+      privacy: string;
+      hideDaysPlayed: boolean;
+    } | null;
+    errors: string[];
+  } | null;
+}
 
 const bio = ref("");
 const privacy = ref("PUBLIC_ACCOUNT");
@@ -95,7 +107,7 @@ watch(
   { immediate: true }
 );
 
-const { mutate, loading: saving } = useMutation<UpdateUserMutation>(UPDATE_USER);
+const { mutate, loading: saving } = useMutation<UpdateUserResult>(UPDATE_USER);
 
 async function saveProfile() {
   saveError.value = "";
