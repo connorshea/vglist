@@ -12,7 +12,7 @@
       <div class="notification is-success">
         <p>Export complete. Copy the JSON below or download it.</p>
       </div>
-      <pre class="box" style="max-height: 400px; overflow: auto;">{{ exportData }}</pre>
+      <pre class="box" style="max-height: 400px; overflow: auto">{{ exportData }}</pre>
     </div>
 
     <button
@@ -27,31 +27,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useMutation } from '@/composables/useGraphQL'
-import { EXPORT_LIBRARY } from '@/graphql/mutations/users-settings'
-import type { ExportLibraryMutation } from '@/types/graphql'
+import { ref } from "vue";
+import { useMutation } from "@/composables/useGraphQL";
+import { EXPORT_LIBRARY } from "@/graphql/mutations/users-settings";
+import type { ExportLibraryMutation } from "@/types/graphql";
 
-const exportData = ref('')
-const exportError = ref('')
+const exportData = ref("");
+const exportError = ref("");
 
-const { mutate, loading: exporting } = useMutation<ExportLibraryMutation>(EXPORT_LIBRARY)
+const { mutate, loading: exporting } = useMutation<ExportLibraryMutation>(EXPORT_LIBRARY);
 
 async function exportLibrary() {
-  exportError.value = ''
-  exportData.value = ''
+  exportError.value = "";
+  exportData.value = "";
 
   try {
-    const response = await mutate()
-    const result = response?.exportLibrary
+    const response = await mutate();
+    const result = response?.exportLibrary;
 
     if (result?.errors && result.errors.length > 0) {
-      exportError.value = result.errors.join(', ')
+      exportError.value = result.errors.join(", ");
     } else if (result?.libraryJson) {
-      exportData.value = result.libraryJson
+      exportData.value = result.libraryJson;
     }
   } catch (e) {
-    exportError.value = e instanceof Error ? e.message : 'An unexpected error occurred.'
+    exportError.value = e instanceof Error ? e.message : "An unexpected error occurred.";
   }
 }
 </script>

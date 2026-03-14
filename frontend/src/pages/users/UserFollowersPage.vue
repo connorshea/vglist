@@ -14,9 +14,7 @@
         &rsaquo; Followers
       </h1>
 
-      <p class="subtitle is-6 has-text-grey">
-        {{ user.followers.totalCount }} followers
-      </p>
+      <p class="subtitle is-6 has-text-grey">{{ user.followers.totalCount }} followers</p>
 
       <div v-if="!followerUsers.length" class="notification is-light">
         <p>No followers yet.</p>
@@ -50,18 +48,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_USER } from '@/graphql/queries/users'
-import type { GetUserQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_USER } from "@/graphql/queries/users";
+import type { GetUserQuery } from "@/types/graphql";
 
-const route = useRoute()
+const route = useRoute();
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string }),
-})
+  variables: () => ({ id: route.params.id as string })
+});
 
-const user = computed(() => data.value?.user ?? null)
-const followerUsers = computed(() => user.value?.followers?.nodes ?? [])
+const user = computed(() => data.value?.user ?? null);
+const followerUsers = computed(() => user.value?.followers?.nodes ?? []);
 </script>

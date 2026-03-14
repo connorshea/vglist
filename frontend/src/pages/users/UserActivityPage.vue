@@ -22,17 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_USER } from '@/graphql/queries/users'
-import type { GetUserQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_USER } from "@/graphql/queries/users";
+import type { GetUserQuery } from "@/types/graphql";
 
-const route = useRoute()
+const route = useRoute();
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string }),
-})
+  variables: () => ({ id: route.params.id as string })
+});
 
-const user = computed(() => data.value?.user ?? null)
+const user = computed(() => data.value?.user ?? null);
 </script>

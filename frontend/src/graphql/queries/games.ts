@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const GAME_FIELDS = gql`
   fragment GameFields on Game {
@@ -7,14 +7,42 @@ export const GAME_FIELDS = gql`
     releaseDate
     avgRating
     coverUrl(size: MEDIUM)
-    developers { nodes { id name } }
-    publishers { nodes { id name } }
-    platforms { nodes { id name } }
-    genres { nodes { id name } }
-    engines { nodes { id name } }
-    series { id name }
+    developers {
+      nodes {
+        id
+        name
+      }
+    }
+    publishers {
+      nodes {
+        id
+        name
+      }
+    }
+    platforms {
+      nodes {
+        id
+        name
+      }
+    }
+    genres {
+      nodes {
+        id
+        name
+      }
+    }
+    engines {
+      nodes {
+        id
+        name
+      }
+    }
+    series {
+      id
+      name
+    }
   }
-`
+`;
 
 export const GET_GAME = gql`
   ${GAME_FIELDS}
@@ -31,7 +59,7 @@ export const GET_GAME = gql`
       igdbId
     }
   }
-`
+`;
 
 export const GET_GAMES = gql`
   query GetGames($first: Int, $after: String) {
@@ -41,7 +69,12 @@ export const GET_GAMES = gql`
         name
         releaseDate
         coverUrl(size: SMALL)
-        developers { nodes { id name } }
+        developers {
+          nodes {
+            id
+            name
+          }
+        }
       }
       pageInfo {
         hasNextPage
@@ -49,7 +82,7 @@ export const GET_GAMES = gql`
       }
     }
   }
-`
+`;
 
 export const SEARCH_GAMES = gql`
   query SearchGames($query: String!) {
@@ -59,8 +92,13 @@ export const SEARCH_GAMES = gql`
         name
         releaseDate
         coverUrl(size: SMALL)
-        developers { nodes { id name } }
+        developers {
+          nodes {
+            id
+            name
+          }
+        }
       }
     }
   }
-`
+`;

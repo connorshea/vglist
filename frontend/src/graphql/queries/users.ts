@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const GET_CURRENT_USER = gql`
   query GetCurrentUser {
@@ -13,7 +13,7 @@ export const GET_CURRENT_USER = gql`
       hideDaysPlayed
     }
   }
-`
+`;
 
 export const GET_USER = gql`
   query GetUser($id: ID!) {
@@ -41,22 +41,39 @@ export const GET_USER = gql`
           completionStatus
           rating
         }
-        pageInfo { hasNextPage endCursor }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
       followers {
         totalCount
-        nodes { id username slug avatarUrl(size: SMALL) }
+        nodes {
+          id
+          username
+          slug
+          avatarUrl(size: SMALL)
+        }
       }
       following {
         totalCount
-        nodes { id username slug avatarUrl(size: SMALL) }
+        nodes {
+          id
+          username
+          slug
+          avatarUrl(size: SMALL)
+        }
       }
       favoritedGames(first: 10) {
-        nodes { id name coverUrl(size: SMALL) }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
       }
     }
   }
-`
+`;
 
 export const GET_USERS = gql`
   query GetUsers($first: Int, $after: String) {
@@ -66,12 +83,17 @@ export const GET_USERS = gql`
         username
         slug
         avatarUrl(size: SMALL)
-        gamePurchases { totalCount }
+        gamePurchases {
+          totalCount
+        }
       }
-      pageInfo { hasNextPage endCursor }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_CURRENT_USER_PROFILE = gql`
   query GetCurrentUserProfile {
@@ -82,7 +104,7 @@ export const GET_CURRENT_USER_PROFILE = gql`
       hideDaysPlayed
     }
   }
-`
+`;
 
 export const SEARCH_USERS = gql`
   query SearchUsers($query: String!) {
@@ -95,4 +117,4 @@ export const SEARCH_USERS = gql`
       }
     }
   }
-`
+`;

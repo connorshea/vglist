@@ -89,19 +89,11 @@
         </h2>
         <div class="columns is-multiline">
           <div v-for="game in favoritedGames" :key="game.id" class="column is-narrow">
-            <div class="card" style="width: 120px;">
+            <div class="card" style="width: 120px">
               <div class="card-image">
                 <figure class="image is-3by4">
-                  <img
-                    v-if="game.coverUrl"
-                    :src="game.coverUrl"
-                    :alt="game.name"
-                  />
-                  <img
-                    v-else
-                    src="https://via.placeholder.com/90x120"
-                    :alt="game.name"
-                  />
+                  <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
+                  <img v-else src="https://via.placeholder.com/90x120" :alt="game.name" />
                 </figure>
               </div>
               <div class="card-content p-2">
@@ -131,19 +123,13 @@
                       :src="purchase.game.coverUrl"
                       :alt="purchase.game.name"
                     />
-                    <img
-                      v-else
-                      src="https://via.placeholder.com/64"
-                      :alt="purchase.game.name"
-                    />
+                    <img v-else src="https://via.placeholder.com/64" :alt="purchase.game.name" />
                   </figure>
                 </div>
                 <div class="media-content">
                   <p class="title is-5">{{ purchase.game.name }}</p>
                   <p class="subtitle is-6 has-text-grey">
-                    <span v-if="purchase.rating !== null">
-                      Rating: {{ purchase.rating }}/100
-                    </span>
+                    <span v-if="purchase.rating !== null"> Rating: {{ purchase.rating }}/100 </span>
                     <span v-if="purchase.completionStatus" class="ml-3">
                       {{ formatStatus(purchase.completionStatus) }}
                     </span>
@@ -162,51 +148,51 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuery, useMutation } from '@/composables/useGraphQL'
-import { useAuthStore } from '@/stores/auth'
-import { GET_USER } from '@/graphql/queries/users'
-import { FOLLOW_USER, UNFOLLOW_USER } from '@/graphql/mutations/users'
-import type { GetUserQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useAuthStore } from "@/stores/auth";
+import { GET_USER } from "@/graphql/queries/users";
+import { FOLLOW_USER, UNFOLLOW_USER } from "@/graphql/mutations/users";
+import type { GetUserQuery } from "@/types/graphql";
 
-const route = useRoute()
-const authStore = useAuthStore()
+const route = useRoute();
+const authStore = useAuthStore();
 
 const { data, loading, error, refetch } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string }),
-})
+  variables: () => ({ id: route.params.id as string })
+});
 
-const user = computed(() => data.value?.user ?? null)
-const gamePurchases = computed(() => user.value?.gamePurchases?.nodes ?? [])
-const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? [])
+const user = computed(() => data.value?.user ?? null);
+const gamePurchases = computed(() => user.value?.gamePurchases?.nodes ?? []);
+const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
 
 const canFollowOrUnfollow = computed(() => {
-  return authStore.isAuthenticated && user.value && authStore.user?.id !== user.value.id
-})
+  return authStore.isAuthenticated && user.value && authStore.user?.id !== user.value.id;
+});
 
-const { mutate: followUser, loading: followLoading } = useMutation(FOLLOW_USER)
-const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_USER)
+const { mutate: followUser, loading: followLoading } = useMutation(FOLLOW_USER);
+const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_USER);
 
 async function handleFollow() {
   try {
-    await followUser({ userId: route.params.id as string })
-    await refetch()
+    await followUser({ userId: route.params.id as string });
+    await refetch();
   } catch (err) {
-    console.error('Failed to follow user:', err)
+    console.error("Failed to follow user:", err);
   }
 }
 
 async function handleUnfollow() {
   try {
-    await unfollowUser({ userId: route.params.id as string })
-    await refetch()
+    await unfollowUser({ userId: route.params.id as string });
+    await refetch();
   } catch (err) {
-    console.error('Failed to unfollow user:', err)
+    console.error("Failed to unfollow user:", err);
   }
 }
 
 function formatStatus(status: string): string {
-  return status.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+  return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 </script>

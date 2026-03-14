@@ -19,11 +19,7 @@
         <h2 class="title is-4 mt-5">Developed Games</h2>
 
         <div class="columns is-multiline">
-          <div
-            v-for="game in data.company.developedGames.nodes"
-            :key="game.id"
-            class="column is-3"
-          >
+          <div v-for="game in data.company.developedGames.nodes" :key="game.id" class="column is-3">
             <div class="card">
               <div class="card-image" v-if="game.coverUrl">
                 <figure class="image is-3by4">
@@ -44,11 +40,7 @@
         <h2 class="title is-4 mt-5">Published Games</h2>
 
         <div class="columns is-multiline">
-          <div
-            v-for="game in data.company.publishedGames.nodes"
-            :key="game.id"
-            class="column is-3"
-          >
+          <div v-for="game in data.company.publishedGames.nodes" :key="game.id" class="column is-3">
             <div class="card">
               <div class="card-image" v-if="game.coverUrl">
                 <figure class="image is-3by4">
@@ -69,14 +61,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_COMPANY } from '@/graphql/queries/resources'
-import type { GetCompanyQuery } from '@/types/graphql'
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_COMPANY } from "@/graphql/queries/resources";
+import type { GetCompanyQuery } from "@/types/graphql";
 
-const route = useRoute()
+const route = useRoute();
 
 const { data, loading, error } = useQuery<GetCompanyQuery>(GET_COMPANY, {
-  variables: { id: route.params.id },
-})
+  variables: { id: route.params.id }
+});
 </script>

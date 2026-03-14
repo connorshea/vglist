@@ -20,9 +20,7 @@
           <h1 class="title">{{ game.name }}</h1>
 
           <div class="tags" v-if="game.avgRating">
-            <span class="tag is-info is-medium">
-              Rating: {{ game.avgRating.toFixed(1) }}
-            </span>
+            <span class="tag is-info is-medium"> Rating: {{ game.avgRating.toFixed(1) }} </span>
           </div>
 
           <table class="table is-fullwidth">
@@ -33,21 +31,17 @@
               </tr>
               <tr v-if="game.developers.nodes.length">
                 <th>Developers</th>
-                <td>{{ game.developers.nodes.map((d: { name: string }) => d.name).join(', ') }}</td>
+                <td>{{ game.developers.nodes.map((d: { name: string }) => d.name).join(", ") }}</td>
               </tr>
               <tr v-if="game.publishers.nodes.length">
                 <th>Publishers</th>
-                <td>{{ game.publishers.nodes.map((p: { name: string }) => p.name).join(', ') }}</td>
+                <td>{{ game.publishers.nodes.map((p: { name: string }) => p.name).join(", ") }}</td>
               </tr>
               <tr v-if="game.platforms.nodes.length">
                 <th>Platforms</th>
                 <td>
                   <div class="tags">
-                    <span
-                      v-for="platform in game.platforms.nodes"
-                      :key="platform.id"
-                      class="tag"
-                    >
+                    <span v-for="platform in game.platforms.nodes" :key="platform.id" class="tag">
                       {{ platform.name }}
                     </span>
                   </div>
@@ -69,7 +63,7 @@
               </tr>
               <tr v-if="game.engines.nodes.length">
                 <th>Engines</th>
-                <td>{{ game.engines.nodes.map((e: { name: string }) => e.name).join(', ') }}</td>
+                <td>{{ game.engines.nodes.map((e: { name: string }) => e.name).join(", ") }}</td>
               </tr>
               <tr v-if="game.series">
                 <th>Series</th>
@@ -108,64 +102,62 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { useAuthStore } from '@/stores/auth'
-import { gqlClient } from '@/graphql/client'
-import { GET_GAME } from '@/graphql/queries/games'
-import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME } from '@/graphql/mutations/games'
-import type { GetGameQuery } from '@/types/graphql'
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { useAuthStore } from "@/stores/auth";
+import { gqlClient } from "@/graphql/client";
+import { GET_GAME } from "@/graphql/queries/games";
+import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME } from "@/graphql/mutations/games";
+import type { GetGameQuery } from "@/types/graphql";
 
-const route = useRoute()
-const authStore = useAuthStore()
+const route = useRoute();
+const authStore = useAuthStore();
 
-const gameId = computed(() => route.params.id as string)
+const gameId = computed(() => route.params.id as string);
 
 const { data, loading, error } = useQuery<GetGameQuery>(GET_GAME, {
-  variables: () => ({ id: gameId.value }),
-})
+  variables: () => ({ id: gameId.value })
+});
 
-const game = computed(() => data.value?.game ?? null)
+const game = computed(() => data.value?.game ?? null);
 
-const addingToLibrary = ref(false)
-const favoriting = ref(false)
-const actionMessage = ref('')
-const actionIsError = ref(false)
+const addingToLibrary = ref(false);
+const favoriting = ref(false);
+const actionMessage = ref("");
+const actionIsError = ref(false);
 
-const actionMessageClass = computed(() =>
-  actionIsError.value ? 'is-danger' : 'is-success',
-)
+const actionMessageClass = computed(() => (actionIsError.value ? "is-danger" : "is-success"));
 
 async function addToLibrary() {
-  addingToLibrary.value = true
-  actionMessage.value = ''
+  addingToLibrary.value = true;
+  actionMessage.value = "";
 
   try {
-    await gqlClient.request(ADD_GAME_TO_LIBRARY, { gameId: gameId.value })
-    actionMessage.value = `${game.value?.name ?? 'Game'} has been added to your library.`
-    actionIsError.value = false
+    await gqlClient.request(ADD_GAME_TO_LIBRARY, { gameId: gameId.value });
+    actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
+    actionIsError.value = false;
   } catch (err) {
-    actionMessage.value = `Failed to add game to library: ${err instanceof Error ? err.message : String(err)}`
-    actionIsError.value = true
+    actionMessage.value = `Failed to add game to library: ${err instanceof Error ? err.message : String(err)}`;
+    actionIsError.value = true;
   } finally {
-    addingToLibrary.value = false
+    addingToLibrary.value = false;
   }
 }
 
 async function favoriteGame() {
-  favoriting.value = true
-  actionMessage.value = ''
+  favoriting.value = true;
+  actionMessage.value = "";
 
   try {
-    await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value })
-    actionMessage.value = `${game.value?.name ?? 'Game'} has been favorited.`
-    actionIsError.value = false
+    await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value });
+    actionMessage.value = `${game.value?.name ?? "Game"} has been favorited.`;
+    actionIsError.value = false;
   } catch (err) {
-    actionMessage.value = `Failed to favorite game: ${err instanceof Error ? err.message : String(err)}`
-    actionIsError.value = true
+    actionMessage.value = `Failed to favorite game: ${err instanceof Error ? err.message : String(err)}`;
+    actionIsError.value = true;
   } finally {
-    favoriting.value = false
+    favoriting.value = false;
   }
 }
 </script>

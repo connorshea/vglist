@@ -18,10 +18,7 @@
       </ul>
     </div>
 
-    <div
-      v-if="data?.seriesList.pageInfo.hasNextPage"
-      class="has-text-centered mt-5"
-    >
+    <div v-if="data?.seriesList.pageInfo.hasNextPage" class="has-text-centered mt-5">
       <button
         class="button is-primary"
         :class="{ 'is-loading': loading }"
@@ -35,25 +32,22 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_SERIES_LIST } from '@/graphql/queries/resources'
-import type { GetSeriesListQuery } from '@/types/graphql'
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_SERIES_LIST } from "@/graphql/queries/resources";
+import type { GetSeriesListQuery } from "@/types/graphql";
 
 const { data, loading, error, fetchMore } = useQuery<GetSeriesListQuery>(GET_SERIES_LIST, {
-  variables: { first: 25 },
-})
+  variables: { first: 25 }
+});
 
 function loadMore() {
-  if (!data.value) return
+  if (!data.value) return;
 
-  fetchMore(
-    { first: 25, after: data.value.seriesList.pageInfo.endCursor },
-    (prev, next) => ({
-      seriesList: {
-        ...next.seriesList,
-        nodes: [...prev.seriesList.nodes, ...next.seriesList.nodes],
-      },
-    }),
-  )
+  fetchMore({ first: 25, after: data.value.seriesList.pageInfo.endCursor }, (prev, next) => ({
+    seriesList: {
+      ...next.seriesList,
+      nodes: [...prev.seriesList.nodes, ...next.seriesList.nodes]
+    }
+  }));
 }
 </script>
