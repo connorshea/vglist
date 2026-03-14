@@ -213,6 +213,33 @@ nav.navbar {
     }
   }
 
+  .navbar-search .input {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #fff;
+    height: 36px;
+    font-size: 0.875rem;
+    transition:
+      background-color 200ms,
+      border-color 200ms;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    &:focus {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #fff;
+    }
+  }
+
   .navbar-item img.user-avatar {
     max-height: 1.8rem;
     max-width: 1.8rem;
