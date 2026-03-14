@@ -2,6 +2,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { gqlClient } from "@/graphql/client";
 import { SIGN_IN, SIGN_UP, REQUEST_PASSWORD_RESET } from "@/graphql/mutations/auth";
+import { useSnackbar } from "@/composables/useSnackbar";
 
 export function useAuth() {
   const authStore = useAuthStore();
@@ -67,6 +68,8 @@ export function useAuth() {
   function signOut() {
     authStore.clearAuth();
     router.push("/");
+    const { show } = useSnackbar();
+    show("You have been signed out.", "success");
   }
 
   return {
