@@ -33,7 +33,7 @@
     "vue-loader": "^17.4.2",
     "vue3-select-component": "0.16.0",
     "webpack": "^5.105.2",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^7.0.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
