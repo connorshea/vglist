@@ -21,8 +21,8 @@ export const UPDATE_GAME_IN_LIBRARY = gql`
     $startDate: ISO8601Date
     $completionDate: ISO8601Date
     $replayCount: Int
-    $platformIds: [ID!]
-    $storeIds: [ID!]
+    $platforms: [ID]
+    $stores: [ID]
   ) {
     updateGameInLibrary(
       gamePurchaseId: $gamePurchaseId
@@ -33,8 +33,8 @@ export const UPDATE_GAME_IN_LIBRARY = gql`
       startDate: $startDate
       completionDate: $completionDate
       replayCount: $replayCount
-      platformIds: $platformIds
-      storeIds: $storeIds
+      platforms: $platforms
+      stores: $stores
     ) {
       gamePurchase {
         id
@@ -50,7 +50,7 @@ export const UPDATE_GAME_IN_LIBRARY = gql`
 export const REMOVE_GAME_FROM_LIBRARY = gql`
   mutation RemoveGameFromLibrary($gamePurchaseId: ID!) {
     removeGameFromLibrary(gamePurchaseId: $gamePurchaseId) {
-      gamePurchase { id }
+      game { id }
     }
   }
 `

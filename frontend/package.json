@@ -10,7 +10,8 @@
     "typecheck": "vue-tsc --noEmit",
     "lint": "oxlint --tsconfig tsconfig.json",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
     "bulma": "^1.0.4",
@@ -24,6 +25,9 @@
     "vue-router": "^5.0.3"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.6",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-operations": "^4.4.0",
     "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^6.0.5",
     "oxfmt": "^0.40.0",

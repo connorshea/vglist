@@ -29,13 +29,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useMutation } from '@/composables/useGraphQL'
-import { EXPORT_LIBRARY } from '@/graphql/mutations/users'
-import type { ExportLibraryData } from '@/types/graphql'
+import { EXPORT_LIBRARY } from '@/graphql/mutations/users-settings'
+import type { ExportLibraryMutation } from '@/types/graphql'
 
 const exportData = ref('')
 const exportError = ref('')
 
-const { mutate, loading: exporting } = useMutation<ExportLibraryData>(EXPORT_LIBRARY)
+const { mutate, loading: exporting } = useMutation<ExportLibraryMutation>(EXPORT_LIBRARY)
 
 async function exportLibrary() {
   exportError.value = ''

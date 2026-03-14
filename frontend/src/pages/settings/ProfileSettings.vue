@@ -71,20 +71,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useQuery, useMutation } from '@/composables/useGraphQL'
-import { UPDATE_USER } from '@/graphql/mutations/users'
-import gql from 'graphql-tag'
-import type { GetCurrentUserProfileData, UpdateUserData } from '@/types/graphql'
-
-const GET_CURRENT_USER_PROFILE = gql`
-  query GetCurrentUserProfile {
-    currentUser {
-      id
-      bio
-      privacy
-      hideDaysPlayed
-    }
-  }
-`
+import { UPDATE_USER } from '@/graphql/mutations/users-settings'
+import { GET_CURRENT_USER_PROFILE } from '@/graphql/queries/users'
+import type { GetCurrentUserProfileQuery, UpdateUserMutation } from '@/types/graphql'
 
 const bio = ref('')
 const privacy = ref('PUBLIC_ACCOUNT')
@@ -92,7 +81,7 @@ const hideDaysPlayed = ref(false)
 const saveError = ref('')
 const saveSuccess = ref(false)
 
-const { data, loading, error } = useQuery<GetCurrentUserProfileData>(GET_CURRENT_USER_PROFILE)
+const { data, loading, error } = useQuery<GetCurrentUserProfileQuery>(GET_CURRENT_USER_PROFILE)
 
 watch(data, (val) => {
   if (val?.currentUser) {
@@ -102,7 +91,7 @@ watch(data, (val) => {
   }
 }, { immediate: true })
 
-const { mutate, loading: saving } = useMutation<UpdateUserData>(UPDATE_USER)
+const { mutate, loading: saving } = useMutation<UpdateUserMutation>(UPDATE_USER)
 
 async function saveProfile() {
   saveError.value = ''

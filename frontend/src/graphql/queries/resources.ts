@@ -141,9 +141,11 @@ export const GLOBAL_SEARCH = gql`
   query GlobalSearch($query: String!) {
     globalSearch(query: $query) {
       nodes {
-        searchableId
-        searchableType
-        content
+        ... on SearchResultInterface {
+          searchableId
+          searchableType
+          content
+        }
       }
     }
   }
@@ -166,15 +168,12 @@ export const GET_ACTIVITY = gql`
 export const GET_BASIC_SITE_STATISTICS = gql`
   query GetBasicSiteStatistics {
     basicSiteStatistics {
-      gamesCount
-      platformsCount
-      seriesCount
-      enginesCount
-      companiesCount
-      genresCount
-      storesCount
-      usersCount
-      gamePurchasesCount
+      games
+      platforms
+      series
+      engines
+      companies
+      genres
     }
   }
 `

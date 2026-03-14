@@ -71,11 +71,11 @@
 import { ref, watch } from 'vue'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_ACTIVITY } from '@/graphql/queries/resources'
-import type { GetActivityData } from '@/types/graphql'
+import type { GetActivityQuery } from '@/types/graphql'
 
 const feedType = ref<'GLOBAL' | 'FOLLOWING'>('GLOBAL')
 
-const { data, loading, error, fetchMore, refetch } = useQuery<GetActivityData>(GET_ACTIVITY, {
+const { data, loading, error, fetchMore, refetch } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
   variables: () => ({ feedType: feedType.value, first: 25 }),
 })
 

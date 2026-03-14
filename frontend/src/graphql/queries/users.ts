@@ -43,8 +43,14 @@ export const GET_USER = gql`
         }
         pageInfo { hasNextPage endCursor }
       }
-      followers { totalCount }
-      following { totalCount }
+      followers {
+        totalCount
+        nodes { id username slug avatarUrl(size: SMALL) }
+      }
+      following {
+        totalCount
+        nodes { id username slug avatarUrl(size: SMALL) }
+      }
       favoritedGames(first: 10) {
         nodes { id name coverUrl(size: SMALL) }
       }
@@ -63,6 +69,17 @@ export const GET_USERS = gql`
         gamePurchases { totalCount }
       }
       pageInfo { hasNextPage endCursor }
+    }
+  }
+`
+
+export const GET_CURRENT_USER_PROFILE = gql`
+  query GetCurrentUserProfile {
+    currentUser {
+      id
+      bio
+      privacy
+      hideDaysPlayed
     }
   }
 `

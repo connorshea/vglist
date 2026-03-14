@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_GENRES } from '@/graphql/queries/resources'
-import type { GetGenresData } from '@/types/graphql'
+import type { GetGenresQuery } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery<GetGenresData>(GET_GENRES, {
+const { data, loading, error, fetchMore } = useQuery<GetGenresQuery>(GET_GENRES, {
   variables: { first: 25 },
 })
 

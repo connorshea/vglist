@@ -37,9 +37,9 @@
 <script setup lang="ts">
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_PLATFORMS } from '@/graphql/queries/resources'
-import type { GetPlatformsData } from '@/types/graphql'
+import type { GetPlatformsQuery } from '@/types/graphql'
 
-const { data, loading, error, fetchMore } = useQuery<GetPlatformsData>(GET_PLATFORMS, {
+const { data, loading, error, fetchMore } = useQuery<GetPlatformsQuery>(GET_PLATFORMS, {
   variables: { first: 25 },
 })
 

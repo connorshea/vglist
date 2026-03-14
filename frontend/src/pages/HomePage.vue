@@ -24,22 +24,20 @@
 import { computed } from 'vue'
 import { useQuery } from '@/composables/useGraphQL'
 import { GET_BASIC_SITE_STATISTICS } from '@/graphql/queries/resources'
-import type { GetBasicSiteStatisticsData } from '@/types/graphql'
+import type { GetBasicSiteStatisticsQuery } from '@/types/graphql'
 
-const { data } = useQuery<GetBasicSiteStatisticsData>(GET_BASIC_SITE_STATISTICS)
+const { data } = useQuery<GetBasicSiteStatisticsQuery>(GET_BASIC_SITE_STATISTICS)
 
 const stats = computed(() => {
   if (!data.value) return []
   const s = data.value.basicSiteStatistics
   return [
-    { label: 'Games', value: s.gamesCount },
-    { label: 'Users', value: s.usersCount },
-    { label: 'Library Entries', value: s.gamePurchasesCount },
-    { label: 'Platforms', value: s.platformsCount },
-    { label: 'Companies', value: s.companiesCount },
-    { label: 'Genres', value: s.genresCount },
-    { label: 'Engines', value: s.enginesCount },
-    { label: 'Series', value: s.seriesCount },
+    { label: 'Games', value: s.games },
+    { label: 'Platforms', value: s.platforms },
+    { label: 'Companies', value: s.companies },
+    { label: 'Genres', value: s.genres },
+    { label: 'Engines', value: s.engines },
+    { label: 'Series', value: s.series },
   ]
 })
 </script>
