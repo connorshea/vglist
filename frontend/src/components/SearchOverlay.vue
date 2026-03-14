@@ -1,11 +1,35 @@
 <template>
   <Teleport to="body">
-    <Transition name="overlay">
-      <div v-if="isOpen" class="search-overlay" @click.self="close">
-        <div class="search-header">
-          <div class="search-bar-wrap">
+    <div v-if="isOpen" class="search-overlay" @click.self="close">
+      <div class="search-header">
+        <div class="search-bar-wrap">
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            ref="searchInputRef"
+            v-model="query"
+            class="search-input"
+            type="text"
+            placeholder="Search games, companies, users…"
+            @input="onSearch"
+            @keydown.escape="close"
+            @keydown.enter="goToFirstResult"
+          />
+          <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
+          <button class="search-close" aria-label="Close search" @click="close">
             <svg
-              class="search-icon"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -13,24 +37,56 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-            <input
-              ref="searchInputRef"
-              v-model="query"
-              class="search-input"
-              type="text"
-              placeholder="Search games, companies, users…"
-              @input="onSearch"
-              @keydown.escape="close"
-              @keydown.enter="goToFirstResult"
-            />
-            <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
-            <button class="search-close" aria-label="Close search" @click="close">
+          </button>
+        </div>
+      </div>
+
+      <div class="search-results">
+        <!-- Empty state -->
+        <div v-if="!query || query.length < 2" class="search-empty">
+          <svg
+            class="search-empty-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <p>Start typing to search games, companies, users, and more.</p>
+        </div>
+
+        <!-- Loading state -->
+        <div v-else-if="loading" class="search-empty">
+          <div class="search-spinner"></div>
+          <p>Searching…</p>
+        </div>
+
+        <!-- Error state -->
+        <div v-else-if="error" class="search-empty">
+          <p class="search-error-text">Search failed: {{ error }}</p>
+          <p class="search-empty-hint">Try again or check your connection</p>
+        </div>
+
+        <!-- No results -->
+        <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
+          <p>No results found for "{{ query }}"</p>
+          <p class="search-empty-hint">Try a different search term</p>
+        </div>
+
+        <!-- Results grid -->
+        <div v-else-if="totalResults > 0" class="results-grid" :class="gridColumnsClass">
+          <!-- Games column -->
+          <div v-if="gameResults.length" class="category">
+            <div class="category-header">
               <svg
-                width="16"
-                height="16"
+                class="category-icon"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -38,189 +94,131 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+                <rect x="2" y="6" width="20" height="12" rx="2" />
+                <line x1="6" y1="12" x2="10" y2="12" />
+                <line x1="8" y1="10" x2="8" y2="14" />
+                <circle cx="17" cy="11" r="1" />
+                <circle cx="15" cy="13" r="1" />
               </svg>
-            </button>
-          </div>
-        </div>
+              <span class="category-title">Games</span>
+              <span class="category-count"
+                >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
+              >
+            </div>
 
-        <div class="search-results">
-          <!-- Empty state -->
-          <div v-if="!query || query.length < 2" class="search-empty">
-            <svg
-              class="search-empty-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+            <a
+              v-for="(game, idx) in gameResults"
+              :key="game.searchableId"
+              class="result-item"
+              :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
+              @click.prevent="goToResult(game)"
             >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <p>Start typing to search games, companies, users, and more.</p>
-          </div>
-
-          <!-- Loading state -->
-          <div v-else-if="loading" class="search-empty">
-            <div class="search-spinner"></div>
-            <p>Searching…</p>
-          </div>
-
-          <!-- Error state -->
-          <div v-else-if="error" class="search-empty">
-            <p class="search-error-text">Search failed: {{ error }}</p>
-            <p class="search-empty-hint">Try again or check your connection</p>
-          </div>
-
-          <!-- No results -->
-          <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
-            <p>No results found for "{{ query }}"</p>
-            <p class="search-empty-hint">Try a different search term</p>
-          </div>
-
-          <!-- Results grid -->
-          <div v-else-if="totalResults > 0" class="results-grid" :class="gridColumnsClass">
-            <!-- Games column -->
-            <div v-if="gameResults.length" class="category">
-              <div class="category-header">
-                <svg
-                  class="category-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="2" y="6" width="20" height="12" rx="2" />
-                  <line x1="6" y1="12" x2="10" y2="12" />
-                  <line x1="8" y1="10" x2="8" y2="14" />
-                  <circle cx="17" cy="11" r="1" />
-                  <circle cx="15" cy="13" r="1" />
-                </svg>
-                <span class="category-title">Games</span>
-                <span class="category-count"
-                  >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
-                >
+              <div class="result-thumb">
+                <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.content" />
+                <div v-else class="result-thumb-placeholder">
+                  {{ gameInitials(game.content) }}
+                </div>
               </div>
+              <div class="result-info">
+                <div class="result-title">{{ game.content }}</div>
+                <div class="result-meta">
+                  <span v-if="game.releaseDate" class="result-year">{{
+                    releaseYear(game.releaseDate)
+                  }}</span>
+                  <span v-if="game.developerName" class="result-developer">{{
+                    game.developerName
+                  }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
 
-              <a
-                v-for="(game, idx) in gameResults"
-                :key="game.searchableId"
-                class="result-item"
-                :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
-                @click.prevent="goToResult(game)"
+          <!-- Other resources column -->
+          <div v-if="otherResults.length" class="category">
+            <div class="category-header">
+              <svg
+                class="category-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <div class="result-thumb">
-                  <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.content" />
-                  <div v-else class="result-thumb-placeholder">
-                    {{ gameInitials(game.content) }}
-                  </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ game.content }}</div>
-                  <div class="result-meta">
-                    <span v-if="game.releaseDate" class="result-year">{{
-                      releaseYear(game.releaseDate)
-                    }}</span>
-                    <span v-if="game.developerName" class="result-developer">{{
-                      game.developerName
-                    }}</span>
-                  </div>
-                </div>
-              </a>
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              </svg>
+              <span class="category-title">Other</span>
+              <span class="category-count"
+                >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
+              >
             </div>
 
-            <!-- Other resources column -->
-            <div v-if="otherResults.length" class="category">
-              <div class="category-header">
-                <svg
-                  class="category-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                </svg>
-                <span class="category-title">Other</span>
-                <span class="category-count"
-                  >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
-                >
+            <a
+              v-for="(item, idx) in otherResults"
+              :key="item.searchableId"
+              class="result-item result-item--compact"
+              :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+              @click.prevent="goToResult(item)"
+            >
+              <div class="result-thumb">
+                <div class="result-thumb-placeholder">
+                  {{ item.content.charAt(0).toUpperCase() }}
+                </div>
               </div>
+              <div class="result-info">
+                <div class="result-title">{{ item.content }}</div>
+                <div class="result-meta">
+                  <span class="result-type-tag">{{ item.searchableType }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
 
-              <a
-                v-for="(item, idx) in otherResults"
-                :key="item.searchableId"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-                @click.prevent="goToResult(item)"
+          <!-- Users column -->
+          <div v-if="userResults.length" class="category">
+            <div class="category-header">
+              <svg
+                class="category-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ item.content.charAt(0).toUpperCase() }}
-                  </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ item.content }}</div>
-                  <div class="result-meta">
-                    <span class="result-type-tag">{{ item.searchableType }}</span>
-                  </div>
-                </div>
-              </a>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <span class="category-title">Users</span>
+              <span class="category-count"
+                >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+              >
             </div>
 
-            <!-- Users column -->
-            <div v-if="userResults.length" class="category">
-              <div class="category-header">
-                <svg
-                  class="category-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                <span class="category-title">Users</span>
-                <span class="category-count"
-                  >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
-                >
+            <a
+              v-for="(user, idx) in userResults"
+              :key="user.searchableId"
+              class="result-item result-item--compact"
+              :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
+              @click.prevent="goToResult(user)"
+            >
+              <div class="result-thumb">
+                <img v-if="user.avatarUrl" :src="user.avatarUrl" :alt="user.content" />
+                <div v-else class="result-thumb-placeholder">
+                  {{ user.content.charAt(0).toUpperCase() }}
+                </div>
               </div>
-
-              <a
-                v-for="(user, idx) in userResults"
-                :key="user.searchableId"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
-                @click.prevent="goToResult(user)"
-              >
-                <div class="result-thumb">
-                  <img v-if="user.avatarUrl" :src="user.avatarUrl" :alt="user.content" />
-                  <div v-else class="result-thumb-placeholder">
-                    {{ user.content.charAt(0).toUpperCase() }}
-                  </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ user.content }}</div>
-                </div>
-              </a>
-            </div>
+              <div class="result-info">
+                <div class="result-title">{{ user.content }}</div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
-    </Transition>
+    </div>
   </Teleport>
 </template>
 
@@ -363,22 +361,6 @@ function releaseYear(date: string): string {
   background: rgba(14, 10, 24, 0.6);
 }
 
-/* ── Transition ── */
-.overlay-enter-active {
-  animation: overlayIn 0.25s ease-out;
-}
-.overlay-leave-active {
-  animation: overlayIn 0.2s ease-in reverse;
-}
-@keyframes overlayIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 /* ── Search bar area ── */
 .search-header {
   flex-shrink: 0;
@@ -389,6 +371,7 @@ function releaseYear(date: string): string {
 }
 
 .search-bar-wrap {
+  view-transition-name: search-bar;
   position: relative;
   display: flex;
   align-items: center;
