@@ -282,13 +282,16 @@ export const GET_ACTIVITY = gql`
             game {
               id
               name
+              coverUrl(size: SMALL)
             }
             completionStatus
+            rating
           }
           ... on FavoriteGame {
             game {
               id
               name
+              coverUrl(size: SMALL)
             }
           }
           ... on Relationship {
@@ -296,12 +299,14 @@ export const GET_ACTIVITY = gql`
               id
               username
               slug
+              avatarUrl(size: SMALL)
             }
           }
           ... on User {
             id
             username
             slug
+            avatarUrl(size: SMALL)
           }
         }
       }

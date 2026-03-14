@@ -2768,13 +2768,14 @@ export type GetActivityQuery = {
       createdAt: string;
       user: { id: string; username: string; slug: string; avatarUrl?: string | null };
       eventable:
-        | { game: { id: string; name: string } }
+        | { game: { id: string; name: string; coverUrl?: string | null } }
         | {
             completionStatus?: GamePurchaseCompletionStatus | null;
-            game: { id: string; name: string };
+            rating?: number | null;
+            game: { id: string; name: string; coverUrl?: string | null };
           }
-        | { followed: { id: string; username: string; slug: string } }
-        | { id: string; username: string; slug: string };
+        | { followed: { id: string; username: string; slug: string; avatarUrl?: string | null } }
+        | { id: string; username: string; slug: string; avatarUrl?: string | null };
     }>;
     pageInfo: { hasNextPage: boolean; endCursor?: string | null };
   } | null;
