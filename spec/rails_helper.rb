@@ -5,8 +5,6 @@ require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
-require 'capybara/rails'
-require 'selenium/webdriver'
 require 'paper_trail/frameworks/rspec'
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -43,53 +41,19 @@ RSpec.configure do |config|
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
-  #
-  # You can disable this behaviour by removing the line below, and instead
-  # explicitly tag your specs with their type, e.g.:
-  #
-  #     RSpec.describe UsersController, :type => :controller do
-  #       # ...
-  #     end
-  #
-  # The different available types are documented in the features, such as in
-  # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
-  # arbitrary gems may also be filtered via:
-  # config.filter_gems_from_backtrace("gem name")
 
   # Add FactoryBot support to Rspec tests.
   config.include FactoryBot::Syntax::Methods
 
-  # Add Devise helpers to controller and view tests.
-  config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::ControllerHelpers, type: :view
+  # Add Devise helpers to request tests.
   config.include Devise::Test::IntegrationHelpers, type: :request
-  config.include Devise::Test::IntegrationHelpers, type: :feature
 
-  config.include FeatureTestHelper, type: :feature
   config.include ApiRequestTestHelper, type: :request
   config.include EnvHelper
-
-  # Prints JavaScript errors to the console if there are any.
-  if ENV['RSPEC_FEATURE_DEBUG']
-    config.after(:each, type: :feature, js: true) do
-      errors = page.driver.browser.logs.get(:browser)
-      if errors.present?
-        aggregate_failures 'javascript errrors' do
-          errors.each do |error|
-            expect(error.level).not_to eq('SEVERE'), error.message
-            next unless error.level == 'WARNING'
-
-            warn 'WARN: javascript warning'
-            warn error.message
-          end
-        end
-      end
-    end
-  end
 end
 
 # Configure shoulda-matchers to work with rspec and all of rails.
@@ -98,64 +62,4 @@ Shoulda::Matchers.configure do |config|
     with.test_framework :rspec
     with.library :rails
   end
-end
-
-# Capybara configuration
-Capybara.server = :puma, { Silent: true }
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
-Capybara.register_driver :headless_chrome do |app|
-  options = ::Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--headless')
-  options.add_argument('--disable-dev-shm-usage')
-  # https://github.com/teamcapybara/capybara/issues/2796#issuecomment-2678172710
-  options.add_argument('--disable-background-timer-throttling')
-  options.add_argument('--disable-backgrounding-occluded-windows')
-  options.add_argument('--disable-renderer-backgrounding')
-  # Open Chrome to chrome://inspect and click "Configure" next to the "Discover network targets" option.
-  # Add "localhost:9500" as a target and then you can inspect the browser while the tests are
-  # running. It should show up under "Remote Target". You may need to slow down the tests with a sleep.
-  options.add_argument('--remote-debugging-port=9500') if ENV['RSPEC_FEATURE_DEBUG']
-
-  Capybara::Selenium::Driver.new app,
-    browser: :chrome,
-    options: options,
-    service: Selenium::WebDriver::Service.chrome(args: ['--log-path=tmp/chrome.log'])
-end
-
-# Disable sandboxing in CI as the sandbox is wonky inside Docker containers.
-Capybara.register_driver :ci_chrome do |app|
-  options = ::Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--headless')
-  options.add_argument('--no-sandbox')
-  options.add_argument('--disable-dev-shm-usage')
-  # https://github.com/teamcapybara/capybara/issues/2796#issuecomment-2678172710
-  options.add_argument('--disable-background-timer-throttling')
-  options.add_argument('--disable-backgrounding-occluded-windows')
-  options.add_argument('--disable-renderer-backgrounding')
-
-  Capybara::Selenium::Driver.new app,
-    browser: :chrome,
-    options: options,
-    service: Selenium::WebDriver::Service.chrome(args: ['--log-path=tmp/chrome.log'])
-end
-
-# Show Chrome running the test suite when RSPEC_FEATURE_DEBUG is set.
-if ENV['CI']
-  Capybara.default_driver = :ci_chrome
-# This flag will display actual Chrome windows when running feature specs.
-elsif ENV['RSPEC_FEATURE_DEBUG_EXTREME']
-  Capybara.default_driver = :chrome
-else
-  Capybara.default_driver = :headless_chrome
-end
-
-if ENV['CI']
-  Capybara.javascript_driver = :ci_chrome
-else
-  # Use headless_chrome for any feature tests marked with js: true
-  Capybara.javascript_driver = :headless_chrome
 end
