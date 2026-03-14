@@ -7,18 +7,7 @@
 
       <!-- Mobile search button (to the left of hamburger) -->
       <button class="navbar-mobile-search is-hidden-desktop" aria-label="Search" @click="openSearch">
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        >
-          <circle cx="7.5" cy="7.5" r="5.5" />
-          <path d="M12 12l4 4" />
-        </svg>
+        <Search :size="18" :stroke-width="1.8" />
       </button>
 
       <!-- Hamburger (mobile only, opens bottom sheet) -->
@@ -109,6 +98,7 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
+import { Search } from "lucide-vue-next";
 import NavSearch from "./NavSearch.vue";
 import MobileNavSheet from "./MobileNavSheet.vue";
 

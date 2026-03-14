@@ -15,90 +15,28 @@
           <li class="mn-stagger">
             <router-link class="mn-nav-item" to="/activity" @click="close">
               <div class="mn-nav-icon ic-activity">
-                <svg
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M3 9h2l2-5 3 10 2-5h3" />
-                </svg>
+                <Activity :stroke-width="1.6" />
               </div>
               Activity
-              <svg
-                class="mn-arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-              >
-                <path d="M6 4l4 4-4 4" />
-              </svg>
+              <ChevronRight class="mn-arrow" :size="16" :stroke-width="1.4" />
             </router-link>
           </li>
           <li class="mn-stagger">
             <router-link class="mn-nav-item" to="/games" @click="close">
               <div class="mn-nav-icon ic-games">
-                <svg
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="2" y="3" width="14" height="12" rx="2" />
-                  <path d="M6 7h1M11 7h1M6 11c1 1 5 1 6 0" />
-                </svg>
+                <Gamepad2 :stroke-width="1.6" />
               </div>
               Games
-              <svg
-                class="mn-arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-              >
-                <path d="M6 4l4 4-4 4" />
-              </svg>
+              <ChevronRight class="mn-arrow" :size="16" :stroke-width="1.4" />
             </router-link>
           </li>
           <li class="mn-stagger">
             <router-link class="mn-nav-item" to="/users" @click="close">
               <div class="mn-nav-icon ic-users">
-                <svg
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="9" cy="6" r="3.5" />
-                  <path d="M3 16c0-3 2.7-5 6-5s6 2 6 5" />
-                </svg>
+                <User :stroke-width="1.6" />
               </div>
               Users
-              <svg
-                class="mn-arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-              >
-                <path d="M6 4l4 4-4 4" />
-              </svg>
+              <ChevronRight class="mn-arrow" :size="16" :stroke-width="1.4" />
             </router-link>
           </li>
         </ul>
@@ -129,16 +67,7 @@
           </router-link>
           <div class="mn-user-actions">
             <button class="mn-ubtn" aria-label="Sign out" @click="handleSignOut">
-              <svg
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M6 14H3.5a1 1 0 01-1-1V3a1 1 0 011-1H6M11 11l3-3-3-3M14 8H6" />
-              </svg>
+              <LogOut :stroke-width="1.4" />
             </button>
           </div>
         </div>
@@ -158,6 +87,7 @@ import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
+import { Activity, Gamepad2, User, ChevronRight, LogOut } from "lucide-vue-next";
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits<{ (e: "close"): void }>();
