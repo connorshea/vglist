@@ -27,7 +27,7 @@ RSpec.describe "SPA", type: :request do
         expect(response.content_type).to include('text/html')
       end
 
-      it "sets the Content-Security-Policy header" do
+      it "sets the Content-Security-Policy header", :aggregate_failures do
         get '/games'
         csp = response.headers['Content-Security-Policy']
         expect(csp).to be_present

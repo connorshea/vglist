@@ -4,7 +4,7 @@ RSpec.describe "Api::Auth", type: :request do
   describe "POST /api/auth/sign_in" do
     let(:user) { create(:confirmed_user) }
 
-    it "returns a JWT token for valid credentials" do
+    it "returns a JWT token for valid credentials", :aggregate_failures do
       post api_auth_sign_in_path, params: { email: user.email, password: "password" }
 
       expect(response).to have_http_status(:success)
@@ -104,7 +104,7 @@ RSpec.describe "Api::Auth", type: :request do
   describe "GET /api/auth/me" do
     let(:user) { create(:confirmed_user) }
 
-    it "returns the current user when authenticated with a JWT" do
+    it "returns the current user when authenticated with a JWT", :aggregate_failures do
       token = JwtService.encode(user)
       get api_auth_me_path, headers: { 'Authorization': "Bearer #{token}" }
 
