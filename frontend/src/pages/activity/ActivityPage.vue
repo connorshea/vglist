@@ -212,11 +212,17 @@ function switchFeed(type: "GLOBAL" | "FOLLOWING") {
 }
 
 function nextPage() {
-  if (hasNextPage.value) currentPage.value++;
+  if (hasNextPage.value) {
+    currentPage.value++;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 type ActivityEvent = GetActivityQuery["activity"] extends
@@ -301,6 +307,12 @@ function eventBadge(event: ActivityEvent): BadgeInfo | null {
       label: completionStatusLabels[status],
       cssClass: `badge-${status.toLowerCase().replace("_", "-")}`
     };
+  }
+  if (event.eventCategory === "NEW_USER") {
+    return { label: "New User", cssClass: "badge-new-user" };
+  }
+  if (event.eventCategory === "FOLLOWING") {
+    return { label: "Followed", cssClass: "badge-followed" };
   }
   return null;
 }
@@ -570,6 +582,16 @@ async function deleteEvent(eventId: string) {
 .badge-paused {
   background: #f4f3ef;
   color: #888780;
+}
+
+.badge-new-user {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-followed {
+  background: #e3f2fd;
+  color: #1565c0;
 }
 
 /* Meta row */
