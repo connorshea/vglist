@@ -2434,6 +2434,8 @@ export type GetGameQueryVariables = Exact<{
 
 export type GetGameQuery = {
   game?: {
+    isFavorited?: boolean | null;
+    isInLibrary?: boolean | null;
     wikidataId?: number | null;
     steamAppIds: Array<number>;
     pcgamingwikiId?: string | null;
