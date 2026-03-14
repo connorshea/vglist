@@ -122,13 +122,14 @@ class GraphqlController < ApplicationController
     if user_using_jwt?
       token = request.headers['Authorization']&.sub(/^Bearer\s+/i, '')
       decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
-      @jwt_user = User.find(decoded.first['user_id'])
+      user = User.find(decoded.first['user_id'])
+      @jwt_user = user unless user.banned?
     elsif user_using_oauth?
       doorkeeper_authorize!
     elsif request.headers.key?('X-User-Email') && request.headers.key?('X-User-Token')
       # Token auth — only authenticate if both email and token are provided and valid
       user = User.find_by(email: request.headers['X-User-Email'])
-      if user&.verify_api_token!(request.headers['X-User-Token'])
+      if user&.verify_api_token!(request.headers['X-User-Token']) && !user.banned?
         @api_token_user = user
       end
     end
