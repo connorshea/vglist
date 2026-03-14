@@ -2335,6 +2335,12 @@ export interface WikidataBlocklistEntryEdge {
   node?: Maybe<WikidataBlocklistEntry>;
 }
 
+export type DeleteEventMutationVariables = Exact<{
+  eventId: Scalars["ID"]["input"];
+}>;
+
+export type DeleteEventMutation = { deleteEvent?: { deleted: boolean } | null };
+
 export type AddGameToLibraryMutationVariables = Exact<{
   gameId: Scalars["ID"]["input"];
   completionStatus?: InputMaybe<GamePurchaseCompletionStatus>;
@@ -2431,6 +2437,39 @@ export type UnfollowUserMutationVariables = Exact<{
 
 export type UnfollowUserMutation = {
   unfollowUser?: { user?: { id: string; username: string } | null } | null;
+};
+
+export type BanUserMutationVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+}>;
+
+export type BanUserMutation = {
+  banUser?: { user?: { id: string; banned: boolean; role: UserRole } | null } | null;
+};
+
+export type UnbanUserMutationVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+}>;
+
+export type UnbanUserMutation = {
+  unbanUser?: { user?: { id: string; banned: boolean } | null } | null;
+};
+
+export type UpdateUserRoleMutationVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+  role: UserRole;
+}>;
+
+export type UpdateUserRoleMutation = {
+  updateUserRole?: { user?: { id: string; role: UserRole } | null } | null;
+};
+
+export type RemoveUserAvatarMutationVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+}>;
+
+export type RemoveUserAvatarMutation = {
+  removeUserAvatar?: { user: { id: string; avatarUrl?: string | null } } | null;
 };
 
 export type GameFieldsFragment = {
