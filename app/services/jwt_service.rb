@@ -18,6 +18,6 @@ class JwtService
   end
 
   def self.secret_key
-    Rails.application.credentials.secret_key_base
+    Rails.application.credentials.secret_key_base || Rails.application.secret_key_base
   end
 end
