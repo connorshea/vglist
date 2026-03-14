@@ -22,25 +22,7 @@
 
       <div class="columns is-multiline">
         <div v-for="follower in followerUsers" :key="follower.id" class="column is-3">
-          <div class="box has-text-centered">
-            <figure class="image is-64x64 is-inline-block mb-2">
-              <img
-                v-if="follower.avatarUrl"
-                class="is-rounded"
-                :src="follower.avatarUrl"
-                :alt="follower.username"
-              />
-              <img
-                v-else
-                class="is-rounded"
-                src="https://via.placeholder.com/64"
-                :alt="follower.username"
-              />
-            </figure>
-            <p>
-              <router-link :to="`/users/${follower.id}`">{{ follower.username }}</router-link>
-            </p>
-          </div>
+          <UserCard :id="follower.id" :username="follower.username" :avatar-url="follower.avatarUrl" :size="64" />
         </div>
       </div>
     </div>
@@ -53,6 +35,7 @@ import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_USER } from "@/graphql/queries/users";
 import type { GetUserQuery } from "@/types/graphql";
+import UserCard from "@/components/UserCard.vue";
 
 const route = useRoute();
 
