@@ -2767,6 +2767,14 @@ export type GetActivityQuery = {
       eventCategory: EventCategory;
       createdAt: string;
       user: { id: string; username: string; slug: string; avatarUrl?: string | null };
+      eventable:
+        | { game: { id: string; name: string } }
+        | {
+            completionStatus?: GamePurchaseCompletionStatus | null;
+            game: { id: string; name: string };
+          }
+        | { followed: { id: string; username: string; slug: string } }
+        | { id: string; username: string; slug: string };
     }>;
     pageInfo: { hasNextPage: boolean; endCursor?: string | null };
   } | null;

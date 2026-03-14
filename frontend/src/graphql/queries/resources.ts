@@ -277,6 +277,33 @@ export const GET_ACTIVITY = gql`
           slug
           avatarUrl(size: SMALL)
         }
+        eventable {
+          ... on GamePurchase {
+            game {
+              id
+              name
+            }
+            completionStatus
+          }
+          ... on FavoriteGame {
+            game {
+              id
+              name
+            }
+          }
+          ... on Relationship {
+            followed {
+              id
+              username
+              slug
+            }
+          }
+          ... on User {
+            id
+            username
+            slug
+          }
+        }
       }
       pageInfo {
         hasNextPage
