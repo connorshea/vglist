@@ -89,10 +89,14 @@ class GraphqlController < ApplicationController
   # Check whether the doorkeeper token is associated with a first-party OAuth
   # application, and return true if so.
   def first_party?
+    # JWT tokens are issued by the first-party SPA.
+    return true if user_using_jwt?
+
     return false if doorkeeper_token.nil? || doorkeeper_token.application_id.nil?
 
     # Just block it in production for now to prevent malicious usage of the API,
     # but still allow local development.
+    # TODO: MAKE SURE TO UNDO THIS BEFORE PRODUCTION RELEASE
     return false if Rails.env.production?
 
     true
