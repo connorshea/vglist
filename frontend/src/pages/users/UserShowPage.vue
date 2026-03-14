@@ -41,6 +41,7 @@
               v-if="user.isFollowed"
               class="button is-light"
               :class="{ 'is-loading': unfollowLoading }"
+              :disabled="unfollowLoading"
               @click="handleUnfollow"
             >
               Unfollow
@@ -49,6 +50,7 @@
               v-else
               class="button is-primary"
               :class="{ 'is-loading': followLoading }"
+              :disabled="followLoading"
               @click="handleFollow"
             >
               Follow
@@ -186,13 +188,21 @@ const { mutate: followUser, loading: followLoading } = useMutation(FOLLOW_USER)
 const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_USER)
 
 async function handleFollow() {
-  await followUser({ userId: route.params.id as string })
-  await refetch()
+  try {
+    await followUser({ userId: route.params.id as string })
+    await refetch()
+  } catch (err) {
+    console.error('Failed to follow user:', err)
+  }
 }
 
 async function handleUnfollow() {
-  await unfollowUser({ userId: route.params.id as string })
-  await refetch()
+  try {
+    await unfollowUser({ userId: route.params.id as string })
+    await refetch()
+  } catch (err) {
+    console.error('Failed to unfollow user:', err)
+  }
 }
 
 function formatStatus(status: string): string {

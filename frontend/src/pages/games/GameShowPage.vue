@@ -142,10 +142,10 @@ async function addToLibrary() {
 
   try {
     await gqlClient.request(ADD_GAME_TO_LIBRARY, { gameId: gameId.value })
-    actionMessage.value = `${game.value.name} has been added to your library.`
+    actionMessage.value = `${game.value?.name ?? 'Game'} has been added to your library.`
     actionIsError.value = false
   } catch (err) {
-    actionMessage.value = `Failed to add game to library: ${(err as Error).message}`
+    actionMessage.value = `Failed to add game to library: ${err instanceof Error ? err.message : String(err)}`
     actionIsError.value = true
   } finally {
     addingToLibrary.value = false
@@ -158,10 +158,10 @@ async function favoriteGame() {
 
   try {
     await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value })
-    actionMessage.value = `${game.value.name} has been favorited.`
+    actionMessage.value = `${game.value?.name ?? 'Game'} has been favorited.`
     actionIsError.value = false
   } catch (err) {
-    actionMessage.value = `Failed to favorite game: ${(err as Error).message}`
+    actionMessage.value = `Failed to favorite game: ${err instanceof Error ? err.message : String(err)}`
     actionIsError.value = true
   } finally {
     favoriting.value = false
