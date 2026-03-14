@@ -59,14 +59,21 @@
 
             <div v-if="authStore.isAuthenticated" class="game-hero-actions">
               <button
+                v-if="!game.isInLibrary"
                 class="hero-btn hero-btn-primary"
                 :disabled="addingToLibrary"
                 @click="addToLibrary"
               >
                 + Add to library
               </button>
-              <button class="hero-btn" :disabled="favoriting" @click="favoriteGame">
-                Favorite
+              <span v-else class="hero-btn hero-btn-active">In library</span>
+              <button
+                class="hero-btn"
+                :class="{ 'hero-btn-active': game.isFavorited }"
+                :disabled="favoriting"
+                @click="toggleFavorite"
+              >
+                {{ game.isFavorited ? "Favorited" : "Favorite" }}
               </button>
             </div>
           </div>
@@ -295,7 +302,7 @@ import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { gqlClient } from "@/graphql/client";
 import { GET_GAME } from "@/graphql/queries/games";
-import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME } from "@/graphql/mutations/games";
+import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME, UNFAVORITE_GAME } from "@/graphql/mutations/games";
 import type { GetGameQuery } from "@/types/graphql";
 
 const route = useRoute();
@@ -303,7 +310,7 @@ const authStore = useAuthStore();
 
 const gameId = computed(() => route.params.id as string);
 
-const { data, loading, error } = useQuery<GetGameQuery>(GET_GAME, {
+const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
   variables: () => ({ id: gameId.value })
 });
 
@@ -459,6 +466,7 @@ async function addToLibrary() {
     await gqlClient.request(ADD_GAME_TO_LIBRARY, { gameId: gameId.value });
     actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
     actionIsError.value = false;
+    refetch();
   } catch (err) {
     actionMessage.value = `Failed to add game to library: ${extractGqlError(err)}`;
     actionIsError.value = true;
@@ -467,22 +475,30 @@ async function addToLibrary() {
   }
 }
 
-async function favoriteGame() {
+async function toggleFavorite() {
   if (!authStore.isAuthenticated) {
     actionMessage.value = "You must be signed in to favorite games.";
     actionIsError.value = true;
     return;
   }
 
+  const currentlyFavorited = game.value?.isFavorited;
   favoriting.value = true;
   actionMessage.value = "";
 
   try {
-    await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value });
-    actionMessage.value = `${game.value?.name ?? "Game"} has been favorited.`;
+    if (currentlyFavorited) {
+      await gqlClient.request(UNFAVORITE_GAME, { gameId: gameId.value });
+      actionMessage.value = `${game.value?.name ?? "Game"} has been unfavorited.`;
+    } else {
+      await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value });
+      actionMessage.value = `${game.value?.name ?? "Game"} has been favorited.`;
+    }
     actionIsError.value = false;
+    // Re-fetch to update isFavorited and favoriters list
+    refetch();
   } catch (err) {
-    actionMessage.value = `Failed to favorite game: ${extractGqlError(err)}`;
+    actionMessage.value = `Failed to ${currentlyFavorited ? "unfavorite" : "favorite"} game: ${extractGqlError(err)}`;
     actionIsError.value = true;
   } finally {
     favoriting.value = false;
@@ -682,6 +698,11 @@ a.hero-tag:hover {
 
 .hero-btn-primary:hover {
   background: rgba(255, 255, 255, 0.9);
+}
+
+.hero-btn-active {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 /* ── Body content ── */

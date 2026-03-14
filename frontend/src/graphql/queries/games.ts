@@ -49,6 +49,8 @@ export const GET_GAME = gql`
   query GetGame($id: ID!) {
     game(id: $id) {
       ...GameFields
+      isFavorited
+      isInLibrary
       wikidataId
       steamAppIds
       pcgamingwikiId
