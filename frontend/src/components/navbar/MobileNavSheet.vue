@@ -272,8 +272,8 @@ function onPointerDown(e: PointerEvent) {
   right: 0;
   bottom: -80px;
   z-index: 90;
-  background: #fff;
-  border-radius: 20px 20px 0 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-pill) var(--radius-pill) 0 0;
   padding: 0 0 calc(80px + env(safe-area-inset-bottom, 0));
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
@@ -283,12 +283,6 @@ function onPointerDown(e: PointerEvent) {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.12);
-}
-
-@media (prefers-color-scheme: dark) {
-  .mn-sheet {
-    background: #2c2c2a;
-  }
 }
 
 .mn-sheet.open {
@@ -313,7 +307,7 @@ function onPointerDown(e: PointerEvent) {
   width: 36px;
   height: 4px;
   border-radius: 2px;
-  background: #d3d1c7;
+  background: var(--color-border);
 }
 
 .mn-body {
@@ -333,23 +327,17 @@ function onPointerDown(e: PointerEvent) {
   align-items: center;
   gap: 14px;
   padding: 13px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   text-decoration: none;
-  color: #2c2c2a;
+  color: var(--color-text-primary);
   font-size: 15px;
   font-weight: 500;
   transition: background 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  .mn-nav-item {
-    color: #f4f3ef;
-  }
-}
-
 .mn-nav-item:active {
-  background: #f4f3ef;
+  background: var(--color-bg-subtle);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -390,21 +378,15 @@ function onPointerDown(e: PointerEvent) {
 
 .mn-arrow {
   margin-left: auto;
-  color: #d3d1c7;
+  color: var(--color-border);
   flex-shrink: 0;
 }
 
 /* Divider */
 .mn-divider {
   height: 0.5px;
-  background: #d3d1c7;
+  background: var(--color-border);
   margin: 2px 12px 16px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .mn-divider {
-    background: rgba(255, 255, 255, 0.15);
-  }
 }
 
 /* Section label */
@@ -413,7 +395,7 @@ function onPointerDown(e: PointerEvent) {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: #b4b2a9;
+  color: var(--color-text-tertiary);
   padding: 0 12px;
   margin-bottom: 10px;
 }
@@ -429,10 +411,10 @@ function onPointerDown(e: PointerEvent) {
 
 .mn-chip {
   padding: 8px 16px;
-  border-radius: 20px;
-  background: #f4f3ef;
-  border: 0.5px solid #d3d1c7;
-  color: #5f5e5a;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-subtle);
+  border: 0.5px solid var(--color-border);
+  color: var(--color-text-secondary);
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
@@ -446,13 +428,13 @@ function onPointerDown(e: PointerEvent) {
   .mn-chip {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
-    color: #d3d1c7;
+    color: var(--color-border);
   }
 }
 
 .mn-chip:active {
   background: #eae9e4;
-  border-color: #b4b2a9;
+  border-color: var(--color-text-tertiary);
 }
 
 /* User row */
@@ -461,8 +443,8 @@ function onPointerDown(e: PointerEvent) {
   align-items: center;
   gap: 12px;
   padding: 14px 12px;
-  border-radius: 12px;
-  background: #f4f3ef;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-subtle);
   margin-top: 4px;
 }
 
@@ -495,18 +477,12 @@ function onPointerDown(e: PointerEvent) {
 .mn-user-name {
   font-size: 14px;
   font-weight: 600;
-  color: #2c2c2a;
-}
-
-@media (prefers-color-scheme: dark) {
-  .mn-user-name {
-    color: #f4f3ef;
-  }
+  color: var(--color-text-primary);
 }
 
 .mn-user-sub {
   font-size: 12px;
-  color: #888780;
+  color: var(--color-text-secondary);
 }
 
 .mn-user-actions {
@@ -518,9 +494,9 @@ function onPointerDown(e: PointerEvent) {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 0.5px solid #d3d1c7;
-  background: #fff;
-  color: #888780;
+  border: 0.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -532,8 +508,7 @@ function onPointerDown(e: PointerEvent) {
 
 @media (prefers-color-scheme: dark) {
   .mn-ubtn {
-    background: #2c2c2a;
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--color-border);
   }
 }
 
@@ -559,7 +534,7 @@ function onPointerDown(e: PointerEvent) {
   align-items: center;
   justify-content: center;
   padding: 12px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -568,9 +543,9 @@ function onPointerDown(e: PointerEvent) {
 }
 
 .mn-auth-signin {
-  background: #f4f3ef;
-  border: 0.5px solid #d3d1c7;
-  color: #2c2c2a;
+  background: var(--color-bg-subtle);
+  border: 0.5px solid var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .mn-auth-signin:active {

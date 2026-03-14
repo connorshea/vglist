@@ -1025,22 +1025,18 @@ async function toggleFavorite() {
 </script>
 
 <style scoped>
-/* ── Dark mode custom properties ── */
+/* ── Page-level custom properties (reference global tokens) ── */
 .game-show {
-  --game-border: hsl(0, 0%, 85%);
+  --game-border: var(--color-border);
   --game-border-light: hsl(0, 0%, 92%);
-  --game-text-muted: hsl(0, 0%, 45%);
-  --game-text-label: hsl(0, 0%, 55%);
-  --game-track-bg: hsl(0, 0%, 85%);
+  --game-text-muted: var(--color-text-secondary);
+  --game-text-label: var(--color-text-tertiary);
+  --game-track-bg: var(--color-border);
 }
 
 @media (prefers-color-scheme: dark) {
   .game-show {
-    --game-border: hsl(217, 20%, 38%);
     --game-border-light: hsl(217, 20%, 34%);
-    --game-text-muted: hsl(217, 10%, 65%);
-    --game-text-label: hsl(217, 10%, 60%);
-    --game-track-bg: hsl(217, 20%, 35%);
     --game-link-color: hsl(240, 70%, 75%);
   }
 
@@ -1095,7 +1091,7 @@ async function toggleFavorite() {
 
 .game-hero-cover img {
   width: 240px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   display: block;
 }
@@ -1103,7 +1099,7 @@ async function toggleFavorite() {
 .game-cover-placeholder {
   width: 240px;
   height: 320px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   display: flex;
   align-items: center;
@@ -1225,7 +1221,7 @@ async function toggleFavorite() {
   display: inline-block;
   padding: 0.35rem 1rem;
   border: 1.5px solid rgba(255, 255, 255, 0.55);
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 500;
@@ -1248,7 +1244,7 @@ a.hero-tag:hover {
 
 .hero-btn {
   padding: 0.6rem 1.5rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   border: 1.5px solid rgba(255, 255, 255, 0.7);
   background: transparent;
   color: #fff;
@@ -1300,10 +1296,10 @@ a.hero-tag:hover {
 
 /* ── Inline form (replaces tags in hero) ── */
 .form-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  color: #2c2c2a;
+  color: var(--color-text-primary);
 }
 
 .form-grid {
@@ -1316,7 +1312,7 @@ a.hero-tag:hover {
 }
 
 .form-col-left {
-  border-right: 1px solid #e5e5e0;
+  border-right: 1px solid var(--color-border);
 }
 
 .form-col-right {
@@ -1331,7 +1327,7 @@ a.hero-tag:hover {
 .form-label {
   display: block;
   font-size: 0.75rem;
-  color: #888780;
+  color: var(--color-text-secondary);
   margin-bottom: 0.4rem;
 }
 
@@ -1345,7 +1341,7 @@ a.hero-tag:hover {
 .form-pill {
   font-size: 0.75rem;
   padding: 0.3rem 0.75rem;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition: all 0.15s;
   display: inline-block;
@@ -1357,8 +1353,8 @@ a.hero-tag:hover {
 
 .form-pill-off {
   background: transparent;
-  border: 1px solid #d3d1c7;
-  color: #888780;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
 }
 
 .form-pill-off:hover {
@@ -1397,22 +1393,22 @@ a.hero-tag:hover {
   width: 56px;
   font-size: 0.8rem;
   text-align: center;
-  border: 1px solid #d3d1c7;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.35rem 0.5rem;
   outline: none;
   font-family: inherit;
 }
 
 .form-rating-input:focus {
-  border-color: #888780;
+  border-color: var(--color-text-secondary);
 }
 
 .form-rating-track {
   flex: 1;
   height: 6px;
   border-radius: 3px;
-  background: #f4f3ef;
+  background: var(--color-bg-subtle);
   overflow: hidden;
 }
 
@@ -1433,15 +1429,15 @@ a.hero-tag:hover {
 .form-date-input {
   width: 100%;
   font-size: 0.75rem;
-  border: 1px solid #d3d1c7;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.35rem 0.5rem;
   outline: none;
   font-family: inherit;
 }
 
 .form-date-input:focus {
-  border-color: #888780;
+  border-color: var(--color-text-secondary);
 }
 
 .form-date-error {
@@ -1454,15 +1450,15 @@ a.hero-tag:hover {
 .form-hours-input {
   width: 80px;
   font-size: 0.8rem;
-  border: 1px solid #d3d1c7;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.35rem 0.5rem;
   outline: none;
   font-family: inherit;
 }
 
 .form-hours-input:focus {
-  border-color: #888780;
+  border-color: var(--color-text-secondary);
 }
 
 /* Notes textarea */
@@ -1475,8 +1471,8 @@ a.hero-tag:hover {
 .form-textarea {
   width: 100%;
   font-size: 0.8rem;
-  border: 1px solid #d3d1c7;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.5rem 0.625rem;
   outline: none;
   resize: vertical;
@@ -1486,7 +1482,7 @@ a.hero-tag:hover {
 }
 
 .form-textarea:focus {
-  border-color: #888780;
+  border-color: var(--color-text-secondary);
 }
 
 /* Form action buttons */
@@ -1508,7 +1504,7 @@ a.hero-tag:hover {
   font-size: 0.8rem;
   background: none;
   border: 1px solid #e8c4c0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-family: inherit;
@@ -1525,26 +1521,26 @@ a.hero-tag:hover {
 }
 
 .form-btn-cancel {
-  color: #888780;
+  color: var(--color-text-secondary);
   font-size: 0.8rem;
   background: none;
-  border: 1px solid #d3d1c7;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-family: inherit;
 }
 
 .form-btn-cancel:hover {
-  background: #f4f3ef;
+  background: var(--color-bg-subtle);
 }
 
 .form-btn-save {
-  background: #2c2c2a;
+  background: var(--color-text-primary);
   color: #fff;
   font-size: 0.8rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.5rem 1.25rem;
   cursor: pointer;
   font-family: inherit;
@@ -1649,7 +1645,7 @@ a.hero-tag:hover {
 
 .detail-card {
   border: 1px solid var(--game-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -1682,7 +1678,7 @@ a.hero-tag:hover {
 /* ── Sidebar ── */
 .sidebar-card {
   border: 1px solid var(--game-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 1.25rem;
   margin-bottom: 1rem;
 }
@@ -1703,7 +1699,7 @@ a.hero-tag:hover {
   display: inline-block;
   padding: 0.35rem 0.85rem;
   border: 1.5px solid var(--vglist-theme);
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   color: var(--vglist-theme);
   font-size: 0.85rem;
   font-weight: 500;
@@ -1873,7 +1869,7 @@ a.hero-tag:hover {
 
   .form-col-left {
     border-right: none;
-    border-bottom: 1px solid #e5e5e0;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .details-grid {

@@ -375,7 +375,7 @@ async function deleteEvent(eventId: string) {
 <style scoped>
 /* Full-width background */
 .activity-section {
-  background: #f4f3ef;
+  background: var(--color-bg-subtle);
   margin: -3rem calc(-50vw + 50%);
   padding: 3rem max(1.5rem, calc(50vw - 50%));
   min-height: calc(100vh - 52px);
@@ -385,14 +385,14 @@ async function deleteEvent(eventId: string) {
 .activity-tabs {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid #d3d1c7;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 24px;
 }
 
 .activity-tab {
   padding: 10px 18px;
   font-size: 14px;
-  color: #888780;
+  color: var(--color-text-secondary);
   cursor: pointer;
   border: none;
   border-bottom: 2px solid transparent;
@@ -408,7 +408,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .activity-tab:hover:not(.active):not(:disabled) {
-  color: #2c2c2a;
+  color: var(--color-text-primary);
 }
 
 .activity-tab:disabled {
@@ -418,7 +418,7 @@ async function deleteEvent(eventId: string) {
 
 /* Card */
 .a-card {
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 10px;
   padding: 14px 16px;
   display: flex;
@@ -505,7 +505,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-user-link {
-  color: #2c2c2a;
+  color: var(--color-text-primary);
   font-weight: 500;
   text-decoration: none;
   font-size: 14px;
@@ -517,7 +517,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-verb {
-  color: #888780;
+  color: var(--color-text-secondary);
 }
 
 .a-game-link {
@@ -568,8 +568,8 @@ async function deleteEvent(eventId: string) {
 }
 
 .badge-unplayed {
-  background: #f4f3ef;
-  color: #888780;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
 }
 
 .badge-fully-completed {
@@ -578,13 +578,13 @@ async function deleteEvent(eventId: string) {
 }
 
 .badge-not-applicable {
-  background: #f4f3ef;
-  color: #b4b2a9;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-tertiary);
 }
 
 .badge-paused {
-  background: #f4f3ef;
-  color: #888780;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
 }
 
 .badge-new-user {
@@ -608,14 +608,14 @@ async function deleteEvent(eventId: string) {
 
 .a-time {
   font-size: 12px;
-  color: #b4b2a9;
+  color: var(--color-text-tertiary);
 }
 
 .a-separator {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #d3d1c7;
+  background: var(--color-border);
   flex-shrink: 0;
 }
 
@@ -623,7 +623,7 @@ async function deleteEvent(eventId: string) {
 .a-delete-btn {
   background: none;
   border: none;
-  color: #b4b2a9;
+  color: var(--color-text-tertiary);
   font-size: 18px;
   cursor: pointer;
   padding: 0 4px;
@@ -650,6 +650,6 @@ async function deleteEvent(eventId: string) {
 
 .a-rating {
   font-size: 12px;
-  color: #888780;
+  color: var(--color-text-secondary);
 }
 </style>
