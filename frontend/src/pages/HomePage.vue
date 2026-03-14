@@ -78,14 +78,27 @@
         </div>
       </div>
     </section>
+
+    <section v-if="!authStore.isAuthenticated" class="home-cta">
+      <div class="home-cta-inner">
+        <div class="home-cta-blob home-cta-blob-1"></div>
+        <div class="home-cta-blob home-cta-blob-2"></div>
+        <h2 class="home-cta-title">Start tracking your games today</h2>
+        <p class="home-cta-subtitle">Lorem ipsum dolor sit amet foobar baz qux.</p>
+        <router-link to="/signup" class="home-cta-btn">Create an account</router-link>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
+import { useAuthStore } from "@/stores/auth";
 import { GET_BASIC_SITE_STATISTICS } from "@/graphql/queries/resources";
 import { GET_RECENT_GAMES, GET_HERO_COVERS } from "@/graphql/queries/games";
+
+const authStore = useAuthStore();
 
 // ── Existing queries (unchanged) ──
 
@@ -578,6 +591,80 @@ onUnmounted(() => {
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.05em;
+}
+
+/* ── CTA banner ── */
+.home-cta {
+  padding: 2rem 1.5rem 3rem;
+}
+
+.home-cta-inner {
+  position: relative;
+  overflow: hidden;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--p-500) 0%, var(--p-600) 50%, var(--p-700) 100%);
+  text-align: center;
+}
+
+.home-cta-blob {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.home-cta-blob-1 {
+  width: 260px;
+  height: 260px;
+  background: rgba(255, 255, 255, 0.4);
+  top: -60px;
+  right: -40px;
+}
+
+.home-cta-blob-2 {
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.3);
+  bottom: -50px;
+  left: -30px;
+}
+
+.home-cta-title {
+  position: relative;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.home-cta-subtitle {
+  position: relative;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.75rem;
+}
+
+.home-cta-btn {
+  position: relative;
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  background: #fff;
+  color: var(--p-700);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.home-cta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* ── Responsive ── */
