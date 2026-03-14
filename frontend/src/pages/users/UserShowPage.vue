@@ -103,11 +103,7 @@
               >
                 Ban user
               </button>
-              <button
-                v-if="canUnban && user.banned"
-                class="actions-dropdown-item"
-                @click="handleUnban"
-              >
+              <button v-if="canUnban && user.banned" class="actions-dropdown-item" @click="handleUnban">
                 Unban user
               </button>
             </div>
@@ -116,9 +112,7 @@
       </header>
 
       <!-- Banned notice -->
-      <div v-if="user.banned" class="notification is-danger is-light">
-        This user has been banned.
-      </div>
+      <div v-if="user.banned" class="notification is-danger is-light">This user has been banned.</div>
 
       <!-- Private account notice -->
       <div v-if="isPrivateProfile" class="private-notice">
@@ -130,12 +124,7 @@
         <div v-if="favoritedGames.length" class="favorites-section">
           <h2 class="section-label">FAVORITES</h2>
           <div class="favorites-row">
-            <router-link
-              v-for="game in favoritedGames"
-              :key="game.id"
-              :to="`/games/${game.id}`"
-              class="favorite-tile"
-            >
+            <router-link v-for="game in favoritedGames" :key="game.id" :to="`/games/${game.id}`" class="favorite-tile">
               <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
               <div v-else class="favorite-placeholder">
                 <span>{{ gameInitials(game.name) }}</span>
@@ -158,27 +147,16 @@
               :class="{ 'is-active': activeStatus === s.key }"
               @click="activeStatus = s.key"
             >
-              <span
-                v-if="s.key !== 'all'"
-                class="status-dot"
-                :style="{ background: statusColor(s.key) }"
-              ></span>
+              <span v-if="s.key !== 'all'" class="status-dot" :style="{ background: statusColor(s.key) }"></span>
               {{ s.label }}
-              <span class="pill-count">{{
-                s.key === "all" ? gamePurchases.length : statusCount(s.key)
-              }}</span>
+              <span class="pill-count">{{ s.key === "all" ? gamePurchases.length : statusCount(s.key) }}</span>
             </button>
           </div>
 
           <!-- Search + sort row -->
           <div class="library-controls">
             <div class="library-search">
-              <input
-                v-model="search"
-                type="text"
-                placeholder="Search library..."
-                class="input is-small"
-              />
+              <input v-model="search" type="text" placeholder="Search library..." class="input is-small" />
             </div>
             <div class="library-sort">
               <div class="select is-small">
@@ -224,11 +202,7 @@
               </div>
 
               <!-- Rating badge -->
-              <div
-                v-if="purchase.rating !== null"
-                class="gallery-rating"
-                :class="ratingClass(purchase.rating ?? 0)"
-              >
+              <div v-if="purchase.rating !== null" class="gallery-rating" :class="ratingClass(purchase.rating ?? 0)">
                 {{ purchase.rating }}
               </div>
 
@@ -256,15 +230,10 @@
                   >
                     {{ formatStatus(purchase.completionStatus) }}
                   </span>
-                  <span
-                    v-if="purchase.hoursPlayed && !user.hideDaysPlayed"
-                    class="gallery-hover-hours"
-                  >
+                  <span v-if="purchase.hoursPlayed && !user.hideDaysPlayed" class="gallery-hover-hours">
                     {{ purchase.hoursPlayed }}h
                   </span>
-                  <span v-if="purchase.rating !== null" class="gallery-hover-rating">
-                    {{ purchase.rating }}/100
-                  </span>
+                  <span v-if="purchase.rating !== null" class="gallery-hover-rating"> {{ purchase.rating }}/100 </span>
                 </div>
               </div>
             </router-link>
@@ -305,25 +274,18 @@ const gamePurchases = computed(() => user.value?.gamePurchases?.nodes ?? []);
 const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
 
 // Stats
-const totalHoursPlayed = computed(() =>
-  gamePurchases.value.reduce((sum, p) => sum + (p.hoursPlayed ?? 0), 0)
-);
+const totalHoursPlayed = computed(() => gamePurchases.value.reduce((sum, p) => sum + (p.hoursPlayed ?? 0), 0));
 const completedCount = computed(
   () =>
-    gamePurchases.value.filter(
-      (p) => p.completionStatus === "COMPLETED" || p.completionStatus === "FULLY_COMPLETED"
-    ).length
+    gamePurchases.value.filter((p) => p.completionStatus === "COMPLETED" || p.completionStatus === "FULLY_COMPLETED")
+      .length
 );
 const completionPct = computed(() =>
-  gamePurchases.value.length
-    ? Math.round((completedCount.value / gamePurchases.value.length) * 100)
-    : 0
+  gamePurchases.value.length ? Math.round((completedCount.value / gamePurchases.value.length) * 100) : 0
 );
 const avgRating = computed(() => {
   const rated = gamePurchases.value.filter((p) => p.rating !== null);
-  return rated.length
-    ? Math.round(rated.reduce((a, p) => a + (p.rating ?? 0), 0) / rated.length)
-    : 0;
+  return rated.length ? Math.round(rated.reduce((a, p) => a + (p.rating ?? 0), 0) / rated.length) : 0;
 });
 
 // Filters
@@ -349,8 +311,7 @@ const filteredGames = computed(() => {
   return gamePurchases.value
     .filter((p) => {
       if (activeStatus.value !== "all" && p.completionStatus !== activeStatus.value) return false;
-      if (search.value && !p.game.name.toLowerCase().includes(search.value.toLowerCase()))
-        return false;
+      if (search.value && !p.game.name.toLowerCase().includes(search.value.toLowerCase())) return false;
       return true;
     })
     .sort((a, b) => {
@@ -445,15 +406,12 @@ async function handleUnfollow() {
 const actionsOpen = ref(false);
 
 const currentRole = computed(() => authStore.user?.role);
-const isNotSelf = computed(
-  () => authStore.isAuthenticated && user.value && authStore.user?.id !== user.value.id
-);
+const isNotSelf = computed(() => authStore.isAuthenticated && user.value && authStore.user?.id !== user.value.id);
 
 const canBan = computed(
   () =>
     isNotSelf.value &&
-    (currentRole.value === "ADMIN" ||
-      (currentRole.value === "MODERATOR" && user.value?.role === "MEMBER"))
+    (currentRole.value === "ADMIN" || (currentRole.value === "MODERATOR" && user.value?.role === "MEMBER"))
 );
 const canUnban = computed(
   () => isNotSelf.value && (currentRole.value === "ADMIN" || currentRole.value === "MODERATOR")
@@ -462,9 +420,7 @@ const canUpdateRole = computed(() => isNotSelf.value && currentRole.value === "A
 const canRemoveAvatar = computed(
   () => isNotSelf.value && (currentRole.value === "ADMIN" || currentRole.value === "MODERATOR")
 );
-const hasAdminActions = computed(
-  () => canBan.value || canUnban.value || canUpdateRole.value || canRemoveAvatar.value
-);
+const hasAdminActions = computed(() => canBan.value || canUnban.value || canUpdateRole.value || canRemoveAvatar.value);
 
 const { mutate: banUserMutate } = useMutation(BAN_USER);
 const { mutate: unbanUserMutate } = useMutation(UNBAN_USER);
@@ -535,12 +491,7 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
   --up-text-dim: var(--color-text-secondary);
   --up-text-faint: var(--color-text-tertiary);
   --up-hover-overlay: rgba(0, 0, 0, 0.65);
-  --up-name-gradient: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.75) 0%,
-    rgba(0, 0, 0, 0.35) 60%,
-    transparent 100%
-  );
+  --up-name-gradient: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 60%, transparent 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -549,12 +500,7 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
     --up-text-dim: var(--color-text-secondary);
     --up-text-faint: var(--color-text-tertiary);
     --up-hover-overlay: rgba(0, 0, 0, 0.75);
-    --up-name-gradient: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.85) 0%,
-      rgba(0, 0, 0, 0.45) 60%,
-      transparent 100%
-    );
+    --up-name-gradient: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 60%, transparent 100%);
   }
 }
 

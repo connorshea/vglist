@@ -14,12 +14,7 @@
       <div class="field">
         <label class="label" for="bio">Bio</label>
         <div class="control">
-          <textarea
-            id="bio"
-            v-model="bio"
-            class="textarea"
-            placeholder="Tell us about yourself..."
-          ></textarea>
+          <textarea id="bio" v-model="bio" class="textarea" placeholder="Tell us about yourself..."></textarea>
         </div>
       </div>
 
@@ -54,12 +49,7 @@
 
       <div class="field">
         <div class="control">
-          <button
-            type="submit"
-            class="button is-primary"
-            :class="{ 'is-loading': saving }"
-            :disabled="saving"
-          >
+          <button type="submit" class="button is-primary" :class="{ 'is-loading': saving }" :disabled="saving">
             Save
           </button>
         </div>

@@ -4,12 +4,10 @@ const isOpen = ref(false);
 
 function withViewTransition(callback: () => void): void {
   if ("startViewTransition" in document) {
-    (document as { startViewTransition: (cb: () => Promise<void>) => void }).startViewTransition(
-      async () => {
-        callback();
-        await nextTick();
-      }
-    );
+    (document as { startViewTransition: (cb: () => Promise<void>) => void }).startViewTransition(async () => {
+      callback();
+      await nextTick();
+    });
   } else {
     callback();
   }

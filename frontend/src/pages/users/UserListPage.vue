@@ -12,12 +12,7 @@
 
     <div v-if="users.length" class="columns is-multiline">
       <div v-for="user in users" :key="user.id" class="column is-3">
-        <UserCard
-          :slug="user.slug"
-          :username="user.username"
-          :avatar-url="user.avatarUrl"
-          :size="96"
-        >
+        <UserCard :slug="user.slug" :username="user.username" :avatar-url="user.avatarUrl" :size="96">
           <p class="subtitle is-6 has-text-grey">{{ user.gamePurchases.totalCount }} games</p>
         </UserCard>
       </div>

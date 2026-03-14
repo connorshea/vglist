@@ -112,9 +112,7 @@
                             :key="opt.value"
                             type="button"
                             class="form-pill"
-                            :class="
-                              formStatus === opt.value ? 'form-pill-on-green' : 'form-pill-off'
-                            "
+                            :class="formStatus === opt.value ? 'form-pill-on-green' : 'form-pill-off'"
                             @click="formStatus = formStatus === opt.value ? null : opt.value"
                           >
                             {{ opt.label }}
@@ -134,10 +132,7 @@
                             @input="clampRating"
                           />
                           <div class="form-rating-track">
-                            <div
-                              class="form-rating-fill"
-                              :style="{ width: (formRating ?? 0) + '%' }"
-                            ></div>
+                            <div class="form-rating-fill" :style="{ width: (formRating ?? 0) + '%' }"></div>
                           </div>
                         </div>
                       </div>
@@ -203,9 +198,7 @@
                           >
                             {{ store.name }}
                           </button>
-                          <span v-if="storesLoading" class="form-empty-hint">
-                            Loading stores...
-                          </span>
+                          <span v-if="storesLoading" class="form-empty-hint"> Loading stores... </span>
                         </div>
                       </div>
 
@@ -230,9 +223,7 @@
                           {{ removingFromLibrary ? "Removing\u2026" : "Remove" }}
                         </button>
                         <div class="form-actions-right">
-                          <button type="button" class="form-btn-cancel" @click="cancelAddForm">
-                            Cancel
-                          </button>
+                          <button type="button" class="form-btn-cancel" @click="cancelAddForm">Cancel</button>
                           <button
                             type="button"
                             class="form-btn-save"
@@ -261,14 +252,7 @@
             <div v-if="game.avgRating" class="game-rating">
               <div class="rating-circle-wrapper">
                 <svg class="rating-circle-svg" viewBox="0 0 120 120">
-                  <circle
-                    class="rating-circle-bg"
-                    cx="60"
-                    cy="60"
-                    r="52"
-                    fill="none"
-                    stroke-width="5"
-                  />
+                  <circle class="rating-circle-bg" cx="60" cy="60" r="52" fill="none" stroke-width="5" />
                   <circle
                     cx="60"
                     cy="60"
@@ -307,9 +291,7 @@
                 <span class="detail-label">PUBLISHER</span>
                 <span class="detail-value">
                   <template v-for="(pub, i) in game.publishers.nodes" :key="pub.id">
-                    <router-link :to="`/companies/${pub.id}`" class="detail-link">{{
-                      pub.name
-                    }}</router-link>
+                    <router-link :to="`/companies/${pub.id}`" class="detail-link">{{ pub.name }}</router-link>
                     <span v-if="i < game.publishers.nodes.length - 1">, </span>
                   </template>
                 </span>
@@ -318,9 +300,7 @@
                 <span class="detail-label">DEVELOPERS</span>
                 <span class="detail-value">
                   <template v-for="(dev, i) in game.developers.nodes" :key="dev.id">
-                    <router-link :to="`/companies/${dev.id}`" class="detail-link">{{
-                      dev.name
-                    }}</router-link>
+                    <router-link :to="`/companies/${dev.id}`" class="detail-link">{{ dev.name }}</router-link>
                     <span v-if="i < game.developers.nodes.length - 1">, </span>
                   </template>
                 </span>
@@ -329,9 +309,7 @@
                 <span class="detail-label">ENGINE</span>
                 <span class="detail-value">
                   <template v-for="(eng, i) in game.engines.nodes" :key="eng.id">
-                    <router-link :to="`/engines/${eng.id}`" class="detail-link">{{
-                      eng.name
-                    }}</router-link>
+                    <router-link :to="`/engines/${eng.id}`" class="detail-link">{{ eng.name }}</router-link>
                     <span v-if="i < game.engines.nodes.length - 1">, </span>
                   </template>
                 </span>
@@ -348,9 +326,7 @@
                 <span class="detail-label">PLATFORM</span>
                 <span class="detail-value">
                   <template v-for="(plat, i) in game.platforms.nodes" :key="plat.id">
-                    <router-link :to="`/platforms/${plat.id}`" class="detail-link">{{
-                      plat.name
-                    }}</router-link>
+                    <router-link :to="`/platforms/${plat.id}`" class="detail-link">{{ plat.name }}</router-link>
                     <span v-if="i < game.platforms.nodes.length - 1">, </span>
                   </template>
                 </span>
@@ -391,18 +367,11 @@
                     :title="owner.username"
                   >
                     <img v-if="owner.avatarUrl" :src="owner.avatarUrl" :alt="owner.username" />
-                    <span
-                      v-else
-                      class="avatar-initials"
-                      :style="{ background: avatarColor(owner.username) }"
-                    >
+                    <span v-else class="avatar-initials" :style="{ background: avatarColor(owner.username) }">
                       {{ userInitials(owner.username) }}
                     </span>
                   </router-link>
-                  <span
-                    v-if="game.owners.totalCount > game.owners.nodes.length"
-                    class="avatar-overflow"
-                  >
+                  <span v-if="game.owners.totalCount > game.owners.nodes.length" class="avatar-overflow">
                     +{{ game.owners.totalCount - game.owners.nodes.length }}
                   </span>
                 </div>
@@ -427,18 +396,11 @@
                     :title="fav.username"
                   >
                     <img v-if="fav.avatarUrl" :src="fav.avatarUrl" :alt="fav.username" />
-                    <span
-                      v-else
-                      class="avatar-initials"
-                      :style="{ background: avatarColor(fav.username) }"
-                    >
+                    <span v-else class="avatar-initials" :style="{ background: avatarColor(fav.username) }">
                       {{ userInitials(fav.username) }}
                     </span>
                   </router-link>
-                  <span
-                    v-if="game.favoriters.totalCount > game.favoriters.nodes.length"
-                    class="avatar-overflow"
-                  >
+                  <span v-if="game.favoriters.totalCount > game.favoriters.nodes.length" class="avatar-overflow">
                     +{{ game.favoriters.totalCount - game.favoriters.nodes.length }}
                   </span>
                 </div>
@@ -482,17 +444,13 @@
             </header>
             <section class="modal-card-body">
               <p>
-                Are you sure you want to remove <strong>{{ game.name }}</strong> from your library?
-                This will delete your rating, status, and notes for this game.
+                Are you sure you want to remove <strong>{{ game.name }}</strong> from your library? This will delete
+                your rating, status, and notes for this game.
               </p>
             </section>
             <footer class="modal-card-foot remove-confirm-footer">
               <button class="button" @click="showRemoveConfirm = false">Cancel</button>
-              <button
-                class="button is-danger"
-                :disabled="removingFromLibrary"
-                @click="confirmRemoveFromLibrary"
-              >
+              <button class="button is-danger" :disabled="removingFromLibrary" @click="confirmRemoveFromLibrary">
                 {{ removingFromLibrary ? "Removing\u2026" : "Remove" }}
               </button>
             </footer>
@@ -518,12 +476,7 @@ import {
   FAVORITE_GAME,
   UNFAVORITE_GAME
 } from "@/graphql/mutations/games";
-import type {
-  GetGameQuery,
-  GetGamePurchaseQuery,
-  GetStoresQuery,
-  GamePurchaseCompletionStatus
-} from "@/types/graphql";
+import type { GetGameQuery, GetGamePurchaseQuery, GetStoresQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 
@@ -563,14 +516,10 @@ const releaseYear = computed(() => {
 const HERO_TAG_LIMIT = 3;
 
 const visibleGenres = computed(() => game.value?.genres.nodes.slice(0, HERO_TAG_LIMIT) ?? []);
-const hiddenGenreCount = computed(() =>
-  Math.max(0, (game.value?.genres.nodes.length ?? 0) - HERO_TAG_LIMIT)
-);
+const hiddenGenreCount = computed(() => Math.max(0, (game.value?.genres.nodes.length ?? 0) - HERO_TAG_LIMIT));
 
 const visiblePlatforms = computed(() => game.value?.platforms.nodes.slice(0, HERO_TAG_LIMIT) ?? []);
-const hiddenPlatformCount = computed(() =>
-  Math.max(0, (game.value?.platforms.nodes.length ?? 0) - HERO_TAG_LIMIT)
-);
+const hiddenPlatformCount = computed(() => Math.max(0, (game.value?.platforms.nodes.length ?? 0) - HERO_TAG_LIMIT));
 
 const CIRCLE_RADIUS = 52;
 const ratingCircumference = 2 * Math.PI * CIRCLE_RADIUS;
@@ -590,16 +539,7 @@ function userInitials(username: string): string {
   return username.slice(0, 2).toUpperCase();
 }
 
-const AVATAR_COLORS = [
-  "#6c5ce7",
-  "#00b894",
-  "#e17055",
-  "#0984e3",
-  "#e84393",
-  "#00a862",
-  "#d63031",
-  "#fdcb6e"
-];
+const AVATAR_COLORS = ["#6c5ce7", "#00b894", "#e17055", "#0984e3", "#e84393", "#00a862", "#d63031", "#fdcb6e"];
 
 function avatarColor(username: string): string {
   let hash = 0;

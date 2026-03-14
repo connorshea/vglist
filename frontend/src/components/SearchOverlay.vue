@@ -85,12 +85,8 @@
               <div class="result-info">
                 <div class="result-title">{{ game.content }}</div>
                 <div class="result-meta">
-                  <span v-if="game.releaseDate" class="result-year">{{
-                    releaseYear(game.releaseDate)
-                  }}</span>
-                  <span v-if="game.developerName" class="result-developer">{{
-                    game.developerName
-                  }}</span>
+                  <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
+                  <span v-if="game.developerName" class="result-developer">{{ game.developerName }}</span>
                 </div>
               </div>
             </a>
@@ -102,9 +98,7 @@
               <BriefcaseIcon class="category-icon" />
               <span class="category-title">Companies</span>
               <span class="category-count"
-                >{{ companyResults.length }} result{{
-                  companyResults.length === 1 ? "" : "s"
-                }}</span
+                >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
               >
             </div>
 
@@ -133,9 +127,7 @@
               <MonitorIcon class="category-icon" />
               <span class="category-title">Platforms</span>
               <span class="category-count"
-                >{{ platformResults.length }} result{{
-                  platformResults.length === 1 ? "" : "s"
-                }}</span
+                >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
               >
             </div>
 
@@ -289,19 +281,11 @@ const error = ref<string | null>(null);
 
 // Group results by type
 const dedicatedTypes = new Set(["GAME", "COMPANY", "PLATFORM", "USER"]);
-const gameResults = computed(() =>
-  results.value.filter((r): r is GameSearchResult => r.searchableType === "GAME")
-);
+const gameResults = computed(() => results.value.filter((r): r is GameSearchResult => r.searchableType === "GAME"));
 const companyResults = computed(() => results.value.filter((r) => r.searchableType === "COMPANY"));
-const platformResults = computed(() =>
-  results.value.filter((r) => r.searchableType === "PLATFORM")
-);
-const userResults = computed(() =>
-  results.value.filter((r): r is UserSearchResult => r.searchableType === "USER")
-);
-const otherResults = computed(() =>
-  results.value.filter((r) => !dedicatedTypes.has(r.searchableType))
-);
+const platformResults = computed(() => results.value.filter((r) => r.searchableType === "PLATFORM"));
+const userResults = computed(() => results.value.filter((r): r is UserSearchResult => r.searchableType === "USER"));
+const otherResults = computed(() => results.value.filter((r) => !dedicatedTypes.has(r.searchableType)));
 
 const totalResults = computed(() => results.value.length);
 
@@ -387,8 +371,7 @@ const typeRouteMap: Record<string, string> = {
 function resultHref(result: SearchResultUnion): string {
   const path = typeRouteMap[result.searchableType];
   if (!path) return "#";
-  const id =
-    result.searchableType === "USER" ? (result as UserSearchResult).slug : result.searchableId;
+  const id = result.searchableType === "USER" ? (result as UserSearchResult).slug : result.searchableId;
   return `/${path}/${id}`;
 }
 

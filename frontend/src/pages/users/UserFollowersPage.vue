@@ -16,18 +16,11 @@
 
       <p class="subtitle is-6 has-text-grey">{{ user.followers.totalCount }} followers</p>
 
-      <p v-if="!followerUsers.length" class="has-text-centered has-text-grey py-6">
-        No followers yet.
-      </p>
+      <p v-if="!followerUsers.length" class="has-text-centered has-text-grey py-6">No followers yet.</p>
 
       <div class="columns is-multiline">
         <div v-for="follower in followerUsers" :key="follower.id" class="column is-3">
-          <UserCard
-            :slug="follower.slug"
-            :username="follower.username"
-            :avatar-url="follower.avatarUrl"
-            :size="64"
-          />
+          <UserCard :slug="follower.slug" :username="follower.username" :avatar-url="follower.avatarUrl" :size="64" />
         </div>
       </div>
     </div>

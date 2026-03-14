@@ -14,9 +14,7 @@
         &rsaquo; Favorite Games
       </h1>
 
-      <p v-if="!favoritedGames.length" class="has-text-centered has-text-grey py-6">
-        No favorite games yet.
-      </p>
+      <p v-if="!favoritedGames.length" class="has-text-centered has-text-grey py-6">No favorite games yet.</p>
 
       <div class="columns is-multiline">
         <div v-for="game in favoritedGames" :key="game.id" class="column is-2">

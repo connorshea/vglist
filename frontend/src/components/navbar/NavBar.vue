@@ -6,11 +6,7 @@
       </router-link>
 
       <!-- Mobile search button (to the left of hamburger) -->
-      <button
-        class="navbar-mobile-search is-hidden-desktop"
-        aria-label="Search"
-        @click="openSearch"
-      >
+      <button class="navbar-mobile-search is-hidden-desktop" aria-label="Search" @click="openSearch">
         <svg
           width="18"
           height="18"
@@ -71,12 +67,8 @@
               {{ authStore.user?.username }}
             </a>
             <div v-show="!dropdownsClosed" class="navbar-dropdown is-right">
-              <router-link class="navbar-item" :to="`/users/${authStore.user?.slug}`">
-                Profile
-              </router-link>
-              <router-link v-if="authStore.isAdmin" class="navbar-item" to="/admin">
-                Admin
-              </router-link>
+              <router-link class="navbar-item" :to="`/users/${authStore.user?.slug}`"> Profile </router-link>
+              <router-link v-if="authStore.isAdmin" class="navbar-item" to="/admin"> Admin </router-link>
               <router-link class="navbar-item" to="/settings">Settings</router-link>
               <hr class="navbar-divider" />
               <a class="navbar-item" @click="handleSignOut">Sign out</a>
@@ -97,11 +89,7 @@
                 rel="noopener noreferrer"
                 >GitHub</a
               >
-              <a
-                class="navbar-item"
-                href="https://discord.gg/EWGm3YY"
-                target="_blank"
-                rel="noopener noreferrer"
+              <a class="navbar-item" href="https://discord.gg/EWGm3YY" target="_blank" rel="noopener noreferrer"
                 >Discord</a
               >
             </div>

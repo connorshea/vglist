@@ -3,9 +3,7 @@
     <div class="columns is-centered">
       <div class="column is-6">
         <div v-if="!authStore.isAuthenticated" class="notification is-warning">
-          <p>
-            You must be <router-link to="/login">signed in</router-link> to create or edit games.
-          </p>
+          <p>You must be <router-link to="/login">signed in</router-link> to create or edit games.</p>
         </div>
 
         <div v-else class="box has-text-centered">

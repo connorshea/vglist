@@ -11,11 +11,7 @@
       >
         Following
       </button>
-      <button
-        class="activity-tab"
-        :class="{ active: feedType === 'GLOBAL' }"
-        @click="switchFeed('GLOBAL')"
-      >
+      <button class="activity-tab" :class="{ active: feedType === 'GLOBAL' }" @click="switchFeed('GLOBAL')">
         Global
       </button>
     </div>
@@ -29,20 +25,13 @@
     </div>
 
     <div v-if="data">
-      <div
-        v-if="data.activity && data.activity.nodes.length === 0"
-        class="has-text-centered has-text-grey py-6"
-      >
+      <div v-if="data.activity && data.activity.nodes.length === 0" class="has-text-centered has-text-grey py-6">
         <p>No activity yet.</p>
       </div>
 
       <div v-for="event in data?.activity?.nodes" :key="event.id" class="a-card">
         <!-- Cover art for game-related events -->
-        <router-link
-          v-if="eventGame(event)"
-          :to="`/games/${eventGame(event)!.id}`"
-          class="a-cover-link"
-        >
+        <router-link v-if="eventGame(event)" :to="`/games/${eventGame(event)!.id}`" class="a-cover-link">
           <img
             v-if="eventGame(event)!.coverUrl"
             class="a-cover"
@@ -82,9 +71,7 @@
                 {{ event.user.username }}
               </router-link>
               {{ " " }}
-              <template
-                v-if="event.eventCategory === 'ADD_TO_LIBRARY' && 'game' in event.eventable"
-              >
+              <template v-if="event.eventCategory === 'ADD_TO_LIBRARY' && 'game' in event.eventable">
                 <span class="a-verb">added</span>{{ " " }}
                 <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
                   event.eventable.game.name
@@ -92,28 +79,20 @@
                 >{{ " " }}
                 <span class="a-verb">to their library</span>
               </template>
-              <template
-                v-else-if="
-                  event.eventCategory === 'CHANGE_COMPLETION_STATUS' && 'game' in event.eventable
-                "
-              >
+              <template v-else-if="event.eventCategory === 'CHANGE_COMPLETION_STATUS' && 'game' in event.eventable">
                 <span class="a-verb">{{ completionStatusVerb(event) }}</span
                 >{{ " " }}
                 <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
                   event.eventable.game.name
                 }}</router-link>
               </template>
-              <template
-                v-else-if="event.eventCategory === 'FAVORITE_GAME' && 'game' in event.eventable"
-              >
+              <template v-else-if="event.eventCategory === 'FAVORITE_GAME' && 'game' in event.eventable">
                 <span class="a-verb">favorited</span>{{ " " }}
                 <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
                   event.eventable.game.name
                 }}</router-link>
               </template>
-              <template
-                v-else-if="event.eventCategory === 'FOLLOWING' && 'followed' in event.eventable"
-              >
+              <template v-else-if="event.eventCategory === 'FOLLOWING' && 'followed' in event.eventable">
                 <span class="a-verb">started following</span>{{ " " }}
                 <router-link :to="`/users/${event.eventable.followed.slug}`" class="a-user-link">{{
                   event.eventable.followed.username
@@ -124,11 +103,7 @@
               </template>
             </span>
 
-            <span
-              v-if="eventBadge(event)"
-              class="a-status-badge"
-              :class="eventBadge(event)!.cssClass"
-            >
+            <span v-if="eventBadge(event)" class="a-status-badge" :class="eventBadge(event)!.cssClass">
               {{ eventBadge(event)!.label }}
             </span>
 
@@ -170,11 +145,7 @@ import { ref, watch, computed } from "vue";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
-import type {
-  GetActivityQuery,
-  GamePurchaseCompletionStatus,
-  DeleteEventMutation
-} from "@/types/graphql";
+import type { GetActivityQuery, GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
@@ -225,16 +196,9 @@ function prevPage() {
   }
 }
 
-type ActivityEvent = GetActivityQuery["activity"] extends
-  | { nodes: Array<infer N> }
-  | null
-  | undefined
-  ? N
-  : never;
+type ActivityEvent = GetActivityQuery["activity"] extends { nodes: Array<infer N> } | null | undefined ? N : never;
 
-function eventGame(
-  event: ActivityEvent
-): { id: string; name: string; coverUrl?: string | null } | null {
+function eventGame(event: ActivityEvent): { id: string; name: string; coverUrl?: string | null } | null {
   if (
     (event.eventCategory === "ADD_TO_LIBRARY" ||
       event.eventCategory === "CHANGE_COMPLETION_STATUS" ||
@@ -248,8 +212,7 @@ function eventGame(
 
 function eventRating(event: ActivityEvent): number | null {
   if (
-    (event.eventCategory === "ADD_TO_LIBRARY" ||
-      event.eventCategory === "CHANGE_COMPLETION_STATUS") &&
+    (event.eventCategory === "ADD_TO_LIBRARY" || event.eventCategory === "CHANGE_COMPLETION_STATUS") &&
     "rating" in event.eventable &&
     event.eventable.rating != null
   ) {

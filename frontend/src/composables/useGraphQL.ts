@@ -20,10 +20,7 @@ interface UseQueryReturn<TData> {
   loading: Ref<boolean>;
   error: Ref<Error | null>;
   refetch: () => Promise<void>;
-  fetchMore: (
-    variables: Record<string, unknown>,
-    merge: (prev: TData, next: TData) => TData
-  ) => Promise<void>;
+  fetchMore: (variables: Record<string, unknown>, merge: (prev: TData, next: TData) => TData) => Promise<void>;
 }
 
 export function useQuery<TData = Record<string, unknown>, TVariables = Record<string, unknown>>(
@@ -50,10 +47,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     }
   }
 
-  async function fetchMore(
-    variables: Record<string, unknown>,
-    merge: (prev: TData, next: TData) => TData
-  ) {
+  async function fetchMore(variables: Record<string, unknown>, merge: (prev: TData, next: TData) => TData) {
     loading.value = true;
     try {
       const nextData = await gqlClient.request<TData>(query, variables);
