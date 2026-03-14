@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading...</p>
     </div>
 
@@ -48,15 +48,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_USER } from '@/graphql/queries/users'
 
 const route = useRoute()
 
-const { result, loading, error } = useQuery(GET_USER, () => ({
-  id: route.params.id as string,
-}))
+const { data, loading, error } = useQuery(GET_USER, {
+  variables: () => ({ id: route.params.id as string }),
+})
 
-const user = computed(() => result.value?.user ?? null)
+const user = computed(() => data.value?.user ?? null)
 const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? [])
 </script>

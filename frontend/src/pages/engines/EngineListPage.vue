@@ -2,7 +2,7 @@
   <section class="section">
     <h1 class="title">Engines</h1>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading engines...</p>
     </div>
 
@@ -10,16 +10,16 @@
       <p>Failed to load engines: {{ error.message }}</p>
     </div>
 
-    <div v-if="result" class="content">
+    <div v-if="data" class="content">
       <ul>
-        <li v-for="engine in result.engines.nodes" :key="engine.id">
+        <li v-for="engine in data.engines.nodes" :key="engine.id">
           <router-link :to="`/engines/${engine.id}`">{{ engine.name }}</router-link>
         </li>
       </ul>
     </div>
 
     <div
-      v-if="result?.engines.pageInfo.hasNextPage"
+      v-if="data?.engines.pageInfo.hasNextPage"
       class="has-text-centered mt-5"
     >
       <button
@@ -35,32 +35,22 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_ENGINES } from '@/graphql/queries/resources'
 
-const { result, loading, error, fetchMore } = useQuery(GET_ENGINES, {
-  first: 25,
+const { data, loading, error, fetchMore } = useQuery(GET_ENGINES, {
+  variables: { first: 25 },
 })
 
 function loadMore() {
-  fetchMore({
-    variables: {
-      first: 25,
-      after: result.value.engines.pageInfo.endCursor,
-    },
-    updateQuery(previousResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) return previousResult
-
-      return {
-        engines: {
-          ...fetchMoreResult.engines,
-          nodes: [
-            ...previousResult.engines.nodes,
-            ...fetchMoreResult.engines.nodes,
-          ],
-        },
-      }
-    },
-  })
+  fetchMore(
+    { first: 25, after: data.value.engines.pageInfo.endCursor },
+    (prev, next) => ({
+      engines: {
+        ...next.engines,
+        nodes: [...prev.engines.nodes, ...next.engines.nodes],
+      },
+    }),
+  )
 }
 </script>

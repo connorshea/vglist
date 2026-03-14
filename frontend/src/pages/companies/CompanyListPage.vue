@@ -2,7 +2,7 @@
   <section class="section">
     <h1 class="title">Companies</h1>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading companies...</p>
     </div>
 
@@ -10,16 +10,16 @@
       <p>Failed to load companies: {{ error.message }}</p>
     </div>
 
-    <div v-if="result" class="content">
+    <div v-if="data" class="content">
       <ul>
-        <li v-for="company in result.companies.nodes" :key="company.id">
+        <li v-for="company in data.companies.nodes" :key="company.id">
           <router-link :to="`/companies/${company.id}`">{{ company.name }}</router-link>
         </li>
       </ul>
     </div>
 
     <div
-      v-if="result?.companies.pageInfo.hasNextPage"
+      v-if="data?.companies.pageInfo.hasNextPage"
       class="has-text-centered mt-5"
     >
       <button
@@ -35,32 +35,22 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_COMPANIES } from '@/graphql/queries/resources'
 
-const { result, loading, error, fetchMore } = useQuery(GET_COMPANIES, {
-  first: 25,
+const { data, loading, error, fetchMore } = useQuery(GET_COMPANIES, {
+  variables: { first: 25 },
 })
 
 function loadMore() {
-  fetchMore({
-    variables: {
-      first: 25,
-      after: result.value.companies.pageInfo.endCursor,
-    },
-    updateQuery(previousResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) return previousResult
-
-      return {
-        companies: {
-          ...fetchMoreResult.companies,
-          nodes: [
-            ...previousResult.companies.nodes,
-            ...fetchMoreResult.companies.nodes,
-          ],
-        },
-      }
-    },
-  })
+  fetchMore(
+    { first: 25, after: data.value.companies.pageInfo.endCursor },
+    (prev, next) => ({
+      companies: {
+        ...next.companies,
+        nodes: [...prev.companies.nodes, ...next.companies.nodes],
+      },
+    }),
+  )
 }
 </script>

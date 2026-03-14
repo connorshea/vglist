@@ -28,7 +28,7 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { debounce } from 'lodash-es'
-import { apolloClient } from '@/graphql/client'
+import { gqlClient } from '@/graphql/client'
 import { GLOBAL_SEARCH } from '@/graphql/queries/resources'
 
 interface SearchResult {
@@ -49,11 +49,9 @@ const performSearch = debounce(async () => {
     return
   }
 
-  const { data } = await apolloClient.query({
-    query: GLOBAL_SEARCH,
-    variables: { query: query.value },
-    fetchPolicy: 'network-only',
-  })
+  const data = await gqlClient.request<{
+    globalSearch: { nodes: SearchResult[] }
+  }>(GLOBAL_SEARCH, { query: query.value })
 
   results.value = data.globalSearch.nodes
   showDropdown.value = true

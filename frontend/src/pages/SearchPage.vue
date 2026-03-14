@@ -6,7 +6,7 @@
       <p>Enter a search query to find games, companies, platforms, and more.</p>
     </div>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Searching...</p>
     </div>
 
@@ -14,8 +14,8 @@
       <p>Search failed: {{ error.message }}</p>
     </div>
 
-    <div v-if="result && query">
-      <div v-if="result.globalSearch.nodes.length === 0" class="notification is-warning">
+    <div v-if="data && query">
+      <div v-if="data.globalSearch.nodes.length === 0" class="notification is-warning">
         <p>No results found for "{{ query }}".</p>
       </div>
 
@@ -36,18 +36,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GLOBAL_SEARCH } from '@/graphql/queries/resources'
 
 const route = useRoute()
 
 const query = computed(() => (route.query.q as string) ?? '')
 
-const { result, loading, error } = useQuery(GLOBAL_SEARCH, () => ({
-  query: query.value,
-}), () => ({
-  enabled: query.value.length > 0,
-}))
+const { data, loading, error } = useQuery(GLOBAL_SEARCH, {
+  variables: () => ({ query: query.value }),
+  enabled: () => query.value.length > 0,
+})
 
 interface SearchResult {
   searchableId: string
@@ -56,10 +55,10 @@ interface SearchResult {
 }
 
 const groupedResults = computed(() => {
-  if (!result.value) return {}
+  if (!data.value) return {}
 
   const groups: Record<string, SearchResult[]> = {}
-  for (const node of result.value.globalSearch.nodes) {
+  for (const node of data.value.globalSearch.nodes) {
     const type = node.searchableType as string
     if (!groups[type]) {
       groups[type] = []

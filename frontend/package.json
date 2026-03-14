@@ -13,24 +13,23 @@
     "fmt:check": "oxfmt --check"
   },
   "dependencies": {
-    "vue": "^3.5.13",
-    "vue-router": "^5.0.3",
-    "@apollo/client": "^3.13.8",
-    "@vue/apollo-composable": "^4.2.1",
-    "graphql": "^16.13.1",
-    "graphql-tag": "^2.12.6",
-    "pinia": "^3.0.4",
     "bulma": "^1.0.4",
+    "graphql": "^16.13.1",
+    "graphql-request": "^7.4.0",
+    "graphql-tag": "^2.12.6",
+    "lodash-es": "^4.17.23",
+    "pinia": "^3.0.4",
     "sass-embedded": "^1.97.3",
-    "lodash-es": "^4.17.23"
+    "vue": "^3.5.13",
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.5",
-    "vite": "^8.0.0",
-    "typescript": "~5.9.3",
-    "vue-tsc": "^3.2.5",
     "@types/lodash-es": "^4.17.12",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "oxfmt": "^0.40.0",
     "oxlint": "^1.51.0",
-    "oxfmt": "^0.40.0"
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0",
+    "vue-tsc": "^3.2.5"
   }
 }

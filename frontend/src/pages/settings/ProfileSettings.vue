@@ -2,7 +2,7 @@
   <div>
     <h2 class="title is-4">Profile Settings</h2>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading profile...</p>
     </div>
 
@@ -10,7 +10,7 @@
       <p>Failed to load profile: {{ error.message }}</p>
     </div>
 
-    <form v-if="result" @submit.prevent="saveProfile">
+    <form v-if="data" @submit.prevent="saveProfile">
       <div class="field">
         <label class="label" for="bio">Bio</label>
         <div class="control">
@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useQuery, useMutation } from '@vue/apollo-composable'
+import { useQuery, useMutation } from '@/composables/useGraphQL'
 import { UPDATE_USER } from '@/graphql/mutations/users'
 import gql from 'graphql-tag'
 
@@ -91,9 +91,9 @@ const hideDaysPlayed = ref(false)
 const saveError = ref('')
 const saveSuccess = ref(false)
 
-const { result, loading, error } = useQuery(GET_CURRENT_USER_PROFILE)
+const { data, loading, error } = useQuery(GET_CURRENT_USER_PROFILE)
 
-watch(result, (val) => {
+watch(data, (val) => {
   if (val?.currentUser) {
     bio.value = val.currentUser.bio ?? ''
     privacy.value = val.currentUser.privacy ?? 'PUBLIC_ACCOUNT'
@@ -114,7 +114,7 @@ async function saveProfile() {
       hideDaysPlayed: hideDaysPlayed.value,
     })
 
-    const errors = response?.data?.updateUser?.errors
+    const errors = response?.updateUser?.errors
     if (errors && errors.length > 0) {
       saveError.value = errors.join(', ')
     } else {
