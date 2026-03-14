@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
@@ -11,7 +11,7 @@ export const SIGN_IN = gql`
       errors
     }
   }
-`
+`;
 
 export const SIGN_UP = gql`
   mutation SignUp(
@@ -30,7 +30,7 @@ export const SIGN_UP = gql`
       errors
     }
   }
-`
+`;
 
 export const REQUEST_PASSWORD_RESET = gql`
   mutation RequestPasswordReset($email: String!) {
@@ -38,4 +38,4 @@ export const REQUEST_PASSWORD_RESET = gql`
       message
     }
   }
-`
+`;

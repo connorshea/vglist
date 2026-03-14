@@ -69,49 +69,53 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useQuery, useMutation } from '@/composables/useGraphQL'
-import { UPDATE_USER } from '@/graphql/mutations/users-settings'
-import { GET_CURRENT_USER_PROFILE } from '@/graphql/queries/users'
-import type { GetCurrentUserProfileQuery, UpdateUserMutation } from '@/types/graphql'
+import { ref, watch } from "vue";
+import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { UPDATE_USER } from "@/graphql/mutations/users-settings";
+import { GET_CURRENT_USER_PROFILE } from "@/graphql/queries/users";
+import type { GetCurrentUserProfileQuery, UpdateUserMutation } from "@/types/graphql";
 
-const bio = ref('')
-const privacy = ref('PUBLIC_ACCOUNT')
-const hideDaysPlayed = ref(false)
-const saveError = ref('')
-const saveSuccess = ref(false)
+const bio = ref("");
+const privacy = ref("PUBLIC_ACCOUNT");
+const hideDaysPlayed = ref(false);
+const saveError = ref("");
+const saveSuccess = ref(false);
 
-const { data, loading, error } = useQuery<GetCurrentUserProfileQuery>(GET_CURRENT_USER_PROFILE)
+const { data, loading, error } = useQuery<GetCurrentUserProfileQuery>(GET_CURRENT_USER_PROFILE);
 
-watch(data, (val) => {
-  if (val?.currentUser) {
-    bio.value = val.currentUser.bio ?? ''
-    privacy.value = val.currentUser.privacy ?? 'PUBLIC_ACCOUNT'
-    hideDaysPlayed.value = val.currentUser.hideDaysPlayed ?? false
-  }
-}, { immediate: true })
+watch(
+  data,
+  (val) => {
+    if (val?.currentUser) {
+      bio.value = val.currentUser.bio ?? "";
+      privacy.value = val.currentUser.privacy ?? "PUBLIC_ACCOUNT";
+      hideDaysPlayed.value = val.currentUser.hideDaysPlayed ?? false;
+    }
+  },
+  { immediate: true }
+);
 
-const { mutate, loading: saving } = useMutation<UpdateUserMutation>(UPDATE_USER)
+const { mutate, loading: saving } = useMutation<UpdateUserMutation>(UPDATE_USER);
 
 async function saveProfile() {
-  saveError.value = ''
-  saveSuccess.value = false
+  saveError.value = "";
+  saveSuccess.value = false;
 
   try {
     const response = await mutate({
       bio: bio.value,
       privacy: privacy.value,
-      hideDaysPlayed: hideDaysPlayed.value,
-    })
+      hideDaysPlayed: hideDaysPlayed.value
+    });
 
-    const errors = response?.updateUser?.errors
+    const errors = response?.updateUser?.errors;
     if (errors && errors.length > 0) {
-      saveError.value = errors.join(', ')
+      saveError.value = errors.join(", ");
     } else {
-      saveSuccess.value = true
+      saveSuccess.value = true;
     }
   } catch (e) {
-    saveError.value = e instanceof Error ? e.message : 'An unexpected error occurred.'
+    saveError.value = e instanceof Error ? e.message : "An unexpected error occurred.";
   }
 }
 </script>

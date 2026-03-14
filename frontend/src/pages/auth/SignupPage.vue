@@ -14,7 +14,13 @@
         <div class="field">
           <label class="label">Username</label>
           <div class="control">
-            <input v-model="username" class="input" type="text" placeholder="Username (3-20 characters)" required />
+            <input
+              v-model="username"
+              class="input"
+              type="text"
+              placeholder="Username (3-20 characters)"
+              required
+            />
           </div>
         </div>
 
@@ -28,59 +34,75 @@
         <div class="field">
           <label class="label">Password</label>
           <div class="control">
-            <input v-model="password" class="input" type="password" placeholder="Password (minimum 8 characters)" required />
+            <input
+              v-model="password"
+              class="input"
+              type="password"
+              placeholder="Password (minimum 8 characters)"
+              required
+            />
           </div>
         </div>
 
         <div class="field">
           <label class="label">Password Confirmation</label>
           <div class="control">
-            <input v-model="passwordConfirmation" class="input" type="password" placeholder="Confirm password" required />
+            <input
+              v-model="passwordConfirmation"
+              class="input"
+              type="password"
+              placeholder="Confirm password"
+              required
+            />
           </div>
         </div>
 
         <div class="field">
           <div class="control">
             <button class="button is-primary" type="submit" :disabled="isLoading">
-              {{ isLoading ? 'Creating account...' : 'Sign Up' }}
+              {{ isLoading ? "Creating account..." : "Sign Up" }}
             </button>
           </div>
         </div>
 
-        <p>
-          Already have an account? <router-link to="/login">Sign in</router-link>
-        </p>
+        <p>Already have an account? <router-link to="/login">Sign in</router-link></p>
       </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuth } from '@/composables/useAuth'
+import { ref } from "vue";
+import { useAuth } from "@/composables/useAuth";
 
-const { signUp } = useAuth()
+const { signUp } = useAuth();
 
-const username = ref('')
-const email = ref('')
-const password = ref('')
-const passwordConfirmation = ref('')
-const errors = ref<string[]>([])
-const successMessage = ref('')
-const isLoading = ref(false)
+const username = ref("");
+const email = ref("");
+const password = ref("");
+const passwordConfirmation = ref("");
+const errors = ref<string[]>([]);
+const successMessage = ref("");
+const isLoading = ref(false);
 
 async function handleSubmit() {
-  isLoading.value = true
-  errors.value = []
+  isLoading.value = true;
+  errors.value = [];
 
-  const result = await signUp(username.value, email.value, password.value, passwordConfirmation.value)
+  const result = await signUp(
+    username.value,
+    email.value,
+    password.value,
+    passwordConfirmation.value
+  );
 
   if (result.success) {
-    successMessage.value = 'Account created successfully! Please check your email to confirm your account.'
+    successMessage.value =
+      "Account created successfully! Please check your email to confirm your account.";
   } else {
-    errors.value = result.errors
+    errors.value = result.errors;
   }
 
-  isLoading.value = false
+  isLoading.value = false;
 }
 </script>

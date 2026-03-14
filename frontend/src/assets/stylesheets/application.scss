@@ -605,14 +605,30 @@ nav.navbar {
     overflow: hidden;
     color: #fff;
 
-    &.color-1 { background-color: #03a9f4; }
-    &.color-2 { background-color: #ff5252; }
-    &.color-3 { background-color: #e91e63; }
-    &.color-4 { background-color: #ff5722; }
-    &.color-5 { background-color: #8bc34a; }
-    &.color-6 { background-color: #3f51b5; }
-    &.color-7 { background-color: #7c4dff; }
-    &.color-8 { background-color: #d1cfcf; }
+    &.color-1 {
+      background-color: #03a9f4;
+    }
+    &.color-2 {
+      background-color: #ff5252;
+    }
+    &.color-3 {
+      background-color: #e91e63;
+    }
+    &.color-4 {
+      background-color: #ff5722;
+    }
+    &.color-5 {
+      background-color: #8bc34a;
+    }
+    &.color-6 {
+      background-color: #3f51b5;
+    }
+    &.color-7 {
+      background-color: #7c4dff;
+    }
+    &.color-8 {
+      background-color: #d1cfcf;
+    }
   }
 }
 
@@ -635,10 +651,23 @@ nav.navbar {
 }
 
 @keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 
 .games-search-sidebar {

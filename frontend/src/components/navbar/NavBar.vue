@@ -1,9 +1,7 @@
 <template>
   <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <router-link class="navbar-item has-text-weight-bold" to="/">
-        vglist
-      </router-link>
+      <router-link class="navbar-item has-text-weight-bold" to="/"> vglist </router-link>
       <a
         role="button"
         class="navbar-burger"
@@ -44,11 +42,7 @@
             <a class="navbar-link">More</a>
             <div class="navbar-dropdown is-right">
               <router-link class="navbar-item" to="/settings">Settings</router-link>
-              <router-link
-                v-if="authStore.isAdmin"
-                class="navbar-item"
-                to="/admin"
-              >
+              <router-link v-if="authStore.isAdmin" class="navbar-item" to="/admin">
                 Admin
               </router-link>
               <hr class="navbar-divider" />
@@ -70,17 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { useAuth } from '@/composables/useAuth'
-import NavSearch from './NavSearch.vue'
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { useAuth } from "@/composables/useAuth";
+import NavSearch from "./NavSearch.vue";
 
-const authStore = useAuthStore()
-const { signOut } = useAuth()
-const isBurgerActive = ref(false)
+const authStore = useAuthStore();
+const { signOut } = useAuth();
+const isBurgerActive = ref(false);
 
 function handleSignOut() {
-  signOut()
-  isBurgerActive.value = false
+  signOut();
+  isBurgerActive.value = false;
 }
 </script>

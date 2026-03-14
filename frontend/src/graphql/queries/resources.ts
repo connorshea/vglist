@@ -1,13 +1,19 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const GET_PLATFORMS = gql`
   query GetPlatforms($first: Int, $after: String) {
     platforms(first: $first, after: $after) {
-      nodes { id name }
-      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_PLATFORM = gql`
   query GetPlatform($id: ID!) {
@@ -16,21 +22,34 @@ export const GET_PLATFORM = gql`
       name
       wikidataId
       games(first: 30) {
-        nodes { id name coverUrl(size: SMALL) }
-        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
-`
+`;
 
 export const GET_COMPANIES = gql`
   query GetCompanies($first: Int, $after: String) {
     companies(first: $first, after: $after) {
-      nodes { id name }
-      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_COMPANY = gql`
   query GetCompany($id: ID!) {
@@ -39,25 +58,45 @@ export const GET_COMPANY = gql`
       name
       wikidataId
       developedGames(first: 30) {
-        nodes { id name coverUrl(size: SMALL) }
-        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
       publishedGames(first: 30) {
-        nodes { id name coverUrl(size: SMALL) }
-        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
-`
+`;
 
 export const GET_GENRES = gql`
   query GetGenres($first: Int, $after: String) {
     genres(first: $first, after: $after) {
-      nodes { id name }
-      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_GENRE = gql`
   query GetGenre($id: ID!) {
@@ -66,21 +105,34 @@ export const GET_GENRE = gql`
       name
       wikidataId
       games(first: 30) {
-        nodes { id name coverUrl(size: SMALL) }
-        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
-`
+`;
 
 export const GET_ENGINES = gql`
   query GetEngines($first: Int, $after: String) {
     engines(first: $first, after: $after) {
-      nodes { id name }
-      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_ENGINE = gql`
   query GetEngine($id: ID!) {
@@ -89,21 +141,34 @@ export const GET_ENGINE = gql`
       name
       wikidataId
       games(first: 30) {
-        nodes { id name coverUrl(size: SMALL) }
-        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
-`
+`;
 
 export const GET_SERIES_LIST = gql`
   query GetSeriesList($first: Int, $after: String) {
     seriesList(first: $first, after: $after) {
-      nodes { id name }
-      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_SERIES = gql`
   query GetSeries($id: ID!) {
@@ -112,21 +177,34 @@ export const GET_SERIES = gql`
       name
       wikidataId
       games(first: 30) {
-        nodes { id name coverUrl(size: SMALL) }
-        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
-`
+`;
 
 export const GET_STORES = gql`
   query GetStores($first: Int, $after: String) {
     stores(first: $first, after: $after) {
-      nodes { id name }
-      pageInfo { hasNextPage endCursor }
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_STORE = gql`
   query GetStore($id: ID!) {
@@ -135,7 +213,7 @@ export const GET_STORE = gql`
       name
     }
   }
-`
+`;
 
 export const GLOBAL_SEARCH = gql`
   query GlobalSearch($query: String!) {
@@ -149,7 +227,7 @@ export const GLOBAL_SEARCH = gql`
       }
     }
   }
-`
+`;
 
 export const GET_ACTIVITY = gql`
   query GetActivity($feedType: ActivityFeed, $first: Int, $after: String) {
@@ -158,12 +236,20 @@ export const GET_ACTIVITY = gql`
         id
         eventCategory
         createdAt
-        user { id username slug avatarUrl(size: SMALL) }
+        user {
+          id
+          username
+          slug
+          avatarUrl(size: SMALL)
+        }
       }
-      pageInfo { hasNextPage endCursor }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
-`
+`;
 
 export const GET_BASIC_SITE_STATISTICS = gql`
   query GetBasicSiteStatistics {
@@ -176,4 +262,4 @@ export const GET_BASIC_SITE_STATISTICS = gql`
       genres
     }
   }
-`
+`;

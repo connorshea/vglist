@@ -34,54 +34,54 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { GLOBAL_SEARCH } from '@/graphql/queries/resources'
-import type { GlobalSearchQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
+import type { GlobalSearchQuery } from "@/types/graphql";
 
-const route = useRoute()
+const route = useRoute();
 
-const query = computed(() => (route.query.q as string) ?? '')
+const query = computed(() => (route.query.q as string) ?? "");
 
 const { data, loading, error } = useQuery<GlobalSearchQuery>(GLOBAL_SEARCH, {
   variables: () => ({ query: query.value }),
-  enabled: () => query.value.length > 0,
-})
+  enabled: () => query.value.length > 0
+});
 
 interface SearchResult {
-  searchableId: string
-  searchableType: string
-  content: string
+  searchableId: string;
+  searchableType: string;
+  content: string;
 }
 
 const groupedResults = computed(() => {
-  if (!data.value) return {}
+  if (!data.value) return {};
 
-  const groups: Record<string, SearchResult[]> = {}
+  const groups: Record<string, SearchResult[]> = {};
   for (const node of data.value.globalSearch.nodes) {
-    const type = node.searchableType as string
+    const type = node.searchableType as string;
     if (!groups[type]) {
-      groups[type] = []
+      groups[type] = [];
     }
-    groups[type].push(node as SearchResult)
+    groups[type].push(node as SearchResult);
   }
-  return groups
-})
+  return groups;
+});
 
 function resultLink(item: SearchResult): string {
   const typeToPath: Record<string, string> = {
-    Game: 'games',
-    Company: 'companies',
-    Platform: 'platforms',
-    Engine: 'engines',
-    Genre: 'genres',
-    Series: 'series',
-    Store: 'stores',
-    User: 'users',
-  }
+    Game: "games",
+    Company: "companies",
+    Platform: "platforms",
+    Engine: "engines",
+    Genre: "genres",
+    Series: "series",
+    Store: "stores",
+    User: "users"
+  };
 
-  const path = typeToPath[item.searchableType] ?? 'games'
-  return `/${path}/${item.searchableId}`
+  const path = typeToPath[item.searchableType] ?? "games";
+  return `/${path}/${item.searchableId}`;
 }
 </script>

@@ -1,15 +1,18 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export const ADD_GAME_TO_LIBRARY = gql`
   mutation AddGameToLibrary($gameId: ID!) {
     addGameToLibrary(gameId: $gameId) {
       gamePurchase {
         id
-        game { id name }
+        game {
+          id
+          name
+        }
       }
     }
   }
-`
+`;
 
 export const UPDATE_GAME_IN_LIBRARY = gql`
   mutation UpdateGameInLibrary(
@@ -45,28 +48,36 @@ export const UPDATE_GAME_IN_LIBRARY = gql`
       }
     }
   }
-`
+`;
 
 export const REMOVE_GAME_FROM_LIBRARY = gql`
   mutation RemoveGameFromLibrary($gamePurchaseId: ID!) {
     removeGameFromLibrary(gamePurchaseId: $gamePurchaseId) {
-      game { id }
+      game {
+        id
+      }
     }
   }
-`
+`;
 
 export const FAVORITE_GAME = gql`
   mutation FavoriteGame($gameId: ID!) {
     favoriteGame(gameId: $gameId) {
-      game { id name }
+      game {
+        id
+        name
+      }
     }
   }
-`
+`;
 
 export const UNFAVORITE_GAME = gql`
   mutation UnfavoriteGame($gameId: ID!) {
     unfavoriteGame(gameId: $gameId) {
-      game { id name }
+      game {
+        id
+        name
+      }
     }
   }
-`
+`;

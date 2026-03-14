@@ -16,7 +16,7 @@
         <div class="field">
           <div class="control">
             <button class="button is-primary" type="submit" :disabled="isLoading">
-              {{ isLoading ? 'Sending...' : 'Send Reset Instructions' }}
+              {{ isLoading ? "Sending..." : "Send Reset Instructions" }}
             </button>
           </div>
         </div>
@@ -28,18 +28,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuth } from '@/composables/useAuth'
+import { ref } from "vue";
+import { useAuth } from "@/composables/useAuth";
 
-const { requestPasswordReset } = useAuth()
+const { requestPasswordReset } = useAuth();
 
-const email = ref('')
-const message = ref('')
-const isLoading = ref(false)
+const email = ref("");
+const message = ref("");
+const isLoading = ref(false);
 
 async function handleSubmit() {
-  isLoading.value = true
-  message.value = await requestPasswordReset(email.value)
-  isLoading.value = false
+  isLoading.value = true;
+  message.value = await requestPasswordReset(email.value);
+  isLoading.value = false;
 }
 </script>

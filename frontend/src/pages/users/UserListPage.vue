@@ -31,9 +31,7 @@
             <p class="title is-5">
               <router-link :to="`/users/${user.id}`">{{ user.username }}</router-link>
             </p>
-            <p class="subtitle is-6 has-text-grey">
-              {{ user.gamePurchases.totalCount }} games
-            </p>
+            <p class="subtitle is-6 has-text-grey">{{ user.gamePurchases.totalCount }} games</p>
           </div>
         </div>
       </div>
@@ -53,31 +51,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_USERS } from '@/graphql/queries/users'
-import type { GetUsersQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_USERS } from "@/graphql/queries/users";
+import type { GetUsersQuery } from "@/types/graphql";
 
 const { data, loading, error, fetchMore } = useQuery<GetUsersQuery>(GET_USERS, {
-  variables: { first: 20 },
-})
+  variables: { first: 20 }
+});
 
-const users = computed(() => data.value?.users?.nodes ?? [])
-const hasNextPage = computed(() => data.value?.users?.pageInfo?.hasNextPage ?? false)
-const endCursor = computed(() => data.value?.users?.pageInfo?.endCursor ?? null)
+const users = computed(() => data.value?.users?.nodes ?? []);
+const hasNextPage = computed(() => data.value?.users?.pageInfo?.hasNextPage ?? false);
+const endCursor = computed(() => data.value?.users?.pageInfo?.endCursor ?? null);
 
 function loadMore() {
-  fetchMore(
-    { first: 20, after: endCursor.value },
-    (prev, next) => ({
-      users: {
-        ...next.users,
-        nodes: [
-          ...prev.users.nodes,
-          ...next.users.nodes,
-        ],
-      },
-    }),
-  )
+  fetchMore({ first: 20, after: endCursor.value }, (prev, next) => ({
+    users: {
+      ...next.users,
+      nodes: [...prev.users.nodes, ...next.users.nodes]
+    }
+  }));
 }
 </script>

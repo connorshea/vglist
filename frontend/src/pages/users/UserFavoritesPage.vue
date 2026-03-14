@@ -23,16 +23,8 @@
           <div class="card">
             <div class="card-image">
               <figure class="image is-3by4">
-                <img
-                  v-if="game.coverUrl"
-                  :src="game.coverUrl"
-                  :alt="game.name"
-                />
-                <img
-                  v-else
-                  src="https://via.placeholder.com/120x160"
-                  :alt="game.name"
-                />
+                <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
+                <img v-else src="https://via.placeholder.com/120x160" :alt="game.name" />
               </figure>
             </div>
             <div class="card-content p-3">
@@ -46,18 +38,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_USER } from '@/graphql/queries/users'
-import type { GetUserQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_USER } from "@/graphql/queries/users";
+import type { GetUserQuery } from "@/types/graphql";
 
-const route = useRoute()
+const route = useRoute();
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ id: route.params.id as string }),
-})
+  variables: () => ({ id: route.params.id as string })
+});
 
-const user = computed(() => data.value?.user ?? null)
-const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? [])
+const user = computed(() => data.value?.user ?? null);
+const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
 </script>

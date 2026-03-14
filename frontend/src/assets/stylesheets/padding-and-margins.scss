@@ -1,21 +1,7 @@
 @use "sass:string";
 @use "bulma/sass/utilities/mixins";
 
-$spaceamounts: (
-  0,
-  5,
-  10,
-  15,
-  20,
-  25,
-  30,
-  35,
-  40,
-  45,
-  50,
-  75,
-  100
-);
+$spaceamounts: (0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100);
 $sides: (top, bottom, left, right);
 
 @each $space in $spaceamounts {

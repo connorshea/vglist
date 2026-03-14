@@ -21,23 +21,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_BASIC_SITE_STATISTICS } from '@/graphql/queries/resources'
-import type { GetBasicSiteStatisticsQuery } from '@/types/graphql'
+import { computed } from "vue";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_BASIC_SITE_STATISTICS } from "@/graphql/queries/resources";
+import type { GetBasicSiteStatisticsQuery } from "@/types/graphql";
 
-const { data } = useQuery<GetBasicSiteStatisticsQuery>(GET_BASIC_SITE_STATISTICS)
+const { data } = useQuery<GetBasicSiteStatisticsQuery>(GET_BASIC_SITE_STATISTICS);
 
 const stats = computed(() => {
-  if (!data.value) return []
-  const s = data.value.basicSiteStatistics
+  if (!data.value) return [];
+  const s = data.value.basicSiteStatistics;
   return [
-    { label: 'Games', value: s.games },
-    { label: 'Platforms', value: s.platforms },
-    { label: 'Companies', value: s.companies },
-    { label: 'Genres', value: s.genres },
-    { label: 'Engines', value: s.engines },
-    { label: 'Series', value: s.series },
-  ]
-})
+    { label: "Games", value: s.games },
+    { label: "Platforms", value: s.platforms },
+    { label: "Companies", value: s.companies },
+    { label: "Genres", value: s.genres },
+    { label: "Engines", value: s.engines },
+    { label: "Series", value: s.series }
+  ];
+});
 </script>

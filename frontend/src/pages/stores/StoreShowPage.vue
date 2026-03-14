@@ -15,14 +15,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useQuery } from '@/composables/useGraphQL'
-import { GET_STORE } from '@/graphql/queries/resources'
-import type { GetStoreQuery } from '@/types/graphql'
+import { useRoute } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_STORE } from "@/graphql/queries/resources";
+import type { GetStoreQuery } from "@/types/graphql";
 
-const route = useRoute()
+const route = useRoute();
 
 const { data, loading, error } = useQuery<GetStoreQuery>(GET_STORE, {
-  variables: { id: route.params.id },
-})
+  variables: { id: route.params.id }
+});
 </script>
