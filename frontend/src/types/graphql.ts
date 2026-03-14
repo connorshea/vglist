@@ -195,13 +195,22 @@ export interface GetUserQuery {
   };
 }
 
+export interface SearchResultNode {
+  searchableId: string;
+  searchableType: string;
+  content: string;
+  // Game-specific fields
+  coverUrl?: string | null;
+  developerName?: string | null;
+  releaseDate?: string | null;
+  // User-specific fields
+  avatarUrl?: string | null;
+  slug?: string;
+}
+
 export interface GlobalSearchQuery {
   globalSearch: {
-    nodes: {
-      searchableId: string;
-      searchableType: string;
-      content: string;
-    }[];
+    nodes: SearchResultNode[];
   };
 }
 

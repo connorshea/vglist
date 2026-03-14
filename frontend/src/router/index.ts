@@ -171,13 +171,6 @@ const router = createRouter({
       component: () => import("@/pages/activity/ActivityPage.vue")
     },
 
-    // Search
-    {
-      path: "/search",
-      name: "search",
-      component: () => import("@/pages/SearchPage.vue")
-    },
-
     // Settings
     {
       path: "/settings",

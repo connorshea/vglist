@@ -219,10 +219,45 @@ export const GLOBAL_SEARCH = gql`
   query GlobalSearch($query: String!) {
     globalSearch(query: $query) {
       nodes {
-        ... on SearchResultInterface {
+        ... on GameSearchResult {
           searchableId
           searchableType
           content
+          coverUrl(size: SMALL)
+          developerName
+          releaseDate
+        }
+        ... on CompanySearchResult {
+          searchableId
+          searchableType
+          content
+        }
+        ... on EngineSearchResult {
+          searchableId
+          searchableType
+          content
+        }
+        ... on GenreSearchResult {
+          searchableId
+          searchableType
+          content
+        }
+        ... on PlatformSearchResult {
+          searchableId
+          searchableType
+          content
+        }
+        ... on SeriesSearchResult {
+          searchableId
+          searchableType
+          content
+        }
+        ... on UserSearchResult {
+          searchableId
+          searchableType
+          content
+          avatarUrl(size: SMALL)
+          slug
         }
       }
     }
