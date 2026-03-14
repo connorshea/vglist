@@ -30,6 +30,8 @@
 import { ref } from "vue";
 import { useMutation } from "@/composables/useGraphQL";
 import { EXPORT_LIBRARY } from "@/graphql/mutations/users-settings";
+import { extractGqlError } from "@/utils/graphql-errors";
+
 interface ExportLibraryResult {
   exportLibrary?: {
     libraryJson?: string | null;
@@ -56,7 +58,7 @@ async function exportLibrary() {
       exportData.value = result.libraryJson;
     }
   } catch (e) {
-    exportError.value = e instanceof Error ? e.message : "An unexpected error occurred.";
+    exportError.value = extractGqlError(e);
   }
 }
 </script>

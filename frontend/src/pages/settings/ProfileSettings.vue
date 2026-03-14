@@ -74,6 +74,7 @@ import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { UPDATE_USER } from "@/graphql/mutations/users-settings";
 import { GET_CURRENT_USER_PROFILE } from "@/graphql/queries/users";
 import type { GetCurrentUserProfileQuery } from "@/types/graphql";
+import { extractGqlError } from "@/utils/graphql-errors";
 
 interface UpdateUserResult {
   updateUser?: {
@@ -127,7 +128,7 @@ async function saveProfile() {
       saveSuccess.value = true;
     }
   } catch (e) {
-    saveError.value = e instanceof Error ? e.message : "An unexpected error occurred.";
+    saveError.value = extractGqlError(e);
   }
 }
 </script>
