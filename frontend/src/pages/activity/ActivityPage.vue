@@ -1,16 +1,23 @@
 <template>
-  <section class="section">
+  <section class="section activity-section">
     <h1 class="title">Activity</h1>
 
-    <div class="tabs">
-      <ul>
-        <li :class="{ 'is-active': feedType === 'GLOBAL' }">
-          <a @click="switchFeed('GLOBAL')">Global</a>
-        </li>
-        <li v-if="authStore.isAuthenticated" :class="{ 'is-active': feedType === 'FOLLOWING' }">
-          <a @click="switchFeed('FOLLOWING')">Following</a>
-        </li>
-      </ul>
+    <div class="activity-tabs">
+      <button
+        class="activity-tab"
+        :class="{ active: feedType === 'FOLLOWING' }"
+        :disabled="!authStore.isAuthenticated"
+        @click="switchFeed('FOLLOWING')"
+      >
+        Following
+      </button>
+      <button
+        class="activity-tab"
+        :class="{ active: feedType === 'GLOBAL' }"
+        @click="switchFeed('GLOBAL')"
+      >
+        Global
+      </button>
     </div>
 
     <div v-if="loading && !data" class="has-text-centered">
@@ -29,79 +36,111 @@
         <p>No activity yet.</p>
       </div>
 
-      <div v-for="event in data?.activity?.nodes" :key="event.id" class="box">
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-48x48">
+      <div v-for="event in data?.activity?.nodes" :key="event.id" class="a-card">
+        <!-- Cover art for game-related events -->
+        <router-link
+          v-if="eventGame(event)"
+          :to="`/games/${eventGame(event)!.id}`"
+          class="a-cover-link"
+        >
+          <img
+            v-if="eventGame(event)!.coverUrl"
+            class="a-cover"
+            :src="eventGame(event)!.coverUrl!"
+            :alt="eventGame(event)!.name"
+          />
+          <div v-else class="a-cover a-cover-placeholder">
+            <span>{{ eventGame(event)!.name.charAt(0).toUpperCase() }}</span>
+          </div>
+        </router-link>
+
+        <!-- User avatar for non-game events -->
+        <div v-else class="a-cover-link">
+          <div class="a-cover a-cover-placeholder a-cover-user">
+            <span v-if="event.eventCategory === 'FOLLOWING' && 'followed' in event.eventable">
+              {{ event.eventable.followed.username.charAt(0).toUpperCase() }}
+            </span>
+            <span v-else-if="event.eventCategory === 'NEW_USER'">
+              {{ event.user.username.charAt(0).toUpperCase() }}
+            </span>
+          </div>
+        </div>
+
+        <div class="a-body">
+          <div class="a-row1">
+            <span class="a-sentence">
               <img
                 v-if="event.user.avatarUrl"
-                class="is-rounded"
+                class="a-user-avatar"
                 :src="event.user.avatarUrl"
                 :alt="event.user.username"
               />
-              <span v-else class="activity-avatar-placeholder is-rounded">
+              <span v-else class="a-user-avatar a-user-avatar-placeholder">
                 {{ event.user.username.charAt(0).toUpperCase() }}
               </span>
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>
-                  <router-link :to="`/users/${event.user.slug}`">
-                    {{ event.user.username }}
-                  </router-link>
-                </strong>
-                {{ " " }}
-                <template
-                  v-if="event.eventCategory === 'ADD_TO_LIBRARY' && 'game' in event.eventable"
-                >
-                  added
-                  <router-link :to="`/games/${event.eventable.game.id}`">
-                    {{ event.eventable.game.name }}
-                  </router-link>
-                  to their library
-                </template>
-                <template
-                  v-else-if="
-                    event.eventCategory === 'CHANGE_COMPLETION_STATUS' && 'game' in event.eventable
-                  "
-                >
-                  changed the completion status of
-                  <router-link :to="`/games/${event.eventable.game.id}`">
-                    {{ event.eventable.game.name }}
-                  </router-link>
-                  <template
-                    v-if="'completionStatus' in event.eventable && event.eventable.completionStatus"
-                  >
-                    to {{ completionStatusLabel(event.eventable.completionStatus) }}
-                  </template>
-                </template>
-                <template
-                  v-else-if="event.eventCategory === 'FAVORITE_GAME' && 'game' in event.eventable"
-                >
-                  favorited
-                  <router-link :to="`/games/${event.eventable.game.id}`">
-                    {{ event.eventable.game.name }}
-                  </router-link>
-                </template>
-                <template
-                  v-else-if="event.eventCategory === 'FOLLOWING' && 'followed' in event.eventable"
-                >
-                  started following
-                  <router-link :to="`/users/${event.eventable.followed.slug}`">
-                    {{ event.eventable.followed.username }}
-                  </router-link>
-                </template>
-                <template v-else-if="event.eventCategory === 'NEW_USER'"> joined vglist </template>
-                <br />
-                <small class="has-text-grey">{{
-                  new Date(event.createdAt).toLocaleString()
-                }}</small>
-              </p>
-            </div>
+              <router-link :to="`/users/${event.user.slug}`" class="a-user-link">
+                {{ event.user.username }}
+              </router-link>
+              {{ " " }}
+              <template
+                v-if="event.eventCategory === 'ADD_TO_LIBRARY' && 'game' in event.eventable"
+              >
+                <span class="a-verb">added</span>{{ " " }}
+                <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
+                  event.eventable.game.name
+                }}</router-link
+                >{{ " " }}
+                <span class="a-verb">to their library</span>
+              </template>
+              <template
+                v-else-if="
+                  event.eventCategory === 'CHANGE_COMPLETION_STATUS' && 'game' in event.eventable
+                "
+              >
+                <span class="a-verb">{{ completionStatusVerb(event) }}</span
+                >{{ " " }}
+                <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
+                  event.eventable.game.name
+                }}</router-link>
+              </template>
+              <template
+                v-else-if="event.eventCategory === 'FAVORITE_GAME' && 'game' in event.eventable"
+              >
+                <span class="a-verb">favorited</span>{{ " " }}
+                <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
+                  event.eventable.game.name
+                }}</router-link>
+              </template>
+              <template
+                v-else-if="event.eventCategory === 'FOLLOWING' && 'followed' in event.eventable"
+              >
+                <span class="a-verb">started following</span>{{ " " }}
+                <router-link :to="`/users/${event.eventable.followed.slug}`" class="a-user-link">{{
+                  event.eventable.followed.username
+                }}</router-link>
+              </template>
+              <template v-else-if="event.eventCategory === 'NEW_USER'">
+                <span class="a-verb">joined vglist</span>
+              </template>
+            </span>
+
+            <span
+              v-if="eventBadge(event)"
+              class="a-status-badge"
+              :class="eventBadge(event)!.cssClass"
+            >
+              {{ eventBadge(event)!.label }}
+            </span>
           </div>
-        </article>
+
+          <div class="a-meta">
+            <span class="a-time">{{ timeAgo(event.createdAt) }}</span>
+            <template v-if="eventRating(event) !== null">
+              <span class="a-separator" />
+              <span class="a-rating">{{ eventRating(event) }} / 100</span>
+            </template>
+          </div>
+        </div>
       </div>
 
       <PaginationNav
@@ -127,7 +166,7 @@ import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 
 const PAGE_SIZE = 25;
-const feedType = ref<"GLOBAL" | "FOLLOWING">("GLOBAL");
+const feedType = ref<"GLOBAL" | "FOLLOWING">(authStore.isAuthenticated ? "FOLLOWING" : "GLOBAL");
 const currentPage = ref(1);
 const pageCursors = ref<(string | null)[]>([null]);
 
@@ -161,33 +200,355 @@ function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
 
+type ActivityEvent = GetActivityQuery["activity"] extends
+  | { nodes: Array<infer N> }
+  | null
+  | undefined
+  ? N
+  : never;
+
+function eventGame(
+  event: ActivityEvent
+): { id: string; name: string; coverUrl?: string | null } | null {
+  if (
+    (event.eventCategory === "ADD_TO_LIBRARY" ||
+      event.eventCategory === "CHANGE_COMPLETION_STATUS" ||
+      event.eventCategory === "FAVORITE_GAME") &&
+    "game" in event.eventable
+  ) {
+    return event.eventable.game;
+  }
+  return null;
+}
+
+function eventRating(event: ActivityEvent): number | null {
+  if (
+    (event.eventCategory === "ADD_TO_LIBRARY" ||
+      event.eventCategory === "CHANGE_COMPLETION_STATUS") &&
+    "rating" in event.eventable &&
+    event.eventable.rating != null
+  ) {
+    return event.eventable.rating;
+  }
+  return null;
+}
+
 const completionStatusLabels: Record<GamePurchaseCompletionStatus, string> = {
   UNPLAYED: "Unplayed",
   IN_PROGRESS: "In Progress",
   DROPPED: "Dropped",
   COMPLETED: "Completed",
-  FULLY_COMPLETED: "Fully Completed",
-  NOT_APPLICABLE: "Not Applicable",
+  FULLY_COMPLETED: "100%",
+  NOT_APPLICABLE: "N/A",
   PAUSED: "Paused"
 };
 
-function completionStatusLabel(status: GamePurchaseCompletionStatus): string {
-  return completionStatusLabels[status];
+const completionStatusVerbs: Record<GamePurchaseCompletionStatus, string> = {
+  UNPLAYED: "set",
+  IN_PROGRESS: "is playing",
+  DROPPED: "dropped",
+  COMPLETED: "completed",
+  FULLY_COMPLETED: "100%'d",
+  NOT_APPLICABLE: "set",
+  PAUSED: "paused"
+};
+
+function completionStatusVerb(event: ActivityEvent): string {
+  if ("completionStatus" in event.eventable && event.eventable.completionStatus) {
+    return completionStatusVerbs[event.eventable.completionStatus];
+  }
+  return "changed the status of";
+}
+
+interface BadgeInfo {
+  label: string;
+  cssClass: string;
+}
+
+function eventBadge(event: ActivityEvent): BadgeInfo | null {
+  if (event.eventCategory === "ADD_TO_LIBRARY") {
+    return { label: "Added", cssClass: "badge-added" };
+  }
+  if (event.eventCategory === "FAVORITE_GAME") {
+    return { label: "Favorited", cssClass: "badge-favorited" };
+  }
+  if (
+    event.eventCategory === "CHANGE_COMPLETION_STATUS" &&
+    "completionStatus" in event.eventable &&
+    event.eventable.completionStatus
+  ) {
+    const status = event.eventable.completionStatus;
+    return {
+      label: completionStatusLabels[status],
+      cssClass: `badge-${status.toLowerCase().replace("_", "-")}`
+    };
+  }
+  return null;
+}
+
+function timeAgo(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHr = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHr / 24);
+  const diffWeek = Math.floor(diffDay / 7);
+  const diffMonth = Math.floor(diffDay / 30);
+
+  if (diffMin < 1) return "just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffHr < 24) return `${diffHr}h ago`;
+  if (diffDay === 1) return "1 day ago";
+  if (diffDay < 7) return `${diffDay} days ago`;
+  if (diffWeek === 1) return "1 week ago";
+  if (diffWeek < 5) return `${diffWeek} weeks ago`;
+  if (diffMonth === 1) return "1 month ago";
+  if (diffMonth < 12) return `${diffMonth} months ago`;
+  return date.toLocaleDateString();
 }
 </script>
 
 <style scoped>
-.activity-avatar-placeholder {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Bleed background into parent main.section padding */
+.activity-section {
+  background: #f4f3ef;
+  margin: -3rem -1.5rem;
+  padding: 3rem 1.5rem;
+  min-height: calc(100vh - 52px);
+}
+
+/* Tabs */
+.activity-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #d3d1c7;
+  margin-bottom: 24px;
+}
+
+.activity-tab {
+  padding: 10px 18px;
+  font-size: 14px;
+  color: #888780;
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.activity-tab.active {
+  color: #5855b3;
+  border-bottom-color: #5855b3;
+  font-weight: 500;
+}
+
+.activity-tab:hover:not(.active):not(:disabled) {
+  color: #2c2c2a;
+}
+
+.activity-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Card */
+.a-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+  margin-bottom: 8px;
+}
+
+.a-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Cover art */
+.a-cover-link {
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.a-cover {
+  width: 52px;
+  height: 68px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+}
+
+.a-cover-placeholder {
+  background: linear-gradient(145deg, #8b5cf6 0%, #6366f1 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  font-size: 1.25rem;
-  font-weight: 700;
   color: #fff;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.a-cover-user {
+  background: linear-gradient(145deg, #6366f1 0%, #4338ca 100%);
+}
+
+/* Body */
+.a-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.a-row1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.a-sentence {
+  font-size: 14px;
+  line-height: 1.45;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Inline user avatar */
+.a-user-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 4px;
+  display: inline-block;
+}
+
+.a-user-avatar-placeholder {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 22px;
+}
+
+.a-user-link {
+  color: #2c2c2a;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.a-user-link:hover {
+  color: #5855b3;
+}
+
+.a-verb {
+  color: #888780;
+}
+
+.a-game-link {
+  color: #185fa5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.a-game-link:hover {
+  text-decoration: underline;
+}
+
+/* Status badges */
+.a-status-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-added {
+  background: #f3effa;
+  color: #5855b3;
+}
+
+.badge-favorited {
+  background: #fef0e6;
+  color: #c2410c;
+}
+
+.badge-completed {
+  background: #e6f1fb;
+  color: #0c447c;
+}
+
+.badge-in-progress {
+  background: #eaf3de;
+  color: #27500a;
+}
+
+.badge-dropped {
+  background: #fef0e6;
+  color: #8b4513;
+}
+
+.badge-unplayed {
+  background: #f4f3ef;
+  color: #888780;
+}
+
+.badge-fully-completed {
+  background: #fff8db;
+  color: #7a6200;
+}
+
+.badge-not-applicable {
+  background: #f4f3ef;
+  color: #b4b2a9;
+}
+
+.badge-paused {
+  background: #f4f3ef;
+  color: #888780;
+}
+
+/* Meta row */
+.a-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.a-time {
+  font-size: 12px;
+  color: #b4b2a9;
+}
+
+.a-separator {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d3d1c7;
+  flex-shrink: 0;
+}
+
+.a-rating {
+  font-size: 12px;
+  color: #888780;
 }
 </style>
