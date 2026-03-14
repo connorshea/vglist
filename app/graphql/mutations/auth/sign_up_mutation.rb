@@ -6,7 +6,7 @@ class Mutations::Auth::SignUpMutation < GraphQL::Schema::Mutation
   argument :password, String, required: true, description: "The user's password (minimum 8 characters)."
   argument :password_confirmation, String, required: true, description: "Password confirmation (must match password)."
 
-  field :user, Types::UserType, null: true, description: "The newly created user."
+  field :message, String, null: true, description: "Success message."
   field :errors, [String], null: false, description: "Error messages if sign up failed."
 
   def resolve(username:, email:, password:, password_confirmation:)
@@ -18,9 +18,9 @@ class Mutations::Auth::SignUpMutation < GraphQL::Schema::Mutation
     )
 
     if user.save
-      { user: user, errors: [] }
+      { message: "Account created successfully. Please check your email to confirm your account.", errors: [] }
     else
-      { user: nil, errors: user.errors.full_messages }
+      { message: nil, errors: user.errors.full_messages }
     end
   end
 end

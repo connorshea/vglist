@@ -10,7 +10,7 @@ export function useAuth() {
   async function signIn(email: string, password: string) {
     try {
       const data = await gqlClient.request<{
-        signIn: { token: string; user: { id: string; username: string; slug: string; role: string }; errors: string[] }
+        signIn: { token: string; userId: string; username: string; slug: string; role: string; errors: string[] }
       }>(SIGN_IN, { email, password })
 
       const result = data.signIn
@@ -19,11 +19,11 @@ export function useAuth() {
       }
 
       authStore.setAuth(result.token, {
-        id: result.user.id,
-        username: result.user.username,
+        id: result.userId,
+        username: result.username,
         email,
-        role: result.user.role.toLowerCase() as 'member' | 'moderator' | 'admin',
-        slug: result.user.slug,
+        role: result.role.toLowerCase() as 'member' | 'moderator' | 'admin',
+        slug: result.slug,
       })
 
       return { success: true, errors: [] as string[] }
@@ -40,7 +40,7 @@ export function useAuth() {
   ) {
     try {
       const data = await gqlClient.request<{
-        signUp: { user: { id: string; username: string }; errors: string[] }
+        signUp: { message: string | null; errors: string[] }
       }>(SIGN_UP, { username, email, password, passwordConfirmation })
 
       const result = data.signUp

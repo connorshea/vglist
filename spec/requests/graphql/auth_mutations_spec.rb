@@ -8,6 +8,10 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
         mutation SignIn($email: String!, $password: String!) {
           signIn(email: $email, password: $password) {
             token
+            userId
+            username
+            slug
+            role
             errors
           }
         }
@@ -25,6 +29,9 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       data = json.dig('data', 'signIn')
       expect(data['token']).to be_present
       expect(data['errors']).to be_empty
+      expect(data['userId']).to eq(user.id.to_s)
+      expect(data['username']).to eq(user.username)
+      expect(data['slug']).to eq(user.slug)
 
       # Verify the token decodes to the correct user
       decoded = JwtService.decode(data['token'])
@@ -75,6 +82,7 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       <<~GQL
         mutation SignUp($username: String!, $email: String!, $password: String!, $passwordConfirmation: String!) {
           signUp(username: $username, email: $email, password: $password, passwordConfirmation: $passwordConfirmation) {
+            message
             errors
           }
         }
@@ -96,6 +104,7 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       json = JSON.parse(response.body)
       data = json.dig('data', 'signUp')
       expect(data['errors']).to be_empty
+      expect(data['message']).to include("Account created successfully")
       expect(User.find_by(email: "graphqluser@example.com")).to be_present
     end
 
@@ -112,6 +121,7 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
 
       json = JSON.parse(response.body)
       data = json.dig('data', 'signUp')
+      expect(data['message']).to be_nil
       expect(data['errors']).not_to be_empty
     end
   end
