@@ -18,7 +18,7 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       GQL
     end
 
-    it "returns a JWT token for valid credentials" do
+    it "returns a JWT token for valid credentials", :aggregate_failures do
       post graphql_path, params: {
         query: query,
         variables: { email: user.email, password: "password" }.to_json
@@ -89,7 +89,7 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       GQL
     end
 
-    it "creates a new user" do
+    it "creates a new user", :aggregate_failures do
       post graphql_path, params: {
         query: query,
         variables: {

@@ -17,7 +17,7 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       GQL
     end
 
-    it "updates the user's bio" do
+    it "updates the user's bio", :aggregate_failures do
       post graphql_path, params: {
         query: query,
         variables: { bio: "Updated bio!" }.to_json
@@ -54,7 +54,7 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       GQL
     end
 
-    it "generates a new API token" do
+    it "generates a new API token", :aggregate_failures do
       post graphql_path, params: { query: query }, headers: auth_headers
 
       expect(response).to have_http_status(:success)
@@ -96,7 +96,7 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       expect(library).to eq([])
     end
 
-    it "exports a library with game purchases" do
+    it "exports a library with game purchases", :aggregate_failures do
       user_with_games = create(:user_with_game_purchase)
       user_with_games.confirm
       token = JwtService.encode(user_with_games)
