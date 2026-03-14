@@ -11,6 +11,8 @@
     "lint": "oxlint --tsconfig tsconfig.json",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "codegen": "graphql-codegen"
   },
   "dependencies": {
@@ -30,10 +32,13 @@
     "@graphql-codegen/typescript-operations": "^4.4.0",
     "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^26.1.0",
     "oxfmt": "^0.40.0",
     "oxlint": "^1.51.0",
     "typescript": "~5.9.3",
     "vite": "^8.0.0",
+    "vitest": "^4.1.0",
     "vue-tsc": "^3.2.5"
   }
 }
