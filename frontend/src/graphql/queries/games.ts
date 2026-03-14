@@ -108,6 +108,17 @@ export const GET_RECENT_GAMES = gql`
   }
 `;
 
+export const GET_HERO_COVERS = gql`
+  query GetHeroCovers {
+    games(first: 100, sortBy: RECENTLY_UPDATED) {
+      nodes {
+        id
+        coverUrl(size: SMALL)
+      }
+    }
+  }
+`;
+
 export const SEARCH_GAMES = gql`
   query SearchGames($query: String!) {
     gameSearch(query: $query) {
