@@ -348,6 +348,9 @@ function canDeleteEvent(event: ActivityEvent): boolean {
 }
 
 async function deleteEvent(eventId: string) {
+  // TODO: Create a shared confirmation modal component instead of using window.confirm, and update this.
+  if (!window.confirm("Are you sure you want to delete this event?")) return;
+
   deletingEventId.value = eventId;
   try {
     await deleteEventMutate({ eventId });
@@ -370,11 +373,11 @@ async function deleteEvent(eventId: string) {
 </script>
 
 <style scoped>
-/* Bleed background into parent main.section padding */
+/* Full-width background */
 .activity-section {
   background: #f4f3ef;
-  margin: -3rem -1.5rem;
-  padding: 3rem 1.5rem;
+  margin: -3rem calc(-50vw + 50%);
+  padding: 3rem max(1.5rem, calc(50vw - 50%));
   min-height: calc(100vh - 52px);
 }
 
