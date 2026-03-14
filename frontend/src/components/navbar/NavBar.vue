@@ -74,8 +74,20 @@
             <a class="navbar-link">More</a>
             <div class="navbar-dropdown is-right">
               <router-link class="navbar-item" to="/about">About</router-link>
-              <a class="navbar-item" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <a class="navbar-item" href="https://discord.gg/EWGm3YY" target="_blank" rel="noopener noreferrer">Discord</a>
+              <a
+                class="navbar-item"
+                href="https://github.com/connorshea/vglist"
+                target="_blank"
+                rel="noopener noreferrer"
+                >GitHub</a
+              >
+              <a
+                class="navbar-item"
+                href="https://discord.gg/EWGm3YY"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Discord</a
+              >
             </div>
           </div>
         </template>
@@ -96,9 +108,12 @@ const authStore = useAuthStore();
 const { signOut } = useAuth();
 const isBurgerActive = ref(false);
 
-watch(() => route.path, () => {
-  isBurgerActive.value = false;
-});
+watch(
+  () => route.path,
+  () => {
+    isBurgerActive.value = false;
+  }
+);
 
 function handleSignOut() {
   signOut();
