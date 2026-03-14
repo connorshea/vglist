@@ -362,18 +362,18 @@ function onPointerDown(e: PointerEvent) {
 }
 
 .mn-nav-icon.ic-activity {
-  background: #e6f1fb;
-  color: #185fa5;
+  background: var(--p-100);
+  color: var(--p-700);
 }
 
 .mn-nav-icon.ic-games {
-  background: #eaf3de;
-  color: #27500a;
+  background: var(--p-50);
+  color: var(--p-600);
 }
 
 .mn-nav-icon.ic-users {
-  background: #faeeda;
-  color: #854f0b;
+  background: var(--p-100);
+  color: var(--p-600);
 }
 
 .mn-arrow {
@@ -428,12 +428,12 @@ function onPointerDown(e: PointerEvent) {
   .mn-chip {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
-    color: var(--color-border);
+    color: var(--color-text-secondary);
   }
 }
 
 .mn-chip:active {
-  background: #eae9e4;
+  background: var(--n-100);
   border-color: var(--color-text-tertiary);
 }
 
@@ -458,7 +458,7 @@ function onPointerDown(e: PointerEvent) {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #5855b3;
+  background: var(--p-500);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -513,7 +513,7 @@ function onPointerDown(e: PointerEvent) {
 }
 
 .mn-ubtn:active {
-  background: #eae9e4;
+  background: var(--n-100);
 }
 
 .mn-ubtn svg {
@@ -549,17 +549,17 @@ function onPointerDown(e: PointerEvent) {
 }
 
 .mn-auth-signin:active {
-  background: #eae9e4;
+  background: var(--n-100);
 }
 
 .mn-auth-signup {
-  background: #5855b3;
-  border: 0.5px solid #5855b3;
+  background: var(--p-500);
+  border: 0.5px solid var(--p-500);
   color: #fff;
 }
 
 .mn-auth-signup:active {
-  background: #4a47a0;
+  background: var(--p-600);
 }
 
 /* Stagger animation */

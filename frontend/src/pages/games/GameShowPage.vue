@@ -1036,8 +1036,8 @@ async function toggleFavorite() {
 
 @media (prefers-color-scheme: dark) {
   .game-show {
-    --game-border-light: hsl(217, 20%, 34%);
-    --game-link-color: hsl(240, 70%, 75%);
+    --game-border-light: var(--s-300);
+    --game-link-color: var(--p-300);
   }
 
   .detail-link,
@@ -1050,7 +1050,7 @@ async function toggleFavorite() {
   }
 
   .sidebar-tag:hover {
-    background: hsla(240, 60%, 65%, 0.2);
+    background: rgba(157, 153, 224, 0.15);
   }
 
   .rating-circle-value {
@@ -1363,15 +1363,15 @@ a.hero-tag:hover {
 }
 
 .form-pill-on {
-  background: #e6f1fb;
-  color: #0c447c;
+  background: var(--p-100);
+  color: var(--p-700);
   font-weight: 500;
   border: 1px solid transparent;
 }
 
 .form-pill-on-green {
-  background: #eaf3de;
-  color: #27500a;
+  background: var(--p-200);
+  color: var(--p-700);
   font-weight: 500;
   border: 1px solid transparent;
 }
@@ -1623,7 +1623,7 @@ a.hero-tag:hover {
 
 .rating-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--vglist-theme), hsl(240, 50%, 65%));
+  background: linear-gradient(90deg, var(--p-500), var(--p-400));
   border-radius: 5px;
   transition: width 0.4s ease;
 }
@@ -1708,7 +1708,7 @@ a.hero-tag:hover {
 }
 
 .sidebar-tag:hover {
-  background: hsla(240, 60%, 65%, 0.1);
+  background: rgba(88, 85, 179, 0.1);
 }
 
 /* Community card (owners/favoriters) */

@@ -402,8 +402,8 @@ async function deleteEvent(eventId: string) {
 }
 
 .activity-tab.active {
-  color: #5855b3;
-  border-bottom-color: #5855b3;
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
   font-weight: 500;
 }
 
@@ -452,7 +452,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-cover-placeholder {
-  background: linear-gradient(145deg, #8b5cf6 0%, #6366f1 100%);
+  background: linear-gradient(145deg, var(--p-400) 0%, var(--p-500) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -462,7 +462,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-cover-user {
-  background: linear-gradient(145deg, #6366f1 0%, #4338ca 100%);
+  background: linear-gradient(145deg, var(--p-500) 0%, var(--p-700) 100%);
 }
 
 /* Body */
@@ -496,7 +496,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-user-avatar-placeholder {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--p-400) 0%, var(--p-600) 100%);
   color: #fff;
   font-size: 9px;
   font-weight: 600;
@@ -513,7 +513,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-user-link:hover {
-  color: #5855b3;
+  color: var(--color-accent);
 }
 
 .a-verb {
@@ -521,7 +521,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-game-link {
-  color: #185fa5;
+  color: var(--color-accent);
   text-decoration: none;
   font-weight: 500;
 }
@@ -543,8 +543,8 @@ async function deleteEvent(eventId: string) {
 }
 
 .badge-added {
-  background: #f3effa;
-  color: #5855b3;
+  background: var(--p-50);
+  color: var(--p-500);
 }
 
 .badge-favorited {
@@ -640,7 +640,7 @@ async function deleteEvent(eventId: string) {
 }
 
 .a-delete-btn:hover {
-  color: #f14668;
+  color: var(--r-500);
 }
 
 .a-delete-btn:disabled {
