@@ -7,10 +7,10 @@
 
         <div v-if="statsData" class="home-stats-bar">
           <div class="home-stats-container">
-            <div class="home-stat" v-for="stat in stats" :key="stat.label">
+            <router-link class="home-stat" v-for="stat in stats" :key="stat.label" :to="stat.path">
               <p class="home-stat-value">{{ stat.value.toLocaleString() }}</p>
               <p class="home-stat-label">{{ stat.label }}</p>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -72,12 +72,12 @@ const stats = computed(() => {
   if (!statsData.value) return [];
   const s = statsData.value.basicSiteStatistics;
   return [
-    { label: "GAMES", value: s.games },
-    { label: "SERIES", value: s.series },
-    { label: "PLATFORMS", value: s.platforms },
-    { label: "COMPANIES", value: s.companies },
-    { label: "ENGINES", value: s.engines },
-    { label: "GENRES", value: s.genres },
+    { label: "GAMES", value: s.games, path: "/games" },
+    { label: "SERIES", value: s.series, path: "/series" },
+    { label: "PLATFORMS", value: s.platforms, path: "/platforms" },
+    { label: "COMPANIES", value: s.companies, path: "/companies" },
+    { label: "ENGINES", value: s.engines, path: "/engines" },
+    { label: "GENRES", value: s.genres, path: "/genres" },
   ];
 });
 
@@ -112,8 +112,16 @@ function developerNames(game: GameNode): string {
 }
 
 .home-stat {
+  display: block;
   padding: 0.5rem 1.5rem;
   text-align: center;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.home-stat:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .home-stat-value {
