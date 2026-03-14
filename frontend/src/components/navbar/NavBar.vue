@@ -5,22 +5,7 @@
         <img src="@/assets/images/vglist-logo.svg" alt="vglist" style="height: 24px" />
       </router-link>
 
-      <!-- Hamburger (mobile only, opens bottom sheet) -->
-      <a
-        role="button"
-        class="navbar-burger"
-        :class="{ 'is-active': isSheetOpen }"
-        aria-label="menu"
-        :aria-expanded="isSheetOpen"
-        @click="isSheetOpen = !isSheetOpen"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-
-      <!-- Mobile search button (next to hamburger) -->
+      <!-- Mobile search button (to the left of hamburger) -->
       <button
         class="navbar-mobile-search is-hidden-desktop"
         aria-label="Search"
@@ -39,6 +24,21 @@
           <path d="M12 12l4 4" />
         </svg>
       </button>
+
+      <!-- Hamburger (mobile only, opens bottom sheet) -->
+      <a
+        role="button"
+        class="navbar-burger"
+        :class="{ 'is-active': isSheetOpen }"
+        aria-label="menu"
+        :aria-expanded="isSheetOpen"
+        @click="isSheetOpen = !isSheetOpen"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
     <!-- Desktop menu (never toggled by burger anymore) -->

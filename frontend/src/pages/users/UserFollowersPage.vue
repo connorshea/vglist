@@ -16,9 +16,9 @@
 
       <p class="subtitle is-6 has-text-grey">{{ user.followers.totalCount }} followers</p>
 
-      <div v-if="!followerUsers.length" class="notification is-light">
-        <p>No followers yet.</p>
-      </div>
+      <p v-if="!followerUsers.length" class="has-text-centered has-text-grey py-6">
+        No followers yet.
+      </p>
 
       <div class="columns is-multiline">
         <div v-for="follower in followerUsers" :key="follower.id" class="column is-3">
