@@ -16,5 +16,8 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "managing-dependencies@managing-dependencies": true
   }
 }
