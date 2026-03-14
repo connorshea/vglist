@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
+import { useMutation } from '@/composables/useGraphQL'
 import { EXPORT_LIBRARY } from '@/graphql/mutations/users'
 
 const exportData = ref('')
@@ -42,7 +42,7 @@ async function exportLibrary() {
 
   try {
     const response = await mutate()
-    const result = response?.data?.exportLibrary
+    const result = response?.exportLibrary
 
     if (result?.errors && result.errors.length > 0) {
       exportError.value = result.errors.join(', ')

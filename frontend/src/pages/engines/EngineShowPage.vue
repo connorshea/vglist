@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading engine...</p>
     </div>
 
@@ -8,18 +8,18 @@
       <p>Failed to load engine: {{ error.message }}</p>
     </div>
 
-    <div v-if="result">
-      <h1 class="title">{{ result.engine.name }}</h1>
+    <div v-if="data">
+      <h1 class="title">{{ data.engine.name }}</h1>
 
-      <p v-if="result.engine.wikidataId" class="subtitle is-6">
-        Wikidata ID: {{ result.engine.wikidataId }}
+      <p v-if="data.engine.wikidataId" class="subtitle is-6">
+        Wikidata ID: {{ data.engine.wikidataId }}
       </p>
 
       <h2 class="title is-4 mt-5">Games</h2>
 
       <div class="columns is-multiline">
         <div
-          v-for="game in result.engine.games.nodes"
+          v-for="game in data.engine.games.nodes"
           :key="game.id"
           class="column is-3"
         >
@@ -43,12 +43,12 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_ENGINE } from '@/graphql/queries/resources'
 
 const route = useRoute()
 
-const { result, loading, error } = useQuery(GET_ENGINE, {
-  id: route.params.id,
+const { data, loading, error } = useQuery(GET_ENGINE, {
+  variables: { id: route.params.id },
 })
 </script>

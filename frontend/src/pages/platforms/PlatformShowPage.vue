@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading platform...</p>
     </div>
 
@@ -8,18 +8,18 @@
       <p>Failed to load platform: {{ error.message }}</p>
     </div>
 
-    <div v-if="result">
-      <h1 class="title">{{ result.platform.name }}</h1>
+    <div v-if="data">
+      <h1 class="title">{{ data.platform.name }}</h1>
 
-      <p v-if="result.platform.wikidataId" class="subtitle is-6">
-        Wikidata ID: {{ result.platform.wikidataId }}
+      <p v-if="data.platform.wikidataId" class="subtitle is-6">
+        Wikidata ID: {{ data.platform.wikidataId }}
       </p>
 
       <h2 class="title is-4 mt-5">Games</h2>
 
       <div class="columns is-multiline">
         <div
-          v-for="game in result.platform.games.nodes"
+          v-for="game in data.platform.games.nodes"
           :key="game.id"
           class="column is-3"
         >
@@ -43,12 +43,12 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_PLATFORM } from '@/graphql/queries/resources'
 
 const route = useRoute()
 
-const { result, loading, error } = useQuery(GET_PLATFORM, {
-  id: route.params.id,
+const { data, loading, error } = useQuery(GET_PLATFORM, {
+  variables: { id: route.params.id },
 })
 </script>

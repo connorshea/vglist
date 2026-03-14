@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_BASIC_SITE_STATISTICS } from '@/graphql/queries/resources'
 
-const { result: data } = useQuery(GET_BASIC_SITE_STATISTICS)
+const { data } = useQuery(GET_BASIC_SITE_STATISTICS)
 
 const stats = computed(() => {
   if (!data.value) return []

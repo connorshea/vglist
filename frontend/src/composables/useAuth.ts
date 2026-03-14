@@ -1,37 +1,35 @@
-import { useMutation } from '@vue/apollo-composable'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { gqlClient } from '@/graphql/client'
 import { SIGN_IN, SIGN_UP, REQUEST_PASSWORD_RESET } from '@/graphql/mutations/auth'
-import { apolloClient } from '@/graphql/client'
 
 export function useAuth() {
   const authStore = useAuthStore()
   const router = useRouter()
 
   async function signIn(email: string, password: string) {
-    const { data, errors } = await apolloClient.mutate({
-      mutation: SIGN_IN,
-      variables: { email, password },
-    })
+    try {
+      const data = await gqlClient.request<{
+        signIn: { token: string; user: { id: string; username: string; slug: string; role: string }; errors: string[] }
+      }>(SIGN_IN, { email, password })
 
-    if (errors?.length) {
-      return { success: false, errors: errors.map((e) => e.message) }
+      const result = data.signIn
+      if (result.errors.length > 0) {
+        return { success: false, errors: result.errors }
+      }
+
+      authStore.setAuth(result.token, {
+        id: result.user.id,
+        username: result.user.username,
+        email,
+        role: result.user.role.toLowerCase() as 'member' | 'moderator' | 'admin',
+        slug: result.user.slug,
+      })
+
+      return { success: true, errors: [] as string[] }
+    } catch (e) {
+      return { success: false, errors: [(e instanceof Error ? e.message : 'Sign in failed')] }
     }
-
-    const result = data.signIn
-    if (result.errors.length > 0) {
-      return { success: false, errors: result.errors }
-    }
-
-    authStore.setAuth(result.token, {
-      id: result.user.id,
-      username: result.user.username,
-      email,
-      role: result.user.role.toLowerCase(),
-      slug: result.user.slug,
-    })
-
-    return { success: true, errors: [] }
   }
 
   async function signUp(
@@ -40,35 +38,32 @@ export function useAuth() {
     password: string,
     passwordConfirmation: string,
   ) {
-    const { data, errors } = await apolloClient.mutate({
-      mutation: SIGN_UP,
-      variables: { username, email, password, passwordConfirmation },
-    })
+    try {
+      const data = await gqlClient.request<{
+        signUp: { user: { id: string; username: string }; errors: string[] }
+      }>(SIGN_UP, { username, email, password, passwordConfirmation })
 
-    if (errors?.length) {
-      return { success: false, errors: errors.map((e) => e.message) }
+      const result = data.signUp
+      if (result.errors.length > 0) {
+        return { success: false, errors: result.errors }
+      }
+
+      return { success: true, errors: [] as string[] }
+    } catch (e) {
+      return { success: false, errors: [(e instanceof Error ? e.message : 'Sign up failed')] }
     }
-
-    const result = data.signUp
-    if (result.errors.length > 0) {
-      return { success: false, errors: result.errors }
-    }
-
-    return { success: true, errors: [] }
   }
 
   async function requestPasswordReset(email: string) {
-    const { data } = await apolloClient.mutate({
-      mutation: REQUEST_PASSWORD_RESET,
-      variables: { email },
-    })
+    const data = await gqlClient.request<{
+      requestPasswordReset: { message: string }
+    }>(REQUEST_PASSWORD_RESET, { email })
 
     return data.requestPasswordReset.message
   }
 
   function signOut() {
     authStore.clearAuth()
-    apolloClient.clearStore()
     router.push('/login')
   }
 

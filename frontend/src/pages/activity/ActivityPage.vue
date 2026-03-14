@@ -13,7 +13,7 @@
       </ul>
     </div>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading activity...</p>
     </div>
 
@@ -21,9 +21,9 @@
       <p>Failed to load activity: {{ error.message }}</p>
     </div>
 
-    <div v-if="result">
+    <div v-if="data">
       <div
-        v-for="event in result.activity.nodes"
+        v-for="event in data.activity.nodes"
         :key="event.id"
         class="box"
       >
@@ -51,7 +51,7 @@
       </div>
 
       <div
-        v-if="result.activity.pageInfo.hasNextPage"
+        v-if="data.activity.pageInfo.hasNextPage"
         class="has-text-centered mt-5"
       >
         <button
@@ -69,40 +69,35 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_ACTIVITY } from '@/graphql/queries/resources'
 
 const feedType = ref<'GLOBAL' | 'FOLLOWING'>('GLOBAL')
 
-const { result, loading, error, fetchMore, refetch } = useQuery(GET_ACTIVITY, () => ({
-  feedType: feedType.value,
-  first: 25,
-}))
+const { data, loading, error, fetchMore, refetch } = useQuery(GET_ACTIVITY, {
+  variables: () => ({ feedType: feedType.value, first: 25 }),
+})
 
 watch(feedType, () => {
   refetch()
 })
 
 function loadMore() {
-  fetchMore({
-    variables: {
+  fetchMore(
+    {
       feedType: feedType.value,
       first: 25,
-      after: result.value.activity.pageInfo.endCursor,
+      after: data.value.activity.pageInfo.endCursor,
     },
-    updateQuery(previousResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) return previousResult
-
-      return {
-        activity: {
-          ...fetchMoreResult.activity,
-          nodes: [
-            ...previousResult.activity.nodes,
-            ...fetchMoreResult.activity.nodes,
-          ],
-        },
-      }
-    },
-  })
+    (prev, next) => ({
+      activity: {
+        ...next.activity,
+        nodes: [
+          ...prev.activity.nodes,
+          ...next.activity.nodes,
+        ],
+      },
+    }),
+  )
 }
 </script>

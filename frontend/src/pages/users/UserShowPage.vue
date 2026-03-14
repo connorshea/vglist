@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading...</p>
     </div>
 
@@ -162,7 +162,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useQuery, useMutation } from '@vue/apollo-composable'
+import { useQuery, useMutation } from '@/composables/useGraphQL'
 import { useAuthStore } from '@/stores/auth'
 import { GET_USER } from '@/graphql/queries/users'
 import { FOLLOW_USER, UNFOLLOW_USER } from '@/graphql/mutations/users'
@@ -170,11 +170,11 @@ import { FOLLOW_USER, UNFOLLOW_USER } from '@/graphql/mutations/users'
 const route = useRoute()
 const authStore = useAuthStore()
 
-const { result, loading, error } = useQuery(GET_USER, () => ({
-  id: route.params.id as string,
-}))
+const { data, loading, error, refetch } = useQuery(GET_USER, {
+  variables: () => ({ id: route.params.id as string }),
+})
 
-const user = computed(() => result.value?.user ?? null)
+const user = computed(() => data.value?.user ?? null)
 const gamePurchases = computed(() => user.value?.gamePurchases?.nodes ?? [])
 const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? [])
 
@@ -186,35 +186,13 @@ const { mutate: followUser, loading: followLoading } = useMutation(FOLLOW_USER)
 const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_USER)
 
 async function handleFollow() {
-  await followUser({ userId: route.params.id as string }, {
-    update(cache) {
-      cache.modify({
-        id: cache.identify({ __typename: 'User', id: route.params.id }),
-        fields: {
-          isFollowed() { return true },
-          followers(existing) {
-            return { ...existing, totalCount: (existing as unknown as { totalCount: number }).totalCount + 1 }
-          },
-        },
-      })
-    },
-  })
+  await followUser({ userId: route.params.id as string })
+  await refetch()
 }
 
 async function handleUnfollow() {
-  await unfollowUser({ userId: route.params.id as string }, {
-    update(cache) {
-      cache.modify({
-        id: cache.identify({ __typename: 'User', id: route.params.id }),
-        fields: {
-          isFollowed() { return false },
-          followers(existing) {
-            return { ...existing, totalCount: (existing as unknown as { totalCount: number }).totalCount - 1 }
-          },
-        },
-      })
-    },
-  })
+  await unfollowUser({ userId: route.params.id as string })
+  await refetch()
 }
 
 function formatStatus(status: string): string {

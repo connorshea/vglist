@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading game...</p>
     </div>
 
@@ -110,9 +110,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { useAuthStore } from '@/stores/auth'
-import { apolloClient } from '@/graphql/client'
+import { gqlClient } from '@/graphql/client'
 import { GET_GAME } from '@/graphql/queries/games'
 import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME } from '@/graphql/mutations/games'
 
@@ -121,11 +121,11 @@ const authStore = useAuthStore()
 
 const gameId = computed(() => route.params.id as string)
 
-const { result, loading, error } = useQuery(GET_GAME, () => ({
-  id: gameId.value,
-}))
+const { data, loading, error } = useQuery(GET_GAME, {
+  variables: () => ({ id: gameId.value }),
+})
 
-const game = computed(() => result.value?.game ?? null)
+const game = computed(() => data.value?.game ?? null)
 
 const addingToLibrary = ref(false)
 const favoriting = ref(false)
@@ -141,10 +141,7 @@ async function addToLibrary() {
   actionMessage.value = ''
 
   try {
-    await apolloClient.mutate({
-      mutation: ADD_GAME_TO_LIBRARY,
-      variables: { gameId: gameId.value },
-    })
+    await gqlClient.request(ADD_GAME_TO_LIBRARY, { gameId: gameId.value })
     actionMessage.value = `${game.value.name} has been added to your library.`
     actionIsError.value = false
   } catch (err) {
@@ -160,10 +157,7 @@ async function favoriteGame() {
   actionMessage.value = ''
 
   try {
-    await apolloClient.mutate({
-      mutation: FAVORITE_GAME,
-      variables: { gameId: gameId.value },
-    })
+    await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value })
     actionMessage.value = `${game.value.name} has been favorited.`
     actionIsError.value = false
   } catch (err) {

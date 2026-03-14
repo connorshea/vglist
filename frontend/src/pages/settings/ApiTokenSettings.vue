@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
+import { useMutation } from '@/composables/useGraphQL'
 import { RESET_API_TOKEN } from '@/graphql/mutations/users'
 
 const newToken = ref('')
@@ -45,7 +45,7 @@ async function resetToken() {
 
   try {
     const response = await mutate()
-    const result = response?.data?.resetApiToken
+    const result = response?.resetApiToken
 
     if (result?.errors && result.errors.length > 0) {
       resetError.value = result.errors.join(', ')

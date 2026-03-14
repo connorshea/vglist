@@ -2,7 +2,7 @@
   <section class="section">
     <h1 class="title">Games</h1>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading games...</p>
     </div>
 
@@ -10,9 +10,9 @@
       <p>Failed to load games: {{ error.message }}</p>
     </div>
 
-    <div v-if="result" class="columns is-multiline">
+    <div v-if="data" class="columns is-multiline">
       <div
-        v-for="game in result.games.nodes"
+        v-for="game in data.games.nodes"
         :key="game.id"
         class="column is-3"
       >
@@ -38,7 +38,7 @@
     </div>
 
     <div
-      v-if="result?.games.pageInfo.hasNextPage"
+      v-if="data?.games.pageInfo.hasNextPage"
       class="has-text-centered mt-5"
     >
       <button
@@ -54,32 +54,25 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_GAMES } from '@/graphql/queries/games'
 
-const { result, loading, error, fetchMore } = useQuery(GET_GAMES, {
-  first: 20,
+const { data, loading, error, fetchMore } = useQuery(GET_GAMES, {
+  variables: { first: 20 },
 })
 
 function loadMore() {
-  fetchMore({
-    variables: {
-      first: 20,
-      after: result.value.games.pageInfo.endCursor,
-    },
-    updateQuery(previousResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) return previousResult
-
-      return {
-        games: {
-          ...fetchMoreResult.games,
-          nodes: [
-            ...previousResult.games.nodes,
-            ...fetchMoreResult.games.nodes,
-          ],
-        },
-      }
-    },
-  })
+  fetchMore(
+    { first: 20, after: data.value.games.pageInfo.endCursor },
+    (prev, next) => ({
+      games: {
+        ...next.games,
+        nodes: [
+          ...prev.games.nodes,
+          ...next.games.nodes,
+        ],
+      },
+    }),
+  )
 }
 </script>

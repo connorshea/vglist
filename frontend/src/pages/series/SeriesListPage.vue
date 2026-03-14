@@ -2,7 +2,7 @@
   <section class="section">
     <h1 class="title">Series</h1>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading series...</p>
     </div>
 
@@ -10,16 +10,16 @@
       <p>Failed to load series: {{ error.message }}</p>
     </div>
 
-    <div v-if="result" class="content">
+    <div v-if="data" class="content">
       <ul>
-        <li v-for="s in result.seriesList.nodes" :key="s.id">
+        <li v-for="s in data.seriesList.nodes" :key="s.id">
           <router-link :to="`/series/${s.id}`">{{ s.name }}</router-link>
         </li>
       </ul>
     </div>
 
     <div
-      v-if="result?.seriesList.pageInfo.hasNextPage"
+      v-if="data?.seriesList.pageInfo.hasNextPage"
       class="has-text-centered mt-5"
     >
       <button
@@ -35,32 +35,22 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_SERIES_LIST } from '@/graphql/queries/resources'
 
-const { result, loading, error, fetchMore } = useQuery(GET_SERIES_LIST, {
-  first: 25,
+const { data, loading, error, fetchMore } = useQuery(GET_SERIES_LIST, {
+  variables: { first: 25 },
 })
 
 function loadMore() {
-  fetchMore({
-    variables: {
-      first: 25,
-      after: result.value.seriesList.pageInfo.endCursor,
-    },
-    updateQuery(previousResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) return previousResult
-
-      return {
-        seriesList: {
-          ...fetchMoreResult.seriesList,
-          nodes: [
-            ...previousResult.seriesList.nodes,
-            ...fetchMoreResult.seriesList.nodes,
-          ],
-        },
-      }
-    },
-  })
+  fetchMore(
+    { first: 25, after: data.value.seriesList.pageInfo.endCursor },
+    (prev, next) => ({
+      seriesList: {
+        ...next.seriesList,
+        nodes: [...prev.seriesList.nodes, ...next.seriesList.nodes],
+      },
+    }),
+  )
 }
 </script>

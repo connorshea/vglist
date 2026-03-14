@@ -2,7 +2,7 @@
   <section class="section">
     <h1 class="title">Users</h1>
 
-    <div v-if="loading && !result" class="has-text-centered">
+    <div v-if="loading && !data" class="has-text-centered">
       <p>Loading...</p>
     </div>
 
@@ -54,35 +54,29 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useQuery } from '@vue/apollo-composable'
+import { useQuery } from '@/composables/useGraphQL'
 import { GET_USERS } from '@/graphql/queries/users'
 
-const { result, loading, error, fetchMore } = useQuery(GET_USERS, {
-  first: 20,
+const { data, loading, error, fetchMore } = useQuery(GET_USERS, {
+  variables: { first: 20 },
 })
 
-const users = computed(() => result.value?.users?.nodes ?? [])
-const hasNextPage = computed(() => result.value?.users?.pageInfo?.hasNextPage ?? false)
-const endCursor = computed(() => result.value?.users?.pageInfo?.endCursor ?? null)
+const users = computed(() => data.value?.users?.nodes ?? [])
+const hasNextPage = computed(() => data.value?.users?.pageInfo?.hasNextPage ?? false)
+const endCursor = computed(() => data.value?.users?.pageInfo?.endCursor ?? null)
 
 function loadMore() {
-  fetchMore({
-    variables: {
-      first: 20,
-      after: endCursor.value,
-    },
-    updateQuery(previousResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) return previousResult
-      return {
-        users: {
-          ...fetchMoreResult.users,
-          nodes: [
-            ...previousResult.users.nodes,
-            ...fetchMoreResult.users.nodes,
-          ],
-        },
-      }
-    },
-  })
+  fetchMore(
+    { first: 20, after: endCursor.value },
+    (prev, next) => ({
+      users: {
+        ...next.users,
+        nodes: [
+          ...prev.users.nodes,
+          ...next.users.nodes,
+        ],
+      },
+    }),
+  )
 }
 </script>
