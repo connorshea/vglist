@@ -11,6 +11,45 @@
 
   --vglist-theme: #5957d6;
 
+  /* Purple ramp */
+  --p-50: #f5f4ff;
+  --p-100: #eeedfe;
+  --p-200: #cecbf6;
+  --p-300: #9d99e0;
+  --p-400: #7b77d1;
+  --p-500: #5855b3;
+  --p-600: #4a47a0;
+  --p-700: #3c3489;
+  --p-800: #2a2460;
+  --p-900: #1b1740;
+
+  /* Red ramp (danger) */
+  --r-50: #fcebeb;
+  --r-200: #f09595;
+  --r-500: #e24b4a;
+  --r-800: #791f1f;
+
+  /* Neutral ramp (warm gray) */
+  --n-0: #ffffff;
+  --n-50: #f4f3ef;
+  --n-100: #e8e7e2;
+  --n-200: #d3d1c7;
+  --n-300: #b4b2a9;
+  --n-400: #888780;
+  --n-500: #5f5e5a;
+  --n-600: #444441;
+  --n-700: #2c2c2a;
+
+  /* Slate ramp (dark mode) */
+  --s-50: #e0e3f0;
+  --s-100: #b0b4c8;
+  --s-200: #8b8fa3;
+  --s-300: #555a6e;
+  --s-400: #3d4155;
+  --s-500: #353848;
+  --s-600: #2b2e3d;
+  --s-700: #1e2130;
+
   /* Shared neutral palette */
   --color-text-primary: #2c2c2a;
   --color-text-secondary: #888780;
@@ -18,6 +57,8 @@
   --color-border: #d3d1c7;
   --color-bg-subtle: #f4f3ef;
   --color-surface: #fff;
+  --color-accent: var(--p-500);
+  --color-navbar-bg: var(--p-500);
 
   /* Shared radii */
   --radius-sm: 6px;
@@ -84,11 +125,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bulma-scheme-h: 217;
-    --bulma-scheme-s: 28%;
-    --bulma-scheme-main-l: 24%;
-    --bulma-scheme-main-bis-l: 27%;
-    --bulma-scheme-main-ter-l: 30%;
+    --bulma-scheme-h: 230;
+    --bulma-scheme-s: 17%;
+    --bulma-scheme-main-l: 20%;
+    --bulma-scheme-main-bis-l: 25%;
+    --bulma-scheme-main-ter-l: 29%;
 
     --bulma-scheme-main: hsl(
       var(--bulma-scheme-h),
@@ -106,13 +147,15 @@
     --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
     --library-edit-bar-border: #435169;
 
-    /* Shared neutral palette (dark) */
-    --color-text-primary: hsl(0, 0%, 95%);
-    --color-text-secondary: hsl(217, 10%, 65%);
-    --color-text-tertiary: hsl(217, 10%, 55%);
-    --color-border: hsl(217, 20%, 38%);
-    --color-bg-subtle: hsl(217, 20%, 30%);
-    --color-surface: hsl(217, 28%, 27%);
+    /* Shared neutral palette (dark — slate ramp) */
+    --color-text-primary: var(--s-50);
+    --color-text-secondary: var(--s-200);
+    --color-text-tertiary: var(--s-200);
+    --color-border: var(--s-300);
+    --color-bg-subtle: var(--s-600);
+    --color-surface: var(--s-400);
+    --color-accent: var(--p-300);
+    --color-navbar-bg: var(--s-700);
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
@@ -157,7 +200,7 @@
 }
 
 nav.navbar {
-  background: var(--vglist-theme);
+  background: var(--color-navbar-bg);
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
   padding: 0 20px;
 

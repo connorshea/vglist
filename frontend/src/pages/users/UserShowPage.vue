@@ -589,7 +589,7 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: linear-gradient(135deg, var(--p-400), var(--p-300));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -764,11 +764,11 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
 }
 
 .actions-dropdown-item-danger {
-  color: #f14668;
+  color: var(--r-500);
 }
 
 .actions-dropdown-item-danger:hover {
-  background: #fff0f0;
+  background: var(--r-50);
 }
 
 /* ── Section Labels ── */
