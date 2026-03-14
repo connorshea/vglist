@@ -37,13 +37,15 @@
                 {{ showAddForm ? "Editing\u2026" : inLibraryHovered ? "Edit\u2026" : "In library" }}
               </button>
               <button
-                class="hero-btn hero-cover-btn hero-fav-btn"
-                :class="{ 'hero-btn-active': game.isFavorited }"
+                class="hero-fav-btn"
+                :class="{ 'hero-fav-active': game.isFavorited }"
                 :disabled="favoriting"
                 :aria-label="game.isFavorited ? 'Unfavorite' : 'Favorite'"
                 @click="toggleFavorite"
               >
-                {{ game.isFavorited ? "\u2665" : "\u2661" }}
+                <span class="hero-fav-heart" :class="{ 'hero-fav-pop': game.isFavorited }">
+                  {{ game.isFavorited ? "\u2665" : "\u2661" }}
+                </span>
               </button>
             </div>
           </div>
@@ -1133,8 +1135,51 @@ async function toggleFavorite() {
 
 .hero-fav-btn {
   flex: 0 0 auto;
-  padding: 0.5rem 0.85rem;
-  font-size: 1rem;
+  padding: 0.25rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.hero-fav-btn:hover {
+  color: #fff;
+}
+
+.hero-fav-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hero-fav-active {
+  color: #ff4d6a;
+}
+
+.hero-fav-active:hover {
+  color: #ff6b83;
+}
+
+.hero-fav-heart {
+  display: inline-block;
+}
+
+.hero-fav-pop {
+  animation: fav-pop 0.35s ease;
+}
+
+@keyframes fav-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Hero info */
