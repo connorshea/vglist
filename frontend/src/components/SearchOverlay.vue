@@ -723,6 +723,7 @@ function releaseYear(date: string): string {
   text-align: center;
   padding: 0.25rem;
   background: linear-gradient(135deg, rgba(123, 94, 167, 0.15), rgba(94, 212, 200, 0.08));
+  user-select: none;
 }
 
 /* ── Compact items (users, companies) ── */
