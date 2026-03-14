@@ -76,17 +76,22 @@ export const GET_USER = gql`
 `;
 
 export const GET_USERS = gql`
-  query GetUsers($first: Int, $after: String) {
-    users(first: $first, after: $after) {
+  query GetUsers($first: Int, $after: String, $sortBy: UserSort) {
+    users(first: $first, after: $after, sortBy: $sortBy) {
       nodes {
         id
         username
         slug
         avatarUrl(size: SMALL)
+        role
+        privacy
+        banned
+        createdAt
         gamePurchases {
           totalCount
         }
       }
+      totalCount
       pageInfo {
         hasNextPage
         endCursor

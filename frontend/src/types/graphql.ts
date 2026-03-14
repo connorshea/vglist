@@ -3,9 +3,7 @@ export type InputMaybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
-  [_ in K]?: never;
-};
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
@@ -2393,66 +2391,50 @@ export type RemoveGameFromLibraryMutationVariables = Exact<{
   gamePurchaseId: Scalars["ID"]["input"];
 }>;
 
-export type RemoveGameFromLibraryMutation = {
-  removeGameFromLibrary?: { game?: { id: string } | null } | null;
-};
+export type RemoveGameFromLibraryMutation = { removeGameFromLibrary?: { game?: { id: string } | null } | null };
 
 export type FavoriteGameMutationVariables = Exact<{
   gameId: Scalars["ID"]["input"];
 }>;
 
-export type FavoriteGameMutation = {
-  favoriteGame?: { game?: { id: string; name: string } | null } | null;
-};
+export type FavoriteGameMutation = { favoriteGame?: { game?: { id: string; name: string } | null } | null };
 
 export type UnfavoriteGameMutationVariables = Exact<{
   gameId: Scalars["ID"]["input"];
 }>;
 
-export type UnfavoriteGameMutation = {
-  unfavoriteGame?: { game?: { id: string; name: string } | null } | null;
-};
+export type UnfavoriteGameMutation = { unfavoriteGame?: { game?: { id: string; name: string } | null } | null };
 
 export type FollowUserMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
 }>;
 
-export type FollowUserMutation = {
-  followUser?: { user?: { id: string; username: string } | null } | null;
-};
+export type FollowUserMutation = { followUser?: { user?: { id: string; username: string } | null } | null };
 
 export type UnfollowUserMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
 }>;
 
-export type UnfollowUserMutation = {
-  unfollowUser?: { user?: { id: string; username: string } | null } | null;
-};
+export type UnfollowUserMutation = { unfollowUser?: { user?: { id: string; username: string } | null } | null };
 
 export type BanUserMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
 }>;
 
-export type BanUserMutation = {
-  banUser?: { user?: { id: string; banned: boolean; role: UserRole } | null } | null;
-};
+export type BanUserMutation = { banUser?: { user?: { id: string; banned: boolean; role: UserRole } | null } | null };
 
 export type UnbanUserMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
 }>;
 
-export type UnbanUserMutation = {
-  unbanUser?: { user?: { id: string; banned: boolean } | null } | null;
-};
+export type UnbanUserMutation = { unbanUser?: { user?: { id: string; banned: boolean } | null } | null };
 
 export type UpdateUserRoleMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
   role: UserRole;
 }>;
 
-export type UpdateUserRoleMutation = {
-  updateUserRole?: { user?: { id: string; role: UserRole } | null } | null;
-};
+export type UpdateUserRoleMutation = { updateUserRole?: { user?: { id: string; role: UserRole } | null } | null };
 
 export type RemoveUserAvatarMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
@@ -2551,9 +2533,7 @@ export type GetRecentGamesQuery = {
 
 export type GetHeroCoversQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetHeroCoversQuery = {
-  games?: { nodes: Array<{ id: string; coverUrl?: string | null }> } | null;
-};
+export type GetHeroCoversQuery = { games?: { nodes: Array<{ id: string; coverUrl?: string | null }> } | null };
 
 export type GetGamePurchaseQueryVariables = Exact<{
   id: Scalars["ID"]["input"];
@@ -2880,15 +2860,21 @@ export type GetUserQuery = {
 export type GetUsersQueryVariables = Exact<{
   first?: InputMaybe<Scalars["Int"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
+  sortBy?: InputMaybe<UserSort>;
 }>;
 
 export type GetUsersQuery = {
   users?: {
+    totalCount: number;
     nodes: Array<{
       id: string;
       username: string;
       slug: string;
       avatarUrl?: string | null;
+      role: UserRole;
+      privacy: UserPrivacy;
+      banned: boolean;
+      createdAt: string;
       gamePurchases: { totalCount: number };
     }>;
     pageInfo: { hasNextPage: boolean; endCursor?: string | null };
@@ -2898,12 +2884,7 @@ export type GetUsersQuery = {
 export type GetCurrentUserProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetCurrentUserProfileQuery = {
-  currentUser?: {
-    id: string;
-    bio?: string | null;
-    privacy: UserPrivacy;
-    hideDaysPlayed: boolean;
-  } | null;
+  currentUser?: { id: string; bio?: string | null; privacy: UserPrivacy; hideDaysPlayed: boolean } | null;
 };
 
 export type SearchUsersQueryVariables = Exact<{
@@ -2911,7 +2892,5 @@ export type SearchUsersQueryVariables = Exact<{
 }>;
 
 export type SearchUsersQuery = {
-  userSearch?: {
-    nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
-  } | null;
+  userSearch?: { nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }> } | null;
 };
