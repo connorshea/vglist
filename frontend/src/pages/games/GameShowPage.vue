@@ -152,11 +152,11 @@
                       <div class="form-dates">
                         <div class="form-date-field">
                           <label class="form-label">Started</label>
-                          <input v-model="formStartDate" type="date" class="form-date-input" />
+                          <input v-model="formStartDate" type="date" class="form-date-input" :max="today" />
                         </div>
                         <div class="form-date-field">
                           <label class="form-label">Finished</label>
-                          <input v-model="formCompletionDate" type="date" class="form-date-input" />
+                          <input v-model="formCompletionDate" type="date" class="form-date-input" :max="today" />
                         </div>
                       </div>
                       <p v-if="dateValidationError" class="form-date-error">
@@ -619,6 +619,7 @@ const formStatus = ref<GamePurchaseCompletionStatus | null>(null);
 const formRating = ref<number | null>(null);
 const formStartDate = ref("");
 const formCompletionDate = ref("");
+const today = computed(() => new Date().toISOString().slice(0, 10));
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formHoursPlayed = ref<number | null>(null);
@@ -816,6 +817,13 @@ function clampRating() {
 }
 
 const dateValidationError = computed(() => {
+  const todayStr = today.value;
+  if (formStartDate.value && formStartDate.value > todayStr) {
+    return "Start date cannot be in the future.";
+  }
+  if (formCompletionDate.value && formCompletionDate.value > todayStr) {
+    return "Completion date cannot be in the future.";
+  }
   if (formStartDate.value && formCompletionDate.value) {
     if (formStartDate.value > formCompletionDate.value) {
       return "Start date must be on or before the completion date.";
