@@ -132,6 +132,89 @@
             </a>
           </div>
 
+          <!-- Companies column -->
+          <div v-if="companyResults.length" class="category">
+            <div class="category-header">
+              <svg
+                class="category-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              </svg>
+              <span class="category-title">Companies</span>
+              <span class="category-count"
+                >{{ companyResults.length }} result{{
+                  companyResults.length === 1 ? "" : "s"
+                }}</span
+              >
+            </div>
+
+            <a
+              v-for="(company, idx) in companyResults"
+              :key="company.searchableId"
+              class="result-item result-item--compact"
+              :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
+              @click.prevent="goToResult(company)"
+            >
+              <div class="result-thumb">
+                <div class="result-thumb-placeholder">
+                  {{ company.content.charAt(0).toUpperCase() }}
+                </div>
+              </div>
+              <div class="result-info">
+                <div class="result-title">{{ company.content }}</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Platforms column -->
+          <div v-if="platformResults.length" class="category">
+            <div class="category-header">
+              <svg
+                class="category-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span class="category-title">Platforms</span>
+              <span class="category-count"
+                >{{ platformResults.length }} result{{
+                  platformResults.length === 1 ? "" : "s"
+                }}</span
+              >
+            </div>
+
+            <a
+              v-for="(platform, idx) in platformResults"
+              :key="platform.searchableId"
+              class="result-item result-item--compact"
+              :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+              @click.prevent="goToResult(platform)"
+            >
+              <div class="result-thumb">
+                <div class="result-thumb-placeholder">
+                  {{ platform.content.charAt(0).toUpperCase() }}
+                </div>
+              </div>
+              <div class="result-info">
+                <div class="result-title">{{ platform.content }}</div>
+              </div>
+            </a>
+          </div>
+
           <!-- Other resources column -->
           <div v-if="otherResults.length" class="category">
             <div class="category-header">
@@ -168,7 +251,9 @@
               <div class="result-info">
                 <div class="result-title">{{ item.content }}</div>
                 <div class="result-meta">
-                  <span class="result-type-tag">{{ item.searchableType }}</span>
+                  <span class="result-type-tag">{{
+                    item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
+                  }}</span>
                 </div>
               </div>
             </a>
@@ -252,10 +337,15 @@ const hasSearched = ref(false);
 const error = ref<string | null>(null);
 
 // Group results by type
-const gameResults = computed(() => results.value.filter((r) => r.searchableType === "Game"));
-const userResults = computed(() => results.value.filter((r) => r.searchableType === "User"));
+const dedicatedTypes = new Set(["GAME", "COMPANY", "PLATFORM", "USER"]);
+const gameResults = computed(() => results.value.filter((r) => r.searchableType === "GAME"));
+const companyResults = computed(() => results.value.filter((r) => r.searchableType === "COMPANY"));
+const platformResults = computed(() =>
+  results.value.filter((r) => r.searchableType === "PLATFORM")
+);
+const userResults = computed(() => results.value.filter((r) => r.searchableType === "USER"));
 const otherResults = computed(() =>
-  results.value.filter((r) => r.searchableType !== "Game" && r.searchableType !== "User")
+  results.value.filter((r) => !dedicatedTypes.has(r.searchableType))
 );
 
 const totalResults = computed(() => results.value.length);
@@ -264,10 +354,12 @@ const totalResults = computed(() => results.value.length);
 const gridColumnsClass = computed(() => {
   const cols = [
     gameResults.value.length > 0,
+    companyResults.value.length > 0,
+    platformResults.value.length > 0,
     otherResults.value.length > 0,
     userResults.value.length > 0
   ].filter(Boolean).length;
-  return `grid-cols-${cols}`;
+  return `grid-cols-${Math.min(cols, 4)}`;
 });
 
 // Focus input when overlay opens, and listen for Escape globally
@@ -327,20 +419,20 @@ function goToFirstResult() {
 }
 
 const typeRouteMap: Record<string, string> = {
-  Game: "games",
-  User: "users",
-  Platform: "platforms",
-  Company: "companies",
-  Engine: "engines",
-  Genre: "genres",
-  Series: "series",
-  Store: "stores"
+  GAME: "games",
+  USER: "users",
+  PLATFORM: "platforms",
+  COMPANY: "companies",
+  ENGINE: "engines",
+  GENRE: "genres",
+  SERIES: "series",
+  STORE: "stores"
 };
 
 function goToResult(result: SearchResultNode) {
   const path = typeRouteMap[result.searchableType];
   if (path) {
-    const id = result.searchableType === "User" && result.slug ? result.slug : result.searchableId;
+    const id = result.searchableType === "USER" && result.slug ? result.slug : result.searchableId;
     router.push(`/${path}/${id}`);
   }
   close();
@@ -559,6 +651,9 @@ function releaseYear(date: string): string {
 .grid-cols-3 {
   grid-template-columns: 1fr 1fr 1fr;
 }
+.grid-cols-4 {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 
 /* ── Category column ── */
 .category {
@@ -725,7 +820,8 @@ function releaseYear(date: string): string {
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .grid-cols-3 {
+  .grid-cols-3,
+  .grid-cols-4 {
     grid-template-columns: 1fr 1fr;
   }
   .search-header,
@@ -736,6 +832,7 @@ function releaseYear(date: string): string {
 }
 
 @media (max-width: 600px) {
+  .grid-cols-4,
   .grid-cols-3,
   .grid-cols-2 {
     grid-template-columns: 1fr;
