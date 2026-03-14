@@ -43,12 +43,17 @@
                 :aria-label="game.isFavorited ? 'Unfavorite' : 'Favorite'"
                 @click="toggleFavorite"
               >
-                <Heart
-                  :size="18"
-                  :stroke-width="1.8"
-                  :fill="game.isFavorited ? 'currentColor' : 'none'"
-                  :class="{ 'hero-fav-pop': game.isFavorited }"
-                />
+                <span class="hero-fav-wrap">
+                  <Heart
+                    :size="18"
+                    :stroke-width="1.8"
+                    :fill="game.isFavorited ? 'currentColor' : 'none'"
+                    :class="{ 'hero-fav-pop': game.isFavorited }"
+                  />
+                  <span v-if="game.isFavorited" class="hero-sparkles" :key="sparkleKey">
+                    <span v-for="i in 6" :key="i" class="hero-sparkle" :style="sparkleStyle(i)" />
+                  </span>
+                </span>
               </button>
             </div>
           </div>
@@ -767,6 +772,24 @@ const dateValidationError = computed(() => {
 const addingToLibrary = ref(false);
 const removingFromLibrary = ref(false);
 const favoriting = ref(false);
+const sparkleKey = ref(0);
+
+function sparkleStyle(i: number): Record<string, string> {
+  const angle = (i - 1) * 60;
+  const rad = (angle * Math.PI) / 180;
+  const dist = 16 + Math.random() * 6;
+  const x = Math.cos(rad) * dist;
+  const y = Math.sin(rad) * dist;
+  const size = 3 + Math.random() * 2;
+  const delay = Math.random() * 0.1;
+  return {
+    "--sx": `${x}px`,
+    "--sy": `${y}px`,
+    width: `${size}px`,
+    height: `${size}px`,
+    animationDelay: `${delay}s`
+  };
+}
 const actionMessage = ref("");
 const actionIsError = ref(false);
 
@@ -889,6 +912,7 @@ async function toggleFavorite() {
       showSnackbar(`${game.value?.name ?? "Game"} has been unfavorited.`);
     } else {
       await gqlClient.request(FAVORITE_GAME, { gameId: gameId.value });
+      sparkleKey.value++;
       showSnackbar(`${game.value?.name ?? "Game"} has been favorited.`);
     }
     actionMessage.value = "";
@@ -1028,6 +1052,13 @@ async function toggleFavorite() {
   background: rgba(255, 75, 106, 0.25);
 }
 
+.hero-fav-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .hero-fav-pop {
   animation: fav-pop 0.35s ease;
 }
@@ -1041,6 +1072,36 @@ async function toggleFavorite() {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+.hero-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-sparkle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background: #ff4d6a;
+  opacity: 0;
+  animation: sparkle-burst 0.5s ease-out forwards;
+}
+
+@keyframes sparkle-burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--sx), var(--sy)) scale(0);
+    opacity: 0;
   }
 }
 
