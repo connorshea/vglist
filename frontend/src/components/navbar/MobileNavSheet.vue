@@ -228,7 +228,7 @@ const isDragging = ref(false);
 const dragY = ref(0);
 
 const dragStyle = computed(() => {
-  if (!isDragging.value || dragY.value <= 0) return {};
+  if (!isDragging.value || dragY.value === 0) return {};
   return { transform: `translateY(${dragY.value}px)` };
 });
 
@@ -271,7 +271,13 @@ function onPointerDown(e: PointerEvent) {
 
   const onMove = (ev: PointerEvent) => {
     const dy = ev.clientY - startY;
-    dragY.value = Math.max(0, dy);
+    if (dy < 0) {
+      // Dragging up: apply rubber-band resistance, cap at -60px
+      dragY.value = Math.max(-60, dy * 0.3);
+    } else {
+      // Dragging down: dismiss gesture
+      dragY.value = dy;
+    }
   };
 
   const onUp = () => {
@@ -312,15 +318,15 @@ function onPointerDown(e: PointerEvent) {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -80px;
   z-index: 90;
   background: #fff;
   border-radius: 20px 20px 0 0;
-  padding: 0 0 env(safe-area-inset-bottom, 0);
+  padding: 0 0 calc(80px + env(safe-area-inset-bottom, 0));
   transform: translateY(100%);
   transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
-  max-height: 85vh;
+  max-height: calc(85vh + 80px);
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
