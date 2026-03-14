@@ -14,17 +14,37 @@
         <router-view />
       </div>
     </main>
+    <SearchOverlay />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import NavBar from "@/components/navbar/NavBar.vue";
+import SearchOverlay from "@/components/SearchOverlay.vue";
+import { useSearchOverlay } from "@/composables/useSearchOverlay";
 
 const route = useRoute();
 const flashMessage = ref("");
 const flashType = ref<"success" | "error">("success");
+const { toggle: toggleSearch } = useSearchOverlay();
+
+// Global keyboard shortcut: Cmd+K / Ctrl+K to toggle search overlay
+function handleGlobalKeydown(e: KeyboardEvent) {
+  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+    e.preventDefault();
+    toggleSearch();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("keydown", handleGlobalKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleGlobalKeydown);
+});
 
 // Handle flash messages from route query (e.g., after email confirmation)
 watch(
