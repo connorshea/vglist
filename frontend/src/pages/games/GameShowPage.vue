@@ -36,7 +36,7 @@
               <span v-if="releaseYear" class="hero-tag">{{ releaseYear }}</span>
             </div>
 
-            <div class="game-hero-actions">
+            <div v-if="authStore.isAuthenticated" class="game-hero-actions">
               <button
                 class="hero-btn hero-btn-primary"
                 :disabled="addingToLibrary"
@@ -298,6 +298,17 @@ const externalLinks = computed<ExternalLink[]>(() => {
   return links;
 });
 
+function extractGqlError(err: unknown): string {
+  if (err && typeof err === "object" && "response" in err) {
+    const response = (err as { response: { errors?: { message: string }[] } }).response;
+    if (response.errors?.length) {
+      return response.errors.map((e) => e.message).join(", ");
+    }
+  }
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
+
 // Action state
 const addingToLibrary = ref(false);
 const favoriting = ref(false);
@@ -321,7 +332,7 @@ async function addToLibrary() {
     actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
     actionIsError.value = false;
   } catch (err) {
-    actionMessage.value = `Failed to add game to library: ${err instanceof Error ? err.message : String(err)}`;
+    actionMessage.value = `Failed to add game to library: ${extractGqlError(err)}`;
     actionIsError.value = true;
   } finally {
     addingToLibrary.value = false;
@@ -343,7 +354,7 @@ async function favoriteGame() {
     actionMessage.value = `${game.value?.name ?? "Game"} has been favorited.`;
     actionIsError.value = false;
   } catch (err) {
-    actionMessage.value = `Failed to favorite game: ${err instanceof Error ? err.message : String(err)}`;
+    actionMessage.value = `Failed to favorite game: ${extractGqlError(err)}`;
     actionIsError.value = true;
   } finally {
     favoriting.value = false;

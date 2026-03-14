@@ -179,7 +179,7 @@
               <div
                 v-if="purchase.completionStatus"
                 class="gallery-status-dot"
-                :class="{ 'is-playing': purchase.completionStatus === 'in_progress' }"
+                :class="{ 'is-playing': purchase.completionStatus === 'IN_PROGRESS' }"
                 :style="{ background: statusColor(purchase.completionStatus) }"
               ></div>
 
@@ -245,7 +245,7 @@ const totalHoursPlayed = computed(() =>
 const completedCount = computed(
   () =>
     gamePurchases.value.filter(
-      (p) => p.completionStatus === "completed" || p.completionStatus === "fully_completed"
+      (p) => p.completionStatus === "COMPLETED" || p.completionStatus === "FULLY_COMPLETED"
     ).length
 );
 const completionPct = computed(() =>
@@ -267,12 +267,12 @@ const sortBy = ref("name");
 
 const statuses = [
   { key: "all", label: "All" },
-  { key: "in_progress", label: "Playing" },
-  { key: "completed", label: "Completed" },
-  { key: "fully_completed", label: "100%" },
-  { key: "paused", label: "Paused" },
-  { key: "dropped", label: "Dropped" },
-  { key: "unplayed", label: "Unplayed" }
+  { key: "IN_PROGRESS", label: "Playing" },
+  { key: "COMPLETED", label: "Completed" },
+  { key: "FULLY_COMPLETED", label: "100%" },
+  { key: "PAUSED", label: "Paused" },
+  { key: "DROPPED", label: "Dropped" },
+  { key: "UNPLAYED", label: "Unplayed" }
 ];
 
 function statusCount(key: string): number {
@@ -297,13 +297,13 @@ const filteredGames = computed(() => {
 
 // Status colors
 const STATUS_COLORS: Record<string, string> = {
-  in_progress: "#3b82f6",
-  completed: "#22c55e",
-  fully_completed: "#16a34a",
-  paused: "#f59e0b",
-  dropped: "#ef4444",
-  unplayed: "#a855f7",
-  not_applicable: "#6b7280"
+  IN_PROGRESS: "#3b82f6",
+  COMPLETED: "#22c55e",
+  FULLY_COMPLETED: "#16a34a",
+  PAUSED: "#f59e0b",
+  DROPPED: "#ef4444",
+  UNPLAYED: "#a855f7",
+  NOT_APPLICABLE: "#6b7280"
 };
 
 function statusColor(status: string): string {
@@ -319,13 +319,13 @@ function ratingClass(rating: number): string {
 
 function formatStatus(status: string): string {
   const labels: Record<string, string> = {
-    in_progress: "Playing",
-    completed: "Completed",
-    fully_completed: "100%",
-    paused: "Paused",
-    dropped: "Dropped",
-    unplayed: "Unplayed",
-    not_applicable: "N/A"
+    IN_PROGRESS: "Playing",
+    COMPLETED: "Completed",
+    FULLY_COMPLETED: "100%",
+    PAUSED: "Paused",
+    DROPPED: "Dropped",
+    UNPLAYED: "Unplayed",
+    NOT_APPLICABLE: "N/A"
   };
   return labels[status] ?? status;
 }
