@@ -129,9 +129,7 @@ class GraphqlController < ApplicationController
     elsif request.headers.key?('X-User-Email') && request.headers.key?('X-User-Token')
       # Token auth — only authenticate if both email and token are provided and valid
       user = User.find_by(email: request.headers['X-User-Email'])
-      if user&.verify_api_token!(request.headers['X-User-Token']) && !user.banned?
-        @api_token_user = user
-      end
+      @api_token_user = user if user&.verify_api_token!(request.headers['X-User-Token']) && !user.banned?
     end
   rescue JWT::DecodeError, ActiveRecord::RecordNotFound
     # Invalid JWT — continue without authentication, let the schema handle it

@@ -2,6 +2,13 @@ module Types
   class MutationType < Types::BaseObject
     description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."
 
+    # Skip the BaseObject auth check on MutationType itself so that
+    # unauthenticated auth mutations (signIn, signUp, requestPasswordReset)
+    # can execute. Individual mutations handle their own auth checks.
+    def self.authorized?(_object, _context)
+      true
+    end
+
     # Auth mutations (no authentication required)
     field :sign_in, mutation: Mutations::Auth::SignInMutation
     field :sign_up, mutation: Mutations::Auth::SignUpMutation
