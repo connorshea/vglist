@@ -21,12 +21,9 @@
                 :src="user.avatarUrl"
                 :alt="user.username"
               />
-              <img
-                v-else
-                class="is-rounded"
-                src="https://via.placeholder.com/96"
-                :alt="user.username"
-              />
+              <div v-else class="user-avatar-placeholder is-rounded">
+                <span>{{ userInitial(user.username) }}</span>
+              </div>
             </figure>
             <p class="title is-5">
               <router-link :to="`/users/${user.id}`">{{ user.username }}</router-link>
@@ -82,4 +79,27 @@ function nextPage() {
 function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
+
+function userInitial(username: string): string {
+  return username.charAt(0).toUpperCase();
+}
 </script>
+
+<style scoped>
+.user-avatar-placeholder {
+  width: 96px;
+  height: 96px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.user-avatar-placeholder span {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+</style>

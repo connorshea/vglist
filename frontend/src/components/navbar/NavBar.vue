@@ -69,10 +69,14 @@
           </div>
         </template>
         <template v-else>
-          <div class="navbar-item">
-            <div class="buttons">
-              <router-link class="button is-light" to="/signup">Sign Up</router-link>
-              <router-link class="button is-white" to="/login">Sign In</router-link>
+          <router-link class="navbar-item" to="/signup">Sign up</router-link>
+          <router-link class="navbar-item" to="/login">Sign in</router-link>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">More</a>
+            <div class="navbar-dropdown is-right">
+              <router-link class="navbar-item" to="/about">About</router-link>
+              <a class="navbar-item" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="navbar-item" href="https://discord.gg/EWGm3YY" target="_blank" rel="noopener noreferrer">Discord</a>
             </div>
           </div>
         </template>
