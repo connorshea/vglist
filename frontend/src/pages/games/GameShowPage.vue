@@ -37,15 +37,18 @@
                 {{ showAddForm ? "Editing\u2026" : inLibraryHovered ? "Edit\u2026" : "In library" }}
               </button>
               <button
-                class="hero-fav-btn"
+                class="hero-btn hero-fav-btn"
                 :class="{ 'hero-fav-active': game.isFavorited }"
                 :disabled="favoriting"
                 :aria-label="game.isFavorited ? 'Unfavorite' : 'Favorite'"
                 @click="toggleFavorite"
               >
-                <span class="hero-fav-heart" :class="{ 'hero-fav-pop': game.isFavorited }">
-                  {{ game.isFavorited ? "\u2665" : "\u2661" }}
-                </span>
+                <Heart
+                  :size="18"
+                  :stroke-width="1.8"
+                  :fill="game.isFavorited ? 'currentColor' : 'none'"
+                  :class="{ 'hero-fav-pop': game.isFavorited }"
+                />
               </button>
             </div>
           </div>
@@ -477,6 +480,7 @@ import {
   UNFAVORITE_GAME
 } from "@/graphql/mutations/games";
 import type { GetGameQuery, GetGamePurchaseQuery, GetStoresQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
+import { Heart } from "lucide-vue-next";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 
@@ -1079,35 +1083,22 @@ async function toggleFavorite() {
 
 .hero-fav-btn {
   flex: 0 0 auto;
-  padding: 0.25rem;
-  font-size: 1.5rem;
-  line-height: 1;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  transition: color 0.15s;
-}
-
-.hero-fav-btn:hover {
-  color: #fff;
-}
-
-.hero-fav-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  padding: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-fav-active {
   color: #ff4d6a;
+  border-color: rgba(255, 75, 106, 0.5);
+  background: rgba(255, 75, 106, 0.15);
 }
 
 .hero-fav-active:hover {
   color: #ff6b83;
-}
-
-.hero-fav-heart {
-  display: inline-block;
+  border-color: rgba(255, 107, 131, 0.6);
+  background: rgba(255, 75, 106, 0.25);
 }
 
 .hero-fav-pop {
