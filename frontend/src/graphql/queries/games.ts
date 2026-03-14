@@ -51,6 +51,7 @@ export const GET_GAME = gql`
       ...GameFields
       isFavorited
       isInLibrary
+      gamePurchaseId
       wikidataId
       steamAppIds
       pcgamingwikiId

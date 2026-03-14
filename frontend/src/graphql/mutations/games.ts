@@ -1,10 +1,34 @@
 import gql from "graphql-tag";
 
 export const ADD_GAME_TO_LIBRARY = gql`
-  mutation AddGameToLibrary($gameId: ID!) {
-    addGameToLibrary(gameId: $gameId) {
+  mutation AddGameToLibrary(
+    $gameId: ID!
+    $completionStatus: GamePurchaseCompletionStatus
+    $rating: Int
+    $hoursPlayed: Float
+    $comments: String
+    $startDate: ISO8601Date
+    $completionDate: ISO8601Date
+    $platforms: [ID]
+    $stores: [ID]
+  ) {
+    addGameToLibrary(
+      gameId: $gameId
+      completionStatus: $completionStatus
+      rating: $rating
+      hoursPlayed: $hoursPlayed
+      comments: $comments
+      startDate: $startDate
+      completionDate: $completionDate
+      platforms: $platforms
+      stores: $stores
+    ) {
       gamePurchase {
         id
+        completionStatus
+        rating
+        hoursPlayed
+        comments
         game {
           id
           name

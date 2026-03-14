@@ -2337,11 +2337,30 @@ export interface WikidataBlocklistEntryEdge {
 
 export type AddGameToLibraryMutationVariables = Exact<{
   gameId: Scalars["ID"]["input"];
+  completionStatus?: InputMaybe<GamePurchaseCompletionStatus>;
+  rating?: InputMaybe<Scalars["Int"]["input"]>;
+  hoursPlayed?: InputMaybe<Scalars["Float"]["input"]>;
+  comments?: InputMaybe<Scalars["String"]["input"]>;
+  startDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
+  completionDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
+  platforms?: InputMaybe<
+    Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>
+  >;
+  stores?: InputMaybe<
+    Array<InputMaybe<Scalars["ID"]["input"]>> | InputMaybe<Scalars["ID"]["input"]>
+  >;
 }>;
 
 export type AddGameToLibraryMutation = {
   addGameToLibrary?: {
-    gamePurchase?: { id: string; game: { id: string; name: string } } | null;
+    gamePurchase?: {
+      id: string;
+      completionStatus?: GamePurchaseCompletionStatus | null;
+      rating?: number | null;
+      hoursPlayed?: number | null;
+      comments?: string | null;
+      game: { id: string; name: string };
+    } | null;
   } | null;
 };
 
@@ -2436,6 +2455,7 @@ export type GetGameQuery = {
   game?: {
     isFavorited?: boolean | null;
     isInLibrary?: boolean | null;
+    gamePurchaseId?: string | null;
     wikidataId?: number | null;
     steamAppIds: Array<number>;
     pcgamingwikiId?: string | null;

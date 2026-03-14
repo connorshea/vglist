@@ -17,6 +17,27 @@
             <div v-else class="game-cover-placeholder">
               <span>{{ gameInitials }}</span>
             </div>
+
+            <div v-if="authStore.isAuthenticated" class="hero-cover-actions">
+              <button
+                v-if="!game.isInLibrary"
+                class="hero-btn hero-cover-btn"
+                :disabled="addingToLibrary"
+                @click="toggleAddForm"
+              >
+                {{ showAddForm ? "Adding\u2026" : "+ Add to library" }}
+              </button>
+              <span v-else class="hero-btn hero-cover-btn hero-btn-active">In library</span>
+              <button
+                class="hero-btn hero-cover-btn hero-fav-btn"
+                :class="{ 'hero-btn-active': game.isFavorited }"
+                :disabled="favoriting"
+                :aria-label="game.isFavorited ? 'Unfavorite' : 'Favorite'"
+                @click="toggleFavorite"
+              >
+                {{ game.isFavorited ? "\u2665" : "\u2661" }}
+              </button>
+            </div>
           </div>
 
           <div class="game-hero-info">
@@ -56,32 +77,133 @@
                 </span>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div v-if="authStore.isAuthenticated" class="game-hero-actions">
-              <button
-                v-if="!game.isInLibrary"
-                class="hero-btn hero-btn-primary"
-                :disabled="addingToLibrary"
-                @click="addToLibrary"
-              >
-                + Add to library
-              </button>
-              <span v-else class="hero-btn hero-btn-active">In library</span>
-              <button
-                class="hero-btn"
-                :class="{ 'hero-btn-active': game.isFavorited }"
-                :disabled="favoriting"
-                @click="toggleFavorite"
-              >
-                {{ game.isFavorited ? "Favorited" : "Favorite" }}
-              </button>
+        <!-- Slide-up Add to Library form -->
+        <div class="form-area" :class="{ open: showAddForm }">
+          <div class="form-area-inner">
+            <div class="form-card">
+              <div class="form-grid">
+                <!-- Left column: Status, Rating, Dates -->
+                <div class="form-col form-col-left">
+                  <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <div class="form-pills">
+                      <button
+                        v-for="opt in statusOptions"
+                        :key="opt.value"
+                        type="button"
+                        class="form-pill"
+                        :class="formStatus === opt.value ? 'form-pill-on-green' : 'form-pill-off'"
+                        @click="formStatus = formStatus === opt.value ? null : opt.value"
+                      >
+                        {{ opt.label }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Rating (out of 100)</label>
+                    <div class="form-rating-row">
+                      <input
+                        v-model.number="formRating"
+                        type="number"
+                        min="0"
+                        max="100"
+                        class="form-rating-input"
+                      />
+                      <div class="form-rating-track">
+                        <div
+                          class="form-rating-fill"
+                          :style="{ width: (formRating ?? 0) + '%' }"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-dates">
+                    <div class="form-date-field">
+                      <label class="form-label">Started</label>
+                      <input v-model="formStartDate" type="date" class="form-date-input" />
+                    </div>
+                    <div class="form-date-field">
+                      <label class="form-label">Finished</label>
+                      <input v-model="formCompletionDate" type="date" class="form-date-input" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right column: Platforms, Store, Notes, Actions -->
+                <div class="form-col form-col-right">
+                  <div class="form-group">
+                    <label class="form-label">Platforms played</label>
+                    <div class="form-pills">
+                      <button
+                        v-for="plat in game.platforms.nodes"
+                        :key="plat.id"
+                        type="button"
+                        class="form-pill"
+                        :class="formPlatformIds.has(plat.id) ? 'form-pill-on' : 'form-pill-off'"
+                        @click="toggleFormPlatform(plat.id)"
+                      >
+                        {{ plat.name }}
+                      </button>
+                      <span v-if="game.platforms.nodes.length === 0" class="form-empty-hint">
+                        No platforms listed for this game.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Store</label>
+                    <div class="form-pills">
+                      <button
+                        v-for="store in allStores"
+                        :key="store.id"
+                        type="button"
+                        class="form-pill"
+                        :class="formStoreIds.has(store.id) ? 'form-pill-on' : 'form-pill-off'"
+                        @click="toggleFormStore(store.id)"
+                      >
+                        {{ store.name }}
+                      </button>
+                      <span v-if="storesLoading" class="form-empty-hint">Loading stores...</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-notes-group">
+                    <label class="form-label">Review / notes</label>
+                    <textarea
+                      v-model="formComments"
+                      class="form-textarea"
+                      placeholder="What did you think?"
+                      maxlength="2000"
+                    ></textarea>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="form-btn-cancel" @click="cancelAddForm">
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      class="form-btn-save"
+                      :disabled="addingToLibrary"
+                      @click="submitAddForm"
+                    >
+                      {{ addingToLibrary ? "Saving\u2026" : "Save" }}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Content below hero -->
-      <div class="game-body">
+      <div class="game-body" :class="{ dimmed: showAddForm }">
         <div class="columns is-variable is-6">
           <!-- Main column -->
           <div class="column is-8">
@@ -302,8 +424,9 @@ import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { gqlClient } from "@/graphql/client";
 import { GET_GAME } from "@/graphql/queries/games";
+import { GET_STORES } from "@/graphql/queries/resources";
 import { ADD_GAME_TO_LIBRARY, FAVORITE_GAME, UNFAVORITE_GAME } from "@/graphql/mutations/games";
-import type { GetGameQuery } from "@/types/graphql";
+import type { GetGameQuery, GetStoresQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const route = useRoute();
@@ -316,6 +439,12 @@ const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
 });
 
 const game = computed(() => data.value?.game ?? null);
+
+// Fetch all stores for the form
+const { data: storesData, loading: storesLoading } = useQuery<GetStoresQuery>(GET_STORES, {
+  variables: { first: 100 }
+});
+const allStores = computed(() => storesData.value?.stores?.nodes ?? []);
 
 const gameInitials = computed(() => {
   if (!game.value) return "";
@@ -434,7 +563,74 @@ const externalLinks = computed<ExternalLink[]>(() => {
   return links;
 });
 
-// Action state
+// ── Add to Library form state ──
+const statusOptions: { value: GamePurchaseCompletionStatus; label: string }[] = [
+  { value: "UNPLAYED", label: "Planned" },
+  { value: "IN_PROGRESS", label: "Playing" },
+  { value: "PAUSED", label: "Paused" },
+  { value: "DROPPED", label: "Dropped" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "FULLY_COMPLETED", label: "100%" },
+  { value: "NOT_APPLICABLE", label: "N/A" }
+];
+
+const showAddForm = ref(false);
+const formStatus = ref<GamePurchaseCompletionStatus | null>(null);
+const formRating = ref<number | null>(null);
+const formStartDate = ref("");
+const formCompletionDate = ref("");
+const formPlatformIds = ref(new Set<string>());
+const formStoreIds = ref(new Set<string>());
+const formComments = ref("");
+
+function resetForm() {
+  formStatus.value = null;
+  formRating.value = null;
+  formStartDate.value = "";
+  formCompletionDate.value = "";
+  formPlatformIds.value = new Set();
+  formStoreIds.value = new Set();
+  formComments.value = "";
+}
+
+function openAddForm() {
+  resetForm();
+  showAddForm.value = true;
+}
+
+function toggleAddForm() {
+  if (showAddForm.value) {
+    showAddForm.value = false;
+  } else {
+    openAddForm();
+  }
+}
+
+function cancelAddForm() {
+  showAddForm.value = false;
+}
+
+function toggleFormPlatform(id: string) {
+  const next = new Set(formPlatformIds.value);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
+  formPlatformIds.value = next;
+}
+
+function toggleFormStore(id: string) {
+  const next = new Set(formStoreIds.value);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
+  formStoreIds.value = next;
+}
+
+// ── Action state ──
 const addingToLibrary = ref(false);
 const favoriting = ref(false);
 const actionMessage = ref("");
@@ -442,7 +638,7 @@ const actionIsError = ref(false);
 
 const actionMessageClass = computed(() => (actionIsError.value ? "is-danger" : "is-success"));
 
-async function addToLibrary() {
+async function submitAddForm() {
   if (!authStore.isAuthenticated) {
     actionMessage.value = "You must be signed in to add games to your library.";
     actionIsError.value = true;
@@ -452,10 +648,35 @@ async function addToLibrary() {
   addingToLibrary.value = true;
   actionMessage.value = "";
 
+  const variables: Record<string, unknown> = { gameId: gameId.value };
+
+  if (formStatus.value) {
+    variables.completionStatus = formStatus.value;
+  }
+  if (formRating.value != null && formRating.value >= 0) {
+    variables.rating = Math.round(Math.min(100, Math.max(0, formRating.value)));
+  }
+  if (formStartDate.value) {
+    variables.startDate = formStartDate.value;
+  }
+  if (formCompletionDate.value) {
+    variables.completionDate = formCompletionDate.value;
+  }
+  if (formPlatformIds.value.size > 0) {
+    variables.platforms = [...formPlatformIds.value];
+  }
+  if (formStoreIds.value.size > 0) {
+    variables.stores = [...formStoreIds.value];
+  }
+  if (formComments.value.trim()) {
+    variables.comments = formComments.value.trim();
+  }
+
   try {
-    await gqlClient.request(ADD_GAME_TO_LIBRARY, { gameId: gameId.value });
+    await gqlClient.request(ADD_GAME_TO_LIBRARY, variables);
     actionMessage.value = `${game.value?.name ?? "Game"} has been added to your library.`;
     actionIsError.value = false;
+    showAddForm.value = false;
     refetch();
   } catch (err) {
     actionMessage.value = `Failed to add game to library: ${extractGqlError(err)}`;
@@ -485,7 +706,6 @@ async function toggleFavorite() {
       actionMessage.value = `${game.value?.name ?? "Game"} has been favorited.`;
     }
     actionIsError.value = false;
-    // Re-fetch to update isFavorited and favoriters list
     refetch();
   } catch (err) {
     actionMessage.value = `Failed to ${currentlyFavorited ? "unfavorite" : "favorite"} game: ${extractGqlError(err)}`;
@@ -561,6 +781,10 @@ async function toggleFavorite() {
 }
 
 /* Cover image */
+.game-hero-cover {
+  flex-shrink: 0;
+}
+
 .game-hero-cover img {
   width: 240px;
   border-radius: 12px;
@@ -585,6 +809,26 @@ async function toggleFavorite() {
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.05em;
+}
+
+/* Buttons below cover */
+.hero-cover-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.hero-cover-btn {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+.hero-fav-btn {
+  flex: 0 0 auto;
+  padding: 0.5rem 0.85rem;
+  font-size: 1rem;
 }
 
 /* Hero info */
@@ -651,11 +895,6 @@ a.hero-tag:hover {
   cursor: default;
 }
 
-.game-hero-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
 .hero-btn {
   padding: 0.6rem 1.5rem;
   border-radius: 20px;
@@ -680,24 +919,255 @@ a.hero-tag:hover {
   cursor: not-allowed;
 }
 
-.hero-btn-primary {
-  background: #fff;
-  color: var(--vglist-theme);
-  border-color: #fff;
-}
-
-.hero-btn-primary:hover {
-  background: rgba(255, 255, 255, 0.9);
-}
-
 .hero-btn-active {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.8);
 }
 
+/* ── Slide-up form area ── */
+.form-area {
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.35s;
+  opacity: 0;
+}
+
+.form-area.open {
+  max-height: 800px;
+  opacity: 1;
+}
+
+.form-area-inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  color: #2c2c2a;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+}
+
+.form-col {
+  padding: 1.25rem;
+}
+
+.form-col-left {
+  border-right: 1px solid #e5e5e0;
+}
+
+.form-col-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #888780;
+  margin-bottom: 0.4rem;
+}
+
+/* Form pills */
+.form-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.form-pill {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-block;
+  user-select: none;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.form-pill-off {
+  background: transparent;
+  border: 1px solid #d3d1c7;
+  color: #888780;
+}
+
+.form-pill-off:hover {
+  border-color: #aaa;
+  color: #555;
+}
+
+.form-pill-on {
+  background: #e6f1fb;
+  color: #0c447c;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.form-pill-on-green {
+  background: #eaf3de;
+  color: #27500a;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.form-empty-hint {
+  font-size: 0.75rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Rating input */
+.form-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-rating-input {
+  width: 56px;
+  font-size: 0.8rem;
+  text-align: center;
+  border: 1px solid #d3d1c7;
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-rating-input:focus {
+  border-color: #888780;
+}
+
+.form-rating-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #f4f3ef;
+  overflow: hidden;
+}
+
+.form-rating-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #27500a;
+  transition: width 0.15s;
+}
+
+/* Date inputs */
+.form-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+}
+
+.form-date-input {
+  width: 100%;
+  font-size: 0.75rem;
+  border: 1px solid #d3d1c7;
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-date-input:focus {
+  border-color: #888780;
+}
+
+/* Notes textarea */
+.form-notes-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-textarea {
+  width: 100%;
+  font-size: 0.8rem;
+  border: 1px solid #d3d1c7;
+  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  outline: none;
+  resize: vertical;
+  flex: 1;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.form-textarea:focus {
+  border-color: #888780;
+}
+
+/* Form action buttons */
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+}
+
+.form-btn-cancel {
+  color: #888780;
+  font-size: 0.8rem;
+  background: none;
+  border: 1px solid #d3d1c7;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.form-btn-cancel:hover {
+  background: #f4f3ef;
+}
+
+.form-btn-save {
+  background: #2c2c2a;
+  color: #fff;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.form-btn-save:hover {
+  background: #444441;
+}
+
+.form-btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Dimmed body when form is open */
+.game-body.dimmed {
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
 /* ── Body content ── */
 .game-body {
   margin-top: 2rem;
+  transition: opacity 0.3s;
 }
 
 /* ── Rating section ── */
@@ -995,8 +1465,13 @@ a.hero-tag:hover {
     justify-content: center;
   }
 
-  .game-hero-actions {
-    justify-content: center;
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-col-left {
+    border-right: none;
+    border-bottom: 1px solid #e5e5e0;
   }
 
   .details-grid {
