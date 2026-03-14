@@ -12,25 +12,9 @@
 
     <div v-if="users.length" class="columns is-multiline">
       <div v-for="user in users" :key="user.id" class="column is-3">
-        <div class="card">
-          <div class="card-content has-text-centered">
-            <figure class="image is-96x96 is-inline-block mb-3">
-              <img
-                v-if="user.avatarUrl"
-                class="is-rounded"
-                :src="user.avatarUrl"
-                :alt="user.username"
-              />
-              <div v-else class="user-avatar-placeholder is-rounded">
-                <span>{{ userInitial(user.username) }}</span>
-              </div>
-            </figure>
-            <p class="title is-5">
-              <router-link :to="`/users/${user.id}`">{{ user.username }}</router-link>
-            </p>
-            <p class="subtitle is-6 has-text-grey">{{ user.gamePurchases.totalCount }} games</p>
-          </div>
-        </div>
+        <UserCard :id="user.id" :username="user.username" :avatar-url="user.avatarUrl" :size="96">
+          <p class="subtitle is-6 has-text-grey">{{ user.gamePurchases.totalCount }} games</p>
+        </UserCard>
       </div>
     </div>
 
@@ -51,6 +35,7 @@ import { useQuery } from "@/composables/useGraphQL";
 import { GET_USERS } from "@/graphql/queries/users";
 import type { GetUsersQuery } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
+import UserCard from "@/components/UserCard.vue";
 
 const PAGE_SIZE = 20;
 const currentPage = ref(1);
@@ -79,27 +64,4 @@ function nextPage() {
 function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
-
-function userInitial(username: string): string {
-  return username.charAt(0).toUpperCase();
-}
 </script>
-
-<style scoped>
-.user-avatar-placeholder {
-  width: 96px;
-  height: 96px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.user-avatar-placeholder span {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.02em;
-}
-</style>

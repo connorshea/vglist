@@ -24,9 +24,17 @@
     <div v-if="data">
       <div v-for="event in data.activity.nodes" :key="event.id" class="box">
         <article class="media">
-          <figure class="media-left" v-if="event.user.avatarUrl">
+          <figure class="media-left">
             <p class="image is-48x48">
-              <img class="is-rounded" :src="event.user.avatarUrl" :alt="event.user.username" />
+              <img
+                v-if="event.user.avatarUrl"
+                class="is-rounded"
+                :src="event.user.avatarUrl"
+                :alt="event.user.username"
+              />
+              <span v-else class="activity-avatar-placeholder is-rounded">
+                {{ event.user.username.charAt(0).toUpperCase() }}
+              </span>
             </p>
           </figure>
           <div class="media-content">
@@ -102,3 +110,19 @@ function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
 </script>
+
+<style scoped>
+.activity-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+</style>
