@@ -57,6 +57,24 @@ export const GET_GAME = gql`
       epicGamesStoreId
       gogId
       igdbId
+      owners(first: 6) {
+        nodes {
+          id
+          slug
+          username
+          avatarUrl(size: SMALL)
+        }
+        totalCount
+      }
+      favoriters(first: 6) {
+        nodes {
+          id
+          slug
+          username
+          avatarUrl(size: SMALL)
+        }
+        totalCount
+      }
     }
   }
 `;

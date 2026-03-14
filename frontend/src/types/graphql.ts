@@ -2447,6 +2447,14 @@ export type GetGameQuery = {
     releaseDate?: string | null;
     avgRating?: number | null;
     coverUrl?: string | null;
+    owners: {
+      totalCount: number;
+      nodes: Array<{ id: string; slug: string; username: string; avatarUrl?: string | null }>;
+    };
+    favoriters: {
+      totalCount: number;
+      nodes: Array<{ id: string; slug: string; username: string; avatarUrl?: string | null }>;
+    };
     developers: { nodes: Array<{ id: string; name: string }> };
     publishers: { nodes: Array<{ id: string; name: string }> };
     platforms: { nodes: Array<{ id: string; name: string }> };
