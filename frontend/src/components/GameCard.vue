@@ -57,6 +57,8 @@ const gameInitials = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  cursor: default;
 }
 
 .game-cover-placeholder span {

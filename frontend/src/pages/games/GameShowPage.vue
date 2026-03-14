@@ -432,6 +432,7 @@ async function favoriteGame() {
   align-items: center;
   justify-content: center;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  user-select: none;
 }
 
 .game-cover-placeholder span {
