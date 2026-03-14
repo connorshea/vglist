@@ -1,6 +1,14 @@
 <template>
   <Teleport to="body">
-    <div v-if="isOpen" class="search-overlay" @click.self="close">
+    <div
+      v-if="isOpen"
+      ref="overlayRef"
+      class="search-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search"
+      @click.self="close"
+    >
       <div class="search-header">
         <div class="search-bar-wrap">
           <SearchIcon class="search-icon" stroke-width="2" />
@@ -60,6 +68,7 @@
             <a
               v-for="(game, idx) in gameResults"
               :key="game.searchableId"
+              :href="resultHref(game)"
               class="result-item"
               :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
               @click.prevent="goToResult(game)"
@@ -99,6 +108,7 @@
             <a
               v-for="(company, idx) in companyResults"
               :key="company.searchableId"
+              :href="resultHref(company)"
               class="result-item result-item--compact"
               :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
               @click.prevent="goToResult(company)"
@@ -129,6 +139,7 @@
             <a
               v-for="(platform, idx) in platformResults"
               :key="platform.searchableId"
+              :href="resultHref(platform)"
               class="result-item result-item--compact"
               :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
               @click.prevent="goToResult(platform)"
@@ -157,6 +168,7 @@
             <a
               v-for="(item, idx) in otherResults"
               :key="item.searchableId"
+              :href="resultHref(item)"
               class="result-item result-item--compact"
               :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
               @click.prevent="goToResult(item)"
@@ -190,6 +202,7 @@
             <a
               v-for="(user, idx) in userResults"
               :key="user.searchableId"
+              :href="resultHref(user)"
               class="result-item result-item--compact"
               :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
               @click.prevent="goToResult(user)"
@@ -229,11 +242,35 @@ import UsersIcon from "@/components/icons/UsersIcon.vue";
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();
 const searchInputRef = ref<HTMLInputElement | null>(null);
+const overlayRef = ref<HTMLElement | null>(null);
 
-// Close overlay on Escape regardless of focus
+// Close overlay on Escape, and trap focus within the overlay
 function onDocumentKeydown(e: KeyboardEvent) {
   if (e.key === "Escape") {
     close();
+    return;
+  }
+
+  if (e.key === "Tab" && overlayRef.value) {
+    const focusable = overlayRef.value.querySelectorAll<HTMLElement>(
+      'input, button, a[href], [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   }
 }
 
@@ -340,11 +377,17 @@ const typeRouteMap: Record<string, string> = {
   STORE: "stores"
 };
 
-function goToResult(result: SearchResultNode) {
+function resultHref(result: SearchResultNode): string {
   const path = typeRouteMap[result.searchableType];
-  if (path) {
-    const id = result.searchableType === "USER" && result.slug ? result.slug : result.searchableId;
-    router.push(`/${path}/${id}`);
+  if (!path) return "#";
+  const id = result.searchableType === "USER" && result.slug ? result.slug : result.searchableId;
+  return `/${path}/${id}`;
+}
+
+function goToResult(result: SearchResultNode) {
+  const href = resultHref(result);
+  if (href !== "#") {
+    router.push(href);
   }
   close();
 }
@@ -373,7 +416,7 @@ function releaseYear(date: string): string {
   flex-direction: column;
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  background: rgba(14, 10, 24, 0.6);
+  background: rgba(14, 10, 24, 0.82);
 }
 
 /* ── Search bar area ── */
@@ -476,9 +519,15 @@ function releaseYear(date: string): string {
     color 0.15s;
 }
 
-.search-close:hover {
+.search-close:hover,
+.search-close:focus-visible {
   background: rgba(255, 255, 255, 0.12);
   color: #f0ecf5;
+}
+
+.search-close:focus-visible {
+  outline: 2px solid rgba(155, 127, 204, 0.5);
+  outline-offset: 2px;
 }
 
 /* ── Empty / loading / error states ── */
@@ -489,7 +538,7 @@ function releaseYear(date: string): string {
   justify-content: center;
   gap: 0.75rem;
   padding: 4rem 2rem;
-  color: #a99bbf;
+  color: #d0c5e0;
   font-size: 0.95rem;
   text-align: center;
 }
@@ -497,13 +546,13 @@ function releaseYear(date: string): string {
 .search-empty-icon {
   width: 48px;
   height: 48px;
-  color: #7a6b91;
-  opacity: 0.5;
+  color: #a99bbf;
+  opacity: 0.6;
 }
 
 .search-empty-hint {
   font-size: 0.8rem;
-  color: #7a6b91;
+  color: #a99bbf;
 }
 
 .search-error-text {
@@ -619,9 +668,18 @@ function releaseYear(date: string): string {
   color: inherit;
 }
 
-.result-item:hover {
-  background: rgba(60, 48, 85, 0.75);
+.result-item:hover,
+.result-item:focus-visible {
+  background: rgba(90, 70, 130, 0.55);
   transform: translateX(2px);
+  box-shadow: inset 0 0 0 1px rgba(155, 127, 204, 0.25);
+  outline: none;
+}
+
+.result-item:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(155, 127, 204, 0.25),
+    0 0 0 2px rgba(155, 127, 204, 0.5);
 }
 
 @keyframes itemSlideIn {
