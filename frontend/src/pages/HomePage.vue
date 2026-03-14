@@ -3,7 +3,7 @@
     <section class="home-section hero">
       <!-- 3D cover mosaic background -->
       <div class="cover-scene">
-        <div class="cover-mosaic">
+        <div class="cover-mosaic" :class="{ 'covers-loaded': coversReady }">
           <div
             v-for="row in mosaicRows"
             :key="row.id"
@@ -208,6 +208,8 @@ function coverStyle(url: string): Record<string, string> {
   return { backgroundImage: `url(${url})`, backgroundSize: "cover", backgroundPosition: "center" };
 }
 
+const coversReady = ref(false);
+
 // Start with all gradient tiles (instant render before covers load)
 const mosaicTiles = ref<MosaicTile[]>(
   Array.from({ length: TOTAL }, (_, i) => ({
@@ -245,7 +247,7 @@ const coverUrls = computed<string[]>(() => {
   return heroData.value.games.nodes.filter((g) => g.coverUrl).map((g) => g.coverUrl as string);
 });
 
-// Distribute cover images across tiles when they load
+// Distribute cover images across tiles when they load, then preload before showing
 watch(
   coverUrls,
   (urls) => {
@@ -264,6 +266,22 @@ watch(
         mosaicTiles.value[i].style = coverStyle(shuffled[i % shuffled.length]);
       }
     }
+
+    // Preload cover images before revealing mosaic
+    const uniqueUrls = [...new Set(shuffled)];
+    let loaded = 0;
+    const threshold = Math.floor(uniqueUrls.length * 0.75);
+
+    for (const url of uniqueUrls) {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loaded++;
+        if (loaded >= threshold && !coversReady.value) {
+          coversReady.value = true;
+        }
+      };
+      img.src = url;
+    }
   },
   { immediate: true }
 );
@@ -280,7 +298,7 @@ function flipTile() {
 
   tile.flipping = true;
 
-  // Swap background at the midpoint
+  // Swap background at the midpoint (when card is edge-on at 90deg)
   setTimeout(() => {
     const urls = coverUrls.value;
     if (urls.length > 0 && Math.random() > 0.2) {
@@ -290,25 +308,35 @@ function flipTile() {
       const angle = 110 + Math.floor(Math.random() * 70);
       tile.style = { background: `linear-gradient(${angle}deg, ${PALETTES[newIdx][0]}, ${PALETTES[newIdx][1]})` };
     }
-  }, 700);
+  }, 400);
 
   setTimeout(() => {
     tile.flipping = false;
-  }, 1400);
+  }, 800);
 }
 
 function scheduleFlips() {
-  const count = 5 + Math.floor(Math.random() * 4); // 5-8 flips per batch
+  const count = 3 + Math.floor(Math.random() * 3); // 3-5 flips per batch
   for (let i = 0; i < count; i++) {
-    setTimeout(flipTile, i * 150 + Math.random() * 250);
+    setTimeout(flipTile, i * 220 + Math.random() * 320);
   }
 }
 
 onMounted(() => {
+  // Fallback: show mosaic after 5s even if images haven't finished preloading
   setTimeout(() => {
-    scheduleFlips();
-    flipTimer = setInterval(scheduleFlips, 1200); // Flip batches every 1.2s
-  }, 800);
+    coversReady.value = true;
+  }, 5000);
+});
+
+// Start flipping once covers are visible
+watch(coversReady, (ready) => {
+  if (ready && !flipTimer) {
+    setTimeout(() => {
+      scheduleFlips();
+      flipTimer = setInterval(scheduleFlips, 2000);
+    }, 300);
+  }
 });
 
 onUnmounted(() => {
@@ -343,10 +371,15 @@ onUnmounted(() => {
   left: -50%;
   transform: rotateX(12deg) rotateZ(-23deg);
   transform-style: preserve-3d;
-  opacity: 0.59;
+  opacity: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: opacity 0.8s ease-in;
+}
+
+.cover-mosaic.covers-loaded {
+  opacity: 0.59;
 }
 
 /* ── Row-based scrolling ── */
@@ -388,24 +421,18 @@ onUnmounted(() => {
 }
 
 .cover-tile.flipping {
-  animation: flipCard 1.4s ease-in-out;
+  animation: flipCard 0.8s ease-in-out;
 }
 
 @keyframes flipCard {
   0% {
     transform: rotateY(0deg) scale(1);
   }
-  25% {
+  50% {
     transform: rotateY(90deg) scale(1.05);
   }
-  50% {
-    transform: rotateY(180deg) scale(1);
-  }
-  75% {
-    transform: rotateY(270deg) scale(1.05);
-  }
   100% {
-    transform: rotateY(360deg) scale(1);
+    transform: rotateY(0deg) scale(1);
   }
 }
 
@@ -440,7 +467,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   height: 100px;
-  background: linear-gradient(to top, var(--bulma-background, #f4f3f7) 0%, transparent 100%);
+  background: linear-gradient(to top, #110b24 0%, transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -462,6 +489,10 @@ onUnmounted(() => {
   z-index: 2;
   padding-top: 5rem;
   padding-bottom: 3rem;
+}
+
+.home-logo {
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* ── Stats bar ── */
