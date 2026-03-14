@@ -106,39 +106,6 @@
               </svg>
             </router-link>
           </li>
-          <li v-if="authStore.isAuthenticated" class="mn-stagger">
-            <router-link
-              class="mn-nav-item"
-              :to="`/users/${authStore.user?.slug}/library`"
-              @click="close"
-            >
-              <div class="mn-nav-icon ic-library">
-                <svg
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M3 6h12M3 10h12M3 14h8" />
-                </svg>
-              </div>
-              Library
-              <svg
-                class="mn-arrow"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-              >
-                <path d="M6 4l4 4-4 4" />
-              </svg>
-            </router-link>
-          </li>
         </ul>
 
         <div class="mn-divider mn-stagger" />
@@ -419,11 +386,6 @@ function onPointerDown(e: PointerEvent) {
 .mn-nav-icon.ic-users {
   background: #faeeda;
   color: #854f0b;
-}
-
-.mn-nav-icon.ic-library {
-  background: #fbeaf0;
-  color: #72243e;
 }
 
 .mn-arrow {
