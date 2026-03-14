@@ -195,36 +195,6 @@ nav.navbar {
     font-size: 1rem;
   }
 
-  @include mixins.touch {
-    .navbar-menu {
-      background-color: var(--vglist-theme);
-    }
-
-    .navbar-dropdown {
-      background-color: hsl(241, 40%, 35%);
-      box-shadow: none;
-      border-radius: 6px;
-      margin: 0.25rem 0.5rem;
-      padding: 0.25rem 0;
-
-      .navbar-item {
-        color: hsl(0, 0%, 100%);
-        background-color: transparent;
-        padding-left: 1.25rem;
-
-        &:hover,
-        &:focus {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: hsl(0, 0%, 100%);
-        }
-      }
-
-      .navbar-divider {
-        background-color: rgba(255, 255, 255, 0.15);
-      }
-    }
-  }
-
   .navbar-search .input {
     background-color: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.15);
