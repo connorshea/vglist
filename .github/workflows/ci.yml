@@ -103,6 +103,10 @@ jobs:
       - run: bundle exec rails db:schema:load
       - run: bundle exec rake graphql:schema:idl
       - run: npx --yes graphql-schema-linter schema.graphql
+      - name: Verify codegen is up to date
+        run: |
+          yarn --cwd frontend run codegen
+          git diff --exit-code frontend/src/types/graphql.ts
 
   factory_bot_lint:
     runs-on: ubuntu-latest
