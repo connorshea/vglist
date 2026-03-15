@@ -177,7 +177,7 @@ class User < ApplicationRecord
     # a token.
     return false if token.nil?
 
-    api_token == token
+    ActiveSupport::SecurityUtils.secure_compare(api_token, token)
   end
 
   # Generate an avatar variant with a specific size, size must be a Symbol

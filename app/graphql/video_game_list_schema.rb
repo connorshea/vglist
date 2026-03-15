@@ -2,12 +2,13 @@ class VideoGameListSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)
 
-  # Configure max_depth to prevent crazy queries.
-  # max_complexity is disabled for now to allow the GraphiQL documentation
-  # panel to work. max_depth is set to 13 as that's what's requires for
-  # introspection to work, which is what's used for the documentation panel.
-  max_depth 15
-  # max_complexity 50
+  # Introspection (used by the GraphiQL documentation panel) requires
+  # a depth of at least 13, but we don't really care for now.
+  max_depth 10
+
+  # Default complexity limit for third-party API consumers.
+  # First-party queries bypass this via the controller (see GraphqlController#execute).
+  max_complexity 500
 
   default_max_page_size 100
   default_page_size 30
