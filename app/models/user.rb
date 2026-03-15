@@ -12,7 +12,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
 
-  has_many :game_purchases
+  has_many :game_purchases, dependent: :destroy
   has_many :games, through: :game_purchases
 
   # Relationship to FavoriteGame records.
@@ -43,11 +43,9 @@ class User < ApplicationRecord
   has_many :new_events, class_name: 'Views::NewEvent'
   has_many :game_purchase_events, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
   has_many :relationship_events, class_name: 'Events::RelationshipEvent', dependent: :destroy
-  has_many :user_events, class_name: 'Events::UserEvent', dependent: :destroy
   has_many :favorite_game_events, class_name: 'Events::FavoriteGameEvent', dependent: :destroy
 
-  # Users have an event for their creation.
-  # New events
+  # Users have an event for their creation (user is the eventable).
   has_many :user_events, foreign_key: :eventable_id, inverse_of: :eventable, class_name: 'Events::UserEvent', dependent: :destroy
 
   # Users create wikidata and steam blocklist entries.
