@@ -196,6 +196,81 @@ RSpec.describe "Games API", type: :request do
       end
     end
 
+    context 'when requesting per-user fields across many games' do
+      let!(:games) { create_list(:game, 5) }
+      let!(:game_purchase1) { create(:game_purchase, user: user, game: games[0]) }
+      let!(:game_purchase2) { create(:game_purchase, user: user, game: games[2]) }
+      let!(:favorite1) { create(:favorite_game, user: user, game: games[0]) }
+      let!(:favorite2) { create(:favorite_game, user: user, game: games[4]) }
+
+      it "returns correct per-user fields for each game", :aggregate_failures do
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                isFavorited
+                isInLibrary
+                gamePurchaseId
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        nodes = result.graphql_dig(:games, :nodes)
+
+        # Game 0: owned + favorited
+        node0 = nodes.find { |n| n[:id] == games[0].id.to_s }
+        expect(node0[:isFavorited]).to be true
+        expect(node0[:isInLibrary]).to be true
+        expect(node0[:gamePurchaseId]).to eq(game_purchase1.id.to_s)
+
+        # Game 1: neither
+        node1 = nodes.find { |n| n[:id] == games[1].id.to_s }
+        expect(node1[:isFavorited]).to be false
+        expect(node1[:isInLibrary]).to be false
+        expect(node1[:gamePurchaseId]).to be_nil
+
+        # Game 2: owned but not favorited
+        node2 = nodes.find { |n| n[:id] == games[2].id.to_s }
+        expect(node2[:isFavorited]).to be false
+        expect(node2[:isInLibrary]).to be true
+        expect(node2[:gamePurchaseId]).to eq(game_purchase2.id.to_s)
+
+        # Game 4: favorited but not owned
+        node4 = nodes.find { |n| n[:id] == games[4].id.to_s }
+        expect(node4[:isFavorited]).to be true
+        expect(node4[:isInLibrary]).to be false
+        expect(node4[:gamePurchaseId]).to be_nil
+      end
+
+      it "returns nil for per-user fields when not authenticated", :aggregate_failures do
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                isFavorited
+                isInLibrary
+                gamePurchaseId
+              }
+            }
+          }
+        GRAPHQL
+
+        post graphql_path, params: { query: query_string }
+        json = JSON.parse(response.body)
+        nodes = json.dig('data', 'games', 'nodes')
+
+        nodes.each do |node|
+          expect(node['isFavorited']).to be_nil
+          expect(node['isInLibrary']).to be_nil
+          expect(node['gamePurchaseId']).to be_nil
+        end
+      end
+    end
+
     context 'when filtering by platform' do
       let(:platform1) { create(:platform) }
       let(:platform2) { create(:platform) }
