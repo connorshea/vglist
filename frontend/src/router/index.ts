@@ -234,11 +234,11 @@ const router = createRouter({
 router.beforeEach((to) => {
   const authStore = useAuthStore();
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  if (to.matched.some((r) => r.meta.requiresAuth) && !authStore.isAuthenticated) {
     return { name: "login", query: { redirect: to.fullPath } };
   }
 
-  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+  if (to.matched.some((r) => r.meta.requiresAdmin) && !authStore.isAdmin) {
     return { name: "home" };
   }
 
