@@ -118,5 +118,18 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       json = JSON.parse(response.body)
       expect(json['errors'].first['message']).to include("logged in")
     end
+
+    it "returns an error when using a non-first-party API token" do
+      api_token = SecureRandom.alphanumeric(20)
+      api_token_user = create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(api_token))
+
+      post graphql_path, params: { query: query }, headers: {
+        'X-User-Email': api_token_user.email,
+        'X-User-Token': api_token_user.api_token
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors'].first['message']).to include("first-party")
+    end
   end
 end
