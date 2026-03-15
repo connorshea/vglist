@@ -88,7 +88,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:game_purchases) }
+    it { should have_many(:game_purchases).dependent(:destroy) }
     it { should have_many(:games).through(:game_purchases) }
     it { should have_many(:favorite_games).dependent(:destroy) }
     it { should have_many(:favorited_games).through(:favorite_games) }
