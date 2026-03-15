@@ -311,21 +311,11 @@ function onHeroAfterEnter() {
 }
 
 function toggleAddForm() {
-  if (showAddForm.value) {
-    showAddForm.value = false;
-  } else {
-    showAddForm.value = true;
-    nextTick(() => libraryFormRef.value?.openAsAdd());
-  }
+  showAddForm.value = !showAddForm.value;
 }
 
 function toggleEditForm() {
-  if (showAddForm.value) {
-    showAddForm.value = false;
-  } else {
-    showAddForm.value = true;
-    nextTick(() => libraryFormRef.value?.openAsEdit());
-  }
+  showAddForm.value = !showAddForm.value;
 }
 
 function cancelAddForm() {
