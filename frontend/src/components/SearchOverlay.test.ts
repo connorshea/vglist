@@ -119,7 +119,7 @@ describe("SearchOverlay", () => {
   describe("rendering", () => {
     it("does not render the overlay when isOpen is false", () => {
       const wrapper = mountOverlay();
-      expect(wrapper.find(".search-overlay").exists()).toBe(false);
+      expect(wrapper.find(".search-overlay").exists()).toBeFalsy();
     });
 
     it("renders the overlay when isOpen is true", async () => {
@@ -127,9 +127,9 @@ describe("SearchOverlay", () => {
       await nextTick();
 
       const wrapper = mountOverlay();
-      expect(wrapper.find(".search-overlay").exists()).toBe(true);
-      expect(wrapper.find('[role="dialog"]').exists()).toBe(true);
-      expect(wrapper.find(".search-input").exists()).toBe(true);
+      expect(wrapper.find(".search-overlay").exists()).toBeTruthy();
+      expect(wrapper.find('[role="dialog"]').exists()).toBeTruthy();
+      expect(wrapper.find(".search-input").exists()).toBeTruthy();
     });
 
     it("renders the search input with correct placeholder", async () => {
@@ -265,7 +265,7 @@ describe("SearchOverlay", () => {
       );
 
       const resultItem = wrapper.find(".result-item");
-      expect(resultItem.exists()).toBe(true);
+      expect(resultItem.exists()).toBeTruthy();
       await resultItem.trigger("click");
 
       expect(pushMock).toHaveBeenCalledWith("/games/42");
@@ -287,7 +287,7 @@ describe("SearchOverlay", () => {
       );
 
       const resultItem = wrapper.find(".result-item");
-      expect(resultItem.exists()).toBe(true);
+      expect(resultItem.exists()).toBeTruthy();
       await resultItem.trigger("click");
 
       expect(pushMock).toHaveBeenCalledWith("/users/janedoe-slug");
@@ -311,7 +311,7 @@ describe("SearchOverlay", () => {
       );
 
       const resultLink = wrapper.find(".result-item");
-      expect(resultLink.exists()).toBe(true);
+      expect(resultLink.exists()).toBeTruthy();
       expect(resultLink.attributes("href")).toBe("/platforms/5");
     });
   });
