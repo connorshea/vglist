@@ -165,22 +165,3 @@ export const GET_GAME_PURCHASE = gql`
     }
   }
 `;
-
-export const SEARCH_GAMES = gql`
-  query SearchGames($query: String!) {
-    gameSearch(query: $query) {
-      nodes {
-        id
-        name
-        releaseDate
-        coverUrl(size: SMALL)
-        developers {
-          nodes {
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-`;

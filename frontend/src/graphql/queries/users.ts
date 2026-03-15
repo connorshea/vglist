@@ -110,16 +110,3 @@ export const GET_CURRENT_USER_PROFILE = gql`
     }
   }
 `;
-
-export const SEARCH_USERS = gql`
-  query SearchUsers($query: String!) {
-    userSearch(query: $query) {
-      nodes {
-        id
-        username
-        slug
-        avatarUrl(size: SMALL)
-      }
-    }
-  }
-`;
