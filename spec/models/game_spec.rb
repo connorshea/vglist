@@ -420,6 +420,11 @@ RSpec.describe Game, type: :model do
       expect { game_with_publisher.destroy }.to change(GamePublisher, :count).by(-1)
     end
 
+    it 'SteamAppId should be deleted when game is deleted' do
+      game_with_steam_app_id = create(:game_with_steam_app_id)
+      expect { game_with_steam_app_id.destroy }.to change(SteamAppId, :count).by(-1)
+    end
+
     it 'Series should not be deleted when game is deleted' do
       game_with_series
       expect { game_with_series.destroy }.not_to change(Series, :count)

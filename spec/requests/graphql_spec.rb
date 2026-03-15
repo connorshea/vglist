@@ -54,5 +54,34 @@ RSpec.describe "GraphQL", type: :request do
       post graphql_path(format: :json), headers: headers
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it 'treats an expired JWT as unauthenticated' do
+      expired_token = JWT.encode(
+        { user_id: user.id, exp: 1.day.ago.to_i, iat: 2.days.ago.to_i },
+        Rails.application.secret_key_base,
+        'HS256'
+      )
+      query = '{ currentUser { id } }'
+
+      post graphql_path(format: :json),
+        params: { query: query },
+        headers: { 'Authorization': "Bearer #{expired_token}" }
+
+      expect(response).to have_http_status(:success)
+      json = JSON.parse(response.body)
+      expect(json.dig('data', 'currentUser')).to be_nil
+    end
+
+    it 'treats an invalid JWT as unauthenticated' do
+      query = '{ currentUser { id } }'
+
+      post graphql_path(format: :json),
+        params: { query: query },
+        headers: { 'Authorization': "Bearer invalid.jwt.token" }
+
+      expect(response).to have_http_status(:success)
+      json = JSON.parse(response.body)
+      expect(json.dig('data', 'currentUser')).to be_nil
+    end
   end
 end
