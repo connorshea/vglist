@@ -71,21 +71,21 @@
               <button
                 v-if="canUpdateRole && user.role !== 'MODERATOR'"
                 class="actions-dropdown-item"
-                @click="handleUpdateRole('MODERATOR')"
+                @click="promptRoleChange('MODERATOR')"
               >
                 Make moderator
               </button>
               <button
                 v-if="canUpdateRole && user.role === 'MODERATOR'"
                 class="actions-dropdown-item"
-                @click="handleUpdateRole('MEMBER')"
+                @click="promptRoleChange('MEMBER')"
               >
                 Demote to member
               </button>
               <button
                 v-if="canUpdateRole && user.role !== 'ADMIN'"
                 class="actions-dropdown-item"
-                @click="handleUpdateRole('ADMIN')"
+                @click="promptRoleChange('ADMIN')"
               >
                 Make admin
               </button>
@@ -99,7 +99,7 @@
               <button
                 v-if="canBan && !user.banned"
                 class="actions-dropdown-item actions-dropdown-item-danger"
-                @click="handleBan"
+                @click="promptBan"
               >
                 Ban user
               </button>
@@ -241,6 +241,36 @@
         </div>
       </template>
     </div>
+    <!-- Ban confirmation dialog -->
+    <ConfirmDialog
+      v-model="showBanConfirm"
+      title="Ban user?"
+      confirm-label="Ban user"
+      loading-label="Banning…"
+      :loading="banLoading"
+      @confirm="confirmBan"
+    >
+      <template #icon>
+        <CircleAlert :size="22" :stroke-width="1.8" />
+      </template>
+      <strong>{{ user?.username }}</strong> will be banned and will no longer be able to access their account.
+    </ConfirmDialog>
+
+    <!-- Role change confirmation dialog -->
+    <ConfirmDialog
+      v-model="showRoleConfirm"
+      :title="roleConfirmTitle"
+      :confirm-label="roleConfirmLabel"
+      :loading-label="roleConfirmLoadingLabel"
+      :loading="roleLoading"
+      variant="primary"
+      @confirm="confirmRoleChange"
+    >
+      <template #icon>
+        <ShieldCheck :size="22" :stroke-width="1.8" />
+      </template>
+      <strong>{{ user?.username }}</strong> {{ roleConfirmDescription }}
+    </ConfirmDialog>
   </section>
 </template>
 
@@ -260,6 +290,8 @@ import {
   REMOVE_USER_AVATAR
 } from "@/graphql/mutations/users";
 import type { GetUserQuery } from "@/types/graphql";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { CircleAlert, ShieldCheck } from "lucide-vue-next";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -404,6 +436,11 @@ async function handleUnfollow() {
 
 // ── Admin actions ──
 const actionsOpen = ref(false);
+const showBanConfirm = ref(false);
+const showRoleConfirm = ref(false);
+const pendingRole = ref<string | null>(null);
+const banLoading = ref(false);
+const roleLoading = ref(false);
 
 const currentRole = computed(() => authStore.user?.role);
 const isNotSelf = computed(() => authStore.isAuthenticated && user.value && authStore.user?.id !== user.value.id);
@@ -427,15 +464,22 @@ const { mutate: unbanUserMutate } = useMutation(UNBAN_USER);
 const { mutate: updateUserRoleMutate } = useMutation(UPDATE_USER_ROLE);
 const { mutate: removeUserAvatarMutate } = useMutation(REMOVE_USER_AVATAR);
 
-async function handleBan() {
-  if (!confirm(`Are you sure you want to ban ${user.value!.username}?`)) return;
+function promptBan() {
   actionsOpen.value = false;
+  showBanConfirm.value = true;
+}
+
+async function confirmBan() {
+  banLoading.value = true;
   try {
     await banUserMutate({ userId: user.value!.id });
+    showBanConfirm.value = false;
     await refetch();
     showSnackbar(`${user.value!.username} has been banned.`, "success");
   } catch {
     showSnackbar("Failed to ban user.", "error");
+  } finally {
+    banLoading.value = false;
   }
 }
 
@@ -450,15 +494,52 @@ async function handleUnban() {
   }
 }
 
-async function handleUpdateRole(role: string) {
-  const roleLabel = role === "MODERATOR" ? "moderator" : role === "ADMIN" ? "admin" : "member";
+function roleLabelFor(role: string): string {
+  if (role === "MODERATOR") return "moderator";
+  if (role === "ADMIN") return "admin";
+  return "member";
+}
+
+const roleConfirmTitle = computed(() => {
+  if (!pendingRole.value) return "";
+  if (pendingRole.value === "MEMBER") return "Demote to member?";
+  return `Make ${roleLabelFor(pendingRole.value)}?`;
+});
+
+const roleConfirmLabel = computed(() => {
+  if (!pendingRole.value) return "";
+  if (pendingRole.value === "MEMBER") return "Demote to member";
+  return `Make ${roleLabelFor(pendingRole.value)}`;
+});
+
+const roleConfirmLoadingLabel = computed(() => "Updating…");
+
+const roleConfirmDescription = computed(() => {
+  if (!pendingRole.value) return "";
+  if (pendingRole.value === "ADMIN") return "will be granted full admin privileges.";
+  if (pendingRole.value === "MODERATOR") return "will be granted moderator privileges.";
+  return "will be demoted to a regular member.";
+});
+
+function promptRoleChange(role: string) {
   actionsOpen.value = false;
+  pendingRole.value = role;
+  showRoleConfirm.value = true;
+}
+
+async function confirmRoleChange() {
+  if (!pendingRole.value) return;
+  roleLoading.value = true;
+  const roleLabel = roleLabelFor(pendingRole.value);
   try {
-    await updateUserRoleMutate({ userId: user.value!.id, role });
+    await updateUserRoleMutate({ userId: user.value!.id, role: pendingRole.value });
+    showRoleConfirm.value = false;
     await refetch();
     showSnackbar(`${user.value!.username} is now a ${roleLabel}.`, "success");
   } catch {
     showSnackbar("Failed to update user role.", "error");
+  } finally {
+    roleLoading.value = false;
   }
 }
 

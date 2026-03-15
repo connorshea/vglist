@@ -10,7 +10,7 @@
         @keydown="onKeydown"
       >
         <div class="cd-backdrop" @click="cancel"></div>
-        <div ref="dialogRef" class="cd-modal" tabindex="-1">
+        <div ref="dialogRef" class="cd-modal" :class="{ 'cd-variant-primary': variant === 'primary' }" tabindex="-1">
           <div class="cd-body">
             <div v-if="$slots.icon" class="cd-icon">
               <slot name="icon" />
@@ -21,8 +21,8 @@
             </div>
           </div>
           <div class="cd-actions">
-            <button class="cd-btn cd-btn-danger" :disabled="loading" @click="$emit('confirm')">
-              <Trash2 :size="15" :stroke-width="2" />
+            <button class="cd-btn" :class="confirmBtnClass" :disabled="loading" @click="$emit('confirm')">
+              <Trash2 v-if="variant === 'danger'" :size="15" :stroke-width="2" />
               {{ loading ? loadingLabel : confirmLabel }}
             </button>
             <button class="cd-btn cd-btn-cancel" @click="cancel">
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onBeforeUnmount } from "vue";
+import { ref, computed, watch, nextTick, onBeforeUnmount } from "vue";
 import { Trash2 } from "lucide-vue-next";
 
 const props = withDefaults(
@@ -47,14 +47,18 @@ const props = withDefaults(
     loadingLabel?: string;
     cancelLabel?: string;
     loading?: boolean;
+    variant?: "danger" | "primary";
   }>(),
   {
     confirmLabel: "Remove from library",
     loadingLabel: "Removing\u2026",
     cancelLabel: "Cancel",
-    loading: false
+    loading: false,
+    variant: "danger"
   }
 );
+
+const confirmBtnClass = computed(() => (props.variant === "danger" ? "cd-btn-danger" : "cd-btn-primary"));
 
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
@@ -170,8 +174,8 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  background: var(--r-50);
-  color: var(--r-500);
+  background: var(--cd-icon-bg, var(--r-50));
+  color: var(--cd-icon-color, var(--r-500));
 }
 
 .cd-title {
@@ -233,13 +237,30 @@ onBeforeUnmount(() => {
   background: #c93c3b;
 }
 
+.cd-btn-primary {
+  background: var(--vglist-theme);
+  color: #fff;
+}
+
+.cd-btn-primary:active:not(:disabled) {
+  background: var(--p-600);
+}
+
+.cd-variant-primary {
+  --cd-icon-bg: var(--p-50);
+  --cd-icon-color: var(--p-500);
+}
+
 .cd-btn-cancel {
-  background: var(--color-bg-subtle);
+  background: transparent;
   color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 }
 
 .cd-btn-cancel:hover {
-  background: var(--color-border);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-tertiary);
 }
 
 /* Transition */
@@ -293,6 +314,11 @@ onBeforeUnmount(() => {
   .cd-icon {
     background: rgba(226, 75, 74, 0.15);
     color: var(--r-200);
+  }
+
+  .cd-variant-primary .cd-icon {
+    background: rgba(157, 153, 224, 0.15);
+    color: var(--p-200);
   }
 
   .cd-btn-cancel {
