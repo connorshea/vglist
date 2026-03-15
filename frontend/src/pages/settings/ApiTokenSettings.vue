@@ -8,10 +8,10 @@
       <p>{{ resetError }}</p>
     </div>
 
-    <div v-if="newToken" class="notification is-success">
+    <div v-if="newToken" class="notification is-success is-light">
       <p class="mb-2"><strong>Your new API token:</strong></p>
-      <code>{{ newToken }}</code>
-      <p class="mt-2 has-text-grey is-size-7">
+      <code class="token-display">{{ newToken }}</code>
+      <p class="mt-2 is-size-7 has-text-dark">
         Make sure to copy this token now. You will not be able to see it again.
       </p>
     </div>
@@ -57,3 +57,16 @@ async function resetToken() {
   }
 }
 </script>
+
+<style scoped>
+.token-display {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bulma-scheme-main, #fff);
+  border: 1px solid var(--bulma-border, #dbdbdb);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  word-break: break-all;
+  user-select: all;
+}
+</style>
