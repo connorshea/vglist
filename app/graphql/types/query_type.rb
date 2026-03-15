@@ -41,9 +41,9 @@ module Types
 
     field :basic_site_statistics, resolver: Resolvers::SiteStatisticResolvers::BasicResolver
 
-    # Make the page size unlimited since we handle page size in the
-    # resolver instead.
-    field :global_search, resolver: Resolvers::GlobalSearchResolver, max_page_size: nil
+    # Cap at 200 results to prevent expensive queries (e.g. searching
+    # "the" could match 30k+ records in prod).
+    field :global_search, resolver: Resolvers::GlobalSearchResolver, max_page_size: 200
 
     # Admin stuff
     field :site_statistics, resolver: Resolvers::SiteStatisticResolvers::ListResolver

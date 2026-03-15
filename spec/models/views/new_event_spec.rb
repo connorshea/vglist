@@ -45,9 +45,9 @@ RSpec.describe Views::NewEvent, type: :model do
       it "works when joined with users table without ambiguous column error" do
         create(:game_purchase, user: user)
 
-        expect {
+        expect do
           Views::NewEvent.recently_created.includes(:user).where(user_id: user.id).to_a
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe Views::NewEvent, type: :model do
   describe ".preload_eventables" do
     let(:user) { create(:confirmed_user) }
 
-    it "preloads eventable data for a collection of events" do
+    it "preloads eventable data for a collection of events", :aggregate_failures do
       game_purchase = create(:game_purchase, user: user)
       favorite_game = create(:favorite_game, user: user)
       relationship = create(:relationship, follower: user)
