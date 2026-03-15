@@ -165,8 +165,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from "vue";
-import { useRoute } from "vue-router";
+import { computed, nextTick, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useImageColors } from "@/composables/useImageColors";
@@ -184,6 +184,7 @@ import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
 import GameSidebar from "@/components/game/GameSidebar.vue";
 
 const route = useRoute();
+const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
@@ -194,6 +195,13 @@ const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
 });
 
 const game = computed(() => data.value?.game ?? null);
+
+// Redirect to 404 when the game is not found or the query fails.
+watch([data, error, loading], () => {
+  if (!loading.value && (error.value || (data.value && !game.value))) {
+    router.replace({ name: "notFound" });
+  }
+});
 
 // Extract dominant colors from the cover image for the hero background gradient.
 const coverUrl = computed(() => game.value?.coverUrl ?? null);
