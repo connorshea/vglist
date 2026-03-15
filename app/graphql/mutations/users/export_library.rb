@@ -8,6 +8,8 @@ class Mutations::Users::ExportLibrary < Mutations::BaseMutation
     user = context[:current_user]
     raise GraphQL::ExecutionError, "You must be logged in to export your library." if user.nil?
 
+    require_permissions!(:first_party)
+
     game_purchases = user.game_purchases.includes(:game, :platforms, :stores)
 
     library_data = game_purchases.map do |gp|
