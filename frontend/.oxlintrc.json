@@ -33,6 +33,7 @@
     "unicorn/no-accessor-recursion": "error",
     "unicorn/no-lonely-if": "error",
     "unicorn/no-negation-in-equality-check": "error",
+    "unicorn/prefer-add-event-listener": "error",
     "vue/no-required-prop-with-default": "error"
   },
   "overrides": [
