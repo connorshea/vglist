@@ -290,7 +290,7 @@ function onHeroBeforeLeave() {
   const el = heroInfoRef.value;
   if (el) {
     savedInfoHeight = el.getBoundingClientRect().height;
-    el.style.height = savedInfoHeight + "px";
+    el.style.height = `${savedInfoHeight}px`;
     el.style.overflow = "hidden";
   }
 }
@@ -302,10 +302,10 @@ function onHeroEnter() {
   nextTick(() => {
     el.style.height = "auto";
     const newHeight = el.getBoundingClientRect().height;
-    el.style.height = savedInfoHeight + "px";
+    el.style.height = `${savedInfoHeight}px`;
     void el.offsetHeight; // force reflow
     el.style.transition = "height 0.35s ease";
-    el.style.height = newHeight + "px";
+    el.style.height = `${newHeight}px`;
   });
 }
 
