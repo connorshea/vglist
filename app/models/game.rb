@@ -5,19 +5,19 @@ class Game < ApplicationRecord
   has_many :game_purchases, dependent: :destroy
   has_many :purchasers, through: :game_purchases, source: :user
 
-  has_many :game_developers
+  has_many :game_developers, dependent: :destroy
   has_many :developers, through: :game_developers, source: :company
 
-  has_many :game_publishers
+  has_many :game_publishers, dependent: :destroy
   has_many :publishers, through: :game_publishers, source: :company
 
-  has_many :game_platforms
+  has_many :game_platforms, dependent: :destroy
   has_many :platforms, through: :game_platforms, source: :platform
 
-  has_many :game_genres
+  has_many :game_genres, dependent: :destroy
   has_many :genres, through: :game_genres, source: :genre
 
-  has_many :game_engines
+  has_many :game_engines, dependent: :destroy
   has_many :engines, through: :game_engines, source: :engine
 
   has_many :steam_app_ids, dependent: :destroy
