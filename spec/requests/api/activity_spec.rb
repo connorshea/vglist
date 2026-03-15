@@ -136,69 +136,75 @@ RSpec.describe "Activity API", type: :request do
       )
     end
 
-    it "returns eventable fields used by the activity feed frontend" do
-      game_purchase
-      relationship
-      favorite_game
-
-      query_string = <<-GRAPHQL
-        query {
-          activity(feedType: GLOBAL) {
-            nodes {
-              eventCategory
-              user {
-                id
-                username
-                slug
-              }
-              eventable {
-                ... on GamePurchase {
-                  game { id name }
-                  completionStatus
-                }
-                ... on FavoriteGame {
-                  game { id name }
-                }
-                ... on Relationship {
-                  followed { id username slug }
-                }
-                ... on User {
+    context "when returning eventable fields used by the activity feed frontend" do
+      let(:eventable_query_string) do
+        <<-GRAPHQL
+          query {
+            activity(feedType: GLOBAL) {
+              nodes {
+                eventCategory
+                user {
                   id
                   username
                   slug
                 }
+                eventable {
+                  ... on GamePurchase {
+                    game { id name }
+                    completionStatus
+                  }
+                  ... on FavoriteGame {
+                    game { id name }
+                  }
+                  ... on Relationship {
+                    followed { id username slug }
+                  }
+                  ... on User {
+                    id
+                    username
+                    slug
+                  }
+                }
               }
             }
           }
-        }
-      GRAPHQL
+        GRAPHQL
+      end
 
-      result = api_request(query_string, token: access_token)
-      nodes = result.graphql_dig(:activity, :nodes)
+      let(:nodes) do
+        game_purchase
+        relationship
+        favorite_game
 
-      # Find nodes by event category
-      favorite_node = nodes.find { |n| n[:eventCategory] == "FAVORITE_GAME" }
-      relationship_node = nodes.find { |n| n[:eventCategory] == "FOLLOWING" }
-      add_to_library_node = nodes.find { |n| n[:eventCategory] == "ADD_TO_LIBRARY" }
-      new_user_nodes = nodes.select { |n| n[:eventCategory] == "NEW_USER" }
+        result = api_request(eventable_query_string, token: access_token)
+        result.graphql_dig(:activity, :nodes)
+      end
 
-      # GamePurchase eventable returns game name and id
-      expect(add_to_library_node[:eventable][:game][:name]).to eq(game_purchase.game.name)
-      expect(add_to_library_node[:eventable][:game][:id]).to eq(game_purchase.game.id.to_s)
+      it "returns game fields on GamePurchase eventable" do
+        add_to_library_node = nodes.find { |n| n[:eventCategory] == "ADD_TO_LIBRARY" }
+        expect(add_to_library_node[:eventable][:game][:name]).to eq(game_purchase.game.name)
+        expect(add_to_library_node[:eventable][:game][:id]).to eq(game_purchase.game.id.to_s)
+      end
 
-      # FavoriteGame eventable returns game name and id
-      expect(favorite_node[:eventable][:game][:name]).to eq(favorite_game.game.name)
-      expect(favorite_node[:eventable][:game][:id]).to eq(favorite_game.game.id.to_s)
+      it "returns game fields on FavoriteGame eventable" do
+        favorite_node = nodes.find { |n| n[:eventCategory] == "FAVORITE_GAME" }
+        expect(favorite_node[:eventable][:game][:name]).to eq(favorite_game.game.name)
+        expect(favorite_node[:eventable][:game][:id]).to eq(favorite_game.game.id.to_s)
+      end
 
-      # Relationship eventable returns followed user details
-      expect(relationship_node[:eventable][:followed][:username]).to eq(user2.username)
-      expect(relationship_node[:eventable][:followed][:slug]).to eq(user2.slug)
+      it "returns followed user details on Relationship eventable" do
+        relationship_node = nodes.find { |n| n[:eventCategory] == "FOLLOWING" }
+        expect(relationship_node[:eventable][:followed][:username]).to eq(user2.username)
+        expect(relationship_node[:eventable][:followed][:slug]).to eq(user2.slug)
+      end
 
-      # User (NEW_USER) eventable returns user details
-      expect(new_user_nodes).not_to be_empty
-      new_user_node = new_user_nodes.first
-      expect(new_user_node[:eventable][:username]).to be_present
-      expect(new_user_node[:eventable][:slug]).to be_present
+      it "returns user details on NEW_USER eventable" do
+        new_user_nodes = nodes.select { |n| n[:eventCategory] == "NEW_USER" }
+        expect(new_user_nodes).not_to be_empty
+        new_user_node = new_user_nodes.first
+        expect(new_user_node[:eventable][:username]).to be_present
+        expect(new_user_node[:eventable][:slug]).to be_present
+      end
     end
 
     it "returns completionStatus on GamePurchase eventable when set" do

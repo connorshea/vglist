@@ -10,7 +10,7 @@ module Resolvers
       case feed_type
       when 'global'
         Views::NewEvent.recently_created
-                       .includes(:user)
+                       .includes(user: { avatar_attachment: :blob })
                        .joins(:user)
                        .where(users: { privacy: :public_account })
       when 'following'
@@ -18,7 +18,7 @@ module Resolvers
 
         user_ids = @context[:current_user].following.select(:id)
         Views::NewEvent.recently_created
-                       .includes(:user)
+                       .includes(user: { avatar_attachment: :blob })
                        .where(user_id: user_ids)
                        .or(Views::NewEvent.where(user_id: @context[:current_user].id))
       end
