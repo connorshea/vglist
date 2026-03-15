@@ -63,7 +63,9 @@ async function handleSubmit() {
 
   if (result.success) {
     const redirect = route.query.redirect as string;
-    router.push(redirect || "/");
+    // Only allow relative paths to prevent open redirect attacks.
+    const safeRedirect = redirect && redirect.startsWith("/") && !redirect.startsWith("//") ? redirect : "/";
+    router.push(safeRedirect);
   } else {
     errors.value = result.errors;
   }
