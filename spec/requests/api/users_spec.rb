@@ -413,6 +413,20 @@ RSpec.describe "Users API", type: :request do
 
           expect(result.graphql_dig(:users, :nodes)).to eq(expected_users)
         end
+
+        it "returns totalCount when sorting by #{sort_order}" do
+          query_string = <<~GRAPHQL_WITH_INTERP
+            query {
+              users(sortBy: #{sort_order.upcase}) {
+                totalCount
+              }
+            }
+          GRAPHQL_WITH_INTERP
+
+          result = api_request(query_string, token: access_token)
+
+          expect(result.graphql_dig(:users, :total_count)).to eq(User.where(banned: false).count)
+        end
       end
     end
   end
