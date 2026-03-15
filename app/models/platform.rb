@@ -2,10 +2,10 @@ class Platform < ApplicationRecord
   include GlobalSearchable
   include Searchable
 
-  has_many :game_platforms
+  has_many :game_platforms, dependent: :destroy
   has_many :games, through: :game_platforms, source: :game
 
-  has_many :game_purchase_platforms
+  has_many :game_purchase_platforms, dependent: :destroy
   has_many :game_purchases, through: :game_purchase_platforms, source: :game_purchase
 
   has_paper_trail ignore: [:updated_at, :created_at],

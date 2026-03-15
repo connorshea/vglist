@@ -424,5 +424,30 @@ RSpec.describe Game, type: :model do
       game_with_series
       expect { game_with_series.destroy }.not_to change(Series, :count)
     end
+
+    it 'Platform should not be deleted when game is deleted' do
+      game_with_platform
+      expect { game_with_platform.destroy }.not_to change(Platform, :count)
+    end
+
+    it 'Genre should not be deleted when game is deleted' do
+      game_with_genre
+      expect { game_with_genre.destroy }.not_to change(Genre, :count)
+    end
+
+    it 'Engine should not be deleted when game is deleted' do
+      game_with_engine
+      expect { game_with_engine.destroy }.not_to change(Engine, :count)
+    end
+
+    it 'Company should not be deleted when game with developer is deleted' do
+      game_with_developer
+      expect { game_with_developer.destroy }.not_to change(Company, :count)
+    end
+
+    it 'Company should not be deleted when game with publisher is deleted' do
+      game_with_publisher
+      expect { game_with_publisher.destroy }.not_to change(Company, :count)
+    end
   end
 end
