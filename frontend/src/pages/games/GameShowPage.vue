@@ -659,8 +659,12 @@ function clearReviewDraft(): void {
   localStorage.removeItem(reviewDraftKey());
 }
 
+// Suppress localStorage sync during form reset/population.
+let suppressDraftSync = false;
+
 // Persist the review text to localStorage whenever it changes.
 watch(formComments, (value) => {
+  if (suppressDraftSync) return;
   if (value.trim() === "") {
     clearReviewDraft();
   } else {
@@ -725,7 +729,9 @@ function resetForm() {
 }
 
 function openAddForm() {
+  suppressDraftSync = true;
   resetForm();
+  suppressDraftSync = false;
   loadReviewDraft();
   showAddForm.value = true;
 }
@@ -742,6 +748,7 @@ async function openEditForm() {
   const purchaseId = game.value?.gamePurchaseId;
   if (!purchaseId) return;
 
+  suppressDraftSync = true;
   resetForm();
   isEditing.value = true;
   showAddForm.value = true;
@@ -751,7 +758,10 @@ async function openEditForm() {
       id: purchaseId
     });
     const gp = result.gamePurchase;
-    if (!gp) return;
+    if (!gp) {
+      suppressDraftSync = false;
+      return;
+    }
 
     formStatus.value = (gp.completionStatus as GamePurchaseCompletionStatus) ?? null;
     formRating.value = gp.rating ?? null;
@@ -759,10 +769,12 @@ async function openEditForm() {
     formStartDate.value = gp.startDate ?? "";
     formCompletionDate.value = gp.completionDate ?? "";
     formComments.value = gp.comments ?? "";
+    suppressDraftSync = false;
     loadReviewDraft();
     formPlatformIds.value = new Set(gp.platforms.nodes.map((p) => p.id));
     formStoreIds.value = new Set(gp.stores.nodes.map((s) => s.id));
   } catch {
+    suppressDraftSync = false;
     actionMessage.value = "Failed to load game purchase details.";
     actionIsError.value = true;
   }
