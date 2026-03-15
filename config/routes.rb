@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :api do
     post 'auth/sign_in', to: 'auth#sign_in'
     post 'auth/sign_up', to: 'auth#sign_up'
+    delete 'auth/sign_out', to: 'auth#sign_out'
     get 'auth/me', to: 'auth#me'
   end
 

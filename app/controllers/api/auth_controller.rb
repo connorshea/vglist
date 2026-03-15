@@ -63,22 +63,29 @@ module Api
       end
     end
 
+    def sign_out
+      user = jwt_user
+      if user
+        JwtService.revoke_all!(user)
+        render json: { message: "Signed out successfully." }
+      else
+        render json: { error: "Not authenticated." }, status: :unauthorized
+      end
+    end
+
     private
 
     def sign_up_params
       params.permit(:username, :email, :password, :password_confirmation)
     end
 
-    # Decode JWT from Authorization header for the /me endpoint.
+    # Decode JWT from Authorization header.
     def jwt_user
       auth_header = request.headers['Authorization']
       return nil unless auth_header&.start_with?('Bearer ')
 
       token = auth_header.sub(/^Bearer\s+/i, '')
-      decoded = JwtService.decode(token)
-      User.find(decoded.first['user_id'])
-    rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-      nil
+      JwtService.decode_and_verify(token)
     end
   end
 end

@@ -38,6 +38,30 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(decoded.first['user_id']).to eq(user.id)
     end
 
+    it "returns a token that includes jwt_version and passes verification" do
+      post graphql_path, params: {
+        query: query,
+        variables: { email: user.email, password: "password" }.to_json
+      }
+
+      json = JSON.parse(response.body)
+      token = json.dig('data', 'signIn', 'token')
+      decoded = JwtService.decode(token)
+      expect(decoded.first['jwt_version']).to eq(user.jwt_version)
+      expect(JwtService.decode_and_verify(token)).to eq(user)
+    end
+
+    it "returns a token that is rejected after revocation" do
+      post graphql_path, params: {
+        query: query,
+        variables: { email: user.email, password: "password" }.to_json
+      }
+
+      token = JSON.parse(response.body).dig('data', 'signIn', 'token')
+      JwtService.revoke_all!(user)
+      expect(JwtService.decode_and_verify(token)).to be_nil
+    end
+
     it "returns errors for invalid credentials" do
       post graphql_path, params: {
         query: query,

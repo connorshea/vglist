@@ -27,11 +27,7 @@ RSpec.describe "GraphQL", type: :request do
     end
 
     it 'authenticates with a valid JWT token' do
-      jwt_token = JWT.encode(
-        { user_id: user.id, exp: 1.day.from_now.to_i, iat: Time.current.to_i },
-        Rails.application.credentials.secret_key_base,
-        'HS256'
-      )
+      jwt_token = JwtService.encode(user)
       headers = {
         'User-Agent': 'GraphQL Test',
         'Authorization': "Bearer #{jwt_token}"
@@ -82,6 +78,42 @@ RSpec.describe "GraphQL", type: :request do
       expect(response).to have_http_status(:success)
       json = JSON.parse(response.body)
       expect(json.dig('data', 'currentUser')).to be_nil
+    end
+
+    it 'treats a revoked JWT as unauthenticated' do
+      jwt_token = JwtService.encode(user)
+      JwtService.revoke_all!(user)
+      query = '{ currentUser { id } }'
+
+      post graphql_path(format: :json),
+        params: { query: query },
+        headers: { 'Authorization': "Bearer #{jwt_token}" }
+
+      expect(response).to have_http_status(:success)
+      json = JSON.parse(response.body)
+      expect(json.dig('data', 'currentUser')).to be_nil
+    end
+
+    it 'rejects a revoked JWT for mutations that require authentication' do
+      jwt_token = JwtService.encode(user)
+      JwtService.revoke_all!(user)
+
+      mutation = <<~GQL
+        mutation UpdateUser($bio: String) {
+          updateUser(bio: $bio) {
+            user { id }
+            errors
+          }
+        }
+      GQL
+
+      post graphql_path(format: :json),
+        params: { query: mutation, variables: { bio: "hacked" }.to_json },
+        headers: { 'Authorization': "Bearer #{jwt_token}" }
+
+      json = JSON.parse(response.body)
+      expect(json['errors'].first['message']).to include("logged in")
+      expect(user.reload.bio).not_to eq("hacked")
     end
   end
 end

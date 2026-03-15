@@ -142,6 +142,13 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'jwt_version' do
+    it 'defaults to 0' do
+      new_user = create(:user)
+      expect(new_user.jwt_version).to eq(0)
+    end
+  end
+
   describe 'Scopes' do
     context 'with most followers' do
       let(:user2) { create(:user, id: 1) }
