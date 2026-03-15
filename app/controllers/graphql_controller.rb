@@ -138,6 +138,20 @@ class GraphqlController < ApplicationController
       @jwt_user = user unless user.banned?
     elsif user_using_oauth?
       doorkeeper_authorize!
+      # Eagerly resolve the Doorkeeper user so we can check banned status
+      # and cache the result for doorkeeper_user (avoids a duplicate query).
+      if doorkeeper_token.present?
+        user = User.find_by(id: doorkeeper_token[:resource_owner_id])
+        if user&.banned?
+          @doorkeeper_user = nil
+          render json: {
+            data: nil,
+            errors: [{ message: "The user that owns this token has been banned." }]
+          }, status: :forbidden
+          return
+        end
+        @doorkeeper_user = user
+      end
     elsif request.headers.key?('X-User-Email') && request.headers.key?('X-User-Token')
       # Token auth — only authenticate if both email and token are provided and valid
       user = User.find_by(email: request.headers['X-User-Email'])
