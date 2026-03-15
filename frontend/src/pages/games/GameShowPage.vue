@@ -129,9 +129,10 @@
                       </div>
 
                       <div class="form-group">
-                        <label class="form-label">Rating (out of 100)</label>
+                        <label class="form-label" for="form-rating">Rating (out of 100)</label>
                         <div class="form-rating-row">
                           <input
+                            id="form-rating"
                             v-model.number="formRating"
                             type="number"
                             min="0"
@@ -146,8 +147,9 @@
                       </div>
 
                       <div class="form-group">
-                        <label class="form-label">Hours played</label>
+                        <label class="form-label" for="form-hours-played">Hours played</label>
                         <input
+                          id="form-hours-played"
                           v-model.number="formHoursPlayed"
                           type="number"
                           min="0"
@@ -160,19 +162,31 @@
                       <div class="form-dates">
                         <div class="form-date-field">
                           <div class="form-label-row">
-                            <label class="form-label">Started</label>
+                            <label class="form-label" for="form-start-date">Started</label>
                             <button type="button" class="form-date-today" @click="formStartDate = today">Today</button>
                           </div>
-                          <input v-model="formStartDate" type="date" class="form-date-input" :max="today" />
+                          <input
+                            id="form-start-date"
+                            v-model="formStartDate"
+                            type="date"
+                            class="form-date-input"
+                            :max="today"
+                          />
                         </div>
                         <div class="form-date-field">
                           <div class="form-label-row">
-                            <label class="form-label">Finished</label>
+                            <label class="form-label" for="form-completion-date">Finished</label>
                             <button type="button" class="form-date-today" @click="formCompletionDate = today">
                               Today
                             </button>
                           </div>
-                          <input v-model="formCompletionDate" type="date" class="form-date-input" :max="today" />
+                          <input
+                            id="form-completion-date"
+                            v-model="formCompletionDate"
+                            type="date"
+                            class="form-date-input"
+                            :max="today"
+                          />
                         </div>
                       </div>
                       <p v-if="dateValidationError" class="form-date-error">
@@ -219,8 +233,9 @@
                       </div>
 
                       <div class="form-group form-notes-group">
-                        <label class="form-label">Review / notes</label>
+                        <label class="form-label" for="form-comments">Review / notes</label>
                         <textarea
+                          id="form-comments"
                           v-model="formComments"
                           class="form-textarea"
                           placeholder="What did you think?"
