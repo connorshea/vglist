@@ -26,7 +26,7 @@ RSpec.describe Series, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:games) }
+    it { should have_many(:games).dependent(:nullify) }
   end
 
   describe "Indexes" do

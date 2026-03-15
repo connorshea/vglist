@@ -26,7 +26,7 @@ RSpec.describe Engine, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:game_engines) }
+    it { should have_many(:game_engines).dependent(:destroy) }
     it { should have_many(:games).through(:game_engines).source(:game) }
   end
 
