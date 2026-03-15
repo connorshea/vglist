@@ -31,7 +31,7 @@ module Types
       return [] unless user_visible?
 
       Views::NewEvent.recently_created
-                     .joins(:user)
+                     .includes(:user)
                      .where(user_id: @object.id)
     end
 
@@ -57,7 +57,6 @@ module Types
     # see this information.
     {
       bio: nil,
-      game_purchases: [],
       followers: [],
       following: [],
       favorited_games: []
@@ -65,6 +64,12 @@ module Types
       define_method(meth_name) do
         handler(meth_name, fallback)
       end
+    end
+
+    def game_purchases
+      return [] unless user_visible?
+
+      @object.game_purchases.includes(:game)
     end
 
     def followed?
