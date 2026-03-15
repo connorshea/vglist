@@ -168,7 +168,9 @@
                         <div class="form-date-field">
                           <div class="form-label-row">
                             <label class="form-label">Finished</label>
-                            <button type="button" class="form-date-today" @click="formCompletionDate = today">Today</button>
+                            <button type="button" class="form-date-today" @click="formCompletionDate = today">
+                              Today
+                            </button>
                           </div>
                           <input v-model="formCompletionDate" type="date" class="form-date-input" :max="today" />
                         </div>
