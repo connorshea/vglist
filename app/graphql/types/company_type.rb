@@ -11,5 +11,13 @@ module Types
     # Associations
     field :published_games, GameType.connection_type, null: false, description: "Games published by this company."
     field :developed_games, GameType.connection_type, null: false, description: "Games developed by this company."
+
+    def published_games
+      @object.published_games.with_attached_cover
+    end
+
+    def developed_games
+      @object.developed_games.with_attached_cover
+    end
   end
 end

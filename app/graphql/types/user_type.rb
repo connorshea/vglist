@@ -31,12 +31,10 @@ module Types
       return [] unless user_visible?
 
       Views::NewEvent.recently_created
-                     .includes(:user)
+                     .includes(user: { avatar_attachment: :blob })
                      .where(user_id: @object.id)
     end
 
-    # This causes an N+2 query, figure out a better way to do this.
-    # https://github.com/rmosolgo/graphql-ruby/issues/1777
     def avatar_url(size:)
       avatar = @object.sized_avatar(size)
       return if avatar.nil?
@@ -69,7 +67,7 @@ module Types
     def game_purchases
       return [] unless user_visible?
 
-      @object.game_purchases.includes(:game, :platforms, :stores)
+      @object.game_purchases.includes(:platforms, :stores, game: { cover_attachment: :blob })
     end
 
     def followed?

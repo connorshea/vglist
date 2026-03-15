@@ -59,9 +59,9 @@ class GamePurchase < ApplicationRecord
   def start_date_before_completion_date
     return if start_date.nil? || completion_date.nil?
 
-    if start_date > completion_date
-      errors.add(:start_date, "can't be after completion date")
-    end
+    return unless start_date > completion_date
+
+    errors.add(:start_date, "can't be after completion date")
   end
 
   def game_purchase_create

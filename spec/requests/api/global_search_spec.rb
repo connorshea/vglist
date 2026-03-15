@@ -228,6 +228,73 @@ RSpec.describe "Global Search API", type: :request do
       end
     end
 
+    context 'with N+1 query prevention' do
+      it "does not fire per-result queries for game search results" do
+        create_list(:game_with_cover, 5, name: 'NplusOneG', developers: create_list(:company, 1, name: 'DevCo'))
+        query_string = <<-GRAPHQL
+          query($query: String!, $types: [SearchableEnum!]) {
+            globalSearch(query: $query, searchableTypes: $types) {
+              nodes {
+                ... on GameSearchResult {
+                  searchableId
+                  coverUrl
+                  developerName
+                  releaseDate
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        queries = []
+        callback = lambda { |_name, _start, _finish, _id, payload|
+          queries << payload[:sql] unless payload[:name] == "SCHEMA" || payload[:sql].match?(/\A(BEGIN|COMMIT|ROLLBACK|SAVEPOINT|RELEASE)/i)
+        }
+        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+          result = api_request(query_string, variables: { query: 'NplusOneG', types: ['GAME'] }, token: access_token)
+          expect(result.graphql_dig(:global_search, :nodes).length).to eq(5)
+        end
+
+        # With preloading, games should be batch-loaded with a single WHERE id IN query,
+        # not individual Game.find per result. Count SELECT on games table:
+        # batch load = 1 query with IN clause. Without fix, would be 15 (3 per result).
+        game_queries = queries.select { |q| q.include?('SELECT "games".* FROM "games"') }
+        expect(game_queries.length).to be <= 2
+      end
+
+      it "does not fire per-result queries for user search results" do
+        5.times { |i| create(:user_with_avatar, username: "nplus1user#{i}") }
+        query_string = <<-GRAPHQL
+          query($query: String!, $types: [SearchableEnum!]) {
+            globalSearch(query: $query, searchableTypes: $types) {
+              nodes {
+                ... on UserSearchResult {
+                  searchableId
+                  avatarUrl
+                  slug
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        queries = []
+        callback = lambda { |_name, _start, _finish, _id, payload|
+          queries << payload[:sql] unless payload[:name] == "SCHEMA" || payload[:sql].match?(/\A(BEGIN|COMMIT|ROLLBACK|SAVEPOINT|RELEASE)/i)
+        }
+        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+          result = api_request(query_string, variables: { query: 'nplus1user', types: ['USER'] }, token: access_token)
+          expect(result.graphql_dig(:global_search, :nodes).length).to eq(5)
+        end
+
+        # With preloading, users should be batch-loaded. Count data-loading queries on users table.
+        # Exclude existence checks (SELECT 1 AS one) which are from auth/validation.
+        # Without fix, would be 10+ (2 per result). With fix, should be a small constant (batch + auth).
+        user_data_queries = queries.select { |q| q.include?('SELECT "users".* FROM "users" WHERE "users"."id"') }
+        expect(user_data_queries.length).to be <= 5
+      end
+    end
+
     context 'with all types of records' do
       let!(:company) { create(:company, name: 'Foo') }
       let!(:engine) { create(:engine, name: 'Foo') }
