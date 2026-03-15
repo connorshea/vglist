@@ -87,7 +87,10 @@ class GraphqlController < ApplicationController
   def doorkeeper_user
     return if doorkeeper_token.nil?
 
-    @doorkeeper_user ||= User.find_by(id: doorkeeper_token[:resource_owner_id])
+    user = User.find_by(id: doorkeeper_token[:resource_owner_id])
+    return nil if user&.banned?
+
+    @doorkeeper_user ||= user
   end
 
   # Check whether the request is from a first-party client.
