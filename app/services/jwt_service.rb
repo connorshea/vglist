@@ -35,7 +35,8 @@ class JwtService
 
   # Increment the user's jwt_version to invalidate all existing tokens.
   def self.revoke_all!(user)
-    user.increment!(:jwt_version)
+    user.jwt_version += 1
+    user.save!
   end
 
   def self.secret_key
