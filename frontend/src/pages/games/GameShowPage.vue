@@ -159,11 +159,17 @@
 
                       <div class="form-dates">
                         <div class="form-date-field">
-                          <label class="form-label">Started</label>
+                          <div class="form-label-row">
+                            <label class="form-label">Started</label>
+                            <button type="button" class="form-date-today" @click="formStartDate = today">Today</button>
+                          </div>
                           <input v-model="formStartDate" type="date" class="form-date-input" :max="today" />
                         </div>
                         <div class="form-date-field">
-                          <label class="form-label">Finished</label>
+                          <div class="form-label-row">
+                            <label class="form-label">Finished</label>
+                            <button type="button" class="form-date-today" @click="formCompletionDate = today">Today</button>
+                          </div>
                           <input v-model="formCompletionDate" type="date" class="form-date-input" :max="today" />
                         </div>
                       </div>
@@ -939,17 +945,21 @@ async function toggleFavorite() {
 
 @media (prefers-color-scheme: dark) {
   .game-show {
+    --game-border: var(--s-300);
     --game-border-light: var(--s-300);
+    --game-text-muted: var(--s-200);
+    --game-text-label: var(--s-200);
+    --game-track-bg: var(--s-300);
     --game-link-color: var(--p-300);
   }
 
-  .detail-link,
-  .sidebar-tag {
+  .detail-link {
     color: var(--game-link-color);
   }
 
   .sidebar-tag {
-    border-color: var(--game-link-color);
+    color: var(--s-100);
+    border-color: var(--s-300);
   }
 
   .sidebar-tag:hover {
@@ -962,6 +972,20 @@ async function toggleFavorite() {
 
   .details-heading {
     color: var(--game-link-color);
+  }
+
+  .rating-bar-fill {
+    background: var(--p-400);
+  }
+
+  .community-count,
+  .community-empty,
+  .avatar-overflow {
+    color: var(--s-200);
+  }
+
+  .avatar-circle {
+    border-color: var(--s-600);
   }
 }
 
@@ -1358,6 +1382,33 @@ a.hero-tag:hover {
 
 .form-date-input:focus {
   border-color: var(--color-text-secondary);
+}
+
+.form-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.form-label-row .form-label {
+  margin-bottom: 0;
+}
+
+.form-date-today {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--p-500);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: 0.4rem;
+}
+
+.form-date-today:hover {
+  color: var(--p-600);
+  text-decoration: underline;
 }
 
 .form-date-error {
@@ -1844,6 +1895,14 @@ a.hero-tag:hover {
 
   .form-date-error {
     color: var(--r-200);
+  }
+
+  .form-date-today {
+    color: var(--p-300);
+  }
+
+  .form-date-today:hover {
+    color: var(--p-200);
   }
 }
 </style>
