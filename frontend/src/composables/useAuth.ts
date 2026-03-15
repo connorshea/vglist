@@ -78,7 +78,7 @@ export function useAuth() {
       }
     }
     authStore.clearAuth();
-    router.push("/");
+    void router.push("/");
     const { show } = useSnackbar();
     show("You have been signed out.", "success");
   }
