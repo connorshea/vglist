@@ -129,7 +129,7 @@ function handleSignOut() {
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
+  background: transparent;
   color: #fff;
   display: flex;
   align-items: center;
@@ -137,11 +137,18 @@ function handleSignOut() {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s;
+  margin-left: auto;
   margin-right: 8px;
   align-self: center;
 }
 
 .navbar-mobile-search:active {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Remove Bulma's margin-left:auto from the burger so it sits
+   directly next to the search button (which has margin-left:auto). */
+.navbar-burger {
+  margin-left: 0;
 }
 </style>

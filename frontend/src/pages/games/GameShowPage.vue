@@ -939,7 +939,7 @@ async function toggleFavorite() {
 /* ── Page-level custom properties (reference global tokens) ── */
 .game-show {
   --game-border: var(--color-border);
-  --game-border-light: hsl(0, 0%, 92%);
+  --game-border-light: var(--color-bg-subtle);
   --game-text-muted: var(--color-text-secondary);
   --game-text-label: var(--color-text-tertiary);
   --game-track-bg: var(--color-border);
@@ -964,10 +964,6 @@ async function toggleFavorite() {
     border-color: var(--s-300);
   }
 
-  .sidebar-tag:hover {
-    background: rgba(157, 153, 224, 0.15);
-  }
-
   .rating-circle-value {
     color: var(--game-link-color);
   }
@@ -978,16 +974,6 @@ async function toggleFavorite() {
 
   .rating-bar-fill {
     background: var(--p-400);
-  }
-
-  .community-count,
-  .community-empty,
-  .avatar-overflow {
-    color: var(--s-200);
-  }
-
-  .avatar-circle {
-    border-color: var(--s-600);
   }
 }
 
@@ -1002,6 +988,12 @@ async function toggleFavorite() {
   margin-top: -3rem;
   background: #4b46af;
   padding: 3rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .game-hero {
+    background: #3a3690;
+  }
 }
 
 .game-hero-inner {
@@ -1319,7 +1311,7 @@ a.hero-tag:hover {
   background: var(--p-100);
   color: var(--p-700);
   font-weight: 500;
-  border: 1px solid transparent;
+  border: 1px solid var(--p-100);
 }
 
 .form-empty-hint {
@@ -1681,7 +1673,13 @@ a.hero-tag:hover {
 }
 
 .sidebar-tag:hover {
-  background: rgba(88, 85, 179, 0.1);
+  background: color-mix(in srgb, var(--vglist-theme) 10%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .sidebar-tag:hover {
+    background: color-mix(in srgb, var(--p-300) 15%, transparent);
+  }
 }
 
 /* Community card (owners/favoriters) */
@@ -1703,7 +1701,7 @@ a.hero-tag:hover {
 
 .community-count {
   font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--game-text-muted);
 }
 
 .community-divider {
@@ -1714,7 +1712,7 @@ a.hero-tag:hover {
 
 .community-empty {
   font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--game-text-muted);
 }
 
 .avatar-stack {
@@ -1726,7 +1724,7 @@ a.hero-tag:hover {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid var(--color-surface);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -1765,7 +1763,7 @@ a.hero-tag:hover {
 .avatar-overflow {
   margin-left: 0.5rem;
   font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--game-text-muted);
   font-weight: 500;
 }
 
