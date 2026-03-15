@@ -217,7 +217,7 @@ export const GET_STORE = gql`
 
 export const GLOBAL_SEARCH = gql`
   query GlobalSearch($query: String!) {
-    globalSearch(query: $query) {
+    globalSearch(query: $query, first: 50) {
       nodes {
         ... on GameSearchResult {
           searchableId
