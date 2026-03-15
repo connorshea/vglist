@@ -9,8 +9,8 @@
     </div>
 
     <div v-if="game" class="game-show">
-      <!-- Full-width purple hero -->
-      <section class="game-hero">
+      <!-- Hero section with dynamic gradient background derived from cover art -->
+      <section class="game-hero" :style="heroStyle">
         <div class="game-hero-inner">
           <div class="game-hero-cover">
             <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
@@ -169,6 +169,7 @@ import { computed, nextTick, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
+import { useImageColors } from "@/composables/useImageColors";
 import { gqlClient } from "@/graphql/client";
 import { GET_GAME } from "@/graphql/queries/games";
 import { GET_STORES } from "@/graphql/queries/resources";
@@ -193,6 +194,11 @@ const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
 });
 
 const game = computed(() => data.value?.game ?? null);
+
+// Extract dominant colors from the cover image for the hero background gradient.
+const coverUrl = computed(() => game.value?.coverUrl ?? null);
+const { gradient: heroGradient } = useImageColors(coverUrl);
+const heroStyle = computed(() => (heroGradient.value ? { background: heroGradient.value } : undefined));
 
 // Fetch all stores for the form
 const { data: storesData, loading: storesLoading } = useQuery<GetStoresQuery>(GET_STORES, {
@@ -455,6 +461,7 @@ const actionMessageClass = computed(() => (actionIsError.value ? "is-danger" : "
   margin-top: -3rem;
   background: #4b46af;
   padding: 3rem 0;
+  transition: background 0.6s ease;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -681,6 +688,34 @@ a.hero-tag:hover {
 .hero-btn-active {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* GitHub-style overrides for the cover action buttons */
+.hero-btn.hero-cover-btn {
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.hero-btn.hero-cover-btn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.hero-btn.hero-cover-btn:active {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.12) 100%);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.hero-btn.hero-fav-btn {
+  border-radius: 6px;
 }
 
 /* ── Hero swap transition ── */
