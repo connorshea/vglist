@@ -43,10 +43,6 @@
         <p>{{ saveError }}</p>
       </div>
 
-      <div v-if="saveSuccess" class="notification is-success">
-        <p>Profile updated successfully.</p>
-      </div>
-
       <div class="field">
         <div class="control">
           <button type="submit" class="button is-primary" :class="{ 'is-loading': saving }" :disabled="saving">
@@ -61,6 +57,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useSnackbar } from "@/composables/useSnackbar";
 import { UPDATE_USER } from "@/graphql/mutations/users-settings";
 import { GET_CURRENT_USER_PROFILE } from "@/graphql/queries/users";
 import type { GetCurrentUserProfileQuery } from "@/types/graphql";
@@ -82,7 +79,7 @@ const bio = ref("");
 const privacy = ref("PUBLIC_ACCOUNT");
 const hideDaysPlayed = ref(false);
 const saveError = ref("");
-const saveSuccess = ref(false);
+const { show: showSnackbar } = useSnackbar();
 
 const { data, loading, error } = useQuery<GetCurrentUserProfileQuery>(GET_CURRENT_USER_PROFILE);
 
@@ -102,7 +99,6 @@ const { mutate, loading: saving } = useMutation<UpdateUserResult>(UPDATE_USER);
 
 async function saveProfile() {
   saveError.value = "";
-  saveSuccess.value = false;
 
   try {
     const response = await mutate({
@@ -115,7 +111,7 @@ async function saveProfile() {
     if (errors && errors.length > 0) {
       saveError.value = errors.join(", ");
     } else {
-      saveSuccess.value = true;
+      showSnackbar("Profile updated successfully.");
     }
   } catch (e) {
     saveError.value = extractGqlError(e);
