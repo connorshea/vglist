@@ -2422,6 +2422,37 @@ export interface WikidataBlocklistEntryEdge {
   node?: Maybe<WikidataBlocklistEntry>;
 }
 
+export type SignInMutationVariables = Exact<{
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+}>;
+
+export type SignInMutation = {
+  signIn?: {
+    token?: string | null;
+    userId?: string | null;
+    username?: string | null;
+    slug?: string | null;
+    role?: string | null;
+    errors: Array<string>;
+  } | null;
+};
+
+export type SignUpMutationVariables = Exact<{
+  username: Scalars["String"]["input"];
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+  passwordConfirmation: Scalars["String"]["input"];
+}>;
+
+export type SignUpMutation = { signUp?: { message?: string | null; errors: Array<string> } | null };
+
+export type RequestPasswordResetMutationVariables = Exact<{
+  email: Scalars["String"]["input"];
+}>;
+
+export type RequestPasswordResetMutation = { requestPasswordReset?: { message: string } | null };
+
 export type DeleteEventMutationVariables = Exact<{
   eventId: Scalars["ID"]["input"];
 }>;
@@ -2495,6 +2526,27 @@ export type UnfavoriteGameMutationVariables = Exact<{
 }>;
 
 export type UnfavoriteGameMutation = { unfavoriteGame?: { game?: { id: string; name: string } | null } | null };
+
+export type UpdateUserMutationVariables = Exact<{
+  bio?: InputMaybe<Scalars["String"]["input"]>;
+  privacy?: InputMaybe<UserPrivacy>;
+  hideDaysPlayed?: InputMaybe<Scalars["Boolean"]["input"]>;
+}>;
+
+export type UpdateUserMutation = {
+  updateUser?: {
+    errors: Array<string>;
+    user?: { id: string; bio?: string | null; privacy: UserPrivacy; hideDaysPlayed: boolean } | null;
+  } | null;
+};
+
+export type ResetApiTokenMutationVariables = Exact<{ [key: string]: never }>;
+
+export type ResetApiTokenMutation = { resetApiToken?: { apiToken?: string | null; errors: Array<string> } | null };
+
+export type ExportLibraryMutationVariables = Exact<{ [key: string]: never }>;
+
+export type ExportLibraryMutation = { exportLibrary?: { libraryJson?: string | null; errors: Array<string> } | null };
 
 export type FollowUserMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
@@ -2600,7 +2652,7 @@ export type GetGamesQuery = {
       name: string;
       releaseDate?: string | null;
       coverUrl?: string | null;
-      developers: { nodes: Array<{ id: string; name: string }> };
+      developers: { nodes: Array<{ name: string }> };
     }>;
     pageInfo: { hasNextPage: boolean; endCursor?: string | null };
   } | null;

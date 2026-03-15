@@ -13,7 +13,7 @@
     "fmt:check": "oxfmt --check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "codegen": "graphql-codegen && oxfmt"
+    "codegen": "graphql-codegen && oxfmt && oxfmt"
   },
   "dependencies": {
     "bulma": "^1.0.4",
