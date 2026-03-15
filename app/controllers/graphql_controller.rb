@@ -20,7 +20,11 @@ class GraphqlController < ApplicationController
       first_party: first_party?
     }
 
-    result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name)
+    # Skip complexity limit for first-party queries (the SPA may need
+    # higher complexity for pages like the activity feed).
+    complexity_limit = first_party? ? nil : 500
+
+    result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name, max_complexity: complexity_limit)
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?
@@ -86,11 +90,13 @@ class GraphqlController < ApplicationController
     @doorkeeper_user ||= User.find_by(id: doorkeeper_token[:resource_owner_id])
   end
 
-  # Check whether the doorkeeper token is associated with a first-party OAuth
-  # application, and return true if so.
+  # Check whether the request is from a first-party client.
   def first_party?
-    # JWT tokens are issued by the first-party SPA.
-    return true if user_using_jwt?
+    # Only trust JWT auth if the token was actually validated successfully.
+    # Checking user_using_jwt? alone is not enough — an attacker could send
+    # a malformed token (e.g. "a.b.c") that looks like a JWT but fails
+    # decoding, bypassing complexity limits without authenticating.
+    return true if @jwt_user.present?
 
     return false if doorkeeper_token.nil? || doorkeeper_token.application_id.nil?
 
