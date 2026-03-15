@@ -47,7 +47,7 @@ module Api
     end
 
     def me
-      user = current_user || jwt_user
+      user = jwt_user
       if user
         render json: {
           user: {
