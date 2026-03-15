@@ -90,9 +90,8 @@ export const GET_GAMES = gql`
         name
         releaseDate
         coverUrl(size: SMALL)
-        developers {
+        developers(first: 3) {
           nodes {
-            id
             name
           }
         }
