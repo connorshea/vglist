@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { mount, flushPromises, VueWrapper } from "@vue/test-utils";
+import { mount, flushPromises, type VueWrapper } from "@vue/test-utils";
 import { nextTick } from "vue";
 import SearchOverlay from "./SearchOverlay.vue";
 
