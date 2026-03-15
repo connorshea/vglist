@@ -1,5 +1,7 @@
 module Types
   class EventType < Types::BaseObject
+    connection_type_class(Types::EventConnectionType)
+
     description "Represents events in the Activity Feed."
 
     field :id, ID, null: false, description: "The ID of the event, keep in mind that Events - unlike all other models - use UUIDs."
