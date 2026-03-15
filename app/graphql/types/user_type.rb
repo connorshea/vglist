@@ -69,7 +69,7 @@ module Types
     def game_purchases
       return [] unless user_visible?
 
-      @object.game_purchases.includes(:game)
+      @object.game_purchases.includes(:game, :platforms, :stores)
     end
 
     def followed?
