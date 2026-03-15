@@ -65,7 +65,18 @@ export function useAuth() {
     return data.requestPasswordReset.message;
   }
 
-  function signOut() {
+  async function signOut() {
+    // Revoke the token server-side before clearing local state.
+    if (authStore.token) {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/auth/sign_out`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${authStore.token}` }
+        });
+      } catch {
+        // Clear local state even if the server request fails.
+      }
+    }
     authStore.clearAuth();
     router.push("/");
     const { show } = useSnackbar();
