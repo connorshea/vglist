@@ -113,7 +113,13 @@ const formattedJoinedDate = computed(() => {
 
 .user-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .user-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .user-card.is-banned {
