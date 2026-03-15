@@ -222,8 +222,8 @@ nav.navbar {
   }
 
   @include mixins.from(bv.$desktop) {
-    .navbar-menu .navbar-item:not(.has-dropdown),
-    .navbar-menu .navbar-item:not(.field) {
+    .navbar-menu .navbar-item:not(.has-dropdown):not(:has(.navbar-search)),
+    .navbar-menu .navbar-item:not(.field):not(:has(.navbar-search)) {
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
       --bulma-navbar-item-background-a: 0;
@@ -272,6 +272,7 @@ nav.navbar {
     color: #fff;
     height: 36px;
     font-size: 0.875rem;
+    cursor: pointer;
     transition:
       background-color 200ms,
       border-color 200ms;
