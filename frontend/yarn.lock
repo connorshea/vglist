@@ -3078,7 +3078,7 @@ oxlint-tsgolint@^0.17.0:
     "@oxlint-tsgolint/win32-arm64" "0.17.0"
     "@oxlint-tsgolint/win32-x64" "0.17.0"
 
-oxlint@^1.51.0:
+oxlint@^1.55.0:
   version "1.55.0"
   resolved "https://registry.yarnpkg.com/oxlint/-/oxlint-1.55.0.tgz#b30a3cc8fde11f9dfe00d686167b5eac50841aa1"
   integrity sha512-T+FjepiyWpaZMhekqRpH8Z3I4vNM610p6w+Vjfqgj5TZUxHXl7N8N5IPvmOU8U4XdTRxqtNNTh9Y4hLtr7yvFg==
@@ -3491,7 +3491,7 @@ sass-embedded-win32-x64@1.98.0:
   resolved "https://registry.yarnpkg.com/sass-embedded-win32-x64/-/sass-embedded-win32-x64-1.98.0.tgz#861ca78a70b6d6b0da8e0bc001f8b2f595e62c37"
   integrity sha512-/lbrVsfbcbdZQ5SJCWcV0NVPd6YRs+FtAnfedp4WbCkO/ZO7Zt/58MvI4X2BVpRY/Nt5ZBo1/7v2gYcQ+J4svQ==
 
-sass-embedded@^1.97.3:
+sass-embedded@^1.98.0:
   version "1.98.0"
   resolved "https://registry.yarnpkg.com/sass-embedded/-/sass-embedded-1.98.0.tgz#c8a314cd522361f814d838d1518be4406e9db716"
   integrity sha512-Do7u6iRb6K+lrllcTkB1BXcHwOxcKe3rEfOF/GcCLE2w3WpddakRAosJOHFUR37DpsvimQXEt5abs3NzUjEIqg==
@@ -4022,7 +4022,7 @@ vue-tsc@^3.2.5:
     "@volar/typescript" "2.4.28"
     "@vue/language-core" "3.2.5"
 
-vue@^3.5.13:
+vue@^3.5.30:
   version "3.5.30"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.30.tgz#66df25e9795af3e5522b36f24f3d290fde83f8a0"
   integrity sha512-hTHLc6VNZyzzEH/l7PFGjpcTvUgiaPK5mdLkbjrTeWSRcEfxFrv56g/XckIYlE9ckuobsdwqd5mk2g1sBkMewg==
