@@ -38,7 +38,7 @@ export function useImageColors(imageUrl: Ref<string | null | undefined>): ImageC
     // getImageData() will throw -- caught below with a graceful fallback.
     img.crossOrigin = "anonymous";
 
-    img.onload = () => {
+    img.addEventListener("load", () => {
       try {
         const colors = sampleDominantColors(img);
         if (colors.length >= 2) {
@@ -48,12 +48,12 @@ export function useImageColors(imageUrl: Ref<string | null | undefined>): ImageC
         // Canvas tainted by CORS or other error -- keep gradient as null
         // so the component falls back to its default background.
       }
-    };
+    });
 
     // Network error or broken URL -- stay null.
-    img.onerror = () => {
+    img.addEventListener("error", () => {
       gradient.value = null;
-    };
+    });
 
     img.src = url;
   }

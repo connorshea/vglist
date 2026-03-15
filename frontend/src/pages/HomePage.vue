@@ -286,12 +286,14 @@ watch(
 
     for (const url of uniqueUrls) {
       const img = new Image();
-      img.onload = img.onerror = () => {
+      const onDone = () => {
         loaded++;
         if (loaded >= threshold && !coversReady.value) {
           coversReady.value = true;
         }
       };
+      img.addEventListener("load", onDone);
+      img.addEventListener("error", onDone);
       img.src = url;
     }
   },
