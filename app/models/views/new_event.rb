@@ -29,6 +29,15 @@ module Views
       'following' => Events::RelationshipEvent
     }.freeze
 
+    # Nested associations to preload for each event category's eventable.
+    EVENTABLE_INCLUDES = {
+      'add_to_library' => { game: { cover_attachment: :blob } },
+      'change_completion_status' => { game: { cover_attachment: :blob } },
+      'favorite_game' => { game: { cover_attachment: :blob } },
+      'new_user' => { avatar_attachment: :blob },
+      'following' => { followed: { avatar_attachment: :blob } }
+    }.freeze
+
     # Get a specific event subclass record based on the ID.
     # When event_category is known, queries only the correct table (1 query instead of up to 4).
     def self.find_event_subclass_by_id(id, category = nil)
@@ -65,7 +74,7 @@ module Views
         next unless klass
 
         ids = category_events.map(&:id)
-        records = klass.where(id: ids).includes(:eventable)
+        records = klass.where(id: ids).includes(eventable: EVENTABLE_INCLUDES[category])
         records.each { |r| subclass_map[r.id] = r }
       end
 

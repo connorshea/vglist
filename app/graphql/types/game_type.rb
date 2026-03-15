@@ -46,8 +46,6 @@ module Types
       @object.steam_app_ids.map(&:app_id)
     end
 
-    # TODO: This causes an N+2 query, figure out a better way to do this.
-    # https://github.com/rmosolgo/graphql-ruby/issues/1777
     def cover_url(size:)
       cover = @object.sized_cover(size)
       return if cover.nil?

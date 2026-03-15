@@ -10,5 +10,9 @@ module Types
 
     # Associations
     field :games, GameType.connection_type, null: false, description: "Games in this genre."
+
+    def games
+      @object.games.with_attached_cover
+    end
   end
 end
