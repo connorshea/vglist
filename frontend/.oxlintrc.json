@@ -14,7 +14,11 @@
   "ignorePatterns": [],
   "rules": {
     "eqeqeq": ["error", "smart"],
-    "unicorn/no-abusive-eslint-disable": "error"
+    "unicorn/no-abusive-eslint-disable": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/consistent-type-exports": "error",
+    "unicorn/no-lonely-if": "error"
   },
   "overrides": [
     {

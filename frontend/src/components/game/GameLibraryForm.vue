@@ -316,10 +316,8 @@ const dateValidationError = computed(() => {
   if (formCompletionDate.value && formCompletionDate.value > todayStr) {
     return "Completion date cannot be in the future.";
   }
-  if (formStartDate.value && formCompletionDate.value) {
-    if (formStartDate.value > formCompletionDate.value) {
-      return "Start date must be on or before the completion date.";
-    }
+  if (formStartDate.value && formCompletionDate.value && formStartDate.value > formCompletionDate.value) {
+    return "Start date must be on or before the completion date.";
   }
   return "";
 });
