@@ -61,6 +61,33 @@
               <router-link class="navbar-item" to="/settings">Settings</router-link>
               <hr class="navbar-divider" />
               <a class="navbar-item" @click="handleSignOut">Sign out</a>
+              <hr class="navbar-divider" />
+              <router-link class="navbar-item" to="/about">About</router-link>
+              <a
+                class="navbar-item"
+                href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Changelog</a
+              >
+              <a
+                class="navbar-item"
+                href="https://github.com/connorshea/vglist"
+                target="_blank"
+                rel="noopener noreferrer"
+                >GitHub</a
+              >
+              <a
+                class="navbar-item"
+                href="https://github.com/connorshea/vglist/blob/main/API.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                >API Docs</a
+              >
+              <a class="navbar-item" href="/graphiql" target="_blank" rel="noopener noreferrer">GraphiQL</a>
+              <a class="navbar-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
+                >Discord</a
+              >
             </div>
           </div>
         </template>
@@ -73,12 +100,27 @@
               <router-link class="navbar-item" to="/about">About</router-link>
               <a
                 class="navbar-item"
+                href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Changelog</a
+              >
+              <a
+                class="navbar-item"
                 href="https://github.com/connorshea/vglist"
                 target="_blank"
                 rel="noopener noreferrer"
                 >GitHub</a
               >
-              <a class="navbar-item" href="https://discord.gg/EWGm3YY" target="_blank" rel="noopener noreferrer"
+              <a
+                class="navbar-item"
+                href="https://github.com/connorshea/vglist/blob/main/API.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                >API Docs</a
+              >
+              <a class="navbar-item" href="/graphiql" target="_blank" rel="noopener noreferrer">GraphiQL</a>
+              <a class="navbar-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
                 >Discord</a
               >
             </div>
