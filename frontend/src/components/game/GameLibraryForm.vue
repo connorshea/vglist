@@ -147,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { gqlClient } from "@/graphql/client";
 import { GET_GAME_PURCHASE } from "@/graphql/queries/games";
 import { ADD_GAME_TO_LIBRARY, UPDATE_GAME_IN_LIBRARY } from "@/graphql/mutations/games";
@@ -383,6 +383,17 @@ async function submit() {
     saving.value = false;
   }
 }
+
+// Auto-initialize when mounted. This is needed because the parent uses
+// <Transition mode="out-in"> which delays mounting until the leave transition
+// completes, so the parent's nextTick-based ref calls would fire too early.
+onMounted(() => {
+  if (props.gamePurchaseId) {
+    openAsEdit();
+  } else {
+    openAsAdd();
+  }
+});
 
 defineExpose({ openAsAdd, openAsEdit });
 </script>
