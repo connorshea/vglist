@@ -51,7 +51,7 @@
                     :class="{ 'hero-fav-pop': game.isFavorited }"
                   />
                   <span v-if="game.isFavorited" class="hero-sparkles" :key="sparkleKey">
-                    <span v-for="i in 6" :key="i" class="hero-sparkle" :style="sparkleStyle(i)" />
+                    <span v-for="(style, i) in sparkleStyles" :key="i" class="hero-sparkle" :style="style" />
                   </span>
                 </span>
               </button>
@@ -365,22 +365,30 @@ async function confirmRemoveFromLibrary() {
 const favoriting = ref(false);
 const sparkleKey = ref(0);
 
-function sparkleStyle(i: number): Record<string, string> {
-  const angle = (i - 1) * 60;
-  const rad = (angle * Math.PI) / 180;
-  const dist = 16 + Math.random() * 6;
-  const x = Math.cos(rad) * dist;
-  const y = Math.sin(rad) * dist;
-  const size = 3 + Math.random() * 2;
-  const delay = Math.random() * 0.1;
-  return {
-    "--sx": `${x}px`,
-    "--sy": `${y}px`,
-    width: `${size}px`,
-    height: `${size}px`,
-    animationDelay: `${delay}s`
-  };
+function generateSparkleStyles(): Record<string, string>[] {
+  return Array.from({ length: 6 }, (_, i) => {
+    const angle = i * 60;
+    const rad = (angle * Math.PI) / 180;
+    const dist = 16 + Math.random() * 6;
+    const x = Math.cos(rad) * dist;
+    const y = Math.sin(rad) * dist;
+    const size = 3 + Math.random() * 2;
+    const delay = Math.random() * 0.1;
+    return {
+      "--sx": `${x}px`,
+      "--sy": `${y}px`,
+      width: `${size}px`,
+      height: `${size}px`,
+      animationDelay: `${delay}s`
+    };
+  });
 }
+
+const sparkleStyles = computed(() => {
+  // Re-generate styles whenever sparkleKey changes (i.e. on each favorite action).
+  void sparkleKey.value;
+  return generateSparkleStyles();
+});
 
 async function toggleFavorite() {
   if (!authStore.isAuthenticated) {
