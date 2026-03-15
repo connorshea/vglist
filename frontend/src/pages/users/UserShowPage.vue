@@ -48,7 +48,7 @@
             v-if="canFollowOrUnfollow && user.isFollowed"
             class="follow-btn follow-btn-secondary"
             :disabled="unfollowLoading"
-            @click="handleUnfollow"
+            @click="promptUnfollow"
           >
             Unfollow
           </button>
@@ -92,7 +92,7 @@
               <button
                 v-if="canRemoveAvatar && user.avatarUrl"
                 class="actions-dropdown-item actions-dropdown-item-danger"
-                @click="handleRemoveAvatar"
+                @click="promptRemoveAvatar"
               >
                 Remove avatar
               </button>
@@ -103,7 +103,7 @@
               >
                 Ban user
               </button>
-              <button v-if="canUnban && user.banned" class="actions-dropdown-item" @click="handleUnban">
+              <button v-if="canUnban && user.banned" class="actions-dropdown-item" @click="promptUnban">
                 Unban user
               </button>
             </div>
@@ -271,6 +271,54 @@
       </template>
       <strong>{{ user?.username }}</strong> {{ roleConfirmDescription }}
     </ConfirmDialog>
+
+    <!-- Unfollow confirmation dialog -->
+    <ConfirmDialog
+      v-model="showUnfollowConfirm"
+      title="Unfollow user?"
+      confirm-label="Unfollow"
+      loading-label="Unfollowing…"
+      :loading="unfollowLoading"
+      @confirm="confirmUnfollow"
+    >
+      <template #icon>
+        <UserMinus :size="22" :stroke-width="1.8" />
+      </template>
+      You will no longer see <strong>{{ user?.username }}</strong
+      >'s activity in your feed.
+    </ConfirmDialog>
+
+    <!-- Unban confirmation dialog -->
+    <ConfirmDialog
+      v-model="showUnbanConfirm"
+      title="Unban user?"
+      confirm-label="Unban user"
+      loading-label="Unbanning…"
+      :loading="unbanLoading"
+      variant="primary"
+      @confirm="confirmUnban"
+    >
+      <template #icon>
+        <ShieldCheck :size="22" :stroke-width="1.8" />
+      </template>
+      <strong>{{ user?.username }}</strong> will regain access to their account.
+    </ConfirmDialog>
+
+    <!-- Remove avatar confirmation dialog -->
+    <ConfirmDialog
+      v-model="showRemoveAvatarConfirm"
+      title="Remove avatar?"
+      confirm-label="Remove avatar"
+      loading-label="Removing…"
+      :loading="removeAvatarLoading"
+      @confirm="confirmRemoveAvatar"
+    >
+      <template #icon>
+        <CircleAlert :size="22" :stroke-width="1.8" />
+      </template>
+      <strong>{{ user?.username }}</strong
+      >'s avatar will be removed and replaced with the default.
+    </ConfirmDialog>
   </section>
 </template>
 
@@ -291,7 +339,7 @@ import {
 } from "@/graphql/mutations/users";
 import type { GetUserQuery } from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import { CircleAlert, ShieldCheck } from "lucide-vue-next";
+import { CircleAlert, ShieldCheck, UserMinus } from "lucide-vue-next";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -424,9 +472,16 @@ async function handleFollow() {
   }
 }
 
-async function handleUnfollow() {
+const showUnfollowConfirm = ref(false);
+
+function promptUnfollow() {
+  showUnfollowConfirm.value = true;
+}
+
+async function confirmUnfollow() {
   try {
     await unfollowUser({ userId: user.value!.id });
+    showUnfollowConfirm.value = false;
     await refetch();
     showSnackbar(`You have unfollowed ${user.value!.username}.`);
   } catch {
@@ -483,14 +538,25 @@ async function confirmBan() {
   }
 }
 
-async function handleUnban() {
+const showUnbanConfirm = ref(false);
+const unbanLoading = ref(false);
+
+function promptUnban() {
   actionsOpen.value = false;
+  showUnbanConfirm.value = true;
+}
+
+async function confirmUnban() {
+  unbanLoading.value = true;
   try {
     await unbanUserMutate({ userId: user.value!.id });
+    showUnbanConfirm.value = false;
     await refetch();
     showSnackbar(`${user.value!.username} has been unbanned.`, "success");
   } catch {
     showSnackbar("Failed to unban user.", "error");
+  } finally {
+    unbanLoading.value = false;
   }
 }
 
@@ -543,14 +609,25 @@ async function confirmRoleChange() {
   }
 }
 
-async function handleRemoveAvatar() {
+const showRemoveAvatarConfirm = ref(false);
+const removeAvatarLoading = ref(false);
+
+function promptRemoveAvatar() {
   actionsOpen.value = false;
+  showRemoveAvatarConfirm.value = true;
+}
+
+async function confirmRemoveAvatar() {
+  removeAvatarLoading.value = true;
   try {
     await removeUserAvatarMutate({ userId: user.value!.id });
+    showRemoveAvatarConfirm.value = false;
     await refetch();
     showSnackbar("Avatar removed.", "success");
   } catch {
     showSnackbar("Failed to remove avatar.", "error");
+  } finally {
+    removeAvatarLoading.value = false;
   }
 }
 

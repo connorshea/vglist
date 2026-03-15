@@ -112,7 +112,7 @@
               class="a-delete-btn"
               aria-label="Delete event"
               :disabled="deletingEventId === event.id"
-              @click="deleteEvent(event.id)"
+              @click="promptDeleteEvent(event.id)"
             >
               &times;
             </button>
@@ -137,6 +137,21 @@
         @next="nextPage"
       />
     </div>
+
+    <!-- Delete event confirmation dialog -->
+    <ConfirmDialog
+      v-model="showDeleteEventConfirm"
+      title="Delete event?"
+      confirm-label="Delete event"
+      loading-label="Deleting…"
+      :loading="deletingEventId !== null"
+      @confirm="confirmDeleteEvent"
+    >
+      <template #icon>
+        <Trash2 :size="22" :stroke-width="1.8" />
+      </template>
+      This event will be permanently removed from the activity feed.
+    </ConfirmDialog>
   </section>
 </template>
 
@@ -147,6 +162,8 @@ import { GET_ACTIVITY } from "@/graphql/queries/resources";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
 import type { GetActivityQuery, GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { Trash2 } from "lucide-vue-next";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
 
@@ -310,13 +327,22 @@ function canDeleteEvent(event: ActivityEvent): boolean {
   return event.user.id === authStore.user.id;
 }
 
-async function deleteEvent(eventId: string) {
-  // TODO: Create a shared confirmation modal component instead of using window.confirm, and update this.
-  if (!window.confirm("Are you sure you want to delete this event?")) return;
+const showDeleteEventConfirm = ref(false);
+const pendingDeleteEventId = ref<string | null>(null);
+
+function promptDeleteEvent(eventId: string) {
+  pendingDeleteEventId.value = eventId;
+  showDeleteEventConfirm.value = true;
+}
+
+async function confirmDeleteEvent() {
+  const eventId = pendingDeleteEventId.value;
+  if (!eventId) return;
 
   deletingEventId.value = eventId;
   try {
     await deleteEventMutate({ eventId });
+    showDeleteEventConfirm.value = false;
     if (data.value?.activity) {
       data.value = {
         ...data.value,
@@ -331,6 +357,7 @@ async function deleteEvent(eventId: string) {
     showSnackbar("Failed to delete event.", "error");
   } finally {
     deletingEventId.value = null;
+    pendingDeleteEventId.value = null;
   }
 }
 </script>
