@@ -1,0 +1,908 @@
+@use "bulma-variables" as bv;
+@use "bulma/sass/utilities/mixins";
+@use "sass:color";
+@use "padding-and-margins";
+@use "utilities";
+@use "home";
+@use "tooltip";
+
+:root {
+  color-scheme: light dark;
+
+  --vglist-theme: #5957d6;
+
+  /* Purple ramp */
+  --p-50: #f5f4ff;
+  --p-100: #eeedfe;
+  --p-200: #cecbf6;
+  --p-300: #9d99e0;
+  --p-400: #7b77d1;
+  --p-500: #5957d6;
+  --p-600: #4a47a0;
+  --p-700: #3c3489;
+  --p-800: #2a2460;
+  --p-900: #1b1740;
+
+  /* Red ramp (danger) */
+  --r-50: #fcebeb;
+  --r-200: #f09595;
+  --r-500: #e24b4a;
+  --r-800: #791f1f;
+
+  /* Neutral ramp (warm gray) */
+  --n-0: #ffffff;
+  --n-50: #f4f3ef;
+  --n-100: #e8e7e2;
+  --n-200: #d3d1c7;
+  --n-300: #b4b2a9;
+  --n-400: #888780;
+  --n-500: #5f5e5a;
+  --n-600: #444441;
+  --n-700: #2c2c2a;
+
+  /* Slate ramp (dark mode) */
+  --s-50: #e0e3f0;
+  --s-100: #b0b4c8;
+  --s-200: #8b8fa3;
+  --s-300: #555a6e;
+  --s-400: #3d4155;
+  --s-500: #353848;
+  --s-600: #2b2e3d;
+  --s-700: #1e2130;
+
+  /* Shared neutral palette */
+  --color-text-primary: #2c2c2a;
+  --color-text-secondary: #888780;
+  --color-text-tertiary: #b4b2a9;
+  --color-border: #d3d1c7;
+  --color-bg-subtle: #f4f3ef;
+  --color-surface: #fff;
+  --color-accent: var(--p-500);
+  --color-navbar-bg: var(--p-500);
+
+  /* Shared radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 20px;
+
+  /* Shared transitions */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.2s;
+
+  --bulma-scheme-main: hsl(0, 0%, 100%);
+  --bulma-scheme-h: 0;
+  --bulma-scheme-s: 0%;
+  --bulma-scheme-main-l: 100%;
+  --bulma-scheme-main-bis-l: 98%;
+  --bulma-scheme-main-ter-l: 96%;
+  --bulma-background-l: 98%;
+  --bulma-text-l: 29%;
+
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  --bulma-background: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-background-l));
+  --bulma-text: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-text-l));
+
+  --bulma-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+
+  --home-page-subtitle-text: #fff;
+  --home-section-background-color: var(--vglist-theme);
+  --home-section-background-brightness: 85%;
+
+  --vglist-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+  --library-edit-bar-border: #dcdfe6;
+
+  .button {
+    --bulma-button-background-l-delta: 5%;
+    --bulma-primary-invert-l: var(--bulma-primary-100-l);
+  }
+
+  .card {
+    --bulma-card-background-color: var(--bulma-scheme-main);
+  }
+
+  .tabs {
+    --bulma-tabs-border-bottom-color: var(--bulma-border-hover);
+  }
+
+  .control,
+  .input,
+  .textarea,
+  .select {
+    --bulma-input-background-l-delta: 6%;
+    --bulma-input-border-l-delta: -20%;
+  }
+
+  .modal {
+    --bulma-modal-card-head-background-color: var(--bulma-scheme-main-bis);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bulma-scheme-h: 230;
+    --bulma-scheme-s: 17%;
+    --bulma-scheme-main-l: 20%;
+    --bulma-scheme-main-bis-l: 25%;
+    --bulma-scheme-main-ter-l: 29%;
+
+    --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+    --bulma-background-l: 20%;
+    --bulma-text-l: 100%;
+
+    --bulma-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
+
+    --home-section-background-color: var(--bulma-scheme-main);
+    --home-section-background-brightness: 75%;
+
+    --vglist-shadow: 0 2px 3px rgba(12, 12, 12, 0.1), 0 0 0 1px rgba(12, 12, 12, 0.1);
+    --library-edit-bar-border: #435169;
+
+    /* Shared neutral palette (dark — slate ramp) */
+    --color-text-primary: var(--s-50);
+    --color-text-secondary: var(--s-200);
+    --color-text-tertiary: var(--s-200);
+    --color-border: var(--s-300);
+    --color-bg-subtle: var(--s-600);
+    --color-surface: var(--s-400);
+    --color-accent: var(--p-300);
+    --color-navbar-bg: var(--p-500);
+
+    --text-muted: var(--grey-lighter, #dbdbdb);
+
+    /* Brighten links in dark mode for readable contrast (~5:1) */
+    --bulma-link-text: hsl(241deg, 61%, 75%);
+    --bulma-link-on-scheme-l: 75%;
+
+    --bulma-light-light-invert-l: 15%;
+
+    .card {
+      --bulma-card-background-color: var(--bulma-scheme-main-ter);
+    }
+
+    .box {
+      --bulma-box-background-color: var(--bulma-scheme-main-ter);
+    }
+
+    .control,
+    .input,
+    .textarea,
+    .select {
+      --bulma-input-background-l-delta: 6%;
+      --bulma-input-border-l-delta: 20%;
+    }
+
+    .menu-list a,
+    .menu-list button,
+    .menu-list .menu-item {
+      --bulma-menu-item-h: var(--bulma-scheme-h);
+      --bulma-menu-item-s: var(--bulma-scheme-s);
+      --bulma-menu-item-background-l: var(--bulma-scheme-main-ter-l);
+    }
+  }
+
+  /* Brighten Bulma .has-text-grey for readable contrast on dark backgrounds (~4.7:1) */
+  .has-text-grey {
+    color: var(--s-100) !important;
+  }
+}
+
+/* ── View Transitions (search bar morph) ── */
+::view-transition-old(search-bar),
+::view-transition-new(search-bar) {
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+}
+
+nav.navbar {
+  background: var(--color-navbar-bg);
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
+  padding: 0 20px;
+
+  .navbar-burger:hover {
+    color: #fff;
+  }
+
+  a.navbar-item,
+  .navbar-link {
+    --bulma-navbar-item-background-a: 0;
+    gap: 0.25rem;
+
+    &:focus,
+    &:focus-within,
+    &:hover {
+      --bulma-navbar-item-background-a: 0;
+    }
+  }
+
+  @include mixins.from(bv.$desktop) {
+    .navbar-menu .navbar-item:not(.has-dropdown):not(:has(.navbar-search)),
+    .navbar-menu .navbar-item:not(.field):not(:has(.navbar-search)) {
+      border-bottom: 2px solid transparent;
+      transition: border-bottom 200ms;
+      --bulma-navbar-item-background-a: 0;
+
+      &:hover,
+      &:focus {
+        --bulma-navbar-item-background-a: 0.05;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .navbar-dropdown {
+      .navbar-item {
+        transition: border-bottom 0ms;
+        transition: background-color 200ms;
+        transition: color 0ms;
+        border-bottom: 0;
+
+        &:hover,
+        &:focus {
+          border-bottom: 0;
+        }
+
+        &:hover,
+        &:focus,
+        &.is-active {
+          --bulma-navbar-item-color: hsl(0, 0%, var(--bulma-text-l));
+          --bulma-navbar-item-background-a: 0.1;
+
+          @media (prefers-color-scheme: dark) {
+            --bulma-navbar-item-background-a: 0.25;
+          }
+        }
+      }
+    }
+  }
+
+  .navbar-dropdown {
+    font-size: 1rem;
+  }
+
+  .navbar-search .input {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #fff;
+    height: 36px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition:
+      background-color 200ms,
+      border-color 200ms;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    &:focus {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #fff;
+    }
+  }
+
+  .navbar-item img.user-avatar {
+    max-height: 1.8rem;
+    max-width: 1.8rem;
+    object-fit: scale-down;
+    border: 1px solid #fff;
+  }
+
+  .navbar-dropdown-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  img.game-cover {
+    max-height: 48px;
+    overflow: clip;
+    object-fit: cover;
+  }
+}
+
+.navbar-search-dropdown {
+  max-height: 400px;
+  height: auto;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.dropdown:not(.v-select) {
+  button > .icon {
+    fill: var(--bulma-text);
+    z-index: 4;
+    transition: transform 150ms;
+    margin-top: 2px;
+  }
+
+  &.is-active {
+    button > .icon {
+      fill: var(--bulma-text);
+      transform: rotate(-180deg);
+      margin-top: 0;
+    }
+  }
+
+  &.is-fullwidth-mobile {
+    @include mixins.touch {
+      display: flex;
+      width: 100%;
+    }
+  }
+}
+
+.buttons {
+  align-items: initial;
+
+  &.buttons-vertical {
+    flex-direction: column;
+  }
+}
+
+.dropdown-trigger {
+  &.is-fullwidth {
+    display: flex;
+    width: 100%;
+  }
+
+  &.is-fullwidth-mobile {
+    @include mixins.touch {
+      display: flex;
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+
+  button {
+    &.is-fullwidth {
+      display: flex;
+      width: 100%;
+    }
+
+    &.is-fullwidth-mobile {
+      @include mixins.touch {
+        display: flex;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  &.is-fullwidth {
+    width: 100%;
+  }
+
+  &.is-fullwidth-mobile {
+    @include mixins.touch {
+      width: 100%;
+    }
+  }
+}
+
+.file-select > input[type="file"] {
+  display: none;
+}
+
+.file-select > .select-button {
+  padding: 1rem;
+  color: white;
+  background-color: #2ea169;
+  border-radius: 0.3rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.hero-area {
+  display: flex;
+  flex-flow: column wrap;
+
+  @include mixins.from(bv.$desktop) {
+    flex-flow: row nowrap;
+
+    .text-block {
+      flex: 1 1 100%;
+      padding-left: 15px;
+    }
+  }
+
+  @include mixins.touch {
+    .text-block {
+      text-align: center;
+    }
+  }
+
+  .hero-image {
+    flex: 1 1 200px;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: top left;
+
+      @include mixins.touch {
+        object-position: top center;
+        max-height: 300px;
+      }
+    }
+
+    &.hero-image-150 {
+      img {
+        height: 200px;
+        width: auto;
+        max-width: 100%;
+      }
+    }
+
+    @include mixins.touch {
+      margin: auto;
+    }
+  }
+}
+
+.game-card-list,
+.user-card-list {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  --bulma-block-spacing: 0;
+
+  @include mixins.from(bv.$tablet) {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}
+
+.custom-card {
+  background-color: var(--bulma-card-background-color);
+  box-shadow: var(--vglist-shadow);
+  border-radius: var(--bulma-card-radius);
+  width: auto;
+  position: relative;
+  overflow: hidden;
+
+  .button {
+    --bulma-button-background-l-delta: 0;
+
+    &:hover {
+      --bulma-button-background-l-delta: -3%;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      --bulma-button-background-l-delta: 6%;
+
+      &:hover {
+        --bulma-button-background-l-delta: 9%;
+      }
+    }
+  }
+
+  &.game-card {
+    height: 200px;
+  }
+
+  &.user-card {
+    height: 80px;
+
+    .card-content {
+      overflow: hidden;
+    }
+
+    .title {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: normal;
+    }
+
+    img {
+      width: 80px;
+      min-width: 80px;
+      height: 80px;
+    }
+  }
+
+  .card-container {
+    padding: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    height: 100%;
+  }
+
+  .card-content {
+    padding: 15px;
+  }
+
+  .game-cover {
+    height: 100%;
+    width: 140px;
+    max-width: 140px;
+    min-width: 140px;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.game-card-dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.game-sidebar .game-cover img {
+  display: block;
+  margin: auto;
+}
+
+.notification.flash-notification {
+  border-radius: 0;
+  padding: 1rem 2.5rem 1rem 1.5rem;
+  display: flex;
+
+  > p {
+    flex-grow: 1;
+    white-space: normal;
+  }
+
+  > .delete {
+    position: relative;
+    right: auto;
+    top: auto;
+  }
+}
+
+.notification.errors-notification {
+  li {
+    list-style: initial;
+    margin-left: 20px;
+  }
+}
+
+.modal-card {
+  max-height: calc(100vh - 120px);
+  overflow: scroll;
+  overflow-x: hidden;
+
+  .modal-card-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 20px);
+    padding-right: 10px;
+    padding-bottom: 4px;
+  }
+}
+
+.modal-card-body-allow-overflow {
+  overflow: initial;
+}
+
+.input::placeholder {
+  color: var(--bulma-input-placeholder-color);
+  opacity: 0.5;
+}
+
+.infobox {
+  width: 100%;
+  column-count: 3;
+  column-width: 250px;
+  column-gap: 20px;
+  column-fill: balance;
+
+  .infobox-section {
+    break-inside: avoid;
+  }
+
+  @include mixins.touch {
+    column-count: 1;
+  }
+}
+
+.stats-card {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  padding: 15px;
+}
+
+.button.is-fullwidth-mobile {
+  @include mixins.touch {
+    display: flex;
+    width: 100%;
+  }
+}
+
+.is-fullwidth-mobile {
+  @include mixins.touch {
+    width: 100%;
+  }
+}
+
+.level {
+  .level-item {
+    white-space: nowrap;
+    flex-basis: 100px;
+    margin: 0;
+    padding: 5px;
+  }
+
+  &.notification {
+    flex-direction: row;
+  }
+}
+
+.more-from-this-series-card {
+  max-width: 500px;
+
+  .games {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+
+    a {
+      display: inline-block;
+      position: relative;
+    }
+  }
+
+  .game-cover {
+    height: 200px;
+    width: 140px;
+    max-width: 140px;
+    min-width: 140px;
+
+    @include mixins.touch {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      position: absolute;
+    }
+
+    p {
+      color: #fff;
+      padding: 8px;
+      position: absolute;
+      bottom: 0;
+      background-color: rgba(#333, 0.7);
+      width: 100%;
+    }
+  }
+}
+
+@include mixins.touch {
+  .pagination-list {
+    display: none;
+  }
+}
+
+.stats-card {
+  .level {
+    width: 100%;
+  }
+}
+
+.percentage-bar {
+  height: 18px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .percentage-bar-portion {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    color: #fff;
+
+    &.color-1 {
+      background-color: #03a9f4;
+    }
+    &.color-2 {
+      background-color: #ff5252;
+    }
+    &.color-3 {
+      background-color: #e91e63;
+    }
+    &.color-4 {
+      background-color: #ff5722;
+    }
+    &.color-5 {
+      background-color: #8bc34a;
+    }
+    &.color-6 {
+      background-color: #3f51b5;
+    }
+    &.color-7 {
+      background-color: #7c4dff;
+    }
+    &.color-8 {
+      background-color: #d1cfcf;
+    }
+  }
+}
+
+.library-edit-bar.level {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--bulma-scheme-main, #fff);
+  border: 1px solid var(--library-edit-bar-border);
+  margin-bottom: 5px;
+  z-index: 39;
+  padding: 8px 5px 8px 15px;
+}
+
+.js-submit-button-error {
+  background-color: #ff3860 !important;
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.games-search-sidebar {
+  .games-filters > div {
+    margin-top: 10px;
+  }
+
+  .dropdown {
+    display: block;
+  }
+
+  .dropdown-menu {
+    position: relative;
+  }
+}
+
+.user-select-all {
+  user-select: all;
+}
+
+.sign-in-container {
+  max-width: 500px;
+
+  @include mixins.touch {
+    box-shadow: none;
+  }
+}
+
+.toggle-icon-on-hover {
+  &:hover > .svg-icon.icon-1 {
+    display: none;
+  }
+
+  > .svg-icon.icon-2 {
+    display: none;
+  }
+
+  &:hover > .svg-icon.icon-2 {
+    display: initial;
+  }
+}
+
+.navbar-search-input {
+  --bulma-input-color: #fff;
+  --bulma-input-color-l: 90%;
+
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 0;
+  border-radius: 3px;
+  transition:
+    background-color 250ms,
+    color 250ms;
+
+  &::placeholder {
+    color: #fff;
+  }
+
+  + span.icon {
+    fill: rgba(255, 255, 255, 0.5);
+    transition: fill 250ms;
+  }
+
+  &:focus {
+    --bulma-input-color-l: 10%;
+
+    background-color: rgba(255, 255, 255, 1);
+
+    + span.icon {
+      fill: hsl(0, 0%, 40%);
+    }
+
+    &::placeholder {
+      color: hsl(var(--bulma-text-h), var(--bulma-text-s), 10%);
+    }
+  }
+}
+
+.is-vertical-align-middle {
+  vertical-align: middle;
+}
+
+.is-borderless {
+  border: 0px;
+}
+
+.has-text-muted {
+  color: var(--text-muted);
+}
+
+.vgt-table th.vgt-row-header {
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--bulma-scheme-main) !important;
+  }
+}
+
+.avatar-image-grid {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(auto-fill, 64px);
+
+  @include mixins.touch {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .avatar-image-grid-item {
+    &.avatar-image-grid-item-overflow {
+      display: inline-grid;
+      background-color: var(--bulma-scheme-main-ter);
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--bulma-border);
+
+      @media (prefers-color-scheme: dark) {
+        border: 0;
+      }
+
+      p {
+        margin: auto;
+        font-size: 1.2rem;
+      }
+    }
+
+    a {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

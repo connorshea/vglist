@@ -20,7 +20,7 @@ Doorkeeper.configure do
     if current_user
       head :forbidden unless current_user.admin?
     else
-      redirect_to new_user_session_url
+      render json: { error: "You must be an admin to access this resource." }, status: :unauthorized
     end
   end
 
@@ -70,11 +70,9 @@ Doorkeeper.configure do
   #
   # use_polymorphic_resource_owner
 
-  # If you are planning to use Doorkeeper in Rails 5 API-only application, then you might
-  # want to use API mode that will skip all the views management and change the way how
-  # Doorkeeper responds to a requests.
-  #
-  # api_only
+  # Use API mode since this is an API-only Rails application.
+  # This skips all view management and returns JSON responses.
+  api_only
 
   # Enforce token request content type to application/x-www-form-urlencoded.
   # It is not enabled by default to not break prior versions of the gem.
@@ -116,7 +114,10 @@ Doorkeeper.configure do
   # +ActionController::API+. The return value of this option must be a stringified class name.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-base-controller
   #
-  base_controller 'ApplicationController'
+  # Use ActionController::API directly for Doorkeeper controllers to avoid
+  # Pundit's verify_authorized/verify_policy_scoped after-actions, which
+  # Doorkeeper controllers don't satisfy.
+  base_controller 'ActionController::API'
 
   # Reuse access token for the same resource owner within an application (disabled by default).
   #

@@ -1500,7 +1500,8 @@ CREATE TABLE public.users (
     privacy integer DEFAULT 0 NOT NULL,
     banned boolean DEFAULT false NOT NULL,
     encrypted_api_token character varying,
-    hide_days_played boolean DEFAULT false
+    hide_days_played boolean DEFAULT false,
+    jwt_version integer DEFAULT 0 NOT NULL
 );
 
 
@@ -3084,6 +3085,7 @@ ALTER TABLE ONLY public.oauth_access_tokens
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260315184411'),
 ('20240616170248'),
 ('20240615183529'),
 ('20240615182736'),

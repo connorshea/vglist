@@ -10,17 +10,21 @@ module Types
       end
       field :slug, String, null: false, description: "The slug for usage defining the user's profile URL."
 
-      # This causes an N+2 query, figure out a better way to do this.
-      # https://github.com/rmosolgo/graphql-ruby/issues/1777
       def avatar_url(size:)
-        avatar = User.find(@object.searchable_id).sized_avatar(size)
+        avatar = user&.sized_avatar(size)
         return if avatar.nil?
 
         Rails.application.routes.url_helpers.rails_representation_url(avatar)
       end
 
       def slug
-        User.find(@object.searchable_id).slug
+        user&.slug
+      end
+
+      private
+
+      def user
+        @context[:preloaded_users]&.dig(@object.searchable_id)
       end
     end
   end

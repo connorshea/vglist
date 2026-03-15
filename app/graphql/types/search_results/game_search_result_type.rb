@@ -11,21 +11,25 @@ module Types
       field :developer_name, String, null: true, description: 'The name of the game\'s developer, will choose the first if there are multiple developers.'
       field :release_date, GraphQL::Types::ISO8601Date, null: true, description: 'The release date of the game, if one exists.'
 
-      # TODO: This causes an N+2 query, figure out a better way to do this.
-      # https://github.com/rmosolgo/graphql-ruby/issues/1777
       def cover_url(size:)
-        cover = Game.find(@object.searchable_id).sized_cover(size)
+        cover = game&.sized_cover(size)
         return if cover.nil?
 
         Rails.application.routes.url_helpers.rails_representation_url(cover)
       end
 
       def developer_name
-        Game.find(@object.searchable_id).developers.first&.name
+        game&.developers&.first&.name
       end
 
       def release_date
-        Game.find(@object.searchable_id).release_date
+        game&.release_date
+      end
+
+      private
+
+      def game
+        @context[:preloaded_games]&.dig(@object.searchable_id)
       end
     end
   end

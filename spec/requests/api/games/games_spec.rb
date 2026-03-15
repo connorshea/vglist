@@ -127,6 +127,154 @@ RSpec.describe "Games API", type: :request do
       end
     end
 
+    context 'when requesting association fields on a games list' do
+      let!(:game) { create(:game_with_everything) }
+
+      it "returns association data for games", :aggregate_failures do
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                name
+                series { id name }
+                platforms { nodes { id name } }
+                genres { nodes { id name } }
+                developers { nodes { id name } }
+                publishers { nodes { id name } }
+                engines { nodes { id name } }
+                steamAppIds
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        game_node = result.graphql_dig(:games, :nodes).find { |n| n[:id] == game.id.to_s }
+
+        expect(game_node[:series][:name]).to eq(game.series.name)
+        expect(game_node[:platforms][:nodes].first[:name]).to eq(game.platforms.first.name)
+        expect(game_node[:genres][:nodes].first[:name]).to eq(game.genres.first.name)
+        expect(game_node[:developers][:nodes].first[:name]).to eq(game.developers.first.name)
+        expect(game_node[:publishers][:nodes].first[:name]).to eq(game.publishers.first.name)
+        expect(game_node[:engines][:nodes].first[:name]).to eq(game.engines.first.name)
+        expect(game_node[:steamAppIds]).to eq(game.steam_app_ids.map(&:app_id))
+      end
+    end
+
+    context 'when requesting per-user fields on a games list' do
+      let!(:game) { create(:game) }
+      let!(:game2) { create(:game) }
+      let!(:game_purchase) { create(:game_purchase, user: user, game: game) }
+
+      before(:each) { create(:favorite_game, user: user, game: game) }
+
+      it "returns isFavorited and isInLibrary fields", :aggregate_failures do
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                isFavorited
+                isInLibrary
+                gamePurchaseId
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        nodes = result.graphql_dig(:games, :nodes)
+        owned_node = nodes.find { |n| n[:id] == game.id.to_s }
+        unowned_node = nodes.find { |n| n[:id] == game2.id.to_s }
+
+        expect(owned_node[:isFavorited]).to be true
+        expect(owned_node[:isInLibrary]).to be true
+        expect(owned_node[:gamePurchaseId]).to eq(game_purchase.id.to_s)
+        expect(unowned_node[:isFavorited]).to be false
+        expect(unowned_node[:isInLibrary]).to be false
+        expect(unowned_node[:gamePurchaseId]).to be_nil
+      end
+    end
+
+    context 'when requesting per-user fields across many games' do
+      let!(:games) { create_list(:game, 5) }
+      let!(:game_purchase1) { create(:game_purchase, user: user, game: games[0]) }
+      let!(:game_purchase2) { create(:game_purchase, user: user, game: games[2]) }
+
+      before(:each) do
+        create(:favorite_game, user: user, game: games[0])
+        create(:favorite_game, user: user, game: games[4])
+      end
+
+      it "returns correct per-user fields for each game", :aggregate_failures do
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                isFavorited
+                isInLibrary
+                gamePurchaseId
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        nodes = result.graphql_dig(:games, :nodes)
+
+        # Game 0: owned + favorited
+        node0 = nodes.find { |n| n[:id] == games[0].id.to_s }
+        expect(node0[:isFavorited]).to be true
+        expect(node0[:isInLibrary]).to be true
+        expect(node0[:gamePurchaseId]).to eq(game_purchase1.id.to_s)
+
+        # Game 1: neither
+        node1 = nodes.find { |n| n[:id] == games[1].id.to_s }
+        expect(node1[:isFavorited]).to be false
+        expect(node1[:isInLibrary]).to be false
+        expect(node1[:gamePurchaseId]).to be_nil
+
+        # Game 2: owned but not favorited
+        node2 = nodes.find { |n| n[:id] == games[2].id.to_s }
+        expect(node2[:isFavorited]).to be false
+        expect(node2[:isInLibrary]).to be true
+        expect(node2[:gamePurchaseId]).to eq(game_purchase2.id.to_s)
+
+        # Game 4: favorited but not owned
+        node4 = nodes.find { |n| n[:id] == games[4].id.to_s }
+        expect(node4[:isFavorited]).to be true
+        expect(node4[:isInLibrary]).to be false
+        expect(node4[:gamePurchaseId]).to be_nil
+      end
+
+      it "returns nil for per-user fields when not authenticated", :aggregate_failures do
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                isFavorited
+                isInLibrary
+                gamePurchaseId
+              }
+            }
+          }
+        GRAPHQL
+
+        post graphql_path, params: { query: query_string }
+        json = JSON.parse(response.body)
+        nodes = json.dig('data', 'games', 'nodes')
+
+        nodes.each do |node|
+          expect(node['isFavorited']).to be_nil
+          expect(node['isInLibrary']).to be_nil
+          expect(node['gamePurchaseId']).to be_nil
+        end
+      end
+    end
+
     context 'when filtering by platform' do
       let(:platform1) { create(:platform) }
       let(:platform2) { create(:platform) }

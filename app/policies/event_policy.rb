@@ -8,6 +8,6 @@ class EventPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user && event&.user_id == user&.id
+    user && (event&.user_id == user&.id || user&.moderator? || user&.admin?)
   end
 end

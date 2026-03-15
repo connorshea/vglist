@@ -88,7 +88,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:game_purchases) }
+    it { should have_many(:game_purchases).dependent(:destroy) }
     it { should have_many(:games).through(:game_purchases) }
     it { should have_many(:favorite_games).dependent(:destroy) }
     it { should have_many(:favorited_games).through(:favorite_games) }
@@ -139,6 +139,13 @@ RSpec.describe User, type: :model do
       expect(user).to have_many(:followers)
         .through(:passive_relationships)
         .source(:follower)
+    end
+  end
+
+  describe 'jwt_version' do
+    it 'defaults to 0' do
+      new_user = create(:user)
+      expect(new_user.jwt_version).to eq(0)
     end
   end
 

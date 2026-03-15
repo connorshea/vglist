@@ -2,10 +2,10 @@ class Company < ApplicationRecord
   include GlobalSearchable
   include Searchable
 
-  has_many :game_developers
+  has_many :game_developers, dependent: :destroy
   has_many :developed_games, through: :game_developers, source: :game
 
-  has_many :game_publishers
+  has_many :game_publishers, dependent: :destroy
   has_many :published_games, through: :game_publishers, source: :game
 
   has_paper_trail ignore: [:updated_at, :created_at],

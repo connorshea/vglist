@@ -36,6 +36,25 @@ RSpec.describe GamePurchase, type: :model do
         .allow_nil
     end
 
+    it 'is invalid when start_date is after completion_date' do
+      game_purchase.start_date = 3.days.ago
+      game_purchase.completion_date = 5.days.ago
+      expect(game_purchase).not_to be_valid
+      expect(game_purchase.errors[:start_date]).to include("can't be after completion date")
+    end
+
+    it 'is valid when start_date is before completion_date' do
+      game_purchase.start_date = 5.days.ago
+      game_purchase.completion_date = 1.day.ago
+      expect(game_purchase).to be_valid
+    end
+
+    it 'is valid when start_date or completion_date is nil' do
+      game_purchase.start_date = 3.days.ago
+      game_purchase.completion_date = nil
+      expect(game_purchase).to be_valid
+    end
+
     it 'validates the completion status enum' do
       expect(game_purchase).to define_enum_for(:completion_status)
         .with_values(

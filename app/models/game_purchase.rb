@@ -52,7 +52,17 @@ class GamePurchase < ApplicationRecord
       allow_nil: true
     }
 
+  validate :start_date_before_completion_date
+
   private
+
+  def start_date_before_completion_date
+    return if start_date.nil? || completion_date.nil?
+
+    return unless start_date > completion_date
+
+    errors.add(:start_date, "can't be after completion date")
+  end
 
   def game_purchase_create
     Events::GamePurchaseEvent.create!(

@@ -1,0 +1,58 @@
+@forward "bulma/sass/utilities" with (
+  $variable-columns: false,
+  $control-height: 2.25em,
+  $control-padding-vertical: calc(0.375em - 1px),
+  $control-padding-horizontal: calc(0.625em - 1px),
+  $link: #5957d6,
+  $primary: #5957d6,
+  $danger: #e24b4a
+);
+
+@forward "bulma/sass/elements" with (
+  $button-padding-vertical: calc(0.375em - 1px),
+  $button-padding-horizontal: 0.75em
+);
+
+@forward "bulma/sass/components" with (
+  $navbar-item-color-l: 100%,
+  $navbar-item-color: hsl(0, 0%, 100%),
+  $navbar-burger-color: #fff,
+  $navbar-background-color: transparent,
+  $navbar-dropdown-arrow: #fff,
+  $navbar-divider-height: 1px,
+  $navbar-dropdown-boxed-shadow: "rgba(10, 10, 10, 0.1) 0px 8px 8px 0px",
+  $panel-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
+  $card-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
+  $dropdown-content-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
+  $card-radius: 0.5rem
+);
+
+@forward "bulma/sass/form" with (
+  $input-shadow: none,
+  $input-focus-shadow-size: 0,
+  $input-radius: 4px
+);
+
+@forward "bulma/sass/helpers" with (
+  $spacing-values: (
+    "0": 0,
+    "5": 5px,
+    "10": 10px,
+    "15": 15px,
+    "20": 20px,
+    "25": 25px,
+    "30": 30px,
+    "35": 35px,
+    "40": 40px,
+    "45": 45px,
+    "50": 50px,
+    "75": 75px,
+    "100": 100px
+  )
+);
+
+@forward "bulma/sass/base";
+@forward "bulma/sass/grid";
+@forward "bulma/sass/layout";
+
+@forward "bulma/sass/themes";

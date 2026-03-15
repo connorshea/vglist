@@ -341,6 +341,37 @@ RSpec.describe "Users API", type: :request do
       end
     end
 
+    context 'when requesting game purchases with associations' do
+      let!(:game_purchase) { create(:game_purchase_with_everything, user: user) }
+
+      it "returns game purchase data with platforms and stores", :aggregate_failures do
+        query_string = <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              gamePurchases {
+                nodes {
+                  id
+                  game { id name }
+                  platforms { nodes { id name } }
+                  stores { nodes { id name } }
+                  completionStatus
+                  rating
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+        purchase_node = result.graphql_dig(:user, :game_purchases, :nodes).first
+
+        expect(purchase_node[:id]).to eq(game_purchase.id.to_s)
+        expect(purchase_node[:game][:name]).to eq(game_purchase.game.name)
+        expect(purchase_node[:platforms][:nodes].first[:name]).to eq(game_purchase.platforms.first.name)
+        expect(purchase_node[:stores][:nodes].first[:name]).to eq(game_purchase.stores.first.name)
+      end
+    end
+
     context 'with currentUser' do
       it "returns data for current user when requesting currentUser" do
         user
@@ -412,6 +443,20 @@ RSpec.describe "Users API", type: :request do
           end
 
           expect(result.graphql_dig(:users, :nodes)).to eq(expected_users)
+        end
+
+        it "returns totalCount when sorting by #{sort_order}" do
+          query_string = <<~GRAPHQL_WITH_INTERP
+            query {
+              users(sortBy: #{sort_order.upcase}) {
+                totalCount
+              }
+            }
+          GRAPHQL_WITH_INTERP
+
+          result = api_request(query_string, token: access_token)
+
+          expect(result.graphql_dig(:users, :total_count)).to eq(User.where(banned: false).count)
         end
       end
     end

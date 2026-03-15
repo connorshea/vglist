@@ -81,4 +81,6 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 - **Vue components**: Always use Composition API with `<script setup>` and TypeScript. Props use `modelValue`/`update:modelValue` for v-model.
 - **TypeScript**: Strict mode enforced. No `any` types.
 - **Database schema**: Uses `structure.sql` (not `schema.rb`) because of SQL views.
+- **Accessibility**: Pages should be accessible and keyboard-navigable wherever possible. Use semantic HTML, ARIA attributes (e.g. `role="dialog"`, `aria-modal`, `aria-label`), visible focus styles (`:focus-visible`), focus trapping in modals/overlays, and ensure all interactive elements are reachable via Tab.
+- **Icons**: Use [Lucide](https://lucide.dev/icons/) icons via `lucide-vue-next`. Do not create custom SVG icon components — import icons directly from `lucide-vue-next` instead.
 - **CI checks**: Rubocop, Oxlint, Oxfmt, TypeScript (tsc + vue-tsc), GraphQL schema lint, RSpec (unit + feature separately).

@@ -21,7 +21,7 @@ module Resolvers
         by_genre: nil,
         by_engine: nil
       )
-        games = Game.all
+        games = Game.all.includes(:series, :developers, :publishers, :engines, :genres, :platforms, :steam_app_ids).with_attached_cover
 
         games = games.on_platform(on_platform) unless on_platform.nil?
         games = games.by_year(by_year) unless by_year.nil?

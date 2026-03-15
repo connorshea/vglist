@@ -5,6 +5,12 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+# Install frontend dependencies if needed
+if [ ! -d frontend/node_modules ]; then
+  echo "Installing frontend dependencies..."
+  yarn --cwd frontend install
+fi
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 

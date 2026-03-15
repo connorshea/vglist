@@ -46,8 +46,6 @@ module Types
       @object.steam_app_ids.map(&:app_id)
     end
 
-    # TODO: This causes an N+2 query, figure out a better way to do this.
-    # https://github.com/rmosolgo/graphql-ruby/issues/1777
     def cover_url(size:)
       cover = @object.sized_cover(size)
       return if cover.nil?
@@ -58,19 +56,34 @@ module Types
     def favorited?
       return nil if @context[:current_user].nil?
 
-      @context[:current_user].favorite_games.find_by(game_id: @object.id).present?
+      favorited_game_ids.include?(@object.id)
     end
 
     def in_library?
       return nil if @context[:current_user].nil?
 
-      @context[:current_user].game_purchases.find_by(game_id: @object.id).present?
+      game_purchase_map.key?(@object.id)
     end
 
     def game_purchase_id
       return nil if @context[:current_user].nil?
 
-      @context[:current_user].game_purchases.find_by(game_id: @object.id)&.id
+      game_purchase_map[@object.id]
+    end
+
+    private
+
+    # Cache the current user's game purchase IDs keyed by game_id for the
+    # duration of the request, so isFavorited/isInLibrary/gamePurchaseId
+    # don't each fire a separate query per game.
+    def game_purchase_map
+      @context[:current_user_game_purchase_map] ||=
+        @context[:current_user].game_purchases.pluck(:game_id, :id).to_h
+    end
+
+    def favorited_game_ids
+      @context[:current_user_favorited_game_ids] ||=
+        @context[:current_user].favorite_games.pluck(:game_id).to_set
     end
   end
 end

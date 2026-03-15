@@ -174,19 +174,19 @@ RSpec.describe Game, type: :model do
     it { should have_many(:favorites) }
     it { should have_many(:favoriters).through(:favorites).source(:user) }
 
-    it { should have_many(:game_developers) }
+    it { should have_many(:game_developers).dependent(:destroy) }
     it { should have_many(:developers).through(:game_developers).source(:company) }
 
-    it { should have_many(:game_publishers) }
+    it { should have_many(:game_publishers).dependent(:destroy) }
     it { should have_many(:publishers).through(:game_publishers).source(:company) }
 
-    it { should have_many(:game_platforms) }
+    it { should have_many(:game_platforms).dependent(:destroy) }
     it { should have_many(:platforms).through(:game_platforms).source(:platform) }
 
-    it { should have_many(:game_genres) }
+    it { should have_many(:game_genres).dependent(:destroy) }
     it { should have_many(:genres).through(:game_genres).source(:genre) }
 
-    it { should have_many(:game_engines) }
+    it { should have_many(:game_engines).dependent(:destroy) }
     it { should have_many(:engines).through(:game_engines).source(:engine) }
 
     it { should have_many(:steam_app_ids) }
@@ -420,9 +420,39 @@ RSpec.describe Game, type: :model do
       expect { game_with_publisher.destroy }.to change(GamePublisher, :count).by(-1)
     end
 
+    it 'SteamAppId should be deleted when game is deleted' do
+      game_with_steam_app_id = create(:game_with_steam_app_id)
+      expect { game_with_steam_app_id.destroy }.to change(SteamAppId, :count).by(-1)
+    end
+
     it 'Series should not be deleted when game is deleted' do
       game_with_series
       expect { game_with_series.destroy }.not_to change(Series, :count)
+    end
+
+    it 'Platform should not be deleted when game is deleted' do
+      game_with_platform
+      expect { game_with_platform.destroy }.not_to change(Platform, :count)
+    end
+
+    it 'Genre should not be deleted when game is deleted' do
+      game_with_genre
+      expect { game_with_genre.destroy }.not_to change(Genre, :count)
+    end
+
+    it 'Engine should not be deleted when game is deleted' do
+      game_with_engine
+      expect { game_with_engine.destroy }.not_to change(Engine, :count)
+    end
+
+    it 'Company should not be deleted when game with developer is deleted' do
+      game_with_developer
+      expect { game_with_developer.destroy }.not_to change(Company, :count)
+    end
+
+    it 'Company should not be deleted when game with publisher is deleted' do
+      game_with_publisher
+      expect { game_with_publisher.destroy }.not_to change(Company, :count)
     end
   end
 end

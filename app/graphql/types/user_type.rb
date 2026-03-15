@@ -1,4 +1,5 @@
 module Types
+  # NOTE: We intentionally do not expose the email field here, as it is considered sensitive information.
   class UserType < Types::BaseObject
     description "User accounts on vglist"
 
@@ -30,12 +31,10 @@ module Types
       return [] unless user_visible?
 
       Views::NewEvent.recently_created
-                     .joins(:user)
+                     .includes(user: { avatar_attachment: :blob })
                      .where(user_id: @object.id)
     end
 
-    # This causes an N+2 query, figure out a better way to do this.
-    # https://github.com/rmosolgo/graphql-ruby/issues/1777
     def avatar_url(size:)
       avatar = @object.sized_avatar(size)
       return if avatar.nil?
@@ -56,7 +55,6 @@ module Types
     # see this information.
     {
       bio: nil,
-      game_purchases: [],
       followers: [],
       following: [],
       favorited_games: []
@@ -64,6 +62,12 @@ module Types
       define_method(meth_name) do
         handler(meth_name, fallback)
       end
+    end
+
+    def game_purchases
+      return [] unless user_visible?
+
+      @object.game_purchases.includes(:platforms, :stores, game: { cover_attachment: :blob })
     end
 
     def followed?

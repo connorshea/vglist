@@ -2,7 +2,7 @@ class Series < ApplicationRecord
   include GlobalSearchable
   include Searchable
 
-  has_many :games
+  has_many :games, dependent: :nullify
 
   has_paper_trail ignore: [:updated_at, :created_at],
                   versions: {

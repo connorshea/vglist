@@ -1,22 +1,27 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
-  # GET /resource/confirmation/new
-  def new
-    skip_authorization
-    super
-  end
-
   # POST /resource/confirmation
   def create
     skip_authorization
-    super
+    self.resource = resource_class.send_confirmation_instructions(resource_params)
+    if successfully_sent?(resource)
+      render json: { message: "Confirmation instructions sent." }
+    else
+      render json: { errors: resource.errors.full_messages }, status: :unprocessable_content
+    end
   end
 
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
     skip_authorization
-    super
+    self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+    if resource.errors.empty?
+      # Redirect to the frontend app's login page after confirmation
+      redirect_to "#{ENV.fetch('FRONTEND_URL', 'http://localhost:5173')}/login?confirmed=true", allow_other_host: true
+    else
+      redirect_to "#{ENV.fetch('FRONTEND_URL', 'http://localhost:5173')}/login?confirmation_error=true", allow_other_host: true
+    end
   end
 
   private
