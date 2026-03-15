@@ -166,7 +166,8 @@ RSpec.describe "Games API", type: :request do
       let!(:game) { create(:game) }
       let!(:game2) { create(:game) }
       let!(:game_purchase) { create(:game_purchase, user: user, game: game) }
-      let!(:favorite_game) { create(:favorite_game, user: user, game: game) }
+
+      before(:each) { create(:favorite_game, user: user, game: game) }
 
       it "returns isFavorited and isInLibrary fields", :aggregate_failures do
         query_string = <<~GRAPHQL
@@ -200,8 +201,11 @@ RSpec.describe "Games API", type: :request do
       let!(:games) { create_list(:game, 5) }
       let!(:game_purchase1) { create(:game_purchase, user: user, game: games[0]) }
       let!(:game_purchase2) { create(:game_purchase, user: user, game: games[2]) }
-      let!(:favorite1) { create(:favorite_game, user: user, game: games[0]) }
-      let!(:favorite2) { create(:favorite_game, user: user, game: games[4]) }
+
+      before(:each) do
+        create(:favorite_game, user: user, game: games[0])
+        create(:favorite_game, user: user, game: games[4])
+      end
 
       it "returns correct per-user fields for each game", :aggregate_failures do
         query_string = <<~GRAPHQL

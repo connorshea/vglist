@@ -16,9 +16,18 @@ module Resolvers
       validates length: { minimum: 1 }
     end
 
+    # Limit results per type to ensure type diversity. Without this,
+    # a broad query like "the" returns thousands of games and drowns
+    # out all other types.
+    MAX_RESULTS_PER_TYPE = 25
+
     def resolve(query:, searchable_types: %w[Game Series Company Platform Engine Genre User])
-      PgSearch.multisearch(query)
-              .where(searchable_type: searchable_types)
+      searchable_types.flat_map do |type|
+        PgSearch.multisearch(query)
+                .where(searchable_type: type)
+                .limit(MAX_RESULTS_PER_TYPE)
+                .to_a
+      end
     end
   end
 end
