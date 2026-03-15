@@ -45,6 +45,20 @@ const gameInitials = computed(() => {
   height: 100%;
   overflow: hidden;
   border-radius: 6px;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.game-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .game-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .game-card-cover {
