@@ -2,12 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   schema: "../schema.graphql",
-  documents: [
-    "src/graphql/**/*.ts",
-    // Exclude files with mutations not yet in the GraphQL schema
-    "!src/graphql/mutations/auth.ts",
-    "!src/graphql/mutations/users-settings.ts"
-  ],
+  documents: ["src/graphql/**/*.ts"],
   generates: {
     "src/types/graphql.ts": {
       plugins: ["typescript", "typescript-operations"],
