@@ -73,7 +73,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     watch(
       varsGetter,
       () => {
-        execute();
+        void execute();
       },
       { deep: true }
     );
@@ -87,12 +87,12 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
         : () => (options.enabled as Ref<boolean>).value;
 
     watch(enabledGetter, (val) => {
-      if (val) execute();
+      if (val) void execute();
     });
   }
 
   onMounted(() => {
-    execute();
+    void execute();
   });
 
   return { data, loading, error, refetch: execute, fetchMore };
