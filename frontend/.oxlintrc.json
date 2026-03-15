@@ -4,7 +4,9 @@
   "categories": {
     "correctness": "error"
   },
-  "rules": {},
+  "rules": {
+    "eqeqeq": ["error", "smart"],
+  },
   "overrides": [
     {
       "files": ["src/**/*.{ts,vue}"],
