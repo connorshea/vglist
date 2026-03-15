@@ -2697,22 +2697,6 @@ export type GetGamePurchaseQuery = {
   } | null;
 };
 
-export type SearchGamesQueryVariables = Exact<{
-  query: Scalars["String"]["input"];
-}>;
-
-export type SearchGamesQuery = {
-  gameSearch?: {
-    nodes: Array<{
-      id: string;
-      name: string;
-      releaseDate?: string | null;
-      coverUrl?: string | null;
-      developers: { nodes: Array<{ id: string; name: string }> };
-    }>;
-  } | null;
-};
-
 export type GetPlatformsQueryVariables = Exact<{
   first?: InputMaybe<Scalars["Int"]["input"]>;
   after?: InputMaybe<Scalars["String"]["input"]>;
@@ -3028,12 +3012,4 @@ export type GetCurrentUserProfileQueryVariables = Exact<{ [key: string]: never }
 
 export type GetCurrentUserProfileQuery = {
   currentUser?: { id: string; bio?: string | null; privacy: UserPrivacy; hideDaysPlayed: boolean } | null;
-};
-
-export type SearchUsersQueryVariables = Exact<{
-  query: Scalars["String"]["input"];
-}>;
-
-export type SearchUsersQuery = {
-  userSearch?: { nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }> } | null;
 };
