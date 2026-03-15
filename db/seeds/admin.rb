@@ -49,6 +49,9 @@ puts "Creating Game Purchases for admin..."
   end
   stores.uniq!
 
+  start_date = Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date)
+  completion_date = Faker::Date.between(from: start_date, to: Date.current)
+
   GamePurchase.create_with(
     platforms: platforms,
     stores: stores
@@ -57,8 +60,8 @@ puts "Creating Game Purchases for admin..."
     user: admin,
     rating: rand(0..100),
     completion_status: rand(0..5),
-    start_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
-    completion_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
+    start_date: start_date,
+    completion_date: completion_date,
     comments: Faker::Lorem.sentence,
     hours_played: rand(0..100),
     replay_count: rand(0..3)
