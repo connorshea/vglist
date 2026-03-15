@@ -336,7 +336,6 @@ const performSearch = debounce(async () => {
     error.value = message;
     results.value = [];
     hasSearched.value = true;
-    console.error("Search failed:", e);
   } finally {
     loading.value = false;
   }
