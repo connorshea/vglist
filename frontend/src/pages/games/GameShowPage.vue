@@ -140,7 +140,7 @@
                             class="form-rating-input"
                             @input="clampRating"
                           />
-                          <div class="form-rating-track">
+                          <div class="form-rating-track" @click="setRatingFromClick">
                             <div class="form-rating-fill" :style="{ width: (formRating ?? 0) + '%' }"></div>
                           </div>
                         </div>
@@ -639,6 +639,35 @@ const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formHoursPlayed = ref<number | null>(null);
 const formComments = ref("");
+
+/** localStorage key for persisting review draft text per game. */
+function reviewDraftKey(): string {
+  return `vglist-review-draft-${gameId.value}`;
+}
+
+/** Load a saved review draft from localStorage, but only if the field is currently empty. */
+function loadReviewDraft(): void {
+  if (formComments.value !== "") return;
+  const saved = localStorage.getItem(reviewDraftKey());
+  if (saved) {
+    formComments.value = saved;
+  }
+}
+
+/** Clear the saved review draft from localStorage. */
+function clearReviewDraft(): void {
+  localStorage.removeItem(reviewDraftKey());
+}
+
+// Persist the review text to localStorage whenever it changes.
+watch(formComments, (value) => {
+  if (value.trim() === "") {
+    clearReviewDraft();
+  } else {
+    localStorage.setItem(reviewDraftKey(), value);
+  }
+});
+
 const inLibraryHovered = ref(false);
 const showRemoveConfirm = ref(false);
 
@@ -697,6 +726,7 @@ function resetForm() {
 
 function openAddForm() {
   resetForm();
+  loadReviewDraft();
   showAddForm.value = true;
 }
 
@@ -729,6 +759,7 @@ async function openEditForm() {
     formStartDate.value = gp.startDate ?? "";
     formCompletionDate.value = gp.completionDate ?? "";
     formComments.value = gp.comments ?? "";
+    loadReviewDraft();
     formPlatformIds.value = new Set(gp.platforms.nodes.map((p) => p.id));
     formStoreIds.value = new Set(gp.stores.nodes.map((s) => s.id));
   } catch {
@@ -773,6 +804,13 @@ function clampRating() {
   if (formRating.value == null) return;
   if (formRating.value > 100) formRating.value = 100;
   if (formRating.value < 0) formRating.value = 0;
+}
+
+function setRatingFromClick(event: MouseEvent) {
+  const track = event.currentTarget as HTMLElement;
+  const rect = track.getBoundingClientRect();
+  const pct = ((event.clientX - rect.left) / rect.width) * 100;
+  formRating.value = Math.round(Math.min(100, Math.max(0, pct)));
 }
 
 const dateValidationError = computed(() => {
@@ -880,6 +918,7 @@ async function submitAddForm() {
     actionMessage.value = "";
     actionIsError.value = false;
     showAddForm.value = false;
+    clearReviewDraft();
     refetch();
   } catch (err) {
     const action = isEditing.value ? "update" : "add";
@@ -904,6 +943,7 @@ async function removeFromLibrary() {
     actionIsError.value = false;
     showAddForm.value = false;
     showRemoveConfirm.value = false;
+    clearReviewDraft();
     refetch();
   } catch (err) {
     actionMessage.value = `Failed to remove game from library: ${extractGqlError(err)}`;
@@ -1363,6 +1403,7 @@ a.hero-tag:hover {
   border-radius: 3px;
   background: var(--p-100);
   overflow: hidden;
+  cursor: pointer;
 }
 
 .form-rating-fill {
@@ -1456,8 +1497,7 @@ a.hero-tag:hover {
   padding: 0.5rem 0.625rem;
   outline: none;
   resize: vertical;
-  flex: 1;
-  min-height: 60px;
+  min-height: 80px;
   font-family: inherit;
 }
 
