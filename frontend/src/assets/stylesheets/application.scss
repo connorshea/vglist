@@ -151,6 +151,10 @@
 
     --text-muted: var(--grey-lighter, #dbdbdb);
 
+    /* Brighten links in dark mode for readable contrast (~5:1) */
+    --bulma-link-text: hsl(241deg, 61%, 75%);
+    --bulma-link-on-scheme-l: 75%;
+
     --bulma-light-light-invert-l: 15%;
 
     .card {
@@ -176,6 +180,11 @@
       --bulma-menu-item-s: var(--bulma-scheme-s);
       --bulma-menu-item-background-l: var(--bulma-scheme-main-ter-l);
     }
+  }
+
+  /* Brighten Bulma .has-text-grey for readable contrast on dark backgrounds (~4.7:1) */
+  .has-text-grey {
+    color: var(--s-100) !important;
   }
 }
 
