@@ -5,6 +5,30 @@
     "correctness": "error"
   },
   "rules": {},
+  "overrides": [
+    {
+      "files": ["src/**/*.{ts,vue}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "graphql-tag",
+                "message": "Import graphql-tag only in src/graphql/ files. Components and pages should import queries/mutations from src/graphql/ modules."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/graphql/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
   "env": {
     "builtin": true,
     "es2024": true
