@@ -341,7 +341,7 @@ import type { GetUserQuery } from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { CircleAlert, ShieldCheck, UserMinus } from "lucide-vue-next";
 
-const route = useRoute();
+const route = useRoute("user");
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 

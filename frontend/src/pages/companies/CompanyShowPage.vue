@@ -49,7 +49,7 @@ import { GET_COMPANY } from "@/graphql/queries/resources";
 import type { GetCompanyQuery } from "@/types/graphql";
 import GameCard from "@/components/GameCard.vue";
 
-const route = useRoute();
+const route = useRoute("company");
 
 const { data, loading, error } = useQuery<GetCompanyQuery>(GET_COMPANY, {
   variables: { id: route.params.id }

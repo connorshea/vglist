@@ -35,7 +35,7 @@ import { GET_USER } from "@/graphql/queries/users";
 import type { GetUserQuery } from "@/types/graphql";
 import UserCard from "@/components/UserCard.vue";
 
-const route = useRoute();
+const route = useRoute("userFollowers");
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
   variables: () => ({ slug: route.params.slug as string })
