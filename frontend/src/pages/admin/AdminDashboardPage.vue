@@ -240,7 +240,12 @@ import { computed, ref } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
-import { GET_LIVE_STATISTICS, GET_STEAM_BLOCKLIST, GET_WIKIDATA_BLOCKLIST, GET_UNMATCHED_GAMES } from "@/graphql/queries/admin";
+import {
+  GET_LIVE_STATISTICS,
+  GET_STEAM_BLOCKLIST,
+  GET_WIKIDATA_BLOCKLIST,
+  GET_UNMATCHED_GAMES
+} from "@/graphql/queries/admin";
 import {
   ADD_TO_STEAM_BLOCKLIST,
   REMOVE_FROM_STEAM_BLOCKLIST,
@@ -259,7 +264,11 @@ const { show: showSnackbar } = useSnackbar();
 const activeTab = ref("dashboard");
 
 // Dashboard
-const { data: statsData, loading: statsLoading, error: statsError } = useQuery<GetLiveStatisticsQuery>(GET_LIVE_STATISTICS);
+const {
+  data: statsData,
+  loading: statsLoading,
+  error: statsError
+} = useQuery<GetLiveStatisticsQuery>(GET_LIVE_STATISTICS);
 const stats = computed(() => statsData.value?.liveStatistics ?? null);
 
 const coreStats = computed(() => {

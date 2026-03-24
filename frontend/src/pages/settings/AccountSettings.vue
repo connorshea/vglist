@@ -23,7 +23,12 @@
           <input id="email-password" v-model="emailPassword" class="input" type="password" required />
         </div>
       </div>
-      <button class="button is-primary" type="submit" :class="{ 'is-loading': updatingEmail }" :disabled="updatingEmail">
+      <button
+        class="button is-primary"
+        type="submit"
+        :class="{ 'is-loading': updatingEmail }"
+        :disabled="updatingEmail"
+      >
         Update email
       </button>
     </form>
@@ -49,7 +54,14 @@
       <div class="field">
         <label class="label" for="pw-confirm">Confirm new password</label>
         <div class="control">
-          <input id="pw-confirm" v-model="newPasswordConfirmation" class="input" type="password" required minlength="8" />
+          <input
+            id="pw-confirm"
+            v-model="newPasswordConfirmation"
+            class="input"
+            type="password"
+            required
+            minlength="8"
+          />
         </div>
       </div>
       <button
