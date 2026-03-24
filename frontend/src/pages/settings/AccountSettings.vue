@@ -174,7 +174,7 @@ async function handleUpdateEmail() {
       showSnackbar(result.errors.join(", "), "error");
     } else {
       authStore.updateUser({ email: newEmail.value });
-      showSnackbar("Email updated successfully.");
+      showSnackbar("A confirmation email has been sent to your new address.");
       newEmail.value = "";
       emailPassword.value = "";
     }

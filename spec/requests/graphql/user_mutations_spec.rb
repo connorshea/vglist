@@ -73,6 +73,163 @@ RSpec.describe "GraphQL User Mutations", type: :request do
     end
   end
 
+  describe "updateEmail mutation" do
+    let(:query) do
+      <<~GQL
+        mutation UpdateEmail($newEmail: String!, $currentPassword: String!) {
+          updateEmail(newEmail: $newEmail, currentPassword: $currentPassword) {
+            user { id }
+            errors
+          }
+        }
+      GQL
+    end
+
+    it "sets the unconfirmed email with correct password", :aggregate_failures do
+      post graphql_path, params: {
+        query: query,
+        variables: { newEmail: "newemail@example.com", currentPassword: "password" }.to_json
+      }, headers: auth_headers
+
+      expect(response).to have_http_status(:success)
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updateEmail')
+      expect(data['errors']).to be_empty
+      expect(data['user']).to be_present
+      # Devise reconfirmable stores new email in unconfirmed_email until confirmed
+      expect(user.reload.unconfirmed_email).to eq("newemail@example.com")
+    end
+
+    it "returns an error when current password is incorrect" do
+      post graphql_path, params: {
+        query: query,
+        variables: { newEmail: "newemail@example.com", currentPassword: "wrongpassword" }.to_json
+      }, headers: auth_headers
+
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updateEmail')
+      expect(data['user']).to be_nil
+      expect(data['errors']).to include("Current password is incorrect.")
+    end
+
+    it "returns an error when email is already taken" do
+      create(:confirmed_user, email: "taken@example.com")
+
+      post graphql_path, params: {
+        query: query,
+        variables: { newEmail: "taken@example.com", currentPassword: "password" }.to_json
+      }, headers: auth_headers
+
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updateEmail')
+      expect(data['user']).to be_nil
+      expect(data['errors']).not_to be_empty
+    end
+
+    it "returns an error when not authenticated" do
+      post graphql_path, params: {
+        query: query,
+        variables: { newEmail: "new@example.com", currentPassword: "password" }.to_json
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors'].first['message']).to include("logged in")
+    end
+  end
+
+  describe "updatePassword mutation" do
+    let(:query) do
+      <<~GQL
+        mutation UpdatePassword($currentPassword: String!, $newPassword: String!, $newPasswordConfirmation: String!) {
+          updatePassword(currentPassword: $currentPassword, newPassword: $newPassword, newPasswordConfirmation: $newPasswordConfirmation) {
+            user { id }
+            errors
+          }
+        }
+      GQL
+    end
+
+    it "updates the user's password with correct current password", :aggregate_failures do
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "password",
+          newPassword: "newpassword123",
+          newPasswordConfirmation: "newpassword123"
+        }.to_json
+      }, headers: auth_headers
+
+      expect(response).to have_http_status(:success)
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updatePassword')
+      expect(data['errors']).to be_empty
+      expect(data['user']).to be_present
+      expect(user.reload.valid_password?("newpassword123")).to be true
+    end
+
+    it "returns an error when current password is incorrect" do
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "wrongpassword",
+          newPassword: "newpassword123",
+          newPasswordConfirmation: "newpassword123"
+        }.to_json
+      }, headers: auth_headers
+
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updatePassword')
+      expect(data['user']).to be_nil
+      expect(data['errors']).to include("Current password is incorrect.")
+    end
+
+    it "returns an error when new passwords do not match" do
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "password",
+          newPassword: "newpassword123",
+          newPasswordConfirmation: "differentpassword"
+        }.to_json
+      }, headers: auth_headers
+
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updatePassword')
+      expect(data['user']).to be_nil
+      expect(data['errors']).to include("New password and confirmation do not match.")
+    end
+
+    it "returns an error when new password is too short" do
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "password",
+          newPassword: "short",
+          newPasswordConfirmation: "short"
+        }.to_json
+      }, headers: auth_headers
+
+      json = JSON.parse(response.body)
+      data = json.dig('data', 'updatePassword')
+      expect(data['user']).to be_nil
+      expect(data['errors']).not_to be_empty
+    end
+
+    it "returns an error when not authenticated" do
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "password",
+          newPassword: "newpassword123",
+          newPasswordConfirmation: "newpassword123"
+        }.to_json
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors'].first['message']).to include("logged in")
+    end
+  end
+
   describe "exportLibrary mutation" do
     let(:query) do
       <<~GQL
