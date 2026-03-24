@@ -179,6 +179,7 @@ import { Heart, CircleAlert } from "lucide-vue-next";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+// eslint-disable-next-line typescript/consistent-type-imports -- used in template, not just as a type
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
 import GameSidebar from "@/components/game/GameSidebar.vue";
