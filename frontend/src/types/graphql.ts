@@ -2972,14 +2972,8 @@ export type GetUserQuery = {
       }>;
       pageInfo: { hasNextPage: boolean; endCursor?: string | null };
     };
-    followers: {
-      totalCount: number;
-      nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
-    };
-    following: {
-      totalCount: number;
-      nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
-    };
+    followers: { totalCount: number };
+    following: { totalCount: number };
     favoritedGames: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
   } | null;
 };
@@ -3005,6 +2999,36 @@ export type GetUsersQuery = {
       gamePurchases: { totalCount: number };
     }>;
     pageInfo: { hasNextPage: boolean; endCursor?: string | null };
+  } | null;
+};
+
+export type GetUserFollowersQueryVariables = Exact<{
+  slug: Scalars["String"]["input"];
+}>;
+
+export type GetUserFollowersQuery = {
+  user?: {
+    id: string;
+    username: string;
+    followers: {
+      totalCount: number;
+      nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
+    };
+  } | null;
+};
+
+export type GetUserFollowingQueryVariables = Exact<{
+  slug: Scalars["String"]["input"];
+}>;
+
+export type GetUserFollowingQuery = {
+  user?: {
+    id: string;
+    username: string;
+    following: {
+      totalCount: number;
+      nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
+    };
   } | null;
 };
 
