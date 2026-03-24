@@ -45,7 +45,7 @@ import type { GetUserQuery } from "@/types/graphql";
 const route = useRoute("userFavorites");
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ slug: route.params.slug as string })
+  variables: () => ({ slug: route.params.slug })
 });
 
 const user = computed(() => data.value?.user ?? null);

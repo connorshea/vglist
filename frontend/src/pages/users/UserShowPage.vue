@@ -346,7 +346,7 @@ const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
 const { data, loading, error, refetch } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ slug: route.params.slug as string })
+  variables: () => ({ slug: route.params.slug })
 });
 
 const user = computed(() => data.value?.user ?? null);
