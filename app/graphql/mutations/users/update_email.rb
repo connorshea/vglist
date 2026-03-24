@@ -12,9 +12,7 @@ class Mutations::Users::UpdateEmail < Mutations::BaseMutation
     user = context[:current_user]
     raise GraphQL::ExecutionError, "You must be logged in to update your email." if user.nil?
 
-    unless user.valid_password?(current_password)
-      return { user: nil, errors: ["Current password is incorrect."] }
-    end
+    return { user: nil, errors: ["Current password is incorrect."] } unless user.valid_password?(current_password)
 
     if user.update(email: new_email)
       { user: user, errors: [] }
