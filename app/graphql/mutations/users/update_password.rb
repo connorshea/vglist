@@ -12,13 +12,9 @@ class Mutations::Users::UpdatePassword < Mutations::BaseMutation
     user = context[:current_user]
     raise GraphQL::ExecutionError, "You must be logged in to update your password." if user.nil?
 
-    unless user.valid_password?(current_password)
-      return { user: nil, errors: ["Current password is incorrect."] }
-    end
+    return { user: nil, errors: ["Current password is incorrect."] } unless user.valid_password?(current_password)
 
-    if new_password != new_password_confirmation
-      return { user: nil, errors: ["New password and confirmation do not match."] }
-    end
+    return { user: nil, errors: ["New password and confirmation do not match."] } if new_password != new_password_confirmation
 
     if user.update(password: new_password, password_confirmation: new_password_confirmation)
       { user: user, errors: [] }
