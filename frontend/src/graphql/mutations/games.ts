@@ -105,3 +105,21 @@ export const UNFAVORITE_GAME = gql`
     }
   }
 `;
+
+export const DELETE_GAME = gql`
+  mutation DeleteGame($gameId: ID!) {
+    deleteGame(gameId: $gameId) {
+      deleted
+    }
+  }
+`;
+
+export const REMOVE_GAME_COVER = gql`
+  mutation RemoveGameCover($gameId: ID!) {
+    removeGameCover(gameId: $gameId) {
+      game {
+        id
+      }
+    }
+  }
+`;

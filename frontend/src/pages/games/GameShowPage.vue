@@ -147,6 +147,36 @@
         {{ actionMessage }}
       </div>
 
+      <!-- Mod/admin actions -->
+      <div v-if="authStore.isModerator" class="game-admin-actions mt-5">
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="game-admin-menu">
+              <span>Admin Actions</span>
+              <span class="icon is-small">
+                <ChevronDown :size="15" />
+              </span>
+            </button>
+          </div>
+          <div id="game-admin-menu" class="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <router-link class="dropdown-item" :to="`/games/${game.id}/edit`">Edit</router-link>
+              <a v-if="game.coverUrl" class="dropdown-item has-text-danger" @click="showRemoveCoverConfirm = true">
+                Remove cover
+              </a>
+              <a
+                v-if="game.wikidataId"
+                class="dropdown-item has-text-danger"
+                @click="showWikidataBlocklistConfirm = true"
+              >
+                Add to Wikidata Blocklist
+              </a>
+              <a class="dropdown-item has-text-danger" @click="showDeleteGameConfirm = true">Delete game</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Remove from library confirmation modal -->
       <ConfirmDialog
         v-model="showRemoveConfirm"
@@ -159,6 +189,53 @@
         </template>
         <strong>{{ game.name }}</strong> will be removed from your library. Your rating, status, and notes will be
         deleted.
+      </ConfirmDialog>
+
+      <!-- Remove cover confirmation -->
+      <ConfirmDialog
+        v-model="showRemoveCoverConfirm"
+        title="Remove cover?"
+        confirm-label="Remove cover"
+        loading-label="Removing…"
+        :loading="removingCover"
+        @confirm="confirmRemoveCover"
+      >
+        <template #icon>
+          <CircleAlert :size="22" :stroke-width="1.8" />
+        </template>
+        The cover image for <strong>{{ game.name }}</strong> will be removed.
+      </ConfirmDialog>
+
+      <!-- Wikidata blocklist confirmation -->
+      <ConfirmDialog
+        v-model="showWikidataBlocklistConfirm"
+        title="Add to Wikidata Blocklist?"
+        confirm-label="Add to blocklist"
+        loading-label="Adding…"
+        :loading="addingToBlocklist"
+        @confirm="confirmAddToWikidataBlocklist"
+      >
+        <template #icon>
+          <CircleAlert :size="22" :stroke-width="1.8" />
+        </template>
+        <strong>{{ game.name }}</strong> (Wikidata ID: Q{{ game.wikidataId }}) will be added to the blocklist and the
+        Wikidata ID will be removed from the game.
+      </ConfirmDialog>
+
+      <!-- Delete game confirmation -->
+      <ConfirmDialog
+        v-model="showDeleteGameConfirm"
+        title="Delete game?"
+        confirm-label="Delete game"
+        loading-label="Deleting…"
+        :loading="deletingGame"
+        @confirm="confirmDeleteGame"
+      >
+        <template #icon>
+          <CircleAlert :size="22" :stroke-width="1.8" />
+        </template>
+        <strong>{{ game.name }}</strong> will be permanently deleted, including all library entries and favorites. This
+        cannot be undone.
       </ConfirmDialog>
     </div>
   </div>
@@ -173,9 +250,16 @@ import { useImageColors } from "@/composables/useImageColors";
 import { gqlClient } from "@/graphql/client";
 import { GET_GAME } from "@/graphql/queries/games";
 import { GET_STORES } from "@/graphql/queries/resources";
-import { REMOVE_GAME_FROM_LIBRARY, FAVORITE_GAME, UNFAVORITE_GAME } from "@/graphql/mutations/games";
+import {
+  REMOVE_GAME_FROM_LIBRARY,
+  FAVORITE_GAME,
+  UNFAVORITE_GAME,
+  DELETE_GAME,
+  REMOVE_GAME_COVER
+} from "@/graphql/mutations/games";
+import { ADD_TO_WIKIDATA_BLOCKLIST } from "@/graphql/mutations/admin";
 import type { GetGameQuery, GetStoresQuery } from "@/types/graphql";
-import { Heart, CircleAlert } from "lucide-vue-next";
+import { Heart, CircleAlert, ChevronDown } from "lucide-vue-next";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
@@ -434,6 +518,59 @@ async function toggleFavorite() {
 const actionMessage = ref("");
 const actionIsError = ref(false);
 const actionMessageClass = computed(() => (actionIsError.value ? "is-danger" : "is-success"));
+
+// ── Admin actions ──
+const showRemoveCoverConfirm = ref(false);
+const removingCover = ref(false);
+const showWikidataBlocklistConfirm = ref(false);
+const addingToBlocklist = ref(false);
+const showDeleteGameConfirm = ref(false);
+const deletingGame = ref(false);
+
+async function confirmRemoveCover() {
+  removingCover.value = true;
+  try {
+    await gqlClient.request(REMOVE_GAME_COVER, { gameId: gameId.value });
+    showSnackbar("Cover removed.");
+    showRemoveCoverConfirm.value = false;
+    refetch();
+  } catch (err) {
+    showSnackbar(`Failed to remove cover: ${extractGqlError(err)}`, "error");
+  } finally {
+    removingCover.value = false;
+  }
+}
+
+async function confirmAddToWikidataBlocklist() {
+  if (!game.value?.wikidataId) return;
+  addingToBlocklist.value = true;
+  try {
+    await gqlClient.request(ADD_TO_WIKIDATA_BLOCKLIST, {
+      name: game.value.name,
+      wikidataId: game.value.wikidataId
+    });
+    showSnackbar(`${game.value.name} added to Wikidata blocklist.`);
+    showWikidataBlocklistConfirm.value = false;
+    refetch();
+  } catch (err) {
+    showSnackbar(`Failed to add to blocklist: ${extractGqlError(err)}`, "error");
+  } finally {
+    addingToBlocklist.value = false;
+  }
+}
+
+async function confirmDeleteGame() {
+  deletingGame.value = true;
+  try {
+    await gqlClient.request(DELETE_GAME, { gameId: gameId.value });
+    showSnackbar(`${game.value?.name ?? "Game"} has been deleted.`);
+    showDeleteGameConfirm.value = false;
+    router.replace({ name: "games" });
+  } catch (err) {
+    showSnackbar(`Failed to delete game: ${extractGqlError(err)}`, "error");
+    deletingGame.value = false;
+  }
+}
 </script>
 
 <style scoped>
