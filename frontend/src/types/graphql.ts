@@ -2607,6 +2607,18 @@ export type UnfavoriteGameMutationVariables = Exact<{
 
 export type UnfavoriteGameMutation = { unfavoriteGame?: { game?: { id: string; name: string } | null } | null };
 
+export type DeleteGameMutationVariables = Exact<{
+  gameId: Scalars["ID"]["input"];
+}>;
+
+export type DeleteGameMutation = { deleteGame?: { deleted?: boolean | null } | null };
+
+export type RemoveGameCoverMutationVariables = Exact<{
+  gameId: Scalars["ID"]["input"];
+}>;
+
+export type RemoveGameCoverMutation = { removeGameCover?: { game: { id: string } } | null };
+
 export type UpdateUserMutationVariables = Exact<{
   bio?: InputMaybe<Scalars["String"]["input"]>;
   privacy?: InputMaybe<UserPrivacy>;
