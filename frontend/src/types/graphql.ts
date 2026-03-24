@@ -2879,7 +2879,7 @@ export type GetRecentGamesQuery = {
 
 export type GetHeroCoversQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetHeroCoversQuery = { games?: { nodes: Array<{ id: string; coverUrl?: string | null }> } | null };
+export type GetHeroCoversQuery = { games?: { nodes: Array<{ coverUrl?: string | null }> } | null };
 
 export type GetGamePurchaseQueryVariables = Exact<{
   id: Scalars["ID"]["input"];
@@ -2891,7 +2891,6 @@ export type GetGamePurchaseQuery = {
     completionStatus?: GamePurchaseCompletionStatus | null;
     rating?: number | null;
     hoursPlayed?: number | null;
-    replayCount: number;
     comments?: string | null;
     startDate?: string | null;
     completionDate?: string | null;
@@ -2921,10 +2920,7 @@ export type GetPlatformQuery = {
     id: string;
     name: string;
     wikidataId?: number | null;
-    games: {
-      nodes: Array<{ id: string; name: string; coverUrl?: string | null }>;
-      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
-    };
+    games: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
   } | null;
 };
 
@@ -2949,14 +2945,8 @@ export type GetCompanyQuery = {
     id: string;
     name: string;
     wikidataId?: number | null;
-    developedGames: {
-      nodes: Array<{ id: string; name: string; coverUrl?: string | null }>;
-      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
-    };
-    publishedGames: {
-      nodes: Array<{ id: string; name: string; coverUrl?: string | null }>;
-      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
-    };
+    developedGames: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
+    publishedGames: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
   } | null;
 };
 
@@ -2981,10 +2971,7 @@ export type GetGenreQuery = {
     id: string;
     name: string;
     wikidataId?: number | null;
-    games: {
-      nodes: Array<{ id: string; name: string; coverUrl?: string | null }>;
-      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
-    };
+    games: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
   } | null;
 };
 
@@ -3009,10 +2996,7 @@ export type GetEngineQuery = {
     id: string;
     name: string;
     wikidataId?: number | null;
-    games: {
-      nodes: Array<{ id: string; name: string; coverUrl?: string | null }>;
-      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
-    };
+    games: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
   } | null;
 };
 
@@ -3037,10 +3021,7 @@ export type GetSeriesQuery = {
     id: string;
     name: string;
     wikidataId?: number | null;
-    games: {
-      nodes: Array<{ id: string; name: string; coverUrl?: string | null }>;
-      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
-    };
+    games: { nodes: Array<{ id: string; name: string; coverUrl?: string | null }> };
   } | null;
 };
 
@@ -3133,21 +3114,6 @@ export type GetBasicSiteStatisticsQuery = {
   };
 };
 
-export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetCurrentUserQuery = {
-  currentUser?: {
-    id: string;
-    username: string;
-    bio?: string | null;
-    slug: string;
-    role: UserRole;
-    privacy: UserPrivacy;
-    avatarUrl?: string | null;
-    hideDaysPlayed: boolean;
-  } | null;
-};
-
 export type GetUserQueryVariables = Exact<{
   slug: Scalars["String"]["input"];
 }>;
@@ -3207,6 +3173,8 @@ export type GetUsersQuery = {
 
 export type GetUserFollowersQueryVariables = Exact<{
   slug: Scalars["String"]["input"];
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type GetUserFollowersQuery = {
@@ -3216,12 +3184,15 @@ export type GetUserFollowersQuery = {
     followers: {
       totalCount: number;
       nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
+      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
     };
   } | null;
 };
 
 export type GetUserFollowingQueryVariables = Exact<{
   slug: Scalars["String"]["input"];
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type GetUserFollowingQuery = {
@@ -3231,6 +3202,7 @@ export type GetUserFollowingQuery = {
     following: {
       totalCount: number;
       nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
+      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
     };
   } | null;
 };

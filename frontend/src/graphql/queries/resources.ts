@@ -27,10 +27,6 @@ export const GET_PLATFORM = gql`
           name
           coverUrl(size: SMALL)
         }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
       }
     }
   }
@@ -63,20 +59,12 @@ export const GET_COMPANY = gql`
           name
           coverUrl(size: SMALL)
         }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
       }
       publishedGames(first: 30) {
         nodes {
           id
           name
           coverUrl(size: SMALL)
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
         }
       }
     }
@@ -110,10 +98,6 @@ export const GET_GENRE = gql`
           name
           coverUrl(size: SMALL)
         }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
       }
     }
   }
@@ -146,10 +130,6 @@ export const GET_ENGINE = gql`
           name
           coverUrl(size: SMALL)
         }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
       }
     }
   }
@@ -181,10 +161,6 @@ export const GET_SERIES = gql`
           id
           name
           coverUrl(size: SMALL)
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
         }
       }
     }

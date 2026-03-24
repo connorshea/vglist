@@ -132,7 +132,6 @@ export const GET_HERO_COVERS = gql`
   query GetHeroCovers {
     games(first: 100, sortBy: RECENTLY_UPDATED) {
       nodes {
-        id
         coverUrl(size: SMALL)
       }
     }
@@ -146,7 +145,6 @@ export const GET_GAME_PURCHASE = gql`
       completionStatus
       rating
       hoursPlayed
-      replayCount
       comments
       startDate
       completionDate

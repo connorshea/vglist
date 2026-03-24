@@ -39,7 +39,7 @@ const route = useRoute("userFollowing");
 const router = useRouter();
 
 const { data, loading, error } = useQuery<GetUserFollowingQuery>(GET_USER_FOLLOWING, {
-  variables: () => ({ slug: route.params.slug })
+  variables: () => ({ slug: route.params.slug, first: 50 })
 });
 
 watch([data, error, loading], () => {

@@ -1,20 +1,5 @@
 import gql from "graphql-tag";
 
-export const GET_CURRENT_USER = gql`
-  query GetCurrentUser {
-    currentUser {
-      id
-      username
-      bio
-      slug
-      role
-      privacy
-      avatarUrl(size: SMALL)
-      hideDaysPlayed
-    }
-  }
-`;
-
 export const GET_USER = gql`
   query GetUser($slug: String!) {
     user(slug: $slug) {
@@ -89,11 +74,11 @@ export const GET_USERS = gql`
 `;
 
 export const GET_USER_FOLLOWERS = gql`
-  query GetUserFollowers($slug: String!) {
+  query GetUserFollowers($slug: String!, $first: Int, $after: String) {
     user(slug: $slug) {
       id
       username
-      followers {
+      followers(first: $first, after: $after) {
         totalCount
         nodes {
           id
@@ -101,23 +86,31 @@ export const GET_USER_FOLLOWERS = gql`
           slug
           avatarUrl(size: SMALL)
         }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
 `;
 
 export const GET_USER_FOLLOWING = gql`
-  query GetUserFollowing($slug: String!) {
+  query GetUserFollowing($slug: String!, $first: Int, $after: String) {
     user(slug: $slug) {
       id
       username
-      following {
+      following(first: $first, after: $after) {
         totalCount
         nodes {
           id
           username
           slug
           avatarUrl(size: SMALL)
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
