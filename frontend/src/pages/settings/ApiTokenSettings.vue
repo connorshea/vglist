@@ -16,9 +16,24 @@
       </p>
     </div>
 
-    <button class="button is-warning" :class="{ 'is-loading': resetting }" :disabled="resetting" @click="resetToken">
+    <button class="button is-warning" :disabled="resetting" @click="showConfirm = true">
       Reset API Token
     </button>
+
+    <ConfirmDialog
+      v-model="showConfirm"
+      title="Reset API token?"
+      confirm-label="Reset token"
+      loading-label="Resetting…"
+      :loading="resetting"
+      @confirm="resetToken"
+    >
+      <template #icon>
+        <KeyRound :size="22" :stroke-width="1.8" />
+      </template>
+      Your current API token will be <strong>permanently invalidated</strong>. Any applications using it will stop
+      working.
+    </ConfirmDialog>
   </div>
 </template>
 
@@ -27,6 +42,8 @@ import { ref } from "vue";
 import { useMutation } from "@/composables/useGraphQL";
 import { RESET_API_TOKEN } from "@/graphql/mutations/users-settings";
 import { extractGqlError } from "@/utils/graphql-errors";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { KeyRound } from "lucide-vue-next";
 interface ResetApiTokenResult {
   resetApiToken?: {
     apiToken?: string | null;
@@ -36,6 +53,7 @@ interface ResetApiTokenResult {
 
 const newToken = ref("");
 const resetError = ref("");
+const showConfirm = ref(false);
 
 const { mutate, loading: resetting } = useMutation<ResetApiTokenResult>(RESET_API_TOKEN);
 
@@ -54,6 +72,8 @@ async function resetToken() {
     }
   } catch (e) {
     resetError.value = extractGqlError(e);
+  } finally {
+    showConfirm.value = false;
   }
 }
 </script>
