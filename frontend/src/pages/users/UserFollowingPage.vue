@@ -31,14 +31,14 @@
 import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_USER } from "@/graphql/queries/users";
-import type { GetUserQuery } from "@/types/graphql";
+import { GET_USER_FOLLOWING } from "@/graphql/queries/users";
+import type { GetUserFollowingQuery } from "@/types/graphql";
 import UserCard from "@/components/UserCard.vue";
 
 const route = useRoute("userFollowing");
 const router = useRouter();
 
-const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
+const { data, loading, error } = useQuery<GetUserFollowingQuery>(GET_USER_FOLLOWING, {
   variables: () => ({ slug: route.params.slug })
 });
 

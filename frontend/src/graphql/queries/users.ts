@@ -48,21 +48,9 @@ export const GET_USER = gql`
       }
       followers {
         totalCount
-        nodes {
-          id
-          username
-          slug
-          avatarUrl(size: SMALL)
-        }
       }
       following {
         totalCount
-        nodes {
-          id
-          username
-          slug
-          avatarUrl(size: SMALL)
-        }
       }
       favoritedGames(first: 10) {
         nodes {
@@ -95,6 +83,42 @@ export const GET_USERS = gql`
       pageInfo {
         hasNextPage
         endCursor
+      }
+    }
+  }
+`;
+
+export const GET_USER_FOLLOWERS = gql`
+  query GetUserFollowers($slug: String!) {
+    user(slug: $slug) {
+      id
+      username
+      followers {
+        totalCount
+        nodes {
+          id
+          username
+          slug
+          avatarUrl(size: SMALL)
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_FOLLOWING = gql`
+  query GetUserFollowing($slug: String!) {
+    user(slug: $slug) {
+      id
+      username
+      following {
+        totalCount
+        nodes {
+          id
+          username
+          slug
+          avatarUrl(size: SMALL)
+        }
       }
     }
   }
