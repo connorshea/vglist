@@ -188,7 +188,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
-const gameId = computed(() => route.params.id as string);
+const gameId = computed(() => route.params.id);
 
 const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
   variables: () => ({ id: gameId.value })

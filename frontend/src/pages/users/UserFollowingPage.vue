@@ -38,7 +38,7 @@ import UserCard from "@/components/UserCard.vue";
 const route = useRoute("userFollowing");
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ slug: route.params.slug as string })
+  variables: () => ({ slug: route.params.slug })
 });
 
 const user = computed(() => data.value?.user ?? null);
