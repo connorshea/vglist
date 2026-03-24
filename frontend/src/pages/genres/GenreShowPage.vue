@@ -35,7 +35,7 @@ import { GET_GENRE } from "@/graphql/queries/resources";
 import type { GetGenreQuery } from "@/types/graphql";
 import GameCard from "@/components/GameCard.vue";
 
-const route = useRoute();
+const route = useRoute("genre");
 
 const { data, loading, error } = useQuery<GetGenreQuery>(GET_GENRE, {
   variables: { id: route.params.id }

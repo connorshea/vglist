@@ -38,7 +38,7 @@ import { GET_PLATFORM } from "@/graphql/queries/resources";
 import type { GetPlatformQuery } from "@/types/graphql";
 import GameCard from "@/components/GameCard.vue";
 
-const route = useRoute();
+const route = useRoute("platform");
 
 const { data, loading, error } = useQuery<GetPlatformQuery>(GET_PLATFORM, {
   variables: { id: route.params.id }

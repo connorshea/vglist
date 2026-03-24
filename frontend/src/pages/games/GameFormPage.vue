@@ -22,7 +22,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
-const route = useRoute();
+const route = useRoute("gameEdit");
 const authStore = useAuthStore();
 
 const isEditing = computed(() => !!route.params.id);

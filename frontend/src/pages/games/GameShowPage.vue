@@ -183,7 +183,7 @@ import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
 import GameSidebar from "@/components/game/GameSidebar.vue";
 
-const route = useRoute();
+const route = useRoute("game");
 const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();

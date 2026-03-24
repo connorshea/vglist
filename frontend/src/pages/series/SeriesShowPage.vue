@@ -35,7 +35,7 @@ import { GET_SERIES } from "@/graphql/queries/resources";
 import type { GetSeriesQuery } from "@/types/graphql";
 import GameCard from "@/components/GameCard.vue";
 
-const route = useRoute();
+const route = useRoute("series");
 
 const { data, loading, error } = useQuery<GetSeriesQuery>(GET_SERIES, {
   variables: { id: route.params.id }

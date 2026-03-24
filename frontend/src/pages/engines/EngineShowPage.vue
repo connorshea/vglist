@@ -35,7 +35,7 @@ import { GET_ENGINE } from "@/graphql/queries/resources";
 import type { GetEngineQuery } from "@/types/graphql";
 import GameCard from "@/components/GameCard.vue";
 
-const route = useRoute();
+const route = useRoute("engine");
 
 const { data, loading, error } = useQuery<GetEngineQuery>(GET_ENGINE, {
   variables: { id: route.params.id }
