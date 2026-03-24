@@ -16,9 +16,7 @@
       </p>
     </div>
 
-    <button class="button is-warning" :disabled="resetting" @click="showConfirm = true">
-      Reset API Token
-    </button>
+    <button class="button is-warning" :disabled="resetting" @click="showConfirm = true">Reset API Token</button>
 
     <ConfirmDialog
       v-model="showConfirm"
