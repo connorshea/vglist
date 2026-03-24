@@ -323,8 +323,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount } from "vue";
-import { useRoute } from "vue-router";
+import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
@@ -342,11 +342,18 @@ import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { CircleAlert, ShieldCheck, UserMinus } from "lucide-vue-next";
 
 const route = useRoute("user");
+const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
 const { data, loading, error, refetch } = useQuery<GetUserQuery>(GET_USER, {
   variables: () => ({ slug: route.params.slug })
+});
+
+watch([data, error, loading], () => {
+  if (!loading.value && (error.value || (data.value && !data.value.user))) {
+    router.replace({ name: "notFound" });
+  }
 });
 
 const user = computed(() => data.value?.user ?? null);

@@ -29,15 +29,23 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_ENGINE } from "@/graphql/queries/resources";
 import type { GetEngineQuery } from "@/types/graphql";
 import GameCard from "@/components/GameCard.vue";
 
 const route = useRoute("engine");
+const router = useRouter();
 
 const { data, loading, error } = useQuery<GetEngineQuery>(GET_ENGINE, {
   variables: { id: route.params.id }
+});
+
+watch([data, error, loading], () => {
+  if (!loading.value && (error.value || (data.value && !data.value.engine))) {
+    router.replace({ name: "notFound" });
+  }
 });
 </script>

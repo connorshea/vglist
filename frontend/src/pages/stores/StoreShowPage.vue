@@ -15,14 +15,22 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_STORE } from "@/graphql/queries/resources";
 import type { GetStoreQuery } from "@/types/graphql";
 
 const route = useRoute("store");
+const router = useRouter();
 
 const { data, loading, error } = useQuery<GetStoreQuery>(GET_STORE, {
   variables: { id: route.params.id }
+});
+
+watch([data, error, loading], () => {
+  if (!loading.value && (error.value || (data.value && !data.value.store))) {
+    router.replace({ name: "notFound" });
+  }
 });
 </script>
