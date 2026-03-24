@@ -2458,6 +2458,50 @@ export interface WikidataBlocklistEntryEdge {
   node?: Maybe<WikidataBlocklistEntry>;
 }
 
+export type AddToSteamBlocklistMutationVariables = Exact<{
+  name: Scalars["String"]["input"];
+  steamAppId: Scalars["Int"]["input"];
+}>;
+
+export type AddToSteamBlocklistMutation = {
+  addToSteamBlocklist?: { steamBlocklistEntry?: { id: string; name: string; steamAppId: number } | null } | null;
+};
+
+export type RemoveFromSteamBlocklistMutationVariables = Exact<{
+  steamBlocklistEntryId: Scalars["ID"]["input"];
+}>;
+
+export type RemoveFromSteamBlocklistMutation = { removeFromSteamBlocklist?: { deleted: boolean } | null };
+
+export type AddToWikidataBlocklistMutationVariables = Exact<{
+  name: Scalars["String"]["input"];
+  wikidataId: Scalars["Int"]["input"];
+}>;
+
+export type AddToWikidataBlocklistMutation = {
+  addToWikidataBlocklist?: { wikidataBlocklistEntry?: { id: string; name: string; wikidataId: number } | null } | null;
+};
+
+export type RemoveFromWikidataBlocklistMutationVariables = Exact<{
+  wikidataBlocklistEntryId: Scalars["ID"]["input"];
+}>;
+
+export type RemoveFromWikidataBlocklistMutation = { removeFromWikidataBlocklist?: { deleted: boolean } | null };
+
+export type RemoveFromUnmatchedGamesMutationVariables = Exact<{
+  externalServiceId: Scalars["ID"]["input"];
+  externalServiceName: UnmatchedGameExternalService;
+}>;
+
+export type RemoveFromUnmatchedGamesMutation = { removeFromUnmatchedGames?: { deleted: boolean } | null };
+
+export type MergeGamesMutationVariables = Exact<{
+  gameToKeepId: Scalars["ID"]["input"];
+  gameToMergeId: Scalars["ID"]["input"];
+}>;
+
+export type MergeGamesMutation = { mergeGames?: { game: { id: string; name: string } } | null };
+
 export type SignInMutationVariables = Exact<{
   email: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
@@ -2650,6 +2694,88 @@ export type RemoveUserAvatarMutationVariables = Exact<{
 
 export type RemoveUserAvatarMutation = {
   removeUserAvatar?: { user: { id: string; avatarUrl?: string | null } } | null;
+};
+
+export type GetLiveStatisticsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLiveStatisticsQuery = {
+  liveStatistics: {
+    users: number;
+    games: number;
+    platforms: number;
+    series: number;
+    engines: number;
+    companies: number;
+    genres: number;
+    stores: number;
+    events: number;
+    gamePurchases: number;
+    relationships: number;
+    bannedUsers: number;
+    gamesWithCovers: number;
+    gamesWithReleaseDates: number;
+    mobygamesIds: number;
+    pcgamingwikiIds: number;
+    wikidataIds: number;
+    giantbombIds: number;
+    steamAppIds: number;
+    epicGamesStoreIds: number;
+    gogIds: number;
+    igdbIds?: number | null;
+  };
+};
+
+export type GetSteamBlocklistQueryVariables = Exact<{
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type GetSteamBlocklistQuery = {
+  steamBlocklist?: {
+    nodes: Array<{
+      id: string;
+      name: string;
+      steamAppId: number;
+      createdAt: string;
+      user?: { id: string; username: string; slug: string } | null;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor?: string | null };
+  } | null;
+};
+
+export type GetWikidataBlocklistQueryVariables = Exact<{
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type GetWikidataBlocklistQuery = {
+  wikidataBlocklist?: {
+    nodes: Array<{
+      id: string;
+      name: string;
+      wikidataId: number;
+      createdAt: string;
+      user?: { id: string; username: string; slug: string } | null;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor?: string | null };
+  } | null;
+};
+
+export type GetUnmatchedGamesQueryVariables = Exact<{
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type GetUnmatchedGamesQuery = {
+  groupedUnmatchedGames?: {
+    nodes: Array<{
+      externalServiceName: UnmatchedGameExternalService;
+      externalServiceId: string;
+      name: string;
+      count: number;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor?: string | null };
+  } | null;
 };
 
 export type GameFieldsFragment = {
