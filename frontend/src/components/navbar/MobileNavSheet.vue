@@ -66,6 +66,9 @@
             <div class="mn-user-sub">View profile</div>
           </router-link>
           <div class="mn-user-actions">
+            <router-link class="mn-ubtn" to="/settings" aria-label="Settings" @click="close">
+              <Settings :stroke-width="1.4" />
+            </router-link>
             <button class="mn-ubtn" aria-label="Sign out" @click="handleSignOut">
               <LogOut :stroke-width="1.4" />
             </button>
@@ -77,6 +80,18 @@
           <router-link class="mn-auth-btn mn-auth-signin" to="/login" @click="close"> Sign in </router-link>
           <router-link class="mn-auth-btn mn-auth-signup" to="/signup" @click="close"> Create account </router-link>
         </div>
+
+        <div class="mn-divider mn-stagger" />
+
+        <!-- External links -->
+        <div class="mn-section mn-stagger">Links</div>
+        <div class="mn-browse mn-stagger">
+          <router-link class="mn-chip" to="/about" @click="close">About</router-link>
+          <a class="mn-chip" href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a>
+          <a class="mn-chip" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="mn-chip" href="https://github.com/connorshea/vglist/blob/main/API.md" target="_blank" rel="noopener noreferrer">API Docs</a>
+          <a class="mn-chip" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer">Discord</a>
+        </div>
       </div>
     </div>
   </Teleport>
@@ -87,7 +102,7 @@ import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
-import { Activity, Gamepad2, User, ChevronRight, LogOut } from "lucide-vue-next";
+import { Activity, Gamepad2, User, ChevronRight, LogOut, Settings } from "lucide-vue-next";
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits<{ (e: "close"): void }>();
