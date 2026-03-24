@@ -22,16 +22,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_USER } from "@/graphql/queries/users";
 import type { GetUserQuery } from "@/types/graphql";
 
 const route = useRoute("userActivity");
+const router = useRouter();
 
 const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
   variables: () => ({ slug: route.params.slug })
+});
+
+watch([data, error, loading], () => {
+  if (!loading.value && (error.value || (data.value && !data.value.user))) {
+    router.replace({ name: "notFound" });
+  }
 });
 
 const user = computed(() => data.value?.user ?? null);
