@@ -24,6 +24,8 @@ module Types
 
     # User mutations
     field :update_user, mutation: Mutations::Users::UpdateUser
+    field :update_email, mutation: Mutations::Users::UpdateEmail
+    field :update_password, mutation: Mutations::Users::UpdatePassword
     field :follow_user, mutation: Mutations::Users::FollowUser
     field :unfollow_user, mutation: Mutations::Users::UnfollowUser
     field :import_steam_library, mutation: Mutations::Users::ImportSteamLibrary

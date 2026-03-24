@@ -87,9 +87,23 @@
         <div class="mn-section mn-stagger">Links</div>
         <div class="mn-browse mn-stagger">
           <router-link class="mn-chip" to="/about" @click="close">About</router-link>
-          <a class="mn-chip" href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a>
-          <a class="mn-chip" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a class="mn-chip" href="https://github.com/connorshea/vglist/blob/main/API.md" target="_blank" rel="noopener noreferrer">API Docs</a>
+          <a
+            class="mn-chip"
+            href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Changelog</a
+          >
+          <a class="mn-chip" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer"
+            >GitHub</a
+          >
+          <a
+            class="mn-chip"
+            href="https://github.com/connorshea/vglist/blob/main/API.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >API Docs</a
+          >
           <a class="mn-chip" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
       </div>
