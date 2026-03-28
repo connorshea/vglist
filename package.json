@@ -13,7 +13,7 @@
     "lint": "oxlint --type-aware"
   },
   "dependencies": {
-    "@rails/activestorage": "~7.2.2",
+    "@rails/activestorage": "~8.1.300",
     "@rails/ujs": "7.1.3-4",
     "@sentry/vue": "^10.39.0",
     "@swc/core": "^1.15.18",
