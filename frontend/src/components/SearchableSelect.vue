@@ -176,6 +176,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .searchable-select {
   position: relative;
+  margin-bottom: 0.75rem;
 }
 
 .ss-control {

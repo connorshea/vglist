@@ -56,6 +56,34 @@
                 </span>
               </button>
             </div>
+
+            <!-- Mod/admin actions -->
+            <div v-if="authStore.isModerator" class="hero-admin-actions">
+              <div class="dropdown hero-admin-dropdown" :class="{ 'is-hoverable': !showAddForm }">
+                <div class="dropdown-trigger">
+                  <button class="hero-btn hero-cover-btn hero-admin-btn" :disabled="showAddForm" aria-haspopup="true" aria-controls="game-admin-menu">
+                    <span>Admin Actions</span>
+                    <ChevronDown :size="15" />
+                  </button>
+                </div>
+                <div id="game-admin-menu" class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <router-link class="dropdown-item" :to="`/games/${game.id}/edit`">Edit</router-link>
+                    <a v-if="game.coverUrl" class="dropdown-item has-text-danger" @click="showRemoveCoverConfirm = true">
+                      Remove cover
+                    </a>
+                    <a
+                      v-if="game.wikidataId"
+                      class="dropdown-item has-text-danger"
+                      @click="showWikidataBlocklistConfirm = true"
+                    >
+                      Add to Wikidata Blocklist
+                    </a>
+                    <a class="dropdown-item has-text-danger" @click="showDeleteGameConfirm = true">Delete game</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div ref="heroInfoRef" class="game-hero-info">
@@ -147,36 +175,6 @@
         {{ actionMessage }}
       </div>
 
-      <!-- Mod/admin actions -->
-      <div v-if="authStore.isModerator" class="game-admin-actions mt-5">
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <button class="button" aria-haspopup="true" aria-controls="game-admin-menu">
-              <span>Admin Actions</span>
-              <span class="icon is-small">
-                <ChevronDown :size="15" />
-              </span>
-            </button>
-          </div>
-          <div id="game-admin-menu" class="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <router-link class="dropdown-item" :to="`/games/${game.id}/edit`">Edit</router-link>
-              <a v-if="game.coverUrl" class="dropdown-item has-text-danger" @click="showRemoveCoverConfirm = true">
-                Remove cover
-              </a>
-              <a
-                v-if="game.wikidataId"
-                class="dropdown-item has-text-danger"
-                @click="showWikidataBlocklistConfirm = true"
-              >
-                Add to Wikidata Blocklist
-              </a>
-              <a class="dropdown-item has-text-danger" @click="showDeleteGameConfirm = true">Delete game</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Remove from library confirmation modal -->
       <ConfirmDialog
         v-model="showRemoveConfirm"
@@ -263,7 +261,6 @@ import { Heart, CircleAlert, ChevronDown } from "lucide-vue-next";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-// eslint-disable-next-line typescript/consistent-type-imports -- used in template, not just as a type
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
 import GameSidebar from "@/components/game/GameSidebar.vue";
@@ -739,6 +736,27 @@ async function confirmDeleteGame() {
     transform: translate(-50%, -50%) translate(var(--sx), var(--sy)) scale(0);
     opacity: 0;
   }
+}
+
+/* Admin actions below cover buttons */
+.hero-admin-actions {
+  margin-top: 0.5rem;
+}
+
+.hero-admin-dropdown,
+.hero-admin-dropdown .dropdown-trigger,
+.hero-admin-dropdown .dropdown-menu {
+  width: 100%;
+}
+
+.hero-admin-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  padding: 0.4rem 0;
 }
 
 /* Hero info */
