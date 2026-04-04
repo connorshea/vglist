@@ -177,6 +177,16 @@ const feedType = ref<"GLOBAL" | "FOLLOWING">(authStore.isAuthenticated ? "FOLLOW
 const currentPage = ref(1);
 const pageCursors = ref<(string | null)[]>([null]);
 
+// Redirect to global feed if the user is not authenticated.
+watch(
+  () => authStore.isAuthenticated,
+  (isAuthenticated) => {
+    if (!isAuthenticated && feedType.value === "FOLLOWING") {
+      switchFeed("GLOBAL");
+    }
+  }
+);
+
 const { data, loading, error } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
   variables: () => ({
     feedType: feedType.value,

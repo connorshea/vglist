@@ -114,10 +114,15 @@ class UserPolicy < ApplicationPolicy
   end
 
   # User profiles are always visible to their own user and to admins. They are
-  # not visible to moderators or normal users if they're private or if they've
+  # also visible if the given user follows the current user. They are not
+  # visible to moderators or normal users if they're private or if they've
   # been banned.
 
   def user_profile_is_visible?
-    (user&.public_account? && !user&.banned?) || user_is_current_user? || current_user&.admin?
+    (user&.public_account? && !user&.banned?) || user_is_current_user? || current_user&.admin? || user_follows_current_user?
+  end
+
+  def user_follows_current_user?
+    current_user && !user&.banned? && user.following.exists?(id: current_user.id)
   end
 end
