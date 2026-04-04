@@ -123,3 +123,95 @@ export const REMOVE_GAME_COVER = gql`
     }
   }
 `;
+
+export const CREATE_GAME = gql`
+  mutation CreateGame(
+    $name: String!
+    $releaseDate: ISO8601Date
+    $wikidataId: ID
+    $seriesId: ID
+    $platformIds: [ID!]
+    $developerIds: [ID!]
+    $publisherIds: [ID!]
+    $genreIds: [ID!]
+    $engineIds: [ID!]
+    $pcgamingwikiId: String
+    $mobygamesId: Int
+    $giantbombId: String
+    $epicGamesStoreId: String
+    $gogId: String
+    $igdbId: String
+    $steamAppIds: [Int!]
+  ) {
+    createGame(
+      name: $name
+      releaseDate: $releaseDate
+      wikidataId: $wikidataId
+      seriesId: $seriesId
+      platformIds: $platformIds
+      developerIds: $developerIds
+      publisherIds: $publisherIds
+      genreIds: $genreIds
+      engineIds: $engineIds
+      pcgamingwikiId: $pcgamingwikiId
+      mobygamesId: $mobygamesId
+      giantbombId: $giantbombId
+      epicGamesStoreId: $epicGamesStoreId
+      gogId: $gogId
+      igdbId: $igdbId
+      steamAppIds: $steamAppIds
+    ) {
+      game {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UPDATE_GAME = gql`
+  mutation UpdateGame(
+    $gameId: ID!
+    $name: String
+    $releaseDate: ISO8601Date
+    $wikidataId: ID
+    $seriesId: ID
+    $platformIds: [ID!]
+    $developerIds: [ID!]
+    $publisherIds: [ID!]
+    $genreIds: [ID!]
+    $engineIds: [ID!]
+    $pcgamingwikiId: String
+    $mobygamesId: Int
+    $giantbombId: String
+    $epicGamesStoreId: String
+    $gogId: String
+    $igdbId: String
+    $steamAppIds: [Int!]
+  ) {
+    updateGame(
+      gameId: $gameId
+      name: $name
+      releaseDate: $releaseDate
+      wikidataId: $wikidataId
+      seriesId: $seriesId
+      platformIds: $platformIds
+      developerIds: $developerIds
+      publisherIds: $publisherIds
+      genreIds: $genreIds
+      engineIds: $engineIds
+      pcgamingwikiId: $pcgamingwikiId
+      mobygamesId: $mobygamesId
+      giantbombId: $giantbombId
+      epicGamesStoreId: $epicGamesStoreId
+      gogId: $gogId
+      igdbId: $igdbId
+      steamAppIds: $steamAppIds
+    ) {
+      game {
+        id
+        name
+      }
+    }
+  }
+`;

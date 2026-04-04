@@ -117,6 +117,65 @@ export const GET_USER_FOLLOWING = gql`
   }
 `;
 
+export const GET_USER_ACTIVITY = gql`
+  query GetUserActivity($slug: String!, $first: Int, $after: String) {
+    user(slug: $slug) {
+      id
+      username
+      slug
+      activity(first: $first, after: $after) {
+        nodes {
+          id
+          eventCategory
+          createdAt
+          user {
+            id
+            username
+            slug
+            avatarUrl(size: SMALL)
+          }
+          eventable {
+            ... on GamePurchase {
+              game {
+                id
+                name
+                coverUrl(size: SMALL)
+              }
+              completionStatus
+              rating
+            }
+            ... on FavoriteGame {
+              game {
+                id
+                name
+                coverUrl(size: SMALL)
+              }
+            }
+            ... on Relationship {
+              followed {
+                id
+                username
+                slug
+                avatarUrl(size: SMALL)
+              }
+            }
+            ... on User {
+              id
+              username
+              slug
+              avatarUrl(size: SMALL)
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  }
+`;
+
 export const GET_CURRENT_USER_PROFILE = gql`
   query GetCurrentUserProfile {
     currentUser {
