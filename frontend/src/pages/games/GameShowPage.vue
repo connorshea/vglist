@@ -61,7 +61,12 @@
             <div v-if="authStore.isModerator" class="hero-admin-actions">
               <div class="dropdown hero-admin-dropdown" :class="{ 'is-hoverable': !showAddForm }">
                 <div class="dropdown-trigger">
-                  <button class="hero-btn hero-cover-btn hero-admin-btn" :disabled="showAddForm" aria-haspopup="true" aria-controls="game-admin-menu">
+                  <button
+                    class="hero-btn hero-cover-btn hero-admin-btn"
+                    :disabled="showAddForm"
+                    aria-haspopup="true"
+                    aria-controls="game-admin-menu"
+                  >
                     <span>Admin Actions</span>
                     <ChevronDown :size="15" />
                   </button>
@@ -69,7 +74,11 @@
                 <div id="game-admin-menu" class="dropdown-menu" role="menu">
                   <div class="dropdown-content">
                     <router-link class="dropdown-item" :to="`/games/${game.id}/edit`">Edit</router-link>
-                    <a v-if="game.coverUrl" class="dropdown-item has-text-danger" @click="showRemoveCoverConfirm = true">
+                    <a
+                      v-if="game.coverUrl"
+                      class="dropdown-item has-text-danger"
+                      @click="showRemoveCoverConfirm = true"
+                    >
                       Remove cover
                     </a>
                     <a
