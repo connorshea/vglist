@@ -46,7 +46,7 @@ const router = createRouter({
       path: "/games/new",
       name: "gameNew",
       component: () => import("@/pages/games/GameFormPage.vue"),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/games/:id",
@@ -57,7 +57,7 @@ const router = createRouter({
       path: "/games/:id/edit",
       name: "gameEdit",
       component: () => import("@/pages/games/GameFormPage.vue"),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Users
@@ -236,6 +236,10 @@ router.beforeEach((to) => {
 
   if (to.matched.some((r) => r.meta.requiresAuth) && !authStore.isAuthenticated) {
     return { name: "login", query: { redirect: to.fullPath } };
+  }
+
+  if (to.matched.some((r) => r.meta.requiresModerator) && !authStore.isModerator) {
+    return { name: "home" };
   }
 
   if (to.matched.some((r) => r.meta.requiresAdmin) && !authStore.isAdmin) {
