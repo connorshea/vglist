@@ -43,72 +43,52 @@
             </div>
 
             <!-- Series -->
-            <div class="field">
-              <label class="label" for="game-series">Series</label>
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select id="game-series" v-model="form.seriesId">
-                    <option value="">None</option>
-                    <option v-for="s in allSeries" :key="s.id" :value="s.id">{{ s.name }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+            <SearchableSelect
+              v-model="form.seriesId"
+              :options="allSeries"
+              label="Series"
+              placeholder="Search series..."
+            />
 
             <!-- Platforms -->
-            <div class="field">
-              <label class="label">Platforms</label>
-              <div class="control checkboxes-grid">
-                <label v-for="platform in allPlatforms" :key="platform.id" class="checkbox mr-3">
-                  <input type="checkbox" :value="platform.id" v-model="form.platformIds" />
-                  {{ platform.name }}
-                </label>
-              </div>
-            </div>
+            <SearchableMultiSelect
+              v-model="form.platformIds"
+              :options="allPlatforms"
+              label="Platforms"
+              placeholder="Search platforms..."
+            />
 
             <!-- Developers -->
-            <div class="field">
-              <label class="label">Developers</label>
-              <div class="control checkboxes-grid">
-                <label v-for="company in allCompanies" :key="'dev-' + company.id" class="checkbox mr-3">
-                  <input type="checkbox" :value="company.id" v-model="form.developerIds" />
-                  {{ company.name }}
-                </label>
-              </div>
-            </div>
+            <SearchableMultiSelect
+              v-model="form.developerIds"
+              :options="allCompanies"
+              label="Developers"
+              placeholder="Search developers..."
+            />
 
             <!-- Publishers -->
-            <div class="field">
-              <label class="label">Publishers</label>
-              <div class="control checkboxes-grid">
-                <label v-for="company in allCompanies" :key="'pub-' + company.id" class="checkbox mr-3">
-                  <input type="checkbox" :value="company.id" v-model="form.publisherIds" />
-                  {{ company.name }}
-                </label>
-              </div>
-            </div>
+            <SearchableMultiSelect
+              v-model="form.publisherIds"
+              :options="allCompanies"
+              label="Publishers"
+              placeholder="Search publishers..."
+            />
 
             <!-- Genres -->
-            <div class="field">
-              <label class="label">Genres</label>
-              <div class="control checkboxes-grid">
-                <label v-for="genre in allGenres" :key="genre.id" class="checkbox mr-3">
-                  <input type="checkbox" :value="genre.id" v-model="form.genreIds" />
-                  {{ genre.name }}
-                </label>
-              </div>
-            </div>
+            <SearchableMultiSelect
+              v-model="form.genreIds"
+              :options="allGenres"
+              label="Genres"
+              placeholder="Search genres..."
+            />
 
             <!-- Engines -->
-            <div class="field">
-              <label class="label">Engines</label>
-              <div class="control checkboxes-grid">
-                <label v-for="engine in allEngines" :key="engine.id" class="checkbox mr-3">
-                  <input type="checkbox" :value="engine.id" v-model="form.engineIds" />
-                  {{ engine.name }}
-                </label>
-              </div>
-            </div>
+            <SearchableMultiSelect
+              v-model="form.engineIds"
+              :options="allEngines"
+              label="Engines"
+              placeholder="Search engines..."
+            />
 
             <!-- External IDs -->
             <h2 class="title is-5 mt-5">External IDs</h2>
@@ -275,6 +255,8 @@ import { GET_GAME } from "@/graphql/queries/games";
 import { GET_PLATFORMS, GET_COMPANIES, GET_GENRES, GET_ENGINES, GET_SERIES_LIST } from "@/graphql/queries/resources";
 import { CREATE_GAME, UPDATE_GAME } from "@/graphql/mutations/games";
 import { extractGqlError } from "@/utils/graphql-errors";
+import SearchableMultiSelect from "@/components/SearchableMultiSelect.vue";
+import SearchableSelect from "@/components/SearchableSelect.vue";
 
 interface IdName {
   id: string;
@@ -474,25 +456,3 @@ async function handleSubmit() {
   }
 }
 </script>
-
-<style scoped>
-.checkboxes-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0;
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid var(--color-border, #dbdbdb);
-  border-radius: 4px;
-  padding: 0.5rem;
-}
-
-.checkboxes-grid .checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  min-width: 180px;
-  padding: 0.15rem 0.25rem;
-  font-size: 0.9rem;
-}
-</style>
