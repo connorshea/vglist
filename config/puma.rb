@@ -30,7 +30,6 @@
 # but being explicit doesn't hurt.
 port ENV.fetch("PORT", 3000)
 
-# Puma 6 defaults to 3 threads; adjust if needed.
 max_threads = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads max_threads, max_threads
 
