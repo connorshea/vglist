@@ -84,6 +84,7 @@ module VideoGameList
     # caching to make sure the cache is busted when a new version of the
     # application is deployed.
     # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
+    ENV['GIT_COMMIT_SHA'] ||= ENV.fetch('RAILWAY_GIT_COMMIT_SHA', nil)
     ENV['GIT_COMMIT_SHA'] ||= `git rev-parse HEAD`.strip
 
     config.to_prepare do
