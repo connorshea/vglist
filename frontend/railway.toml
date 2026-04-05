@@ -1,0 +1,6 @@
+[build]
+builder = "railpack"
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 60
