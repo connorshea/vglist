@@ -78,6 +78,13 @@ Metrics/PerceivedComplexity:
 Rails:
   Enabled: true
 
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - railway
+
 # TODO: Enable this.
 Rails/HasManyOrHasOneDependent:
   Enabled: false
