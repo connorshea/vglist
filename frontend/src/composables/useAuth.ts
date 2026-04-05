@@ -65,6 +65,31 @@ export function useAuth() {
     return data.requestPasswordReset.message;
   }
 
+  async function resetPassword(resetPasswordToken: string, password: string, passwordConfirmation: string) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: {
+            reset_password_token: resetPasswordToken,
+            password,
+            password_confirmation: passwordConfirmation
+          }
+        })
+      });
+
+      const data = (await response.json()) as { message?: string; errors?: string[] };
+
+      if (response.ok) {
+        return { success: true, errors: [] as string[] };
+      }
+      return { success: false, errors: data.errors ?? ["Password reset failed."] };
+    } catch (e) {
+      return { success: false, errors: [e instanceof Error ? e.message : "Password reset failed."] };
+    }
+  }
+
   async function signOut() {
     // Revoke the token server-side before clearing local state.
     if (authStore.token) {
@@ -87,6 +112,7 @@ export function useAuth() {
     signIn,
     signUp,
     signOut,
-    requestPasswordReset
+    requestPasswordReset,
+    resetPassword
   };
 }
