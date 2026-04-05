@@ -34,7 +34,7 @@ shared_dir = "#{app_dir}/shared"
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
 
-if ENV.fetch("RAILS_ENV") == 'production'
+if ['production', 'railway'].include?(ENV.fetch("RAILS_ENV"))
   if ENV["PORT"]
     # Bind to PORT when provided (e.g. Railway, Heroku).
     bind "tcp://0.0.0.0:#{ENV['PORT']}"
