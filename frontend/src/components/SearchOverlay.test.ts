@@ -8,12 +8,12 @@ import SearchOverlay from "./SearchOverlay.vue";
 const { pushMock, mockIsOpen, mockClose, mockRequest } = vi.hoisted(() => {
   const _isOpen = { value: false };
   return {
-    pushMock: vi.fn(),
+    pushMock: vi.fn<() => void>(),
     mockIsOpen: _isOpen,
     // close() is a simple spy; it does NOT toggle isOpen to avoid
     // mid-test Vue re-renders that conflict with DOM teardown.
-    mockClose: vi.fn(),
-    mockRequest: vi.fn()
+    mockClose: vi.fn<() => void>(),
+    mockRequest: vi.fn<() => Promise<unknown>>()
   };
 });
 

@@ -270,7 +270,7 @@ import { Heart, CircleAlert, ChevronDown } from "lucide-vue-next";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
+import type GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
 import GameSidebar from "@/components/game/GameSidebar.vue";
 

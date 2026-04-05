@@ -64,7 +64,7 @@ describe("PasswordResetConfirmPage", () => {
     await flushPromises();
 
     expect(wrapper.find(".notification.is-success").text()).toContain("Your password has been reset successfully");
-    expect(wrapper.find("form").exists()).toBe(false);
+    expect(wrapper.find("form").exists()).toBeFalsy();
   });
 
   it("shows errors on failure", async () => {
@@ -78,7 +78,7 @@ describe("PasswordResetConfirmPage", () => {
     await flushPromises();
 
     expect(wrapper.find(".notification.is-danger").text()).toContain("Token is invalid or expired.");
-    expect(wrapper.find("form").exists()).toBe(true);
+    expect(wrapper.find("form").exists()).toBeTruthy();
   });
 
   it("shows an error when the reset token is missing", async () => {
