@@ -1,5 +1,6 @@
 [build]
 builder = "railpack"
+watchPatterns = ["frontend/**"]
 
 [deploy]
 healthcheckPath = "/"

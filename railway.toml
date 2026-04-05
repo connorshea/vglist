@@ -1,5 +1,6 @@
 [build]
 builder = "railpack"
+watchPatterns = ["!frontend/**"]
 
 [deploy]
 startCommand = "bundle exec puma -C config/puma.rb"
