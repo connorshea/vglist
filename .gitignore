@@ -60,3 +60,5 @@ sbin/
 !/app/assets/builds/.keep
 
 .playwright-mcp/
+
+/config/credentials/railway.key
