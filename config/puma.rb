@@ -41,13 +41,13 @@ if ['production', 'railway'].include?(ENV.fetch("RAILS_ENV"))
   else
     # Fall back to unix socket for traditional deployments.
     bind "unix://#{shared_dir}/sockets/puma.sock"
+
+    # Set master PID and state locations (only for traditional deployments)
+    pidfile "#{shared_dir}/pids/puma.pid"
+    state_path "#{shared_dir}/pids/puma.state"
+
+    activate_control_app
   end
-
-  # Set master PID and state locations
-  pidfile "#{shared_dir}/pids/puma.pid"
-  state_path "#{shared_dir}/pids/puma.state"
-
-  activate_control_app
 end
 
 # Use the `preload_app!` method when specifying a `workers` number.
