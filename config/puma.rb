@@ -36,7 +36,7 @@ threads max_threads, max_threads
 
 # Worker mode for better throughput in production.
 # Default to 0 in development to avoid macOS fork() crashes.
-workers ENV.fetch("WEB_CONCURRENCY") { Rails.env.production? ? 2 : 0 }
+workers ENV.fetch("WEB_CONCURRENCY") { ENV["RAILS_ENV"] == "production" ? 2 : 0 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
