@@ -1,6 +1,6 @@
 [build]
 builder = "railpack"
-buildCommand = "yarn build && SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile"
+buildCommand = "yarn build && RAILS_MASTER_KEY=$RAILS_MASTER_KEY bundle exec rails assets:precompile"
 
 [deploy]
 startCommand = "bundle exec puma -C config/puma.rb"
