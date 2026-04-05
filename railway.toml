@@ -3,7 +3,7 @@ builder = "railpack"
 
 [deploy]
 startCommand = "bundle exec puma -C config/puma.rb"
-preDeployCommand = "bundle exec rails db:prepare"
+preDeployCommand = "bundle exec rails db:migrate || (bundle exec rails db:schema:load && bundle exec rails db:migrate)"
 healthcheckPath = "/up"
 healthcheckTimeout = 240
 restartPolicyType = "on_failure"
