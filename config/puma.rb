@@ -35,8 +35,13 @@ shared_dir = "#{app_dir}/shared"
 plugin :tmp_restart
 
 if ENV.fetch("RAILS_ENV") == 'production'
-  # Set up socket location
-  bind "unix://#{shared_dir}/sockets/puma.sock"
+  if ENV["PORT"]
+    # Bind to PORT when provided (e.g. Railway, Heroku).
+    bind "tcp://0.0.0.0:#{ENV['PORT']}"
+  else
+    # Fall back to unix socket for traditional deployments.
+    bind "unix://#{shared_dir}/sockets/puma.sock"
+  end
 
   # Set master PID and state locations
   pidfile "#{shared_dir}/pids/puma.pid"

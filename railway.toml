@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+buildCommand = "bundle install && yarn install && yarn build && bundle exec rails assets:precompile"
+
+[deploy]
+startCommand = "bundle exec rails db:migrate && bundle exec puma -C config/puma.rb"
+healthcheckPath = "/up"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
