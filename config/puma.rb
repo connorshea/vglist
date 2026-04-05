@@ -25,25 +25,17 @@
 # Any libraries that use a connection pool or another resource pool should
 # be configured to provide at least as many connections as the number of
 # threads. This includes Active Record's `pool` parameter in `database.yml`.
-threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
-threads threads_count, threads_count
 
-app_dir = File.expand_path("../..", __FILE__)
-shared_dir = "#{app_dir}/shared"
+# Railway sets PORT; Puma 6 reads this automatically,
+# but being explicit doesn't hurt.
+port ENV.fetch("PORT", 3000)
 
-# Allow puma to be restarted by `bin/rails restart` command.
-plugin :tmp_restart
+max_threads = ENV.fetch("RAILS_MAX_THREADS", 3)
+threads max_threads, max_threads
 
-if ENV.fetch("RAILS_ENV") == 'production'
-  # Set up socket location
-  bind "unix://#{shared_dir}/sockets/puma.sock"
-
-  # Set master PID and state locations
-  pidfile "#{shared_dir}/pids/puma.pid"
-  state_path "#{shared_dir}/pids/puma.state"
-
-  activate_control_app
-end
+# Worker mode for better throughput in production.
+# Default to 0 in development to avoid macOS fork() crashes.
+workers ENV.fetch("WEB_CONCURRENCY") { ENV["RAILS_ENV"] == "production" ? 2 : 0 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

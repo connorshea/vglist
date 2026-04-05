@@ -1,5 +1,8 @@
 # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
+  # Health check endpoint for deployment platforms (Railway, etc.)
+  get "up" => "rails/health#show", as: :rails_health_check
+
   # Put this at the top for ~performance~
   root 'home#index'
 

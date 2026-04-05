@@ -60,3 +60,6 @@ sbin/
 !/app/assets/builds/.keep
 
 .playwright-mcp/
+
+/config/credentials/*.key
+!/config/credentials/test.key
