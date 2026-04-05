@@ -83,7 +83,6 @@ Rails/UnknownEnv:
     - production
     - development
     - test
-    - railway
 
 # TODO: Enable this.
 Rails/HasManyOrHasOneDependent:

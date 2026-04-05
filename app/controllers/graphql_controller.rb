@@ -107,7 +107,7 @@ class GraphqlController < ApplicationController
 
     # Just block it in production for now to prevent malicious usage of the API,
     # but still allow local development.
-    return false if Rails.env.production? || Rails.env.railway?
+    return false if Rails.env.production?
 
     true
   end

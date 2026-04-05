@@ -61,4 +61,5 @@ sbin/
 
 .playwright-mcp/
 
-/config/credentials/railway.key
+/config/credentials/*.key
+!/config/credentials/test.key

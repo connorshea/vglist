@@ -93,7 +93,3 @@ production:
   host: <%= ENV['VGLIST_DATABASE_HOST'] %>
   port: <%= ENV['VGLIST_DATABASE_PORT'] %>
   <% end %>
-
-railway:
-  <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
