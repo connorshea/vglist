@@ -34,8 +34,9 @@ port ENV.fetch("PORT", 3000)
 max_threads = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads max_threads, max_threads
 
-# Worker mode for better throughput on Railway.
-workers ENV.fetch("WEB_CONCURRENCY", 2)
+# Worker mode for better throughput in production.
+# Default to 0 in development to avoid macOS fork() crashes.
+workers ENV.fetch("WEB_CONCURRENCY") { Rails.env.production? ? 2 : 0 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
