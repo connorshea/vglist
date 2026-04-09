@@ -81,7 +81,7 @@ gem 'inline_svg', '~> 1.10'
 gem 'invisible_captcha', '~> 2.3.0'
 
 # For parallel execution of long-running tasks.
-gem 'parallel', '~> 1.27', require: false
+gem 'parallel', '~> 2.0', require: false
 
 # For tracking changes to records.
 gem 'paper_trail', '~> 17.0'
