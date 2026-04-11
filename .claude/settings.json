@@ -7,21 +7,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run typecheck || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && pnpm run typecheck || exit 2",
             "timeout": 25,
-            "statusMessage": "Running yarn typecheck"
+            "statusMessage": "Running pnpm typecheck"
           },
           {
             "type": "command",
-            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run lint || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && pnpm run lint || exit 2",
             "timeout": 10,
-            "statusMessage": "Running yarn lint"
+            "statusMessage": "Running pnpm lint"
           },
           {
             "type": "command",
-            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run fmt:check || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && pnpm run fmt:check || exit 2",
             "timeout": 15,
-            "statusMessage": "Running yarn fmt:check"
+            "statusMessage": "Running pnpm fmt:check"
           },
           {
             "type": "command",

@@ -7,7 +7,7 @@
 - Ruby 3.4
 - Postgres 17.x
 - Node.js 22.x
-- Yarn 1.x
+- pnpm
 - ImageMagick (for images, like avatars or game covers)
 
 ### Setup instructions
@@ -15,7 +15,7 @@
 1. Clone the repository with git
 1. To get Bundler 2.7.1, `gem install bundler:2.7.1`
 1. `bundle install`
-1. `yarn install`
+1. `pnpm --dir frontend install`
 1. `bundle exec rails db:setup`
    - This is the equivalent of running `bundle exec rails db:create && bundle exec rails db:structure:load && bundle exec rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
    - If you would like more control, run only `bundle exec rails db:create` and `bundle exec rails db:schema:load`.

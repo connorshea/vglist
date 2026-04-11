@@ -11,17 +11,15 @@ vglist is a Ruby on Rails application for tracking video game libraries. It uses
 ### Development
 
 ```bash
-./bin/dev                    # Start Rails server + Webpack dev server (do NOT run this as an AI agent)
-bundle install               # Install Ruby dependencies
-yarn install                 # Install JS dependencies (always use yarn, never npm)
+./bin/dev                      # Start Rails server + Webpack dev server (do NOT run this as an AI agent)
+bundle install                 # Install Ruby dependencies
+pnpm --dir=frontend install    # Install JS dependencies (always use pnpm, never npm or yarn)
 ```
 
 ### Testing
 
 ```bash
 bundle exec rspec                                              # Full test suite
-bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb"  # Unit tests only
-bundle exec rspec spec/features                                # Feature tests only
 bundle exec rspec spec/models/game_spec.rb                     # Single file
 bundle exec rspec spec/models/game_spec.rb:42                  # Single example by line
 ```
@@ -30,10 +28,11 @@ bundle exec rspec spec/models/game_spec.rb:42                  # Single example 
 
 ```bash
 bundle exec rubocop           # Ruby linting
-yarn run lint                  # JS/TS linting (oxlint with type awareness)
-yarn run fmt:check             # Check JS/TS formatting (oxfmt)
-yarn run fmt                   # Auto-format JS/TS
-yarn run typecheck             # TypeScript type checking (tsc)
+# All pnpm commands should be run from the frontend directory or with --dir=frontend.
+pnpm run lint                  # JS/TS linting (oxlint with type awareness)
+pnpm run fmt:check             # Check JS/TS formatting (oxfmt)
+pnpm run fmt                   # Auto-format JS/TS
+pnpm run typecheck             # TypeScript type checking (tsc)
 ```
 
 ### Database
@@ -76,7 +75,7 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 
 ## Key Conventions
 
-- **Package manager**: Yarn only. **Never use `npx`**, and *definitely* never use `npx --yes` — pulling arbitrary packages at runtime hides supply-chain risk, breaks reproducible builds, and bypasses the lockfile. If you need a CLI tool, add it to `frontend/package.json` devDependencies and expose it via a `scripts` entry (e.g. `"lint:schema": "graphql-schema-linter ../schema.graphql"`), then invoke it with `yarn run <script>` (or `yarn --cwd frontend run <script>` from the repo root). This applies to CI, rake tasks, deploy scripts, and local commands.
+- **Package manager**: pnpm only. **Never use `npx`**, and *definitely* never use `npx --yes` — pulling arbitrary packages at runtime hides supply-chain risk, breaks reproducible builds, and bypasses the lockfile. If you need a CLI tool, add it to `frontend/package.json` devDependencies and expose it via a `scripts` entry (e.g. `"lint:schema": "graphql-schema-linter ../schema.graphql"`), then invoke it with `pnpm run <script>` (or `pnpm --dir frontend run <script>` from the repo root). This applies to CI, rake tasks, deploy scripts, and local commands.
 - **Vue components**: Always use Composition API with `<script setup>` and TypeScript. Props use `modelValue`/`update:modelValue` for v-model.
 - **TypeScript**: Strict mode enforced. No `any` types.
 - **Database schema**: Uses `structure.sql` (not `schema.rb`) because of SQL views.

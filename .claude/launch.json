@@ -10,7 +10,7 @@
     {
       "name": "vglist-frontend",
       "runtimeExecutable": "zsh",
-      "runtimeArgs": ["-lic", "yarn dev"],
+      "runtimeArgs": ["-lic", "pnpm run dev"],
       "cwd": "${workspaceFolder}/frontend",
       "port": 5173
     }

@@ -16,16 +16,20 @@ jobs:
           ruby-version: "3.4.9"
           bundler-cache: true
 
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          package_json_file: frontend/package.json
+
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - run: yarn --cwd frontend install --frozen-lockfile
+      - run: pnpm --dir frontend install --frozen-lockfile
 
-      - run: yarn --cwd frontend run lint --fix
-      - run: yarn --cwd frontend run fmt
+      - run: pnpm --dir frontend run lint --fix
+      - run: pnpm --dir frontend run fmt
 
       - run: bundle exec rubocop --autocorrect
 
