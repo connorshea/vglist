@@ -23,16 +23,16 @@ updates:
     schedule:
       interval: weekly
       time: "12:00"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     target-branch: main
     assignees:
       - connorshea
   - package-ecosystem: npm
-    directory: "/"
+    directory: "frontend/"
     schedule:
       interval: weekly
       time: "12:00"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     target-branch: main
     assignees:
       - connorshea
