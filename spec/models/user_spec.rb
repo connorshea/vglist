@@ -149,6 +149,45 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#verify_api_token!' do
+    let(:user) { create(:user) }
+
+    it 'returns true when the provided token matches the stored token' do
+      user.update!(api_token: 'a' * 32)
+      expect(user.verify_api_token!('a' * 32)).to be true
+    end
+
+    it 'returns false when the provided token does not match the stored token' do
+      user.update!(api_token: 'a' * 32)
+      expect(user.verify_api_token!('b' * 32)).to be false
+    end
+
+    it 'returns false when the provided token is nil' do
+      user.update!(api_token: 'a' * 32)
+      expect(user.verify_api_token!(nil)).to be false
+    end
+
+    it 'returns false when the provided token is an empty string' do
+      user.update!(api_token: 'a' * 32)
+      expect(user.verify_api_token!('')).to be false
+    end
+
+    it 'returns false when the user has no stored token' do
+      expect(user.api_token).to be_nil
+      expect(user.verify_api_token!('a' * 32)).to be false
+    end
+
+    it 'returns false when the provided token has a different length than the stored token' do
+      user.update!(api_token: 'a' * 32)
+      expect(user.verify_api_token!('a' * 16)).to be false
+    end
+
+    it 'returns false when both the stored token and the provided token are nil' do
+      expect(user.api_token).to be_nil
+      expect(user.verify_api_token!(nil)).to be false
+    end
+  end
+
   describe 'Scopes' do
     context 'with most followers' do
       let(:user2) { create(:user, id: 1) }

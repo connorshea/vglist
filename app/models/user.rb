@@ -172,12 +172,18 @@ class User < ApplicationRecord
   # Verify that the token passed into the application matches the user's
   # actual token.
   def verify_api_token!(token)
-    # Return false if the user attempts to pass a nil token. This prevents
-    # other users from hijacking an account if the account doesn't have
-    # a token.
-    return false if token.nil?
+    # Return false if either the provided token or the user's stored token
+    # is blank. This prevents other users from hijacking an account that
+    # doesn't have a token, and avoids secure_compare crashing on `nil`
+    # (it calls `bytesize` on both arguments).
+    return false if token.blank?
 
-    ActiveSupport::SecurityUtils.secure_compare(api_token, token)
+    user_token = api_token
+    return false if user_token.blank?
+
+    # `secure_compare` does its own bytesize check before the constant-time
+    # comparison, so no extra length guard is required here.
+    ActiveSupport::SecurityUtils.secure_compare(user_token, token)
   end
 
   # Generate an avatar variant with a specific size, size must be a Symbol
