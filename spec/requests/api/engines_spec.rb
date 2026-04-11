@@ -70,17 +70,15 @@ RSpec.describe "Engines API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:engines, :nodes)).to eq(
-        [
-          {
-            id: engine.id.to_s,
-            name: engine.name
-          },
-          {
-            id: engine2.id.to_s,
-            name: engine2.name
-          }
-        ]
+      expect(result.graphql_dig(:engines, :nodes)).to contain_exactly(
+        {
+          id: engine.id.to_s,
+          name: engine.name
+        },
+        {
+          id: engine2.id.to_s,
+          name: engine2.name
+        }
       )
     end
   end

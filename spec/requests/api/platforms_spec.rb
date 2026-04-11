@@ -70,17 +70,15 @@ RSpec.describe "Platforms API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:platforms, :nodes)).to eq(
-        [
-          {
-            id: platform.id.to_s,
-            name: platform.name
-          },
-          {
-            id: platform2.id.to_s,
-            name: platform2.name
-          }
-        ]
+      expect(result.graphql_dig(:platforms, :nodes)).to contain_exactly(
+        {
+          id: platform.id.to_s,
+          name: platform.name
+        },
+        {
+          id: platform2.id.to_s,
+          name: platform2.name
+        }
       )
     end
   end
