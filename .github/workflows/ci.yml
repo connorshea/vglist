@@ -16,10 +16,10 @@ jobs:
   rubocop:
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1.288.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
         with:
-          ruby-version: "3.4.6"
+          ruby-version: "3.4.9"
           bundler-cache: true
       - run: bundle exec rubocop
 
@@ -29,8 +29,8 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
           cache: yarn
@@ -45,8 +45,8 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
           cache: yarn
@@ -60,8 +60,8 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
           cache: yarn
@@ -87,10 +87,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1.288.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
         with:
-          ruby-version: "3.4.6"
+          ruby-version: "3.4.9"
           bundler-cache: true
       - uses: actions/setup-node@v6
         with:
@@ -126,12 +126,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
-      - uses: ruby/setup-ruby@v1.288.0
+      - uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
         with:
-          ruby-version: "3.4.6"
+          ruby-version: "3.4.9"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -158,12 +158,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
-      - uses: ruby/setup-ruby@v1.288.0
+      - uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
         with:
-          ruby-version: "3.4.6"
+          ruby-version: "3.4.9"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -179,7 +179,7 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
           fi
-      - uses: actions/upload-artifact@v6.0.0
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: coverage-report
@@ -204,10 +204,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1.288.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
         with:
-          ruby-version: "3.4.6"
+          ruby-version: "3.4.9"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create

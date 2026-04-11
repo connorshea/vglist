@@ -1,0 +1,32 @@
+name: autofix.ci  # needed to securely identify the workflow
+
+on:
+  pull_request:
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
+        with:
+          ruby-version: "3.4.9"
+          bundler-cache: true
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - run: yarn --cwd frontend install --frozen-lockfile
+
+      - run: yarn --cwd frontend run lint --fix
+      - run: yarn --cwd frontend run fmt
+
+      - run: bundle exec rubocop --autocorrect
+
+      - uses: autofix-ci/action@7a166d7532b277f34e16238930461bf77f9d7ed8
