@@ -41,11 +41,11 @@ end
 end
 
 # Create 2 private accounts
-2.times do
+2.times do |n|
   User.create!(
     email: Faker::Internet.unique.email,
     # Make private users with similar names
-    username: "private_user#{Faker::Number.number(digits: 3)}",
+    username: "private_user#{n}_#{Faker::Number.number(digits: 3)}",
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence,
@@ -54,11 +54,11 @@ end
 end
 
 # Create 2 banned accounts
-2.times do
+2.times do |n|
   User.create!(
     email: Faker::Internet.unique.email,
     # Make banned users with similar names
-    username: "banned_user#{Faker::Number.number(digits: 3)}",
+    username: "banned_user#{n}_#{Faker::Number.number(digits: 3)}",
     # Passwords can be up to 128 characters, but we'll just do up to 20 here.
     password: Faker::Internet.password(min_length: 8, max_length: 20),
     bio: Faker::Lorem.sentence,
