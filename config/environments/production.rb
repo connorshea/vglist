@@ -47,7 +47,7 @@ Rails.application.configure do
   # healthcheck (which hits the container directly over HTTP) gets a 200.
   config.ssl_options = {
     hsts: { preload: true },
-    redirect: { exclude: ->(request) { request.path == "/up" } }
+    redirect: { exclude: ->(request) { request.path == "/health" } }
   }
 
   # "info" includes generic and useful information about system operation, but avoids logging too much
