@@ -16,7 +16,7 @@ class SpaController < ActionController::API
       set_csp_header
       render file: index_path, layout: false, content_type: 'text/html'
     else
-      render json: { error: 'Frontend not built. Run: cd frontend && npx vite build && cp -r dist/* ../public/' }, status: :not_found
+      render json: { error: 'Frontend not built. Run: cd frontend && yarn build && cp -r dist/* ../public/' }, status: :not_found
     end
   end
 
