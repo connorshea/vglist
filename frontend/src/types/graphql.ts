@@ -2619,6 +2619,49 @@ export type RemoveGameCoverMutationVariables = Exact<{
 
 export type RemoveGameCoverMutation = { removeGameCover?: { game: { id: string } } | null };
 
+export type CreateGameMutationVariables = Exact<{
+  name: Scalars["String"]["input"];
+  releaseDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
+  wikidataId?: InputMaybe<Scalars["ID"]["input"]>;
+  seriesId?: InputMaybe<Scalars["ID"]["input"]>;
+  platformIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  developerIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  publisherIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  genreIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  engineIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  pcgamingwikiId?: InputMaybe<Scalars["String"]["input"]>;
+  mobygamesId?: InputMaybe<Scalars["Int"]["input"]>;
+  giantbombId?: InputMaybe<Scalars["String"]["input"]>;
+  epicGamesStoreId?: InputMaybe<Scalars["String"]["input"]>;
+  gogId?: InputMaybe<Scalars["String"]["input"]>;
+  igdbId?: InputMaybe<Scalars["String"]["input"]>;
+  steamAppIds?: InputMaybe<Array<Scalars["Int"]["input"]> | Scalars["Int"]["input"]>;
+}>;
+
+export type CreateGameMutation = { createGame?: { game?: { id: string; name: string } | null } | null };
+
+export type UpdateGameMutationVariables = Exact<{
+  gameId: Scalars["ID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  releaseDate?: InputMaybe<Scalars["ISO8601Date"]["input"]>;
+  wikidataId?: InputMaybe<Scalars["ID"]["input"]>;
+  seriesId?: InputMaybe<Scalars["ID"]["input"]>;
+  platformIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  developerIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  publisherIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  genreIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  engineIds?: InputMaybe<Array<Scalars["ID"]["input"]> | Scalars["ID"]["input"]>;
+  pcgamingwikiId?: InputMaybe<Scalars["String"]["input"]>;
+  mobygamesId?: InputMaybe<Scalars["Int"]["input"]>;
+  giantbombId?: InputMaybe<Scalars["String"]["input"]>;
+  epicGamesStoreId?: InputMaybe<Scalars["String"]["input"]>;
+  gogId?: InputMaybe<Scalars["String"]["input"]>;
+  igdbId?: InputMaybe<Scalars["String"]["input"]>;
+  steamAppIds?: InputMaybe<Array<Scalars["Int"]["input"]> | Scalars["Int"]["input"]>;
+}>;
+
+export type UpdateGameMutation = { updateGame?: { game: { id: string; name: string } } | null };
+
 export type UpdateUserMutationVariables = Exact<{
   bio?: InputMaybe<Scalars["String"]["input"]>;
   privacy?: InputMaybe<UserPrivacy>;
@@ -3202,6 +3245,38 @@ export type GetUserFollowingQuery = {
     following: {
       totalCount: number;
       nodes: Array<{ id: string; username: string; slug: string; avatarUrl?: string | null }>;
+      pageInfo: { hasNextPage: boolean; endCursor?: string | null };
+    };
+  } | null;
+};
+
+export type GetUserActivityQueryVariables = Exact<{
+  slug: Scalars["String"]["input"];
+  first?: InputMaybe<Scalars["Int"]["input"]>;
+  after?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type GetUserActivityQuery = {
+  user?: {
+    id: string;
+    username: string;
+    slug: string;
+    activity: {
+      nodes: Array<{
+        id: string;
+        eventCategory: EventCategory;
+        createdAt: string;
+        user: { id: string; username: string; slug: string; avatarUrl?: string | null };
+        eventable:
+          | { game: { id: string; name: string; coverUrl?: string | null } }
+          | {
+              completionStatus?: GamePurchaseCompletionStatus | null;
+              rating?: number | null;
+              game: { id: string; name: string; coverUrl?: string | null };
+            }
+          | { followed: { id: string; username: string; slug: string; avatarUrl?: string | null } }
+          | { id: string; username: string; slug: string; avatarUrl?: string | null };
+      }>;
       pageInfo: { hasNextPage: boolean; endCursor?: string | null };
     };
   } | null;
