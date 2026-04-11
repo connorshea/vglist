@@ -1,6 +1,8 @@
 {
   "files.insertFinalNewline": true,
   "oxc.lint.run": "onSave",
-  "oxc.typeAware": true,
-  "oxc.unusedDisableDirectives": "deny"
+  "oxc.configPath": "frontend/.oxlintrc.json",
+  "oxc.fmt.configPath": "frontend/.oxfmtrc.json",
+  "oxc.unusedDisableDirectives": "deny",
+  "oxc.path.tsgolint": "frontend/node_modules/.bin/tsgolint"
 }
