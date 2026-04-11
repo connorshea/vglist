@@ -1,5 +1,5 @@
 [tools]
-ruby = "3.4.7"
+ruby = "3.4.9"
 node = "22"
 yarn = "1.22.22"
 
