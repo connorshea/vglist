@@ -111,7 +111,7 @@ describe("LoginPage", () => {
 
   it("shows loading state while submitting", async () => {
     // Never resolve so we can inspect loading state
-    mockSignIn.mockReturnValue(new Promise(() => {}));
+    mockSignIn.mockReturnValue(new Promise<{ success: boolean; errors: string[] }>(() => {}));
     const wrapper = mount(LoginPage, mountOptions);
 
     await wrapper.find("input[type='email']").setValue("test@example.com");

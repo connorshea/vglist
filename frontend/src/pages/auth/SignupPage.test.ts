@@ -99,7 +99,7 @@ describe("SignupPage", () => {
   });
 
   it("shows loading state while submitting", async () => {
-    mockSignUp.mockReturnValue(new Promise(() => {}));
+    mockSignUp.mockReturnValue(new Promise<{ success: boolean; errors: string[] }>(() => {}));
     const wrapper = mount(SignupPage, mountOptions);
 
     await wrapper.find("input[type='text']").setValue("testuser");

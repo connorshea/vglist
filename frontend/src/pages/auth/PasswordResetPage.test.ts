@@ -65,7 +65,7 @@ describe("PasswordResetPage", () => {
   });
 
   it("shows loading state while submitting", async () => {
-    mockRequestPasswordReset.mockReturnValue(new Promise(() => {}));
+    mockRequestPasswordReset.mockReturnValue(new Promise<string>(() => {}));
     const wrapper = mount(PasswordResetPage, mountOptions);
 
     await wrapper.find("input[type='email']").setValue("test@example.com");
