@@ -24,12 +24,28 @@ const route = useRoute();
 const { toggle: toggleSearch } = useSearchOverlay();
 const { show: showSnackbar } = useSnackbar();
 
-// Global keyboard shortcut: Cmd+K / Ctrl+K to toggle search overlay
-function handleGlobalKeydown(e: KeyboardEvent) {
-  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-    e.preventDefault();
-    toggleSearch();
+// Global keyboard shortcut: Cmd+K / Ctrl+K to toggle search overlay.
+// Ignore events that originate from editable elements so we don't hijack
+// normal typing or interfere with assistive-tech workflows, and bail out
+// when Alt is held so we don't swallow alternate OS-level shortcuts.
+function isEditableTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
   }
+  if (target.isContentEditable) {
+    return true;
+  }
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+}
+
+function handleGlobalKeydown(e: KeyboardEvent) {
+  if (e.key !== "k" || !(e.metaKey || e.ctrlKey) || e.altKey || isEditableTarget(e.target)) {
+    return;
+  }
+
+  e.preventDefault();
+  toggleSearch();
 }
 
 onMounted(() => {
