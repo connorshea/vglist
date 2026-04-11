@@ -67,7 +67,7 @@ jobs:
           cache: yarn
           cache-dependency-path: frontend/yarn.lock
       - run: yarn install --frozen-lockfile
-      - run: npx vite build
+      - run: yarn build
 
   graphql_lint:
     runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load
       - run: bundle exec rake graphql:schema:idl
-      - run: npx --yes graphql-schema-linter schema.graphql
+      - run: yarn --cwd frontend run lint:schema
       - name: Verify codegen is up to date
         run: |
           yarn --cwd frontend run codegen

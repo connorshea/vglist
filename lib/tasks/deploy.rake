@@ -32,7 +32,7 @@ namespace :deploy do
 
       puts
       puts "Building frontend..."
-      system('cd frontend && npx vite build')
+      system('cd frontend && yarn build')
 
       # Copy built frontend to public/ for Rails to serve.
       puts

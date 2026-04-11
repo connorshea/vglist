@@ -78,6 +78,7 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 
 ## Key Conventions
 
+- **Package manager**: Yarn only. **Never use `npx`**, and *definitely* never use `npx --yes` — pulling arbitrary packages at runtime hides supply-chain risk, breaks reproducible builds, and bypasses the lockfile. If you need a CLI tool, add it to `frontend/package.json` devDependencies and expose it via a `scripts` entry (e.g. `"lint:schema": "graphql-schema-linter ../schema.graphql"`), then invoke it with `yarn run <script>` (or `yarn --cwd frontend run <script>` from the repo root). This applies to CI, rake tasks, deploy scripts, and local commands.
 - **Vue components**: Always use Composition API with `<script setup>` and TypeScript. Props use `modelValue`/`update:modelValue` for v-model.
 - **TypeScript**: Strict mode enforced. No `any` types.
 - **Database schema**: Uses `structure.sql` (not `schema.rb`) because of SQL views.
