@@ -21,6 +21,13 @@ module Resolvers
         by_genre: nil,
         by_engine: nil
       )
+        # TODO: This eagerly preloads every association the list view might
+        # need, but GraphQL clients frequently ask for only a subset of fields.
+        # Consider using GraphQL::Execution::Lookahead (or field-level
+        # batching via graphql-batch) to include/preload only the associations
+        # the client actually selected, e.g. skip `:engines` unless the query
+        # selects `engines`. This avoids unnecessary joins and memory on
+        # narrow queries like `{ games { nodes { id name } } }`.
         games = Game.all.includes(:series, :developers, :publishers, :engines, :genres, :platforms, :steam_app_ids).with_attached_cover
 
         games = games.on_platform(on_platform) unless on_platform.nil?
