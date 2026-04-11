@@ -20,8 +20,8 @@ function loadStoredUser(): AuthUser | null {
 }
 
 export const useAuthStore = defineStore("auth", () => {
-  const token = ref<string | null>(localStorage.getItem("auth_token"));
-  const user = ref<AuthUser | null>(loadStoredUser());
+  const token = ref(localStorage.getItem("auth_token"));
+  const user = ref(loadStoredUser());
 
   const isAuthenticated = computed(() => token.value !== null);
   const isAdmin = computed(() => user.value?.role === "ADMIN");
