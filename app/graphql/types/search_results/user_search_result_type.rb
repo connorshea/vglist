@@ -18,13 +18,16 @@ module Types
       end
 
       def slug
-        user&.slug
+        resolved_user = user
+        raise GraphQL::ExecutionError, "User not found for search result #{@object.searchable_id}" if resolved_user.nil?
+
+        resolved_user.slug
       end
 
       private
 
       def user
-        @context[:preloaded_users]&.dig(@object.searchable_id)
+        @user ||= @context[:preloaded_users]&.dig(@object.searchable_id) || User.find_by(id: @object.searchable_id)
       end
     end
   end

@@ -78,5 +78,40 @@ RSpec.describe "Users::Passwords", type: :request do
       json = JSON.parse(response.body)
       expect(json['errors']).to be_present
     end
+
+    it "revokes previously issued JWTs after a successful reset", :aggregate_failures do
+      # A token issued before the reset (simulating a stolen/leaked token that
+      # the owner is rotating the password to invalidate) should stop working
+      # once the reset succeeds.
+      old_jwt = JwtService.encode(user)
+      expect(JwtService.decode_and_verify(old_jwt)).to eq(user)
+
+      token = user.send_reset_password_instructions
+      put user_password_path, params: {
+        user: {
+          reset_password_token: token,
+          password: "newpassword123",
+          password_confirmation: "newpassword123"
+        }
+      }
+
+      expect(response).to have_http_status(:success)
+      expect(JwtService.decode_and_verify(old_jwt)).to be_nil
+    end
+
+    it "does not revoke tokens when the reset fails" do
+      old_jwt = JwtService.encode(user)
+
+      put user_password_path, params: {
+        user: {
+          reset_password_token: "invalidtoken",
+          password: "newpassword123",
+          password_confirmation: "newpassword123"
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(JwtService.decode_and_verify(old_jwt)).to eq(user)
+    end
   end
 end

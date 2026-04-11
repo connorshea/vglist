@@ -228,6 +228,48 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       json = JSON.parse(response.body)
       expect(json['errors'].first['message']).to include("logged in")
     end
+
+    it "revokes previously issued JWTs after a successful password update", :aggregate_failures do
+      # Capture the token as it stood before the password change, then make
+      # sure a fresh token works (sanity check) before asserting that the
+      # pre-change token no longer decodes to the user.
+      old_token = jwt_token
+      expect(JwtService.decode_and_verify(old_token)).to eq(user)
+
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "password",
+          newPassword: "newpassword123",
+          newPasswordConfirmation: "newpassword123"
+        }.to_json
+      }, headers: auth_headers
+
+      expect(response).to have_http_status(:success)
+      data = JSON.parse(response.body).dig('data', 'updatePassword')
+      expect(data['errors']).to be_empty
+
+      # The user's jwt_version should have been bumped, invalidating the
+      # token issued before the password change.
+      expect(JwtService.decode_and_verify(old_token)).to be_nil
+    end
+
+    it "does not revoke tokens when the password update fails" do
+      old_token = jwt_token
+
+      post graphql_path, params: {
+        query: query,
+        variables: {
+          currentPassword: "wrongpassword",
+          newPassword: "newpassword123",
+          newPasswordConfirmation: "newpassword123"
+        }.to_json
+      }, headers: auth_headers
+
+      # Failed updates must not bump jwt_version — otherwise a wrong-password
+      # guess would log the real user out.
+      expect(JwtService.decode_and_verify(old_token)).to eq(user)
+    end
   end
 
   describe "exportLibrary mutation" do

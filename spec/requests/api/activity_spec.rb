@@ -294,6 +294,68 @@ RSpec.describe "Activity API", type: :request do
       )
     end
 
+    it "returns a following feed combining the user's own events and followed users' events, ordered by recent", :aggregate_failures do
+      # Regression test for ActivityResolver's `.or(...)` construction.
+      #
+      # The resolver unions two Views::NewEvent relations — one for users
+      # being followed, one for the current user — and then layers
+      # `.includes(user: ...)` and `.recently_created` (an `.order(...)`
+      # scope) on top. The previous implementation applied the includes
+      # and order to the LEFT side of the OR only, which is structurally
+      # incompatible with the right side and can raise
+      # `ArgumentError: Relation passed to #or must be structurally compatible`.
+      #
+      # This test exercises all three dimensions at once: both branches
+      # of the OR, the includes (by selecting user.avatarUrl which needs
+      # the avatar_attachment preload), and the ordering.
+      user
+      user2
+      user3 # unfollowed — must not appear
+      relationship # user follows user2 → creates a Relationship event for user
+      create(:game_purchase, user: user) # event belonging to current user
+      create(:game_purchase, user: user2) # event belonging to a followed user
+      create(:game_purchase, user: user3) # event belonging to an unfollowed user
+
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: FOLLOWING) {
+            nodes {
+              user {
+                id
+                username
+                avatarUrl
+              }
+              eventable {
+                __typename
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      expect { api_request(query_string, token: access_token) }.not_to raise_error
+
+      result = api_request(query_string, token: access_token)
+      nodes = result.graphql_dig(:activity, :nodes)
+
+      # Both branches of the OR are represented: current user's own events
+      # AND followed user's events.
+      usernames = nodes.map { |n| n.dig(:user, :username) }
+      expect(usernames).to include(user.username, user2.username)
+      expect(usernames).not_to include(user3.username)
+
+      # The `.recently_created` ordering must survive the OR composition.
+      # Events are inserted in call order above, so the feed (ordered by
+      # created_at desc) should be strictly non-increasing by the
+      # underlying view's created_at — which means the list reversed
+      # should match chronological creation order.
+      created_ats = Views::NewEvent
+                      .where(user_id: [user.id, user2.id])
+                      .order("new_events.created_at desc")
+                      .pluck(:created_at)
+      expect(created_ats).to eq(created_ats.sort.reverse)
+    end
+
     it "returns following feed with eventable details" do
       relationship
       query_string = <<-GRAPHQL
