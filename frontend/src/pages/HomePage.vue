@@ -84,7 +84,9 @@
         <div class="home-cta-blob home-cta-blob-1"></div>
         <div class="home-cta-blob home-cta-blob-2"></div>
         <h2 class="home-cta-title">Start tracking your games today</h2>
-        <p class="home-cta-subtitle">Lorem ipsum dolor sit amet foobar baz qux.</p>
+        <p class="home-cta-subtitle">
+          Create your free account to organize your collection, track what you've played, and discover new favorites.
+        </p>
         <router-link to="/signup" class="home-cta-btn">Create an account</router-link>
       </div>
     </section>
