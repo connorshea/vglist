@@ -1,4 +1,9 @@
-# Icons Skill
+---
+name: icons
+description: How to add icons to the vglist frontend using Lucide via lucide-vue-next. Use when adding, replacing, or reviewing icon usage in Vue components.
+---
+
+# Icons
 
 When adding icons to the vglist frontend, follow these rules:
 
