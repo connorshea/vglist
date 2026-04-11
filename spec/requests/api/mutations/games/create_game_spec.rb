@@ -162,27 +162,27 @@ RSpec.describe "CreateGame Mutation API", type: :request do
               },
               developers: {
                 nodes: [
-                  id: developer.id.to_s
+                  { id: developer.id.to_s }
                 ]
               },
               publishers: {
                 nodes: [
-                  id: publisher.id.to_s
+                  { id: publisher.id.to_s }
                 ]
               },
               platforms: {
                 nodes: [
-                  id: platform.id.to_s
+                  { id: platform.id.to_s }
                 ]
               },
               engines: {
                 nodes: [
-                  id: engine.id.to_s
+                  { id: engine.id.to_s }
                 ]
               },
               genres: {
                 nodes: [
-                  id: genre.id.to_s
+                  { id: genre.id.to_s }
                 ]
               },
               steamAppIds: [123, 456],
