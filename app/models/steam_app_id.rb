@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SteamAppId < ApplicationRecord
   belongs_to :game
 

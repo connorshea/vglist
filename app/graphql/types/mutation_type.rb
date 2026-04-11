@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class MutationType < Types::BaseObject
     description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."

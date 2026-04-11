@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :user do
     # Exclude id 1 to prevent flaky tests involving the behavior where users

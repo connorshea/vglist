@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::ResetApiToken < Mutations::BaseMutation
   description "Generate a new API token for the current user."
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Rails/PluckInWhere
 namespace :vglist do
   namespace :unmatched_games do

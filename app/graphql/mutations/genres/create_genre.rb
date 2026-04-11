@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Genres::CreateGenre < Mutations::BaseMutation
   description "Create a new game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
 

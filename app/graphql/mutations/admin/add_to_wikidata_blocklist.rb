@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
   description "Add game to Wikidata blocklist and remove Wikidata ID from any game that current has it. **Only available to admins using a first-party OAuth Application.**"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating admin..."
 
 # Create an account for admin usage.

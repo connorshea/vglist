@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGamePurchaseStores < ActiveRecord::Migration[6.0]
   def change
     create_table :game_purchase_stores do |t|

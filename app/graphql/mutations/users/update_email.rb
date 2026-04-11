@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::UpdateEmail < Mutations::BaseMutation
   description "Update the current user's email address. Requires current password for verification. " \
               "The new email must be confirmed before it takes effect."

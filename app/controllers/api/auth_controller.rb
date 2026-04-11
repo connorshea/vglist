@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class AuthController < ApplicationController
     skip_before_action :sign_out_banned_users, only: [:sign_in]

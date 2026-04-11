@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :spec do
   desc "Run the rspec test suite without the feature specs."
   task fast: :environment do

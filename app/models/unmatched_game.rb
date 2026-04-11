@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Model for tracking games that were imported via Steam Import (and potentially
 # other importers later) that couldn't be matched to a game on vglist.
 class UnmatchedGame < ApplicationRecord

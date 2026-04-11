@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Admin::RemoveFromUnmatchedGames < Mutations::BaseMutation
   description "Remove game from Unmatched Games list. **Only available to admins using a first-party OAuth Application.**"
 

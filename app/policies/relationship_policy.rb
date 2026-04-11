@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RelationshipPolicy < ApplicationPolicy
   attr_reader :follower
   attr_reader :followed

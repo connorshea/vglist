@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace "pg_search" do
   desc "Rebuild all pg_search indices."
   task 'multisearch:rebuild:all': :environment do

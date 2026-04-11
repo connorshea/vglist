@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class QueryType < Types::BaseObject
     description "Queries are GraphQL requests that can be used to request data from vglist's database."

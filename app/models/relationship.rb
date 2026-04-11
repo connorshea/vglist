@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Relationship < ApplicationRecord
   after_create :create_follow_event
 

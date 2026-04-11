@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Uses an image from the test suite.
 def avatar_fetcher
   File.open('./spec/factories/images/avatar.jpg')

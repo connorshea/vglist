@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class LiveSiteStatisticType < Types::BaseObject
     description <<~MARKDOWN

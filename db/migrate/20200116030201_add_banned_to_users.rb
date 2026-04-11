@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddBannedToUsers < ActiveRecord::Migration[6.0]
   def change
     add_column :users, :banned, :boolean, default: false, null: false

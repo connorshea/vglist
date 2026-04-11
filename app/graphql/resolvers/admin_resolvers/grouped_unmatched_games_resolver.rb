@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Resolvers::AdminResolvers
   class GroupedUnmatchedGamesResolver < Resolvers::BaseResolver
     type Types::GroupedUnmatchedGameType.connection_type, null: true

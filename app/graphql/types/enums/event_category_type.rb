@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class EventCategoryType < Types::BaseEnum
     description "Category types for events in the Activity Feed."

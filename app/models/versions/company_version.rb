@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Versions
   class CompanyVersion < PaperTrail::Version
     self.table_name = :company_versions

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Resolvers
   class ActivityResolver < Resolvers::BaseResolver
     type Types::EventType.connection_type, null: true

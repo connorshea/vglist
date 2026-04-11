@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :import do
   require 'net/http'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GamePurchaseStore < ApplicationRecord
   belongs_to :game_purchase
   belongs_to :store

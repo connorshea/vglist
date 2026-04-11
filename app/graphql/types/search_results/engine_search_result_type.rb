@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   module SearchResults
     class EngineSearchResultType < Types::BaseObject

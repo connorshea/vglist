@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
   description "Update a game in the current user's library."
 

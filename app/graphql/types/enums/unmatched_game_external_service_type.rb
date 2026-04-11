@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class UnmatchedGameExternalServiceType < Types::BaseEnum
     description "External services that an Unmatched Game can come from, currently only Steam."

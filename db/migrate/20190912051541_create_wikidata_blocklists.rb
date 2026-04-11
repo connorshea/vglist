@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateWikidataBlocklists < ActiveRecord::Migration[6.0]
   def change
     create_table :wikidata_blocklists do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Types::SearchResultUnion < Types::BaseUnion
   description "The various possible types of search result."
   possible_types Types::SearchResults::UserSearchResultType,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::BaseMutation < GraphQL::Schema::Mutation
   # This is used for generating payload types
   object_class Types::BaseObject

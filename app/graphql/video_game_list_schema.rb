@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VideoGameListSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)

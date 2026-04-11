@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PaperTrail
   class Version < ActiveRecord::Base # rubocop:disable Rails/ApplicationRecord
     include PaperTrail::VersionConcern

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Admin::RemoveFromSteamBlocklist < Mutations::BaseMutation
   description "Remove game from Steam blocklist. **Only available to admins using a first-party OAuth Application.**"
 

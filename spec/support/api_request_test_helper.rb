@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApiRequestTestHelper
   # @param query_string [String]
   # @param variables [Hash]

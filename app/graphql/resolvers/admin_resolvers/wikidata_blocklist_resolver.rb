@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Resolvers::AdminResolvers
   class WikidataBlocklistResolver < Resolvers::BaseResolver
     type Types::WikidataBlocklistEntryType.connection_type, null: true

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::FollowUser < Mutations::BaseMutation
   description "Follow a user."
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Resolvers
   class GamePurchaseResolver < Resolvers::BaseResolver
     type Types::GamePurchaseType, null: true

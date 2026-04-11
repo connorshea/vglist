@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Auth::RequestPasswordResetMutation < GraphQL::Schema::Mutation
   description "Request a password reset email."
 

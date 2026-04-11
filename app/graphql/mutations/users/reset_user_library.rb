@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
   description "Reset a user's game library. This will remove the user's entire game library from the database. **Only available to users resetting their own libraries using a first-party OAuth Application.**"
 

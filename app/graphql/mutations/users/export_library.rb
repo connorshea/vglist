@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::ExportLibrary < Mutations::BaseMutation
   description "Export the current user's game library as JSON."
 

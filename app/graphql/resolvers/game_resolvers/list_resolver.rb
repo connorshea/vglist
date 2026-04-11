@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Resolvers
   module GameResolvers
     class ListResolver < Resolvers::BaseResolver

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Auth::SignInMutation < GraphQL::Schema::Mutation
   description "Sign in with email and password. Returns a JWT token for authenticating subsequent requests."
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Resolvers
   module GenreResolvers
     class ListResolver < Resolvers::BaseResolver

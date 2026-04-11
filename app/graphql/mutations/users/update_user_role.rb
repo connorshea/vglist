@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::UpdateUserRole < Mutations::BaseMutation
   description "Update a user's role. **Only available to admins using a first-party OAuth Application.**"
 

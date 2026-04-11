@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class GamePurchaseCompletionStatusType < Types::BaseEnum
     description "Completion Status options for game purchases (games in a user's library)."

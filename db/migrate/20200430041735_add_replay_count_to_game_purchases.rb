@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Rails/SquishedSQLHeredocs
 class AddReplayCountToGamePurchases < ActiveRecord::Migration[6.0]
   def change

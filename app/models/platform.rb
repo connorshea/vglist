@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Platform < ApplicationRecord
   include GlobalSearchable
   include Searchable

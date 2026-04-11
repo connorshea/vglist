@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Stores::CreateStore < Mutations::BaseMutation
   description "Create a new game store. **Only available when using a first-party OAuth Application.**"
 
