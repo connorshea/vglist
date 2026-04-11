@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::ConnectSteam < Mutations::BaseMutation
   description "Connect a Steam account for a user. **Only available to users connecting their own Steam account when using a first-party OAuth application.**"
 

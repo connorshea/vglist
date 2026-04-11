@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task stats: "vglist:stats"
 
 namespace :vglist do

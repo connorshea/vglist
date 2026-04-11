@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Stores::DeleteStore < Mutations::BaseMutation
   description "Delete a game store. **Only available to moderators and admins using a first-party OAuth Application.**"
 

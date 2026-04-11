@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Games::UnfavoriteGame < Mutations::BaseMutation
   description "Remove a game from the current user's favorites."
 

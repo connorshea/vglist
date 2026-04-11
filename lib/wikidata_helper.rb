@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WikidataHelper
   require "addressable/template"
   require "open-uri"

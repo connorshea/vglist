@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class FavoriteGameType < Types::BaseObject
     description "This represents a game that has been favorited by a user."

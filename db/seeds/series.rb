@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating Series..."
 
 # Create 20 Series.

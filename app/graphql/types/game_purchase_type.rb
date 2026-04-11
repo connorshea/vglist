@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class GamePurchaseType < Types::BaseObject
     description "This represents a game that a user has in their library. It includes data like the user's rating for the game, comments, hours played, etc."

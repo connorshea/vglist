@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WikidataBlocklist < ApplicationRecord
   belongs_to :user, optional: true
 

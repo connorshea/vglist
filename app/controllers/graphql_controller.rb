@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GraphqlController < ApplicationController
   # Skip authentication for GraphQL — the schema itself handles auth for
   # individual queries/mutations. This allows unauthenticated mutations like

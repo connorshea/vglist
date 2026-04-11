@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class UserSortType < Types::BaseEnum
     description "Options for sorting users."

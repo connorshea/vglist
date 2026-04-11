@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Given a response body, parse the JSON and access the specific type of search
 # result we want.
 #

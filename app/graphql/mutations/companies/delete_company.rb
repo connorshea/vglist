@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Companies::DeleteCompany < Mutations::BaseMutation
   description "Delete a game company. **Only available to moderators and admins using a first-party OAuth Application.**"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Auth::SignUpMutation < GraphQL::Schema::Mutation
   description "Create a new user account. The user must confirm their email before signing in."
 

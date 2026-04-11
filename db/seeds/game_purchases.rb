@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating Game Purchases..."
 
 # Add 3 game to each user's libraries.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateEventsFavoriteGameEvents < ActiveRecord::Migration[6.1]
   def change
     create_table :events_favorite_game_events, id: :uuid do |t|

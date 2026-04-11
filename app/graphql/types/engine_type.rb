@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class EngineType < Types::BaseObject
     description "Video game engines"

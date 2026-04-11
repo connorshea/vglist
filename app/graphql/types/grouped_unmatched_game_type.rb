@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class GroupedUnmatchedGameType < Types::BaseObject
     description "This represents a game that was imported from a third party service by a user, but which couldn't be matched to a game in the vglist database."

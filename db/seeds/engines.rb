@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating Engines..."
 
 10.times do

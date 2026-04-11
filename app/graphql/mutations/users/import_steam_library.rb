@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
   description "Import's the Steam library of the user. **Only available to users importing their own Steam library when using a first-party OAuth application.**"
 

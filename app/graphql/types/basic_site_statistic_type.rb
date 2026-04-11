@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class BasicSiteStatisticType < Types::BaseObject
     description "Basic site statistics."

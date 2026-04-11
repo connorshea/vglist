@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Uses a cover image from the test suite.
 def cover_fetcher
   File.open('./spec/factories/images/crysis.jpg')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameGamePurchaseEventsToEvents < ActiveRecord::Migration[6.0]
   # Turn the game_purchase_events table into a table named events and make
   # it polymorphic to support other event types.

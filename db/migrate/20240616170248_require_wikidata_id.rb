@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RequireWikidataId < ActiveRecord::Migration[7.1]
   def change
     change_column_null :genres, :wikidata_id, false

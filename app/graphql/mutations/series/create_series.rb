@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Series::CreateSeries < Mutations::BaseMutation
   description "Create a new game series. **Only available to moderators and admins using a first-party OAuth Application.**"
 

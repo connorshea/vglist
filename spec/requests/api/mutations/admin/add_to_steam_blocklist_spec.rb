@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe "Add to Steam Blocklist Mutation API", type: :request do

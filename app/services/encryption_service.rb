@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A service for encrypting/decrypting values.
 #
 # Based on this blog post:

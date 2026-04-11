@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Genre < ApplicationRecord
   include GlobalSearchable
   include Searchable

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Defines defaults for all policies.
 class ApplicationPolicy
   class Scope

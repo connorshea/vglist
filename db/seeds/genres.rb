@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating Genres..."
 
 # Create 20 unique genres.

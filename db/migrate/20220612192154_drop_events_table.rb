@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropEventsTable < ActiveRecord::Migration[6.1]
   CONSTRAINT = <<~SQL.squish
     (event_category IN (0, 1) AND eventable_type = 'GamePurchase')

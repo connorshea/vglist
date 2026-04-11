@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Games::UpdateGame < Mutations::BaseMutation
   description "Update an existing game. **Only available to moderators and admins using a first-party OAuth Application.**"
 

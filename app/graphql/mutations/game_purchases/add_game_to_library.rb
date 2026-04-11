@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
   description "Add a game to the current user's library."
 

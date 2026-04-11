@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GenrePolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :genre

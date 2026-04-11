@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class GenreType < Types::BaseObject
     description "Video game genres"

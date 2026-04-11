@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A service for merging two games together.
 class GameMergeService
   attr_accessor :game_a

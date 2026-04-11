@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Service for logging unmatched games from Steam Imports performed by users.
 # This lets us keep track of the most common missed games we should add to
 # the database/add Steam IDs to, or what Steam apps should be added to a

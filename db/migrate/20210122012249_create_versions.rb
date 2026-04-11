@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This migration creates the various `versions` tables, the only schema
 # PaperTrail requires.
 # All other migrations PT provides are optional.

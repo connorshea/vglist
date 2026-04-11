@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   class FavoriteGameEvent < ApplicationRecord
     self.table_name = 'events_favorite_game_events'

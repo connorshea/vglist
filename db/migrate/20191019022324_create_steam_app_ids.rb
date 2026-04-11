@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSteamAppIds < ActiveRecord::Migration[6.0]
   def change
     # No need for timestamps on this table.

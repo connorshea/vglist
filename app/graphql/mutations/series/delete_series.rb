@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Series::DeleteSeries < Mutations::BaseMutation
   description "Delete a game series. **Only available to moderators and admins using a first-party OAuth Application.**"
 

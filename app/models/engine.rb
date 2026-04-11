@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Engine < ApplicationRecord
   include GlobalSearchable
   include Searchable

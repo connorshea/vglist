@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Versions
   class PlatformVersion < PaperTrail::Version
     self.table_name = :platform_versions

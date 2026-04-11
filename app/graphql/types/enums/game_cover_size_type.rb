@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class GameCoverSizeType < Types::BaseEnum
     description <<~DESCRIPTION.squish

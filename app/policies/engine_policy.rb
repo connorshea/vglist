@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnginePolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :engine

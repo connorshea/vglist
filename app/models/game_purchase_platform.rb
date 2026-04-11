@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GamePurchasePlatform < ApplicationRecord
   belongs_to :game_purchase
   belongs_to :platform

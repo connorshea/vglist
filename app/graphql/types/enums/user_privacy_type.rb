@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class UserPrivacyType < Types::BaseEnum
     description "An enum describing the privacy level of a given user. Most users will be `PUBLIC_ACCOUNT`."

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Events
   class UserEvent < ApplicationRecord
     self.table_name = 'events_user_events'

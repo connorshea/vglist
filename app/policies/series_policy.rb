@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SeriesPolicy < ApplicationPolicy
   attr_reader :user
   attr_reader :series

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating Platforms..."
 
 # Create 20 Platforms.

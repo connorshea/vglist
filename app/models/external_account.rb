@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExternalAccount < ApplicationRecord
   belongs_to :user
 

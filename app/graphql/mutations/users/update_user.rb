@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::UpdateUser < Mutations::BaseMutation
   description "Update the current user's profile."
 

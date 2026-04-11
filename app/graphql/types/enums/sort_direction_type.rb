@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class SortDirectionType < Types::BaseEnum
     description "Direction for sorting a list of records."

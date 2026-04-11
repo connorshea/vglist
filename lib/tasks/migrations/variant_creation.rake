@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Rails 6.1 changes the way ActiveStorage works so that variants are
 # tracked in the database. The intent of this task is to create the
 # necessary variants for all game covers and user avatars in our database.

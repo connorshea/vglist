@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCompletionStatusToGamePurchases < ActiveRecord::Migration[5.2]
   def change
     add_column :game_purchases, :completion_status, :integer

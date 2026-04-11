@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # rubocop:disable Rails/TimeZone
 LANGUAGE_CODES_FOR_LABELS = ['en', 'mul'].freeze
 ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze

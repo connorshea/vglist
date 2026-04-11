@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::UnfollowUser < Mutations::BaseMutation
   description "Unfollow a user."
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :import do
   require 'sparql/client'
   require 'wikidata_helper'

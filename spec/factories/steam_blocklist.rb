@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :steam_blocklist do
     steam_app_id { rand(0..100_000) }

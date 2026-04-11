@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 puts "Creating Companies..."
 
 20.times do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GlobalSearchable
   extend ActiveSupport::Concern
   include PgSearch::Model

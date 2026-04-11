@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::Users::UpdatePassword < Mutations::BaseMutation
   description "Update the current user's password. Requires current password for verification."
 

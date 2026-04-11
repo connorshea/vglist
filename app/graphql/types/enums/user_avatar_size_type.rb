@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Enums
   class UserAvatarSizeType < Types::BaseEnum
     description "The size of the user avatar."

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :vglist do
   namespace :update do
     desc "Create an entry in the statistics table for the current data in the database"

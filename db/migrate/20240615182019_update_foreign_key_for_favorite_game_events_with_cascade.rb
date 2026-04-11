@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateForeignKeyForFavoriteGameEventsWithCascade < ActiveRecord::Migration[7.1]
   def change
     # Remove the existing foreign key

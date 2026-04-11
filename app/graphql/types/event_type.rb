@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class EventType < Types::BaseObject
     connection_type_class(Types::EventConnectionType)
