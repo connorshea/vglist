@@ -40,7 +40,7 @@ module Types
 
     # Get the number of purchases for the game where rating is not nil.
     def rating_count
-      @object.game_purchases.where.not(rating: nil).count
+      rating_count_map[@object.id] || 0
     end
 
     # Get the Steam App ID values as an array.
@@ -86,6 +86,13 @@ module Types
     def favorited_game_ids
       @context[:current_user_favorited_game_ids] ||=
         @context[:current_user].favorite_games.pluck(:game_id).to_set
+    end
+
+    # Cache rating counts for all games in a single GROUP BY query so
+    # rating_count doesn't fire a separate COUNT per game.
+    def rating_count_map
+      @context[:game_rating_count_map] ||=
+        GamePurchase.where.not(rating: nil).group(:game_id).count
     end
   end
 end

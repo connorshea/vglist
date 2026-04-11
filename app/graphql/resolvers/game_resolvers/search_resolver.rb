@@ -11,6 +11,8 @@ module Resolvers
 
       def resolve(query:)
         Game.search(query)
+            .includes(:series, :developers, :publishers, :engines, :genres, :platforms, :steam_app_ids)
+            .with_attached_cover
       end
     end
   end

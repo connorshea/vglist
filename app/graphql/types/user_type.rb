@@ -75,10 +75,17 @@ module Types
     def followed?
       return nil if @context[:current_user].nil? || @context[:current_user].id == @object.id
 
-      @context[:current_user].following.exists?(id: @object.id)
+      followed_user_ids.include?(@object.id)
     end
 
     private
+
+    # Cache the current user's followed user IDs for the duration of the
+    # request, so isFollowed doesn't fire a separate EXISTS query per user.
+    def followed_user_ids
+      @context[:current_user_followed_user_ids] ||=
+        @context[:current_user].following.pluck(:id).to_set
+    end
 
     def user_visible?
       # Short-circuit if the user has a public account, to prevent instantiating

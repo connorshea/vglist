@@ -10,7 +10,7 @@ module Resolvers
       argument :query, String, required: true, description: "Username to search by."
 
       def resolve(query:)
-        User.search(query)
+        User.search(query).with_attached_avatar
       end
     end
   end
