@@ -16,7 +16,7 @@ jobs:
           ruby-version: "3.4.9"
           bundler-cache: true
 
-      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - uses: pnpm/action-setup@b307475762933b98ed359c036b0e51f26b63b74b # v5.0.0
         with:
           package_json_file: frontend/package.json
 
