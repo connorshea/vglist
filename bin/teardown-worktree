@@ -65,22 +65,22 @@ def parse_env_file(path)
   end
 end
 
-def db_host
-  ENV.fetch("VGLIST_DATABASE_HOST", "localhost")
-end
+def rails_db_drop(rails_env, dev_db, test_db)
+  puts "  - dropping (RAILS_ENV=#{rails_env})"
+  child_env = {
+    "RAILS_ENV" => rails_env,
+    "VGLIST_DATABASE_NAME" => dev_db,
+    "VGLIST_TEST_DATABASE_NAME" => test_db,
+    "VGLIST_DATABASE_PASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password"),
+    "VGLIST_DATABASE_HOST" => ENV.fetch("VGLIST_DATABASE_HOST", "localhost"),
+    "DISABLE_SPRING" => "1"
+  }
+  out, err, status = run("bundle", "exec", "rails", "db:drop", env: child_env)
+  return if status.success?
 
-def pg_env
-  { "PGPASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password") }
-end
-
-def dropdb(name)
-  out, err, status = run("dropdb", "--if-exists", "-h", db_host, "-U", "postgres", name, env: pg_env)
-  unless status.success?
-    warn out unless out.empty?
-    warn err unless err.empty?
-    die "dropdb #{name} failed"
-  end
-  puts "  - dropped #{name}"
+  warn out unless out.empty?
+  warn err unless err.empty?
+  die "rails db:drop failed (RAILS_ENV=#{rails_env})"
 end
 
 def confirm!(prompt)
@@ -125,8 +125,8 @@ confirm!("Continue?")
 
 puts ""
 puts "Dropping databases:"
-dropdb(dev_db)
-dropdb(test_db)
+rails_db_drop("development", dev_db, test_db)
+rails_db_drop("test",        dev_db, test_db)
 
 puts ""
 puts "Removing env files:"
