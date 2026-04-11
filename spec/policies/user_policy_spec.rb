@@ -323,7 +323,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:user) }
     let(:user) { create(:private_user) }
 
-    before do
+    before(:each) do
       create(:relationship, follower: user, followed: current_user)
     end
 
@@ -346,7 +346,7 @@ RSpec.describe UserPolicy, type: :policy do
     let(:current_user) { create(:user) }
     let(:user) { create(:private_user) }
 
-    before do
+    before(:each) do
       create(:relationship, follower: current_user, followed: user)
     end
 
