@@ -17,6 +17,9 @@ class Mutations::Users::UpdatePassword < Mutations::BaseMutation
     return { user: nil, errors: ["New password and confirmation do not match."] } if new_password != new_password_confirmation
 
     if user.update(password: new_password, password_confirmation: new_password_confirmation)
+      # Invalidate all previously issued JWTs so tokens from before the
+      # password change (including any attacker-held token) stop working.
+      JwtService.revoke_all!(user)
       { user: user, errors: [] }
     else
       { user: nil, errors: user.errors.full_messages }

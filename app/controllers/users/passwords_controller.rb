@@ -25,6 +25,9 @@ class Users::PasswordsController < Devise::PasswordsController
     skip_authorization
     self.resource = resource_class.reset_password_by_token(resource_params)
     if resource.errors.empty?
+      # Invalidate all previously issued JWTs so any token issued before the
+      # reset (including any attacker-held token) stops working.
+      JwtService.revoke_all!(resource)
       render json: { message: "Password has been reset successfully." }
     else
       render json: { errors: resource.errors.full_messages }, status: :unprocessable_content
