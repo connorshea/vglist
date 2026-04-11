@@ -30,14 +30,15 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn install --frozen-lockfile
-      - run: yarn run fmt:check
-      - run: yarn lint
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run fmt:check
+      - run: pnpm run lint
 
   frontend_typecheck:
     runs-on: ubuntu-latest
@@ -46,13 +47,14 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn install --frozen-lockfile
-      - run: yarn run typecheck
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
 
   frontend_build:
     runs-on: ubuntu-latest
@@ -61,13 +63,14 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
 
   graphql_lint:
     runs-on: ubuntu-latest
@@ -92,21 +95,21 @@ jobs:
         with:
           ruby-version: "3.4.9"
           bundler-cache: true
-      - uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "22"
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
-      - run: yarn --cwd frontend install --frozen-lockfile
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm --dir frontend install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load
       - run: bundle exec rake graphql:schema:idl
-      - run: yarn --cwd frontend run lint:schema
+      - run: pnpm --dir frontend run lint:schema
       - name: Verify codegen is up to date
         run: |
-          yarn --cwd frontend run codegen
+          pnpm --dir frontend run codegen
           git diff --exit-code frontend/src/types/graphql.ts
 
   factory_bot_lint:

@@ -28,7 +28,8 @@
 !/storage/.keep
 
 /node_modules
-/yarn-error.log
+/pnpm-debug.log*
+.pnpm-store/
 
 /public/assets
 /public/index.html
@@ -39,8 +40,6 @@
 /public/packs
 /public/packs-test
 /node_modules
-yarn-debug.log*
-.yarn-integrity
 coverage/
 
 .DS_Store

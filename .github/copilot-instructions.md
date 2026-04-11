@@ -16,13 +16,13 @@
 ## Developer Workflows
 
 - **Setup**: See `CONTRIBUTING.md` for environment setup. Key commands:
-  - `bundle install`, `yarn install`, `bundle exec rails db:setup`
+  - `bundle install`, `pnpm --dir frontend install`, `bundle exec rails db:setup`
   - `./bin/dev` (starts Rails + Webpack dev server, an AI agent should not ever run this on a developer's local machine)
 - **Testing**: RSpec for backend (`bundle exec rspec`), Vue/TypeScript tests in `spec/` (see `rails_helper.rb`, `spec_helper.rb`).
-- **Type Checking**: Use `yarn run typecheck` and `yarn run typecheck:vue` for TypeScript/Vue type checks.
+- **Type Checking**: Use `pnpm run typecheck` for TypeScript/Vue type checks.
 - **Imports**: Data import via Rake tasks.
 - **GraphQL**: Schema in `app/graphql/`, queries/mutations in frontend via Apollo or direct fetch.
-- **Yarn**: Use `yarn` for managing JS dependencies, scripts in `package.json`. Do not use npm.
+- **pnpm**: Use `pnpm` for managing JS dependencies, scripts in `package.json`. Do not use npm or yarn.
 
 ## Project-Specific Patterns
 

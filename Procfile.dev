@@ -1,2 +1,2 @@
 api: bin/rails server -p ${PORT:-3000}
-web: cd frontend && yarn dev
+web: cd frontend && pnpm run dev

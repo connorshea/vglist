@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "setup": "./bin/setup-worktree && bundle install && yarn --cwd frontend install",
+        "setup": "./bin/setup-worktree && bundle install && pnpm --dir frontend install",
         "run": "./bin/dev",
         "archive": "./bin/teardown-worktree --yes"
     },

@@ -8,7 +8,7 @@ fi
 # Install frontend dependencies if needed
 if [ ! -d frontend/node_modules ]; then
   echo "Installing frontend dependencies..."
-  yarn --cwd frontend install
+  pnpm --dir frontend install
 fi
 
 # Load worktree-local overrides if present so Foreman exports them to children.
