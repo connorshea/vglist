@@ -19,10 +19,9 @@ RSpec.describe Events::FavoriteGameEvent, type: :model do
   end
 
   describe "Enums" do
-    it {
-      should define_enum_for(:event_category).with_values(
-        favorite_game: 2
-      )
-    }
+    it 'has an event_category enum' do
+      expect(favorite_game_event).to define_enum_for(:event_category)
+        .with_values(favorite_game: 2)
+    end
   end
 end

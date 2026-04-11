@@ -19,10 +19,9 @@ RSpec.describe Events::RelationshipEvent, type: :model do
   end
 
   describe "Enums" do
-    it {
-      should define_enum_for(:event_category).with_values(
-        following: 4
-      )
-    }
+    it 'has an event_category enum' do
+      expect(relationship_event).to define_enum_for(:event_category)
+        .with_values(following: 4)
+    end
   end
 end

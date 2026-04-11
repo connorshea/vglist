@@ -19,10 +19,9 @@ RSpec.describe Events::UserEvent, type: :model do
   end
 
   describe "Enums" do
-    it {
-      should define_enum_for(:event_category).with_values(
-        new_user: 3
-      )
-    }
+    it 'has an event_category enum' do
+      expect(user_event).to define_enum_for(:event_category)
+        .with_values(new_user: 3)
+    end
   end
 end

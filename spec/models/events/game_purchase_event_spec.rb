@@ -19,11 +19,9 @@ RSpec.describe Events::GamePurchaseEvent, type: :model do
   end
 
   describe "Enums" do
-    it {
-      should define_enum_for(:event_category).with_values(
-        add_to_library: 0,
-        change_completion_status: 1
-      )
-    }
+    it 'has an event_category enum' do
+      expect(game_purchase_event).to define_enum_for(:event_category)
+        .with_values(add_to_library: 0, change_completion_status: 1)
+    end
   end
 end
