@@ -2,7 +2,7 @@
     "scripts": {
         "setup": "./bin/setup-worktree && bundle install && yarn --cwd frontend install",
         "run": "./bin/dev",
-        "archive": "./bin/teardown-worktree"
+        "archive": "./bin/teardown-worktree --yes"
     },
     "runScriptMode": "concurrent"
 }

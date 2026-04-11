@@ -86,7 +86,12 @@ end
 def confirm!(prompt)
   return if ASSUME_YES
 
+  unless $stdin.tty?
+    die "stdin is not a terminal; re-run with --yes (or -y) to confirm non-interactively"
+  end
+
   print "#{prompt} [y/N] "
+  $stdout.flush
   answer = $stdin.gets&.strip&.downcase
   die "aborted" unless %w[y yes].include?(answer)
 end
