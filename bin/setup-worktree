@@ -117,6 +117,23 @@ def write_env_file(path, vars)
   File.write(path, body)
 end
 
+def database_has_tables?(rails_env, dev_db, test_db)
+  child_env = {
+    "RAILS_ENV" => rails_env,
+    "VGLIST_DATABASE_NAME" => dev_db,
+    "VGLIST_TEST_DATABASE_NAME" => test_db,
+    "VGLIST_DATABASE_PASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password"),
+    "VGLIST_DATABASE_HOST" => ENV.fetch("VGLIST_DATABASE_HOST", "localhost"),
+    "DISABLE_SPRING" => "1"
+  }
+  out, _err, status = run(
+    "bundle", "exec", "rails", "runner",
+    "puts ActiveRecord::Base.connection.tables.any?",
+    env: child_env
+  )
+  status.success? && out.strip == "true"
+end
+
 def rails_db_task(task, rails_env, dev_db, test_db)
   puts "  - #{task} (RAILS_ENV=#{rails_env})"
   child_env = {
@@ -196,8 +213,16 @@ rails_db_task("db:create", "test",        dev_db, test_db)
 
 puts ""
 puts "Loading schema:"
-rails_db_task("db:schema:load", "development", dev_db, test_db)
-rails_db_task("db:schema:load", "test",        dev_db, test_db)
+if database_has_tables?("development", dev_db, test_db)
+  puts "  - db:schema:load (RAILS_ENV=development) — skipped, tables already exist"
+else
+  rails_db_task("db:schema:load", "development", dev_db, test_db)
+end
+if database_has_tables?("test", dev_db, test_db)
+  puts "  - db:schema:load (RAILS_ENV=test) — skipped, tables already exist"
+else
+  rails_db_task("db:schema:load", "test",        dev_db, test_db)
+end
 
 puts ""
 puts "Worktree configured:"
