@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "Stop",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run typecheck || exit 2",
+            "timeout": 25,
+            "statusMessage": "Running yarn typecheck"
+          },
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run lint || exit 2",
+            "timeout": 10,
+            "statusMessage": "Running yarn lint"
+          },
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run fmt:check || exit 2",
+            "timeout": 15,
+            "statusMessage": "Running yarn fmt:check"
+          },
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && bundle exec rubocop --cache false || exit 2",
+            "timeout": 30,
+            "statusMessage": "Running rubocop"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "managing-dependencies@managing-dependencies": true
+  }
+}

@@ -1,0 +1,80 @@
+# Custom Caddyfile used by Railpack instead of its generated default.
+# Railpack detects this file at the project root (the frontend/ rootDirectory
+# for the vglist-frontend service) and serves the Vite build with it.
+#
+# Most of this mirrors Railpack's generated Caddyfile for Vite static sites:
+# https://railpack.com/languages/node
+# The reason for overriding is the `header` block below, which adds a full
+# Content-Security-Policy plus other hardening headers. Keep the non-CSP
+# blocks in sync with upstream when bumping Railpack.
+
+{
+	admin off
+	persist_config off
+	auto_https off
+
+	log {
+		format json
+	}
+
+	servers {
+		# Trust Railway's edge proxy so request logs get the real client IP.
+		trusted_proxies static private_ranges 100.0.0.0/8
+	}
+}
+
+:{$PORT:80} {
+	log {
+		format json
+	}
+
+	respond /health 200
+
+	header {
+		# Baseline hardening (matches Railpack's defaults).
+		X-Content-Type-Options "nosniff"
+		-Server
+
+		# Additional hardening.
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+		# Content Security Policy (enforced, not report-only).
+		#
+		# - script-src 'self': Vite emits hashed ES module bundles with no
+		#   inline <script> tags, so 'self' is sufficient.
+		# - style-src 'self' 'unsafe-inline' + style-src-attr 'unsafe-inline':
+		#   Vue's :style bindings render inline style="" attributes at runtime.
+		#   'unsafe-inline' on style-src-attr covers those; style-src stays
+		#   strict apart from Vite's build-time CSS injection which also needs
+		#   it. We never render untrusted HTML, so this is low-risk.
+		# - img-src includes the Digital Ocean Spaces bucket that serves game
+		#   covers and user avatars.
+		# - connect-src uses {$API_ORIGIN} (set per-environment on the service)
+		#   so the cutover from vglist-production.up.railway.app to
+		#   api.vglist.co is a one-variable change. *.sentry.io is whitelisted
+		#   preemptively for the browser Sentry SDK envelope endpoint.
+		# - frame-ancestors 'none' replaces the old X-Frame-Options: DENY
+		#   (only works as a real header, not via <meta>).
+		# - upgrade-insecure-requests auto-upgrades any stray http:// asset
+		#   URLs (e.g. from older cached data) to https://.
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://vglist.sfo2.digitaloceanspaces.com; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://vglist-production.up.railway.app} https://*.sentry.io; upgrade-insecure-requests"
+	}
+
+	root * /app/dist
+
+	file_server {
+		hide .git
+		hide .env*
+	}
+
+	encode {
+		gzip
+		zstd
+	}
+
+	# SPA fallback — unknown paths serve index.html so Vue Router can handle
+	# client-side routing.
+	try_files {path} {path}.html {path}/index.html /index.html
+}

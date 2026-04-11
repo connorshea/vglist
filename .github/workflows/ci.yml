@@ -23,39 +23,51 @@ jobs:
           bundler-cache: true
       - run: bundle exec rubocop
 
-  oxfmt:
+  frontend_lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
+          cache-dependency-path: frontend/yarn.lock
       - run: yarn install --frozen-lockfile
       - run: yarn run fmt:check
-
-  oxlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: yarn
-      - run: yarn install --frozen-lockfile
       - run: yarn lint
 
-  typescript:
+  frontend_typecheck:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: yarn
+          cache-dependency-path: frontend/yarn.lock
       - run: yarn install --frozen-lockfile
-      - run: yarn run tsc --noEmit
-      - run: yarn run vue-tsc --noEmit
+      - run: yarn run typecheck
+
+  frontend_build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
 
   graphql_lint:
     runs-on: ubuntu-latest
@@ -84,12 +96,17 @@ jobs:
         with:
           node-version: "22"
           cache: yarn
-      - run: yarn install --frozen-lockfile
+          cache-dependency-path: frontend/yarn.lock
+      - run: yarn --cwd frontend install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load
       - run: bundle exec rake graphql:schema:idl
-      - run: yarn graphql-schema-linter schema.graphql
+      - run: yarn --cwd frontend run lint:schema
+      - name: Verify codegen is up to date
+        run: |
+          yarn --cwd frontend run codegen
+          git diff --exit-code frontend/src/types/graphql.ts
 
   factory_bot_lint:
     runs-on: ubuntu-latest
@@ -116,11 +133,6 @@ jobs:
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: yarn
-      - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load
@@ -153,83 +165,24 @@ jobs:
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: yarn
-      - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load
       - run: bundle exec rails zeitwerk:check
-      - run: bundle exec rake assets:precompile
-      - run: bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb"
+      - run: bundle exec rspec
       - name: Coverage summary
         if: always()
         run: |
           if [ -f coverage/.last_run.json ]; then
             covered=$(ruby -rjson -e 'puts JSON.parse(File.read("coverage/.last_run.json"))["result"]["line"]')
-            echo "## Code Coverage (Unit Tests)" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Code Coverage" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
           fi
       - uses: actions/upload-artifact@v6.0.0
         if: always()
         with:
-          name: coverage-report-unit
-          path: coverage/
-          retention-days: 10
-
-  rspec_features:
-    runs-on: ubuntu-latest
-    env:
-      COVERAGE_COMMAND_NAME: "RSpec:Features"
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_DB: ci_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ""
-          POSTGRES_HOST_AUTH_METHOD: trust
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v6
-      - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
-      - uses: ruby/setup-ruby@v1.288.0
-        with:
-          ruby-version: "3.4.6"
-          bundler-cache: true
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: yarn
-      - run: yarn install --frozen-lockfile
-      - run: cp config/database.yml.ci config/database.yml
-      - run: bundle exec rails db:create
-      - run: bundle exec rails db:schema:load
-      - run: bundle exec rake assets:precompile
-      - run: bundle exec rspec spec/features
-      - name: Coverage summary
-        if: always()
-        run: |
-          if [ -f coverage/.last_run.json ]; then
-            covered=$(ruby -rjson -e 'puts JSON.parse(File.read("coverage/.last_run.json"))["result"]["line"]')
-            echo "## Code Coverage (Feature Tests)" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "**${covered}%** line coverage" >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: coverage-report-features
+          name: coverage-report
           path: coverage/
           retention-days: 10
 
@@ -256,11 +209,6 @@ jobs:
         with:
           ruby-version: "3.4.6"
           bundler-cache: true
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-          cache: yarn
-      - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
       - run: bundle exec rails db:schema:load

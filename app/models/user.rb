@@ -12,7 +12,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable
 
-  has_many :game_purchases
+  has_many :game_purchases, dependent: :destroy
   has_many :games, through: :game_purchases
 
   # Relationship to FavoriteGame records.
@@ -43,11 +43,9 @@ class User < ApplicationRecord
   has_many :new_events, class_name: 'Views::NewEvent'
   has_many :game_purchase_events, class_name: 'Events::GamePurchaseEvent', dependent: :destroy
   has_many :relationship_events, class_name: 'Events::RelationshipEvent', dependent: :destroy
-  has_many :user_events, class_name: 'Events::UserEvent', dependent: :destroy
   has_many :favorite_game_events, class_name: 'Events::FavoriteGameEvent', dependent: :destroy
 
-  # Users have an event for their creation.
-  # New events
+  # Users have an event for their creation (user is the eventable).
   has_many :user_events, foreign_key: :eventable_id, inverse_of: :eventable, class_name: 'Events::UserEvent', dependent: :destroy
 
   # Users create wikidata and steam blocklist entries.
@@ -150,16 +148,6 @@ class User < ApplicationRecord
   global_searchable :username
   searchable :username
 
-  def api_token
-    return nil if encrypted_api_token.nil?
-
-    EncryptionService.decrypt(encrypted_api_token)
-  end
-
-  def api_token=(value)
-    self.encrypted_api_token = EncryptionService.encrypt(value)
-  end
-
   # Make sure the user isn't banned when logging in with Devise.
   def active_for_authentication?
     super && !banned?
@@ -171,15 +159,32 @@ class User < ApplicationRecord
     banned? ? :account_banned : super
   end
 
+  # Generate and persist a new API token for this user. Returns the plaintext
+  # token on success or `nil` if the save fails (errors are available via
+  # `user.errors`). This is the only public entry point for reading a freshly
+  # generated token — the raw accessor is private so that plaintext tokens
+  # can't be accidentally pulled off a persisted user elsewhere in the app.
+  def reset_api_token
+    token = SecureRandom.alphanumeric(40)
+    self.api_token = token
+    save ? token : nil
+  end
+
   # Verify that the token passed into the application matches the user's
   # actual token.
   def verify_api_token!(token)
-    # Return false if the user attempts to pass a nil token. This prevents
-    # other users from hijacking an account if the account doesn't have
-    # a token.
-    return false if token.nil?
+    # Return false if either the provided token or the user's stored token
+    # is blank. This prevents other users from hijacking an account that
+    # doesn't have a token, and avoids secure_compare crashing on `nil`
+    # (it calls `bytesize` on both arguments).
+    return false if token.blank?
 
-    api_token == token
+    user_token = api_token
+    return false if user_token.blank?
+
+    # `secure_compare` does its own bytesize check before the constant-time
+    # comparison, so no extra length guard is required here.
+    ActiveSupport::SecurityUtils.secure_compare(user_token, token)
   end
 
   # Generate an avatar variant with a specific size, size must be a Symbol
@@ -189,6 +194,23 @@ class User < ApplicationRecord
   end
 
   private
+
+  # Decrypt and return the raw API token. Private so the plaintext token
+  # can't be accidentally exposed via a serializer, logger, or API field —
+  # callers that need to read it should go through `verify_api_token!`.
+  def api_token
+    return nil if encrypted_api_token.nil?
+
+    EncryptionService.decrypt(encrypted_api_token)
+  end
+
+  # Private so API tokens can only be set via `reset_api_token`, which
+  # generates a secure random value. This prevents mass-assignment (e.g.
+  # `user.update(api_token: ...)`) from silently encrypting a caller-supplied
+  # value.
+  def api_token=(value)
+    self.encrypted_api_token = EncryptionService.encrypt(value)
+  end
 
   # Usernames that are reserved so they cannot be used.
   RESERVED_USERNAMES = %w[

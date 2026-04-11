@@ -1,0 +1,7 @@
+[build]
+builder = "railpack"
+watchPatterns = ["frontend/**"]
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 60

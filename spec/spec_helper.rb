@@ -26,16 +26,12 @@ SimpleCov.start :rails do
 end
 require 'pundit/rspec'
 require 'pundit/matchers'
-require 'capybara/rspec'
 require 'active_storage_validations/matchers'
 require 'webmock/rspec'
 require 'rspec/rebound'
 
 WebMock.disable_net_connect!(
-  allow_localhost: true,
-  # We have to allow this URL because the webdrivers gem pulls the
-  # ChromeDriver down for our feature tests.
-  allow: ['https://googlechromelabs.github.io', 'https://storage.googleapis.com', 'chromedriver.storage.googleapis.com']
+  allow_localhost: true
 )
 
 RSpec.configure do |config|
@@ -119,19 +115,8 @@ RSpec.configure do |config|
   # Add ActiveStorageValidations matchers to Rspec tests.
   config.include ActiveStorageValidations::Matchers, type: :model
 
-  # run retry only on features
-  config.around :each, type: :feature do |ex|
-    ex.run_with_retry retry: 2
-  end
-
   # show retry status in spec process
   config.verbose_retry = true
   # show exception that triggers a retry if verbose_retry is set to true
   config.display_try_failure_messages = true
-
-  # callback to be run between retries
-  config.retry_callback = proc do |ex|
-    # run some additional clean up task - can be filtered by example metadata
-    Capybara.reset! if ex.metadata[:js]
-  end
 end

@@ -47,7 +47,7 @@ Rails.application.configure do
   # healthcheck (which hits the container directly over HTTP) gets a 200.
   config.ssl_options = {
     hsts: { preload: true },
-    redirect: { exclude: ->(request) { request.path == "/up" } }
+    redirect: { exclude: ->(request) { request.path == "/health" } }
   }
 
   # "info" includes generic and useful information about system operation, but avoids logging too much
@@ -76,7 +76,9 @@ Rails.application.configure do
 
   # NOTE: This is also used to set default_url_options for the whole rails app in another initializer.
   # Be careful if you touch it.
-  config.action_mailer.default_url_options = { host: 'vglist.co' }
+  # API_HOST should be the backend/API domain (e.g. api.vglist.co) so that
+  # Devise email links (confirmation, password reset) route through Rails.
+  config.action_mailer.default_url_options = { host: ENV.fetch('API_HOST', 'vglist.co'), protocol: 'https' }
 
   config.action_mailer.default_options = {
     from: "vglist <noreply@mail.vglist.co>"

@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vglist-api",
+      "runtimeExecutable": "zsh",
+      "runtimeArgs": ["-lic", "bundle exec rails server"],
+      "port": 3000
+    },
+    {
+      "name": "vglist-frontend",
+      "runtimeExecutable": "zsh",
+      "runtimeArgs": ["-lic", "yarn dev"],
+      "cwd": "${workspaceFolder}/frontend",
+      "port": 5173
+    }
+  ]
+}

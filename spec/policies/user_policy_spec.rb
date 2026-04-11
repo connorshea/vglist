@@ -319,6 +319,52 @@ RSpec.describe UserPolicy, type: :policy do
     end
   end
 
+  describe "A user that is followed by a private user" do
+    let(:current_user) { create(:user) }
+    let(:user) { create(:private_user) }
+
+    before(:each) do
+      create(:relationship, follower: user, followed: current_user)
+    end
+
+    it "permits visibility actions" do
+      expect(user_policy).to permit_actions(
+        [
+          :show,
+          :statistics,
+          :compare,
+          :activity,
+          :following,
+          :followers,
+          :favorites
+        ]
+      )
+    end
+  end
+
+  describe "A user that follows a private user but is not followed back" do
+    let(:current_user) { create(:user) }
+    let(:user) { create(:private_user) }
+
+    before(:each) do
+      create(:relationship, follower: current_user, followed: user)
+    end
+
+    it "does not permit visibility actions" do
+      expect(user_policy).to forbid_actions(
+        [
+          :show,
+          :statistics,
+          :compare,
+          :activity,
+          :following,
+          :followers,
+          :favorites
+        ]
+      )
+    end
+  end
+
   describe "A user that is not logged in looking at a private user's profile" do
     let(:current_user) { nil }
     let(:user) { create(:private_user) }

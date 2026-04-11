@@ -5,6 +5,9 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
   node_nullable(false)
 
   def total_count
-    object.items.count
+    count = object.items.count
+    # Grouped relations (e.g. most_games, most_followers scopes) return a
+    # Hash from .count — use its length (number of distinct groups) instead.
+    count.is_a?(Hash) ? count.length : count
   end
 end

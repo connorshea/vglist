@@ -1,0 +1,41 @@
+@use "bulma/sass/utilities/mixins";
+@use "bulma/sass/utilities/initial-variables" as iv;
+
+.home-section {
+  // Break out of the .section > .container wrapper to be full-width.
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  // Pull up into the parent .section padding so there's no white gap.
+  margin-top: -3rem;
+  background: var(--home-section-background-color);
+
+  .subtitle {
+    color: var(--home-page-subtitle-text);
+  }
+
+  .home-logo {
+    width: auto;
+    height: 60px;
+    margin-top: 2rem;
+  }
+
+  @include mixins.from(iv.$desktop) {
+    .home-logo {
+      height: 100px;
+      margin-top: 3rem;
+    }
+  }
+}
+
+.section-home-overlap-card {
+  margin-top: -60px;
+  padding-top: 0;
+
+  @include mixins.touch {
+    margin-top: -100px;
+  }
+}

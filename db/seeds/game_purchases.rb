@@ -24,6 +24,8 @@ puts "Creating Game Purchases..."
     end
     stores.uniq!
 
+    start_date = Faker::Date.between(from: 2.months.ago.to_date, to: 1.month.ago.to_date)
+
     begin
       GamePurchase.create_with(
         platforms: platforms,
@@ -33,8 +35,8 @@ puts "Creating Game Purchases..."
         user: user,
         rating: rand(0..100),
         completion_status: rand(0..5),
-        start_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
-        completion_date: Faker::Date.between(from: 1.month.ago.to_date, to: 1.day.ago.to_date),
+        start_date: start_date,
+        completion_date: start_date + rand(1..28).days,
         comments: Faker::Lorem.sentence
       )
     rescue ActiveRecord::RecordInvalid => e

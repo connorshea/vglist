@@ -12,20 +12,11 @@ gem 'pg', '~> 1.6'
 # Use Puma as the app server
 gem 'puma', '~> 7.2'
 
-# Asset pipeline
-gem 'propshaft', '~> 1.3'
-
-# Use jsbundling-rails to bundle JavaScript using webpack
-gem 'jsbundling-rails', '~> 1.3'
-
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
-
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.14'
-
 # Use devise for Users and authentication.
 gem 'devise', '~> 4.9'
+
+# JWT for stateless API authentication with the Vue SPA frontend.
+gem 'jwt', '~> 3.1'
 
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.2'
@@ -72,13 +63,6 @@ gem "doorkeeper", "~> 5.8.2"
 
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 3.0"
-
-# Render SVGs inline using the asset pipeline.
-gem 'inline_svg', '~> 1.10'
-
-# Honeypot for spambots that doesn't require the user to actually do any
-# captcha and doesn't use google stuff.
-gem 'invisible_captcha', '~> 2.3.0'
 
 # For parallel execution of long-running tasks.
 gem 'parallel', '~> 1.27', require: false
@@ -131,15 +115,11 @@ group :development, :test do
 end
 
 group :development do
-  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '~> 4.2.1'
   gem 'listen', '~> 3.10'
   # Better error pages.
   gem 'better_errors', '~> 2.10'
   # For more useful BetterError error pages.
   gem 'binding_of_caller', '~> 2.0'
-  # Open screenshots when they're taken with capybara.
-  gem 'launchy', '~> 3.1'
   # Improve the formatting of GraphQL requests in the logs.
   # https://github.com/jetruby/graphql-rails_logger
   gem 'graphql-rails_logger', '~> 1.2.5'
@@ -148,9 +128,6 @@ group :development do
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '~> 3.40'
-  gem 'selenium-webdriver', '~> 4.41'
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
   gem 'webmock', '~> 3.26'
   # Retry failed tests to reduce flakiness.

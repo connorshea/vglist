@@ -2,7 +2,7 @@ class Genre < ApplicationRecord
   include GlobalSearchable
   include Searchable
 
-  has_many :game_genres
+  has_many :game_genres, dependent: :destroy
   has_many :games, through: :game_genres, source: :game
 
   has_paper_trail ignore: [:updated_at, :created_at],

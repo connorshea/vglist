@@ -1,0 +1,53 @@
+<template>
+  <section class="section">
+    <div v-if="loading && !data" class="has-text-centered">
+      <p>Loading...</p>
+    </div>
+
+    <div v-if="error" class="notification is-danger">
+      <p>{{ error.message }}</p>
+    </div>
+
+    <div v-if="user">
+      <h1 class="title">
+        <router-link :to="`/users/${route.params.slug}`">{{ user.username }}</router-link>
+        &rsaquo; Following
+      </h1>
+
+      <p class="subtitle is-6 has-text-grey">{{ user.following.totalCount }} users</p>
+
+      <p v-if="!followingUsers.length" class="has-text-centered has-text-grey py-6">Not following anyone yet.</p>
+
+      <div class="columns is-multiline">
+        <div v-for="followed in followingUsers" :key="followed.id" class="column is-3">
+          <UserCard :slug="followed.slug" :username="followed.username" :avatar-url="followed.avatarUrl" :size="64" />
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useQuery } from "@/composables/useGraphQL";
+import { GET_USER_FOLLOWING } from "@/graphql/queries/users";
+import type { GetUserFollowingQuery } from "@/types/graphql";
+import UserCard from "@/components/UserCard.vue";
+
+const route = useRoute("userFollowing");
+const router = useRouter();
+
+const { data, loading, error } = useQuery<GetUserFollowingQuery>(GET_USER_FOLLOWING, {
+  variables: () => ({ slug: route.params.slug, first: 50 })
+});
+
+watch([data, error, loading], () => {
+  if (!loading.value && (error.value || (data.value && !data.value.user))) {
+    router.replace({ name: "notFound" });
+  }
+});
+
+const user = computed(() => data.value?.user ?? null);
+const followingUsers = computed(() => user.value?.following?.nodes ?? []);
+</script>

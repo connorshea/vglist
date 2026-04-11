@@ -22,6 +22,26 @@ RSpec.describe EventPolicy, type: :policy do
     end
   end
 
+  describe 'A moderator' do
+    let(:user) { create(:moderator) }
+    let(:another_user) { create(:user) }
+    let(:event) { create(:event, user: another_user) }
+
+    it "is allowed to delete another user's events" do
+      expect(event_policy).to permit_actions([:destroy])
+    end
+  end
+
+  describe 'An admin' do
+    let(:user) { create(:admin) }
+    let(:another_user) { create(:user) }
+    let(:event) { create(:event, user: another_user) }
+
+    it "is allowed to delete another user's events" do
+      expect(event_policy).to permit_actions([:destroy])
+    end
+  end
+
   describe 'A user that is not logged in' do
     let(:user) { nil }
     let(:event) { create(:event) }

@@ -341,6 +341,37 @@ RSpec.describe "Users API", type: :request do
       end
     end
 
+    context 'when requesting game purchases with associations' do
+      let!(:game_purchase) { create(:game_purchase_with_everything, user: user) }
+
+      it "returns game purchase data with platforms and stores", :aggregate_failures do
+        query_string = <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              gamePurchases {
+                nodes {
+                  id
+                  game { id name }
+                  platforms { nodes { id name } }
+                  stores { nodes { id name } }
+                  completionStatus
+                  rating
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+        purchase_node = result.graphql_dig(:user, :game_purchases, :nodes).first
+
+        expect(purchase_node[:id]).to eq(game_purchase.id.to_s)
+        expect(purchase_node[:game][:name]).to eq(game_purchase.game.name)
+        expect(purchase_node[:platforms][:nodes].first[:name]).to eq(game_purchase.platforms.first.name)
+        expect(purchase_node[:stores][:nodes].first[:name]).to eq(game_purchase.stores.first.name)
+      end
+    end
+
     context 'with currentUser' do
       it "returns data for current user when requesting currentUser" do
         user
@@ -361,6 +392,110 @@ RSpec.describe "Users API", type: :request do
             username: user.username
           }
         )
+      end
+    end
+
+    describe 'email privacy' do
+      # Email is sensitive and must never be exposed via the GraphQL API under
+      # any circumstances. See the NOTE at the top of UserType.
+      it "does not define an email field on the User type" do
+        user_type = VideoGameListSchema.types['User']
+        expect(user_type).not_to be_nil
+        expect(user_type.fields.keys).not_to include('email')
+      end
+
+      it "returns an error when querying email on a user directly" do
+        query_string = <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              id
+              email
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user)).to be_nil
+        expect(api_result_errors(result)).to include(a_string_matching(/email/i))
+      end
+
+      it "returns an error when querying email via currentUser" do
+        query_string = <<-GRAPHQL
+          query {
+            currentUser {
+              id
+              email
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+
+        expect(result.graphql_dig(:current_user)).to be_nil
+        expect(api_result_errors(result)).to include(a_string_matching(/email/i))
+      end
+
+      it "returns an error when querying email via the users list" do
+        query_string = <<-GRAPHQL
+          query {
+            users {
+              nodes {
+                id
+                email
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+
+        expect(result.graphql_dig(:users)).to be_nil
+        expect(api_result_errors(result)).to include(a_string_matching(/email/i))
+      end
+
+      it "returns an error when querying email via userSearch" do
+        query_string = <<-GRAPHQL
+          query($query: String!) {
+            userSearch(query: $query) {
+              nodes {
+                id
+                email
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, variables: { query: user.username }, token: access_token)
+
+        expect(result.graphql_dig(:user_search)).to be_nil
+        expect(api_result_errors(result)).to include(a_string_matching(/email/i))
+      end
+
+      it "does not expose email on nested user types (e.g. activity, followers)" do
+        # UserType is reused everywhere a user is returned (events, game
+        # purchases, relationships, favorites, etc.) so the schema-level check
+        # above covers all of them, but verify a couple of nested paths too as
+        # belt-and-suspenders against someone adding a parallel User-like type
+        # in the future.
+        query_string = <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              id
+              followers {
+                nodes {
+                  id
+                  email
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user)).to be_nil
+        expect(api_result_errors(result)).to include(a_string_matching(/email/i))
       end
     end
 
@@ -412,6 +547,20 @@ RSpec.describe "Users API", type: :request do
           end
 
           expect(result.graphql_dig(:users, :nodes)).to eq(expected_users)
+        end
+
+        it "returns totalCount when sorting by #{sort_order}" do
+          query_string = <<~GRAPHQL_WITH_INTERP
+            query {
+              users(sortBy: #{sort_order.upcase}) {
+                totalCount
+              }
+            }
+          GRAPHQL_WITH_INTERP
+
+          result = api_request(query_string, token: access_token)
+
+          expect(result.graphql_dig(:users, :total_count)).to eq(User.where(banned: false).count)
         end
       end
     end

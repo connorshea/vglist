@@ -23,7 +23,7 @@ FriendlyId.defaults do |config|
                              activity following followers series company
                              companies engine engines user users
                              favorite favorites platform platforms
-                             search compare]
+                             search compare health]
 
   # This adds an option to treat reserved words as conflicts rather than exceptions.
   # When there is no good candidate, a UUID will be appended, matching the existing

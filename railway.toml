@@ -1,10 +1,14 @@
 [build]
 builder = "railpack"
+# Watch everything except the frontend/ subtree so Rails deploys are not
+# triggered by frontend-only changes (the vglist-frontend service handles those).
+# https://docs.railway.com/builds/build-configuration#configure-watch-paths
+watchPatterns = ["**/*", "!/frontend/**"]
 
 [deploy]
 startCommand = "bundle exec puma -C config/puma.rb"
 preDeployCommand = "bundle exec rails db:prepare"
-healthcheckPath = "/up"
+healthcheckPath = "/health"
 healthcheckTimeout = 180
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 4

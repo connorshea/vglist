@@ -26,9 +26,9 @@ RSpec.describe Company, type: :model do
   end
 
   describe "Associations" do
-    it { should have_many(:game_developers) }
+    it { should have_many(:game_developers).dependent(:destroy) }
     it { should have_many(:developed_games).through(:game_developers).source(:game) }
-    it { should have_many(:game_publishers) }
+    it { should have_many(:game_publishers).dependent(:destroy) }
     it { should have_many(:published_games).through(:game_publishers).source(:game) }
   end
 

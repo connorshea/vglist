@@ -2,6 +2,18 @@ module Types
   class MutationType < Types::BaseObject
     description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."
 
+    # Skip the BaseObject auth check on MutationType itself so that
+    # unauthenticated auth mutations (signIn, signUp, requestPasswordReset)
+    # can execute. Individual mutations handle their own auth checks.
+    def self.authorized?(_object, _context)
+      true
+    end
+
+    # Auth mutations (no authentication required)
+    field :sign_in, mutation: Mutations::Auth::SignInMutation
+    field :sign_up, mutation: Mutations::Auth::SignUpMutation
+    field :request_password_reset, mutation: Mutations::Auth::RequestPasswordResetMutation
+
     # Game mutations
     field :create_game, mutation: Mutations::Games::CreateGame
     field :update_game, mutation: Mutations::Games::UpdateGame
@@ -11,6 +23,9 @@ module Types
     field :remove_game_cover, mutation: Mutations::Games::RemoveGameCover
 
     # User mutations
+    field :update_user, mutation: Mutations::Users::UpdateUser
+    field :update_email, mutation: Mutations::Users::UpdateEmail
+    field :update_password, mutation: Mutations::Users::UpdatePassword
     field :follow_user, mutation: Mutations::Users::FollowUser
     field :unfollow_user, mutation: Mutations::Users::UnfollowUser
     field :import_steam_library, mutation: Mutations::Users::ImportSteamLibrary
@@ -22,6 +37,8 @@ module Types
     field :remove_user_avatar, mutation: Mutations::Users::RemoveUserAvatar
     field :reset_user_library, mutation: Mutations::Users::ResetUserLibrary
     field :delete_user, mutation: Mutations::Users::DeleteUser
+    field :reset_api_token, mutation: Mutations::Users::ResetApiToken
+    field :export_library, mutation: Mutations::Users::ExportLibrary
 
     # GamePurchase mutations
     field :add_game_to_library, mutation: Mutations::GamePurchases::AddGameToLibrary
