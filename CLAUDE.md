@@ -11,9 +11,9 @@ vglist is a Ruby on Rails application for tracking video game libraries. It uses
 ### Development
 
 ```bash
-./bin/dev       # Start Rails server + Webpack dev server (do NOT run this as an AI agent)
-bundle install  # Install Ruby dependencies
-pnpm install    # Install JS dependencies (always use pnpm, never npm or yarn)
+./bin/dev                      # Start Rails server + Webpack dev server (do NOT run this as an AI agent)
+bundle install                 # Install Ruby dependencies
+pnpm --dir=frontend install    # Install JS dependencies (always use pnpm, never npm or yarn)
 ```
 
 ### Testing
@@ -28,6 +28,7 @@ bundle exec rspec spec/models/game_spec.rb:42                  # Single example 
 
 ```bash
 bundle exec rubocop           # Ruby linting
+# All pnpm commands should be run from the frontend directory or with --dir=frontend.
 pnpm run lint                  # JS/TS linting (oxlint with type awareness)
 pnpm run fmt:check             # Check JS/TS formatting (oxfmt)
 pnpm run fmt                   # Auto-format JS/TS
