@@ -84,7 +84,7 @@
                 rel="noopener noreferrer"
                 >API Docs</a
               >
-              <a class="navbar-item" href="/graphiql" target="_blank" rel="noopener noreferrer">GraphiQL</a>
+              <!-- <a class="navbar-item" href="/graphiql" target="_blank" rel="noopener noreferrer">GraphiQL</a> -->
               <a class="navbar-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
                 >Discord</a
               >
@@ -119,7 +119,7 @@
                 rel="noopener noreferrer"
                 >API Docs</a
               >
-              <a class="navbar-item" href="/graphiql" target="_blank" rel="noopener noreferrer">GraphiQL</a>
+              <!-- <a class="navbar-item" href="/graphiql" target="_blank" rel="noopener noreferrer">GraphiQL</a> -->
               <a class="navbar-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
                 >Discord</a
               >
