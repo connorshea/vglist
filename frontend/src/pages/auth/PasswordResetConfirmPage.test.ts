@@ -11,11 +11,7 @@ const { mockRoute, mockResetPassword } = vi.hoisted(() => ({
 }));
 
 vi.mock("vue-router", () => ({
-  useRoute: () => mockRoute,
-  RouterLink: {
-    template: "<a><slot /></a>",
-    props: ["to"]
-  }
+  useRoute: () => mockRoute
 }));
 
 vi.mock("@/composables/useAuth", () => ({
@@ -23,6 +19,17 @@ vi.mock("@/composables/useAuth", () => ({
     resetPassword: mockResetPassword
   })
 }));
+
+// The component uses `<router-link>` in its template, which Vue resolves via
+// the component registry rather than a `vue-router` import — stub it here so
+// Vue Test Utils doesn't warn about an unresolved component.
+const mountOptions = {
+  global: {
+    stubs: {
+      RouterLink: true
+    }
+  }
+};
 
 // ── Tests ─────────────────────────────────────────────────────────
 
@@ -33,7 +40,7 @@ describe("PasswordResetConfirmPage", () => {
   });
 
   it("renders the form with password fields", () => {
-    const wrapper = mount(PasswordResetConfirmPage);
+    const wrapper = mount(PasswordResetConfirmPage, mountOptions);
 
     expect(wrapper.find("h1").text()).toBe("Set New Password");
     expect(wrapper.findAll("input[type='password']")).toHaveLength(2);
@@ -42,7 +49,7 @@ describe("PasswordResetConfirmPage", () => {
 
   it("calls resetPassword with token and passwords on submit", async () => {
     mockResetPassword.mockResolvedValue({ success: true, errors: [] });
-    const wrapper = mount(PasswordResetConfirmPage);
+    const wrapper = mount(PasswordResetConfirmPage, mountOptions);
 
     const inputs = wrapper.findAll("input[type='password']");
     await inputs[0].setValue("newpassword123");
@@ -55,7 +62,7 @@ describe("PasswordResetConfirmPage", () => {
 
   it("shows success message and hides the form on success", async () => {
     mockResetPassword.mockResolvedValue({ success: true, errors: [] });
-    const wrapper = mount(PasswordResetConfirmPage);
+    const wrapper = mount(PasswordResetConfirmPage, mountOptions);
 
     const inputs = wrapper.findAll("input[type='password']");
     await inputs[0].setValue("newpassword123");
@@ -69,7 +76,7 @@ describe("PasswordResetConfirmPage", () => {
 
   it("shows errors on failure", async () => {
     mockResetPassword.mockResolvedValue({ success: false, errors: ["Token is invalid or expired."] });
-    const wrapper = mount(PasswordResetConfirmPage);
+    const wrapper = mount(PasswordResetConfirmPage, mountOptions);
 
     const inputs = wrapper.findAll("input[type='password']");
     await inputs[0].setValue("newpassword123");
@@ -83,7 +90,7 @@ describe("PasswordResetConfirmPage", () => {
 
   it("shows an error when the reset token is missing", async () => {
     mockRoute.query = {};
-    const wrapper = mount(PasswordResetConfirmPage);
+    const wrapper = mount(PasswordResetConfirmPage, mountOptions);
 
     const inputs = wrapper.findAll("input[type='password']");
     await inputs[0].setValue("newpassword123");
