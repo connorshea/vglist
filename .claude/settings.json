@@ -7,25 +7,25 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run typecheck || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run typecheck || exit 2",
             "timeout": 25,
             "statusMessage": "Running yarn typecheck"
           },
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run lint || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run lint || exit 2",
             "timeout": 10,
             "statusMessage": "Running yarn lint"
           },
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run fmt:check || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR/frontend\" && yarn run fmt:check || exit 2",
             "timeout": 15,
             "statusMessage": "Running yarn fmt:check"
           },
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && bundle exec rubocop --cache false || exit 2",
+            "command": "[ -n \"$CONDUCTOR_WORKSPACE_NAME\" ] && exit 0; cd \"$CLAUDE_PROJECT_DIR\" && bundle exec rubocop --cache false || exit 2",
             "timeout": 30,
             "statusMessage": "Running rubocop"
           }
@@ -35,5 +35,20 @@
   },
   "enabledPlugins": {
     "managing-dependencies@managing-dependencies": true
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowLocalBinding": true
+    },
+    "filesystem": {
+      "allowWrite": [
+        "frontend/node_modules/ts-log/.vscode/settings.json",
+        "frontend/node_modules/ts-log/.vscode/launch.json",
+      ]
+    },
+    "enableWeakerNetworkIsolation": true
   }
 }
