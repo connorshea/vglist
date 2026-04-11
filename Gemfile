@@ -13,7 +13,7 @@ gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.2'
 
 # Use devise for Users and authentication.
-gem 'devise', '~> 4.9'
+gem 'devise', '~> 5.0'
 
 # JWT for stateless API authentication with the Vue SPA frontend.
 gem 'jwt', '~> 3.1'
@@ -43,7 +43,7 @@ gem 'friendly_id', '~> 5.6.0'
 gem 'sparql', '~> 3.3.2', require: false
 
 # Use Addressable for use with the Wikidata API.
-gem 'addressable', '~> 2.8.9', require: false
+gem 'addressable', '~> 2.9.0', require: false
 
 # Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
 gem 'aws-sdk-s3', '~> 1.208', require: false
