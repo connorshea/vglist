@@ -1,6 +1,6 @@
 [build]
 builder = "railpack"
-watchPatterns = ["frontend/**"]
+watchPatterns = ["frontend/**", "mise.toml"]
 
 [deploy]
 healthcheckPath = "/"
