@@ -350,9 +350,9 @@ RSpec.describe "Activity API", type: :request do
       # underlying view's created_at — which means the list reversed
       # should match chronological creation order.
       created_ats = Views::NewEvent
-                      .where(user_id: [user.id, user2.id])
-                      .order("new_events.created_at desc")
-                      .pluck(:created_at)
+                    .where(user_id: [user.id, user2.id])
+                    .order("new_events.created_at desc")
+                    .pluck(:created_at)
       expect(created_ats).to eq(created_ats.sort.reverse)
     end
 
