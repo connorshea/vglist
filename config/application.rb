@@ -23,7 +23,7 @@ module VideoGameList
     # Initialize configuration defaults for Rails 7.2.
     config.load_defaults 7.2
 
-    # API-only mode: no views, no cookies, no sessions, no flash.
+    # API-only mode: views/flash disabled; cookies/sessions enabled below for Devise/Doorkeeper.
     config.api_only = true
 
     # Rails 7.0 changes the digest class for the key generators to `OpenSSL::Digest::SHA256`.
