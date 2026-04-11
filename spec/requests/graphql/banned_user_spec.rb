@@ -22,9 +22,9 @@ RSpec.describe "GraphQL banned user enforcement", type: :request do
       variables: { bio: "I am banned" }.to_json
     }, headers: { 'Authorization': "Bearer #{jwt_token}" }
 
+    expect(response).to have_http_status(:forbidden)
     json = JSON.parse(response.body)
-    # Banned JWT users are treated as unauthenticated
-    expect(json['errors'].first['message']).to include("logged in")
+    expect(json['errors'].first['message']).to eq("The user that owns this token has been banned.")
   end
 
   it "rejects mutations from a banned user using API token auth" do

@@ -134,7 +134,14 @@ class GraphqlController < ApplicationController
     if user_using_jwt?
       token = request.headers['Authorization']&.sub(/^Bearer\s+/i, '')
       user = JwtService.decode_and_verify(token)
-      @jwt_user = user unless user&.banned?
+      if user&.banned?
+        render json: {
+          data: nil,
+          errors: [{ message: "The user that owns this token has been banned." }]
+        }, status: :forbidden
+        return
+      end
+      @jwt_user = user
     elsif user_using_oauth?
       doorkeeper_authorize!
       # Eagerly resolve the Doorkeeper user so we can check banned status
