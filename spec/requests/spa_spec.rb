@@ -42,5 +42,14 @@ RSpec.describe "SPA", type: :request do
       post '/api/auth/sign_in', params: { email: "x", password: "y" }
       expect(response).to have_http_status(:unauthorized)
     end
+
+    # Locks in the `req.format.html?` route constraint: a JSON client hitting
+    # an unknown path must NOT be redirected to the frontend, otherwise API
+    # consumers would get an unexpected HTML redirect instead of a proper 404.
+    it "does not redirect JSON requests to unknown paths" do
+      expect {
+        get '/some-unknown-path', headers: { 'Accept' => 'application/json' }
+      }.to raise_error(ActionController::RoutingError)
+    end
   end
 end
