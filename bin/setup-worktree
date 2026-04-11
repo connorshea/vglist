@@ -1,0 +1,237 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# bin/setup-worktree — Configures the current git worktree to run vglist in
+# isolation from other worktrees. Generates a unique port pair, writes
+# .env.local + .env.test.local + frontend/.env.local, and creates per-worktree
+# dev/test postgres databases.
+#
+# Idempotent: re-running on a configured worktree reuses the existing port
+# allocation from .env.local. Safe to run multiple times.
+#
+# Usage:
+#   bin/setup-worktree            # configure current worktree
+#   bin/setup-worktree --force    # also run from the main checkout
+
+require "fileutils"
+require "open3"
+require "zlib"
+
+FORCE = ARGV.include?("--force")
+
+REPO_ROOT           = Dir.pwd
+ENV_LOCAL_PATH      = File.join(REPO_ROOT, ".env.local")
+ENV_TEST_LOCAL_PATH = File.join(REPO_ROOT, ".env.test.local")
+FRONTEND_ENV_LOCAL  = File.join(REPO_ROOT, "frontend", ".env.local")
+
+BASE_RAILS_PORT = 3000
+BASE_VITE_PORT  = 5173
+MAX_OFFSET      = 1000
+
+# ----- helpers -----
+
+def die(msg)
+  warn "setup-worktree: #{msg}"
+  exit 1
+end
+
+# Wrapper around Open3.capture3 that accepts an optional env: kwarg. Open3
+# treats a leading hash as the child env (merged with the parent), but kwargs
+# would otherwise swallow it.
+def run(*cmd, env: {})
+  args = env.empty? ? cmd : [env, *cmd]
+  out, err, status = Open3.capture3(*args)
+  [out, err, status]
+end
+
+def git(*args)
+  out, _err, status = run("git", *args)
+  status.success? ? out.strip : nil
+end
+
+# In a main checkout, --absolute-git-dir and --git-common-dir point to the
+# same .git directory. In a linked worktree, --absolute-git-dir points at
+# .git/worktrees/<name> while --git-common-dir is the main repo's .git.
+def main_checkout?
+  git_dir = git("rev-parse", "--absolute-git-dir")
+  common  = git("rev-parse", "--path-format=absolute", "--git-common-dir")
+  die "not inside a git repository" if git_dir.nil? || common.nil?
+  File.expand_path(git_dir) == File.expand_path(common)
+end
+
+def sanitize_suffix(str)
+  str.gsub(/[^a-z0-9]/i, "_").downcase.squeeze("_").sub(/\A_+/, "").sub(/_+\z/, "")
+end
+
+def parse_env_file(path)
+  return {} unless File.exist?(path)
+
+  File.readlines(path).each_with_object({}) do |line, h|
+    line = line.strip
+    next if line.empty? || line.start_with?("#")
+
+    key, _, value = line.partition("=")
+    h[key.strip] = value.strip.gsub(/\A["']|["']\z/, "")
+  end
+end
+
+def list_worktree_paths
+  out = git("worktree", "list", "--porcelain") or return []
+  out.lines.filter_map { |l| l[/\Aworktree (.+)\z/, 1]&.strip }
+end
+
+def used_ports_in_other_worktrees
+  used = []
+  list_worktree_paths.each do |path|
+    next if File.expand_path(path) == File.expand_path(REPO_ROOT)
+
+    env = parse_env_file(File.join(path, ".env.local"))
+    used << env["PORT"].to_i if env["PORT"]
+    used << env["VITE_PORT"].to_i if env["VITE_PORT"]
+  end
+  used.compact.reject(&:zero?)
+end
+
+def port_in_use_on_system?(port)
+  out, _err, status = run("lsof", "-ti", ":#{port}")
+  status.success? && !out.strip.empty?
+end
+
+def allocate_offset(suffix, reserved_ports)
+  start = (Zlib.crc32(suffix) % 90) + 1
+  MAX_OFFSET.times do |i|
+    offset = ((start - 1 + i) % MAX_OFFSET) + 1
+    rails = BASE_RAILS_PORT + offset
+    vite  = BASE_VITE_PORT + offset
+    next if reserved_ports.include?(rails) || reserved_ports.include?(vite)
+    next if port_in_use_on_system?(rails) || port_in_use_on_system?(vite)
+
+    return offset
+  end
+  die "could not find a free port pair after #{MAX_OFFSET} attempts"
+end
+
+def write_env_file(path, vars)
+  FileUtils.mkdir_p(File.dirname(path))
+  body = "#{vars.map { |k, v| "#{k}=#{v}" }.join("\n")}\n"
+  File.write(path, body)
+end
+
+def db_host
+  ENV.fetch("VGLIST_DATABASE_HOST", "localhost")
+end
+
+def pg_env
+  { "PGPASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password") }
+end
+
+def database_exists?(name)
+  out, _err, status = run("psql", "-lqt", "-h", db_host, "-U", "postgres", env: pg_env)
+  return false unless status.success?
+
+  out.lines.any? { |l| l.split("|").first.strip == name }
+end
+
+def createdb(name)
+  if database_exists?(name)
+    puts "  - #{name} already exists, skipping createdb"
+    return
+  end
+  out, err, status = run("createdb", "-h", db_host, "-U", "postgres", name, env: pg_env)
+  unless status.success?
+    warn out unless out.empty?
+    warn err unless err.empty?
+    die "createdb #{name} failed"
+  end
+  puts "  - created #{name}"
+end
+
+def load_schema(rails_env, db_name)
+  puts "  - loading schema into #{db_name} (RAILS_ENV=#{rails_env})"
+  child_env = {
+    "RAILS_ENV" => rails_env,
+    "VGLIST_DATABASE_NAME" => db_name,
+    "VGLIST_TEST_DATABASE_NAME" => db_name,
+    "VGLIST_DATABASE_PASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password")
+  }
+  out, err, status = run("bundle", "exec", "rails", "db:schema:load", env: child_env)
+  return if status.success?
+
+  warn out unless out.empty?
+  warn err unless err.empty?
+  die "rails db:schema:load failed for #{db_name}"
+end
+
+# ----- main -----
+
+if main_checkout? && !FORCE
+  puts "setup-worktree: this looks like the main checkout."
+  puts "The main checkout uses default ports (3000/5173) and database names"
+  puts "(vglist_development, vglist_test) and does not need a .env.local."
+  puts "Pass --force if you really want to generate one anyway."
+  exit 0
+end
+
+dir_basename = File.basename(REPO_ROOT)
+suffix = sanitize_suffix(dir_basename)
+die "could not derive a usable suffix from directory name '#{dir_basename}'" if suffix.empty?
+
+existing = parse_env_file(ENV_LOCAL_PATH)
+
+if existing["PORT"] && existing["VITE_PORT"]
+  rails_port = existing["PORT"].to_i
+  vite_port  = existing["VITE_PORT"].to_i
+  puts "Reusing existing ports from .env.local (Rails #{rails_port}, Vite #{vite_port})"
+else
+  reserved = used_ports_in_other_worktrees
+  offset = allocate_offset(suffix, reserved)
+  rails_port = BASE_RAILS_PORT + offset
+  vite_port  = BASE_VITE_PORT + offset
+end
+
+dev_db  = "vglist_development_#{suffix}"
+test_db = "vglist_test_#{suffix}"
+
+env_vars = {
+  "VGLIST_INSTANCE" => suffix,
+  "PORT" => rails_port,
+  "VITE_PORT" => vite_port,
+  "VGLIST_DATABASE_NAME" => dev_db,
+  "VGLIST_TEST_DATABASE_NAME" => test_db,
+  "FRONTEND_URL" => "http://localhost:#{vite_port}"
+}
+
+frontend_env_vars = {
+  "VITE_PORT" => vite_port,
+  "VITE_API_URL" => "http://localhost:#{rails_port}"
+}
+
+puts "Writing #{ENV_LOCAL_PATH}"
+write_env_file(ENV_LOCAL_PATH, env_vars)
+# dotenv-rails skips .env.local in the test environment, so we duplicate the
+# variables into .env.test.local for `bundle exec rspec`.
+puts "Writing #{ENV_TEST_LOCAL_PATH}"
+write_env_file(ENV_TEST_LOCAL_PATH, env_vars)
+puts "Writing #{FRONTEND_ENV_LOCAL}"
+write_env_file(FRONTEND_ENV_LOCAL, frontend_env_vars)
+
+puts ""
+puts "Creating databases:"
+createdb(dev_db)
+createdb(test_db)
+
+puts ""
+puts "Loading schema:"
+load_schema("development", dev_db)
+load_schema("test", test_db)
+
+puts ""
+puts "Worktree configured:"
+puts "  Suffix:      #{suffix}"
+puts "  Rails port:  #{rails_port}"
+puts "  Vite port:   #{vite_port}"
+puts "  Dev DB:      #{dev_db}"
+puts "  Test DB:     #{test_db}"
+puts "  URL:         http://localhost:#{vite_port}"
+puts ""
+puts "Run `bin/dev` to start the servers."

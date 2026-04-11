@@ -57,6 +57,12 @@ sbin/
 /vendor/*
 .env
 
+# Worktree-local environment overrides (written by bin/setup-worktree)
+.env.local
+.env.*.local
+/frontend/.env.local
+/frontend/.env.*.local
+
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
