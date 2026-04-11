@@ -46,7 +46,7 @@
     "filesystem": {
       "allowWrite": [
         "frontend/node_modules/ts-log/.vscode/settings.json",
-        "frontend/node_modules/ts-log/.vscode/launch.json",
+        "frontend/node_modules/ts-log/.vscode/launch.json"
       ]
     },
     "enableWeakerNetworkIsolation": true
