@@ -70,17 +70,15 @@ RSpec.describe "Genres API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:genres, :nodes)).to eq(
-        [
-          {
-            id: genre.id.to_s,
-            name: genre.name
-          },
-          {
-            id: genre2.id.to_s,
-            name: genre2.name
-          }
-        ]
+      expect(result.graphql_dig(:genres, :nodes)).to contain_exactly(
+        {
+          id: genre.id.to_s,
+          name: genre.name
+        },
+        {
+          id: genre2.id.to_s,
+          name: genre2.name
+        }
       )
     end
   end

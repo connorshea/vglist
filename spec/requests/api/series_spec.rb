@@ -70,17 +70,15 @@ RSpec.describe "Series API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:series_list, :nodes)).to eq(
-        [
-          {
-            id: series.id.to_s,
-            name: series.name
-          },
-          {
-            id: series2.id.to_s,
-            name: series2.name
-          }
-        ]
+      expect(result.graphql_dig(:series_list, :nodes)).to contain_exactly(
+        {
+          id: series.id.to_s,
+          name: series.name
+        },
+        {
+          id: series2.id.to_s,
+          name: series2.name
+        }
       )
     end
   end

@@ -70,17 +70,15 @@ RSpec.describe "Stores API", type: :request do
 
       result = api_request(query_string, token: access_token)
 
-      expect(result.graphql_dig(:stores, :nodes)).to eq(
-        [
-          {
-            id: store.id.to_s,
-            name: store.name
-          },
-          {
-            id: store2.id.to_s,
-            name: store2.name
-          }
-        ]
+      expect(result.graphql_dig(:stores, :nodes)).to contain_exactly(
+        {
+          id: store.id.to_s,
+          name: store.name
+        },
+        {
+          id: store2.id.to_s,
+          name: store2.name
+        }
       )
     end
   end

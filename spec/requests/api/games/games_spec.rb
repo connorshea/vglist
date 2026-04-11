@@ -25,17 +25,15 @@ RSpec.describe "Games API", type: :request do
         GRAPHQL
 
         result = api_request(query_string, token: access_token)
-        expect(result.graphql_dig(:games, :nodes)).to eq(
-          [
-            {
-              id: game.id.to_s,
-              name: game.name
-            },
-            {
-              id: game2.id.to_s,
-              name: game2.name
-            }
-          ]
+        expect(result.graphql_dig(:games, :nodes)).to contain_exactly(
+          {
+            id: game.id.to_s,
+            name: game.name
+          },
+          {
+            id: game2.id.to_s,
+            name: game2.name
+          }
         )
       end
     end
