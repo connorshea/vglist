@@ -6,7 +6,7 @@
 
 - Ruby 3.4
 - Postgres 17.x
-- Node.js 22.x
+- Node.js 24.x
 - pnpm
 - ImageMagick (for images, like avatars or game covers)
 
@@ -50,7 +50,6 @@ This is a list of libraries used for various functionality across the app. It's 
 - [GraphQL](https://graphql.org) via [graphql-ruby](https://graphql-ruby.org): GraphQL is a query language that is used for the vglist API.
 - [TypeScript](https://www.typescriptlang.org): Dialect of JavaScript with static types, most of the JavaScript in the application is written in TypeScript.
 - [Vue.js 3.x](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
-- [Font Awesome](https://fontawesome.com): Icons used in the application mostly come from Font Awesome.
 - [Bulma](https://bulma.io/): CSS Framework used for styling the application.
 
 ## Rake tasks
@@ -65,8 +64,6 @@ Rake tasks are Ruby code for performing tasks. For vglist, most of these are for
   - `rake import:mobygames:covers` - Imports covers from MobyGames, needs a MobyGames API key.
   - `rake import:igdb:covers` - Imports covers from Internet Game Database (IGDB), needs a Twitch API key.
   - `rake pg_search:multisearch:rebuild:all` - Rebuild the search indices, useful after running imports.
-- Deployment
-  - `rake deploy:production` - Deploys the website in production mode, for use on the production server.
 - Development
   - `rake db:seed` - Creates fake data, mostly for development.
 

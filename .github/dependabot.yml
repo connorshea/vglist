@@ -18,15 +18,6 @@ updates:
         versions: [">= 0"]
       - dependency-name: aws-sdk-s3
         versions: [">= 0"]
-  - package-ecosystem: docker
-    directory: "/"
-    schedule:
-      interval: weekly
-      time: "12:00"
-    open-pull-requests-limit: 5
-    target-branch: main
-    assignees:
-      - connorshea
   - package-ecosystem: npm
     directory: "frontend/"
     schedule:
