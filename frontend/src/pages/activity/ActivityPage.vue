@@ -518,12 +518,14 @@ async function confirmDeleteEvent() {
 
 .a-verb {
   color: var(--color-text-secondary);
+  vertical-align: middle;
 }
 
 .a-game-link {
   color: var(--color-accent);
   text-decoration: none;
   font-weight: 500;
+  vertical-align: middle;
 }
 
 .a-game-link:hover {

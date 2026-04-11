@@ -18,21 +18,7 @@
 
       <div class="columns is-multiline">
         <div v-for="game in favoritedGames" :key="game.id" class="column is-2">
-          <div class="card">
-            <div v-if="game.coverUrl" class="card-image">
-              <figure class="image is-3by4">
-                <img :src="game.coverUrl" :alt="game.name" />
-              </figure>
-            </div>
-            <div v-else class="card-image">
-              <div class="game-cover-placeholder">
-                <span>{{ gameInitials(game.name) }}</span>
-              </div>
-            </div>
-            <div class="card-content p-3">
-              <p class="has-text-centered">{{ game.name }}</p>
-            </div>
-          </div>
+          <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
         </div>
       </div>
     </div>
@@ -45,6 +31,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_USER } from "@/graphql/queries/users";
 import type { GetUserQuery } from "@/types/graphql";
+import GameCard from "@/components/GameCard.vue";
 
 const route = useRoute("userFavorites");
 const router = useRouter();
@@ -61,32 +48,4 @@ watch([data, error, loading], () => {
 
 const user = computed(() => data.value?.user ?? null);
 const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
-
-function gameInitials(name: string): string {
-  return name
-    .split(/[\s:]+/)
-    .filter((w) => w.length > 0)
-    .slice(0, 3)
-    .map((w) => w[0].toUpperCase())
-    .join("");
-}
 </script>
-
-<style scoped>
-.game-cover-placeholder {
-  aspect-ratio: 3 / 4;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  cursor: default;
-}
-
-.game-cover-placeholder span {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.05em;
-}
-</style>
