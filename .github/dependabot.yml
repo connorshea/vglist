@@ -36,6 +36,12 @@ updates:
         versions: [">= 0"]
       - dependency-name: "@sentry/integrations"
         versions: [">= 0"]
-      - dependency-name: "vue"
-        versions: [">= 0"]
-        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "12:00"
+    open-pull-requests-limit: 5
+    target-branch: main
+    assignees:
+      - connorshea
