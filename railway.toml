@@ -1,6 +1,9 @@
 [build]
 builder = "railpack"
-watchPatterns = ["!frontend/**"]
+# Watch everything except the frontend/ subtree so Rails deploys are not
+# triggered by frontend-only changes (the vglist-frontend service handles those).
+# https://docs.railway.com/builds/build-configuration#configure-watch-paths
+watchPatterns = ["**", "!/frontend/**"]
 
 [deploy]
 startCommand = "bundle exec puma -C config/puma.rb"
