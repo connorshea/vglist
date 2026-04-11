@@ -9,5 +9,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more information on contributing to t
 ## License
 
 vglist's source code is licensed under the terms of [The MIT License](LICENSE).
-
-Icons are courtesy of [Font Awesome](https://fontawesome.com), licensed as [CC-BY-SA 4.0](https://creativecommons.org/licenses/by/4.0/).
