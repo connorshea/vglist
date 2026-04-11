@@ -39,7 +39,16 @@ const exportError = ref("");
 const { mutate, loading: exporting } = useMutation<ExportLibraryResult>(EXPORT_LIBRARY);
 
 function downloadJson(jsonString: string) {
-  const date = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const dateParts = new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(now);
+  const year = dateParts.find((part) => part.type === "year")?.value;
+  const month = dateParts.find((part) => part.type === "month")?.value;
+  const day = dateParts.find((part) => part.type === "day")?.value;
+  const date = `${year}-${month}-${day}`;
   const username = authStore.user?.username ?? "user";
   const filename = `vglist-export-${username}-${date}.json`;
 
@@ -67,7 +76,9 @@ function downloadJson(jsonString: string) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 0);
 
   return games.length;
 }
@@ -85,7 +96,7 @@ async function exportLibrary() {
     } else if (result?.libraryJson) {
       const gameCount = downloadJson(result.libraryJson);
       if (gameCount !== null) {
-        exportSuccess.value = `Your library export (${gameCount} ${gameCount === 1 ? "game" : "games"}) has been downloaded.`;
+        exportSuccess.value = `Your library export (${gameCount} ${gameCount === 1 ? "game" : "games"}) download has started.`;
       }
     }
   } catch (e) {
