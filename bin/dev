@@ -11,7 +11,16 @@ if [ ! -d frontend/node_modules ]; then
   yarn --cwd frontend install
 fi
 
+# Load worktree-local overrides if present so Foreman exports them to children.
+# This is what makes parallel worktrees pick up their own PORT/VITE_PORT/etc —
+# Vite reads VITE_PORT and VITE_API_URL from process.env in vite.config.ts and
+# only sees them if they're in foreman's environment when the `web` process
+# starts. dotenv-rails handles the Rails side regardless, but Vite needs this.
+if [ -f .env.local ]; then
+  set -a; . ./.env.local; set +a
+fi
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 
-exec foreman start -f Procfile.dev --env /dev/null "$@"
+exec foreman start -f Procfile.dev "$@"

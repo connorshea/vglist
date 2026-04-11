@@ -1,0 +1,142 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# bin/teardown-worktree — Tears down the per-worktree state created by
+# bin/setup-worktree. Drops the dev/test databases and removes .env.local
+# files. Does NOT remove the git worktree itself; that's a manual
+# `git worktree remove <path>` from the main checkout.
+#
+# Refuses to run from the main checkout (unless --force) and refuses to drop
+# any database whose name doesn't have a per-worktree suffix, so the canonical
+# vglist_development / vglist_test can never be dropped by accident.
+#
+# Usage:
+#   bin/teardown-worktree           # confirm and tear down current worktree
+#   bin/teardown-worktree --yes     # skip the confirmation prompt
+#   bin/teardown-worktree --force   # also allow running in the main checkout
+
+require "fileutils"
+require "open3"
+
+FORCE       = ARGV.include?("--force")
+ASSUME_YES  = ARGV.include?("--yes") || ARGV.include?("-y")
+
+REPO_ROOT           = Dir.pwd
+ENV_LOCAL_PATH      = File.join(REPO_ROOT, ".env.local")
+ENV_TEST_LOCAL_PATH = File.join(REPO_ROOT, ".env.test.local")
+FRONTEND_ENV_LOCAL  = File.join(REPO_ROOT, "frontend", ".env.local")
+
+PROTECTED_DB_NAMES = %w[vglist_development vglist_test vglist_production].freeze
+
+# ----- helpers -----
+
+def die(msg)
+  warn "teardown-worktree: #{msg}"
+  exit 1
+end
+
+def run(*cmd, env: {})
+  args = env.empty? ? cmd : [env, *cmd]
+  out, err, status = Open3.capture3(*args)
+  [out, err, status]
+end
+
+def git(*args)
+  out, _err, status = run("git", *args)
+  status.success? ? out.strip : nil
+end
+
+def main_checkout?
+  git_dir = git("rev-parse", "--absolute-git-dir")
+  common  = git("rev-parse", "--path-format=absolute", "--git-common-dir")
+  die "not inside a git repository" if git_dir.nil? || common.nil?
+  File.expand_path(git_dir) == File.expand_path(common)
+end
+
+def parse_env_file(path)
+  return {} unless File.exist?(path)
+
+  File.readlines(path).each_with_object({}) do |line, h|
+    line = line.strip
+    next if line.empty? || line.start_with?("#")
+
+    key, _, value = line.partition("=")
+    h[key.strip] = value.strip.gsub(/\A["']|["']\z/, "")
+  end
+end
+
+def db_host
+  ENV.fetch("VGLIST_DATABASE_HOST", "localhost")
+end
+
+def pg_env
+  { "PGPASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password") }
+end
+
+def dropdb(name)
+  out, err, status = run("dropdb", "--if-exists", "-h", db_host, "-U", "postgres", name, env: pg_env)
+  unless status.success?
+    warn out unless out.empty?
+    warn err unless err.empty?
+    die "dropdb #{name} failed"
+  end
+  puts "  - dropped #{name}"
+end
+
+def confirm!(prompt)
+  return if ASSUME_YES
+
+  print "#{prompt} [y/N] "
+  answer = $stdin.gets&.strip&.downcase
+  die "aborted" unless %w[y yes].include?(answer)
+end
+
+# ----- main -----
+
+die "refusing to run in the main checkout. Pass --force to override (you almost certainly do not want to)." if main_checkout? && !FORCE
+
+die "no .env.local found in #{REPO_ROOT}; nothing to tear down." unless File.exist?(ENV_LOCAL_PATH)
+
+env = parse_env_file(ENV_LOCAL_PATH)
+dev_db  = env["VGLIST_DATABASE_NAME"]
+test_db = env["VGLIST_TEST_DATABASE_NAME"]
+
+die "VGLIST_DATABASE_NAME missing from .env.local"      if dev_db.to_s.empty?
+die "VGLIST_TEST_DATABASE_NAME missing from .env.local" if test_db.to_s.empty?
+
+if PROTECTED_DB_NAMES.include?(dev_db) || PROTECTED_DB_NAMES.include?(test_db)
+  die "refusing to drop a protected database name (#{dev_db} / #{test_db}). " \
+      "Hand-edit .env.local if this was intentional."
+end
+
+unless dev_db.start_with?("vglist_development_") && test_db.start_with?("vglist_test_")
+  die "database names look unusual (#{dev_db} / #{test_db}); refusing to drop. " \
+      "Expected vglist_development_<suffix> and vglist_test_<suffix>."
+end
+
+puts "About to:"
+puts "  - drop database #{dev_db}"
+puts "  - drop database #{test_db}"
+puts "  - delete #{ENV_LOCAL_PATH}"
+puts "  - delete #{ENV_TEST_LOCAL_PATH}" if File.exist?(ENV_TEST_LOCAL_PATH)
+puts "  - delete #{FRONTEND_ENV_LOCAL}"  if File.exist?(FRONTEND_ENV_LOCAL)
+puts ""
+confirm!("Continue?")
+
+puts ""
+puts "Dropping databases:"
+dropdb(dev_db)
+dropdb(test_db)
+
+puts ""
+puts "Removing env files:"
+[ENV_LOCAL_PATH, ENV_TEST_LOCAL_PATH, FRONTEND_ENV_LOCAL].each do |path|
+  next unless File.exist?(path)
+
+  FileUtils.rm(path)
+  puts "  - removed #{path}"
+end
+
+puts ""
+puts "Worktree teardown complete."
+puts "Run `git worktree remove #{REPO_ROOT}` from the main checkout to remove the worktree itself."

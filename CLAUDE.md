@@ -34,8 +34,6 @@ yarn run lint                  # JS/TS linting (oxlint with type awareness)
 yarn run fmt:check             # Check JS/TS formatting (oxfmt)
 yarn run fmt                   # Auto-format JS/TS
 yarn run typecheck             # TypeScript type checking (tsc)
-yarn run typecheck:vue         # Vue component type checking (vue-tsc)
-yarn run typecheck:full        # Both TypeScript checks
 ```
 
 ### Database
@@ -85,3 +83,24 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 - **Accessibility**: Pages should be accessible and keyboard-navigable wherever possible. Use semantic HTML, ARIA attributes (e.g. `role="dialog"`, `aria-modal`, `aria-label`), visible focus styles (`:focus-visible`), focus trapping in modals/overlays, and ensure all interactive elements are reachable via Tab.
 - **Icons**: Use [Lucide](https://lucide.dev/icons/) icons via `lucide-vue-next`. Do not create custom SVG icon components — import icons directly from `lucide-vue-next` instead.
 - **CI checks**: Rubocop, Oxlint, Oxfmt, TypeScript (tsc + vue-tsc), GraphQL schema lint, RSpec (unit + feature separately).
+
+## Parallel Worktrees
+
+vglist supports running multiple git worktrees in parallel (e.g. for parallel agents) without stepping on each other's data. The main checkout at `~/code/vglist` keeps using ports 3000/5173 and the canonical `vglist_development` / `vglist_test` databases unchanged. Each *worktree* gets its own port pair and per-worktree databases via a `.env.local` file.
+
+```bash
+# After creating a new worktree:
+git worktree add .claude/worktrees/my-feature -b my-feature
+cd .claude/worktrees/my-feature
+bin/setup-worktree                # picks free ports, creates DBs, loads schema
+
+bin/dev                            # uses the per-worktree ports
+bundle exec rspec                  # uses the per-worktree test database
+
+# When done with the worktree:
+bin/teardown-worktree              # drops the per-worktree DBs and .env.local
+cd ~/code/vglist
+git worktree remove .claude/worktrees/my-feature
+```
+
+`bin/setup-worktree` is idempotent and refuses to run from the main checkout. `bin/teardown-worktree` refuses to drop any database whose name doesn't have a per-worktree suffix, so the canonical DBs are protected. Both scripts also accept `--force` to override the main-checkout guard.
