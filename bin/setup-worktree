@@ -117,49 +117,23 @@ def write_env_file(path, vars)
   File.write(path, body)
 end
 
-def db_host
-  ENV.fetch("VGLIST_DATABASE_HOST", "localhost")
-end
-
-def pg_env
-  { "PGPASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password") }
-end
-
-def database_exists?(name)
-  out, _err, status = run("psql", "-lqt", "-h", db_host, "-U", "postgres", env: pg_env)
-  return false unless status.success?
-
-  out.lines.any? { |l| l.split("|").first.strip == name }
-end
-
-def createdb(name)
-  if database_exists?(name)
-    puts "  - #{name} already exists, skipping createdb"
-    return
-  end
-  out, err, status = run("createdb", "-h", db_host, "-U", "postgres", name, env: pg_env)
-  unless status.success?
-    warn out unless out.empty?
-    warn err unless err.empty?
-    die "createdb #{name} failed"
-  end
-  puts "  - created #{name}"
-end
-
-def load_schema(rails_env, db_name)
-  puts "  - loading schema into #{db_name} (RAILS_ENV=#{rails_env})"
+def rails_db_task(task, rails_env, dev_db, test_db)
+  puts "  - #{task} (RAILS_ENV=#{rails_env})"
   child_env = {
     "RAILS_ENV" => rails_env,
-    "VGLIST_DATABASE_NAME" => db_name,
-    "VGLIST_TEST_DATABASE_NAME" => db_name,
-    "VGLIST_DATABASE_PASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password")
+    "VGLIST_DATABASE_NAME" => dev_db,
+    "VGLIST_TEST_DATABASE_NAME" => test_db,
+    "VGLIST_DATABASE_PASSWORD" => ENV.fetch("VGLIST_DATABASE_PASSWORD", "password"),
+    "VGLIST_DATABASE_HOST" => ENV.fetch("VGLIST_DATABASE_HOST", "localhost"),
+    # Skip Bootsnap precompile output and similar noise
+    "DISABLE_SPRING" => "1"
   }
-  out, err, status = run("bundle", "exec", "rails", "db:schema:load", env: child_env)
+  out, err, status = run("bundle", "exec", "rails", task, env: child_env)
   return if status.success?
 
   warn out unless out.empty?
   warn err unless err.empty?
-  die "rails db:schema:load failed for #{db_name}"
+  die "rails #{task} failed (RAILS_ENV=#{rails_env})"
 end
 
 # ----- main -----
@@ -216,14 +190,14 @@ puts "Writing #{FRONTEND_ENV_LOCAL}"
 write_env_file(FRONTEND_ENV_LOCAL, frontend_env_vars)
 
 puts ""
-puts "Creating databases:"
-createdb(dev_db)
-createdb(test_db)
+puts "Creating databases (idempotent — existing DBs are left alone):"
+rails_db_task("db:create", "development", dev_db, test_db)
+rails_db_task("db:create", "test",        dev_db, test_db)
 
 puts ""
 puts "Loading schema:"
-load_schema("development", dev_db)
-load_schema("test", test_db)
+rails_db_task("db:schema:load", "development", dev_db, test_db)
+rails_db_task("db:schema:load", "test",        dev_db, test_db)
 
 puts ""
 puts "Worktree configured:"
