@@ -19,11 +19,15 @@
       <div class="columns is-multiline">
         <div v-for="game in favoritedGames" :key="game.id" class="column is-2">
           <div class="card">
-            <div class="card-image">
+            <div v-if="game.coverUrl" class="card-image">
               <figure class="image is-3by4">
-                <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
-                <img v-else src="https://via.placeholder.com/120x160" :alt="game.name" />
+                <img :src="game.coverUrl" :alt="game.name" />
               </figure>
+            </div>
+            <div v-else class="card-image">
+              <div class="game-cover-placeholder">
+                <span>{{ gameInitials(game.name) }}</span>
+              </div>
             </div>
             <div class="card-content p-3">
               <p class="has-text-centered">{{ game.name }}</p>
@@ -57,4 +61,32 @@ watch([data, error, loading], () => {
 
 const user = computed(() => data.value?.user ?? null);
 const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
+
+function gameInitials(name: string): string {
+  return name
+    .split(/[\s:]+/)
+    .filter((w) => w.length > 0)
+    .slice(0, 3)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
 </script>
+
+<style scoped>
+.game-cover-placeholder {
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: default;
+}
+
+.game-cover-placeholder span {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+</style>

@@ -23,18 +23,27 @@ class SpaController < ActionController::API
   private
 
   def set_csp_header
+    digital_ocean_spaces = 'https://vglist.sfo2.digitaloceanspaces.com'
+    cloudflare_insights  = 'https://static.cloudflareinsights.com'
+
     directives = [
-      "default-src 'self' https:",
-      "font-src 'self' https: data:",
-      "img-src 'self' https: data:",
+      "default-src 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
       "object-src 'none'",
-      "script-src 'self' https:",
-      "style-src 'self' https: 'unsafe-inline'",
-      "frame-ancestors 'none'"
+      "frame-ancestors 'none'",
+      "font-src 'self' data:",
+      # Game covers and user avatars are served from our DO Spaces bucket.
+      "img-src 'self' data: #{digital_ocean_spaces}",
+      # Cloudflare Web Analytics auto-injects its beacon from static.cloudflareinsights.com.
+      "script-src 'self' #{cloudflare_insights}",
+      # Vue's :style bindings render inline style attributes at runtime, which require
+      # 'unsafe-inline' under CSP. We never render untrusted HTML so this is low-risk.
+      "style-src 'self' 'unsafe-inline'"
     ]
 
     if Rails.env.production?
-      directives << "connect-src 'self' https://cloudflareinsights.com https://static.cloudflareinsights.com https://vglist.sfo2.digitaloceanspaces.com https://*.sentry.io"
+      directives << "connect-src 'self' https://cloudflareinsights.com #{cloudflare_insights} #{digital_ocean_spaces} https://*.sentry.io"
 
       sentry_uri = ENV['SENTRY_SECURITY_REPORT_URI']
       commit_sha = ENV['GIT_COMMIT_SHA']
