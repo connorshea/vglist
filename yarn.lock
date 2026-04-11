@@ -2285,10 +2285,10 @@ vue-tsc@^3.2.5:
     "@volar/typescript" "2.4.28"
     "@vue/language-core" "3.2.5"
 
-vue3-select-component@0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/vue3-select-component/-/vue3-select-component-0.16.0.tgz#98436688e33e902908ca560d7497d379eab4bbcc"
-  integrity sha512-zh1HyCXkUida15T8uG4fStC3R0rX6q9H2Q6j/0t9aduxSdbX32I+f/aZAsQRmhJnQziOlBYak/ivtv9i0nbiqQ==
+vue3-select-component@0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/vue3-select-component/-/vue3-select-component-0.16.2.tgz#adb3cc4445c40bf2527ed9f935eea3c9d0f4c7e3"
+  integrity sha512-hWhFkkpZINsT87JpzHx6/ZmEiuKC43DvlE9x3Ludyg9/d35bs5m/F4ZvYl0qQUp936elaE0RA/KRlV0haOJJrQ==
   dependencies:
     "@floating-ui/vue" "1.1.10"
   optionalDependencies:
