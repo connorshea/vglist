@@ -1,5 +1,5 @@
 <template>
-  <div class="snackbar-container" aria-live="polite">
+  <div class="snackbar-container">
     <TransitionGroup name="snackbar">
       <div
         v-for="msg in messages"
@@ -7,6 +7,7 @@
         class="snackbar"
         :class="msg.type === 'error' ? 'snackbar-error' : 'snackbar-success'"
         :role="msg.type === 'error' ? 'alert' : 'status'"
+        aria-atomic="true"
       >
         <span class="snackbar-text">{{ msg.text }}</span>
         <button class="snackbar-close" aria-label="Dismiss" @click="dismiss(msg.id)">&times;</button>
