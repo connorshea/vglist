@@ -33,7 +33,7 @@ RSpec.describe "GraphQL banned user enforcement", type: :request do
       variables: { bio: "I am banned" }.to_json
     }, headers: {
       'X-User-Email': banned_user.email,
-      'X-User-Token': banned_user.api_token
+      'X-User-Token': token
     }
 
     json = JSON.parse(response.body)

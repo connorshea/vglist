@@ -148,16 +148,6 @@ class User < ApplicationRecord
   global_searchable :username
   searchable :username
 
-  def api_token
-    return nil if encrypted_api_token.nil?
-
-    EncryptionService.decrypt(encrypted_api_token)
-  end
-
-  def api_token=(value)
-    self.encrypted_api_token = EncryptionService.encrypt(value)
-  end
-
   # Make sure the user isn't banned when logging in with Devise.
   def active_for_authentication?
     super && !banned?
@@ -167,6 +157,17 @@ class User < ApplicationRecord
   # this is the name of the message that will be returned.
   def inactive_message
     banned? ? :account_banned : super
+  end
+
+  # Generate and persist a new API token for this user. Returns the plaintext
+  # token on success or `nil` if the save fails (errors are available via
+  # `user.errors`). This is the only public entry point for reading a freshly
+  # generated token — the raw accessor is private so that plaintext tokens
+  # can't be accidentally pulled off a persisted user elsewhere in the app.
+  def reset_api_token
+    token = SecureRandom.alphanumeric(40)
+    self.api_token = token
+    save ? token : nil
   end
 
   # Verify that the token passed into the application matches the user's
@@ -193,6 +194,23 @@ class User < ApplicationRecord
   end
 
   private
+
+  # Decrypt and return the raw API token. Private so the plaintext token
+  # can't be accidentally exposed via a serializer, logger, or API field —
+  # callers that need to read it should go through `verify_api_token!`.
+  def api_token
+    return nil if encrypted_api_token.nil?
+
+    EncryptionService.decrypt(encrypted_api_token)
+  end
+
+  # Private so API tokens can only be set via `reset_api_token`, which
+  # generates a secure random value. This prevents mass-assignment (e.g.
+  # `user.update(api_token: ...)`) from silently encrypting a caller-supplied
+  # value.
+  def api_token=(value)
+    self.encrypted_api_token = EncryptionService.encrypt(value)
+  end
 
   # Usernames that are reserved so they cannot be used.
   RESERVED_USERNAMES = %w[

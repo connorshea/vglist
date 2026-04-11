@@ -12,10 +12,10 @@ RSpec.describe "GraphQL", type: :request do
       headers = {
         'User-Agent': 'GraphQL Test',
         'X-User-Email': user.email,
-        'X-User-Token': user.api_token
+        'X-User-Token': token
       }
 
-      expect(user.api_token).to eq(token)
+      expect(user.verify_api_token!(token)).to be true
       post graphql_path(format: :json), headers: headers
       expect(response).to have_http_status(:success)
     end

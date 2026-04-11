@@ -324,7 +324,7 @@ RSpec.describe "GraphQL User Mutations", type: :request do
 
       post graphql_path, params: { query: query }, headers: {
         'X-User-Email': api_token_user.email,
-        'X-User-Token': api_token_user.api_token
+        'X-User-Token': api_token
       }
 
       json = JSON.parse(response.body)

@@ -8,8 +8,8 @@ class Mutations::Users::ResetApiToken < Mutations::BaseMutation
     user = context[:current_user]
     raise GraphQL::ExecutionError, "You must be logged in to reset your API token." if user.nil?
 
-    token = SecureRandom.alphanumeric(40)
-    if user.update(api_token: token)
+    token = user.reset_api_token
+    if token
       { api_token: token, errors: [] }
     else
       { api_token: nil, errors: user.errors.full_messages }
