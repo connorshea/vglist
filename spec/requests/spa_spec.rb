@@ -31,11 +31,14 @@ RSpec.describe "SPA", type: :request do
         get '/games'
         csp = response.headers['Content-Security-Policy']
         expect(csp).to be_present
-        expect(csp).to include("default-src 'self' https:")
+        expect(csp).to include("default-src 'self'")
+        expect(csp).to include("base-uri 'self'")
+        expect(csp).to include("form-action 'self'")
         expect(csp).to include("object-src 'none'")
         expect(csp).to include("frame-ancestors 'none'")
-        expect(csp).to include("script-src 'self' https:")
-        expect(csp).to include("style-src 'self' https: 'unsafe-inline'")
+        expect(csp).to include("script-src 'self' https://static.cloudflareinsights.com")
+        expect(csp).to include("img-src 'self' data: https://vglist.sfo2.digitaloceanspaces.com")
+        expect(csp).to include("style-src 'self' 'unsafe-inline'")
       end
 
       it "does not intercept the GraphQL endpoint" do
