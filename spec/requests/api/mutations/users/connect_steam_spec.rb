@@ -24,7 +24,7 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
     end
 
     before(:each) do
-      stub_request(:get, /api.steampowered.com/).to_return(
+      stub_request(:get, /api\.steampowered\.com/).to_return(
         status: 200,
         body: {
           'response': { 'steamid': '123' }
