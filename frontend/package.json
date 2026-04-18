@@ -18,7 +18,7 @@
     "codegen": "graphql-codegen && oxfmt && oxfmt"
   },
   "dependencies": {
-    "@sentry/vue": "^10.48.0",
+    "@sentry/vue": "^10.49.0",
     "bulma": "^1.0.4",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
