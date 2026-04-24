@@ -26,7 +26,7 @@ class Mutations::Admin::AddToWikidataBlocklist < Mutations::BaseMutation
   def authorized?(_object)
     require_permissions!(:first_party)
 
-    raise GraphQL::ExecutionError, "You aren't allowed to add this game to the Wikidata Blocklist." unless AdminPolicy.new(@context[:current_user], nil).remove_from_wikidata_blocklist?
+    raise GraphQL::ExecutionError, "You aren't allowed to add this game to the Wikidata Blocklist." unless AdminPolicy.new(@context[:current_user], nil).add_to_wikidata_blocklist?
 
     return true
   end

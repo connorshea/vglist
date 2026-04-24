@@ -20,6 +20,10 @@ class AdminPolicy < ApplicationPolicy
     user&.admin?
   end
 
+  def add_to_wikidata_blocklist?
+    user&.admin?
+  end
+
   def remove_from_wikidata_blocklist?
     user&.admin?
   end
