@@ -14,6 +14,7 @@ RSpec.describe AdminPolicy, type: :policy do
         [
           :dashboard,
           :wikidata_blocklist,
+          :add_to_wikidata_blocklist,
           :remove_from_wikidata_blocklist,
           :steam_blocklist,
           :new_steam_blocklist,
@@ -34,6 +35,7 @@ RSpec.describe AdminPolicy, type: :policy do
         [
           :dashboard,
           :wikidata_blocklist,
+          :add_to_wikidata_blocklist,
           :remove_from_wikidata_blocklist,
           :steam_blocklist,
           :new_steam_blocklist,
@@ -54,6 +56,7 @@ RSpec.describe AdminPolicy, type: :policy do
         [
           :dashboard,
           :wikidata_blocklist,
+          :add_to_wikidata_blocklist,
           :remove_from_wikidata_blocklist,
           :steam_blocklist,
           :new_steam_blocklist,
@@ -74,6 +77,7 @@ RSpec.describe AdminPolicy, type: :policy do
         [
           :dashboard,
           :wikidata_blocklist,
+          :add_to_wikidata_blocklist,
           :remove_from_wikidata_blocklist,
           :steam_blocklist,
           :new_steam_blocklist,
