@@ -40,7 +40,6 @@ jobs:
 
     env:
       RAILS_ENV: development
-      BUNDLER_VERSION: "2.7.1"
 
     steps:
       - name: Checkout repository

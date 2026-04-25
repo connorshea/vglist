@@ -13,7 +13,7 @@
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 2.7.1, `gem install bundler:2.7.1`
+1. To get Bundler 4.0.10, `gem install bundler:4.0.10`
 1. `bundle install`
 1. `pnpm --dir frontend install`
 1. `bundle exec rails db:setup`
