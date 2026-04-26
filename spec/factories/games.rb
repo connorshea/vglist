@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
+require 'stringio'
+
+cover_image_bytes = Rails.root.join('spec/factories/images/crysis.jpg').binread.freeze
+
 FactoryBot.define do
   factory :game do
     name { "Half-Life 2" }
 
     trait :cover do
       after(:build) do |game|
-        game.cover.attach(io: File.open(Rails.root.join('spec/factories/images/crysis.jpg')), filename: 'crysis.jpg', content_type: 'image/jpeg')
+        game.cover.attach(io: StringIO.new(cover_image_bytes), filename: 'crysis.jpg', content_type: 'image/jpeg')
       end
     end
 

@@ -6,7 +6,7 @@ RSpec.describe AdminPolicy, type: :policy do
   subject(:admin_policy) { described_class.new(user, record) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
+    let(:user) { build_stubbed(:user) }
     let(:record) { nil }
 
     it 'defaults to disallowing everything' do
@@ -48,7 +48,7 @@ RSpec.describe AdminPolicy, type: :policy do
   end
 
   describe 'A user that is a moderator' do
-    let(:user) { create(:moderator) }
+    let(:user) { build_stubbed(:moderator) }
     let(:record) { nil }
 
     it 'defaults to disallowing everything' do
@@ -69,7 +69,7 @@ RSpec.describe AdminPolicy, type: :policy do
   end
 
   describe 'A user that is an admin' do
-    let(:user) { create(:admin) }
+    let(:user) { build_stubbed(:admin) }
     let(:record) { nil }
 
     it 'allows everything' do

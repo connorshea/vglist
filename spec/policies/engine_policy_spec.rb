@@ -6,8 +6,8 @@ RSpec.describe EnginePolicy, type: :policy do
   subject(:engine_policy) { described_class.new(user, engine) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:engine) { create(:engine) }
+    let(:user) { build_stubbed(:user) }
+    let(:engine) { build_stubbed(:engine) }
 
     it "let's a normal user list, show, and search engines" do
       expect(engine_policy).to permit_actions(
@@ -24,7 +24,7 @@ RSpec.describe EnginePolicy, type: :policy do
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
-    let(:engine) { create(:engine) }
+    let(:engine) { build_stubbed(:engine) }
 
     it 'permits index and show' do
       expect(engine_policy).to permit_actions(
@@ -40,8 +40,8 @@ RSpec.describe EnginePolicy, type: :policy do
   end
 
   describe 'A moderator user' do
-    let(:user) { create(:moderator) }
-    let(:engine) { create(:engine) }
+    let(:user) { build_stubbed(:moderator) }
+    let(:engine) { build_stubbed(:engine) }
 
     it "let's a moderator do everything" do
       expect(engine_policy).to permit_actions(
@@ -51,8 +51,8 @@ RSpec.describe EnginePolicy, type: :policy do
   end
 
   describe 'An admin user' do
-    let(:user) { create(:admin) }
-    let(:engine) { create(:engine) }
+    let(:user) { build_stubbed(:admin) }
+    let(:engine) { build_stubbed(:engine) }
 
     it "let's an admin do everything" do
       expect(engine_policy).to permit_actions(

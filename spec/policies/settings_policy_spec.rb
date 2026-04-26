@@ -6,7 +6,7 @@ RSpec.describe SettingsPolicy, type: :policy do
   subject(:settings_policy) { described_class.new(current_user, current_user) }
 
   describe 'A logged-in user' do
-    let(:current_user) { create(:user) }
+    let(:current_user) { build_stubbed(:user) }
 
     it { should permit_actions([:profile, :account, :import, :export, :api_token]) }
   end

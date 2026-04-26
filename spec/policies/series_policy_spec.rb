@@ -6,8 +6,8 @@ RSpec.describe SeriesPolicy, type: :policy do
   subject(:series_policy) { described_class.new(user, series) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:series) { create(:series) }
+    let(:user) { build_stubbed(:user) }
+    let(:series) { build_stubbed(:series) }
 
     it "let's a normal user list, show, and search series'" do
       expect(series_policy).to permit_actions(
@@ -23,8 +23,8 @@ RSpec.describe SeriesPolicy, type: :policy do
   end
 
   describe 'A moderator' do
-    let(:user) { create(:moderator) }
-    let(:series) { create(:series) }
+    let(:user) { build_stubbed(:moderator) }
+    let(:series) { build_stubbed(:series) }
 
     it "let's a moderator do everything" do
       expect(series_policy).to permit_actions(
@@ -34,8 +34,8 @@ RSpec.describe SeriesPolicy, type: :policy do
   end
 
   describe 'An admin' do
-    let(:user) { create(:admin) }
-    let(:series) { create(:series) }
+    let(:user) { build_stubbed(:admin) }
+    let(:series) { build_stubbed(:series) }
 
     it "let's an admin do everything" do
       expect(series_policy).to permit_actions(
@@ -46,7 +46,7 @@ RSpec.describe SeriesPolicy, type: :policy do
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
-    let(:series) { create(:series) }
+    let(:series) { build_stubbed(:series) }
 
     it { should permit_actions([:index, :show]) }
     it { should forbid_actions([:create, :new, :edit, :update, :destroy, :search]) }
