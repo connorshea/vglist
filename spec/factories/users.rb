@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-AVATAR_IMAGE_BYTES = Rails.root.join('spec/factories/images/avatar.jpg').binread.freeze
+require 'stringio'
+
+avatar_image_bytes = Rails.root.join('spec/factories/images/avatar.jpg').binread.freeze
 
 FactoryBot.define do
   factory :user do
@@ -21,7 +23,7 @@ FactoryBot.define do
 
     trait :avatar do
       after(:build) do |user|
-        user.avatar.attach(io: StringIO.new(AVATAR_IMAGE_BYTES), filename: 'avatar.jpg', content_type: 'image/jpeg')
+        user.avatar.attach(io: StringIO.new(avatar_image_bytes), filename: 'avatar.jpg', content_type: 'image/jpeg')
       end
     end
 
