@@ -20,7 +20,8 @@
    - This is the equivalent of running `bundle exec rails db:create && bundle exec rails db:structure:load && bundle exec rails db:seed`, so it will create the databases, seed them with fake data, and create a user with the email `admin@example.com` and the password `password`.
    - If you would like more control, run only `bundle exec rails db:create` and `bundle exec rails db:schema:load`.
    - If you run into an error about the database password being wrong, the application will try to use `'password'` by default, but you can set the password for your database user via the `VGLIST_DATABASE_PASSWORD` environment variable.
-1. Run `./bin/dev` to start the server and webpack.
+   - If you see errors about a `postgres` user not existing, you'll need to create a user in your Postgres instance for local dev. On macOS, use `createuser -s postgres` and `psql -d postgres -c "ALTER USER postgres WITH PASSWORD 'password';"` to create a `postgres` user with the password `password`. Then `bundle exec rails db:setup` should work. (ONLY DO THIS IN LOCAL DEV)
+1. Run `./bin/dev` to start the server and Vite.
 1. Visit <http://localhost:3000> in your browser and you should see the base application.
 
 #### Extras
