@@ -14,7 +14,7 @@ RSpec.describe Admin::UnmatchedGamesPolicy, type: :policy do
   end
 
   describe 'a logged-in non-admin user' do
-    let(:user) { create(:user) }
+    let(:user) { build_stubbed(:user) }
 
     it 'forbids index and destroy' do
       expect(policy).to forbid_actions([:index, :destroy])
@@ -22,7 +22,7 @@ RSpec.describe Admin::UnmatchedGamesPolicy, type: :policy do
   end
 
   describe 'a moderator' do
-    let(:user) { create(:moderator) }
+    let(:user) { build_stubbed(:moderator) }
 
     it 'forbids index and destroy' do
       expect(policy).to forbid_actions([:index, :destroy])
@@ -30,7 +30,7 @@ RSpec.describe Admin::UnmatchedGamesPolicy, type: :policy do
   end
 
   describe 'an admin' do
-    let(:user) { create(:admin) }
+    let(:user) { build_stubbed(:admin) }
 
     it 'permits index and destroy' do
       expect(policy).to permit_actions([:index, :destroy])

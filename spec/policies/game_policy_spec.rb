@@ -6,8 +6,8 @@ RSpec.describe GamePolicy, type: :policy do
   subject(:game_policy) { described_class.new(user, game) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:game) { create(:game) }
+    let(:user) { build_stubbed(:user) }
+    let(:game) { build_stubbed(:game) }
 
     it 'can do basic things' do
       expect(game_policy).to permit_actions(
@@ -38,8 +38,8 @@ RSpec.describe GamePolicy, type: :policy do
   end
 
   describe 'A moderator user' do
-    let(:user) { create(:moderator) }
-    let(:game) { create(:game) }
+    let(:user) { build_stubbed(:moderator) }
+    let(:game) { build_stubbed(:game) }
 
     it "can do almost everything" do
       expect(game_policy).to permit_actions(
@@ -66,8 +66,8 @@ RSpec.describe GamePolicy, type: :policy do
   end
 
   describe 'An admin user' do
-    let(:user) { create(:admin) }
-    let(:game) { create(:game) }
+    let(:user) { build_stubbed(:admin) }
+    let(:game) { build_stubbed(:game) }
 
     it "can do everything" do
       expect(game_policy).to permit_actions(
@@ -92,7 +92,7 @@ RSpec.describe GamePolicy, type: :policy do
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
-    let(:game) { create(:game) }
+    let(:game) { build_stubbed(:game) }
 
     it { should permit_actions([:index, :show]) }
 

@@ -6,8 +6,8 @@ RSpec.describe CompanyPolicy, type: :policy do
   subject(:company_policy) { described_class.new(user, company) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:company) { create(:company) }
+    let(:user) { build_stubbed(:user) }
+    let(:company) { build_stubbed(:company) }
 
     it "let's a normal user list, show, and search companies" do
       expect(company_policy).to permit_actions(
@@ -23,8 +23,8 @@ RSpec.describe CompanyPolicy, type: :policy do
   end
 
   describe 'A moderator' do
-    let(:user) { create(:moderator) }
-    let(:company) { create(:company) }
+    let(:user) { build_stubbed(:moderator) }
+    let(:company) { build_stubbed(:company) }
 
     it "let's a moderator do everything" do
       expect(company_policy).to permit_actions(
@@ -34,8 +34,8 @@ RSpec.describe CompanyPolicy, type: :policy do
   end
 
   describe 'An admin' do
-    let(:user) { create(:admin) }
-    let(:company) { create(:company) }
+    let(:user) { build_stubbed(:admin) }
+    let(:company) { build_stubbed(:company) }
 
     it "let's an admin do everything" do
       expect(company_policy).to permit_actions(
@@ -46,7 +46,7 @@ RSpec.describe CompanyPolicy, type: :policy do
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
-    let(:company) { create(:company) }
+    let(:company) { build_stubbed(:company) }
 
     it { should permit_actions([:index, :show]) }
     it { should forbid_actions([:create, :new, :edit, :update, :destroy, :search]) }

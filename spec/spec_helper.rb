@@ -15,16 +15,20 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require 'simplecov'
-SimpleCov.start :rails do
-  add_group "Policies", "app/policies"
-  add_group "GraphQL", "app/graphql"
+# Coverage adds noticeable overhead, so only run it when explicitly requested
+# (via COVERAGE=1) or in CI. GitHub Actions sets CI=true automatically.
+if ENV['COVERAGE'] || ENV['CI']
+  require 'simplecov'
+  SimpleCov.start :rails do
+    add_group "Policies", "app/policies"
+    add_group "GraphQL", "app/graphql"
 
-  # Enable result merging for parallel CI jobs
-  merge_timeout 3600
+    # Enable result merging for parallel CI jobs
+    merge_timeout 3600
 
-  # Set command name based on environment variable to distinguish unit vs feature tests in CI
-  command_name ENV.fetch('COVERAGE_COMMAND_NAME', 'RSpec')
+    # Set command name based on environment variable to distinguish unit vs feature tests in CI
+    command_name ENV.fetch('COVERAGE_COMMAND_NAME', 'RSpec')
+  end
 end
 require 'pundit/rspec'
 require 'pundit/matchers'

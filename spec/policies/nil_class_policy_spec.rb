@@ -6,7 +6,7 @@ RSpec.describe NilClassPolicy, type: :policy do
   subject(:nil_class_policy) { described_class.new(user, nil) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
+    let(:user) { build_stubbed(:user) }
 
     it 'defaults to disallowing everything' do
       expect(nil_class_policy).to forbid_actions(
@@ -26,7 +26,7 @@ RSpec.describe NilClassPolicy, type: :policy do
   end
 
   describe "An action that doesn't exist" do
-    let(:user) { create(:user) }
+    let(:user) { build_stubbed(:user) }
 
     it "is disallowed" do
       expect(nil_class_policy).to forbid_actions(

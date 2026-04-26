@@ -6,8 +6,8 @@ RSpec.describe StorePolicy, type: :policy do
   subject(:store_policy) { described_class.new(user, store) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:store) { create(:store) }
+    let(:user) { build_stubbed(:user) }
+    let(:store) { build_stubbed(:store) }
 
     it "let's a normal user list, show, and search stores" do
       expect(store_policy).to permit_actions(
@@ -23,8 +23,8 @@ RSpec.describe StorePolicy, type: :policy do
   end
 
   describe 'A moderator user' do
-    let(:user) { create(:moderator) }
-    let(:store) { create(:store) }
+    let(:user) { build_stubbed(:moderator) }
+    let(:store) { build_stubbed(:store) }
 
     it "let's a moderator do everything" do
       expect(store_policy).to permit_actions(
@@ -34,8 +34,8 @@ RSpec.describe StorePolicy, type: :policy do
   end
 
   describe 'An admin user' do
-    let(:user) { create(:admin) }
-    let(:store) { create(:store) }
+    let(:user) { build_stubbed(:admin) }
+    let(:store) { build_stubbed(:store) }
 
     it "let's an admin do everything" do
       expect(store_policy).to permit_actions(
@@ -46,7 +46,7 @@ RSpec.describe StorePolicy, type: :policy do
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
-    let(:store) { create(:store) }
+    let(:store) { build_stubbed(:store) }
 
     it { should permit_actions([:index, :show]) }
     it { should forbid_actions([:create, :new, :edit, :update, :destroy, :search]) }

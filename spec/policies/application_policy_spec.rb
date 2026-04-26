@@ -6,7 +6,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
   subject(:application_policy) { described_class.new(user, record) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
+    let(:user) { build_stubbed(:user) }
     let(:record) { nil }
 
     it 'defaults to disallowing everything' do

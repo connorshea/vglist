@@ -6,8 +6,8 @@ RSpec.describe PlatformPolicy, type: :policy do
   subject(:platform_policy) { described_class.new(user, platform) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:platform) { create(:platform) }
+    let(:user) { build_stubbed(:user) }
+    let(:platform) { build_stubbed(:platform) }
 
     it "let's a normal user list, show, and search platforms" do
       expect(platform_policy).to permit_actions(
@@ -23,8 +23,8 @@ RSpec.describe PlatformPolicy, type: :policy do
   end
 
   describe 'A moderator user' do
-    let(:user) { create(:moderator) }
-    let(:platform) { create(:platform) }
+    let(:user) { build_stubbed(:moderator) }
+    let(:platform) { build_stubbed(:platform) }
 
     it "let's a moderator do everything" do
       expect(platform_policy).to permit_actions(
@@ -34,8 +34,8 @@ RSpec.describe PlatformPolicy, type: :policy do
   end
 
   describe 'An admin user' do
-    let(:user) { create(:admin) }
-    let(:platform) { create(:platform) }
+    let(:user) { build_stubbed(:admin) }
+    let(:platform) { build_stubbed(:platform) }
 
     it "let's an admin do everything" do
       expect(platform_policy).to permit_actions(
@@ -46,7 +46,7 @@ RSpec.describe PlatformPolicy, type: :policy do
 
   describe 'A user that is not logged in' do
     let(:user) { nil }
-    let(:platform) { create(:platform) }
+    let(:platform) { build_stubbed(:platform) }
 
     it { should permit_actions([:index, :show]) }
     it { should forbid_actions([:create, :new, :edit, :update, :destroy, :search]) }

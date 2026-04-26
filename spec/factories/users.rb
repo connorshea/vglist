@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+AVATAR_IMAGE_BYTES = Rails.root.join('spec/factories/images/avatar.jpg').binread.freeze
+
 FactoryBot.define do
   factory :user do
     # Exclude id 1 to prevent flaky tests involving the behavior where users
@@ -12,12 +14,14 @@ FactoryBot.define do
     bio { "My name is John Doe and I love video games." }
 
     trait :confirmed do
-      after(:create) { |user| user.confirm }
+      # Set confirmed_at directly on creation rather than calling user.confirm
+      # in an after_create hook — the latter triggers a second UPDATE per user.
+      confirmed_at { Time.current }
     end
 
     trait :avatar do
       after(:build) do |user|
-        user.avatar.attach(io: File.open(Rails.root.join('spec/factories/images/avatar.jpg')), filename: 'avatar.jpg', content_type: 'image/jpeg')
+        user.avatar.attach(io: StringIO.new(AVATAR_IMAGE_BYTES), filename: 'avatar.jpg', content_type: 'image/jpeg')
       end
     end
 

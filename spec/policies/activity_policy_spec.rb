@@ -6,8 +6,8 @@ RSpec.describe ActivityPolicy, type: :policy do
   subject(:activity_policy) { described_class.new(user, event) }
 
   describe 'A logged-in user' do
-    let(:user) { create(:user) }
-    let(:event) { create(:event) }
+    let(:user) { build_stubbed(:user) }
+    let(:event) { build_stubbed(:event) }
 
     it "can view both activity feeds" do
       expect(activity_policy).to permit_actions([:global, :following])
@@ -16,7 +16,7 @@ RSpec.describe ActivityPolicy, type: :policy do
 
   describe 'An anonymous user' do
     let(:user) { nil }
-    let(:event) { create(:event) }
+    let(:event) { build_stubbed(:event) }
 
     it "can view only global activity" do
       expect(activity_policy).to permit_actions([:global])
