@@ -18,7 +18,7 @@
     "codegen": "graphql-codegen && oxfmt && oxfmt"
   },
   "dependencies": {
-    "@sentry/vue": "^10.49.0",
+    "@sentry/vue": "^10.50.0",
     "bulma": "^1.0.4",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
@@ -27,25 +27,25 @@
     "lucide-vue-next": "^0.577.0",
     "pinia": "^3.0.4",
     "sass-embedded": "^1.99.0",
-    "vue": "^3.5.32",
-    "vue-router": "^5.0.4"
+    "vue": "^3.5.33",
+    "vue-router": "^5.0.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^6.3.0",
-    "@graphql-codegen/typescript": "^5.0.9",
-    "@graphql-codegen/typescript-operations": "^5.0.9",
+    "@graphql-codegen/cli": "^6.3.1",
+    "@graphql-codegen/typescript": "^5.0.10",
+    "@graphql-codegen/typescript-operations": "^5.1.0",
     "@types/lodash-es": "^4.17.12",
-    "@vitejs/plugin-vue": "^6.0.5",
-    "@vue/test-utils": "^2.4.6",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/test-utils": "^2.4.8",
     "graphql-schema-linter": "^3.0.1",
     "jsdom": "^29.0.2",
-    "oxfmt": "^0.44.0",
-    "oxlint": "^1.60.0",
-    "oxlint-tsgolint": "^0.20.0",
-    "typescript": "~6.0.2",
-    "vite": "^8.0.8",
-    "vitest": "^4.1.4",
-    "vue-tsc": "^3.2.6"
+    "oxfmt": "^0.46.0",
+    "oxlint": "^1.61.0",
+    "oxlint-tsgolint": "^0.22.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5",
+    "vue-tsc": "^3.2.7"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.2"
 }
