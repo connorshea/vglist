@@ -31,7 +31,7 @@
     "vue-router": "^5.0.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^6.3.1",
+    "@graphql-codegen/cli": "^7.0.0",
     "@graphql-codegen/typescript": "^5.0.10",
     "@graphql-codegen/typescript-operations": "^5.1.0",
     "@types/lodash-es": "^4.17.12",
