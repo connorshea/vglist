@@ -89,7 +89,7 @@ group :development, :test do
   gem 'rubocop-rspec_rails', '~> 2.32', require: false
   gem 'rubocop-capybara', '~> 2.23', require: false
   gem 'rubocop-factory_bot', '~> 2.28', require: false
-  gem 'rubocop-rails', '~> 2.34', require: false
+  gem 'rubocop-rails', '~> 2.35', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 2.1'
