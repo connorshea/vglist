@@ -18,7 +18,7 @@ gem 'puma', '~> 8.0'
 gem 'devise', '~> 5.0'
 
 # JWT for stateless API authentication with the Vue SPA frontend.
-gem 'jwt', '~> 3.1'
+gem 'jwt', '~> 3.2'
 
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.2'
