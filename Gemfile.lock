@@ -113,7 +113,7 @@ GEM
     bigdecimal (3.3.1)
     binding_of_caller (2.0.0)
       debug_inspector (>= 1.2.0)
-    bootsnap (1.24.5)
+    bootsnap (1.24.6)
       msgpack (~> 1.2)
     builder (3.3.0)
     byebug (13.0.0)
@@ -238,7 +238,7 @@ GEM
       logger
     mini_mime (1.1.5)
     minitest (5.27.0)
-    msgpack (1.8.0)
+    msgpack (1.8.1)
     net-http-persistent (4.0.8)
       connection_pool (>= 2.2.4, < 4)
     net-imap (0.6.4)
