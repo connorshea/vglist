@@ -142,7 +142,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
     docile (1.4.1)
-    doorkeeper (5.9.1)
+    doorkeeper (5.9.2)
       railties (>= 5)
     dotenv (3.2.0)
     dotenv-rails (3.2.0)
@@ -282,7 +282,7 @@ GEM
       reline (>= 0.6.0)
     pry-rails (0.3.11)
       pry (>= 0.13.0)
-    psych (5.3.1)
+    psych (5.4.0)
       date
       stringio
     public_suffix (7.0.5)
@@ -485,7 +485,7 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.8.1)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   arm64-darwin-23
@@ -504,7 +504,7 @@ DEPENDENCIES
   byebug
   database_cleaner (~> 2.1)
   devise (~> 5.0)
-  doorkeeper (~> 5.9.1)
+  doorkeeper (~> 5.9.2)
   dotenv-rails (~> 3.2)
   factory_bot_rails (~> 6.5)
   faker (~> 3.8.0)
