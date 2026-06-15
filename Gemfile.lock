@@ -440,8 +440,8 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
-    shoulda-matchers (7.0.1)
-      activesupport (>= 7.1)
+    shoulda-matchers (8.0.1)
+      activesupport (>= 7.2)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -539,7 +539,7 @@ DEPENDENCIES
   ruby-progressbar (~> 1.13)
   sentry-rails (~> 6.4.0)
   sentry-ruby (~> 6.4.0)
-  shoulda-matchers (= 7.0.1)
+  shoulda-matchers (= 8.0.1)
   simplecov (~> 0.22)
   sparql (~> 3.3.2)
   webmock (~> 3.26)
