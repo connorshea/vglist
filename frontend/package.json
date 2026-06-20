@@ -22,7 +22,7 @@
     "bulma": "^1.0.4",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
-    "graphql-tag": "^2.12.6",
+    "graphql-tag": "^2.12.7",
     "lodash-es": "^4.18.1",
     "lucide-vue-next": "^0.577.0",
     "pinia": "^3.0.4",

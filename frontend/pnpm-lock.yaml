@@ -21,8 +21,8 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0(graphql@16.13.2)
       graphql-tag:
-        specifier: ^2.12.6
-        version: 2.12.6(graphql@16.13.2)
+        specifier: ^2.12.7
+        version: 2.12.7(graphql@16.13.2)
       lodash-es:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1877,11 +1877,11 @@ packages:
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
 
-  graphql-tag@2.12.6:
-    resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
+  graphql-tag@2.12.7:
+    resolution: {integrity: sha512-xnE/NFzy+0eIesvAsREJZ284zTl/wYuBAvpsFSDhRGRdRHdnE90M21Q3xAWyYInb0J756c6x0pIQ62+vtvOs1Q==}
     engines: {node: '>=10'}
     peerDependencies:
-      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
   graphql-ws@6.0.8:
     resolution: {integrity: sha512-m3EOaNsUBXwAnkBWbzPfe0Nq8pXUfxsWnolC54sru3FzHvhTZL0Ouf/BoQsaGAXqM+YPerXOJ47BUnmgmoupCw==}
@@ -3490,7 +3490,7 @@ snapshots:
       change-case-all: 1.0.15
       dependency-graph: 1.0.0
       graphql: 16.13.2
-      graphql-tag: 2.12.6(graphql@16.13.2)
+      graphql-tag: 2.12.7(graphql@16.13.2)
       parse-filepath: 1.0.2
       tslib: 2.8.1
 
@@ -3504,7 +3504,7 @@ snapshots:
       change-case-all: 2.1.0
       dependency-graph: 1.0.0
       graphql: 16.13.2
-      graphql-tag: 2.12.6(graphql@16.13.2)
+      graphql-tag: 2.12.7(graphql@16.13.2)
       parse-filepath: 1.0.2
       tslib: 2.8.1
 
@@ -4930,7 +4930,7 @@ snapshots:
       glob: 7.2.3
       graphql: 16.13.2
 
-  graphql-tag@2.12.6(graphql@16.13.2):
+  graphql-tag@2.12.7(graphql@16.13.2):
     dependencies:
       graphql: 16.13.2
       tslib: 2.8.1
