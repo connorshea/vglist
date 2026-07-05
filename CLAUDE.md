@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-vglist is a Ruby on Rails application for tracking video game libraries. It uses a Rails 7.2 backend with PostgreSQL 17, a Vue 3 + TypeScript frontend bundled with Webpack 5, and exposes both REST and GraphQL APIs.
+vglist is a Ruby on Rails application for tracking video game libraries. It uses a Rails 7.2 backend with PostgreSQL 17, a standalone Vue 3 + TypeScript SPA frontend (in `frontend/`, bundled with Vite), and exposes both REST and GraphQL APIs.
 
 ## Common Commands
 
 ### Development
 
 ```bash
-./bin/dev                      # Start Rails server + Webpack dev server (do NOT run this as an AI agent)
+./bin/dev                      # Start Rails server + Vite dev server (do NOT run this as an AI agent)
 bundle install                 # Install Ruby dependencies
 pnpm --dir=frontend install    # Install JS dependencies (always use pnpm, never npm or yarn)
 ```
@@ -32,7 +32,14 @@ bundle exec rubocop           # Ruby linting
 pnpm run lint                  # JS/TS linting (oxlint with type awareness)
 pnpm run fmt:check             # Check JS/TS formatting (oxfmt)
 pnpm run fmt                   # Auto-format JS/TS
-pnpm run typecheck             # TypeScript type checking (tsc)
+pnpm run typecheck             # TypeScript + Vue type checking (vue-tsc)
+```
+
+### Frontend tests
+
+```bash
+pnpm --dir=frontend test       # Run the Vitest suite (colocated *.test.ts files under frontend/src/)
+pnpm --dir=frontend run test:watch  # Watch mode
 ```
 
 ### Database
@@ -62,15 +69,22 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 
 ### Frontend
 
-- **Components**: `app/javascript/src/components/` — Vue 3 SFCs
-- **Types**: `app/javascript/src/types/` — TypeScript type definitions
-- **Entry point**: `app/javascript/application.ts`
-- **Styling**: Bulma CSS framework with Sass/SCSS
+The frontend is a standalone Vite-bundled Vue 3 SPA living in `frontend/`, with client-side routing (vue-router) and its own `package.json`. It talks to the backend over the GraphQL API.
+
+- **Components**: `frontend/src/components/` — Vue 3 SFCs
+- **Pages/routes**: `frontend/src/pages/` and `frontend/src/router/` — vue-router route components
+- **State**: `frontend/src/stores/` — Pinia stores
+- **Composables**: `frontend/src/composables/` — e.g. `useGraphQL` (data fetching via `graphql-request`)
+- **GraphQL**: `frontend/src/graphql/` — queries/mutations and the client (`client.ts`); codegen types via `pnpm --dir=frontend run codegen`
+- **Types**: `frontend/src/types/` — TypeScript type definitions
+- **Entry point**: `frontend/src/main.ts`
+- **Styling**: Bulma CSS framework with Sass/SCSS (`frontend/src/assets/stylesheets/`)
 
 ### Tests
 
-- **Framework**: RSpec with FactoryBot (`spec/factories/`), Shoulda Matchers, Pundit matchers
-- **Structure**: `spec/models/`, `spec/requests/`, `spec/policies/`
+- **Backend**: RSpec with FactoryBot (`spec/factories/`), Shoulda Matchers, Pundit matchers
+- **Backend structure**: `spec/models/`, `spec/requests/`, `spec/policies/`
+- **Frontend**: Vitest with `@vue/test-utils`, colocated `*.test.ts` files under `frontend/src/`
 
 ## Key Conventions
 
