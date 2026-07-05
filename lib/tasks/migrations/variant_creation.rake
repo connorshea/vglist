@@ -45,9 +45,9 @@ namespace 'active_storage:vglist:variants' do
               # Use .processed so it only processes if necessary (some of them may not need to be re-processed)
               game.sized_cover(size)&.processed
             end
-          # Rescue MiniMagick errors if they occur so that they don't block the
+          # Rescue Vips errors if they occur so that they don't block the
           # task from continuing.
-          rescue MiniMagick::Error => e
+          rescue Vips::Error => e
             games_progress_bar.log "ERROR: #{e.message}"
             games_progress_bar.log "Failed on game ID: #{game.id}"
           end
@@ -85,9 +85,9 @@ namespace 'active_storage:vglist:variants' do
               # Use .processed so it only processes if necessary
               user.sized_avatar(size)&.processed
             end
-          # Rescue MiniMagick errors if they occur so that they don't block the
+          # Rescue Vips errors if they occur so that they don't block the
           # task from continuing.
-          rescue MiniMagick::Error => e
+          rescue Vips::Error => e
             users_progress_bar.log "ERROR: #{e.message}"
             users_progress_bar.log "Failed on user ID: #{user.id}"
           end

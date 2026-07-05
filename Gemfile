@@ -34,7 +34,6 @@ gem 'pg_search', '~> 2.3'
 
 # Image transformation
 gem 'image_processing', '~> 2.0'
-gem 'mini_magick', '~> 5.3'
 gem 'ruby-vips', '~> 2.3'
 
 # Validations for ActiveStorage.

@@ -41,7 +41,7 @@
 ## Conventions & Gotchas
 
 - **Database**: Postgres 17.x required. Use structure.sql for schema.
-- **Images**: ActiveStorage for uploads, ImageMagick required.
+- **Images**: ActiveStorage for uploads, libvips required.
 - **Testing**: Use RSpec for Ruby, prefer TypeScript for Vue tests.
 - **TypeScript**: Strict mode enforced.
 - **Deployment**: Dockerfile for CI/CD, Rake tasks for production deploy.

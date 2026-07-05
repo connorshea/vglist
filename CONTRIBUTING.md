@@ -8,7 +8,7 @@
 - Postgres 17.x
 - Node.js 24.x
 - pnpm
-- ImageMagick (for images, like avatars or game covers)
+- libvips (for images, like avatars or game covers)
 
 ### Setup instructions
 

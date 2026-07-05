@@ -57,8 +57,8 @@ module VideoGameList
 
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
-    # Use mini magick explicitly since we haven't upgraded to vips.
-    config.active_storage.variant_processor = :mini_magick
+    # Use vips.
+    config.active_storage.variant_processor = :vips
 
     # Allow cross-origin requests from the Vue SPA frontend.
     # FRONTEND_URL must be set in production to avoid permissive CORS.

@@ -84,9 +84,11 @@ class User < ApplicationRecord
   }.freeze
 
   has_one_attached :avatar do |attachable|
-    attachable.variant :small, resize_to_limit: AVATAR_SIZES[:small], gravity: 'Center', crop: "#{AVATAR_SIZES[:small][0]}x#{AVATAR_SIZES[:small][1]}+0+0"
-    attachable.variant :medium, resize_to_limit: AVATAR_SIZES[:medium], gravity: 'Center', crop: "#{AVATAR_SIZES[:medium][0]}x#{AVATAR_SIZES[:medium][1]}+0+0"
-    attachable.variant :large, resize_to_limit: AVATAR_SIZES[:large], gravity: 'Center', crop: "#{AVATAR_SIZES[:large][0]}x#{AVATAR_SIZES[:large][1]}+0+0"
+    # resize_to_fill scales and center-crops to exactly the target dimensions,
+    # which is libvips-compatible (unlike ImageMagick's gravity/crop options).
+    attachable.variant :small, resize_to_fill: AVATAR_SIZES[:small]
+    attachable.variant :medium, resize_to_fill: AVATAR_SIZES[:medium]
+    attachable.variant :large, resize_to_fill: AVATAR_SIZES[:large]
   end
 
   friendly_id :username, use: [:slugged, :finders]
