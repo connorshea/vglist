@@ -226,7 +226,12 @@ import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
-import type { GameSearchResult, SearchResultUnion, UserSearchResult } from "@/types/graphql";
+import type {
+  GlobalSearchQuery,
+  SearchResultFieldsFragment,
+  GameSearchResultFieldsFragment,
+  UserSearchResultFieldsFragment
+} from "@/types/graphql";
 import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "@lucide/vue";
 
 const router = useRouter();
@@ -269,17 +274,21 @@ onBeforeUnmount(() => {
 });
 
 const query = ref("");
-const results = ref<SearchResultUnion[]>([]);
+const results = ref<SearchResultFieldsFragment[]>([]);
 const loading = ref(false);
 const hasSearched = ref(false);
 const error = ref<string | null>(null);
 
 // Group results by type
 const dedicatedTypes = new Set(["GAME", "COMPANY", "PLATFORM", "USER"]);
-const gameResults = computed(() => results.value.filter((r): r is GameSearchResult => r.searchableType === "GAME"));
+const gameResults = computed(() =>
+  results.value.filter((r): r is GameSearchResultFieldsFragment => r.searchableType === "GAME")
+);
 const companyResults = computed(() => results.value.filter((r) => r.searchableType === "COMPANY"));
 const platformResults = computed(() => results.value.filter((r) => r.searchableType === "PLATFORM"));
-const userResults = computed(() => results.value.filter((r): r is UserSearchResult => r.searchableType === "USER"));
+const userResults = computed(() =>
+  results.value.filter((r): r is UserSearchResultFieldsFragment => r.searchableType === "USER")
+);
 const otherResults = computed(() => results.value.filter((r) => !dedicatedTypes.has(r.searchableType)));
 
 const totalResults = computed(() => results.value.length);
@@ -325,9 +334,7 @@ const performSearch = debounce(async () => {
   loading.value = true;
   error.value = null;
   try {
-    const data = await gqlClient.request<{
-      globalSearch: { nodes: SearchResultUnion[] };
-    }>(GLOBAL_SEARCH, { query: query.value });
+    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: query.value });
 
     results.value = data.globalSearch.nodes;
     hasSearched.value = true;
@@ -362,14 +369,14 @@ const typeRouteMap: Record<string, string> = {
   STORE: "stores"
 };
 
-function resultHref(result: SearchResultUnion): string {
+function resultHref(result: SearchResultFieldsFragment): string {
   const path = typeRouteMap[result.searchableType];
   if (!path) return "#";
-  const id = result.searchableType === "USER" ? (result as UserSearchResult).slug : result.searchableId;
+  const id = result.searchableType === "USER" ? (result as UserSearchResultFieldsFragment).slug : result.searchableId;
   return `/${path}/${id}`;
 }
 
-function goToResult(result: SearchResultUnion) {
+function goToResult(result: SearchResultFieldsFragment) {
   const href = resultHref(result);
   if (href !== "#") {
     router.push(href);

@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   documents: ["src/graphql/**/*.ts"],
   generates: {
     "src/types/graphql.ts": {
-      plugins: ["typescript", "typescript-operations"],
+      plugins: ["typescript-operations"],
       config: {
         // Use 'string' for all ID fields since GraphQL IDs come as strings
         scalars: {

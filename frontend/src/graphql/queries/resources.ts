@@ -192,49 +192,31 @@ export const GET_STORE = gql`
 `;
 
 export const GLOBAL_SEARCH = gql`
+  fragment SearchResultFields on SearchResultInterface {
+    searchableId
+    searchableType
+    content
+  }
+
+  fragment GameSearchResultFields on GameSearchResult {
+    ...SearchResultFields
+    coverUrl(size: SMALL)
+    developerName
+    releaseDate
+  }
+
+  fragment UserSearchResultFields on UserSearchResult {
+    ...SearchResultFields
+    avatarUrl(size: SMALL)
+    slug
+  }
+
   query GlobalSearch($query: String!) {
     globalSearch(query: $query, first: 50) {
       nodes {
-        ... on GameSearchResult {
-          searchableId
-          searchableType
-          content
-          coverUrl(size: SMALL)
-          developerName
-          releaseDate
-        }
-        ... on CompanySearchResult {
-          searchableId
-          searchableType
-          content
-        }
-        ... on EngineSearchResult {
-          searchableId
-          searchableType
-          content
-        }
-        ... on GenreSearchResult {
-          searchableId
-          searchableType
-          content
-        }
-        ... on PlatformSearchResult {
-          searchableId
-          searchableType
-          content
-        }
-        ... on SeriesSearchResult {
-          searchableId
-          searchableType
-          content
-        }
-        ... on UserSearchResult {
-          searchableId
-          searchableType
-          content
-          avatarUrl(size: SMALL)
-          slug
-        }
+        ...SearchResultFields
+        ...GameSearchResultFields
+        ...UserSearchResultFields
       }
     }
   }
