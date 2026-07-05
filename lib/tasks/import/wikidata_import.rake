@@ -279,7 +279,9 @@ namespace 'import:wikidata' do
       # Skip if the Wikidata item ID is nil.
       next unless row.key?(:item)
       # Skip if it's used in less than count_limit Wikidata items.
-      next if row[:count].to_i < count_limit
+      # QLever returns the COUNT aggregate as a plain RDF::Literal (no integer
+      # datatype), which doesn't define #to_i, so coerce through #to_s first.
+      next if row[:count].to_s.to_i < count_limit
 
       wikidata_url = row[:item].to_s
 

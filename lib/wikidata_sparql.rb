@@ -28,7 +28,7 @@ module WikidataSparql
   USER_AGENT = [
     'vglist Data Fetcher/1.0',
     ENV['WIKIDATA_CONTACT_EMAIL'].present? ? "(#{ENV['WIKIDATA_CONTACT_EMAIL']})" : nil,
-    'Ruby 3.0'
+    "Ruby #{RUBY_VERSION}"
   ].compact.join(' ')
 
   # Standard Wikidata prefixes. WDQS provides these implicitly; QLever requires
