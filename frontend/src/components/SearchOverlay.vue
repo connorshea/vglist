@@ -227,7 +227,7 @@ import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import type { GameSearchResult, SearchResultUnion, UserSearchResult } from "@/types/graphql";
-import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "lucide-vue-next";
+import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "@lucide/vue";
 
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();

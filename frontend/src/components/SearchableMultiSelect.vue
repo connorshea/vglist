@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
-import { X, Check } from "lucide-vue-next";
+import { X, Check } from "@lucide/vue";
 
 interface Option {
   id: string;

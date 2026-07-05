@@ -41,7 +41,7 @@ import { useMutation } from "@/composables/useGraphQL";
 import { RESET_API_TOKEN } from "@/graphql/mutations/users-settings";
 import { extractGqlError } from "@/utils/graphql-errors";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import { KeyRound } from "lucide-vue-next";
+import { KeyRound } from "@lucide/vue";
 interface ResetApiTokenResult {
   resetApiToken?: {
     apiToken?: string | null;

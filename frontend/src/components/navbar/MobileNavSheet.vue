@@ -116,7 +116,7 @@ import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
-import { Activity, Gamepad2, User, ChevronRight, LogOut, Settings } from "lucide-vue-next";
+import { Activity, Gamepad2, User, ChevronRight, LogOut, Settings } from "@lucide/vue";
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits<{ (e: "close"): void }>();

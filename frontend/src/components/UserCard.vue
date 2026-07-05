@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Lock } from "lucide-vue-next";
+import { Lock } from "@lucide/vue";
 
 const GRADIENTS = [
   "linear-gradient(135deg, var(--p-400), var(--p-600))",

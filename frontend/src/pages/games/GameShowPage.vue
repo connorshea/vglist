@@ -266,11 +266,10 @@ import {
 } from "@/graphql/mutations/games";
 import { ADD_TO_WIKIDATA_BLOCKLIST } from "@/graphql/mutations/admin";
 import type { GetGameQuery, GetStoresQuery } from "@/types/graphql";
-import { Heart, CircleAlert, ChevronDown } from "lucide-vue-next";
+import { Heart, CircleAlert, ChevronDown } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-// oxlint-disable typescript/consistent-type-imports
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
 import GameSidebar from "@/components/game/GameSidebar.vue";

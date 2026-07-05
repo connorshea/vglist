@@ -153,7 +153,7 @@ import { DELETE_EVENT } from "@/graphql/mutations/events";
 import type { GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import { Trash2 } from "lucide-vue-next";
+import { Trash2 } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
 
