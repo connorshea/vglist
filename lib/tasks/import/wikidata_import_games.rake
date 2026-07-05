@@ -7,6 +7,18 @@ ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 # VALUES clause fits comfortably inside a GET query string.
 GAME_HYDRATION_CHUNK_SIZE = 200
 
+# The multi-valued Wikidata properties we import per game, mapped to their
+# property IDs. Fetched together in a single UNION query (see
+# property_values_query) rather than one round-trip each.
+GAME_PROPERTIES = {
+  developers: 'P178',
+  publishers: 'P123',
+  platforms: 'P400',
+  genres: 'P136',
+  series: 'P179',
+  engines: 'P408'
+}.freeze
+
 namespace 'import:wikidata' do
   require 'wikidata_sparql'
 
@@ -41,15 +53,6 @@ namespace 'import:wikidata' do
 
     puts "Found #{new_wikidata_ids.length} new games to import."
 
-    properties = {
-      developers: 'P178',
-      publishers: 'P123',
-      platforms: 'P400',
-      genres: 'P136',
-      series: 'P179',
-      engines: 'P408'
-    }
-
     progress_bar = ProgressBar.create(
       total: new_wikidata_ids.length,
       format: formatting
@@ -69,9 +72,7 @@ namespace 'import:wikidata' do
         # than making per-game REST API calls.
         details = fetch_game_details(chunk)
         release_dates = fetch_release_dates(chunk)
-        props_by_game = properties.transform_values do |property|
-          fetch_property_values(chunk, property)
-        end
+        props_by_game = fetch_property_values(chunk)
 
         chunk.each do |wikidata_id|
           progress_bar.increment
@@ -83,14 +84,16 @@ namespace 'import:wikidata' do
             next
           end
 
-          if label.downcase.include?('playtest') || ADULT_GAME_BLOCKLIST_TERMS.any? { |term| label.downcase.include?(term) }
+          downcased_label = label.downcase
+
+          if downcased_label.include?('playtest') || ADULT_GAME_BLOCKLIST_TERMS.any? { |term| downcased_label.include?(term) }
             progress_bar.log "#{label}: Blocked name. Skipping."
             next
           end
 
           # Numeric Wikidata IDs for each of this game's properties, defaulting
           # to an empty array when the game has none of a given property.
-          game_props = properties.keys.index_with { |key| props_by_game[key][wikidata_id] || [] }
+          game_props = GAME_PROPERTIES.keys.index_with { |key| props_by_game[key][wikidata_id] || [] }
 
           hash = {
             name: label,
@@ -274,20 +277,25 @@ namespace 'import:wikidata' do
     end
   end
 
-  # Bulk-fetch the numeric Wikidata IDs of a single (multi-valued) property for
-  # a chunk of games, e.g. every game's platforms.
+  # Bulk-fetch the numeric Wikidata IDs of every multi-valued property in
+  # GAME_PROPERTIES for a chunk of games, in a single UNION query.
   #
   # @param [Array<Integer>] wikidata_ids Numeric Wikidata IDs.
-  # @param [String] property Property ID, e.g. 'P400'.
-  # @return [Hash{Integer => Array<Integer>}] Keyed by numeric Wikidata ID.
-  def fetch_property_values(wikidata_ids, property)
-    rows = WikidataSparql.query(property_values_query(wikidata_ids, property))
+  # @return [Hash{Symbol => Hash{Integer => Array<Integer>}}] Keyed by property
+  #   name (:platforms, :developers, ...), then by numeric Wikidata game ID.
+  def fetch_property_values(wikidata_ids)
+    rows = WikidataSparql.query(property_values_query(wikidata_ids))
 
-    rows.each_with_object({}) do |row, values|
+    values = GAME_PROPERTIES.keys.index_with { {} }
+    rows.each do |row|
       row = row.to_h
+      key = row[:propType].to_s.to_sym
+      next unless values.key?(key)
+
       wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
-      values[wikidata_id] = row[:props].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
+      values[key][wikidata_id] = row[:props].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
     end
+    values
   end
 
   # Bulk-fetch the earliest day-precision release date for a chunk of games.
@@ -347,17 +355,24 @@ namespace 'import:wikidata' do
     SPARQL
   end
 
-  # SPARQL for a chunk's values of a single multi-valued property, concatenated
-  # per game. Based on the query used for
+  # SPARQL for a chunk's values of every multi-valued property in
+  # GAME_PROPERTIES, concatenated per game and tagged with the property name.
+  # Each property is its own UNION branch: UNION concatenates rows rather than
+  # joining them, so a game's platforms and genres don't Cartesian-multiply the
+  # way they would as sibling triples in one pattern. Based on the query used for
   # https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
-  def property_values_query(wikidata_ids, property)
+  def property_values_query(wikidata_ids)
+    union_branches = GAME_PROPERTIES.map do |name, property|
+      %({ ?item wdt:#{property} ?p1. BIND("#{name}" AS ?propType) })
+    end.join("\n        UNION ")
+
     <<-SPARQL
-      SELECT ?item (GROUP_CONCAT(DISTINCT ?prop; separator=", ") AS ?props) WHERE {
+      SELECT ?item ?propType (GROUP_CONCAT(DISTINCT ?prop; separator=", ") AS ?props) WHERE {
         #{values_clause(wikidata_ids)}
-        ?item wdt:#{property} ?p1.
+        #{union_branches}
         BIND(strafter(str(?p1), "http://www.wikidata.org/entity/") AS ?prop)
       }
-      GROUP BY ?item
+      GROUP BY ?item ?propType
     SPARQL
   end
 
