@@ -6,8 +6,10 @@ require 'sparql/client'
 #
 # We query QLever's hosted Wikidata mirror
 # (https://qlever.dev/wikidata) rather than the official Wikidata Query
-# Service (WDQS). QLever is dramatically faster and has no query timeout, at the
-# cost of lagging real Wikidata by up to ~1 week — fine for our import tasks.
+# Service (WDQS). QLever is dramatically faster and has no query timeout. Its
+# mirror is continuously updated and tracks Wikidata within hours (verified via
+# the newest schema:dateModified in its data), so freshness is a non-issue for
+# our import tasks.
 #
 # Two things differ from WDQS, and the queries in lib/tasks/import are written
 # with them in mind:
@@ -19,7 +21,7 @@ require 'sparql/client'
 module WikidataSparql
   # The SPARQL endpoint to query. Override with the WIKIDATA_SPARQL_ENDPOINT env
   # var to fall back to WDQS ("https://query.wikidata.org/sparql") without a
-  # deploy if QLever is ever lagging or unavailable.
+  # deploy if QLever is ever unavailable.
   ENDPOINT = ENV.fetch('WIKIDATA_SPARQL_ENDPOINT', 'https://qlever.dev/api/wikidata')
 
   # Contact email advertised in the User-Agent per Wikimedia's user-agent
