@@ -26,8 +26,11 @@ if ENV['COVERAGE'] || ENV['CI']
     # Enable result merging for parallel CI jobs
     merge_timeout 3600
 
-    # Set command name based on environment variable to distinguish unit vs feature tests in CI
-    command_name ENV.fetch('COVERAGE_COMMAND_NAME', 'RSpec')
+    # Set command name based on environment variable to distinguish unit vs feature tests in CI.
+    # Append TEST_ENV_NUMBER so each parallel_tests process reports coverage under a
+    # distinct name; SimpleCov then merges them (see merge_timeout above) instead of the
+    # processes clobbering each other's results.
+    command_name "#{ENV.fetch('COVERAGE_COMMAND_NAME', 'RSpec')}#{ENV['TEST_ENV_NUMBER']}"
   end
 end
 require 'pundit/rspec'
