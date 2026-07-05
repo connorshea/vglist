@@ -70,8 +70,7 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 ### Tests
 
 - **Framework**: RSpec with FactoryBot (`spec/factories/`), Shoulda Matchers, Pundit matchers
-- **Feature tests**: Capybara with headless Chrome (Selenium WebDriver)
-- **Structure**: `spec/models/`, `spec/requests/`, `spec/features/`, `spec/policies/`
+- **Structure**: `spec/models/`, `spec/requests/`, `spec/policies/`
 
 ## Key Conventions
 
