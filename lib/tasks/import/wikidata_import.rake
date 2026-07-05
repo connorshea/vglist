@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+# Number of items to fetch labels for per SPARQL round-trip. Kept small enough
+# that the VALUES clause fits comfortably inside a GET query string.
+LABEL_HYDRATION_CHUNK_SIZE = 200
+
 namespace 'import:wikidata' do
   require 'wikidata_sparql'
-  require 'wikidata_helper'
   require 'ruby-progressbar'
 
   desc "Import game developers and publishers from Wikidata"
@@ -283,35 +286,24 @@ namespace 'import:wikidata' do
       # datatype), which doesn't define #to_i, so coerce through #to_s first.
       next if row[:count].to_s.to_i < count_limit
 
-      wikidata_url = row[:item].to_s
-
-      wikidata_ids << wikidata_url.gsub('http://www.wikidata.org/entity/', '')
+      wikidata_ids << row[:item].to_s.gsub('http://www.wikidata.org/entity/', '')
     end
 
-    progress_bar.total = wikidata_ids.length
-
-    items = []
     # Filter invalid data.
     wikidata_ids.select! { |id| id.start_with?('Q') }
 
-    (wikidata_ids.length / 48).floor.times do |index|
-      start_from = index * 48
-      wikidata_labels = WikidataHelper.get_labels(
-        ids: wikidata_ids[start_from..start_from + 48],
-        languages: ['en', 'mul']
-      )
-      wikidata_labels.each do |id, wikidata_label|
-        name = wikidata_label.dig('labels', 'en', 'value') || wikidata_label.dig('labels', 'mul', 'value')
-        # Skip items with no labels or no English label.
-        wikidata_item = { wikidata_id: id, name: name } unless name.nil?
-        items << wikidata_item if wikidata_item
-      end
-      # Add to the progress bar once every iteration.
-      # Mark it as finished if it would otherwise overflow.
-      if progress_bar.progress + 49 >= progress_bar.total
-        progress_bar.finish
-      else
-        progress_bar.progress += 49
+    progress_bar.total = wikidata_ids.length
+
+    # Hydrate labels in bulk over SPARQL rather than via the rate-limited REST
+    # API, which was hitting 429s on large imports (e.g. ~14k companies).
+    items = []
+    wikidata_ids.each_slice(LABEL_HYDRATION_CHUNK_SIZE) do |chunk|
+      labels = fetch_labels(chunk)
+      chunk.each do |id|
+        progress_bar.increment
+        # Skip items with neither an English nor a 'mul' (multilingual) label.
+        name = labels[id]
+        items << { wikidata_id: id, name: name } unless name.nil?
       end
     end
 
@@ -319,6 +311,30 @@ namespace 'import:wikidata' do
     puts item_names.inspect if ENV["DEBUG"]
 
     return items
+  end
+
+  # Bulk-fetch en/mul labels for a chunk of Wikidata items over SPARQL.
+  #
+  # @param [Array<String>] wikidata_ids Q-prefixed item IDs, e.g. ['Q123'].
+  # @return [Hash{String => String}] Q-prefixed ID => label (English preferred,
+  #   'mul' as fallback). Items with neither label are omitted.
+  def fetch_labels(wikidata_ids)
+    values_clause = wikidata_ids.map { |id| "wd:#{id}" }.join(' ')
+    query = <<-SPARQL
+      SELECT ?item (SAMPLE(?enLabel) AS ?en) (SAMPLE(?mulLabel) AS ?mul) WHERE {
+        VALUES ?item { #{values_clause} }
+        OPTIONAL { ?item rdfs:label ?enLabel. FILTER(lang(?enLabel) = "en") }
+        OPTIONAL { ?item rdfs:label ?mulLabel. FILTER(lang(?mulLabel) = "mul") }
+      }
+      GROUP BY ?item
+    SPARQL
+
+    WikidataSparql.query(query).each_with_object({}) do |row, labels|
+      row = row.to_h
+      id = row[:item].to_s.gsub('http://www.wikidata.org/entity/', '')
+      name = (row[:en] || row[:mul])&.to_s
+      labels[id] = name unless name.nil?
+    end
   end
 
   # Returns Wikidata items representing game developers.
