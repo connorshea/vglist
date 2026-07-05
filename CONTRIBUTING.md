@@ -40,7 +40,6 @@ This is a list of libraries used for various functionality across the app. It's 
 - [Ruby on Rails](https://rubyonrails.org): Web application framework.
   - [ActiveRecord](https://guides.rubyonrails.org/active_record_basics.html): Used for SQL queries, migrations, and maintaining the database structure.
   - [ActiveStorage](https://guides.rubyonrails.org/active_storage_overview.html): Used for image storage.
-  - [Propshaft](github.com/rails/propshaft) and [jsbundling-rails](https://github.com/rails/jsbundling-rails): JavaScript / SCSS bundler, generally uses [Webpack](https://webpack.js.org) for JavaScript/TypeScript code.
 - [Postgres](https://www.postgresql.org/): Database engine that the application uses.
 - [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.
 - [Devise](https://github.com/heartcombo/devise): Authentication framework, for logging in and other user authentication things.
@@ -50,7 +49,12 @@ This is a list of libraries used for various functionality across the app. It's 
 - [FactoryBot](https://github.com/thoughtbot/factory_bot): Factories for seeding the database and writing tests.
 - [GraphQL](https://graphql.org) via [graphql-ruby](https://graphql-ruby.org): GraphQL is a query language that is used for the vglist API.
 - [TypeScript](https://www.typescriptlang.org): Dialect of JavaScript with static types, most of the JavaScript in the application is written in TypeScript.
-- [Vue.js 3.x](https://vuejs.org): JavaScript framework for dynamic webpages, used for various complex pages and elements, e.g. the search bar, library table, etc.
+- [Vue.js 3.x](https://vuejs.org): JavaScript framework that powers the standalone frontend SPA (in `frontend/`), used for all pages and interactive elements, e.g. the search bar, library table, etc.
+  - [Vite](https://vite.dev): Build tool and dev server that bundles the frontend.
+  - [Vue Router](https://router.vuejs.org): Client-side routing for the SPA.
+  - [Pinia](https://pinia.vuejs.org): State management for the frontend.
+  - [graphql-request](https://github.com/jasonkuhrt/graphql-request): Lightweight GraphQL client the frontend uses to talk to the API.
+  - [Vitest](https://vitest.dev) with [Vue Test Utils](https://test-utils.vuejs.org): Frontend test runner and component testing utilities.
 - [Bulma](https://bulma.io/): CSS Framework used for styling the application.
 
 ## Rake tasks
