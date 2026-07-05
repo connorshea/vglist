@@ -1,7 +1,7 @@
 [tools]
 ruby = "3.4.9"
 node = "24"
-pnpm = "10.33.0"
+pnpm = "11.10.0"
 
 [settings]
 ruby.compile = false
