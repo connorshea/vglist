@@ -111,6 +111,9 @@ group :development, :test do
   # For better display of rspec test suite progress
   gem 'fuubar', '~> 2.5.1'
 
+  # Run the test suite across multiple processes to speed it up.
+  gem 'parallel_tests', '~> 5.3'
+
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 4.0.0'
 end

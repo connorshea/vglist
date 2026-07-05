@@ -19,9 +19,22 @@ pnpm --dir=frontend install    # Install JS dependencies (always use pnpm, never
 ### Testing
 
 ```bash
-bundle exec rspec                                              # Full test suite
+bundle exec rspec                                              # Full test suite (single process)
 bundle exec rspec spec/models/game_spec.rb                     # Single file
 bundle exec rspec spec/models/game_spec.rb:42                  # Single example by line
+```
+
+The suite is diffuse (no single slow test), so the fastest win is running it across
+multiple processes with `parallel_tests`. Each process gets its own database
+(`vglist_test`, `vglist_test2`, ...) via the `TEST_ENV_NUMBER` suffix in
+`config/database.yml`. CI runs this way by default.
+
+```bash
+# One-time (and after schema changes): create + load a DB per process.
+bundle exec rake parallel:create parallel:load_schema
+
+bundle exec rake parallel:spec                                 # Run the whole suite in parallel
+bundle exec parallel_rspec spec/models spec/requests           # Run specific dirs/files in parallel
 ```
 
 ### Linting & Type Checking
