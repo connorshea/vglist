@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-# Number of items to fetch labels for per SPARQL round-trip. Kept small enough
-# that the VALUES clause fits comfortably inside a GET query string.
-LABEL_HYDRATION_CHUNK_SIZE = 200
-
 namespace 'import:wikidata' do
   require 'wikidata_sparql'
   require 'ruby-progressbar'
@@ -272,69 +268,42 @@ namespace 'import:wikidata' do
     puts "There are now #{Engine.count} engines in the database."
   end
 
-  # Filter invalid items from a set of wikidata rows, and get better
-  # data like labels.
+  # Filter invalid items from a set of wikidata rows and extract their labels.
+  # Labels arrive on each row from the discovery query (see #query), so this is
+  # a pure in-memory pass with no additional network round-trips.
   def wikidata_item_filter(rows:, count_limit: 0, progress_bar:)
-    wikidata_ids = []
+    progress_bar.total = rows.length
+    items = []
 
     rows.each do |row|
       row = row.to_h
-      # Skip if the Wikidata item ID is nil.
+      progress_bar.increment
+      # Skip the aggregate row for games with no association of this type, where
+      # the Wikidata item ID is unbound.
       next unless row.key?(:item)
       # Skip if it's used in less than count_limit Wikidata items.
       # QLever returns the COUNT aggregate as a plain RDF::Literal (no integer
       # datatype), which doesn't define #to_i, so coerce through #to_s first.
       next if row[:count].to_s.to_i < count_limit
 
-      wikidata_ids << row[:item].to_s.gsub('http://www.wikidata.org/entity/', '')
+      wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/', '')
+      # Filter invalid data; only Q-items are real Wikidata entities.
+      next unless wikidata_id.start_with?('Q')
+
+      # Prefer the English label, falling back to the 'mul' (multilingual)
+      # label. Skip items with neither.
+      name = (row[:en] || row[:mul])&.to_s
+      next if name.nil?
+
+      items << { wikidata_id: wikidata_id, name: name }
     end
 
-    # Filter invalid data.
-    wikidata_ids.select! { |id| id.start_with?('Q') }
-
-    progress_bar.total = wikidata_ids.length
-
-    # Hydrate labels in bulk over SPARQL rather than via the rate-limited REST
-    # API, which was hitting 429s on large imports (e.g. ~14k companies).
-    items = []
-    wikidata_ids.each_slice(LABEL_HYDRATION_CHUNK_SIZE) do |chunk|
-      labels = fetch_labels(chunk)
-      chunk.each do |id|
-        progress_bar.increment
-        # Skip items with neither an English nor a 'mul' (multilingual) label.
-        name = labels[id]
-        items << { wikidata_id: id, name: name } unless name.nil?
-      end
+    if ENV["DEBUG"]
+      item_names = items.map { |item| item&.dig(:name) }
+      puts item_names.inspect
     end
-
-    item_names = items.map { |item| item&.dig(:name) } if ENV["DEBUG"]
-    puts item_names.inspect if ENV["DEBUG"]
 
     return items
-  end
-
-  # Bulk-fetch en/mul labels for a chunk of Wikidata items over SPARQL.
-  #
-  # @param [Array<String>] wikidata_ids Q-prefixed item IDs, e.g. ['Q123'].
-  # @return [Hash{String => String}] Q-prefixed ID => label (English preferred,
-  #   'mul' as fallback). Items with neither label are omitted.
-  def fetch_labels(wikidata_ids)
-    values_clause = wikidata_ids.map { |id| "wd:#{id}" }.join(' ')
-    query = <<-SPARQL
-      SELECT ?item (SAMPLE(?enLabel) AS ?en) (SAMPLE(?mulLabel) AS ?mul) WHERE {
-        VALUES ?item { #{values_clause} }
-        OPTIONAL { ?item rdfs:label ?enLabel. FILTER(lang(?enLabel) = "en") }
-        OPTIONAL { ?item rdfs:label ?mulLabel. FILTER(lang(?mulLabel) = "mul") }
-      }
-      GROUP BY ?item
-    SPARQL
-
-    WikidataSparql.query(query).each_with_object({}) do |row, labels|
-      row = row.to_h
-      id = row[:item].to_s.gsub('http://www.wikidata.org/entity/', '')
-      name = (row[:en] || row[:mul])&.to_s
-      labels[id] = name unless name.nil?
-    end
   end
 
   # Returns Wikidata items representing game developers.
@@ -376,13 +345,27 @@ namespace 'import:wikidata' do
   # Returns data for game properties sorted by associations, e.g. number of
   # games developed in the case of developers.
   # Query based off the query used for https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
-  # The first row is the total count of games with no associations of this type.
+  #
+  # Labels are fetched in the same query rather than in a second hydration pass,
+  # so the whole import is one SPARQL round-trip per property. The counts are
+  # computed in an inner subquery that collapses ?game to one row per distinct
+  # ?item *before* the rdfs:label OPTIONALs run — otherwise the labels join
+  # against every game-row (and against the UNDEF ?item of association-less
+  # games), which blows the intermediate result up into the billions of rows and
+  # times out. Requiring the property triple (no OPTIONAL) drops the UNDEF
+  # aggregate row too; wikidata_item_filter discarded it anyway.
   def query(property)
     sparql = <<-SPARQL
-      SELECT ?item (COUNT(?game) as ?count) WHERE {
-        ?game wdt:P31 wd:Q7889. # Instance of video game
-        OPTIONAL { ?game wdt:#{property} ?item. }
-      } GROUP BY ?item
+      SELECT ?item ?count (SAMPLE(?enLabel) AS ?en) (SAMPLE(?mulLabel) AS ?mul) WHERE {
+        {
+          SELECT ?item (COUNT(?game) AS ?count) WHERE {
+            ?game wdt:P31 wd:Q7889. # Instance of video game
+            ?game wdt:#{property} ?item.
+          } GROUP BY ?item
+        }
+        OPTIONAL { ?item rdfs:label ?enLabel. FILTER(lang(?enLabel) = "en") }
+        OPTIONAL { ?item rdfs:label ?mulLabel. FILTER(lang(?mulLabel) = "mul") }
+      } GROUP BY ?item ?count
       ORDER BY DESC(?count)
     SPARQL
 

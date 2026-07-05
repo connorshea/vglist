@@ -43,12 +43,44 @@ module WikidataSparql
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   SPARQL
 
+  # Seconds to pause before every request, to proactively stay under QLever's
+  # rate limit rather than only backing off once it returns a 429.
+  INTER_QUERY_DELAY_SECONDS = 1
+
+  # Seconds to wait before the first retry after a 429; doubles each attempt
+  # (4, 8, 16, 32 seconds).
+  INITIAL_BACKOFF_SECONDS = 4
+
   # Run a SPARQL query against Wikidata, prepending the standard prefixes.
   #
   # @param [String] sparql the query body (without prefix declarations)
   # @return [Array<RDF::Query::Solution>]
   def self.query(sparql)
-    client.query(PREFIXES + sparql)
+    # Pace requests to stay under QLever's rate limit even when we're not
+    # actively being throttled.
+    sleep(INTER_QUERY_DELAY_SECONDS)
+    with_retry { client.query(PREFIXES + sparql) }
+  end
+
+  # Retry a SPARQL request with exponential backoff when the endpoint
+  # rate-limits us (HTTP 429). QLever's nginx returns 429 under bursts of rapid
+  # queries (e.g. the chunked hydration in the games import); backing off clears
+  # it. Other errors propagate immediately.
+  #
+  # @return [Array<RDF::Query::Solution>]
+  def self.with_retry(max_attempts: 5)
+    attempt = 0
+    begin
+      attempt += 1
+      yield
+    rescue SPARQL::Client::ClientError => e
+      raise unless e.message.include?('429') && attempt < max_attempts
+
+      backoff_seconds = INITIAL_BACKOFF_SECONDS * (2**(attempt - 1)) # 4, 8, 16, 32 seconds
+      warn "SPARQL endpoint returned 429 (attempt #{attempt}/#{max_attempts}); retrying in #{backoff_seconds}s..."
+      sleep(backoff_seconds)
+      retry
+    end
   end
 
   # Build a SPARQL client pointed at the Wikidata endpoint.
