@@ -85,11 +85,15 @@ module WikidataSparql
 
   # Build a SPARQL client pointed at the Wikidata endpoint.
   #
+  # Queries are sent via POST so they aren't constrained by the URL-length
+  # ceiling a GET query string imposes on the VALUES clauses in the import
+  # tasks. This lets us hydrate larger chunks per round-trip.
+  #
   # @return [SPARQL::Client]
   def self.client
     SPARQL::Client.new(
       ENDPOINT,
-      method: :get,
+      method: :post,
       headers: { 'User-Agent': USER_AGENT },
       read_timeout: 300
     )
