@@ -2,7 +2,7 @@
 
 namespace :import do
   require 'net/http'
-  require 'sparql/client'
+  require 'wikidata_sparql'
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
@@ -119,11 +119,10 @@ namespace :import do
   # Games with an associated series.
   def games_with_series_query
     sparql = <<-SPARQL
-      SELECT ?item ?itemLabel ?series WHERE
+      SELECT ?item ?series WHERE
       {
         ?item wdt:P31 wd:Q7889; # instance of video game
               wdt:P179 ?series. # in a series
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
       }
     SPARQL
 
@@ -167,24 +166,16 @@ namespace :import do
   # ```ruby
   # {
   #   item: <RDF id='Q123'>,
-  #   itemLabel: Civilization V,
   #   genres: "Q123, Q124, Q125"
   # }
   # ```
   def games_with_property_query(property, plural)
     sparql = <<-SPARQL
-      SELECT ?item ?itemLabel (group_concat(distinct ?prop;separator=", ") as ?#{plural}) with {
-        SELECT ?item WHERE
-        {
-          ?item wdt:P31 wd:Q7889 .
-        }
-      } as %i
-      WHERE {
-        include %i
-        ?item wdt:#{property} ?p1.
+      SELECT ?item (group_concat(distinct ?prop;separator=", ") as ?#{plural}) WHERE {
+        ?item wdt:P31 wd:Q7889; # instance of video game
+              wdt:#{property} ?p1.
         bind(strafter(str(?p1), "http://www.wikidata.org/entity/") as ?prop)
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
-      } GROUP BY ?item ?itemLabel
+      } GROUP BY ?item
     SPARQL
 
     return sparql
@@ -277,14 +268,6 @@ namespace :import do
   # @param [String] query
   # @return [Array<Hash>]
   def get_rows(query)
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
-    rows = []
-    rows.concat(client.query(query))
+    WikidataSparql.query(query)
   end
 end

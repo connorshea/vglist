@@ -5,21 +5,14 @@ LANGUAGE_CODES_FOR_LABELS = ['en', 'mul'].freeze
 ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 
 namespace 'import:wikidata' do
-  require 'sparql/client'
+  require 'wikidata_sparql'
   require 'wikidata_helper'
 
   desc "Import games from Wikidata"
   task games: :environment do
     puts "Importing games from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
     rows = []
-    rows.concat(client.query(games_query))
+    rows.concat(WikidataSparql.query(games_query))
 
     # Get every game in the database that has a Wikidata ID.
     games = Game.where.not(wikidata_id: nil)
@@ -271,15 +264,8 @@ namespace 'import:wikidata' do
   desc "Import release dates for games from Wikidata"
   task 'games:release_dates': :environment do
     puts "Importing game release dates from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
     rows = []
-    rows.concat(client.query(release_dates_query))
+    rows.concat(WikidataSparql.query(release_dates_query))
 
     # Get every game in the database that has a Wikidata ID and no release date.
     games = Game.where.not(wikidata_id: nil).where(release_date: nil)
@@ -386,7 +372,6 @@ namespace 'import:wikidata' do
         FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
         ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
             psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
       }
     SPARQL
   end

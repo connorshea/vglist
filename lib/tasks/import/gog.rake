@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
 namespace :import do
-  require 'sparql/client'
+  require 'wikidata_sparql'
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
   desc "Import GOG.com IDs from Wikidata"
   task gog: :environment do
     puts "Importing GOG.com IDs from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
     rows = []
-    rows.concat(client.query(gog_query))
+    rows.concat(WikidataSparql.query(gog_query))
 
     games = rows.map do |row|
       next unless row.to_h[:gogId].to_s.start_with?('game/')

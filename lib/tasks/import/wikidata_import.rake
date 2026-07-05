@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace 'import:wikidata' do
-  require 'sparql/client'
+  require 'wikidata_sparql'
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
@@ -378,16 +378,6 @@ namespace 'import:wikidata' do
 
   # Convenience method for getting rows from SPARQL.
   def get_rows(query)
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
-    rows = []
-    rows.concat(client.query(query))
-
-    return rows
+    WikidataSparql.query(query)
   end
 end
