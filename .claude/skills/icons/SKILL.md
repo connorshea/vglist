@@ -1,6 +1,6 @@
 ---
 name: icons
-description: How to add icons to the vglist frontend using Lucide via lucide-vue-next. Use when adding, replacing, or reviewing icon usage in Vue components.
+description: How to add icons to the vglist frontend using Lucide via @lucide/vue. Use when adding, replacing, or reviewing icon usage in Vue components.
 ---
 
 # Icons
@@ -9,10 +9,10 @@ When adding icons to the vglist frontend, follow these rules:
 
 ## Rules
 
-1. **Always use Lucide icons** from `lucide-vue-next`. Never create custom SVG icon components or use inline `<svg>` elements for icons.
-2. **Import icons by name** directly from `lucide-vue-next`:
+1. **Always use Lucide icons** from `@lucide/vue`. Never create custom SVG icon components or use inline `<svg>` elements for icons.
+2. **Import icons by name** directly from `@lucide/vue`:
    ```vue
-   import { Search, ChevronRight, Trash2 } from "lucide-vue-next";
+   import { Search, ChevronRight, Trash2 } from "@lucide/vue";
    ```
 3. **Use icons in templates** as Vue components:
    ```vue

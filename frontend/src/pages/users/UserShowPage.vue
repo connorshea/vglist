@@ -339,7 +339,7 @@ import {
 } from "@/graphql/mutations/users";
 import type { GetUserQuery } from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import { CircleAlert, ShieldCheck, UserMinus } from "lucide-vue-next";
+import { CircleAlert, ShieldCheck, UserMinus } from "@lucide/vue";
 
 const route = useRoute("user");
 const router = useRouter();

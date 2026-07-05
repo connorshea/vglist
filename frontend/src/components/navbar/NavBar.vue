@@ -140,7 +140,7 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
-import { Search } from "lucide-vue-next";
+import { Search } from "@lucide/vue";
 import NavSearch from "./NavSearch.vue";
 import MobileNavSheet from "./MobileNavSheet.vue";
 

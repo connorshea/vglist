@@ -144,7 +144,7 @@ import { gqlClient } from "@/graphql/client";
 import { DELETE_USER, RESET_USER_LIBRARY, UPDATE_EMAIL, UPDATE_PASSWORD } from "@/graphql/mutations/users-settings";
 import { extractGqlError } from "@/utils/graphql-errors";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import { CircleAlert } from "lucide-vue-next";
+import { CircleAlert } from "@lucide/vue";
 
 interface MutationResult {
   updateEmail?: { user?: { id: string } | null; errors: string[] } | null;
