@@ -3,9 +3,11 @@
 # rubocop:disable Rails/TimeZone
 ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 
-# Number of games to hydrate per SPARQL round-trip. Kept small enough that the
-# VALUES clause fits comfortably inside a GET query string.
-GAME_HYDRATION_CHUNK_SIZE = 200
+# Number of games to hydrate per SPARQL round-trip. Bigger chunks mean fewer
+# round-trips (and less of the per-query pacing sleep) on a full import, at the
+# cost of larger VALUES clauses and result sets per query. Queries go over POST
+# (see WikidataSparql.client), so this isn't bounded by a GET URL-length limit.
+GAME_HYDRATION_CHUNK_SIZE = 500
 
 # The multi-valued Wikidata properties we import per game, mapped to their
 # property IDs. Fetched together in a single UNION query (see
