@@ -216,7 +216,8 @@ jobs:
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       # Create and load one test database per parallel process (ci_test, ci_test2, ...).
-      - run: bundle exec rake parallel:setup
+      - run: bundle exec rake parallel:create
+      - run: bundle exec rake parallel:load_schema
       - run: bundle exec rails zeitwerk:check
       - run: bundle exec rake parallel:spec
       - name: Coverage summary
