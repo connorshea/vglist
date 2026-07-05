@@ -189,9 +189,7 @@ GEM
     htmlentities (4.4.2)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    image_processing (1.14.0)
-      mini_magick (>= 4.9.5, < 6)
-      ruby-vips (>= 2.0.17, < 3)
+    image_processing (2.0.2)
     io-console (0.8.2)
     irb (1.18.0)
       pp (>= 0.6.0)
@@ -234,8 +232,6 @@ GEM
     marcel (1.2.1)
     matrix (0.4.3)
     method_source (1.1.0)
-    mini_magick (5.3.1)
-      logger
     mini_mime (1.1.5)
     minitest (5.27.0)
     msgpack (1.8.3)
@@ -515,7 +511,7 @@ DEPENDENCIES
   fuubar (~> 2.5.1)
   graphql (~> 2.6.3)
   graphql-rails_logger (~> 1.2.5)
-  image_processing (~> 1.14)
+  image_processing (~> 2.0)
   jwt (~> 3.2)
   kaminari (~> 1.2)
   listen (~> 3.10)
@@ -540,6 +536,7 @@ DEPENDENCIES
   rubocop-rspec (~> 3.10.2)
   rubocop-rspec_rails (~> 2.32)
   ruby-progressbar (~> 1.13)
+  ruby-vips (~> 2.3)
   sentry-rails (~> 6.4.0)
   sentry-ruby (~> 6.4.0)
   shoulda-matchers (= 8.0.1)
@@ -615,7 +612,7 @@ CHECKSUMS
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   htmlentities (4.4.2) sha256=bbafbdf69f2eca9262be4efef7e43e6a1de54c95eb600f26984f71d2fe96c5c3
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
-  image_processing (1.14.0) sha256=754cc169c9c262980889bec6bfd325ed1dafad34f85242b5a07b60af004742fb
+  image_processing (2.0.2) sha256=d0cf990f862d64efb1a14916044bf4b5bb2bccc7e235022413cde46019799cfa
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
@@ -635,7 +632,6 @@ CHECKSUMS
   marcel (1.2.1) sha256=1678e9360e32f9eafa917c80029e2f6d10b2715c66a4b87b6d0da9b9cd1f859f
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
-  mini_magick (5.3.1) sha256=29395dfd76badcabb6403ee5aff6f681e867074f8f28ce08d78661e9e4a351c4
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
   msgpack (1.8.3) sha256=8bda4a6428d3244e50d6bd55854d354edbada88a4e1f4f5731a39a0f86bee6a1
