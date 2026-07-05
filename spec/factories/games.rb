@@ -55,7 +55,7 @@ FactoryBot.define do
     end
 
     trait :giantbomb_id do
-      giantbomb_id { "3030-#{Faker::Number.unique.number(digits: rand(1..4))}" }
+      sequence(:giantbomb_id) { |n| "3030-#{n}" }
     end
 
     trait :epic_games_store_id do
