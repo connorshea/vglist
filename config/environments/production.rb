@@ -31,12 +31,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
-  # We actually use DigitalOcean for this, but the key is called Amazon because
-  # DigitalOcean Spaces is S3-compatible.
-  # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = :amazon
+  # Store uploaded files in Cloudflare R2, served publicly from
+  # files.vglist.co (see config/storage.yml for options).
+  config.active_storage.service = :r2
 
-  # Proxy storage requests directly to DigitalOcean rather than using a redirect.
+  # Proxy storage requests directly to the storage provider rather than using a redirect.
   # config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.

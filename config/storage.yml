@@ -6,8 +6,24 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# Use DigitalOcean Spaces (which is S3-compatible) for ActiveStorage in production.
-# Use rails credentials:edit to set the AWS secrets (as digitalocean:access_key_id|secret_access_key)
+# Cloudflare R2 (S3-compatible) for ActiveStorage in production. Uploads go
+# through the account's S3 API endpoint; objects are served publicly from the
+# custom domain connected to the bucket (public_host). See
+# ActiveStorage::Service::R2Service (lib/active_storage/service/r2_service.rb).
+r2:
+  service: R2
+  access_key_id: <%= ENV["R2_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["R2_SECRET_ACCESS_KEY"] %>
+  endpoint: <%= ENV["R2_ENDPOINT"] %>
+  region: auto
+  bucket: <%= ENV.fetch("R2_BUCKET", "vglist") %>
+  public: true
+  public_host: <%= ENV.fetch("R2_PUBLIC_HOST", "https://files.vglist.co") %>
+
+# Legacy: DigitalOcean Spaces (also S3-compatible), used for ActiveStorage in
+# production before the migration to Cloudflare R2. Remove once the migration
+# is complete and the Spaces bucket has been decommissioned.
+# Secrets are in encrypted credentials (digitalocean:access_key_id|secret_access_key).
 amazon:
   service: S3
   access_key_id: <%= Rails.application.credentials.dig(:digitalocean, :access_key_id) %>
