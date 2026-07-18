@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
 namespace :import do
-  require 'sparql/client'
+  require 'wikidata_sparql'
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
   desc "Import Giant Bomb IDs from Wikidata"
   task giantbomb: :environment do
     puts "Importing Giant Bomb IDs from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
     rows = []
-    rows.concat(client.query(giantbomb_query))
+    rows.concat(WikidataSparql.query(giantbomb_query))
 
     games = rows.map do |row|
       {

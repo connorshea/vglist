@@ -46,7 +46,22 @@ class WikidataHelper
 
     puts api_uri if ENV['DEBUG']
 
-    response = JSON.parse(URI.parse(api_uri.to_s).open.read)
+    begin
+      response = JSON.parse(URI.parse(api_uri.to_s).open.read)
+    rescue OpenURI::HTTPError => e
+      # Surface useful detail on rate limiting (429) and other HTTP errors,
+      # since open-uri's default message ("429 Too Many Requests") hides the
+      # Retry-After hint and the request that triggered it.
+      io = e.io
+      warn "Wikidata API request failed: #{io.status.join(' ')}"
+      warn "  URL: #{api_uri}"
+      warn "  Retry-After: #{io.meta['retry-after']}" if io.meta['retry-after']
+      %w[x-ratelimit-limit x-ratelimit-remaining x-ratelimit-reset].each do |header|
+        warn "  #{header}: #{io.meta[header]}" if io.meta[header]
+      end
+      warn "  Headers: #{io.meta.inspect}" if ENV['DEBUG']
+      raise
+    end
 
     return response['entities'] if response['success'] && action == 'wbgetentities'
 

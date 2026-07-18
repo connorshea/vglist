@@ -1,57 +1,62 @@
 # frozen_string_literal: true
 
 # rubocop:disable Rails/TimeZone
-LANGUAGE_CODES_FOR_LABELS = ['en', 'mul'].freeze
 ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 
+# Number of games to hydrate per SPARQL round-trip. Bigger chunks mean fewer
+# round-trips (and less of the per-query pacing sleep) on a full import, at the
+# cost of larger VALUES clauses and result sets per query. Queries go over POST
+# (see WikidataSparql.client), so this isn't bounded by a GET URL-length limit.
+GAME_HYDRATION_CHUNK_SIZE = 500
+
+# The multi-valued Wikidata properties we import per game, mapped to their
+# property IDs. Fetched together in a single UNION query (see
+# property_values_query) rather than one round-trip each.
+GAME_PROPERTIES = {
+  developers: 'P178',
+  publishers: 'P123',
+  platforms: 'P400',
+  genres: 'P136',
+  series: 'P179',
+  engines: 'P408'
+}.freeze
+
 namespace 'import:wikidata' do
-  require 'sparql/client'
-  require 'wikidata_helper'
+  require 'wikidata_sparql'
 
   desc "Import games from Wikidata"
   task games: :environment do
     puts "Importing games from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
 
-    rows = []
-    rows.concat(client.query(games_query))
+    # Driver query: every video game with an en/mul label. Returns only the
+    # item IDs — everything else is hydrated in bulk below, per chunk.
+    driver_rows = WikidataSparql.query(games_query)
 
-    # Get every game in the database that has a Wikidata ID.
-    games = Game.where.not(wikidata_id: nil)
+    # Everything we need to filter/hydrate against, loaded once. Sets give O(1)
+    # membership checks against the ~1M driver rows.
+    existing_wikidata_ids = Game.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
+    blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id).to_set
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id).to_set
 
-    existing_wikidata_ids = games.pluck(:wikidata_id)
-    blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id)
-    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
-
-    # Create a map of Wikidata IDs to vglist IDs for platforms, engines, and genres, to avoid tons of extra queries later.
+    # Maps of Wikidata IDs to vglist IDs for platforms, engines, and genres, to
+    # avoid tons of extra queries later.
     vglist_engines = Engine.all.pluck(:wikidata_id, :id).to_h
     vglist_platforms = Platform.all.pluck(:wikidata_id, :id).to_h
     vglist_genres = Genre.all.pluck(:wikidata_id, :id).to_h
 
-    # Filter to wikidata items that don't already exist in the database.
-    # Also filter out blocklisted Wikidata items.
-    rows = rows.reject do |row|
-      url = row.to_h[:item].to_s
-      wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '').to_i
-      existing_wikidata_ids.include?(wikidata_id) || blocklisted_wikidata_ids.include?(wikidata_id)
-    end
+    # Numeric Wikidata IDs of games that aren't already in the database and
+    # aren't blocklisted. These are the only games we hydrate and create.
+    new_wikidata_ids = driver_rows.filter_map do |row|
+      wikidata_id = row.to_h[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      next if existing_wikidata_ids.include?(wikidata_id) || blocklisted_wikidata_ids.include?(wikidata_id)
 
-    properties = {
-      developers: 'P178',
-      publishers: 'P123',
-      platforms: 'P400',
-      genres: 'P136',
-      series: 'P179',
-      engines: 'P408'
-    }
+      wikidata_id
+    end.uniq
+
+    puts "Found #{new_wikidata_ids.length} new games to import."
 
     progress_bar = ProgressBar.create(
-      total: rows.length,
+      total: new_wikidata_ids.length,
       format: formatting
     )
 
@@ -62,196 +67,115 @@ namespace 'import:wikidata' do
     Rails.logger.level = 2 if Rails.env.production?
 
     PgSearch.disable_multisearch do
-      rows.each do |row|
-        progress_bar.increment
-        url = row.to_h[:item].to_s
-        wikidata_id = url.gsub('http://www.wikidata.org/entity/', '')
+      # Hydrate and create games one chunk at a time to keep memory and query
+      # size bounded on a full import.
+      new_wikidata_ids.each_slice(GAME_HYDRATION_CHUNK_SIZE) do |chunk|
+        # Bulk-fetch everything for this chunk from Wikidata over SPARQL, rather
+        # than making per-game REST API calls.
+        details = fetch_game_details(chunk)
+        release_dates = fetch_release_dates(chunk)
+        props_by_game = fetch_property_values(chunk)
 
-        # We're hitting 429s on Wikidata so I guess this is necessary.
-        sleep 4
+        chunk.each do |wikidata_id|
+          progress_bar.increment
 
-        wikidata_json = WikidataHelper.get_claims(
-          entity: wikidata_id
-        )
-
-        wikidata_label = WikidataHelper.get_labels(
-          ids: wikidata_id,
-          languages: LANGUAGE_CODES_FOR_LABELS
-        )
-
-        # Get either the English or 'mul' label for the game.
-        label = wikidata_label.dig(wikidata_id, 'labels', 'en', 'value')
-        label ||= wikidata_label.dig(wikidata_id, 'labels', 'mul', 'value')
-        if label.nil?
-          progress_bar.log "No label. Skipping."
-          next
-        end
-
-        if label.downcase.include?('playtest') || ADULT_GAME_BLOCKLIST_TERMS.any? { |term| label.downcase.include?(term) }
-          progress_bar.log "#{label}: Blocked name. Skipping."
-          next
-        end
-
-        game_hash = { wikidata_id: wikidata_id.delete('Q'), name: label }
-
-        # Create attributes for each property.
-        properties.each_key do |key|
-          game_hash[key] = []
-        end
-
-        # Fill the game_hash's attributes with data from the Wikidata JSON.
-        properties.each do |name, property|
-          next if wikidata_json[property].nil?
-
-          wikidata_json[property].each do |snak|
-            # For "unknown values" this may return nil, and we don't want to deal with that, so we don't.
-            next if snak.dig('mainsnak', 'datavalue', 'value', 'numeric-id').nil?
-
-            game_hash[name] << snak.dig('mainsnak', 'datavalue', 'value', 'numeric-id')
+          detail = details[wikidata_id]
+          label = detail&.dig(:label)
+          if label.nil?
+            progress_bar.log "No label. Skipping."
+            next
           end
 
-          # In the rare case of duplicate Wikidata IDs for a given property, strip them out.
-          game_hash[name].uniq!
-        end
+          downcased_label = label.downcase
 
-        pcgamingwiki_id = wikidata_json['P6337']&.first&.dig('mainsnak', 'datavalue', 'value')
-        steam_app_id = wikidata_json['P1733']&.first&.dig('mainsnak', 'datavalue', 'value')
-        epic_games_store_id = wikidata_json['P6278']&.first&.dig('mainsnak', 'datavalue', 'value')
-        # Remove the 'game/' prefix from the GOG.com IDs.
-        gog_id = wikidata_json['P2725']&.first&.dig('mainsnak', 'datavalue', 'value')&.gsub('game/', '')
-        igdb_id = wikidata_json['P5794']&.first&.dig('mainsnak', 'datavalue', 'value')
-        mobygames_id = wikidata_json['P11688']&.first&.dig('mainsnak', 'datavalue', 'value')
-        giantbomb_id = wikidata_json['P5247']&.first&.dig('mainsnak', 'datavalue', 'value')
-
-        release_dates = wikidata_json['P577']&.map { |date| date.dig('mainsnak', 'datavalue', 'value', 'time') }
-        release_dates&.map! do |time|
-          if time.nil?
-            nil
-          else
-            begin
-              Time.parse(time).to_date
-            rescue ArgumentError
-              nil
-            end
+          if downcased_label.include?('playtest') || ADULT_GAME_BLOCKLIST_TERMS.any? { |term| downcased_label.include?(term) }
+            progress_bar.log "#{label}: Blocked name. Skipping."
+            next
           end
-        end
-        # Set release date equal to nil, or the earliest release date if
-        # all of the release dates above resolved to a proper date. It's done
-        # this way to prevent bad release dates from being used if Wikidata
-        # returns a date like "June 2019", which is represented as "2019-06-00",
-        # an invalid date.
-        release_date = nil
-        release_date = release_dates&.min unless release_dates&.any? { |date| date.nil? }
 
-        hash = {
-          name: game_hash[:name],
-          wikidata_id: game_hash[:wikidata_id]
-        }
+          # Numeric Wikidata IDs for each of this game's properties, defaulting
+          # to an empty array when the game has none of a given property.
+          game_props = GAME_PROPERTIES.keys.index_with { |key| props_by_game[key][wikidata_id] || [] }
 
-        hash[:pcgamingwiki_id] = pcgamingwiki_id unless pcgamingwiki_id.nil?
-        hash[:epic_games_store_id] = epic_games_store_id unless epic_games_store_id.nil?
-        hash[:gog_id] = gog_id unless gog_id.nil?
-        hash[:igdb_id] = igdb_id unless igdb_id.nil?
-        hash[:mobygames_id] = mobygames_id unless mobygames_id.nil?
-        hash[:giantbomb_id] = giantbomb_id unless giantbomb_id.nil?
-        hash[:release_date] = release_date unless release_date.nil?
+          hash = {
+            name: label,
+            wikidata_id: wikidata_id
+          }
 
-        begin
-          game = Game.create!(hash)
-          progress_bar.log "Created #{hash[:name]}."
-        rescue ActiveRecord::RecordInvalid => e
-          progress_bar.log "Invalid: #{hash[:name].ljust(30)} | #{e}"
-          next
-        end
+          hash[:pcgamingwiki_id] = detail[:pcgamingwiki_id] unless detail[:pcgamingwiki_id].nil?
+          hash[:epic_games_store_id] = detail[:epic_games_store_id] unless detail[:epic_games_store_id].nil?
+          hash[:gog_id] = detail[:gog_id] unless detail[:gog_id].nil?
+          hash[:igdb_id] = detail[:igdb_id] unless detail[:igdb_id].nil?
+          hash[:mobygames_id] = detail[:mobygames_id] unless detail[:mobygames_id].nil?
+          hash[:giantbomb_id] = detail[:giantbomb_id] unless detail[:giantbomb_id].nil?
 
-        keys = []
-        game_hash.each_key do |key|
-          next if key == :name || key == :wikidata_id || game_hash[key].nil? || game_hash[key] == []
+          release_date = release_dates[wikidata_id]
+          hash[:release_date] = release_date unless release_date.nil?
 
-          keys << key
-        end
-
-        unless steam_app_id.nil? || blocklisted_steam_app_ids.include?(steam_app_id.to_i)
-          progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
           begin
-            SteamAppId.create!(
-              game_id: game.id,
-              app_id: steam_app_id
-            )
+            game = Game.create!(hash)
+            progress_bar.log "Created #{hash[:name]}."
           rescue ActiveRecord::RecordInvalid => e
-            progress_bar.log "Invalid Steam AppID: #{hash[:name].ljust(30)} | #{e}"
+            progress_bar.log "Invalid: #{hash[:name].ljust(30)} | #{e}"
+            next
           end
-        end
 
-        if keys.include?(:developers) || keys.include?(:publishers)
-          # In case one of them doesn't have values, we have a fallback to return an empty array.
-          company_wikidata_ids = (game_hash[:developers] || []) + (game_hash[:publishers] || [])
-          companies = Company.where(wikidata_id: company_wikidata_ids.uniq.map(&:to_i)).pluck(:wikidata_id, :id).to_h
+          steam_app_id = detail[:steam_app_id]
+          unless steam_app_id.nil? || blocklisted_steam_app_ids.include?(steam_app_id.to_i)
+            progress_bar.log 'Adding Steam App ID.' if ENV['DEBUG']
+            begin
+              SteamAppId.create!(
+                game_id: game.id,
+                app_id: steam_app_id
+              )
+            rescue ActiveRecord::RecordInvalid => e
+              progress_bar.log "Invalid Steam AppID: #{hash[:name].ljust(30)} | #{e}"
+            end
+          end
 
-          if keys.include?(:developers)
+          company_wikidata_ids = (game_props[:developers] + game_props[:publishers]).uniq
+          unless company_wikidata_ids.empty?
+            companies = Company.where(wikidata_id: company_wikidata_ids).pluck(:wikidata_id, :id).to_h
+
             progress_bar.log 'Adding developers.' if ENV['DEBUG']
-            game_hash[:developers].each do |developer_wikidata_id|
-              company_id = companies[developer_wikidata_id.to_i]
+            game_props[:developers].each do |developer_wikidata_id|
+              company_id = companies[developer_wikidata_id]
               next if company_id.nil?
 
-              GameDeveloper.create!(
-                game_id: game.id,
-                company_id: company_id
-              )
+              GameDeveloper.create!(game_id: game.id, company_id: company_id)
             end
-          end
 
-          if keys.include?(:publishers)
             progress_bar.log 'Adding publishers.' if ENV['DEBUG']
-            game_hash[:publishers].each do |publisher_wikidata_id|
-              company_id = companies[publisher_wikidata_id.to_i]
+            game_props[:publishers].each do |publisher_wikidata_id|
+              company_id = companies[publisher_wikidata_id]
               next if company_id.nil?
 
-              GamePublisher.create!(
-                game_id: game.id,
-                company_id: company_id
-              )
+              GamePublisher.create!(game_id: game.id, company_id: company_id)
             end
           end
-        end
 
-        if keys.include?(:platforms)
-          platform_ids = vglist_platforms.values_at(*game_hash[:platforms].map(&:to_i)).compact
           progress_bar.log 'Adding platforms.' if ENV['DEBUG']
-          platform_ids.each do |platform_id|
-            GamePlatform.create!(
-              game_id: game.id,
-              platform_id: platform_id
-            )
+          game_props[:platforms].each do |platform_wikidata_id|
+            platform_id = vglist_platforms[platform_wikidata_id]
+            GamePlatform.create!(game_id: game.id, platform_id: platform_id) unless platform_id.nil?
           end
-        end
 
-        if keys.include?(:engines)
-          engine_ids = vglist_engines.values_at(*game_hash[:engines].map(&:to_i)).compact
           progress_bar.log 'Adding engines.' if ENV['DEBUG']
-          engine_ids.each do |engine_id|
-            GameEngine.create!(
-              game_id: game.id,
-              engine_id: engine_id
-            )
+          game_props[:engines].each do |engine_wikidata_id|
+            engine_id = vglist_engines[engine_wikidata_id]
+            GameEngine.create!(game_id: game.id, engine_id: engine_id) unless engine_id.nil?
           end
-        end
 
-        if keys.include?(:genres)
-          genre_ids = vglist_genres.values_at(*game_hash[:genres].map(&:to_i)).compact
           progress_bar.log 'Adding genres.' if ENV['DEBUG']
-          genre_ids.each do |genre_id|
-            GameGenre.create!(
-              game_id: game.id,
-              genre_id: genre_id
-            )
+          game_props[:genres].each do |genre_wikidata_id|
+            genre_id = vglist_genres[genre_wikidata_id]
+            GameGenre.create!(game_id: game.id, genre_id: genre_id) unless genre_id.nil?
           end
-        end
 
-        if keys.include?(:series)
+          next if game_props[:series].empty?
+
           progress_bar.log 'Adding series.' if ENV['DEBUG']
-
-          series = Series.find_by(wikidata_id: game_hash[:series].first)
+          series = Series.find_by(wikidata_id: game_props[:series].first)
           progress_bar.log series.inspect if ENV['DEBUG']
           next if series.nil?
 
@@ -271,27 +195,9 @@ namespace 'import:wikidata' do
   desc "Import release dates for games from Wikidata"
   task 'games:release_dates': :environment do
     puts "Importing game release dates from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
 
-    rows = []
-    rows.concat(client.query(release_dates_query))
-
-    # Get every game in the database that has a Wikidata ID and no release date.
-    games = Game.where.not(wikidata_id: nil).where(release_date: nil)
-
-    existing_wikidata_ids = games.pluck(:wikidata_id)
-
-    # Filter to wikidata items that already exist in the database.
-    rows = rows.select do |row|
-      url = row.to_h[:item].to_s
-      wikidata_id = url.gsub('http://www.wikidata.org/entity/Q', '')
-      existing_wikidata_ids.include?(wikidata_id.to_i)
-    end
+    # Games in the database that have a Wikidata ID but no release date yet.
+    wikidata_ids = Game.where.not(wikidata_id: nil).where(release_date: nil).pluck(:wikidata_id)
 
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
@@ -300,60 +206,33 @@ namespace 'import:wikidata' do
     Rails.logger.level = 2 if Rails.env.production?
 
     progress_bar = ProgressBar.create(
-      total: rows.length,
+      total: wikidata_ids.length,
       format: formatting
     )
 
-    rows.each do |row|
-      progress_bar.increment
+    wikidata_ids.each_slice(GAME_HYDRATION_CHUNK_SIZE) do |chunk|
+      release_dates = fetch_release_dates(chunk)
+      games = Game.where(wikidata_id: chunk).index_by(&:wikidata_id)
 
-      url = row.to_h[:item].to_s
-      wikidata_id = url.gsub('http://www.wikidata.org/entity/', '')
-      wikidata_id_no_q = url.gsub('http://www.wikidata.org/entity/Q', '')
+      chunk.each do |wikidata_id|
+        progress_bar.increment
 
-      game = Game.find_by(wikidata_id: wikidata_id_no_q.to_i)
+        game = games[wikidata_id]
+        next if game.nil?
 
-      wikidata_json = WikidataHelper.get_claims(
-        entity: wikidata_id
-      )
-
-      if wikidata_json['P577'].nil?
-        progress_bar.log "No release dates found for #{game[:name]}."
-        next
-      end
-
-      release_dates = []
-      wikidata_json['P577'].each do |snak|
-        release_date_hash = snak.dig('mainsnak', 'datavalue', 'value')
-        # Catch the case where the release date is invalid. This happens
-        # because Wikidata allows dates like "June 2019", so the API returns
-        # bad data like '2019-06-00', which isn't a valid date. We just
-        # skip these entirely to avoid bad data.
-        begin
-          release_dates << Time.parse(release_date_hash['time']).to_date unless release_date_hash.nil?
-        rescue ArgumentError
-          progress_bar.log "Bad datetime, skipping. (#{release_date_hash['time']})"
-          # Break out of the loop to prevent incorrect release dates, in case a
-          # game has a release date like "1985" and then a later, valid release
-          # date. We'd rather just skip adding a release date altogether.
-          break
+        release_date = release_dates[wikidata_id]
+        if release_date.nil?
+          progress_bar.log "No release dates found for #{game.name}."
+          next
         end
-      end
 
-      # Get earliest release date
-      earliest_release_date = release_dates.min
-
-      if earliest_release_date.nil?
-        progress_bar.log "No release dates found for #{game[:name]}."
-        next
-      end
-
-      begin
-        game.update!(release_date: earliest_release_date)
-        progress_bar.log "Added release date for #{game[:name]}."
-      rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Invalid: #{game[:name].ljust(30)} | #{e}"
-        next
+        begin
+          game.update!(release_date: release_date)
+          progress_bar.log "Added release date for #{game.name}."
+        rescue ActiveRecord::RecordInvalid => e
+          progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
+          next
+        end
       end
     end
 
@@ -374,21 +253,149 @@ namespace 'import:wikidata' do
     SPARQL
   end
 
-  # SPARQL query for getting all video games that have English labels and
-  # release dates with 'valid' dates (e.g. 2020-01-01 rather than 2020-00-00).
-  def release_dates_query
+  # Bulk-fetch labels and single-valued external store IDs for a chunk of games.
+  #
+  # @param [Array<Integer>] wikidata_ids Numeric Wikidata IDs, e.g. [7889, 21125433].
+  # @return [Hash{Integer => Hash}] Keyed by numeric Wikidata ID.
+  def fetch_game_details(wikidata_ids)
+    rows = WikidataSparql.query(game_details_query(wikidata_ids))
+
+    rows.each_with_object({}) do |row, details|
+      row = row.to_h
+      wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+
+      details[wikidata_id] = {
+        # Prefer the English label, falling back to the 'mul' (multilingual) one.
+        label: (row[:en] || row[:mul])&.to_s,
+        steam_app_id: row[:steamAppId]&.to_s,
+        pcgamingwiki_id: row[:pcgamingwikiId]&.to_s,
+        epic_games_store_id: row[:epicGamesStoreId]&.to_s,
+        # Remove the 'game/' prefix from GOG.com IDs.
+        gog_id: row[:gogId]&.to_s&.gsub('game/', ''),
+        igdb_id: row[:igdbId]&.to_s,
+        mobygames_id: row[:mobygamesId]&.to_s,
+        giantbomb_id: row[:giantbombId]&.to_s
+      }
+    end
+  end
+
+  # Bulk-fetch the numeric Wikidata IDs of every multi-valued property in
+  # GAME_PROPERTIES for a chunk of games, in a single UNION query.
+  #
+  # @param [Array<Integer>] wikidata_ids Numeric Wikidata IDs.
+  # @return [Hash{Symbol => Hash{Integer => Array<Integer>}}] Keyed by property
+  #   name (:platforms, :developers, ...), then by numeric Wikidata game ID.
+  def fetch_property_values(wikidata_ids)
+    rows = WikidataSparql.query(property_values_query(wikidata_ids))
+
+    values = GAME_PROPERTIES.keys.index_with { {} }
+    rows.each do |row|
+      row = row.to_h
+      key = row[:propType].to_s.to_sym
+      next unless values.key?(key)
+
+      wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      values[key][wikidata_id] = row[:props].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
+    end
+    values
+  end
+
+  # Bulk-fetch the earliest day-precision release date for a chunk of games.
+  #
+  # @param [Array<Integer>] wikidata_ids Numeric Wikidata IDs.
+  # @return [Hash{Integer => Date}] Keyed by numeric Wikidata ID.
+  def fetch_release_dates(wikidata_ids)
+    rows = WikidataSparql.query(release_dates_query(wikidata_ids))
+
+    dates = Hash.new { |hash, key| hash[key] = [] }
+    rows.each do |row|
+      row = row.to_h
+      wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      parsed = parse_release_date(row[:date])
+      dates[wikidata_id] << parsed unless parsed.nil?
+    end
+
+    dates.transform_values(&:min)
+  end
+
+  # Parse a single Wikidata timestamp into a Date, or nil if it's invalid.
+  def parse_release_date(time)
+    return nil if time.nil?
+
+    Time.parse(time.to_s).to_date
+  rescue ArgumentError
+    nil
+  end
+
+  # SPARQL for a chunk's labels and single-valued external store IDs. Every
+  # property is OPTIONAL and collapsed with SAMPLE so each game yields one row.
+  def game_details_query(wikidata_ids)
     <<-SPARQL
-      SELECT DISTINCT ?item {
-        VALUES ?videoGameTypes { wd:Q7889 wd:Q21125433 }.
-        ?item wdt:P31 ?videoGameTypes; # items that are video games
-              p:P577 ?releaseDateStatement; # items with a publication date.
-              rdfs:label ?label .
-        FILTER(lang(?label) = "en" || lang(?label) = "mul") # with a mul or en label
+      SELECT ?item
+             (SAMPLE(?enLabel) AS ?en)
+             (SAMPLE(?mulLabel) AS ?mul)
+             (SAMPLE(?steam) AS ?steamAppId)
+             (SAMPLE(?pcgw) AS ?pcgamingwikiId)
+             (SAMPLE(?epic) AS ?epicGamesStoreId)
+             (SAMPLE(?gog) AS ?gogId)
+             (SAMPLE(?igdb) AS ?igdbId)
+             (SAMPLE(?mobygames) AS ?mobygamesId)
+             (SAMPLE(?giantbomb) AS ?giantbombId)
+      WHERE {
+        #{values_clause(wikidata_ids)}
+        OPTIONAL { ?item rdfs:label ?enLabel. FILTER(lang(?enLabel) = "en") }
+        OPTIONAL { ?item rdfs:label ?mulLabel. FILTER(lang(?mulLabel) = "mul") }
+        OPTIONAL { ?item wdt:P1733 ?steam. } # Steam App ID
+        OPTIONAL { ?item wdt:P6337 ?pcgw. } # PCGamingWiki ID
+        OPTIONAL { ?item wdt:P6278 ?epic. } # Epic Games Store ID
+        OPTIONAL { ?item wdt:P2725 ?gog. } # GOG.com ID
+        OPTIONAL { ?item wdt:P5794 ?igdb. } # IGDB ID
+        OPTIONAL { ?item wdt:P11688 ?mobygames. } # MobyGames ID
+        OPTIONAL { ?item wdt:P5247 ?giantbomb. } # Giant Bomb ID
+      }
+      GROUP BY ?item
+    SPARQL
+  end
+
+  # SPARQL for a chunk's values of every multi-valued property in
+  # GAME_PROPERTIES, concatenated per game and tagged with the property name.
+  # Each property is its own UNION branch: UNION concatenates rows rather than
+  # joining them, so a game's platforms and genres don't Cartesian-multiply the
+  # way they would as sibling triples in one pattern. Based on the query used for
+  # https://www.wikidata.org/wiki/Wikidata:WikiProject_Video_games/Statistics/Platform
+  def property_values_query(wikidata_ids)
+    union_branches = GAME_PROPERTIES.map do |name, property|
+      %({ ?item wdt:#{property} ?p1. BIND("#{name}" AS ?propType) })
+    end.join("\n        UNION ")
+
+    <<-SPARQL
+      SELECT ?item ?propType (GROUP_CONCAT(DISTINCT ?prop; separator=", ") AS ?props) WHERE {
+        #{values_clause(wikidata_ids)}
+        #{union_branches}
+        BIND(strafter(str(?p1), "http://www.wikidata.org/entity/") AS ?prop)
+      }
+      GROUP BY ?item ?propType
+    SPARQL
+  end
+
+  # SPARQL for a chunk's day-precision, best-rank release dates. A game may have
+  # more than one; the earliest is chosen in Ruby.
+  def release_dates_query(wikidata_ids)
+    <<-SPARQL
+      SELECT ?item ?date WHERE {
+        #{values_clause(wikidata_ids)}
+        ?item p:P577 ?releaseDateStatement. # publication date
         ?releaseDateStatement a wikibase:BestRank; # ... of best rank (instead of wdt:P577)
-            psv:P577 / wikibase:timePrecision 11 . # Precision is "day" (encoded as integer 11)
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
+            psv:P577 ?releaseDateValue.
+        ?releaseDateValue wikibase:timePrecision 11; # Precision is "day" (encoded as integer 11)
+            wikibase:timeValue ?date.
       }
     SPARQL
+  end
+
+  # A `VALUES ?item { wd:Q1 wd:Q2 ... }` clause binding a chunk of games.
+  def values_clause(wikidata_ids)
+    "VALUES ?item { #{wikidata_ids.map { |id| "wd:Q#{id}" }.join(' ')} }"
   end
 
   # Return the formatting to use for the progress bar.

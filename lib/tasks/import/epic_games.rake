@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
 namespace :import do
-  require 'sparql/client'
+  require 'wikidata_sparql'
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
   desc "Import Epic Games Store IDs from Wikidata"
   task epic_games: :environment do
     puts "Importing Epic Games Store IDs from Wikidata..."
-    client = SPARQL::Client.new(
-      "https://query.wikidata.org/sparql",
-      method: :get,
-      headers: { 'User-Agent': 'vglist Data Fetcher/1.0 (connor.james.shea@gmail.com) Ruby 3.0' },
-      read_timeout: 300
-    )
-
     rows = []
-    rows.concat(client.query(epic_games_store_query))
+    rows.concat(WikidataSparql.query(epic_games_store_query))
 
     games = rows.map do |row|
       {
