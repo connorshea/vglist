@@ -39,7 +39,7 @@
     "@vue/test-utils": "^2.4.11",
     "graphql-schema-linter": "^3.0.1",
     "jsdom": "^29.1.1",
-    "oxfmt": "^0.57.0",
+    "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
     "oxlint-tsgolint": "^0.23.0",
     "typescript": "~6.0.3",
