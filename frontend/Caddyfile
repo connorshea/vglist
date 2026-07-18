@@ -49,8 +49,9 @@
 		#   'unsafe-inline' on style-src-attr covers those; style-src stays
 		#   strict apart from Vite's build-time CSS injection which also needs
 		#   it. We never render untrusted HTML, so this is low-risk.
-		# - img-src includes the Digital Ocean Spaces bucket that serves game
-		#   covers and user avatars.
+		# - img-src includes the Cloudflare R2 custom domain that serves game
+		#   covers and user avatars, plus the legacy Digital Ocean Spaces
+		#   bucket (drop the Spaces host once the R2 migration is complete).
 		# - connect-src uses {$API_ORIGIN} (set per-environment on the service)
 		#   so the cutover from vglist-production.up.railway.app to
 		#   api.vglist.co is a one-variable change. *.sentry.io is whitelisted
@@ -59,7 +60,7 @@
 		#   (only works as a real header, not via <meta>).
 		# - upgrade-insecure-requests auto-upgrades any stray http:// asset
 		#   URLs (e.g. from older cached data) to https://.
-		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://vglist.sfo2.digitaloceanspaces.com; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://vglist-production.up.railway.app} https://*.sentry.io; upgrade-insecure-requests"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co https://vglist.sfo2.digitaloceanspaces.com; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://vglist-production.up.railway.app} https://*.sentry.io; upgrade-insecure-requests"
 	}
 
 	root * /app/dist
