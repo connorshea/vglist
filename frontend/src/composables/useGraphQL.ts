@@ -82,9 +82,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
   // Watch enabled flag
   if (options?.enabled && (isRef(options.enabled) || typeof options.enabled === "function")) {
     const enabledGetter =
-      typeof options.enabled === "function"
-        ? (options.enabled as () => boolean)
-        : () => (options.enabled as Ref<boolean>).value;
+      typeof options.enabled === "function" ? options.enabled : () => (options.enabled as Ref<boolean>).value;
 
     watch(enabledGetter, (val) => {
       if (val) void execute();
