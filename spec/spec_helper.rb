@@ -20,8 +20,10 @@
 if ENV['COVERAGE'] || ENV['CI']
   require 'simplecov'
   SimpleCov.start :rails do
-    add_group "Policies", "app/policies"
-    add_group "GraphQL", "app/graphql"
+    group "Policies", "app/policies"
+    group "GraphQL", "app/graphql"
+
+    enable_coverage :branch if ENV['COVERAGE_BRANCH']
 
     # Enable result merging for parallel CI jobs
     merge_timeout 3600
