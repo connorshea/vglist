@@ -37,7 +37,7 @@ gem 'image_processing', '~> 2.0'
 gem 'ruby-vips', '~> 2.3'
 
 # Validations for ActiveStorage.
-gem 'active_storage_validations', '~> 3.0.5'
+gem 'active_storage_validations', '~> 3.0.6'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
 gem 'friendly_id', '~> 5.7.0'
