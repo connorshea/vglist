@@ -42,8 +42,11 @@ class GamePurchasePolicy < ApplicationPolicy
     user && game_purchase&.user_id == user&.id
   end
 
+  # Game purchases are only visible to other users if their owner has a public
+  # account and hasn't been banned, matching UserPolicy#user_profile_is_visible?.
   def user_profile_is_visible?
-    game_purchase&.user&.public_account? || game_purchase_belongs_to_user? || user&.admin?
+    owner = game_purchase&.user
+    (owner&.public_account? && !owner&.banned?) || game_purchase_belongs_to_user? || user&.admin?
   end
 
   def user_signed_in?

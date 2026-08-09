@@ -26,4 +26,26 @@ RSpec.describe RelationshipPolicy, type: :policy do
 
     it { should forbid_actions([:create, :destroy]) }
   end
+
+  describe 'A logged-in user and a banned account' do
+    let(:current_user) { build_stubbed(:confirmed_user) }
+    let(:followed) { build_stubbed(:banned_user) }
+
+    it "can't follow them, but can unfollow them" do
+      expect(relationship_policy).to forbid_action(:create)
+      expect(relationship_policy).to permit_action(:destroy)
+    end
+  end
+
+  describe 'A logged-in user and a private account' do
+    let(:current_user) { build_stubbed(:confirmed_user) }
+    let(:followed) { build_stubbed(:private_user) }
+
+    it "can't follow them, but can unfollow them" do
+      # Unfollowing has to stay allowed, otherwise anyone who followed the
+      # account before it went private would be stuck following it.
+      expect(relationship_policy).to forbid_action(:create)
+      expect(relationship_policy).to permit_action(:destroy)
+    end
+  end
 end

@@ -129,6 +129,74 @@ RSpec.describe GamePurchasePolicy, type: :policy do
     end
   end
 
+  describe 'A normal user when the user that is being viewed is banned' do
+    let(:banned_user) { create(:banned_user) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: banned_user) }
+
+    it "is allowed to see and do nothing" do
+      # It can create because create only allows you to create for the logged-in user.
+      expect(game_purchase_policy).to permit_action(:create)
+      expect(game_purchase_policy).to forbid_actions(
+        [
+          :index,
+          :show,
+          :update,
+          :bulk_update,
+          :destroy
+        ]
+      )
+    end
+  end
+
+  describe 'A user that is not logged in when the user that is being viewed is banned' do
+    let(:banned_user) { create(:banned_user) }
+    let(:user) { nil }
+    let(:game_purchase) { create(:game_purchase, user: banned_user) }
+
+    it "is allowed to see and do nothing" do
+      expect(game_purchase_policy).to forbid_actions(
+        [
+          :index,
+          :show,
+          :create,
+          :update,
+          :bulk_update,
+          :destroy
+        ]
+      )
+    end
+  end
+
+  describe 'An admin user when the user that is being viewed is banned' do
+    let(:banned_user) { create(:banned_user) }
+    let(:user) { create(:confirmed_admin) }
+    let(:game_purchase) { create(:game_purchase, user: banned_user) }
+
+    it "is allowed to see the game purchases but not modify them" do
+      expect(game_purchase_policy).to permit_actions([:index, :show, :create])
+      expect(game_purchase_policy).to forbid_actions([:update, :bulk_update, :destroy])
+    end
+  end
+
+  describe 'A banned user viewing their own game purchases' do
+    let(:user) { create(:banned_user) }
+    let(:game_purchase) { create(:game_purchase, user: user) }
+
+    it "is allowed to see and modify them" do
+      expect(game_purchase_policy).to permit_actions(
+        [
+          :index,
+          :show,
+          :create,
+          :update,
+          :bulk_update,
+          :destroy
+        ]
+      )
+    end
+  end
+
   describe 'A user that is not logged in when the user that is being viewed is private' do
     let(:private_user) { create(:private_user) }
     let(:user) { nil }

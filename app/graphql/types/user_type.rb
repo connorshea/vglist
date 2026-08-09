@@ -81,9 +81,13 @@ module Types
     private
 
     def user_visible?
-      # Short-circuit if the user has a public account, to prevent instantiating
-      # a UserPolicy and all that.
-      return @object.public_account? || UserPolicy.new(@context[:current_user], @object).show?
+      # Short-circuit if the user has a public account and hasn't been banned,
+      # to prevent instantiating a UserPolicy and all that. This condition must
+      # stay identical to the first clause of UserPolicy#user_profile_is_visible?,
+      # otherwise the fast path can expose profiles the policy would hide.
+      return true if @object.public_account? && !@object.banned?
+
+      UserPolicy.new(@context[:current_user], @object).show?
     end
   end
 end

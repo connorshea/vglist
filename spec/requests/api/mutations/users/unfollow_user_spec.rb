@@ -42,5 +42,14 @@ RSpec.describe "UnfollowUser Mutation API", type: :request do
         }
       )
     end
+
+    it "unfollows a user that has since made their account private" do
+      relationship
+      user2.update!(privacy: :private_account)
+
+      expect do
+        api_request(query_string, variables: { id: user2.id }, token: access_token)
+      end.to change(Relationship, :count).by(-1)
+    end
   end
 end

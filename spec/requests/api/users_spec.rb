@@ -12,6 +12,10 @@ RSpec.describe "Users API", type: :request do
     let(:application_for_user_with_avatar) { build(:application, owner: user_with_avatar) }
     let(:access_token_for_user_with_avatar) { create(:access_token, resource_owner_id: user_with_avatar.id, application: application_for_user_with_avatar) }
     let(:private_user) { create(:private_user) }
+    let(:banned_user) { create(:banned_user) }
+    let(:admin) { create(:confirmed_admin) }
+    let(:application_for_admin) { build(:application, owner: admin) }
+    let(:admin_access_token) { create(:access_token, resource_owner_id: admin.id, application: application_for_admin) }
 
     it "returns basic data for user" do
       query_string = <<-GRAPHQL
@@ -182,6 +186,86 @@ RSpec.describe "Users API", type: :request do
           favoritedGames: { nodes: [] }
         }
       )
+    end
+
+    it "returns only public data for banned user" do
+      create(:game_purchase, user: banned_user)
+      create(:favorite_game, user: banned_user)
+
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          user(id: $id) {
+            id
+            username
+            banned
+            bio
+            gamePurchases {
+              nodes {
+                id
+              }
+            }
+            activity {
+              nodes {
+                id
+              }
+            }
+            followers {
+              nodes {
+                id
+              }
+            }
+            following {
+              nodes {
+                id
+              }
+            }
+            favoritedGames {
+              nodes {
+                id
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: banned_user.id }, token: access_token)
+
+      expect(result.graphql_dig(:user)).to eq(
+        {
+          id: banned_user.id.to_s,
+          username: banned_user.username,
+          banned: true,
+          bio: nil,
+          gamePurchases: { nodes: [] },
+          activity: { nodes: [] },
+          followers: { nodes: [] },
+          following: { nodes: [] },
+          favoritedGames: { nodes: [] }
+        }
+      )
+    end
+
+    it "returns a banned user's data to an admin" do
+      create(:game_purchase, user: banned_user)
+
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          user(id: $id) {
+            id
+            bio
+            gamePurchases {
+              nodes {
+                id
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: banned_user.id }, token: admin_access_token)
+
+      expect(result.graphql_dig(:user, :bio)).to eq(banned_user.bio)
+      expect(result.graphql_dig(:user, :gamePurchases, :nodes).length).to eq(1)
     end
 
     it "returns activity for user" do

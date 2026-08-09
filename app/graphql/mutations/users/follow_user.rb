@@ -18,4 +18,14 @@ class Mutations::Users::FollowUser < Mutations::BaseMutation
       user: user
     }
   end
+
+  def authorized?(object)
+    user = User.find_by(id: object[:user_id])
+
+    return false if user.nil?
+
+    raise GraphQL::ExecutionError, "You aren't allowed to follow this user." unless RelationshipPolicy.new(@context[:current_user], user).create?
+
+    return true
+  end
 end
