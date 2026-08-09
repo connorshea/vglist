@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Mutations::Users::UpdatePassword < Mutations::BaseMutation
-  description "Update the current user's password. Requires current password for verification."
+  description "Update the current user's password. Requires current password for verification. " \
+              "**Only available when using a first-party OAuth application.**"
 
   argument :current_password, String, required: true, description: "The user's current password for verification."
   argument :new_password, String, required: true, description: "The new password (minimum 8 characters)."
@@ -13,6 +14,12 @@ class Mutations::Users::UpdatePassword < Mutations::BaseMutation
   def resolve(current_password:, new_password:, new_password_confirmation:)
     user = context[:current_user]
     raise GraphQL::ExecutionError, "You must be logged in to update your password." if user.nil?
+
+    # Changing the password is an auth-factor change, and `revoke_all!` below
+    # only invalidates JWTs — a third-party OAuth token keeps working across
+    # the change. A 'write' scope shouldn't be enough to rotate the credential
+    # that every other session depends on.
+    require_permissions!(:first_party)
 
     return { user: nil, errors: ["Current password is incorrect."] } unless user.valid_password?(current_password)
 
