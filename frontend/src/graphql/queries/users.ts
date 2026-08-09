@@ -14,7 +14,57 @@ export const GET_USER = gql`
       avatarUrl(size: LARGE)
       isFollowed
       hideDaysPlayed
-      gamePurchases(first: 30) {
+      libraryStatistics {
+        gamesCount
+        totalHoursPlayed
+        completionPercentage
+        averageRating
+        statusCounts {
+          status
+          count
+        }
+      }
+      followers {
+        totalCount
+      }
+      following {
+        totalCount
+      }
+      favoritedGames(first: 10) {
+        nodes {
+          id
+          name
+          coverUrl(size: SMALL)
+        }
+      }
+    }
+  }
+`;
+
+// The library is fetched separately from the rest of the profile so that
+// changing a filter, the sort order, or the search term doesn't refetch the
+// avatar, favorites, and library statistics along with it. Filtering, sorting,
+// and counting all happen on the server, so they cover the user's whole
+// library rather than the page of it that's been loaded.
+export const GET_USER_LIBRARY = gql`
+  query GetUserLibrary(
+    $slug: String!
+    $first: Int
+    $after: String
+    $completionStatus: GamePurchaseCompletionStatus
+    $search: String
+    $sortBy: GamePurchaseSort
+  ) {
+    user(slug: $slug) {
+      id
+      gamePurchases(
+        first: $first
+        after: $after
+        completionStatus: $completionStatus
+        search: $search
+        sortBy: $sortBy
+      ) {
+        totalCount
         nodes {
           id
           game {
@@ -29,19 +79,6 @@ export const GET_USER = gql`
         pageInfo {
           hasNextPage
           endCursor
-        }
-      }
-      followers {
-        totalCount
-      }
-      following {
-        totalCount
-      }
-      favoritedGames(first: 10) {
-        nodes {
-          id
-          name
-          coverUrl(size: SMALL)
         }
       }
     }

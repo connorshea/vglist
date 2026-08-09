@@ -25,6 +25,24 @@ class GamePurchase < ApplicationRecord
     paused: 6
   }
 
+  # The completion statuses that count as 'the user finished this game', used
+  # for the completion stats on a user's profile.
+  COMPLETED_STATUSES = [:completed, :fully_completed].freeze
+
+  # Every sort below breaks ties on `id`, so that the ordering is total.
+  # Cursor-based pagination walks the relation by offset, so a partial ordering
+  # would let rows repeat or vanish between pages.
+  scope :by_game_name, -> { joins(:game).order('games.name asc', :id) }
+  # Postgres sorts NULLs first when sorting descending, but a game with no
+  # rating (or no hours logged) belongs at the bottom of these lists.
+  scope :highest_rating, -> { order(Arel.sql('rating desc nulls last'), :id) }
+  scope :most_hours_played, -> { order(Arel.sql('hours_played desc nulls last'), :id) }
+
+  # Find the games in a library whose name contains the given string.
+  scope :with_game_name_matching, ->(query) {
+    joins(:game).where('games.name ILIKE ?', "%#{sanitize_sql_like(query)}%")
+  }
+
   validates :comments,
     length: { maximum: 2000 }
 

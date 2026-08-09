@@ -39,6 +39,15 @@ export type GamePurchaseCompletionStatus =
   /** The game is unplayed. */
   | "UNPLAYED";
 
+/** Options for sorting the games in a user's library. */
+export type GamePurchaseSort =
+  /** Sorted alphabetically by the name of the game. */
+  | "GAME_NAME"
+  /** Sorted with the user's highest-rated games first. Games the user hasn't rated are last. */
+  | "HIGHEST_RATING"
+  /** Sorted with the games the user has played the most hours of first. Games with no hours logged are last. */
+  | "MOST_HOURS_PLAYED";
+
 /** The types of records that can be returned as a `SearchResult`. */
 export type SearchableEnum =
   /** Self-explanatory. */
@@ -1128,7 +1137,33 @@ export interface GetUserQuery {
     avatarUrl: string | null;
     isFollowed: boolean | null;
     hideDaysPlayed: boolean;
+    libraryStatistics: {
+      gamesCount: number;
+      totalHoursPlayed: number;
+      completionPercentage: number;
+      averageRating: number | null;
+      statusCounts: Array<{ status: GamePurchaseCompletionStatus; count: number }>;
+    };
+    followers: { totalCount: number };
+    following: { totalCount: number };
+    favoritedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+  } | null;
+}
+
+export type GetUserLibraryQueryVariables = Exact<{
+  slug: string;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  completionStatus?: GamePurchaseCompletionStatus | null | undefined;
+  search?: string | null | undefined;
+  sortBy?: GamePurchaseSort | null | undefined;
+}>;
+
+export interface GetUserLibraryQuery {
+  user: {
+    id: string;
     gamePurchases: {
+      totalCount: number;
       nodes: Array<{
         id: string;
         hoursPlayed: number | null;
@@ -1138,9 +1173,6 @@ export interface GetUserQuery {
       }>;
       pageInfo: { hasNextPage: boolean; endCursor: string | null };
     };
-    followers: { totalCount: number };
-    following: { totalCount: number };
-    favoritedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
   } | null;
 }
 
