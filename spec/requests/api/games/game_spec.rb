@@ -317,6 +317,49 @@ RSpec.describe "Game query API", type: :request do
       end
     end
 
+    context 'with owners and favoriters that the current user cannot see' do
+      let(:private_user) { create(:private_user) }
+      let(:banned_user) { create(:banned_user) }
+      let(:admin) { create(:confirmed_admin) }
+      let(:admin_application) { build(:application, owner: admin) }
+      let(:admin_access_token) { create(:access_token, resource_owner_id: admin.id, application: admin_application) }
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            game(id: $id) {
+              owners { totalCount nodes { id } }
+              favoriters { totalCount nodes { id } }
+            }
+          }
+        GRAPHQL
+      end
+
+      before(:each) do
+        [private_user, banned_user, user].each do |u|
+          create(:game_purchase, user: u, game: game)
+          create(:favorite_game, user: u, game: game)
+        end
+      end
+
+      it "hides private and banned users from the owners and favoriters connections" do
+        result = api_request(query_string, variables: { id: game.id }, token: access_token)
+
+        expect(result.graphql_dig(:game, :owners)).to eq(
+          { totalCount: 1, nodes: [{ id: user.id.to_s }] }
+        )
+        expect(result.graphql_dig(:game, :favoriters)).to eq(
+          { totalCount: 1, nodes: [{ id: user.id.to_s }] }
+        )
+      end
+
+      it "hides them from admins too, since these connections aren't viewer-specific" do
+        result = api_request(query_string, variables: { id: game.id }, token: admin_access_token)
+
+        expect(result.graphql_dig(:game, :owners, :total_count)).to eq(1)
+        expect(result.graphql_dig(:game, :favoriters, :total_count)).to eq(1)
+      end
+    end
+
     context 'with the current user having favorited the game' do
       let(:favorite_game) { create(:favorite_game, game: game, user: user) }
       let(:query_string) do

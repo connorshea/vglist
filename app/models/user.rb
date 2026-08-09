@@ -107,6 +107,11 @@ class User < ApplicationRecord
       .order(Arel.sql('count(relationships.followed_id) desc nulls last'))
   }
 
+  # Users whose profiles anyone can see, i.e. the first clause of
+  # UserPolicy#user_profile_is_visible?. Use this for listings that are the same
+  # for every viewer; use `visible_to` when the viewer's own carve-outs apply.
+  scope :public_and_unbanned, -> { where(privacy: :public_account, banned: false) }
+
   # Users whose profiles the given viewer is allowed to see. This must stay in
   # sync with UserPolicy#user_profile_is_visible?, and exists so that queries
   # returning many users' records (e.g. the activity feed) can apply the same
@@ -114,7 +119,7 @@ class User < ApplicationRecord
   scope :visible_to, ->(viewer) {
     next all if viewer&.admin?
 
-    visible = where(privacy: :public_account, banned: false)
+    visible = public_and_unbanned
     next visible if viewer.nil?
 
     # A viewer can always see themselves, and can see users that follow them
