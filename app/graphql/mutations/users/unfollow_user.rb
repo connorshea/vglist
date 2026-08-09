@@ -18,4 +18,14 @@ class Mutations::Users::UnfollowUser < Mutations::BaseMutation
       user: user
     }
   end
+
+  def authorized?(object)
+    user = User.find_by(id: object[:user_id])
+
+    return false if user.nil?
+
+    raise GraphQL::ExecutionError, "You aren't allowed to unfollow this user." unless RelationshipPolicy.new(@context[:current_user], user).destroy?
+
+    return true
+  end
 end

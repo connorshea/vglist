@@ -41,5 +41,23 @@ RSpec.describe "FollowUser Mutation API", type: :request do
         }
       )
     end
+
+    it "returns an error when trying to follow a private user" do
+      private_user = create(:private_user)
+
+      expect do
+        result = api_request(query_string, variables: { id: private_user.id }, token: access_token)
+
+        expect(api_result_errors(result)).to include("You aren't allowed to follow this user.")
+      end.not_to change(Relationship, :count)
+    end
+
+    it "returns an error when trying to follow yourself" do
+      expect do
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+        expect(api_result_errors(result)).to include("You aren't allowed to follow this user.")
+      end.not_to change(Relationship, :count)
+    end
   end
 end

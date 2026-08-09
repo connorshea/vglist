@@ -18,4 +18,14 @@ class Mutations::Games::UnfavoriteGame < Mutations::BaseMutation
       game: game
     }
   end
+
+  def authorized?(object)
+    game = Game.find_by(id: object[:game_id])
+
+    return false if game.nil?
+
+    raise GraphQL::ExecutionError, "You aren't allowed to unfavorite this game." unless GamePolicy.new(@context[:current_user], game).unfavorite?
+
+    return true
+  end
 end
