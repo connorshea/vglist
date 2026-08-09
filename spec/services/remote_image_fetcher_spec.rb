@@ -200,4 +200,30 @@ RSpec.describe RemoteImageFetcher, type: :service do
       end
     end
   end
+
+  describe '#close' do
+    let(:image) do
+      stub_request(:get, 'https://images.example.com/cover.png')
+        .to_return(status: 200, body: png, headers: { 'Content-Type' => 'image/png' })
+
+      described_class.fetch('https://images.example.com/cover.png')
+    end
+
+    it 'closes and deletes the tempfile' do
+      path = image.io.path
+
+      expect(File.exist?(path)).to be true
+
+      image.close
+
+      expect(image.io).to be_closed
+      expect(File.exist?(path)).to be false
+    end
+
+    it 'can be called more than once' do
+      image.close
+
+      expect { image.close }.not_to raise_error
+    end
+  end
 end

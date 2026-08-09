@@ -84,4 +84,29 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
     expect(game.cover.filename.to_s).to eq('half-life.png')
     expect(game.cover.byte_size).to eq(png.bytesize)
   end
+
+  # An import runs through thousands of games in a single process, so a cover
+  # that stays open after it's been attached is a file descriptor and a copy of
+  # the image that the task holds onto until it exits.
+  it 'closes and deletes the downloaded tempfile once the cover is attached' do
+    allow(Addrinfo).to receive(:getaddrinfo).and_return([Addrinfo.ip('93.184.216.34')])
+    create(:game, pcgamingwiki_id: 'Some_Game')
+    stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
+    stub_request(:get, 'https://images.pcgamingwiki.com/covers/half-life.png')
+      .to_return(status: 200, body: png, headers: { 'Content-Type' => 'image/png' })
+
+    image = nil
+    path = nil
+    allow(RemoteImageFetcher).to receive(:fetch).and_wrap_original do |original, *args|
+      image = original.call(*args)
+      # Tempfile#path goes nil once the file is unlinked, so remember it now.
+      path = image.io.path
+      image
+    end
+
+    run_task
+
+    expect(image.io).to be_closed
+    expect(File.exist?(path)).to be false
+  end
 end
