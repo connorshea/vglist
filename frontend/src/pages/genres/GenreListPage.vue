@@ -2,6 +2,10 @@
   <section class="section">
     <h1 class="title">Genres</h1>
 
+    <div v-if="authStore.isModerator" class="buttons">
+      <router-link to="/genres/new" class="button is-small is-primary">New Genre</router-link>
+    </div>
+
     <div v-if="loading && !data" class="has-text-centered">
       <p>Loading genres...</p>
     </div>
@@ -31,10 +35,13 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
+import { useAuthStore } from "@/stores/auth";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_GENRES } from "@/graphql/queries/resources";
 import type { GetGenresQuery } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
+
+const authStore = useAuthStore();
 
 const PAGE_SIZE = 25;
 const currentPage = ref(1);

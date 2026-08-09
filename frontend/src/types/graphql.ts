@@ -316,6 +316,166 @@ export interface UpdateGameMutation {
   updateGame: { game: { id: string; name: string } } | null;
 }
 
+export type CreatePlatformMutationVariables = Exact<{
+  name: string;
+  wikidataId: string;
+}>;
+
+export interface CreatePlatformMutation {
+  createPlatform: { platform: { id: string; name: string } | null } | null;
+}
+
+export type UpdatePlatformMutationVariables = Exact<{
+  platformId: string;
+  name?: string | null | undefined;
+  wikidataId?: string | null | undefined;
+}>;
+
+export interface UpdatePlatformMutation {
+  updatePlatform: { platform: { id: string; name: string } } | null;
+}
+
+export type DeletePlatformMutationVariables = Exact<{
+  platformId: string;
+}>;
+
+export interface DeletePlatformMutation {
+  deletePlatform: { deleted: boolean | null } | null;
+}
+
+export type CreateCompanyMutationVariables = Exact<{
+  name: string;
+  wikidataId: string;
+}>;
+
+export interface CreateCompanyMutation {
+  createCompany: { company: { id: string; name: string } | null } | null;
+}
+
+export type UpdateCompanyMutationVariables = Exact<{
+  companyId: string;
+  name?: string | null | undefined;
+  wikidataId?: string | null | undefined;
+}>;
+
+export interface UpdateCompanyMutation {
+  updateCompany: { company: { id: string; name: string } } | null;
+}
+
+export type DeleteCompanyMutationVariables = Exact<{
+  companyId: string;
+}>;
+
+export interface DeleteCompanyMutation {
+  deleteCompany: { deleted: boolean | null } | null;
+}
+
+export type CreateEngineMutationVariables = Exact<{
+  name: string;
+  wikidataId: string;
+}>;
+
+export interface CreateEngineMutation {
+  createEngine: { engine: { id: string; name: string } | null } | null;
+}
+
+export type UpdateEngineMutationVariables = Exact<{
+  engineId: string;
+  name?: string | null | undefined;
+  wikidataId?: string | null | undefined;
+}>;
+
+export interface UpdateEngineMutation {
+  updateEngine: { engine: { id: string; name: string } } | null;
+}
+
+export type DeleteEngineMutationVariables = Exact<{
+  engineId: string;
+}>;
+
+export interface DeleteEngineMutation {
+  deleteEngine: { deleted: boolean | null } | null;
+}
+
+export type CreateGenreMutationVariables = Exact<{
+  name: string;
+  wikidataId: string;
+}>;
+
+export interface CreateGenreMutation {
+  createGenre: { genre: { id: string; name: string } | null } | null;
+}
+
+export type UpdateGenreMutationVariables = Exact<{
+  genreId: string;
+  name?: string | null | undefined;
+  wikidataId?: string | null | undefined;
+}>;
+
+export interface UpdateGenreMutation {
+  updateGenre: { genre: { id: string; name: string } } | null;
+}
+
+export type DeleteGenreMutationVariables = Exact<{
+  genreId: string;
+}>;
+
+export interface DeleteGenreMutation {
+  deleteGenre: { deleted: boolean | null } | null;
+}
+
+export type CreateSeriesMutationVariables = Exact<{
+  name: string;
+  wikidataId: string;
+}>;
+
+export interface CreateSeriesMutation {
+  createSeries: { series: { id: string; name: string } | null } | null;
+}
+
+export type UpdateSeriesMutationVariables = Exact<{
+  seriesId: string;
+  name?: string | null | undefined;
+  wikidataId?: string | null | undefined;
+}>;
+
+export interface UpdateSeriesMutation {
+  updateSeries: { series: { id: string; name: string } } | null;
+}
+
+export type DeleteSeriesMutationVariables = Exact<{
+  seriesId: string;
+}>;
+
+export interface DeleteSeriesMutation {
+  deleteSeries: { deleted: boolean | null } | null;
+}
+
+export type CreateStoreMutationVariables = Exact<{
+  name: string;
+}>;
+
+export interface CreateStoreMutation {
+  createStore: { store: { id: string; name: string } | null } | null;
+}
+
+export type UpdateStoreMutationVariables = Exact<{
+  storeId: string;
+  name?: string | null | undefined;
+}>;
+
+export interface UpdateStoreMutation {
+  updateStore: { store: { id: string; name: string } } | null;
+}
+
+export type DeleteStoreMutationVariables = Exact<{
+  storeId: string;
+}>;
+
+export interface DeleteStoreMutation {
+  deleteStore: { deleted: boolean | null } | null;
+}
+
 export type UpdateUserMutationVariables = Exact<{
   bio?: string | null | undefined;
   privacy?: UserPrivacy | null | undefined;
@@ -643,6 +803,14 @@ export interface GetPlatformQuery {
   } | null;
 }
 
+export type GetPlatformForEditQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetPlatformForEditQuery {
+  platform: { id: string; name: string; wikidataId: number | null } | null;
+}
+
 export type GetCompaniesQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
@@ -667,6 +835,14 @@ export interface GetCompanyQuery {
     developedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
     publishedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
   } | null;
+}
+
+export type GetCompanyForEditQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetCompanyForEditQuery {
+  company: { id: string; name: string; wikidataId: number | null } | null;
 }
 
 export type GetGenresQueryVariables = Exact<{
@@ -694,6 +870,14 @@ export interface GetGenreQuery {
   } | null;
 }
 
+export type GetGenreForEditQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetGenreForEditQuery {
+  genre: { id: string; name: string; wikidataId: number | null } | null;
+}
+
 export type GetEnginesQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
@@ -717,6 +901,14 @@ export interface GetEngineQuery {
     wikidataId: number | null;
     games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
   } | null;
+}
+
+export type GetEngineForEditQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetEngineForEditQuery {
+  engine: { id: string; name: string; wikidataId: number | null } | null;
 }
 
 export type GetSeriesListQueryVariables = Exact<{
@@ -744,6 +936,14 @@ export interface GetSeriesQuery {
   } | null;
 }
 
+export type GetSeriesForEditQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetSeriesForEditQuery {
+  series: { id: string; name: string; wikidataId: number | null } | null;
+}
+
 export type GetStoresQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
@@ -761,6 +961,14 @@ export type GetStoreQueryVariables = Exact<{
 }>;
 
 export interface GetStoreQuery {
+  store: { id: string; name: string } | null;
+}
+
+export type GetStoreForEditQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetStoreForEditQuery {
   store: { id: string; name: string } | null;
 }
 
