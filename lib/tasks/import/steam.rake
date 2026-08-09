@@ -37,10 +37,10 @@ namespace :import do
 
     # Games with no Steam App IDs.
     games_without_steam_ids = Game.left_outer_joins(:steam_app_ids).where(steam_app_ids: { id: nil })
-    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
+    # Sets give O(1) membership checks against the games from Wikidata.
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id).to_set
 
-    valid_wikidata_ids = games_without_steam_ids.pluck(:wikidata_id)
-    valid_wikidata_ids.compact!
+    valid_wikidata_ids = games_without_steam_ids.pluck(:wikidata_id).compact.to_set
 
     games_to_modify = games.select { |game| valid_wikidata_ids.include?(game[:wikidata_id].to_i) }
 

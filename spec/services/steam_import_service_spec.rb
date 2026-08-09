@@ -56,5 +56,35 @@ RSpec.describe SteamImportService, type: :service do
     it 'works with update_hours true' do
       expect { SteamImportService.new(user: user, update_hours: true).call }.to change(GamePurchase, :count).by(1)
     end
+
+    context 'when some games are not in the vglist database' do
+      let(:response) do
+        {
+          'response': {
+            'game_count': 3,
+            'games': [
+              { 'appid': 10, 'name': "Counter-Strike", 'playtime_forever': 455, 'img_icon_url': "abc123" },
+              { 'appid': 20, 'name': "Team Fortress Classic", 'playtime_forever': 10, 'img_icon_url': "def456" },
+              { 'appid': 30, 'name': "Day of Defeat", 'playtime_forever': 0, 'img_icon_url': "ghi789" }
+            ]
+          }
+        }
+      end
+
+      it 'returns the unmatched games' do
+        result = SteamImportService.new(user: user, update_hours: false).call
+
+        expect(result.unmatched.map(&:steam_id)).to contain_exactly(20, 30)
+        expect(result.unmatched.map(&:name)).to contain_exactly("Team Fortress Classic", "Day of Defeat")
+      end
+
+      it 'excludes blocklisted games from the unmatched games' do
+        create(:steam_blocklist, steam_app_id: 20)
+
+        result = SteamImportService.new(user: user, update_hours: false).call
+
+        expect(result.unmatched.map(&:steam_id)).to contain_exactly(30)
+      end
+    end
   end
 end
