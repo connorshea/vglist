@@ -16,21 +16,20 @@ module Resolvers
       argument :by_genre, ID, required: false, description: "Filter games by the ID of the genre they're in."
       argument :by_engine, ID, required: false, description: "Filter games by the ID of the engine they use."
 
+      # Preload based on the fields the client actually selected, rather than
+      # eagerly loading every association the list view might need. See
+      # `GamePreloads`.
+      extras [:lookahead]
+
       def resolve(
+        lookahead:,
         sort_by: nil,
         on_platform: nil,
         by_year: nil,
         by_genre: nil,
         by_engine: nil
       )
-        # TODO: This eagerly preloads every association the list view might
-        # need, but GraphQL clients frequently ask for only a subset of fields.
-        # Consider using GraphQL::Execution::Lookahead (or field-level
-        # batching via graphql-batch) to include/preload only the associations
-        # the client actually selected, e.g. skip `:engines` unless the query
-        # selects `engines`. This avoids unnecessary joins and memory on
-        # narrow queries like `{ games { nodes { id name } } }`.
-        games = Game.all.includes(:series, :developers, :publishers, :engines, :genres, :platforms, :steam_app_ids).with_attached_cover
+        games = GamePreloads.apply(Game.all, lookahead)
 
         games = games.on_platform(on_platform) unless on_platform.nil?
         games = games.by_year(by_year) unless by_year.nil?

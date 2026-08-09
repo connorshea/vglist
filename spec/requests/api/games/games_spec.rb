@@ -310,5 +310,130 @@ RSpec.describe "Games API", type: :request do
         )
       end
     end
+
+    context 'when preloading associations for the games list' do
+      let!(:game) { create(:game_with_everything) }
+      let!(:game2) { create(:game_with_everything) }
+
+      # Authenticating lazily would otherwise create the user, its avatar and
+      # its OAuth application inside the measured block.
+      before(:each) { access_token }
+
+      # The tables touched while running a block, so that a query can be
+      # checked for preloading associations it never asked for.
+      def tables_queried
+        queries = []
+        subscriber = ActiveSupport::Notifications.subscribe('sql.active_record') do |*, payload|
+          queries << payload[:sql] unless payload[:name].to_s.match?(/SCHEMA|TRANSACTION|CACHE/)
+        end
+        yield
+        queries.filter_map { |sql| sql[/FROM "([^"]+)"/, 1] }.uniq
+      ensure
+        ActiveSupport::Notifications.unsubscribe(subscriber)
+      end
+
+      it "doesn't preload associations the query didn't select" do
+        query_string = <<-GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                name
+              }
+            }
+          }
+        GRAPHQL
+
+        tables = tables_queried { api_request(query_string, token: access_token) }
+
+        expect(tables).to include('games')
+        expect(tables).not_to include(
+          'series', 'game_developers', 'game_publishers', 'game_engines',
+          'game_genres', 'game_platforms', 'steam_app_ids', 'active_storage_attachments'
+        )
+      end
+
+      it "preloads only the associations the query did select" do
+        query_string = <<-GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                developers { nodes { name } }
+              }
+            }
+          }
+        GRAPHQL
+
+        tables = tables_queried { api_request(query_string, token: access_token) }
+
+        expect(tables).to include('games', 'game_developers', 'companies')
+        expect(tables).not_to include('game_platforms', 'game_genres', 'steam_app_ids')
+      end
+
+      it "preloads associations selected through edges and fragments" do
+        query_string = <<-GRAPHQL
+          query {
+            games {
+              edges {
+                node {
+                  id
+                  ...GameFields
+                }
+              }
+            }
+          }
+
+          fragment GameFields on Game {
+            platforms { nodes { name } }
+          }
+        GRAPHQL
+
+        tables = tables_queried { api_request(query_string, token: access_token) }
+
+        expect(tables).to include('games', 'game_platforms', 'platforms')
+        expect(tables).not_to include('game_developers', 'game_genres')
+      end
+
+      it "returns the same data regardless of which associations are preloaded" do
+        query_string = <<-GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                name
+                steamAppIds
+                series { name }
+                developers { nodes { name } }
+                platforms { nodes { name } }
+                genres { nodes { name } }
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        expect(result.graphql_dig(:games, :nodes)).to contain_exactly(
+          {
+            id: game.id.to_s,
+            name: game.name,
+            steamAppIds: game.steam_app_ids.map(&:app_id),
+            series: { name: game.series.name },
+            developers: { nodes: game.developers.map { |d| { name: d.name } } },
+            platforms: { nodes: game.platforms.map { |p| { name: p.name } } },
+            genres: { nodes: game.genres.map { |g| { name: g.name } } }
+          },
+          {
+            id: game2.id.to_s,
+            name: game2.name,
+            steamAppIds: game2.steam_app_ids.map(&:app_id),
+            series: { name: game2.series.name },
+            developers: { nodes: game2.developers.map { |d| { name: d.name } } },
+            platforms: { nodes: game2.platforms.map { |p| { name: p.name } } },
+            genres: { nodes: game2.genres.map { |g| { name: g.name } } }
+          }
+        )
+      end
+    end
   end
 end
