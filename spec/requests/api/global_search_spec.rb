@@ -168,6 +168,59 @@ RSpec.describe "Global Search API", type: :request do
         expect(nodes.length).to eq(1)
         expect(nodes.first[:searchableId]).to eq(platform.id.to_s)
       end
+
+      it "only searches each type once when a type is repeated" do
+        query_string = <<-GRAPHQL
+          query($query: String!, $types: [SearchableEnum!]) {
+            globalSearch(query: $query, searchableTypes: $types) {
+              nodes {
+                ... on GameSearchResult {
+                  searchableId
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        allow(PgSearch).to receive(:multisearch).and_call_original
+
+        result = api_request(query_string, variables: { query: 'Searchable', types: ['GAME', 'GAME', 'GAME'] }, token: access_token)
+        nodes = result.graphql_dig(:global_search, :nodes)
+
+        expect(PgSearch).to have_received(:multisearch).once
+        expect(nodes.length).to eq(1)
+        expect(nodes.first[:searchableId]).to eq(game.id.to_s)
+      end
+
+      it "rejects a list with more entries than there are searchable types" do
+        query_string = <<-GRAPHQL
+          query($query: String!, $types: [SearchableEnum!]) {
+            globalSearch(query: $query, searchableTypes: $types) {
+              nodes {
+                __typename
+              }
+            }
+          }
+        GRAPHQL
+
+        types = ['GAME'] * (Resolvers::GlobalSearchResolver::DEFAULT_SEARCHABLE_TYPES.length + 1)
+
+        allow(PgSearch).to receive(:multisearch).and_call_original
+
+        result = api_request(query_string, variables: { query: 'Searchable', types: types }, token: access_token)
+
+        expect(PgSearch).not_to have_received(:multisearch)
+        expect(api_result_errors(result)).to include(
+          "searchableTypes is too long (maximum is #{Resolvers::GlobalSearchResolver::DEFAULT_SEARCHABLE_TYPES.length})"
+        )
+      end
+    end
+
+    context 'with the default searchable types' do
+      it "matches the values of the SearchableEnum" do
+        expect(Resolvers::GlobalSearchResolver::DEFAULT_SEARCHABLE_TYPES)
+          .to match_array(Types::Enums::SearchableEnum.values.each_value.map(&:value))
+      end
     end
 
     context 'with per-type result limits' do
