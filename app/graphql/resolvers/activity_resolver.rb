@@ -12,7 +12,7 @@ module Resolvers
       case feed_type
       when 'global'
         Views::NewEvent.recently_created
-                       .includes(user: { avatar_attachment: :blob })
+                       .includes(user: AttachmentPreloads::AVATAR)
                        .joins(:user)
                        .where(users: { privacy: :public_account, banned: false })
       when 'following'
@@ -31,7 +31,7 @@ module Resolvers
         # layer the includes/order on top of the combined relation.
         Views::NewEvent.where(user_id: user_ids)
                        .or(Views::NewEvent.where(user_id: current_user.id))
-                       .includes(user: { avatar_attachment: :blob })
+                       .includes(user: AttachmentPreloads::AVATAR)
                        .recently_created
       end
     end

@@ -33,7 +33,7 @@ module Types
       return [] unless user_visible?
 
       Views::NewEvent.recently_created
-                     .includes(user: { avatar_attachment: :blob })
+                     .includes(user: AttachmentPreloads::AVATAR)
                      .where(user_id: @object.id)
     end
 
@@ -44,12 +44,23 @@ module Types
       Rails.application.routes.url_helpers.rails_representation_url(avatar)
     end
 
+    # Preloading applied to the associations below once the viewer is allowed to
+    # see them, so that a page of users doesn't load an avatar (or cover) one
+    # record at a time.
+    FIELD_PRELOADS = {
+      followers: ->(relation) { relation.with_attached_avatar },
+      following: ->(relation) { relation.with_attached_avatar },
+      favorited_games: ->(relation) { relation.with_attached_cover }
+    }.freeze
+
     # Extremely cursed metaprogramming that protects private users from having
     # their details exposed if the UserPolicy wants to prevent it.
     def handler(field_name, fallback = nil)
-      return @object.public_send(field_name) if user_visible?
+      return fallback unless user_visible?
 
-      fallback
+      value = @object.public_send(field_name)
+      preload = FIELD_PRELOADS[field_name]
+      preload ? preload.call(value) : value
     end
 
     # Define a method for each of these fields, to forward the correct info onto the handler method.
@@ -69,7 +80,7 @@ module Types
     def game_purchases
       return [] unless user_visible?
 
-      @object.game_purchases.includes(:platforms, :stores, game: { cover_attachment: :blob })
+      @object.game_purchases.includes(:platforms, :stores, game: AttachmentPreloads::COVER)
     end
 
     def followed?

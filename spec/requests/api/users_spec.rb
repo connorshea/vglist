@@ -650,5 +650,53 @@ RSpec.describe "Users API", type: :request do
         end
       end
     end
+
+    context 'when preloading avatars for a list of users' do
+      # Authenticating lazily would create the user inside the measured block.
+      before(:each) { access_token }
+
+      # The number of SQL queries run while the block executes.
+      def query_count
+        count = 0
+        subscriber = ActiveSupport::Notifications.subscribe('sql.active_record') do |*, payload|
+          count += 1 unless payload[:name].to_s.match?(/SCHEMA|TRANSACTION/)
+        end
+        yield
+        count
+      ensure
+        ActiveSupport::Notifications.unsubscribe(subscriber)
+      end
+
+      let(:users_query) do
+        <<-GRAPHQL
+          query {
+            users {
+              nodes {
+                id
+                username
+                avatarUrl(size: SMALL)
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      # The first request for an avatar generates its variant, which writes
+      # records and is unrelated to preloading, so warm those up and measure
+      # the second request.
+      def warm_then_count_queries
+        api_request(users_query, token: access_token)
+        query_count { api_request(users_query, token: access_token) }
+      end
+
+      it "runs no more queries as the list grows" do
+        create_list(:confirmed_user_with_avatar, 2)
+        baseline = warm_then_count_queries
+
+        create_list(:confirmed_user_with_avatar, 3)
+
+        expect(warm_then_count_queries).to eq(baseline)
+      end
+    end
   end
 end
