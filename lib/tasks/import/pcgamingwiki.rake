@@ -165,8 +165,14 @@ namespace :import do
         next
       end
 
-      # Copy the image data to a file with ActiveStorage.
-      game.cover.attach(io: cover.io, filename: cover.filename)
+      # Copy the image data to a file with ActiveStorage, then throw the
+      # downloaded tempfile away so an import doesn't accumulate one open file
+      # per game it processes.
+      begin
+        game.cover.attach(io: cover.io, filename: cover.filename)
+      ensure
+        cover.close
+      end
 
       # If the cover has any errors, they'll show up on the `Game` record.
       # Check for any errors and print them if they exist.

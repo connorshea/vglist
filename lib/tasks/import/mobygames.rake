@@ -168,7 +168,14 @@ namespace :import do
       end
 
       # Attach the cover and get the filename from the last fragment of the URL.
-      game.cover.attach(io: cover.io, filename: cover.filename)
+      # The downloaded tempfile is thrown away as soon as it's been attached,
+      # so an import doesn't accumulate one open file per game it processes.
+      begin
+        game.cover.attach(io: cover.io, filename: cover.filename)
+      ensure
+        cover.close
+      end
+
       attached_covers_count += 1
       progress_bar.log "Added cover for #{game[:name]}."
       progress_bar.increment
