@@ -161,9 +161,15 @@ namespace :import do
         next
       end
 
-      # Copy the image data to a file with ActiveStorage.
+      # Copy the image data to a file with ActiveStorage, then throw the
+      # downloaded tempfile away so an import doesn't accumulate one open file
+      # per game it processes.
       # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
-      game.cover.attach(io: cover.io, filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}")
+      begin
+        game.cover.attach(io: cover.io, filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}")
+      ensure
+        cover.close
+      end
 
       # If the cover has any errors, they'll show up on the `Game` record.
       # Check for any errors and print them if they exist.

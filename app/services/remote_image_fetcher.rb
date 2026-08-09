@@ -79,12 +79,25 @@ class RemoteImageFetcher
   # A downloaded image. `io` is a rewound binary Tempfile suitable for
   # `attach(io:)`, and `uri` is the URL it was ultimately fetched from (which
   # may differ from the requested one if redirects were followed).
+  #
+  # The tempfile is deleted when the Image is garbage collected, but callers
+  # should call `close` as soon as they're done with `io` instead of waiting
+  # for that: an import runs through thousands of covers in one process, and
+  # leaving each one to the finalizer means every cover downloaded so far is
+  # still open and still on disk.
   class Image
     attr_reader :io, :uri
 
     def initialize(io:, uri:)
       @io = io
       @uri = uri
+    end
+
+    # Close and delete the tempfile behind `io`. Safe to call more than once,
+    # and safe to call as soon as `attach` has returned — ActiveStorage has
+    # read the whole file and uploaded it by then.
+    def close
+      io.close!
     end
 
     # The last path segment of the URL, e.g. "cover.jpg". Falls back to
@@ -251,8 +264,7 @@ class RemoteImageFetcher
         tempfile.write(chunk)
       end
     rescue StandardError
-      tempfile.close
-      tempfile.unlink
+      tempfile.close!
       raise
     end
 
