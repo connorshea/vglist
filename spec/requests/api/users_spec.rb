@@ -458,6 +458,179 @@ RSpec.describe "Users API", type: :request do
       end
     end
 
+    context 'when filtering and sorting game purchases' do
+      let!(:completed_purchase) { create(:game_purchase, user: user, game: create(:game, name: 'Bastion'), completion_status: :completed, rating: 90, hours_played: 12.0) }
+      let!(:unplayed_purchase) { create(:game_purchase, user: user, game: create(:game, name: 'Celeste'), completion_status: :unplayed) }
+      let!(:in_progress_purchase) { create(:game_purchase, user: user, game: create(:game, name: 'Alien Isolation'), completion_status: :in_progress, rating: 70, hours_played: 30.5) }
+
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!, $completionStatus: GamePurchaseCompletionStatus, $search: String, $sortBy: GamePurchaseSort) {
+            user(id: $id) {
+              gamePurchases(completionStatus: $completionStatus, search: $search, sortBy: $sortBy) {
+                totalCount
+                nodes {
+                  id
+                }
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      def purchase_ids(**variables)
+        result = api_request(query_string, variables: { id: user.id, **variables }, token: access_token)
+        result.graphql_dig(:user, :game_purchases, :nodes).pluck(:id)
+      end
+
+      it "filters by completion status" do
+        expect(purchase_ids(completion_status: 'COMPLETED')).to eq([completed_purchase.id.to_s])
+      end
+
+      it "filters by a case-insensitive substring of the game's name" do
+        expect(purchase_ids(search: 'lie')).to eq([in_progress_purchase.id.to_s])
+      end
+
+      it "treats the search string as a literal, not as a LIKE pattern" do
+        expect(purchase_ids(search: '%')).to eq([])
+      end
+
+      it "sorts by the game's name" do
+        expect(purchase_ids(sort_by: 'GAME_NAME')).to eq(
+          [in_progress_purchase.id.to_s, completed_purchase.id.to_s, unplayed_purchase.id.to_s]
+        )
+      end
+
+      it "sorts by rating, with unrated games last" do
+        expect(purchase_ids(sort_by: 'HIGHEST_RATING')).to eq(
+          [completed_purchase.id.to_s, in_progress_purchase.id.to_s, unplayed_purchase.id.to_s]
+        )
+      end
+
+      it "sorts by hours played, with games that have no hours logged last" do
+        expect(purchase_ids(sort_by: 'MOST_HOURS_PLAYED')).to eq(
+          [in_progress_purchase.id.to_s, completed_purchase.id.to_s, unplayed_purchase.id.to_s]
+        )
+      end
+
+      it "counts the whole filtered library, not just the requested page" do
+        paged_query_string = <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              gamePurchases(first: 1) {
+                totalCount
+                nodes {
+                  id
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(paged_query_string, variables: { id: user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user, :game_purchases, :total_count)).to eq(3)
+        expect(result.graphql_dig(:user, :game_purchases, :nodes).length).to eq(1)
+      end
+    end
+
+    describe 'libraryStatistics' do
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              libraryStatistics {
+                gamesCount
+                totalHoursPlayed
+                completedCount
+                completionPercentage
+                averageRating
+                statusCounts {
+                  status
+                  count
+                }
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      it "returns zeroed statistics for an empty library" do
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user, :library_statistics)).to eq(
+          {
+            gamesCount: 0,
+            totalHoursPlayed: 0.0,
+            completedCount: 0,
+            completionPercentage: 0,
+            averageRating: nil,
+            statusCounts: []
+          }
+        )
+      end
+
+      it "aggregates over the whole library, not just the page of game purchases the client requested" do
+        create(:game_purchase, user: user, completion_status: :completed, rating: 100, hours_played: 10.0)
+        create(:game_purchase, user: user, completion_status: :fully_completed, rating: 80, hours_played: 5.5)
+        create(:game_purchase, user: user, completion_status: :in_progress, hours_played: 4.5)
+        # No completion status, so it counts towards the library's size but not
+        # towards any of the status counts.
+        create(:game_purchase, user: user, completion_status: nil)
+
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+        statistics = result.graphql_dig(:user, :library_statistics)
+
+        expect(statistics).to include(
+          gamesCount: 4,
+          totalHoursPlayed: 20.0,
+          completedCount: 2,
+          # 2 of 4 games completed.
+          completionPercentage: 50,
+          # Only the two rated games are averaged.
+          averageRating: 90.0
+        )
+        expect(statistics[:statusCounts]).to contain_exactly(
+          { status: 'COMPLETED', count: 1 },
+          { status: 'FULLY_COMPLETED', count: 1 },
+          { status: 'IN_PROGRESS', count: 1 }
+        )
+      end
+
+      it "returns zeroed statistics for a private user's library" do
+        create(:game_purchase, user: private_user, completion_status: :completed, rating: 100, hours_played: 10.0)
+
+        result = api_request(query_string, variables: { id: private_user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user, :library_statistics)).to eq(
+          {
+            gamesCount: 0,
+            totalHoursPlayed: 0.0,
+            completedCount: 0,
+            completionPercentage: 0,
+            averageRating: nil,
+            statusCounts: []
+          }
+        )
+      end
+
+      it "returns a private user's library statistics to that user" do
+        create(:game_purchase, user: private_user, completion_status: :completed, rating: 100, hours_played: 10.0)
+        private_user_application = build(:application, owner: private_user)
+        private_user_token = create(:access_token, resource_owner_id: private_user.id, application: private_user_application)
+
+        result = api_request(query_string, variables: { id: private_user.id }, token: private_user_token)
+
+        expect(result.graphql_dig(:user, :library_statistics)).to include(
+          gamesCount: 1,
+          totalHoursPlayed: 10.0,
+          completedCount: 1,
+          completionPercentage: 100,
+          averageRating: 100.0
+        )
+      end
+    end
+
     context 'with currentUser' do
       it "returns data for current user when requesting currentUser" do
         user

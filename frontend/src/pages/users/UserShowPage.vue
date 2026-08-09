@@ -26,12 +26,10 @@
             </div>
             <p v-if="user.bio" class="profile-bio">{{ user.bio }}</p>
             <p v-if="!isPrivateProfile" class="profile-stats-line">
-              {{ gamePurchases.length }} games
-              <template v-if="totalHoursPlayed > 0 && !user.hideDaysPlayed">
-                · {{ totalHoursPlayed.toLocaleString() }}h played
-              </template>
+              {{ gamesCount }} games
+              <template v-if="totalHoursPlayed > 0 && !user.hideDaysPlayed"> · {{ totalHoursLabel }}h played </template>
               <template v-if="completionPct > 0"> · {{ completionPct }}% completed </template>
-              <template v-if="avgRating > 0"> · avg {{ avgRating }} </template>
+              <template v-if="avgRating !== null"> · avg {{ avgRating }} </template>
             </p>
             <div class="profile-social">
               <router-link :to="`/users/${route.params.slug}/followers`" class="social-link">
@@ -149,7 +147,7 @@
             >
               <span v-if="s.key !== 'all'" class="status-dot" :style="{ background: statusColor(s.key) }"></span>
               {{ s.label }}
-              <span class="pill-count">{{ s.key === "all" ? gamePurchases.length : statusCount(s.key) }}</span>
+              <span class="pill-count">{{ s.key === "all" ? gamesCount : statusCount(s.key) }}</span>
             </button>
           </div>
 
@@ -161,31 +159,38 @@
             <div class="library-sort">
               <div class="select is-small">
                 <select v-model="sortBy">
-                  <option value="name">A → Z</option>
-                  <option value="rating">Rating</option>
-                  <option value="hours">Hours</option>
+                  <option value="GAME_NAME">A → Z</option>
+                  <option value="HIGHEST_RATING">Rating</option>
+                  <option value="MOST_HOURS_PLAYED">Hours</option>
                 </select>
               </div>
             </div>
-            <span class="library-count">
-              {{ filteredGames.length }} game{{ filteredGames.length !== 1 ? "s" : "" }}
-            </span>
+            <span class="library-count"> {{ matchingGamesCount }} game{{ matchingGamesCount !== 1 ? "s" : "" }} </span>
           </div>
 
           <!-- Empty state -->
-          <div v-if="filteredGames.length === 0 && gamePurchases.length > 0" class="library-empty">
-            <p class="library-empty-title">No games found</p>
-            <p class="library-empty-sub">Try adjusting your filters</p>
+          <div v-if="libraryLoading && libraryGames.length === 0" class="library-empty">
+            <p class="library-empty-title">Loading library…</p>
           </div>
 
-          <div v-else-if="gamePurchases.length === 0" class="library-empty">
+          <div v-else-if="libraryError" class="library-empty">
+            <p class="library-empty-title">Failed to load this library</p>
+            <p class="library-empty-sub">{{ libraryError.message }}</p>
+          </div>
+
+          <div v-else-if="gamesCount === 0" class="library-empty">
             <p class="library-empty-title">No games in library yet</p>
+          </div>
+
+          <div v-else-if="libraryGames.length === 0" class="library-empty">
+            <p class="library-empty-title">No games found</p>
+            <p class="library-empty-sub">Try adjusting your filters</p>
           </div>
 
           <!-- Gallery Grid -->
           <div v-else class="gallery-grid">
             <router-link
-              v-for="purchase in filteredGames"
+              v-for="purchase in libraryGames"
               :key="purchase.id"
               :to="`/games/${purchase.game.id}`"
               class="gallery-tile"
@@ -237,6 +242,12 @@
                 </div>
               </div>
             </router-link>
+          </div>
+
+          <div v-if="libraryHasNextPage" class="library-load-more">
+            <button class="library-load-more-btn" :disabled="libraryLoading" @click="loadMoreLibrary">
+              {{ libraryLoading ? "Loading…" : "Load more games" }}
+            </button>
           </div>
         </div>
       </template>
@@ -328,7 +339,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
-import { GET_USER } from "@/graphql/queries/users";
+import { GET_USER, GET_USER_LIBRARY } from "@/graphql/queries/users";
 import {
   FOLLOW_USER,
   UNFOLLOW_USER,
@@ -337,9 +348,17 @@ import {
   UPDATE_USER_ROLE,
   REMOVE_USER_AVATAR
 } from "@/graphql/mutations/users";
-import type { GetUserQuery } from "@/types/graphql";
+import type {
+  GamePurchaseCompletionStatus,
+  GamePurchaseSort,
+  GetUserLibraryQuery,
+  GetUserQuery
+} from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { CircleAlert, ShieldCheck, UserMinus } from "@lucide/vue";
+import { debounce } from "lodash-es";
+
+const LIBRARY_PAGE_SIZE = 30;
 
 const route = useRoute("user");
 const router = useRouter();
@@ -357,28 +376,35 @@ watch([data, error, loading], () => {
 });
 
 const user = computed(() => data.value?.user ?? null);
-const gamePurchases = computed(() => user.value?.gamePurchases?.nodes ?? []);
 const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
 
-// Stats
-const totalHoursPlayed = computed(() => gamePurchases.value.reduce((sum, p) => sum + (p.hoursPlayed ?? 0), 0));
-const completedCount = computed(
-  () =>
-    gamePurchases.value.filter((p) => p.completionStatus === "COMPLETED" || p.completionStatus === "FULLY_COMPLETED")
-      .length
-);
-const completionPct = computed(() =>
-  gamePurchases.value.length ? Math.round((completedCount.value / gamePurchases.value.length) * 100) : 0
-);
-const avgRating = computed(() => {
-  const rated = gamePurchases.value.filter((p) => p.rating !== null);
-  return rated.length ? Math.round(rated.reduce((a, p) => a + (p.rating ?? 0), 0) / rated.length) : 0;
+// Stats, aggregated by the server across the user's whole library. Computing
+// them here instead would only describe the page of games that's been loaded.
+const statistics = computed(() => user.value?.libraryStatistics ?? null);
+const gamesCount = computed(() => statistics.value?.gamesCount ?? 0);
+const totalHoursPlayed = computed(() => statistics.value?.totalHoursPlayed ?? 0);
+const totalHoursLabel = computed(() => Math.round(totalHoursPlayed.value).toLocaleString());
+const completionPct = computed(() => statistics.value?.completionPercentage ?? 0);
+const avgRating = computed(() => statistics.value?.averageRating ?? null);
+
+const statusCounts = computed(() => {
+  const counts: Record<string, number> = {};
+  for (const { status, count } of statistics.value?.statusCounts ?? []) {
+    counts[status] = count;
+  }
+  return counts;
 });
 
-// Filters
+function statusCount(key: string): number {
+  return statusCounts.value[key] ?? 0;
+}
+
+// Filters. These are handed to the server, so they apply to the whole library
+// rather than to the games that happen to have been paged in.
 const activeStatus = ref("all");
 const search = ref("");
-const sortBy = ref("name");
+const debouncedSearch = ref("");
+const sortBy = ref<GamePurchaseSort>("GAME_NAME");
 
 const statuses = [
   { key: "all", label: "All" },
@@ -390,24 +416,57 @@ const statuses = [
   { key: "UNPLAYED", label: "Unplayed" }
 ];
 
-function statusCount(key: string): number {
-  return gamePurchases.value.filter((p) => p.completionStatus === key).length;
-}
+const updateDebouncedSearch = debounce((value: string) => {
+  debouncedSearch.value = value;
+}, 300);
 
-const filteredGames = computed(() => {
-  return gamePurchases.value
-    .filter((p) => {
-      if (activeStatus.value !== "all" && p.completionStatus !== activeStatus.value) return false;
-      if (search.value && !p.game.name.toLowerCase().includes(search.value.toLowerCase())) return false;
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy.value === "name") return a.game.name.localeCompare(b.game.name);
-      if (sortBy.value === "rating") return (b.rating ?? 0) - (a.rating ?? 0);
-      if (sortBy.value === "hours") return (b.hoursPlayed ?? 0) - (a.hoursPlayed ?? 0);
-      return 0;
-    });
+watch(search, (value) => updateDebouncedSearch(value));
+
+onBeforeUnmount(() => updateDebouncedSearch.cancel());
+
+const libraryVariables = computed(() => ({
+  slug: route.params.slug,
+  first: LIBRARY_PAGE_SIZE,
+  completionStatus: activeStatus.value === "all" ? null : (activeStatus.value as GamePurchaseCompletionStatus),
+  search: debouncedSearch.value === "" ? null : debouncedSearch.value,
+  sortBy: sortBy.value
+}));
+
+const {
+  data: libraryData,
+  loading: libraryLoading,
+  error: libraryError,
+  fetchMore: fetchMoreLibrary
+} = useQuery<GetUserLibraryQuery>(GET_USER_LIBRARY, {
+  variables: () => libraryVariables.value
 });
+
+const libraryConnection = computed(() => libraryData.value?.user?.gamePurchases ?? null);
+const libraryGames = computed(() => libraryConnection.value?.nodes ?? []);
+// The number of games matching the current filters, which is not the number of
+// games that have been loaded.
+const matchingGamesCount = computed(() => libraryConnection.value?.totalCount ?? 0);
+const libraryHasNextPage = computed(() => libraryConnection.value?.pageInfo.hasNextPage ?? false);
+
+async function loadMoreLibrary() {
+  const cursor = libraryConnection.value?.pageInfo.endCursor;
+  if (!libraryHasNextPage.value || libraryLoading.value || !cursor) return;
+
+  await fetchMoreLibrary({ ...libraryVariables.value, after: cursor }, (prev, next) => {
+    if (!prev.user || !next.user) return next;
+
+    return {
+      ...next,
+      user: {
+        ...next.user,
+        gamePurchases: {
+          ...next.user.gamePurchases,
+          nodes: [...prev.user.gamePurchases.nodes, ...next.user.gamePurchases.nodes]
+        }
+      }
+    };
+  });
+}
 
 // Status colors
 const STATUS_COLORS: Record<string, string> = {
@@ -1045,6 +1104,35 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
 
 .library-empty-sub {
   font-size: 0.8rem;
+}
+
+.library-load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+.library-load-more-btn {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--up-border);
+  background: transparent;
+  color: var(--up-text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.library-load-more-btn:hover:not(:disabled),
+.library-load-more-btn:focus-visible {
+  border-color: var(--vglist-theme);
+  color: var(--color-text-primary);
+}
+
+.library-load-more-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* ── Gallery Grid ── */
