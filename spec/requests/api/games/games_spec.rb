@@ -323,9 +323,8 @@ RSpec.describe "Games API", type: :request do
       # checked for preloading associations it never asked for.
       def tables_queried
         queries = []
-subscriber = ActiveSupport::Notifications.subscribe('sql.active_record') do |*, payload|
-  queries << payload[:sql] unless payload[:name].to_s.match?(/SCHEMA|TRANSACTION|CACHE/)
-end
+        subscriber = ActiveSupport::Notifications.subscribe('sql.active_record') do |*, payload|
+          queries << payload[:sql] unless payload[:name].to_s.match?(/SCHEMA|TRANSACTION|CACHE/)
         end
         yield
         queries.filter_map { |sql| sql[/FROM "([^"]+)"/, 1] }.uniq
