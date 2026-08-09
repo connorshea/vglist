@@ -153,10 +153,12 @@ namespace :import do
         next
       end
 
-      # Catch the error if the PCGamingWiki cover image doesn't actually exist.
+      # The cover URL comes from a wiki anyone can edit, so it's fetched
+      # through RemoteImageFetcher, which refuses non-public addresses. This
+      # also catches the case where the cover image doesn't actually exist.
       begin
-        cover_blob = URI.parse(cover_url).open
-      rescue OpenURI::HTTPError, URI::InvalidURIError, SocketError => e
+        cover = RemoteImageFetcher.fetch(cover_url)
+      rescue RemoteImageFetcher::Error => e
         progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
         progress_bar.increment
         cover_not_found_or_errored_count += 1
@@ -164,7 +166,7 @@ namespace :import do
       end
 
       # Copy the image data to a file with ActiveStorage.
-      game.cover.attach(io: cover_blob, filename: cover_blob.base_uri.to_s.split('/')[-1].to_s)
+      game.cover.attach(io: cover.io, filename: cover.filename)
 
       # If the cover has any errors, they'll show up on the `Game` record.
       # Check for any errors and print them if they exist.

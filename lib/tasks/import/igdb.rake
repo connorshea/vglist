@@ -146,24 +146,24 @@ namespace :import do
         next
       end
 
-      # Catch the error if the IGDB cover image doesn't actually exist.
+      # The cover URL comes out of the IGDB API response, so it's fetched
+      # through RemoteImageFetcher, which refuses non-public addresses. This
+      # also catches the case where the cover image doesn't actually exist.
       begin
         # Sleep between each attempt at pulling down the game cover, to avoid
         # hitting the IGDB website with a lot of load.
         sleep 0.25
-        cover_blob = URI.parse(igdb_game.dig('cover', 'url')).open
-      rescue OpenURI::HTTPError, URI::InvalidURIError, SocketError => e
+        cover = RemoteImageFetcher.fetch(igdb_game.dig('cover', 'url'))
+      rescue RemoteImageFetcher::Error => e
         progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
         progress_bar.increment
         cover_not_found_or_errored_count += 1
         next
       end
 
-      # Incredibly stupid way to get the file extension from the IGDB cover URL.
-      file_ext = cover_blob.base_uri.to_s.split(%r{[/.]})[-1].to_s
       # Copy the image data to a file with ActiveStorage.
       # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
-      game.cover.attach(io: cover_blob, filename: "#{game.id}_from_igdb.#{file_ext}")
+      game.cover.attach(io: cover.io, filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}")
 
       # If the cover has any errors, they'll show up on the `Game` record.
       # Check for any errors and print them if they exist.

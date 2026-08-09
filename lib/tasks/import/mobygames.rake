@@ -155,10 +155,12 @@ namespace :import do
         next
       end
 
-      # Catch the error if the MobyGames cover image doesn't actually exist.
+      # The cover URL comes out of the MobyGames API response, so it's fetched
+      # through RemoteImageFetcher, which refuses non-public addresses. This
+      # also catches the case where the cover image doesn't actually exist.
       begin
-        cover_blob = URI.parse(cover_url).open
-      rescue OpenURI::HTTPError => e
+        cover = RemoteImageFetcher.fetch(cover_url)
+      rescue RemoteImageFetcher::Error => e
         progress_bar.log "Error: #{e}"
         progress_bar.increment
         no_cover_url_count += 1
@@ -166,7 +168,7 @@ namespace :import do
       end
 
       # Attach the cover and get the filename from the last fragment of the URL.
-      game.cover.attach(io: cover_blob, filename: cover_blob.base_uri.to_s.split('/')[-1].to_s)
+      game.cover.attach(io: cover.io, filename: cover.filename)
       attached_covers_count += 1
       progress_bar.log "Added cover for #{game[:name]}."
       progress_bar.increment
