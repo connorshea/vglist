@@ -73,6 +73,23 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       json = JSON.parse(response.body)
       expect(json['errors'].first['message']).to include("logged in")
     end
+
+    it "returns an error when using a non-first-party API token", :aggregate_failures do
+      api_token = SecureRandom.alphanumeric(20)
+      api_token_user = create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(api_token))
+
+      post graphql_path, params: { query: query }, headers: {
+        'X-User-Email': api_token_user.email,
+        'X-User-Token': api_token
+      }
+
+      json = JSON.parse(response.body)
+      expect(json['errors'].first['message']).to include("first-party")
+      expect(json.dig('data', 'resetApiToken')).to be_nil
+      # The existing token must survive a rejected reset, otherwise this is a
+      # denial-of-service against the user's other integrations.
+      expect(api_token_user.reload.verify_api_token!(api_token)).to be true
+    end
   end
 
   describe "updateEmail mutation" do
