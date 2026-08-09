@@ -42,8 +42,9 @@ namespace :import do
     task series: :environment do
       puts "Adding game series' from Wikidata to games."
 
-      # Get all games with no series that have Wikidata IDs.
-      games_with_no_series = Game.where(series_id: nil).where.not(wikidata_id: nil).pluck(:wikidata_id)
+      # Get all games with no series that have Wikidata IDs. A set, because
+      # this is membership-tested once per Wikidata row below.
+      games_with_no_series = Game.where(series_id: nil).where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
       rows = get_rows(games_with_series_query).map(&:to_h)
 
@@ -193,8 +194,9 @@ namespace :import do
 
     puts "Adding game #{property_name.pluralize} from Wikidata to games."
 
-    # Get all games that have Wikidata IDs.
-    games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    # Get all games that have Wikidata IDs. A set, because this is
+    # membership-tested once per Wikidata row below.
+    games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
     # This has to use send because methods in Rake tasks are private by default.
     rows = get_rows(send("games_with_#{property_name.pluralize}_query")).map(&:to_h)

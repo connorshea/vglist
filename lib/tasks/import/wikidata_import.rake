@@ -25,7 +25,7 @@ namespace 'import:wikidata' do
     companies.uniq! { |company| company&.dig(:wikidata_id) }
 
     # Filter companies that are already represented in the vglist database.
-    wikidata_ids_in_db = Company.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    wikidata_ids_in_db = Company.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
     companies = companies.reject { |company| wikidata_ids_in_db.include?(company[:wikidata_id].delete('Q').to_i) }
 
     puts
@@ -77,7 +77,7 @@ namespace 'import:wikidata' do
     platforms.uniq! { |platform| platform&.dig(:wikidata_id) }
 
     # Filter platforms that are already represented in the vglist database.
-    wikidata_ids_in_db = Platform.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    wikidata_ids_in_db = Platform.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
     platforms = platforms.reject { |platform| wikidata_ids_in_db.include?(platform[:wikidata_id].delete('Q').to_i) }
 
     puts
@@ -129,7 +129,7 @@ namespace 'import:wikidata' do
     genres.uniq! { |genre| genre&.dig(:wikidata_id) }
 
     # Filter genres that are already represented in the vglist database.
-    wikidata_ids_in_db = Genre.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    wikidata_ids_in_db = Genre.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
     genres = genres.reject { |genre| wikidata_ids_in_db.include?(genre[:wikidata_id].delete('Q').to_i) }
 
     progress_bar_for_filter.finish unless progress_bar_for_filter.finished?
@@ -182,7 +182,7 @@ namespace 'import:wikidata' do
     series.uniq! { |s| s&.dig(:wikidata_id) }
 
     # Filter series that are already represented in the vglist database.
-    wikidata_ids_in_db = Series.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    wikidata_ids_in_db = Series.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
     series = series.reject { |srs| wikidata_ids_in_db.include?(srs[:wikidata_id].delete('Q').to_i) }
 
     puts
@@ -235,7 +235,7 @@ namespace 'import:wikidata' do
     engines.uniq! { |engine| engine&.dig(:wikidata_id) }
 
     # Filter engines that are already represented in the vglist database.
-    wikidata_ids_in_db = Engine.where.not(wikidata_id: nil).pluck(:wikidata_id)
+    wikidata_ids_in_db = Engine.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
     engines = engines.reject { |engine| wikidata_ids_in_db.include?(engine[:wikidata_id].delete('Q').to_i) }
 
     puts

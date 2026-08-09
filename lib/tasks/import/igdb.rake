@@ -85,7 +85,11 @@ namespace :import do
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    igdb_games = []
+    # IGDB results indexed by slug, so the per-game lookup below is a constant
+    # time hit rather than a scan of every result fetched so far. The first
+    # result wins for any duplicated slug, matching the `Array#find` it
+    # replaces.
+    igdb_games_by_slug = {}
 
     puts "Getting game information from IGDB..."
 
@@ -121,8 +125,11 @@ namespace :import do
         end
       end
 
-      igdb_games.concat(igdb_response)
-      igdb_games.compact!
+      igdb_response.compact.each do |igdb_game|
+        slug = igdb_game['slug']
+        igdb_games_by_slug[slug] = igdb_game unless igdb_games_by_slug.key?(slug)
+      end
+
       # Sleep to prevent the rate limiter from killing us.
       sleep 1
     end
@@ -136,8 +143,8 @@ namespace :import do
     cover_added_count = 0
 
     games.each do |game|
-      # Find the IGDB cover URL from igdb_games for this game record.
-      igdb_game = igdb_games.find { |g| g['slug'] == game[:igdb_id] }
+      # Find the IGDB cover URL from the IGDB results for this game record.
+      igdb_game = igdb_games_by_slug[game[:igdb_id]]
 
       if igdb_game.nil?
         progress_bar.log "#{game[:name].ljust(40)} | No cover found for the game's IGDB ID."
