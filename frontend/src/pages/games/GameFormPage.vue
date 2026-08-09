@@ -9,7 +9,7 @@
         <template v-else>
           <h1 class="title">{{ isEditing ? "Edit Game" : "New Game" }}</h1>
 
-          <div v-if="isEditing && gameLoading && !gameData" class="has-text-centered py-5">
+          <div v-if="isEditing && gameLoading" class="has-text-centered py-5">
             <p>Loading game...</p>
           </div>
 
@@ -17,7 +17,10 @@
             <p>Failed to load game: {{ gameError.message }}</p>
           </div>
 
-          <form v-if="!isEditing || gameData" @submit.prevent="handleSubmit">
+          <!-- `gameData` still holds the previously loaded game while a refetch
+               for a new id is in flight, so gate on `gameLoading` too or the
+               form renders with the wrong record's values. -->
+          <form v-if="!isEditing || (gameData && !gameLoading)" @submit.prevent="handleSubmit">
             <!-- Name -->
             <div class="field">
               <label class="label" for="game-name">Name <span class="has-text-danger">*</span></label>

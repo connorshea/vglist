@@ -5,7 +5,7 @@
     label="Series"
     plural-label="series"
     :is-editing="isEditing"
-    :loading="isEditing && loading && !data"
+    :loading="isEditing && loading"
     :submitting="submitting"
     :submit-error="submitError"
     :cancel-to="isEditing ? `/series/${seriesId}` : '/series'"

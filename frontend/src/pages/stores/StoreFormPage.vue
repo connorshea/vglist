@@ -5,7 +5,7 @@
     plural-label="stores"
     :with-wikidata-id="false"
     :is-editing="isEditing"
-    :loading="isEditing && loading && !data"
+    :loading="isEditing && loading"
     :submitting="submitting"
     :submit-error="submitError"
     :cancel-to="isEditing ? `/stores/${storeId}` : '/stores'"
