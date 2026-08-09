@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { defineComponent, nextTick, ref } from "vue";
+import { defineComponent, nextTick, ref, type Ref } from "vue";
 import { mount } from "@vue/test-utils";
 import { GET_PLATFORM_FOR_EDIT } from "@/graphql/queries/resources";
 import { useQuery } from "./useGraphQL";
@@ -32,9 +32,11 @@ type ThingData = { platform: { id: string } };
 
 /**
  * Mounts a component around `useQuery` so `onMounted` fires and the reactive
- * variables watcher is active, and hands back the id ref to drive it.
+ * variables watcher is active, and hands back the id ref to drive it. Pass an
+ * `enabled` ref to also drive the enabled flag; leaving it off exercises the
+ * always-enabled path where the option is omitted entirely.
  */
-function mountQuery() {
+function mountQuery({ enabled }: { enabled?: Ref<boolean> } = {}) {
   const id = ref("1");
   // Held in a plain binding rather than a ref — a ref would deeply unwrap the
   // refs the composable returns, leaving `.value` undefined.
@@ -44,7 +46,8 @@ function mountQuery() {
     defineComponent({
       setup() {
         composable = useQuery<ThingData>(GET_PLATFORM_FOR_EDIT, {
-          variables: () => ({ id: id.value })
+          variables: () => ({ id: id.value }),
+          enabled: enabled ? () => enabled.value : undefined
         });
         return () => null;
       }
@@ -124,6 +127,62 @@ describe("useQuery", () => {
 
     expect(query().error.value).toBeNull();
     expect(query().data.value).toEqual({ platform: { id: "2" } });
+  });
+
+  it("discards a response that arrives after the query is disabled", async () => {
+    const first = deferred<ThingData>();
+    mockRequest.mockReturnValueOnce(first.promise);
+
+    const enabled = ref(true);
+    const { query } = mountQuery({ enabled });
+    await nextTick();
+
+    // Standing in for navigating from an edit route to a new one in a reused
+    // component: the query is disabled while its request is still in flight.
+    enabled.value = false;
+    await nextTick();
+    expect(mockRequest).toHaveBeenCalledTimes(1);
+
+    first.resolve({ platform: { id: "1" } });
+    await nextTick();
+
+    // Applying it would repopulate form fields the page just cleared.
+    expect(query().data.value).toBeNull();
+    expect(query().loading.value).toBeFalsy();
+  });
+
+  it("discards an error that arrives after the query is disabled", async () => {
+    const first = deferred<ThingData>();
+    mockRequest.mockReturnValueOnce(first.promise);
+
+    const enabled = ref(true);
+    const { query } = mountQuery({ enabled });
+    await nextTick();
+
+    enabled.value = false;
+    await nextTick();
+
+    first.reject(new Error("stale request failed"));
+    await nextTick();
+
+    expect(query().error.value).toBeNull();
+    expect(query().loading.value).toBeFalsy();
+  });
+
+  it("runs again when the query is re-enabled", async () => {
+    mockRequest.mockResolvedValue({ platform: { id: "1" } });
+
+    const enabled = ref(false);
+    const { query } = mountQuery({ enabled });
+    await nextTick();
+    expect(mockRequest).not.toHaveBeenCalled();
+
+    enabled.value = true;
+    await nextTick();
+    await nextTick();
+
+    expect(mockRequest).toHaveBeenCalledTimes(1);
+    expect(query().data.value).toEqual({ platform: { id: "1" } });
   });
 
   it("still surfaces data and errors from the newest request", async () => {

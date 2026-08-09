@@ -37,8 +37,17 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
   // last wins — which may be the older one.
   let latestRequestId = 0;
 
+  // A disabled query must not write state, and `enabled` can flip to false
+  // while a request is in flight (e.g. navigating from an edit route to a new
+  // one in a component vue-router reuses). Bailing out of `execute` doesn't
+  // touch `latestRequestId`, so the in-flight request would otherwise still
+  // count as the newest and apply its result.
+  function isEnabled() {
+    return options?.enabled === undefined || resolveValue(options.enabled);
+  }
+
   async function execute() {
-    if (options?.enabled !== undefined && !resolveValue(options.enabled)) return;
+    if (!isEnabled()) return;
 
     const requestId = ++latestRequestId;
     loading.value = true;
@@ -47,10 +56,10 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     try {
       const variables = options?.variables ? resolveValue(options.variables) : undefined;
       const result = await gqlClient.request<TData>(query, variables as Record<string, unknown>);
-      if (requestId !== latestRequestId) return;
+      if (requestId !== latestRequestId || !isEnabled()) return;
       data.value = result;
     } catch (e) {
-      if (requestId !== latestRequestId) return;
+      if (requestId !== latestRequestId || !isEnabled()) return;
       error.value = e instanceof Error ? e : new Error(String(e));
     } finally {
       // Only the newest request owns the loading flag, so a superseded
@@ -66,14 +75,14 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     loading.value = true;
     try {
       const nextData = await gqlClient.request<TData>(query, variables);
-      if (requestId !== latestRequestId) return;
+      if (requestId !== latestRequestId || !isEnabled()) return;
       if (data.value) {
         data.value = merge(data.value, nextData);
       } else {
         data.value = nextData;
       }
     } catch (e) {
-      if (requestId !== latestRequestId) return;
+      if (requestId !== latestRequestId || !isEnabled()) return;
       error.value = e instanceof Error ? e : new Error(String(e));
     } finally {
       if (requestId === latestRequestId) loading.value = false;
