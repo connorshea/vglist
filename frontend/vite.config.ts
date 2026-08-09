@@ -18,11 +18,11 @@ export default defineConfig(({ mode }) => {
   return {
     // Serve files from the root public/ directory (favicons, manifest, etc.)
     // so they're available at / in both dev and production builds.
-    publicDir: resolve(__dirname, "../public"),
+    publicDir: resolve(import.meta.dirname, "../public"),
     plugins: [vue()],
     resolve: {
       alias: {
-        "@": resolve(__dirname, "src")
+        "@": resolve(import.meta.dirname, "src")
       }
     },
     server: {
