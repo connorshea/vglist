@@ -38,14 +38,20 @@ class GraphqlController < ApplicationController
 
   # Check whether the user is using OAuth based on whether a Doorkeeper token exists.
   def user_using_oauth?
-    return false unless request.headers.key?('Authorization')
+    # If the token is a JWT (contains dots), it's not OAuth.
+    return false if user_using_jwt?
 
-    # If the token is a JWT (contains dots), it's not OAuth
-    auth_header = request.headers['Authorization']
-    token = auth_header&.sub(/^Bearer\s+/i, '')
-    return false if token&.count('.') == 2
+    # An `Authorization` header that isn't a JWT is an OAuth attempt, even if the
+    # token turns out to be bogus — those still need to fail via
+    # `doorkeeper_authorize!` rather than silently falling through as anonymous.
+    return true if request.headers.key?('Authorization')
 
-    true
+    # Defence in depth: Doorkeeper is configured to only accept tokens from the
+    # `Authorization` header (see `access_token_methods` in
+    # config/initializers/doorkeeper.rb), but if that ever changes, any token
+    # Doorkeeper does resolve must still go through the scope/expiry/revocation
+    # checks in `doorkeeper_authorize!` instead of skipping them.
+    doorkeeper_token.present?
   end
 
   # Check whether the user is using JWT authentication.

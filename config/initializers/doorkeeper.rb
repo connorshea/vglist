@@ -260,7 +260,13 @@ Doorkeeper.configure do
   # Check out https://github.com/doorkeeper-gem/doorkeeper/wiki/Changing-how-clients-are-authenticated
   # for more information on customization
   #
-  # access_token_methods :from_bearer_authorization, :from_access_token_param, :from_bearer_param
+  # Only accept access tokens from the `Authorization` header. The parameter
+  # forms (`?access_token=`/`?bearer_token=` and the equivalent body fields) are
+  # deliberately disabled: RFC 6750 §2.3/§5.3 discourages them (tokens leak into
+  # logs, referrers and browser history), and GraphqlController only routes
+  # requests through `doorkeeper_authorize!` — the check for scopes, expiry and
+  # revocation — when the token arrives in that header.
+  access_token_methods :from_bearer_authorization
 
   # Forces the usage of the HTTPS protocol in non-native redirect uris (enabled
   # by default in non-development environments). OAuth2 delegates security in
