@@ -50,6 +50,15 @@ watch(
   { immediate: true }
 );
 
+// The "new" and "edit" routes resolve to this same component, so vue-router
+// reuses the instance when navigating between them. Clear any values carried
+// over from an edit when we land on "new".
+watch(isEditing, (editing) => {
+  if (editing) return;
+  name.value = "";
+  submitError.value = "";
+});
+
 // Redirect to 404 when editing a store that doesn't exist.
 watch([data, error, loading], () => {
   if (isEditing.value && !loading.value && (error.value || (data.value && !data.value.store))) {
