@@ -5,7 +5,7 @@
     label="Company"
     plural-label="companies"
     :is-editing="isEditing"
-    :loading="isEditing && loading && !data"
+    :loading="isEditing && loading"
     :submitting="submitting"
     :submit-error="submitError"
     :cancel-to="isEditing ? `/companies/${companyId}` : '/companies'"

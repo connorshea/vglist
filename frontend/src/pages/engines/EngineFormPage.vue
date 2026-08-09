@@ -5,7 +5,7 @@
     label="Engine"
     plural-label="engines"
     :is-editing="isEditing"
-    :loading="isEditing && loading && !data"
+    :loading="isEditing && loading"
     :submitting="submitting"
     :submit-error="submitError"
     :cancel-to="isEditing ? `/engines/${engineId}` : '/engines'"

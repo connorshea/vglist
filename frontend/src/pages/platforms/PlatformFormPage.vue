@@ -5,7 +5,7 @@
     label="Platform"
     plural-label="platforms"
     :is-editing="isEditing"
-    :loading="isEditing && loading && !data"
+    :loading="isEditing && loading"
     :submitting="submitting"
     :submit-error="submitError"
     :cancel-to="isEditing ? `/platforms/${platformId}` : '/platforms'"
