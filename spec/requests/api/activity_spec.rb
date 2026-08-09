@@ -568,18 +568,6 @@ RSpec.describe "Activity API", type: :request do
     # Authenticating lazily would create the user inside the measured block.
     before(:each) { access_token }
 
-    # The number of SQL queries run while the block executes.
-    def query_count
-      count = 0
-      subscriber = ActiveSupport::Notifications.subscribe('sql.active_record') do |*, payload|
-        count += 1 unless payload[:name].to_s.match?(/SCHEMA|TRANSACTION/)
-      end
-      yield
-      count
-    ensure
-      ActiveSupport::Notifications.unsubscribe(subscriber)
-    end
-
     def create_library_event
       create(
         :game_purchase_library_event,

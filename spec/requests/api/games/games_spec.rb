@@ -319,19 +319,6 @@ RSpec.describe "Games API", type: :request do
       # its OAuth application inside the measured block.
       before(:each) { access_token }
 
-      # The tables touched while running a block, so that a query can be
-      # checked for preloading associations it never asked for.
-      def tables_queried
-        queries = []
-        subscriber = ActiveSupport::Notifications.subscribe('sql.active_record') do |*, payload|
-          queries << payload[:sql] unless payload[:name].to_s.match?(/SCHEMA|TRANSACTION|CACHE/)
-        end
-        yield
-        queries.filter_map { |sql| sql[/FROM "([^"]+)"/, 1] }.uniq
-      ensure
-        ActiveSupport::Notifications.unsubscribe(subscriber)
-      end
-
       it "doesn't preload associations the query didn't select" do
         query_string = <<-GRAPHQL
           query {

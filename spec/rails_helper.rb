@@ -56,6 +56,7 @@ RSpec.configure do |config|
 
   config.include ApiRequestTestHelper, type: :request
   config.include EnvHelper
+  config.include SqlQueryTestHelper
 end
 
 # Configure shoulda-matchers to work with rspec and all of rails.
