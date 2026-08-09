@@ -409,6 +409,118 @@ RSpec.describe "Activity API", type: :request do
       expect(usernames).not_to include(private_user.username)
     end
 
+    it "excludes banned users from global activity feed" do
+      banned_user = create(:banned_user)
+      create(:game_purchase, user: banned_user)
+
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: GLOBAL) {
+            nodes {
+              user { username }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+      nodes = result.graphql_dig(:activity, :nodes)
+      usernames = nodes.map { |n| n.dig(:user, :username) }
+
+      expect(usernames).not_to include(banned_user.username)
+    end
+
+    it "excludes a followed user who has since gone private from the following feed" do
+      create(:relationship, follower: user, followed: user2)
+      create(:game_purchase, user: user2)
+      # The follow was created while user2's account was still public, and it
+      # isn't removed when they switch to a private account.
+      user2.update!(privacy: :private_account)
+
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: FOLLOWING) {
+            nodes {
+              user { username }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+      usernames = result.graphql_dig(:activity, :nodes).map { |n| n.dig(:user, :username) }
+
+      expect(usernames).not_to include(user2.username)
+    end
+
+    it "excludes a followed user who has since been banned from the following feed" do
+      create(:relationship, follower: user, followed: user2)
+      create(:game_purchase, user: user2)
+      user2.update!(banned: true)
+
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: FOLLOWING) {
+            nodes {
+              user { username }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+      usernames = result.graphql_dig(:activity, :nodes).map { |n| n.dig(:user, :username) }
+
+      expect(usernames).not_to include(user2.username)
+    end
+
+    it "includes a followed private user that follows the current user back in the following feed" do
+      # UserPolicy#user_profile_is_visible? lets a viewer see a private profile
+      # if that user follows the viewer, so the feed must match.
+      create(:relationship, follower: user, followed: user2)
+      create(:relationship, follower: user2, followed: user)
+      create(:game_purchase, user: user2)
+      user2.update!(privacy: :private_account)
+
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: FOLLOWING) {
+            nodes {
+              user { username }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+      usernames = result.graphql_dig(:activity, :nodes).map { |n| n.dig(:user, :username) }
+
+      expect(usernames).to include(user2.username)
+    end
+
+    it "includes a followed private user's events when the current user is an admin" do
+      admin = create(:confirmed_admin)
+      admin_token = create(:access_token, resource_owner_id: admin.id, application: build(:application, owner: admin))
+      create(:relationship, follower: admin, followed: user2)
+      create(:game_purchase, user: user2)
+      user2.update!(privacy: :private_account)
+
+      query_string = <<-GRAPHQL
+        query {
+          activity(feedType: FOLLOWING) {
+            nodes {
+              user { username }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: admin_token)
+      usernames = result.graphql_dig(:activity, :nodes).map { |n| n.dig(:user, :username) }
+
+      expect(usernames).to include(user2.username)
+    end
+
     it "returns an error when querying following feed without authentication" do
       query_string = <<-GRAPHQL
         query {
