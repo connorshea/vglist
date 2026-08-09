@@ -32,12 +32,17 @@ module Views
     }.freeze
 
     # Nested associations to preload for each event category's eventable.
+    #
+    # Game purchases also preload their owner, which `GamePurchaseType`'s
+    # authorization check reads for every record. These are loaded by ID rather
+    # than through a user's association, so there's no `inverse_of` to fall back
+    # on and the owner would otherwise be fetched one purchase at a time.
     EVENTABLE_INCLUDES = {
-      'add_to_library' => { game: { cover_attachment: :blob } },
-      'change_completion_status' => { game: { cover_attachment: :blob } },
-      'favorite_game' => { game: { cover_attachment: :blob } },
-      'new_user' => { avatar_attachment: :blob },
-      'following' => { followed: { avatar_attachment: :blob } }
+      'add_to_library' => [:user, { game: AttachmentPreloads::COVER }],
+      'change_completion_status' => [:user, { game: AttachmentPreloads::COVER }],
+      'favorite_game' => { game: AttachmentPreloads::COVER },
+      'new_user' => AttachmentPreloads::AVATAR,
+      'following' => { followed: AttachmentPreloads::AVATAR }
     }.freeze
 
     # Get a specific event subclass record based on the ID.

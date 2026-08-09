@@ -650,5 +650,41 @@ RSpec.describe "Users API", type: :request do
         end
       end
     end
+
+    context 'when preloading avatars for a list of users' do
+      # Authenticating lazily would create the user inside the measured block.
+      before(:each) { access_token }
+
+      let(:users_query) do
+        <<-GRAPHQL
+          query {
+            users {
+              nodes {
+                id
+                username
+                avatarUrl(size: SMALL)
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      # The first request for an avatar generates its variant, which writes
+      # records and is unrelated to preloading, so warm those up and measure
+      # the second request.
+      def warm_then_count_queries
+        api_request(users_query, token: access_token)
+        query_count { api_request(users_query, token: access_token) }
+      end
+
+      it "runs no more queries as the list grows" do
+        create_list(:confirmed_user_with_avatar, 2)
+        baseline = warm_then_count_queries
+
+        create_list(:confirmed_user_with_avatar, 3)
+
+        expect(warm_then_count_queries).to eq(baseline)
+      end
+    end
   end
 end

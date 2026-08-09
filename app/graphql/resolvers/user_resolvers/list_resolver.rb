@@ -11,7 +11,7 @@ module Resolvers
 
       def resolve(sort_by: nil)
         # Exclude banned users from the results.
-        users = User.all.where(banned: false)
+        users = User.all.where(banned: false).with_attached_avatar
 
         sort_by.nil? ? users.order(:id) : users.public_send(sort_by.to_sym)
       end

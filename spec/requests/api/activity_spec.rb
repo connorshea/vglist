@@ -539,4 +539,58 @@ RSpec.describe "Activity API", type: :request do
       expect(json['errors'].first['message']).to eq("You must be logged in to view the following feed.")
     end
   end
+
+  describe "Preloading for the activity feed" do
+    let(:user) { create(:confirmed_user) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    # Every field the feed renders that touches an association or an
+    # attachment, so a missing preload shows up as extra queries.
+    let(:activity_query) do
+      <<-GRAPHQL
+        query {
+          activity(feedType: GLOBAL) {
+            nodes {
+              id
+              user { id username avatarUrl(size: SMALL) }
+              eventable {
+                ... on GamePurchase {
+                  rating
+                  game { id name coverUrl(size: SMALL) }
+                }
+              }
+            }
+          }
+        }
+      GRAPHQL
+    end
+
+    # Authenticating lazily would create the user inside the measured block.
+    before(:each) { access_token }
+
+    def create_library_event
+      create(
+        :game_purchase_library_event,
+        user: create(:confirmed_user_with_avatar),
+        eventable: create(:game_purchase, game: create(:game_with_cover))
+      )
+    end
+
+    # The first request for an image generates its variant, which writes records
+    # and is unrelated to preloading, so warm those up and measure the second
+    # request.
+    def warm_then_count_queries
+      api_request(activity_query, token: access_token)
+      query_count { api_request(activity_query, token: access_token) }
+    end
+
+    it "runs no more queries as the feed grows" do
+      2.times { create_library_event }
+      baseline = warm_then_count_queries
+
+      3.times { create_library_event }
+
+      expect(warm_then_count_queries).to eq(baseline)
+    end
+  end
 end

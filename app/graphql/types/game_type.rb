@@ -45,11 +45,11 @@ module Types
     # plays this" list, so they're restricted to public, unbanned accounts for
     # everyone, rather than being tailored to the viewer.
     def owners
-      @object.purchasers.public_and_unbanned
+      @object.purchasers.public_and_unbanned.with_attached_avatar
     end
 
     def favoriters
-      @object.favoriters.public_and_unbanned
+      @object.favoriters.public_and_unbanned.with_attached_avatar
     end
 
     # Get the number of purchases for the game where rating is not nil.

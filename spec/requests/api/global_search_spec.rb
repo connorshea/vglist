@@ -304,11 +304,7 @@ RSpec.describe "Global Search API", type: :request do
           }
         GRAPHQL
 
-        queries = []
-        callback = lambda { |_name, _start, _finish, _id, payload|
-          queries << payload[:sql] unless payload[:name] == "SCHEMA" || payload[:sql].match?(/\A(BEGIN|COMMIT|ROLLBACK|SAVEPOINT|RELEASE)/i)
-        }
-        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        queries = queries_run do
           result = api_request(query_string, variables: { query: 'NplusOneG', types: ['GAME'] }, token: access_token)
           expect(result.graphql_dig(:global_search, :nodes).length).to eq(5)
         end
@@ -336,11 +332,7 @@ RSpec.describe "Global Search API", type: :request do
           }
         GRAPHQL
 
-        queries = []
-        callback = lambda { |_name, _start, _finish, _id, payload|
-          queries << payload[:sql] unless payload[:name] == "SCHEMA" || payload[:sql].match?(/\A(BEGIN|COMMIT|ROLLBACK|SAVEPOINT|RELEASE)/i)
-        }
-        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        queries = queries_run do
           result = api_request(query_string, variables: { query: 'nplus1user', types: ['USER'] }, token: access_token)
           expect(result.graphql_dig(:global_search, :nodes).length).to eq(5)
         end

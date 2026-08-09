@@ -10,10 +10,9 @@
 module GamePreloads
   # GameType field name => the association to preload for it.
   #
-  # `cover_url` is deliberately absent: it needs `with_attached_cover`, which
-  # preloads `blob: { variant_records: { image_attachment: :blob } }` on top of
-  # the attachment. A plain `includes(cover_attachment: :blob)` would leave the
-  # variant record lookup to fire once per game.
+  # `cover_url` is deliberately absent: it needs the full attachment chain, and
+  # `with_attached_cover` applies here because the cover hangs off the relation
+  # being loaded. See `AttachmentPreloads` for why the short form isn't enough.
   FIELD_PRELOADS = {
     series: :series,
     developers: :developers,
