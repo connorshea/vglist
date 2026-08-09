@@ -57,4 +57,29 @@ RSpec.describe "GamePurchase API", type: :request do
       expect(result.graphql_dig(:game_purchase)).to eq(nil)
     end
   end
+
+  describe "Query for data on game_purchase owned by banned user" do
+    let(:user) { create(:confirmed_user) }
+    let(:banned_user) { create(:banned_user) }
+    let(:application) { build(:application, owner: user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:game_purchase) { create(:game_purchase_with_comments_and_rating, user: banned_user) }
+
+    it "returns null data" do
+      game_purchase
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          gamePurchase(id: $id) {
+            id
+            rating
+            comments
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: game_purchase.id }, token: access_token)
+
+      expect(result.graphql_dig(:game_purchase)).to eq(nil)
+    end
+  end
 end
