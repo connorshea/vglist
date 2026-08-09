@@ -27,7 +27,7 @@ module Types
     field :engines, EngineType.connection_type, null: false, description: "Game engines that the game runs on."
     field :genres, GenreType.connection_type, null: false, description: "Genres of the game."
     field :platforms, PlatformType.connection_type, null: false, description: "Platforms the game is available on."
-    field :owners, UserType.connection_type, null: false, method: :purchasers, description: "Users who have this game in their libraries."
+    field :owners, UserType.connection_type, null: false, description: "Users who have this game in their libraries."
     field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
@@ -37,6 +37,20 @@ module Types
     field :is_favorited, Boolean, null: true, resolver_method: :favorited?, description: "Whether the game is in the current user's favorites, or `null` if there is no logged-in user."
     field :is_in_library, Boolean, null: true, resolver_method: :in_library?, description: "Whether the game is in the current user's library, or `null` if there is no logged-in user."
     field :game_purchase_id, ID, null: true, description: 'The ID of the GamePurchase record if the game is in the current user\'s library, or `null` otherwise.'
+
+    # These two connections are the inverse of `User#gamePurchases` and
+    # `User#favoritedGames`, which UserType hides for private and banned users.
+    # Without the same filter here they can be used to answer "does this
+    # private/banned user own or like this game?". These are a public "who else
+    # plays this" list, so they're restricted to public, unbanned accounts for
+    # everyone, rather than being tailored to the viewer.
+    def owners
+      @object.purchasers.public_and_unbanned
+    end
+
+    def favoriters
+      @object.favoriters.public_and_unbanned
+    end
 
     # Get the number of purchases for the game where rating is not nil.
     def rating_count
