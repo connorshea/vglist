@@ -107,6 +107,27 @@ class User < ApplicationRecord
       .order(Arel.sql('count(relationships.followed_id) desc nulls last'))
   }
 
+  # Users whose profiles the given viewer is allowed to see. This must stay in
+  # sync with UserPolicy#user_profile_is_visible?, and exists so that queries
+  # returning many users' records (e.g. the activity feed) can apply the same
+  # rule in SQL instead of re-deriving it.
+  scope :visible_to, ->(viewer) {
+    next all if viewer&.admin?
+
+    visible = where(privacy: :public_account, banned: false)
+    next visible if viewer.nil?
+
+    # A viewer can always see themselves, and can see users that follow them
+    # (unless those users have been banned), even if those accounts are private.
+    #
+    # The follower check reads follower_id off `relationships` directly rather
+    # than going through the `followers` association, which would join `users`
+    # a second time; that join makes the planner seq scan the whole users table
+    # instead of probing it by primary key.
+    visible.or(where(id: viewer.id))
+           .or(where(banned: false, id: viewer.passive_relationships.select(:follower_id)))
+  }
+
   # Users have roles that can be used to define what actions they're allowed
   # to perform. Default should be 'member'.
   enum :role, { member: 0, moderator: 1, admin: 2 }

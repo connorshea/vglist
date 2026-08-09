@@ -240,6 +240,54 @@ RSpec.describe User, type: :model do
         expect(User.most_games).to eq([user1, user3, user2])
       end
     end
+
+    context 'with visible_to' do
+      let(:viewer) { create(:user) }
+      let(:public_user) { create(:user) }
+      let(:private_user) { create(:user, :private_account) }
+      let(:banned_user) { create(:user, :banned) }
+
+      it "includes public, unbanned users" do
+        expect(User.visible_to(viewer)).to include(public_user)
+      end
+
+      it "excludes private users" do
+        expect(User.visible_to(viewer)).not_to include(private_user)
+      end
+
+      it "excludes banned users" do
+        expect(User.visible_to(viewer)).not_to include(banned_user)
+      end
+
+      it "includes the viewer themselves, even when private" do
+        viewer.update!(privacy: :private_account)
+        expect(User.visible_to(viewer)).to include(viewer)
+      end
+
+      it "includes private users that follow the viewer" do
+        create(:relationship, follower: private_user, followed: viewer)
+        expect(User.visible_to(viewer)).to include(private_user)
+      end
+
+      it "excludes banned users that follow the viewer" do
+        create(:relationship, follower: banned_user, followed: viewer)
+        expect(User.visible_to(viewer)).not_to include(banned_user)
+      end
+
+      it "excludes private users that the viewer follows" do
+        create(:relationship, follower: viewer, followed: private_user)
+        expect(User.visible_to(viewer)).not_to include(private_user)
+      end
+
+      it "includes everyone for an admin viewer" do
+        expect(User.visible_to(create(:admin))).to include(private_user, banned_user)
+      end
+
+      it "only includes public, unbanned users when there's no viewer" do
+        expect(User.visible_to(nil)).to include(public_user)
+        expect(User.visible_to(nil)).not_to include(private_user, banned_user)
+      end
+    end
   end
 
   describe 'Destructions' do
