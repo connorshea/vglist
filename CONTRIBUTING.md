@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Ruby 3.4
+- Ruby 4.0
 - Postgres 17.x
 - Node.js 24.x
 - pnpm

@@ -3,7 +3,7 @@
 source 'https://rubygems.org', cooldown: 3
 # git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '>= 3.4.9'
+ruby '>= 4.0.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 7.2.2'
