@@ -32,6 +32,16 @@ export const GET_PLATFORM = gql`
   }
 `;
 
+export const GET_PLATFORM_FOR_EDIT = gql`
+  query GetPlatformForEdit($id: ID!) {
+    platform(id: $id) {
+      id
+      name
+      wikidataId
+    }
+  }
+`;
+
 export const GET_COMPANIES = gql`
   query GetCompanies($first: Int, $after: String) {
     companies(first: $first, after: $after) {
@@ -71,6 +81,16 @@ export const GET_COMPANY = gql`
   }
 `;
 
+export const GET_COMPANY_FOR_EDIT = gql`
+  query GetCompanyForEdit($id: ID!) {
+    company(id: $id) {
+      id
+      name
+      wikidataId
+    }
+  }
+`;
+
 export const GET_GENRES = gql`
   query GetGenres($first: Int, $after: String) {
     genres(first: $first, after: $after) {
@@ -99,6 +119,16 @@ export const GET_GENRE = gql`
           coverUrl(size: SMALL)
         }
       }
+    }
+  }
+`;
+
+export const GET_GENRE_FOR_EDIT = gql`
+  query GetGenreForEdit($id: ID!) {
+    genre(id: $id) {
+      id
+      name
+      wikidataId
     }
   }
 `;
@@ -135,6 +165,16 @@ export const GET_ENGINE = gql`
   }
 `;
 
+export const GET_ENGINE_FOR_EDIT = gql`
+  query GetEngineForEdit($id: ID!) {
+    engine(id: $id) {
+      id
+      name
+      wikidataId
+    }
+  }
+`;
+
 export const GET_SERIES_LIST = gql`
   query GetSeriesList($first: Int, $after: String) {
     seriesList(first: $first, after: $after) {
@@ -167,6 +207,16 @@ export const GET_SERIES = gql`
   }
 `;
 
+export const GET_SERIES_FOR_EDIT = gql`
+  query GetSeriesForEdit($id: ID!) {
+    series(id: $id) {
+      id
+      name
+      wikidataId
+    }
+  }
+`;
+
 export const GET_STORES = gql`
   query GetStores($first: Int, $after: String) {
     stores(first: $first, after: $after) {
@@ -184,6 +234,15 @@ export const GET_STORES = gql`
 
 export const GET_STORE = gql`
   query GetStore($id: ID!) {
+    store(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_STORE_FOR_EDIT = gql`
+  query GetStoreForEdit($id: ID!) {
     store(id: $id) {
       id
       name

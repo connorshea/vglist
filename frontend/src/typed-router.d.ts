@@ -28,27 +28,39 @@ declare module "vue-router" {
 
       // Platforms
       platforms: RouteRecordInfo<"platforms", "/platforms", Record<never, never>, Record<never, never>>;
+      platformNew: RouteRecordInfo<"platformNew", "/platforms/new", Record<never, never>, Record<never, never>>;
       platform: RouteRecordInfo<"platform", "/platforms/:id", { id: string | number }, { id: string }>;
+      platformEdit: RouteRecordInfo<"platformEdit", "/platforms/:id/edit", { id: string | number }, { id: string }>;
 
       // Companies
       companies: RouteRecordInfo<"companies", "/companies", Record<never, never>, Record<never, never>>;
+      companyNew: RouteRecordInfo<"companyNew", "/companies/new", Record<never, never>, Record<never, never>>;
       company: RouteRecordInfo<"company", "/companies/:id", { id: string | number }, { id: string }>;
+      companyEdit: RouteRecordInfo<"companyEdit", "/companies/:id/edit", { id: string | number }, { id: string }>;
 
       // Engines
       engines: RouteRecordInfo<"engines", "/engines", Record<never, never>, Record<never, never>>;
+      engineNew: RouteRecordInfo<"engineNew", "/engines/new", Record<never, never>, Record<never, never>>;
       engine: RouteRecordInfo<"engine", "/engines/:id", { id: string | number }, { id: string }>;
+      engineEdit: RouteRecordInfo<"engineEdit", "/engines/:id/edit", { id: string | number }, { id: string }>;
 
       // Genres
       genres: RouteRecordInfo<"genres", "/genres", Record<never, never>, Record<never, never>>;
+      genreNew: RouteRecordInfo<"genreNew", "/genres/new", Record<never, never>, Record<never, never>>;
       genre: RouteRecordInfo<"genre", "/genres/:id", { id: string | number }, { id: string }>;
+      genreEdit: RouteRecordInfo<"genreEdit", "/genres/:id/edit", { id: string | number }, { id: string }>;
 
       // Series
       seriesList: RouteRecordInfo<"seriesList", "/series", Record<never, never>, Record<never, never>>;
+      seriesNew: RouteRecordInfo<"seriesNew", "/series/new", Record<never, never>, Record<never, never>>;
       series: RouteRecordInfo<"series", "/series/:id", { id: string | number }, { id: string }>;
+      seriesEdit: RouteRecordInfo<"seriesEdit", "/series/:id/edit", { id: string | number }, { id: string }>;
 
       // Stores
       stores: RouteRecordInfo<"stores", "/stores", Record<never, never>, Record<never, never>>;
+      storeNew: RouteRecordInfo<"storeNew", "/stores/new", Record<never, never>, Record<never, never>>;
       store: RouteRecordInfo<"store", "/stores/:id", { id: string | number }, { id: string }>;
+      storeEdit: RouteRecordInfo<"storeEdit", "/stores/:id/edit", { id: string | number }, { id: string }>;
 
       // Activity
       activity: RouteRecordInfo<"activity", "/activity", Record<never, never>, Record<never, never>>;

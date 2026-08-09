@@ -105,9 +105,21 @@ const router = createRouter({
       component: () => import("@/pages/platforms/PlatformListPage.vue")
     },
     {
+      path: "/platforms/new",
+      name: "platformNew",
+      component: () => import("@/pages/platforms/PlatformFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
+    },
+    {
       path: "/platforms/:id",
       name: "platform",
       component: () => import("@/pages/platforms/PlatformShowPage.vue")
+    },
+    {
+      path: "/platforms/:id/edit",
+      name: "platformEdit",
+      component: () => import("@/pages/platforms/PlatformFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Companies
@@ -117,9 +129,21 @@ const router = createRouter({
       component: () => import("@/pages/companies/CompanyListPage.vue")
     },
     {
+      path: "/companies/new",
+      name: "companyNew",
+      component: () => import("@/pages/companies/CompanyFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
+    },
+    {
       path: "/companies/:id",
       name: "company",
       component: () => import("@/pages/companies/CompanyShowPage.vue")
+    },
+    {
+      path: "/companies/:id/edit",
+      name: "companyEdit",
+      component: () => import("@/pages/companies/CompanyFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Engines
@@ -129,9 +153,21 @@ const router = createRouter({
       component: () => import("@/pages/engines/EngineListPage.vue")
     },
     {
+      path: "/engines/new",
+      name: "engineNew",
+      component: () => import("@/pages/engines/EngineFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
+    },
+    {
       path: "/engines/:id",
       name: "engine",
       component: () => import("@/pages/engines/EngineShowPage.vue")
+    },
+    {
+      path: "/engines/:id/edit",
+      name: "engineEdit",
+      component: () => import("@/pages/engines/EngineFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Genres
@@ -141,9 +177,21 @@ const router = createRouter({
       component: () => import("@/pages/genres/GenreListPage.vue")
     },
     {
+      path: "/genres/new",
+      name: "genreNew",
+      component: () => import("@/pages/genres/GenreFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
+    },
+    {
       path: "/genres/:id",
       name: "genre",
       component: () => import("@/pages/genres/GenreShowPage.vue")
+    },
+    {
+      path: "/genres/:id/edit",
+      name: "genreEdit",
+      component: () => import("@/pages/genres/GenreFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Series
@@ -153,9 +201,21 @@ const router = createRouter({
       component: () => import("@/pages/series/SeriesListPage.vue")
     },
     {
+      path: "/series/new",
+      name: "seriesNew",
+      component: () => import("@/pages/series/SeriesFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
+    },
+    {
       path: "/series/:id",
       name: "series",
       component: () => import("@/pages/series/SeriesShowPage.vue")
+    },
+    {
+      path: "/series/:id/edit",
+      name: "seriesEdit",
+      component: () => import("@/pages/series/SeriesFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Stores
@@ -165,9 +225,21 @@ const router = createRouter({
       component: () => import("@/pages/stores/StoreListPage.vue")
     },
     {
+      path: "/stores/new",
+      name: "storeNew",
+      component: () => import("@/pages/stores/StoreFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
+    },
+    {
       path: "/stores/:id",
       name: "store",
       component: () => import("@/pages/stores/StoreShowPage.vue")
+    },
+    {
+      path: "/stores/:id/edit",
+      name: "storeEdit",
+      component: () => import("@/pages/stores/StoreFormPage.vue"),
+      meta: { requiresAuth: true, requiresModerator: true }
     },
 
     // Activity
