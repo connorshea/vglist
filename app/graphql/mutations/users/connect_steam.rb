@@ -12,9 +12,23 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
     user = User.find(user_id)
 
     # Resolve the numerical Steam ID based on the provided username.
-    uri = URI("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=#{ENV['STEAM_WEB_API_KEY']}&vanityurl=#{steam_username}")
+    #
+    # The username is user-provided, so it has to be escaped rather than
+    # interpolated into the query string, otherwise the user can append or
+    # override parameters on a request that carries our Steam Web API key.
+    uri = URI("https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/")
+    uri.query = URI.encode_www_form(
+      key: ENV['STEAM_WEB_API_KEY'],
+      vanityurl: steam_username
+    )
+
     response = Net::HTTP.get_response(uri)
-    json = JSON.parse(response.body)
+
+    begin
+      json = JSON.parse(response.body)
+    rescue JSON::ParserError
+      raise GraphQL::ExecutionError, 'The Steam API returned an unexpected response.'
+    end
 
     steam_id = json.dig("response", "steamid")
 
@@ -24,7 +38,7 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
     # If not, create it and pass in the steam_id and steam_profile_url.
     @steam_account = ExternalAccount.create_with(
       steam_id: steam_id,
-      steam_profile_url: "https://steamcommunity.com/id/#{steam_username}/"
+      steam_profile_url: "https://steamcommunity.com/id/#{ERB::Util.url_encode(steam_username)}/"
     ).find_or_create_by!(
       user_id: user.id,
       account_type: :steam

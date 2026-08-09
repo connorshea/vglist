@@ -77,6 +77,41 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
           )
         end.to change(ExternalAccount, :count).by(1)
       end
+
+      it "escapes the username rather than letting it inject query parameters" do
+        api_request(query_string, variables: { id: user.id, steam_username: 'foobar&key=attacker&format=xml' }, token: access_token)
+
+        expect(WebMock).to have_requested(:get, 'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/')
+          .with(query: { 'key' => 'foo', 'vanityurl' => 'foobar&key=attacker&format=xml' })
+        expect(ExternalAccount.last.steam_profile_url).to eq('https://steamcommunity.com/id/foobar%26key%3Dattacker%26format%3Dxml/')
+      end
+
+      it "handles a non-ASCII username without raising" do
+        expect do
+          result = api_request(query_string, variables: { id: user.id, steam_username: 'connörshea' }, token: access_token)
+          expect(result.graphql_dig(:connect_steam)).to eq(
+            {
+              connected: true
+            }
+          )
+        end.to change(ExternalAccount, :count).by(1)
+
+        expect(WebMock).to have_requested(:get, 'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/')
+          .with(query: { 'key' => 'foo', 'vanityurl' => 'connörshea' })
+      end
+
+      it "returns an error when the Steam API returns a non-JSON response" do
+        stub_request(:get, /api\.steampowered\.com/).to_return(
+          status: 200,
+          body: '<?xml version="1.0"?><response><steamid>123</steamid></response>',
+          headers: {}
+        )
+
+        expect do
+          result = api_request(query_string, variables: { id: user.id, steam_username: 'foobar' }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq('The Steam API returned an unexpected response.')
+        end.not_to change(ExternalAccount, :count)
+      end
     end
   end
 end
