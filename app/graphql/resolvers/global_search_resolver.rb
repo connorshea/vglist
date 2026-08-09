@@ -12,10 +12,18 @@ module Resolvers
       reason to send a request for every letter a user types.
     MARKDOWN
 
+    # Every searchable type, used as the default when the client doesn't
+    # specify any. Also the upper bound on the length of `searchable_types`,
+    # since asking for more than one of each type is meaningless.
+    DEFAULT_SEARCHABLE_TYPES = %w[Game Series Company Platform Engine Genre User].freeze
+
     argument :query, String, required: true, description: 'The query to search for records with.'
     argument :searchable_types, [Types::Enums::SearchableEnum], required: false do
-      description 'The types of records that multisearch should return. By default, it will return all types of searchable records.'
-      validates length: { minimum: 1 }
+      description 'The types of records that multisearch should return. By default, it will return all types of searchable records. Duplicate types are ignored.'
+      # `resolve` runs one full-text query per type, so cap the list at the
+      # number of types that exist. Duplicates within that cap are deduped
+      # below, so a request can never issue more than one query per type.
+      validates length: { minimum: 1, maximum: DEFAULT_SEARCHABLE_TYPES.length }
     end
 
     # Limit results per type to ensure type diversity. Without this,
@@ -23,8 +31,8 @@ module Resolvers
     # out all other types.
     MAX_RESULTS_PER_TYPE = 25
 
-    def resolve(query:, searchable_types: %w[Game Series Company Platform Engine Genre User])
-      results = searchable_types.flat_map do |type|
+    def resolve(query:, searchable_types: DEFAULT_SEARCHABLE_TYPES)
+      results = searchable_types.uniq.flat_map do |type|
         PgSearch.multisearch(query)
                 .where(searchable_type: type)
                 .limit(MAX_RESULTS_PER_TYPE)
