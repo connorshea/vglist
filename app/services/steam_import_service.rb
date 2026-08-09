@@ -30,7 +30,7 @@ class SteamImportService
 
     raise NoGamesError if games.nil?
 
-    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id)
+    blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id).to_set
 
     # Filter out games with no icon, as they tend to be random server software and such.
     games.reject! { |game| game['img_icon_url'].blank? }
@@ -48,6 +48,12 @@ class SteamImportService
     end
     # Get a list of Steam IDs that weren't found in the vglist database.
     missing_ids = steam_ids.to_set - matching_app_and_game_ids.map(&:first).to_set
+    # Index the games by their Steam App ID so the unmatched games can be looked
+    # up in constant time rather than by scanning the whole array for each one.
+    # The first game wins for any duplicated app ID, matching `Array#find`.
+    games_by_app_id = games.each_with_object({}) do |game, hash|
+      hash[game['appid']] = game unless hash.key?(game['appid'])
+    end
 
     create_time = Time.current
 
@@ -85,7 +91,7 @@ class SteamImportService
     updated_purchases = GamePurchase.where(id: updated.pluck('id'))
 
     unmatched = missing_ids.to_a.filter_map do |id|
-      game = games.find { |g| g['appid'] == id }
+      game = games_by_app_id[id]
 
       next unless game
 
