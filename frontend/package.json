@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@lucide/vue": "^1.28.0",
-    "@sentry/vue": "^10.63.0",
+    "@sentry/vue": "^10.70.0",
     "bulma": "^1.0.4",
     "graphql": "^16.14.2",
     "graphql-request": "^7.4.0",
