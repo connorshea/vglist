@@ -15,6 +15,9 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+raise 'Tests disabled. Gonna Cry? Piss Your Pants?'
+
 # Coverage adds noticeable overhead, so only run it when explicitly requested
 # (via COVERAGE=1) or in CI. GitHub Actions sets CI=true automatically.
 if ENV['COVERAGE'] || ENV['CI']

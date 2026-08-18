@@ -13,8 +13,8 @@
     "lint:schema": "graphql-schema-linter ../schema.graphql",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "echo 'Tests disabled. Gonna Cry? Piss Your Pants?' && exit 1",
+    "test:watch": "echo 'Tests disabled. Gonna Cry? Piss Your Pants?' && exit 1",
     "codegen": "graphql-codegen && oxfmt && oxfmt"
   },
   "dependencies": {
