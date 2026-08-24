@@ -188,7 +188,7 @@ GEM
     htmlentities (4.4.2)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    image_processing (2.0.2)
+    image_processing (2.0.3)
     io-console (0.8.2)
     irb (1.18.0)
       pp (>= 0.6.0)
@@ -605,7 +605,7 @@ CHECKSUMS
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   htmlentities (4.4.2) sha256=bbafbdf69f2eca9262be4efef7e43e6a1de54c95eb600f26984f71d2fe96c5c3
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
-  image_processing (2.0.2) sha256=d0cf990f862d64efb1a14916044bf4b5bb2bccc7e235022413cde46019799cfa
+  image_processing (2.0.3) sha256=793e33f38470edd0a2d6bfd00acf8cb239c76284ba2e3dfb76633ac2b457f23a
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
