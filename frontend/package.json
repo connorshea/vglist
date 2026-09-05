@@ -36,7 +36,7 @@
     "@graphql-codegen/typescript-operations": "^6.1.5",
     "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^6.0.8",
-    "@vue/test-utils": "^2.4.11",
+    "@vue/test-utils": "^2.5.0",
     "graphql-schema-linter": "^3.0.1",
     "jsdom": "^30.0.1",
     "oxfmt": "^0.62.0",
