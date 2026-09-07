@@ -33,7 +33,7 @@ gem 'pundit', '~> 2.5'
 gem 'pg_search', '~> 2.3'
 
 # Image transformation
-gem 'image_processing', '~> 2.0'
+gem 'image_processing', '~> 2.1'
 gem 'ruby-vips', '~> 2.3'
 
 # Validations for ActiveStorage.
