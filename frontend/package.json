@@ -44,7 +44,7 @@
     "oxlint-tsgolint": "^0.23.0",
     "typescript": "~6.0.3",
     "vite": "^8.2.0",
-    "vitest": "^4.1.10",
+    "vitest": "^5.0.0",
     "vue-tsc": "^3.3.9"
   },
   "packageManager": "pnpm@11.10.0"
