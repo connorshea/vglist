@@ -68,7 +68,7 @@ gem "doorkeeper", "~> 5.9.6"
 gem "rack-cors", "~> 3.0"
 
 # For parallel execution of long-running tasks.
-gem 'parallel', '~> 2.1', require: false
+gem 'parallel', '~> 2.2', require: false
 
 # For tracking changes to records.
 gem 'paper_trail', '~> 17.0'
