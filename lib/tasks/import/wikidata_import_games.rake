@@ -38,8 +38,9 @@ namespace 'import:wikidata' do
     blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id).to_set
     blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id).to_set
 
-    # Maps of Wikidata IDs to vglist IDs for platforms, engines, and genres, to
-    # avoid tons of extra queries later.
+    # Maps of Wikidata IDs to vglist IDs for companies, platforms, engines,
+    # genres, and series, to avoid tons of extra queries later.
+    vglist_companies = Company.where.not(wikidata_id: nil).pluck(:wikidata_id, :id).to_h
     vglist_engines = Engine.all.pluck(:wikidata_id, :id).to_h
     vglist_platforms = Platform.all.pluck(:wikidata_id, :id).to_h
     vglist_genres = Genre.all.pluck(:wikidata_id, :id).to_h
@@ -134,25 +135,20 @@ namespace 'import:wikidata' do
             end
           end
 
-          company_wikidata_ids = (game_props[:developers] + game_props[:publishers]).uniq
-          unless company_wikidata_ids.empty?
-            companies = Company.where(wikidata_id: company_wikidata_ids).pluck(:wikidata_id, :id).to_h
+          progress_bar.log 'Adding developers.' if ENV['DEBUG']
+          game_props[:developers].each do |developer_wikidata_id|
+            company_id = vglist_companies[developer_wikidata_id]
+            next if company_id.nil?
 
-            progress_bar.log 'Adding developers.' if ENV['DEBUG']
-            game_props[:developers].each do |developer_wikidata_id|
-              company_id = companies[developer_wikidata_id]
-              next if company_id.nil?
+            GameDeveloper.create!(game_id: game.id, company_id: company_id)
+          end
 
-              GameDeveloper.create!(game_id: game.id, company_id: company_id)
-            end
+          progress_bar.log 'Adding publishers.' if ENV['DEBUG']
+          game_props[:publishers].each do |publisher_wikidata_id|
+            company_id = vglist_companies[publisher_wikidata_id]
+            next if company_id.nil?
 
-            progress_bar.log 'Adding publishers.' if ENV['DEBUG']
-            game_props[:publishers].each do |publisher_wikidata_id|
-              company_id = companies[publisher_wikidata_id]
-              next if company_id.nil?
-
-              GamePublisher.create!(game_id: game.id, company_id: company_id)
-            end
+            GamePublisher.create!(game_id: game.id, company_id: company_id)
           end
 
           progress_bar.log 'Adding platforms.' if ENV['DEBUG']
