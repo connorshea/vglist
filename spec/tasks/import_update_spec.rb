@@ -21,10 +21,10 @@ RSpec.describe 'import:update:genres', type: :task do
     $stdout = original
   end
 
-  # The task calls WikidataSparql.query(...) then .map(&:to_h) on the result, so
-  # plain hashes stand in for the RDF solutions. `item` is the game and the
-  # `genres` string is the group_concat of genre entity URIs the real query
-  # returns.
+  # The task calls WikidataSparql.query(...) and reads `[:item]`/`[:genres]` off
+  # each row, so plain hashes stand in for the RDF solutions. `item` is the game
+  # and the `genres` string is the group_concat of genre entity URIs the real
+  # query returns.
   def stub_sparql(rows)
     allow(WikidataSparql).to receive(:query).and_return(rows)
   end
