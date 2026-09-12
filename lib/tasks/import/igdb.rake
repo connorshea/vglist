@@ -14,9 +14,13 @@ namespace :import do
   task 'igdb:covers': :environment do
     puts "This task will attach covers to any games which have IGDB IDs and no cover."
 
+    # Load the set once; it's enumerated in both the metadata-fetch and the
+    # cover-download passes below, so a relation would re-run the query each
+    # time (and .count would fire its own).
     games = Game.includes(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
                 .where.not(igdb_id: [nil, ""])
+                .to_a
 
     puts "Found #{games.count} games with an IGDB ID and no cover."
 
@@ -34,6 +38,11 @@ namespace :import do
 
     puts "Getting game information from IGDB..."
 
+    # Authenticate with Twitch once up front rather than per batch: the app
+    # access token is valid for weeks, so re-requesting it for every group of
+    # 50 games was one wasted OAuth round-trip per batch.
+    access_token = twitch_auth['access_token']
+
     games.in_groups_of(50, false) do |game_batch|
       slugs = game_batch.pluck(:igdb_id)
 
@@ -48,7 +57,7 @@ namespace :import do
 
       igdb_response = igdb_request(
         body: igdb_body,
-        access_token: twitch_auth['access_token'],
+        access_token: access_token,
         endpoint: 'games'
       )
 
