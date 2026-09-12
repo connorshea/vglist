@@ -7,64 +7,9 @@ namespace :import do
 
   desc "Import PCGamingWiki IDs from Wikidata"
   task pcgamingwiki: :environment do
-    puts "Importing PCGamingWiki IDs from Wikidata..."
-    rows = []
-    rows.concat(WikidataSparql.query(pcgamingwiki_query))
-
-    games = rows.map do |row|
-      {
-        wikidata_id: row.to_h[:item].to_s.gsub('http://www.wikidata.org/entity/Q', ''),
-        pcgamingwiki_id: row.to_h[:pcgamingwikiId]
-      }
+    import_external_id(query: pcgamingwiki_query, column: :pcgamingwiki_id, label: 'PCGamingWiki ID') do |row|
+      row[:pcgamingwikiId].to_s
     end
-
-    games.uniq! { |e| e[:wikidata_id] }
-
-    puts "Found #{games.count} games on Wikidata with a PCGamingWiki ID."
-
-    pcgamingwiki_added_count = 0
-
-    progress_bar = ProgressBar.create(
-      total: games.count,
-      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-    )
-
-    # Set whodunnit to 'system' for any audited changes made by this Rake task.
-    PaperTrail.request.whodunnit = 'system'
-
-    # Limit logging in production to allow the progress bar to work.
-    Rails.logger.level = 2 if Rails.env.production?
-
-    games.each_with_index do |game, _index|
-      game_record = Game.where(wikidata_id: game[:wikidata_id], pcgamingwiki_id: nil).first
-
-      unless game_record
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Adding PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}." if ENV['DEBUG']
-
-      begin
-        Game.find(game_record.id).update!(pcgamingwiki_id: game[:pcgamingwiki_id])
-      rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Added PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
-
-      pcgamingwiki_added_count += 1
-      progress_bar.increment
-    end
-
-    progress_bar.finish unless progress_bar.finished?
-
-    games_with_pcgamingwiki_ids = Game.where.not(pcgamingwiki_id: nil)
-    puts
-    puts "Done. #{games_with_pcgamingwiki_ids.count} games now have PCGamingWiki IDs."
-    puts "#{pcgamingwiki_added_count} PCGamingWiki IDs added."
   end
 
   desc "Attach covers to games, only applies to games that have a PCGamingWiki ID and don't already have a cover."
