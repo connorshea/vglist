@@ -4,18 +4,12 @@ module Types
 
     connection_type_class(Types::BaseConnectionObject)
 
-    # User needs to be logged in to get anything from the API.
-    def self.authorized?(_object, context)
-      raise GraphQL::ExecutionError, "You must be logged in to use the API." if context[:current_user].nil?
-      raise GraphQL::ExecutionError, "The user that owns this token has been banned." if context[:current_user]&.banned?
-
-      # Make sure the doorkeeper scopes include read.
-      # Skip this check if the user is using token authentication.
-      raise GraphQL::ExecutionError, "Your token must have the 'read' scope to perform a query." if !context[:token_auth] &&
-                                                                                                    context[:doorkeeper_scopes] &&
-                                                                                                    !context[:doorkeeper_scopes]&.include?('read')
-
-      return true
-    end
+    # NOTE: Request-level authentication (logged in, not banned, has the
+    # required OAuth scope) is enforced in GraphqlController#execute before the
+    # schema runs. It deliberately does NOT live in a root `.authorized?`:
+    # raising GraphQL::ExecutionError from the root type's `.authorized?`
+    # crashes graphql-ruby, which dereferences a nil current_object while
+    # building the error. Per-object authorization still lives in each
+    # type's/mutation's own `.authorized?`.
   end
 end

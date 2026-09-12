@@ -33,11 +33,25 @@ class GraphqlController < ApplicationController
       return
     end
 
+    if graphql_current_user.banned?
+      render_graphql_error("The user that owns this token has been banned.")
+      return
+    end
+
+    token_auth = !user_using_oauth?
+    doorkeeper_scopes = doorkeeper_token&.scopes&.to_a
+    # Third-party OAuth tokens must carry the 'read' scope to query the API.
+    # Token-authenticated requests don't have scopes, so they're exempt.
+    if !token_auth && doorkeeper_scopes && !doorkeeper_scopes.include?('read')
+      render_graphql_error("Your token must have the 'read' scope to perform a query.")
+      return
+    end
+
     context = {
       current_user: graphql_current_user,
       pundit: self,
-      doorkeeper_scopes: doorkeeper_token&.scopes&.to_a,
-      token_auth: !user_using_oauth?,
+      doorkeeper_scopes: doorkeeper_scopes,
+      token_auth: token_auth,
       first_party: first_party?
     }
 
@@ -143,5 +157,13 @@ class GraphqlController < ApplicationController
 
   def handle_user_not_logged_in
     render json: { error: { message: 'You must provide a valid email and token to use the GraphQL API.' } }, status: :unauthorized
+  end
+
+  # Render a top-level GraphQL error for a request-level authorization failure.
+  # These checks live here rather than in BaseObject.authorized? because raising
+  # GraphQL::ExecutionError from the root type's authorized? crashes graphql-ruby
+  # (it dereferences a nil current_object while building the error).
+  def render_graphql_error(message)
+    render json: { data: nil, errors: [{ message: message }] }
   end
 end
