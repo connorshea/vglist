@@ -236,20 +236,40 @@ namespace :import do
         row[plural.to_sym].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
     end
 
-    # Preload every lookup the loop below used to do one row at a time, the same
-    # way the games import (wikidata_import_games.rake) does:
-    #   * the games themselves, with their existing associations eager-loaded so
-    #     reading `game.genres` fires no query, replacing a `Game.find_by` and a
-    #     `game.<props>.pluck` per game, and
-    #   * a Wikidata ID -> { id, name } map for the property records (Genre,
-    #     Company, ...), replacing a `find_by` per prop per game.
-    games_by_wikidata_id = Game.where(wikidata_id: props_by_game_wikidata_id.keys)
-                               .includes(plural.to_sym)
-                               .index_by(&:wikidata_id)
-
     prop_class = Object.const_get(klass_name.titleize)
     join_class = Object.const_get("Game#{property_name.titleize}")
     join_foreign_key = "#{klass_name}_id".to_sym
+
+    # The rows have been reduced into props_by_game_wikidata_id above and are
+    # never read again; drop the reference so the ~140k heavyweight RDF solutions
+    # can be garbage-collected before we build the maps below, instead of being
+    # held in memory alongside them.
+    rows = nil # rubocop:disable Lint/UselessAssignment
+
+    # Preload every lookup the loop below used to do one row at a time, but
+    # without instantiating a single Game or Genre/Company record — on a full
+    # update that eager-loaded AR object graph is where the memory went. We only
+    # need each game's id (to build the join rows) and name (to log), plus the
+    # Wikidata IDs of the props it already has:
+    #   * a Wikidata ID -> { id, name } map for the candidate games,
+    #   * the Wikidata IDs of the props each game already has, pulled straight
+    #     from the join without instantiating the associations (games with none
+    #     simply don't appear), and
+    #   * a Wikidata ID -> { id, name } map for the property records (Genre,
+    #     Company, ...), replacing a `find_by` per prop per game.
+    game_wikidata_ids = props_by_game_wikidata_id.keys
+    game_info_by_wikidata_id = Game.where(wikidata_id: game_wikidata_ids)
+                                   .pluck(:wikidata_id, :id, :name)
+                                   .to_h { |wikidata_id, id, name| [wikidata_id, { id: id, name: name }] }
+
+    existing_prop_wikidata_ids_by_game = {}
+    Game.where(wikidata_id: game_wikidata_ids)
+        .joins(plural.to_sym)
+        .pluck('games.wikidata_id', "#{prop_class.table_name}.wikidata_id")
+        .each do |game_wikidata_id, prop_wikidata_id|
+          (existing_prop_wikidata_ids_by_game[game_wikidata_id] ||= []) << prop_wikidata_id
+        end
+
     prop_by_wikidata_id = prop_class.where.not(wikidata_id: nil)
                                     .pluck(:wikidata_id, :id, :name)
                                     .to_h { |wikidata_id, id, name| [wikidata_id, { id: id, name: name }] }
@@ -265,11 +285,11 @@ namespace :import do
 
       progress_bar.log "Adding #{plural}." if ENV['DEBUG']
 
-      game = games_by_wikidata_id[game_wikidata_id]
+      game = game_info_by_wikidata_id[game_wikidata_id]
       next if game.nil?
 
-      # Uses the eager-loaded association, so this fires no query.
-      existing_wikidata_ids = game.public_send(plural).map(&:wikidata_id)
+      # Pulled from the join above, so this fires no query.
+      existing_wikidata_ids = existing_prop_wikidata_ids_by_game[game_wikidata_id] || []
 
       # Filter props down to just the ones not already represented by
       # an associated game join model, e.g. GamePlatform.
@@ -284,11 +304,11 @@ namespace :import do
         # given Wikidata ID.
         next if prop.nil?
 
-        progress_bar.log "Adding #{prop[:name]} to #{game.name}."
+        progress_bar.log "Adding #{prop[:name]} to #{game[:name]}."
 
         # Create a record for a game join model, e.g. GamePlatform.
         # It needs game_id and then an id for the property, e.g. platform_id
-        join_class.create(game_id: game.id, join_foreign_key => prop[:id])
+        join_class.create(game_id: game[:id], join_foreign_key => prop[:id])
         game_was_updated = true
       end
 
