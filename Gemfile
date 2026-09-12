@@ -52,7 +52,7 @@ gem 'friendly_id', '~> 5.6.0'
 gem 'sparql', '~> 3.3.2', require: false
 
 # Use Addressable for use with the Wikidata API.
-gem 'addressable', '~> 2.8.9', require: false
+gem 'addressable', '~> 2.9.0', require: false
 
 # Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
 gem 'aws-sdk-s3', '~> 1.208', require: false
@@ -65,7 +65,7 @@ gem 'sentry-ruby', '~> 6.4.0'
 gem 'sentry-rails', '~> 6.4.0'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 2.5.21'
+gem 'graphql', '~> 2.6.10'
 
 # Doorkeeper for OAuth API tokens
 gem "doorkeeper", "~> 5.8.2"
@@ -95,7 +95,7 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 1.84', require: false
+  gem 'rubocop', '~> 1.84.0', require: false
 
   # rubocop extensions
   gem 'rubocop-performance', '~> 1.26.1', require: false
