@@ -83,6 +83,14 @@ namespace :import do
           row[:series].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
       end
 
+      # The ~140k rows and the games_with_no_series set have been reduced into
+      # series_by_game_wikidata_id and aren't read again; drop them so they can
+      # be garbage-collected before the loop below rather than held alongside it.
+      # rubocop:disable Lint/UselessAssignment
+      rows = nil
+      games_with_no_series = nil
+      # rubocop:enable Lint/UselessAssignment
+
       # Preload the games and a Wikidata ID -> Series ID map once, instead of a
       # Game.find_by per row and a Series.find_by per game.
       games_by_wikidata_id = Game.where(wikidata_id: series_by_game_wikidata_id.keys).index_by(&:wikidata_id)
