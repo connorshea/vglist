@@ -6,8 +6,11 @@ namespace :import do
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
+  # Deliberately not `=> :environment`: this task only orchestrates, so it stays
+  # a tiny process rather than booting Rails and holding it for the whole run.
+  # The subtasks it spawns each depend on :environment themselves.
   desc "Runs an import to update all data from Wikidata."
-  task update: :environment do
+  task :update do # rubocop:disable Rails/RakeEnvironment
     puts 'Running an import to update all existing games in the database...'
 
     import_tasks = [
@@ -26,9 +29,26 @@ namespace :import do
       "import:update:platforms"
     ]
 
+    # Run each subtask in its own process instead of Rake::Task#invoke. Every
+    # subtask loads a large Wikidata result set and builds big in-memory maps;
+    # in-process, MRI never returns that freed heap to the OS, so the whole run
+    # would sit at the peak footprint of the hungriest task. A fresh process per
+    # task reclaims everything on exit, keeping the run near a single task's
+    # footprint. with_original_env strips this process's Bundler setup so the
+    # child's `bundle exec` resolves the project Gemfile cleanly; chdir anchors
+    # it to the project root and RAILS_ENV is carried across explicitly.
+    rails_root = File.expand_path('../../..', __dir__)
+    child_env = { 'RAILS_ENV' => ENV['RAILS_ENV'] }.compact
+
     import_tasks.each do |task|
       puts "Running 'rake #{task}'."
-      Rake::Task[task].invoke
+
+      run_child = lambda do
+        system(child_env, 'bundle', 'exec', 'rake', task, chdir: rails_root)
+      end
+      succeeded = defined?(Bundler) ? Bundler.with_original_env(&run_child) : run_child.call
+      abort("Aborting import:update: 'rake #{task}' failed.") unless succeeded
+
       puts
       puts '-------------------------'
       puts
