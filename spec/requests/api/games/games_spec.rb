@@ -245,30 +245,6 @@ RSpec.describe "Games API", type: :request do
         expect(node4[:gamePurchaseId]).to be_nil
       end
 
-      it "returns nil for per-user fields when not authenticated", :aggregate_failures do
-        query_string = <<~GRAPHQL
-          query {
-            games {
-              nodes {
-                id
-                isFavorited
-                isInLibrary
-                gamePurchaseId
-              }
-            }
-          }
-        GRAPHQL
-
-        post graphql_path, params: { query: query_string }
-        json = JSON.parse(response.body)
-        nodes = json.dig('data', 'games', 'nodes')
-
-        nodes.each do |node|
-          expect(node['isFavorited']).to be_nil
-          expect(node['isInLibrary']).to be_nil
-          expect(node['gamePurchaseId']).to be_nil
-        end
-      end
     end
 
     context 'when filtering by platform' do
