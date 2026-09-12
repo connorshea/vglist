@@ -42,6 +42,7 @@ namespace 'import:wikidata' do
     vglist_engines = Engine.all.pluck(:wikidata_id, :id).to_h
     vglist_platforms = Platform.all.pluck(:wikidata_id, :id).to_h
     vglist_genres = Genre.all.pluck(:wikidata_id, :id).to_h
+    vglist_series = Series.all.pluck(:wikidata_id, :id).to_h
 
     # Numeric Wikidata IDs of games that aren't already in the database and
     # aren't blocklisted. These are the only games we hydrate and create.
@@ -174,11 +175,11 @@ namespace 'import:wikidata' do
           next if game_props[:series].empty?
 
           progress_bar.log 'Adding series.' if ENV['DEBUG']
-          series = Series.find_by(wikidata_id: game_props[:series].first)
-          progress_bar.log series.inspect if ENV['DEBUG']
-          next if series.nil?
+          series_id = vglist_series[game_props[:series].first]
+          progress_bar.log series_id.inspect if ENV['DEBUG']
+          next if series_id.nil?
 
-          game.update!(series_id: series.id)
+          game.update!(series_id: series_id)
         end
       end
     end

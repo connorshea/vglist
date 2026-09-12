@@ -42,8 +42,17 @@ namespace :import do
 
     games_to_modify = games.select { |game| valid_wikidata_ids.include?(game[:wikidata_id].to_i) }
 
-    games_to_modify.each_with_index do |game, _index|
-      game_record = Game.find_by(wikidata_id: game[:wikidata_id])
+    # Load the records we're about to modify up front, keyed by Wikidata ID, in
+    # bounded batches — one pass instead of a Game.find_by per game.
+    records_by_wikidata_id = {}
+    games_to_modify.map { |game| game[:wikidata_id].to_i }.each_slice(5_000) do |wikidata_ids|
+      Game.where(wikidata_id: wikidata_ids).find_each do |game_record|
+        records_by_wikidata_id[game_record.wikidata_id] = game_record
+      end
+    end
+
+    games_to_modify.each do |game|
+      game_record = records_by_wikidata_id[game[:wikidata_id].to_i]
 
       unless game_record
         progress_bar.increment
