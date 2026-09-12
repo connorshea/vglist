@@ -5,68 +5,13 @@ namespace :import do
 
   desc "Import GOG.com IDs from Wikidata"
   task gog: :environment do
-    puts "Importing GOG.com IDs from Wikidata..."
-    rows = []
-    rows.concat(WikidataSparql.query(gog_query))
-
-    games = rows.map do |row|
-      next unless row.to_h[:gogId].to_s.start_with?('game/')
-
-      {
-        wikidata_id: row.to_h[:item].to_s.gsub('http://www.wikidata.org/entity/Q', ''),
-        gog_id: row.to_h[:gogId].to_s.gsub('game/', '')
-      }
+    # A Wikidata GOG.com ID can point at a game or at other GOG catalog entries
+    # (movies, etc.); only "game/..." IDs are for games, and we store them
+    # without the "game/" prefix.
+    import_external_id(query: gog_query, column: :gog_id, label: 'GOG.com ID') do |row|
+      gog_id = row[:gogId].to_s
+      gog_id.delete_prefix('game/') if gog_id.start_with?('game/')
     end
-
-    # Reject any nil values that are returned.
-    games.compact!
-    games.uniq! { |e| e[:wikidata_id] }
-
-    puts "Found #{games.count} games on Wikidata with a GOG.com ID."
-
-    gog_added_count = 0
-
-    progress_bar = ProgressBar.create(
-      total: games.count,
-      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-    )
-
-    # Set whodunnit to 'system' for any audited changes made by this Rake task.
-    PaperTrail.request.whodunnit = 'system'
-
-    # Limit logging in production to allow the progress bar to work.
-    Rails.logger.level = 2 if Rails.env.production?
-
-    games.each_with_index do |game, _index|
-      game_record = Game.where(wikidata_id: game[:wikidata_id], gog_id: nil).first
-
-      unless game_record
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Adding GOG.com ID '#{game[:gog_id]}' to #{game_record.name}." if ENV['DEBUG']
-
-      begin
-        Game.find(game_record.id).update!(gog_id: game[:gog_id])
-      rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Added GOG.com ID '#{game[:gog_id]}' to #{game_record.name}."
-
-      gog_added_count += 1
-      progress_bar.increment
-    end
-
-    progress_bar.finish unless progress_bar.finished?
-
-    games_with_gog_ids = Game.where.not(gog_id: nil)
-    puts
-    puts "Done. #{games_with_gog_ids.count} games now have GOG.com IDs."
-    puts "#{gog_added_count} GOG.com IDs added."
   end
 
   # SPARQL query for getting all video games with GOG.com IDs on Wikidata.
