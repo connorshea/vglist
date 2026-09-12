@@ -200,7 +200,11 @@ namespace :import do
     games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
     # This has to use send because methods in Rake tasks are private by default.
-    rows = get_rows(send("games_with_#{plural}_query")).map(&:to_h)
+    # Iterate the RDF solutions directly (they support `[:item]`) rather than
+    # mapping them all to hashes first — the query returns every video game on
+    # Wikidata with this property (~140k rows), so that intermediate array is
+    # pure allocation we filter away below.
+    rows = get_rows(send("games_with_#{plural}_query"))
 
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
@@ -214,7 +218,7 @@ namespace :import do
     # ?item, so there's one row per game and no risk of clobbering.
     props_by_game_wikidata_id = {}
     rows.each do |row|
-      game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      game_wikidata_id = row[:item].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
       next unless games.include?(game_wikidata_id)
 
       props_by_game_wikidata_id[game_wikidata_id] =
