@@ -45,22 +45,31 @@ namespace :import do
       # this is membership-tested once per Wikidata row below.
       games_with_no_series = Game.where(series_id: nil).where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
-      rows = get_rows(games_with_series_query).map(&:to_h)
+      # The query returns every video game on Wikidata with a series (~140k
+      # rows), so iterate the RDF solutions directly and use delete_prefix
+      # rather than allocating a hash and gsubbing per row.
+      rows = get_rows(games_with_series_query)
 
-      games_to_update = []
+      # Series Wikidata ID to set, keyed by the game's Wikidata ID so the games
+      # can be batch-loaded below. The query isn't grouped by ?item, so a game
+      # with more than one series yields more than one row; the last wins, as
+      # the previous row-by-row version also did.
+      series_by_game_wikidata_id = {}
       rows.each do |row|
-        game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+        game_wikidata_id = row[:item].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
         next unless games_with_no_series.include?(game_wikidata_id)
 
-        series_id = row[:series].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
-        games_to_update << {
-          game: Game.find_by(wikidata_id: game_wikidata_id),
-          series_id: series_id
-        }
+        series_by_game_wikidata_id[game_wikidata_id] =
+          row[:series].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
       end
 
+      # Preload the games and a Wikidata ID -> Series ID map once, instead of a
+      # Game.find_by per row and a Series.find_by per game.
+      games_by_wikidata_id = Game.where(wikidata_id: series_by_game_wikidata_id.keys).index_by(&:wikidata_id)
+      series_id_by_wikidata_id = Series.where.not(wikidata_id: nil).pluck(:wikidata_id, :id).to_h
+
       progress_bar = ProgressBar.create(
-        total: games_to_update.count,
+        total: series_by_game_wikidata_id.count,
         format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
       )
 
@@ -70,19 +79,21 @@ namespace :import do
       Rails.logger.level = 2 if Rails.env.production?
 
       updated_games_count = 0
-      games_to_update.each do |hash|
+      series_by_game_wikidata_id.each do |game_wikidata_id, series_wikidata_id|
         progress_bar.increment
 
         progress_bar.log 'Adding series.' if ENV['DEBUG']
 
-        series = Series.find_by(wikidata_id: hash[:series_id])
-        progress_bar.log series.inspect if ENV['DEBUG']
-        next if series.nil?
+        game = games_by_wikidata_id[game_wikidata_id]
+        next if game.nil?
 
-        progress_bar.log "Adding series ID to #{hash[:game].name}."
+        series_id = series_id_by_wikidata_id[series_wikidata_id]
+        next if series_id.nil?
+
+        progress_bar.log "Adding series ID to #{game.name}."
 
         # Update the game to include the missing series ID.
-        Game.find(hash[:game].id).update!(series_id: series.id)
+        game.update!(series_id: series_id)
 
         updated_games_count += 1
       end
