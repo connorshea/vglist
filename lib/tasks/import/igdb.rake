@@ -45,6 +45,11 @@ namespace :import do
     # 50 games was one wasted OAuth round-trip per batch.
     access_token = twitch_auth['access_token']
 
+    fetch_progress_bar = ProgressBar.create(
+      total: games.count,
+      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    )
+
     games.in_groups_of(50, false) do |game_batch|
       slugs = game_batch.pluck(:igdb_id)
 
@@ -82,9 +87,15 @@ namespace :import do
         igdb_games_by_slug[slug] = igdb_game unless igdb_games_by_slug.key?(slug)
       end
 
+      # Advance by the number of games in this batch (the last group may be
+      # smaller than 50).
+      fetch_progress_bar.progress += game_batch.size
+
       # Sleep to prevent the rate limiter from killing us.
       sleep 1
     end
+
+    fetch_progress_bar.finish unless fetch_progress_bar.finished?
 
     progress_bar = ProgressBar.create(
       total: games.count,
