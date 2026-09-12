@@ -55,6 +55,18 @@ namespace 'import:wikidata' do
       wikidata_id
     end.uniq
 
+    # driver_rows (~1M heavyweight RDF solutions) and the two filter-only sets
+    # have been reduced into new_wikidata_ids and are never read again. Drop the
+    # references so they can be garbage-collected before the hydration loop
+    # below, rather than staying resident alongside its per-chunk fetches and
+    # the vglist_* maps for the whole import. (blocklisted_steam_app_ids is kept
+    # — the loop still checks it.)
+    # rubocop:disable Lint/UselessAssignment
+    driver_rows = nil
+    existing_wikidata_ids = nil
+    blocklisted_wikidata_ids = nil
+    # rubocop:enable Lint/UselessAssignment
+
     puts "Found #{new_wikidata_ids.length} new games to import."
 
     progress_bar = ProgressBar.create(
