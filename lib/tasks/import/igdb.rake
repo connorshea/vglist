@@ -95,24 +95,28 @@ namespace :import do
 
     fetch_progress_bar.finish unless fetch_progress_bar.finished?
 
+    # The fetch pass has told us which games IGDB actually returned a cover for;
+    # drop the rest before the download pass. There's nothing to do for a game
+    # with no IGDB cover, so keeping it only skews the progress bar's ETA and
+    # holds its record in memory. Reassigning games to the filtered subset lets
+    # the unmatched records be collected and removes the per-iteration nil check.
+    games_found_count = games.count
+    games = games.select { |game| igdb_games_by_slug.key?(game[:igdb_id]) }
+    # Seed with the games IGDB had no cover for, so the final tally still counts
+    # them; download errors add to it below.
+    cover_not_found_or_errored_count = games_found_count - games.count
+    cover_added_count = 0
+
+    puts "#{games.count} of #{games_found_count} games have a cover on IGDB; downloading those."
+
     progress_bar = ProgressBar.create(
       total: games.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    cover_not_found_or_errored_count = 0
-    cover_added_count = 0
-
     games.each do |game|
-      # Find the IGDB cover URL from the IGDB results for this game record.
+      # Every remaining game has an IGDB cover (filtered above).
       igdb_game = igdb_games_by_slug[game[:igdb_id]]
-
-      if igdb_game.nil?
-        progress_bar.log "#{game[:name].ljust(40)} | No cover found for the game's IGDB ID."
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
-      end
 
       # The cover URL comes out of the IGDB API response, so it's fetched
       # through RemoteImageFetcher, which refuses non-public addresses. This
