@@ -191,15 +191,16 @@ namespace :import do
   # @return [void]
   def add_props_to_games(property_name, klass_name = nil)
     klass_name = property_name if klass_name.nil?
+    plural = property_name.pluralize
 
-    puts "Adding game #{property_name.pluralize} from Wikidata to games."
+    puts "Adding game #{plural} from Wikidata to games."
 
     # Get all games that have Wikidata IDs. A set, because this is
     # membership-tested once per Wikidata row below.
     games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
     # This has to use send because methods in Rake tasks are private by default.
-    rows = get_rows(send("games_with_#{property_name.pluralize}_query")).map(&:to_h)
+    rows = get_rows(send("games_with_#{plural}_query")).map(&:to_h)
 
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
@@ -208,62 +209,78 @@ namespace :import do
     # to prevent spamming the logs when running the command.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games_to_update = []
+    # Collect the prop Wikidata IDs each game should gain, keyed by the game's
+    # Wikidata ID so we can batch-load the games below. The query groups by
+    # ?item, so there's one row per game and no risk of clobbering.
+    props_by_game_wikidata_id = {}
     rows.each do |row|
       game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
       next unless games.include?(game_wikidata_id)
 
-      prop_ids = row[property_name.pluralize.to_sym].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
-      games_to_update << {
-        game: Game.find_by(wikidata_id: game_wikidata_id),
-        props: prop_ids
-      }
+      props_by_game_wikidata_id[game_wikidata_id] =
+        row[plural.to_sym].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
     end
 
+    # Preload every lookup the loop below used to do one row at a time, the same
+    # way the games import (wikidata_import_games.rake) does:
+    #   * the games themselves, with their existing associations eager-loaded so
+    #     reading `game.genres` fires no query, replacing a `Game.find_by` and a
+    #     `game.<props>.pluck` per game, and
+    #   * a Wikidata ID -> { id, name } map for the property records (Genre,
+    #     Company, ...), replacing a `find_by` per prop per game.
+    games_by_wikidata_id = Game.where(wikidata_id: props_by_game_wikidata_id.keys)
+                               .includes(plural.to_sym)
+                               .index_by(&:wikidata_id)
+
+    prop_class = Object.const_get(klass_name.titleize)
+    join_class = Object.const_get("Game#{property_name.titleize}")
+    join_foreign_key = "#{klass_name}_id".to_sym
+    prop_by_wikidata_id = prop_class.where.not(wikidata_id: nil)
+                                    .pluck(:wikidata_id, :id, :name)
+                                    .to_h { |wikidata_id, id, name| [wikidata_id, { id: id, name: name }] }
+
     progress_bar = ProgressBar.create(
-      total: games_to_update.count,
+      total: props_by_game_wikidata_id.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
     updated_games_count = 0
-    games_to_update.each do |hash|
+    props_by_game_wikidata_id.each do |game_wikidata_id, prop_wikidata_ids|
       progress_bar.increment
 
-      progress_bar.log "Adding #{property_name.pluralize}." if ENV['DEBUG']
+      progress_bar.log "Adding #{plural}." if ENV['DEBUG']
 
-      # Get the Wikidata IDs for the game's property.
-      wikidata_ids = hash[:game].public_send(property_name.pluralize).pluck(:wikidata_id)
+      game = games_by_wikidata_id[game_wikidata_id]
+      next if game.nil?
+
+      # Uses the eager-loaded association, so this fires no query.
+      existing_wikidata_ids = game.public_send(plural).map(&:wikidata_id)
 
       # Filter props down to just the ones not already represented by
       # an associated game join model, e.g. GamePlatform.
-      props_to_add = hash[:props].difference(wikidata_ids)
+      props_to_add = prop_wikidata_ids.difference(existing_wikidata_ids)
 
       game_was_updated = false
 
       props_to_add.each do |prop_wikidata_id|
-        prop = Object.const_get(klass_name.titleize).find_by(wikidata_id: prop_wikidata_id)
+        prop = prop_by_wikidata_id[prop_wikidata_id]
         progress_bar.log prop.inspect if ENV['DEBUG']
         # Go to the next iteration if there's no record for the
         # given Wikidata ID.
         next if prop.nil?
 
-        progress_bar.log "Adding #{prop.name} to #{hash[:game].name}."
+        progress_bar.log "Adding #{prop[:name]} to #{game.name}."
 
         # Create a record for a game join model, e.g. GamePlatform.
         # It needs game_id and then an id for the property, e.g. platform_id
-        game_join_args = { game_id: hash[:game].id }
-        game_join_args["#{klass_name}_id".to_sym] = prop.id
-
-        Object.const_get("Game#{property_name.titleize}").create(
-          game_join_args
-        )
+        join_class.create(game_id: game.id, join_foreign_key => prop[:id])
         game_was_updated = true
       end
 
       updated_games_count += 1 if game_was_updated
     end
 
-    puts "Added #{property_name.pluralize} to #{updated_games_count} games."
+    puts "Added #{plural} to #{updated_games_count} games."
   end
 
   # Get rows from a SPARQL query.
