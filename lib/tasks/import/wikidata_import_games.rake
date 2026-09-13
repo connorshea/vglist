@@ -9,6 +9,14 @@ ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 # (see WikidataSparql.client), so this isn't bounded by a GET URL-length limit.
 GAME_HYDRATION_CHUNK_SIZE = 500
 
+# Number of games per SPARQL round-trip for the release-dates import. Larger
+# than GAME_HYDRATION_CHUNK_SIZE because that pass fetches one heavyweight query
+# per chunk (labels, external IDs, and every multi-valued property), whereas
+# release_dates_query returns just an item + date per row — a small result set —
+# so we can pack more games per round-trip to cut the number of requests and the
+# per-request pacing sleep (see WikidataSparql::INTER_QUERY_DELAY_SECONDS).
+RELEASE_DATE_CHUNK_SIZE = 2500
+
 # The multi-valued Wikidata properties we import per game, mapped to their
 # property IDs. Fetched together in a single UNION query (see
 # property_values_query) rather than one round-trip each.
@@ -219,28 +227,36 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    wikidata_ids.each_slice(GAME_HYDRATION_CHUNK_SIZE) do |chunk|
+    wikidata_ids.each_slice(RELEASE_DATE_CHUNK_SIZE) do |chunk|
       release_dates = fetch_release_dates(chunk)
       games = Game.where(wikidata_id: chunk).index_by(&:wikidata_id)
 
-      chunk.each do |wikidata_id|
-        progress_bar.increment
+      # Wrap the chunk's writes in one transaction so Postgres commits (and
+      # fsyncs) once per chunk instead of once per game. update! still runs
+      # validations and records a PaperTrail version per game; we're only
+      # collapsing hundreds of separate commits into one. A RecordInvalid is
+      # raised by validation before any SQL is issued, so rescuing it and
+      # continuing leaves the surrounding transaction usable.
+      Game.transaction do
+        chunk.each do |wikidata_id|
+          progress_bar.increment
 
-        game = games[wikidata_id]
-        next if game.nil?
+          game = games[wikidata_id]
+          next if game.nil?
 
-        release_date = release_dates[wikidata_id]
-        if release_date.nil?
-          progress_bar.log "No release dates found for #{game.name}."
-          next
-        end
+          release_date = release_dates[wikidata_id]
+          if release_date.nil?
+            progress_bar.log "No release dates found for #{game.name}."
+            next
+          end
 
-        begin
-          game.update!(release_date: release_date)
-          progress_bar.log "Added release date for #{game.name}."
-        rescue ActiveRecord::RecordInvalid => e
-          progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
-          next
+          begin
+            game.update!(release_date: release_date)
+            progress_bar.log "Added release date for #{game.name}."
+          rescue ActiveRecord::RecordInvalid => e
+            progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
+            next
+          end
         end
       end
     end
