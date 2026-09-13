@@ -21,10 +21,14 @@ namespace :import do
 
     puts "This task will try to attach covers to any games which have MobyGames IDs and no cover."
 
-    # Get games with MobyGames IDs and no cover.
+    # Get games with MobyGames IDs and no cover. mobygames_id is a bigint, so
+    # nil is its only "missing" value — do NOT add "" here: Rails casts the empty
+    # string to nil for an integer column but still emits `mobygames_id = NULL`,
+    # which is never true, so `where.not` over it matches zero rows regardless of
+    # the data.
     games = Game.includes(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
-                .where.not(mobygames_id: [nil, ""])
+                .where.not(mobygames_id: nil)
 
     puts "Found #{games.count} games with a MobyGames ID and no cover."
 
