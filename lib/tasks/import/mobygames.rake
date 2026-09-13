@@ -15,9 +15,10 @@ namespace :import do
 
   desc "Import game covers from MobyGames"
   task 'mobygames:covers': :environment do
-    # NOTE: API limitations.
-    #   API requests are limited to 360 per hour (one every ten seconds).
-    #   In addition, requests should be made no more frequently than one per second.
+    # NOTE: MobyGames rate limits (https://www.mobygames.com/info/api/):
+    #   non-commercial keys allow 720 requests/hour (one every 5s), legacy keys
+    #   360/hour (one every 10s), both capped at 1 request/second. We sleep 10s
+    #   per request below, which stays within either tier.
 
     puts "This task will try to attach covers to any games which have MobyGames IDs and no cover."
 
@@ -49,76 +50,46 @@ namespace :import do
     no_matching_game_count = 0
 
     games.each do |game|
-      # Build the query with the title and key URL-encoded, so non-ASCII
-      # characters, spaces, and query metacharacters (a base64 key can contain
-      # +, /, and =) are escaped rather than corrupting the request or making the
-      # URL unparseable.
-      query = URI.encode_www_form(limit: 80, title: game[:name], api_key: ENV['MOBYGAMES_API_KEY'])
-      api_url = "https://api.mobygames.com/v1/games?#{query}"
-      begin
-        api_url = URI.parse(api_url)
-      rescue URI::InvalidURIError => e
-        # The encoding above should make this unreachable, but guard anyway —
-        # and skip before the rate-limit sleep, since no API request happens.
-        progress_bar.log "Invalid URL: #{e}."
-        progress_bar.increment
-        next
-      end
-
-      # progress_bar.log "API URL: #{api_url}"
-
-      # Pace against the MobyGames rate limit, but only now that we know this
-      # game yields a valid request URL — games skipped above cost no sleep.
+      # Pace against the MobyGames rate limit (see NOTE above) before each call.
       progress_bar.log ""
       progress_bar.log "Sleeping for 10 seconds..."
       sleep(10)
 
-      # Get the JSON response from the MobyGames API.
+      # Look the game up directly by its MobyGames ID. /games/{id} is the
+      # single-game convenience endpoint (equivalent to /games?id={id}) and
+      # returns the game object directly, so there's no title search to run or
+      # moby_url to reconcile — we already know the exact ID. The api_key must be
+      # URL-encoded: a base64 key can contain +, /, and =.
+      key = URI.encode_www_form_component(ENV['MOBYGAMES_API_KEY'].to_s)
+      api_url = URI.parse("https://api.mobygames.com/v1/games/#{game[:mobygames_id]}?api_key=#{key}")
+
       req = Net::HTTP::Get.new(api_url)
       req['Cache-Control'] = 'no-cache'
       res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
         http.request(req)
       end
 
-      # Surface API errors instead of silently reporting "No matching games" for
-      # every game. An error response (e.g. a 401 from a missing or expired
-      # MOBYGAMES_API_KEY, or a 429 rate limit) is a body with no "games" key,
-      # which is otherwise indistinguishable from a search that found nothing.
-      # Aborting is safe to resume: the task only processes games still missing a
-      # cover, so a re-run picks up where this left off once the cause is fixed.
+      # A 404 just means MobyGames has no game with this ID (a stale or bad
+      # mobygames_id); skip it rather than aborting the whole run.
+      if res.is_a?(Net::HTTPNotFound)
+        progress_bar.log "No MobyGames game found for #{game[:name]} (mobygames_id: #{game[:mobygames_id]})."
+        progress_bar.increment
+        no_matching_game_count += 1
+        next
+      end
+
+      # Any other error (a 401 from a missing/expired MOBYGAMES_API_KEY, a 429
+      # rate limit, ...) is systemic, so surface it instead of masking it as a
+      # missing cover. Safe to resume: the task only processes games that still
+      # lack a cover, so a re-run continues where this left off.
       raise "MobyGames API request failed: HTTP #{res.code} #{res.message}. Body: #{res.body.to_s[0, 300]}" unless res.is_a?(Net::HTTPSuccess)
 
-      json = JSON.parse(res.body)
+      game_data = JSON.parse(res.body)
 
-      mobygames_games = json['games']
-
-      # Move on if no games are returned by the search.
-      unless mobygames_games&.length&.positive?
-        progress_bar.log "No matching games found for #{game[:name]}."
-        progress_bar.increment
-        no_matching_game_count += 1
-        next
-      end
-
-      # Find the first game that matches the mobygames_id we're looking for.
-      current_game = mobygames_games.find do |mobygames_game|
-        progress_bar.log "moby_url: #{mobygames_game['moby_url']}"
-        moby_url = mobygames_game['moby_url']
-        moby_url.gsub('http://www.mobygames.com/game/', '') == game[:mobygames_id]
-      end
-
-      # Skip if we can't find the current game.
-      if current_game.nil?
-        progress_bar.log "No matching game found for #{game[:name]} (mobygames_id: #{game[:mobygames_id]})."
-        progress_bar.increment
-        no_matching_game_count += 1
-        next
-      end
-
-      cover_url = current_game.dig('sample_cover', 'image')
-
+      # sample_cover, and its image, may be null (see the API's "Null data" note).
+      cover_url = game_data.dig('sample_cover', 'image')
       if cover_url.nil?
-        progress_bar.log "No cover image found."
+        progress_bar.log "No cover image found for #{game[:name]}."
         progress_bar.increment
         no_cover_url_count += 1
         next
