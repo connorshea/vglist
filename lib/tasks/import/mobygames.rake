@@ -49,19 +49,25 @@ namespace :import do
     no_matching_game_count = 0
 
     games.each do |game|
-      progress_bar.log ""
-      progress_bar.log "Sleeping for 10 seconds..."
-      sleep(10)
       api_url = "https://api.mobygames.com/v1/games?limit=80&title=#{game[:name]}&api_key=#{ENV['MOBYGAMES_API_KEY']}"
       begin
         api_url = URI.parse(api_url)
       rescue URI::InvalidURIError => e
+        # No API request happens for these (e.g. a non-ASCII title can't go in a
+        # URI), so skip before the rate-limit sleep rather than wasting 10s on a
+        # game we're going to discard anyway.
         progress_bar.log "Invalid URL: #{e}."
         progress_bar.increment
         next
       end
 
       # progress_bar.log "API URL: #{api_url}"
+
+      # Pace against the MobyGames rate limit, but only now that we know this
+      # game yields a valid request URL — games skipped above cost no sleep.
+      progress_bar.log ""
+      progress_bar.log "Sleeping for 10 seconds..."
+      sleep(10)
 
       # Get the JSON response from the MobyGames API.
       req = Net::HTTP::Get.new(api_url)
