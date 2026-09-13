@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# The MobyGames /games endpoint accepts a multi-valued `id` parameter and
+# returns up to `limit` games per request (default and max 100). So the cover
+# import looks games up 100 IDs at a time — one request, and one rate-limit
+# sleep, per 100 games instead of per game.
+MOBYGAMES_GAME_ID_BATCH_SIZE = 100
+
 namespace :import do
   require 'wikidata_sparql'
   require 'wikidata_helper'
@@ -49,19 +55,19 @@ namespace :import do
     no_cover_url_count = 0
     no_matching_game_count = 0
 
-    games.each do |game|
-      # Pace against the MobyGames rate limit (see NOTE above) before each call.
+    games.each_slice(MOBYGAMES_GAME_ID_BATCH_SIZE) do |batch|
+      # Pace against the MobyGames rate limit (see NOTE above): one request, one
+      # sleep, per batch of up to 100 games.
       progress_bar.log ""
       progress_bar.log "Sleeping for 10 seconds..."
       sleep(10)
 
-      # Look the game up directly by its MobyGames ID. /games/{id} is the
-      # single-game convenience endpoint (equivalent to /games?id={id}) and
-      # returns the game object directly, so there's no title search to run or
-      # moby_url to reconcile — we already know the exact ID. The api_key must be
-      # URL-encoded: a base64 key can contain +, /, and =.
-      key = URI.encode_www_form_component(ENV['MOBYGAMES_API_KEY'].to_s)
-      api_url = URI.parse("https://api.mobygames.com/v1/games/#{game[:mobygames_id]}?api_key=#{key}")
+      # Look the whole batch up in one round-trip. /games takes a multi-valued
+      # `id` parameter and returns just the games that exist, so there's no title
+      # search or moby_url reconciliation — we already know the exact IDs.
+      # Everything is URL-encoded: a base64 api_key can contain +, /, and =.
+      query = URI.encode_www_form(id: batch.map { |game| game[:mobygames_id] }, api_key: ENV['MOBYGAMES_API_KEY'])
+      api_url = URI.parse("https://api.mobygames.com/v1/games?#{query}")
 
       req = Net::HTTP::Get.new(api_url)
       req['Cache-Control'] = 'no-cache'
@@ -69,56 +75,63 @@ namespace :import do
         http.request(req)
       end
 
-      # A 404 just means MobyGames has no game with this ID (a stale or bad
-      # mobygames_id); skip it rather than aborting the whole run.
-      if res.is_a?(Net::HTTPNotFound)
-        progress_bar.log "No MobyGames game found for #{game[:name]} (mobygames_id: #{game[:mobygames_id]})."
-        progress_bar.increment
-        no_matching_game_count += 1
-        next
-      end
-
-      # Any other error (a 401 from a missing/expired MOBYGAMES_API_KEY, a 429
-      # rate limit, ...) is systemic, so surface it instead of masking it as a
-      # missing cover. Safe to resume: the task only processes games that still
-      # lack a cover, so a re-run continues where this left off.
+      # A batch request returns 200 with only the games that exist (unknown IDs
+      # are simply absent), so any non-success is systemic — a 401 from a
+      # missing/expired MOBYGAMES_API_KEY, a 429 rate limit, etc. Surface it
+      # instead of masking it as missing covers. Safe to resume: the task only
+      # processes games that still lack a cover, so a re-run continues from here.
       raise "MobyGames API request failed: HTTP #{res.code} #{res.message}. Body: #{res.body.to_s[0, 300]}" unless res.is_a?(Net::HTTPSuccess)
 
-      game_data = JSON.parse(res.body)
+      # Index the returned games by their MobyGames ID; the API orders them by ID
+      # rather than matching the order we requested.
+      returned = JSON.parse(res.body).fetch('games', []).index_by { |game_data| game_data['game_id'] }
 
-      # sample_cover, and its image, may be null (see the API's "Null data" note).
-      cover_url = game_data.dig('sample_cover', 'image')
-      if cover_url.nil?
-        progress_bar.log "No cover image found for #{game[:name]}."
+      batch.each do |game|
+        game_data = returned[game[:mobygames_id]]
+
+        # The ID wasn't in the response, so MobyGames has no such game any more
+        # (a stale or bad mobygames_id).
+        if game_data.nil?
+          progress_bar.log "No MobyGames game found for #{game[:name]} (mobygames_id: #{game[:mobygames_id]})."
+          progress_bar.increment
+          no_matching_game_count += 1
+          next
+        end
+
+        # sample_cover, and its image, may be null (see the API's "Null data" note).
+        cover_url = game_data.dig('sample_cover', 'image')
+        if cover_url.nil?
+          progress_bar.log "No cover image found for #{game[:name]}."
+          progress_bar.increment
+          no_cover_url_count += 1
+          next
+        end
+
+        # The cover URL comes out of the MobyGames API response, so it's fetched
+        # through RemoteImageFetcher, which refuses non-public addresses. This
+        # also catches the case where the cover image doesn't actually exist.
+        begin
+          cover = RemoteImageFetcher.fetch(cover_url)
+        rescue RemoteImageFetcher::Error => e
+          progress_bar.log "Error: #{e}"
+          progress_bar.increment
+          no_cover_url_count += 1
+          next
+        end
+
+        # Attach the cover and get the filename from the last fragment of the URL.
+        # The downloaded tempfile is thrown away as soon as it's been attached,
+        # so an import doesn't accumulate one open file per game it processes.
+        begin
+          game.cover.attach(io: cover.io, filename: cover.filename)
+        ensure
+          cover.close
+        end
+
+        attached_covers_count += 1
+        progress_bar.log "Added cover for #{game[:name]}."
         progress_bar.increment
-        no_cover_url_count += 1
-        next
       end
-
-      # The cover URL comes out of the MobyGames API response, so it's fetched
-      # through RemoteImageFetcher, which refuses non-public addresses. This
-      # also catches the case where the cover image doesn't actually exist.
-      begin
-        cover = RemoteImageFetcher.fetch(cover_url)
-      rescue RemoteImageFetcher::Error => e
-        progress_bar.log "Error: #{e}"
-        progress_bar.increment
-        no_cover_url_count += 1
-        next
-      end
-
-      # Attach the cover and get the filename from the last fragment of the URL.
-      # The downloaded tempfile is thrown away as soon as it's been attached,
-      # so an import doesn't accumulate one open file per game it processes.
-      begin
-        game.cover.attach(io: cover.io, filename: cover.filename)
-      ensure
-        cover.close
-      end
-
-      attached_covers_count += 1
-      progress_bar.log "Added cover for #{game[:name]}."
-      progress_bar.increment
     end
 
     progress_bar.finish unless progress_bar.finished?
