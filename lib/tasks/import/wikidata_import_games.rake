@@ -17,6 +17,15 @@ GAME_HYDRATION_CHUNK_SIZE = 500
 # per-request pacing sleep (see WikidataSparql::INTER_QUERY_DELAY_SECONDS).
 RELEASE_DATE_CHUNK_SIZE = 2500
 
+# Number of games written per transaction in the release-dates import. Kept much
+# smaller than RELEASE_DATE_CHUNK_SIZE (which is sized for the network) because
+# it optimizes a different axis: batching commits amortizes Postgres' per-commit
+# fsync, but each update! is its own statement round-trip, so wrapping a whole
+# 2500-game chunk in one transaction would hold thousands of row locks open for
+# the duration of all those round-trips and roll the entire chunk back on any
+# mid-batch DB error. A few hundred rows already captures the fsync savings.
+RELEASE_DATE_WRITE_BATCH_SIZE = 500
+
 # The multi-valued Wikidata properties we import per game, mapped to their
 # property IDs. Fetched together in a single UNION query (see
 # property_values_query) rather than one round-trip each.
@@ -231,31 +240,34 @@ namespace 'import:wikidata' do
       release_dates = fetch_release_dates(chunk)
       games = Game.where(wikidata_id: chunk).index_by(&:wikidata_id)
 
-      # Wrap the chunk's writes in one transaction so Postgres commits (and
-      # fsyncs) once per chunk instead of once per game. update! still runs
-      # validations and records a PaperTrail version per game; we're only
-      # collapsing hundreds of separate commits into one. A RecordInvalid is
-      # raised by validation before any SQL is issued, so rescuing it and
-      # continuing leaves the surrounding transaction usable.
-      Game.transaction do
-        chunk.each do |wikidata_id|
-          progress_bar.increment
+      # Write in sub-batches, each in one transaction, so Postgres commits (and
+      # fsyncs) once per batch instead of once per game while keeping the
+      # transaction — and the row locks it holds — bounded regardless of the
+      # (network-sized) chunk. update! still runs validations and records a
+      # PaperTrail version per game; we're only collapsing separate commits into
+      # one. A RecordInvalid is raised by validation before any SQL is issued,
+      # so rescuing it and continuing leaves the surrounding transaction usable.
+      chunk.each_slice(RELEASE_DATE_WRITE_BATCH_SIZE) do |write_batch|
+        Game.transaction do
+          write_batch.each do |wikidata_id|
+            progress_bar.increment
 
-          game = games[wikidata_id]
-          next if game.nil?
+            game = games[wikidata_id]
+            next if game.nil?
 
-          release_date = release_dates[wikidata_id]
-          if release_date.nil?
-            progress_bar.log "No release dates found for #{game.name}."
-            next
-          end
+            release_date = release_dates[wikidata_id]
+            if release_date.nil?
+              progress_bar.log "No release dates found for #{game.name}."
+              next
+            end
 
-          begin
-            game.update!(release_date: release_date)
-            progress_bar.log "Added release date for #{game.name}."
-          rescue ActiveRecord::RecordInvalid => e
-            progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
-            next
+            begin
+              game.update!(release_date: release_date)
+              progress_bar.log "Added release date for #{game.name}."
+            rescue ActiveRecord::RecordInvalid => e
+              progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
+              next
+            end
           end
         end
       end
