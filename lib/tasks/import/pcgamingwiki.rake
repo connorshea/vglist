@@ -60,12 +60,35 @@ namespace :import do
 
       req = Net::HTTP::Get.new(api_url)
       req['Cache-Control'] = 'no-cache'
+      # Identify ourselves. PCGamingWiki sits behind Cloudflare, which serves an
+      # HTML challenge/error page (not JSON) to requests without a User-Agent or
+      # sent too quickly.
+      req['User-Agent'] = WikidataSparql::USER_AGENT
 
       res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
         http.request(req)
       end
 
-      json = JSON.parse(res.body)
+      # PCGamingWiki sometimes answers with an HTML error or Cloudflare page
+      # instead of JSON (typically when it's rate-limiting us). Parsing that as
+      # JSON used to abort the whole task; skip this game and carry on instead.
+      # A re-run picks up anything skipped here, since it only selects games that
+      # still have no cover.
+      unless res.is_a?(Net::HTTPSuccess) && res.content_type&.include?('json')
+        progress_bar.log "#{game[:name].ljust(40)} | Unexpected response (HTTP #{res.code}), skipping."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        next
+      end
+
+      begin
+        json = JSON.parse(res.body)
+      rescue JSON::ParserError => e
+        progress_bar.log "#{game[:name].ljust(40)} | Could not parse response as JSON: #{e.message}, skipping."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        next
+      end
 
       json = json.dig('cargoquery', 0)
       if json.nil?
