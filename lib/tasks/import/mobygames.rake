@@ -77,6 +77,15 @@ namespace :import do
       res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
         http.request(req)
       end
+
+      # Surface API errors instead of silently reporting "No matching games" for
+      # every game. An error response (e.g. a 401 from a missing or expired
+      # MOBYGAMES_API_KEY, or a 429 rate limit) is a body with no "games" key,
+      # which is otherwise indistinguishable from a search that found nothing.
+      # Aborting is safe to resume: the task only processes games still missing a
+      # cover, so a re-run picks up where this left off once the cause is fixed.
+      raise "MobyGames API request failed: HTTP #{res.code} #{res.message}. Body: #{res.body.to_s[0, 300]}" unless res.is_a?(Net::HTTPSuccess)
+
       json = JSON.parse(res.body)
 
       mobygames_games = json['games']
