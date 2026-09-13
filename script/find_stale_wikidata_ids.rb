@@ -293,7 +293,9 @@ module FindStaleWikidataIds
       PREFIX owl: <http://www.w3.org/2002/07/owl#>
       SELECT ?item ?target (COUNT(?o) AS ?triples) WHERE {
         VALUES ?item { #{values} }
-        OPTIONAL { ?item owl:sameAs ?target. }
+        # owl:sameAs can also point at external entities (e.g. Freebase); only a
+        # target in Wikidata's entity namespace signals a merge/redirect.
+        OPTIONAL { ?item owl:sameAs ?target. FILTER(STRSTARTS(STR(?target), "http://www.wikidata.org/entity/Q")) }
         OPTIONAL { ?item ?p ?o. }
       } GROUP BY ?item ?target
     SPARQL
@@ -304,8 +306,12 @@ module FindStaleWikidataIds
       id = qid_to_int(binding.dig('item', 'value'))
       next unless id
 
-      if binding['target']
-        states[id] = [:merged, qid_to_int(binding.dig('target', 'value'))]
+      # Defensive: only treat it as a merge when the target actually converts to
+      # a Q-ID, so a non-Q-ID target can never leave merged_into nil (which the
+      # %d format in #report would then raise on). Otherwise classify by triples.
+      merged_into = binding['target'] && qid_to_int(binding.dig('target', 'value'))
+      if merged_into
+        states[id] = [:merged, merged_into]
       elsif binding.dig('triples', 'value').to_i.zero?
         states[id] = [:deleted, nil]
       else
