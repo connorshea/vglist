@@ -71,6 +71,12 @@ namespace :import do
         http.request(req)
       end
 
+      # Pace requests so we stay under PCGamingWiki's rate limit rather than
+      # hammering it back-to-back (which is what gets us served the Cloudflare
+      # page handled below). Placed right after the request so every path from
+      # here on is paced, whether the game gets a cover or is skipped.
+      sleep(1)
+
       # PCGamingWiki sometimes answers with an HTML error or Cloudflare page
       # instead of JSON (typically when it's rate-limiting us). Parsing that as
       # JSON used to abort the whole task; skip this game and carry on instead.
