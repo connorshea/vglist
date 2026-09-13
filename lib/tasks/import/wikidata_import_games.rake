@@ -235,9 +235,36 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
+    release_dates_added_count = 0
+    no_release_date_count = 0
+    invalid_count = 0
+
     wikidata_ids.each_slice(RELEASE_DATE_CHUNK_SIZE) do |chunk|
       release_dates = fetch_release_dates(chunk)
       games = Game.where(wikidata_id: chunk).index_by(&:wikidata_id)
+
+      # Pair each game with its fetched date, dropping (and logging) games with
+      # no day-precision release date so the transactions below wrap only real
+      # writes. Filtering first also packs each write batch with actual updates
+      # instead of padding it with skipped games, so every transaction commits a
+      # full batch rather than a mostly-empty one.
+      updates = chunk.filter_map do |wikidata_id|
+        game = games[wikidata_id]
+        if game.nil?
+          progress_bar.increment
+          next
+        end
+
+        release_date = release_dates[wikidata_id]
+        if release_date.nil?
+          progress_bar.increment
+          progress_bar.log "No release dates found for #{game.name}."
+          no_release_date_count += 1
+          next
+        end
+
+        [game, release_date]
+      end
 
       # Write in sub-batches, each in one transaction, so Postgres commits (and
       # fsyncs) once per batch instead of once per game while keeping the
@@ -246,24 +273,17 @@ namespace 'import:wikidata' do
       # PaperTrail version per game; we're only collapsing separate commits into
       # one. A RecordInvalid is raised by validation before any SQL is issued,
       # so rescuing it and continuing leaves the surrounding transaction usable.
-      chunk.each_slice(RELEASE_DATE_WRITE_BATCH_SIZE) do |write_batch|
+      updates.each_slice(RELEASE_DATE_WRITE_BATCH_SIZE) do |write_batch|
         Game.transaction do
-          write_batch.each do |wikidata_id|
+          write_batch.each do |game, release_date|
             progress_bar.increment
-
-            game = games[wikidata_id]
-            next if game.nil?
-
-            release_date = release_dates[wikidata_id]
-            if release_date.nil?
-              progress_bar.log "No release dates found for #{game.name}."
-              next
-            end
 
             begin
               game.update!(release_date: release_date)
+              release_dates_added_count += 1
               progress_bar.log "Added release date for #{game.name}."
             rescue ActiveRecord::RecordInvalid => e
+              invalid_count += 1
               progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
               next
             end
@@ -273,6 +293,9 @@ namespace 'import:wikidata' do
     end
 
     progress_bar.finish unless progress_bar.finished?
+
+    puts "Done. Added release dates to #{release_dates_added_count} games."
+    puts "#{no_release_date_count} games had no day-precision release date, #{invalid_count} failed validation."
   end
 
   # The SPARQL query for getting all video games with English or mul labels on Wikidata.
