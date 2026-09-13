@@ -49,13 +49,17 @@ namespace :import do
     no_matching_game_count = 0
 
     games.each do |game|
-      api_url = "https://api.mobygames.com/v1/games?limit=80&title=#{game[:name]}&api_key=#{ENV['MOBYGAMES_API_KEY']}"
+      # Build the query with the title and key URL-encoded, so non-ASCII
+      # characters, spaces, and query metacharacters (a base64 key can contain
+      # +, /, and =) are escaped rather than corrupting the request or making the
+      # URL unparseable.
+      query = URI.encode_www_form(limit: 80, title: game[:name], api_key: ENV['MOBYGAMES_API_KEY'])
+      api_url = "https://api.mobygames.com/v1/games?#{query}"
       begin
         api_url = URI.parse(api_url)
       rescue URI::InvalidURIError => e
-        # No API request happens for these (e.g. a non-ASCII title can't go in a
-        # URI), so skip before the rate-limit sleep rather than wasting 10s on a
-        # game we're going to discard anyway.
+        # The encoding above should make this unreachable, but guard anyway —
+        # and skip before the rate-limit sleep, since no API request happens.
         progress_bar.log "Invalid URL: #{e}."
         progress_bar.increment
         next
