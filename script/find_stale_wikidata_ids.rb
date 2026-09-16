@@ -11,7 +11,8 @@
 # merged/redirected into another item. Both cases mean the stored wikidataId is
 # stale.
 #
-# How each state is detected in one SPARQL query per chunk:
+# How each state is detected (two plain-join SPARQL queries per chunk — see
+# classify_chunk for why it isn't one):
 #   * merged/redirected -> the item has an `owl:sameAs` triple pointing at the
 #     item it was merged into (Wikidata leaves this behind on the old Q-id).
 #   * deleted           -> the item has zero triples in the mirror.
@@ -35,20 +36,27 @@
 #                             of re-fetching from the API when the file already exists
 #
 # Resilience and resume:
-#   * Transient network failures (dropped connections, timeouts, TLS resets) are
-#     retried with backoff on every request, so a blip doesn't abort a long run.
+#   * Transient network failures (dropped connections, timeouts, TLS resets) and
+#     gateway errors (429 rate limits, 502/503/504) are retried with backoff on
+#     every request, so a blip doesn't abort a long run.
 #   * The vglist fetch is written incrementally to two sidecar files next to
 #     VGLIST_GAMES_JSON — "<name>.partial.jsonl" (one game per line, appended as
 #     each page arrives) and "<name>.progress.json" (the pagination cursor). If
 #     the fetch is interrupted, simply re-run: it resumes from the last saved
 #     page instead of starting over. The sidecars are removed once the full
 #     dataset has been written. Delete them by hand to force a fresh fetch.
+#   * The Wikidata classification pass resumes the same way, via
+#     "<name>.classify.partial.jsonl" (stale verdicts, appended per chunk) and
+#     "<name>.classify.progress.json" (the last completed chunk, keyed to the ID
+#     set). An interrupted classification re-run skips to the first unfinished
+#     chunk rather than re-checking every ID. These are removed once it finishes.
 
 require 'net/http'
 require 'openssl'
 require 'uri'
 require 'json'
 require 'time'
+require 'digest'
 
 module FindStaleWikidataIds
   VGLIST_ENDPOINT = ENV.fetch('VGLIST_ENDPOINT', 'https://vglist.co/graphql')
@@ -112,6 +120,7 @@ module FindStaleWikidataIds
 
     warn "Checking #{ids.length} distinct Wikidata IDs against #{SPARQL_ENDPOINT} ..."
     states = classify_wikidata_ids(ids)
+    clear_classify_progress
 
     findings = []
     states.each do |wikidata_id, (state, merged_into)|
@@ -270,54 +279,126 @@ module FindStaleWikidataIds
 
   # ---- Wikidata / QLever -----------------------------------------------------
 
-  # Classify every given numeric Wikidata ID. Returns a Hash:
-  #   { 12345 => [:ok, nil], 6789 => [:deleted, nil], 999 => [:merged, 179] }
+  # Classify every given numeric Wikidata ID and return only the stale ones, as a
+  # Hash: { 6789 => [:deleted, nil], 999 => [:merged, 179] }. Healthy (:ok) IDs
+  # are the overwhelming majority and the caller ignores them, so they're neither
+  # returned nor stored — this keeps memory flat and makes a resumed run's result
+  # identical to an uninterrupted one.
+  #
+  # Chunk-level resume: after each chunk, the stale verdicts are appended to a
+  # JSONL sidecar and the completed chunk index recorded in a progress file, both
+  # keyed to the exact ID set. An interrupted run re-reads them and skips straight
+  # to the first unfinished chunk instead of re-querying every ID again. The
+  # sidecars are cleared once the run finishes.
   def classify_wikidata_ids(ids)
-    states = {}
+    partial, progress = classify_paths
+    fingerprint = ids_fingerprint(ids)
+    start_chunk = resume_classify_chunk(progress, ids.length, fingerprint)
 
-    ids.each_slice(CHUNK_SIZE).with_index do |chunk, index|
-      warn "  chunk #{index + 1} (#{index * CHUNK_SIZE + chunk.length}/#{ids.length}) ..." if (index % 10).zero?
-      classify_chunk(chunk).each { |id, state| states[id] = state }
+    states = start_chunk.positive? ? load_classified(partial) : {}
+    chunks = ids.each_slice(CHUNK_SIZE).to_a
+    if start_chunk.positive?
+      warn "Resuming classification from chunk #{start_chunk + 1}/#{chunks.length} " \
+           "(#{states.length} stale ID(s) already found)."
+    end
+
+    File.open(partial, start_chunk.positive? ? 'a' : 'w') do |file|
+      chunks.each_with_index do |chunk, index|
+        next if index < start_chunk
+
+        classify_chunk(chunk).each do |id, (state, merged_into)|
+          next if state == :ok # healthy IDs are neither returned nor persisted
+
+          states[id] = [state, merged_into]
+          file.puts JSON.generate('id' => id, 'state' => state, 'merged_into' => merged_into)
+        end
+        file.flush
+        write_classify_checkpoint(progress, chunk_index: index, total: ids.length, fingerprint: fingerprint)
+
+        done = [(index + 1) * CHUNK_SIZE, ids.length].min
+        warn "  chunk #{index + 1}/#{chunks.length} (#{done}/#{ids.length}) ..." if (index % 10).zero?
+      end
     end
 
     states
   end
 
-  # One SPARQL query per chunk. Every VALUES item comes back as exactly one row
-  # (thanks to the OPTIONALs + GROUP BY), so we can read each item's state
-  # directly rather than inferring "absent means healthy".
+  # Classify a chunk of Wikidata IDs with two cheap, plain-join queries.
+  #
+  # These used to be one query with `OPTIONAL { ?item ?p ?o }` to count triples,
+  # but that unbound-predicate optional makes QLever plan a full scan of the SPO
+  # index (billions of rows) and the server OOMs ("Tried to allocate ... but only
+  # ... available"). Instead we ask separately: (a) which items redirect via
+  # owl:sameAs, and (b) which items still have any triple at all. Both bind
+  # ?item through VALUES first, so each scans only the ~100 items in the chunk.
+  # An item that has no triples and isn't a redirect is a deletion.
   def classify_chunk(chunk)
-    values = chunk.map { |id| "wd:Q#{id}" }.join(' ')
-    query = <<~SPARQL
-      PREFIX wd: <http://www.wikidata.org/entity/>
-      PREFIX owl: <http://www.w3.org/2002/07/owl#>
-      SELECT ?item ?target (COUNT(?o) AS ?triples) WHERE {
-        VALUES ?item { #{values} }
-        # owl:sameAs can also point at external entities (e.g. Freebase); only a
-        # target in Wikidata's entity namespace signals a merge/redirect.
-        OPTIONAL { ?item owl:sameAs ?target. FILTER(STRSTARTS(STR(?target), "http://www.wikidata.org/entity/Q")) }
-        OPTIONAL { ?item ?p ?o. }
-      } GROUP BY ?item ?target
-    SPARQL
+    merges = fetch_merge_targets(chunk)
+    existing = fetch_existing_ids(chunk)
 
-    result = sparql_query(query)
-
-    result.dig('results', 'bindings').each_with_object({}) do |binding, states|
-      id = qid_to_int(binding.dig('item', 'value'))
-      next unless id
-
-      # Defensive: only treat it as a merge when the target actually converts to
-      # a Q-ID, so a non-Q-ID target can never leave merged_into nil (which the
-      # %d format in #report would then raise on). Otherwise classify by triples.
-      merged_into = binding['target'] && qid_to_int(binding.dig('target', 'value'))
-      if merged_into
-        states[id] = [:merged, merged_into]
-      elsif binding.dig('triples', 'value').to_i.zero?
+    chunk.each_with_object({}) do |id, states|
+      if (target = merges[id])
+        states[id] = [:merged, target]
+      elsif !existing[id]
         states[id] = [:deleted, nil]
       else
         states[id] = [:ok, nil]
       end
     end
+  end
+
+  # Items in the chunk that redirect to another Wikidata item, as
+  # { id => target_id }. owl:sameAs can also point at external entities (e.g.
+  # Freebase); only a target in Wikidata's entity namespace signals a merge.
+  def fetch_merge_targets(chunk)
+    query = <<~SPARQL
+      PREFIX wd: <http://www.wikidata.org/entity/>
+      PREFIX owl: <http://www.w3.org/2002/07/owl#>
+      SELECT ?item ?target WHERE {
+        VALUES ?item { #{item_values(chunk)} }
+        ?item owl:sameAs ?target.
+        FILTER(STRSTARTS(STR(?target), "http://www.wikidata.org/entity/Q"))
+      }
+    SPARQL
+
+    sparql_query(query).dig('results', 'bindings').each_with_object({}) do |binding, targets|
+      id = qid_to_int(binding.dig('item', 'value'))
+      target = qid_to_int(binding.dig('target', 'value'))
+      # Guard both ends: a non-Q-ID target must never leave merged_into nil (the
+      # %d format in #report would raise on that).
+      targets[id] = target if id && target
+    end
+  end
+
+  # The subset of the chunk that still has at least one statement in the mirror,
+  # as a { id => true } lookup. Any chunk id absent from the result has no
+  # statements, i.e. was deleted.
+  #
+  # We match direct-claim (wdt:) statements via `wikibase:directClaim` rather
+  # than every triple (`?item ?p ?o`): a plain all-triples scan pulls each item's
+  # hundreds of labels/descriptions/aliases/sitelinks, and materializing that for
+  # 100 items is heavy enough to time the upstream out (nginx 502). This is the
+  # same bounded pattern the dumper uses; a live game always has statements.
+  def fetch_existing_ids(chunk)
+    query = <<~SPARQL
+      PREFIX wd: <http://www.wikidata.org/entity/>
+      PREFIX wikibase: <http://wikiba.se/ontology#>
+      SELECT DISTINCT ?item WHERE {
+        VALUES ?item { #{item_values(chunk)} }
+        ?item ?propUrl ?value.
+        ?prop wikibase:directClaim ?propUrl.
+      }
+    SPARQL
+
+    sparql_query(query).dig('results', 'bindings').each_with_object({}) do |binding, existing|
+      id = qid_to_int(binding.dig('item', 'value'))
+      existing[id] = true if id
+    end
+  end
+
+  # A space-separated `wd:Q…` list for a VALUES clause.
+  def item_values(chunk)
+    chunk.map { |id| "wd:Q#{id}" }.join(' ')
   end
 
   def sparql_query(query)
@@ -339,6 +420,17 @@ module FindStaleWikidataIds
       if response.code == '429' && attempt < MAX_SPARQL_ATTEMPTS
         backoff = INITIAL_BACKOFF_SECONDS * (2**(attempt - 1))
         warn "  rate limited (429); retrying in #{backoff}s"
+        sleep(backoff)
+        raise Retry
+      end
+
+      # Gateway errors (nginx 502/503/504) mean the upstream QLever hiccuped or
+      # timed out — transient, so back off and retry rather than aborting a long
+      # run. (A genuine query error comes back as 500 with a JSON `exception`
+      # body, handled below, and is not retried here.)
+      if %w[502 503 504].include?(response.code) && attempt < MAX_SPARQL_ATTEMPTS
+        backoff = INITIAL_BACKOFF_SECONDS * (2**(attempt - 1))
+        warn "  gateway error (HTTP #{response.code}); retrying in #{backoff}s"
         sleep(backoff)
         raise Retry
       end
@@ -486,6 +578,79 @@ module FindStaleWikidataIds
 
   def clear_fetch_progress
     progress_paths.each { |path| File.delete(path) if File.exist?(path) }
+  end
+
+  # ---- Resumable classification bookkeeping ----------------------------------
+  #
+  # Sidecars next to GAMES_JSON, distinct from the fetch ones: the stale verdicts
+  # as JSONL (appended per chunk) and the last completed chunk index as JSON.
+
+  def classify_paths
+    ["#{GAMES_JSON}.classify.partial.jsonl", "#{GAMES_JSON}.classify.progress.json"]
+  end
+
+  # A stable digest of the exact ID set (and order) being classified. If the
+  # dataset changes between runs the chunk boundaries shift, so a mismatch
+  # forces classification to start over rather than resume against stale offsets.
+  def ids_fingerprint(ids)
+    Digest::SHA1.hexdigest(ids.join(','))
+  end
+
+  # The next chunk index to classify: the one after the last completed chunk,
+  # but only when a checkpoint and partial file exist and still match this run's
+  # chunk size and ID set. Otherwise 0 (start over).
+  def resume_classify_chunk(progress, total, fingerprint)
+    partial, = classify_paths
+    return 0 unless File.exist?(progress) && File.exist?(partial)
+
+    checkpoint = parse_json(File.read(progress))
+    return 0 unless checkpoint['chunk_size'] == CHUNK_SIZE &&
+                    checkpoint['total'] == total &&
+                    checkpoint['fingerprint'] == fingerprint
+
+    checkpoint['chunk_index'].to_i + 1
+  rescue StandardError => e
+    warn "Ignoring unreadable classification checkpoint #{progress}: #{e.message}"
+    0
+  end
+
+  def write_classify_checkpoint(path, chunk_index:, total:, fingerprint:)
+    File.write(path, JSON.generate(
+                       'chunk_index' => chunk_index,
+                       'chunk_size' => CHUNK_SIZE,
+                       'total' => total,
+                       'fingerprint' => fingerprint,
+                       'endpoint' => SPARQL_ENDPOINT,
+                       'updated_at' => Time.now.utc.iso8601
+                     ))
+  end
+
+  # Rebuild the stale-verdict states from the JSONL sidecar, tolerating a
+  # truncated final line left by a crash mid-write. Only non-:ok verdicts are
+  # stored, which is all the caller needs.
+  def load_classified(path)
+    states = {}
+    File.foreach(path).with_index do |line, index|
+      line = line.strip
+      next if line.empty?
+
+      begin
+        record = JSON.parse(line)
+      rescue JSON::ParserError
+        warn "  skipping unparseable line #{index + 1} in #{path} (likely a partial write before a crash)"
+        next
+      end
+
+      id = record['id']
+      next unless id
+
+      states[id] = [record['state'].to_s.to_sym, record['merged_into']]
+    end
+    states
+  end
+
+  def clear_classify_progress
+    classify_paths.each { |path| File.delete(path) if File.exist?(path) }
   end
 
   def parse_json(body)
