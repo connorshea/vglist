@@ -18,6 +18,14 @@
 #   * deleted           -> the item has zero triples in the mirror.
 #   * healthy           -> has triples and no `owl:sameAs`; not reported.
 #
+# Optional dump shortcut: pass WIKIDATA_DUMP_JSON pointing at the blob from
+# script/dump_wikidata_games.rb and any vglist ID present in it — i.e. still a
+# video game item on Wikidata — skips the live check entirely. Only IDs missing
+# from the dump (deleted, merged/redirected, or no longer typed as a game) are
+# queried against the endpoint, which is usually a tiny fraction of the library.
+# The dump is a snapshot, so an item deleted after it was generated won't be
+# caught until the dump is regenerated.
+#
 # Usage:
 #   VGLIST_EMAIL=you@example.com VGLIST_TOKEN=your_api_token \
 #     ruby script/find_stale_wikidata_ids.rb
@@ -34,6 +42,8 @@
 #   VGLIST_GAMES_JSON         where to save the fetched dataset (default vglist_games.json)
 #   USE_CACHE                 if set (e.g. USE_CACHE=1), reuse VGLIST_GAMES_JSON instead
 #                             of re-fetching from the API when the file already exists
+#   WIKIDATA_DUMP_JSON        optional path to the dump from dump_wikidata_games.rb;
+#                             IDs found in it skip the live check (see below)
 #
 # Resilience and resume:
 #   * Transient network failures (dropped connections, timeouts, TLS resets) and
@@ -66,6 +76,12 @@ module FindStaleWikidataIds
 
   # Where the fetched vglist dataset is saved (and optionally reloaded from).
   GAMES_JSON = ENV.fetch('VGLIST_GAMES_JSON', 'vglist_games.json')
+
+  # Optional path to the Wikidata games dump produced by
+  # script/dump_wikidata_games.rb. When set, any vglist Wikidata ID present in
+  # the dump is known to still exist as a video game and skips the live QLever
+  # check; only IDs absent from the dump are classified against the endpoint.
+  WIKIDATA_DUMP_JSON = ENV['WIKIDATA_DUMP_JSON'].to_s.strip.freeze
 
   # Pace SPARQL requests to stay under QLever's rate limit, and back off on 429.
   # Mirrors lib/wikidata_sparql.rb's approach.
@@ -118,8 +134,18 @@ module FindStaleWikidataIds
     with_wikidata.each { |g| games_by_wikidata_id[g[:wikidata_id]] << g }
     ids = games_by_wikidata_id.keys
 
-    warn "Checking #{ids.length} distinct Wikidata IDs against #{SPARQL_ENDPOINT} ..."
-    states = classify_wikidata_ids(ids)
+    # An ID present in the Wikidata dump still exists as a video game, so it can't
+    # be stale — only IDs missing from the dump need the live QLever check.
+    ids_to_check = ids
+    unless WIKIDATA_DUMP_JSON.empty?
+      present = load_dump_ids(WIKIDATA_DUMP_JSON)
+      ids_to_check = ids.reject { |id| present[id] }
+      warn "#{ids.length - ids_to_check.length} of #{ids.length} IDs are present in the dump " \
+           "(#{WIKIDATA_DUMP_JSON}) and skip the live check; #{ids_to_check.length} to verify live."
+    end
+
+    warn "Checking #{ids_to_check.length} distinct Wikidata IDs against #{SPARQL_ENDPOINT} ..."
+    states = classify_wikidata_ids(ids_to_check)
     clear_classify_progress
 
     findings = []
@@ -252,6 +278,30 @@ module FindStaleWikidataIds
 
   def reuse_cache?
     !ENV['USE_CACHE'].to_s.strip.empty? && File.exist?(GAMES_JSON)
+  end
+
+  # Numeric Wikidata IDs present in the dump, as a { id => true } lookup.
+  #
+  # The dump writes one game object per line, led by its "wikidata_id" key, so we
+  # pull just that first field with a regex rather than JSON-parsing each line —
+  # the full per-game property payload is large and we only need the ID. Works on
+  # both the final blob (indented, comma-terminated lines) and the raw
+  # ".partial.jsonl" sidecar; any game line not led by wikidata_id falls back to
+  # a full parse.
+  def load_dump_ids(path)
+    raise "Wikidata dump not found: #{path}" unless File.exist?(path)
+
+    present = {}
+    File.foreach(path) do |line|
+      if (match = line.match(/\A\s*\{"wikidata_id":(\d+)/))
+        present[match[1].to_i] = true
+      elsif line.lstrip.start_with?('{"')
+        id = JSON.parse(line.strip.chomp(','))['wikidata_id']
+        present[id] = true if id
+      end
+    end
+    warn "Loaded #{present.size} Wikidata IDs from the dump (#{path})."
+    present
   end
 
   def graphql_request(email:, token:, variables:)
