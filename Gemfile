@@ -113,7 +113,7 @@ group :development, :test do
   gem 'fuubar', '~> 2.5.1'
 
   # Run the test suite across multiple processes to speed it up.
-  gem 'parallel_tests', '~> 5.3'
+  gem 'parallel_tests', '~> 5.8'
 
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 4.0.0'
