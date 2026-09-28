@@ -62,7 +62,7 @@ gem 'sentry-rails', '~> 6.4.0'
 gem 'graphql', '~> 2.6.11'
 
 # Doorkeeper for OAuth API tokens
-gem "doorkeeper", "~> 5.9.6"
+gem "doorkeeper", "~> 5.9.9"
 
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 3.0"
