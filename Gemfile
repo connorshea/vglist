@@ -71,7 +71,7 @@ gem "rack-cors", "~> 3.0"
 gem "rack-attack", "~> 6.7"
 
 # For parallel execution of long-running tasks.
-gem 'parallel', '~> 2.2', require: false
+gem 'parallel', '~> 2.3', require: false
 
 # For tracking changes to records.
 gem 'paper_trail', '~> 17.0'
