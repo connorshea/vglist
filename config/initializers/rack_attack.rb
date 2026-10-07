@@ -23,19 +23,29 @@ module RackAttackConfig
   def auth_request?(req)
     return false unless req.post? || req.put? || req.patch?
 
-    AUTH_PATHS.include?(req.path) || graphql_query(req).match?(AUTH_MUTATION_PATTERN)
+    AUTH_PATHS.include?(path(req)) || graphql_query(req).match?(AUTH_MUTATION_PATTERN)
   end
 
   def sign_in_request?(req)
     return false unless req.post?
 
-    SIGN_IN_PATHS.include?(req.path) || graphql_query(req).match?(SIGN_IN_PATTERN)
+    SIGN_IN_PATHS.include?(path(req)) || graphql_query(req).match?(SIGN_IN_PATTERN)
   end
 
   def email_delivery_request?(req)
     return false unless req.post?
 
-    EMAIL_DELIVERY_PATHS.include?(req.path) || graphql_query(req).match?(EMAIL_DELIVERY_MUTATION_PATTERN)
+    EMAIL_DELIVERY_PATHS.include?(path(req)) || graphql_query(req).match?(EMAIL_DELIVERY_MUTATION_PATTERN)
+  end
+
+  # The path as the router sees it. Rack::Attack runs before routing, so the
+  # raw path can differ from what we match against while still reaching the
+  # same action: every route accepts an optional format suffix
+  # (`/api/auth/sign_in.json`), and the router squeezes duplicate slashes and
+  # ignores a trailing one (`//api/auth/sign_in/`).
+  def path(req)
+    req.env['vglist.rack_attack.path'] ||=
+      ActionDispatch::Journey::Router::Utils.normalize_path(req.path).sub(%r{\.[^/.]+\z}, '')
   end
 
   # Prefer the IP computed by ActionDispatch::RemoteIp (which knows about
@@ -48,9 +58,9 @@ module RackAttackConfig
   # "foo@example.com" share a counter. Returns nil when there isn't one.
   def email(req)
     raw =
-      if req.path == '/graphql'
+      if path(req) == '/graphql'
         graphql_email(req)
-      elsif req.path.start_with?('/users/')
+      elsif path(req).start_with?('/users/')
         dig_param(req, 'user', 'email')
       else
         dig_param(req, 'email')
@@ -61,7 +71,7 @@ module RackAttackConfig
   end
 
   def graphql_query(req)
-    return '' unless req.path == '/graphql'
+    return '' unless path(req) == '/graphql'
 
     graphql_body(req)['query'].to_s
   end
