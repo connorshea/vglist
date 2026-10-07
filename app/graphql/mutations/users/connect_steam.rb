@@ -22,7 +22,13 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
       vanityurl: steam_username
     )
 
-    response = Net::HTTP.get_response(uri)
+    begin
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 5, read_timeout: 10) do |http|
+        http.request(Net::HTTP::Get.new(uri))
+      end
+    rescue Net::OpenTimeout, Net::ReadTimeout
+      raise GraphQL::ExecutionError, 'The Steam API took too long to respond.'
+    end
 
     begin
       json = JSON.parse(response.body)
