@@ -91,6 +91,12 @@ RSpec.describe JwtService do
       expect { described_class.revoke_all!(user) }.to change { user.reload.jwt_version }.by(1)
     end
 
+    it 'increments the jwt_version even if the user record is invalid' do
+      user.update_column(:bio, 'a' * 1001) # rubocop:disable Rails/SkipsModelValidations
+      expect(user.reload).not_to be_valid
+      expect { described_class.revoke_all!(user) }.to change { user.reload.jwt_version }.by(1)
+    end
+
     it 'invalidates all previously issued tokens' do
       token1 = described_class.encode(user)
       token2 = described_class.encode(user)
