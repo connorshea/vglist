@@ -151,6 +151,25 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.authenticate_with_password' do
+    let!(:user) { create(:confirmed_user, password: 'correct-password') }
+
+    it 'returns the user when the password is correct' do
+      expect(User.authenticate_with_password(user.email, 'correct-password')).to eq(user)
+    end
+
+    it 'returns nil when the password is wrong' do
+      expect(User.authenticate_with_password(user.email, 'wrong-password')).to be_nil
+    end
+
+    it 'still hashes the password when no user has that email' do
+      allow(Devise::Encryptor).to receive(:digest).and_call_original
+
+      expect(User.authenticate_with_password('nobody@example.com', 'some-password')).to be_nil
+      expect(Devise::Encryptor).to have_received(:digest).with(User, 'some-password')
+    end
+  end
+
   describe '#verify_api_token!' do
     let(:user) { create(:user) }
 

@@ -6,9 +6,9 @@ module Api
     skip_after_action :verify_authorized
 
     def sign_in
-      user = User.find_by(email: params[:email])
+      user = User.authenticate_with_password(params[:email], params[:password])
 
-      if user&.valid_password?(params[:password])
+      if user
         if user.banned?
           render json: { error: "Your account has been banned." }, status: :forbidden
           return
