@@ -180,13 +180,13 @@ class User < ApplicationRecord
 
   # Find the user with this email and return them if the password is correct,
   # or nil otherwise. When no user has that email, hash the password anyway
-  # (as Devise's own paranoid strategy does) so the response time doesn't
-  # reveal whether the email is registered.
+  # and discard the result, so the response time doesn't reveal whether the
+  # email is registered.
   def self.authenticate_with_password(email, password)
     user = find_by(email: email)
     return user if user&.valid_password?(password)
 
-    new.password = password if user.nil?
+    Devise::Encryptor.digest(self, password) if user.nil?
     nil
   end
 
