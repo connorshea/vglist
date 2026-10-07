@@ -178,6 +178,18 @@ class User < ApplicationRecord
   global_searchable :username
   searchable :username
 
+  # Find the user with this email and return them if the password is correct,
+  # or nil otherwise. When no user has that email, hash the password anyway
+  # (as Devise's own paranoid strategy does) so the response time doesn't
+  # reveal whether the email is registered.
+  def self.authenticate_with_password(email, password)
+    user = find_by(email: email)
+    return user if user&.valid_password?(password)
+
+    new.password = password if user.nil?
+    nil
+  end
+
   # Make sure the user isn't banned when logging in with Devise.
   def active_for_authentication?
     super && !banned?
