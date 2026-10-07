@@ -39,26 +39,29 @@ namespace :import do
     games.each do |game|
       progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
 
+      # The ID is interpolated into Cargo's SQL-like `where` clause as a
+      # double-quoted string, so a double quote would let it escape the string
+      # and rewrite the query. Real PCGamingWiki page names almost never
+      # contain one, so skip those rather than trying to escape them.
+      if game[:pcgamingwiki_id].include?('"')
+        progress_bar.log "#{game[:name].ljust(40)} | PCGamingWiki ID contains a double quote, skipping."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        next
+      end
+
       # Cargo doesn't use underscores in page names, so they have to be replaced
-      # by a URL-encoded space character.
-      url_encoded_pcgw_id = game[:pcgamingwiki_id].gsub('"', '%22').gsub('_', '%20')
-      api_url = "https://www.pcgamingwiki.com/w/api.php?action=cargoquery&format=json&tables=Infobox_game&fields=Infobox_game.Cover_URL&where=Infobox_game._pageName%3D\"#{url_encoded_pcgw_id}\""
-
-      unless api_url.ascii_only?
-        progress_bar.log "#{game[:name].ljust(40)} | URL cannot contain non-ASCII characters: #{api_url}."
-        cover_not_found_or_errored_count += 1
-        progress_bar.increment
-        next
-      end
-
-      begin
-        api_url = URI.parse(api_url)
-      rescue URI::InvalidURIError => e
-        progress_bar.log "#{game[:name].ljust(40)} | Invalid URL: #{e}."
-        cover_not_found_or_errored_count += 1
-        progress_bar.increment
-        next
-      end
+      # by spaces. Everything is URL-encoded so characters like `&`, `=` and `%`
+      # in the ID can't add or override query parameters.
+      page_name = game[:pcgamingwiki_id].tr('_', ' ')
+      api_url = URI('https://www.pcgamingwiki.com/w/api.php')
+      api_url.query = URI.encode_www_form(
+        action: 'cargoquery',
+        format: 'json',
+        tables: 'Infobox_game',
+        fields: 'Infobox_game.Cover_URL',
+        where: %(Infobox_game._pageName="#{page_name}")
+      )
 
       req = Net::HTTP::Get.new(api_url)
       req['Cache-Control'] = 'no-cache'

@@ -70,6 +70,34 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
     server&.close
   end
 
+  it 'URL-encodes the PCGamingWiki ID into the Cargo query' do
+    create(:game, pcgamingwiki_id: 'Foo_&_Bar=Baz%')
+    stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
+
+    run_task
+
+    expect(WebMock).to(
+      have_requested(:get, 'https://www.pcgamingwiki.com/w/api.php').with(
+        query: {
+          'action' => 'cargoquery',
+          'format' => 'json',
+          'tables' => 'Infobox_game',
+          'fields' => 'Infobox_game.Cover_URL',
+          'where' => 'Infobox_game._pageName="Foo & Bar=Baz%"'
+        }
+      )
+    )
+  end
+
+  it 'skips a PCGamingWiki ID containing a double quote' do
+    create(:game, pcgamingwiki_id: 'Foo"_OR_1=1_OR_"')
+    stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
+
+    run_task
+
+    expect(WebMock).not_to have_requested(:get, %r{www\.pcgamingwiki\.com/w/api\.php})
+  end
+
   it 'attaches a cover from a public URL' do
     # Resolution is stubbed so the spec doesn't depend on DNS.
     allow(Addrinfo).to receive(:getaddrinfo).and_return([Addrinfo.ip('93.184.216.34')])
