@@ -72,7 +72,13 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
 
   it 'URL-encodes the PCGamingWiki ID into the Cargo query' do
     create(:game, pcgamingwiki_id: 'Foo_&_Bar=Baz%')
-    stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
+    # Only the API request matters here, so return no covers rather than a
+    # cover URL the task would then try to download.
+    stub_request(:get, %r{www\.pcgamingwiki\.com/w/api\.php}).to_return(
+      status: 200,
+      headers: { 'Content-Type' => 'application/json' },
+      body: { cargoquery: [] }.to_json
+    )
 
     run_task
 
@@ -91,7 +97,6 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
 
   it 'skips a PCGamingWiki ID containing a double quote' do
     create(:game, pcgamingwiki_id: 'Foo"_OR_1=1_OR_"')
-    stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
 
     run_task
 
