@@ -6,7 +6,7 @@ class Users::PasswordsController < Devise::PasswordsController
   def edit
     skip_authorization
     frontend_url = ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
-    redirect_to "#{frontend_url}/password/reset/confirm?reset_password_token=#{params[:reset_password_token]}", allow_other_host: true
+    redirect_to "#{frontend_url}/password/reset/confirm?reset_password_token=#{ERB::Util.url_encode(params[:reset_password_token].to_s)}", allow_other_host: true
   end
 
   # POST /resource/password (request password reset email)
