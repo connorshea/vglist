@@ -78,5 +78,11 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
         expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to delete this game purchase.")
       end.not_to change(GamePurchase, :count)
     end
+
+    it "returns the same error for a game purchase ID that doesn't exist" do
+      result = api_request(query_string2, variables: { id: GamePurchase.maximum(:id).to_i + 1 }, token: access_token)
+
+      expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to delete this game purchase.")
+    end
   end
 end

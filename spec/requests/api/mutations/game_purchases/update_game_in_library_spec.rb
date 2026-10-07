@@ -55,6 +55,12 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
         expect(response.to_h['errors'].first['message']).to eq("You aren't allowed to update this game purchase.")
       end.not_to change(GamePurchase, :count)
     end
+
+    it "returns the same error for a game purchase that doesn't exist" do
+      response = api_request(query_string, variables: { id: GamePurchase.maximum(:id).to_i + 1 }, token: access_token)
+
+      expect(response.to_h['errors'].first['message']).to eq("You aren't allowed to update this game purchase.")
+    end
   end
 
   describe "Mutation updates an existing GamePurchase with more data" do

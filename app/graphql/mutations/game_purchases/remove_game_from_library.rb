@@ -38,7 +38,7 @@ class Mutations::GamePurchases::RemoveGameFromLibrary < Mutations::BaseMutation
     if game_purchase_id.nil? && !game_id.nil?
       game_purchase = GamePurchase.find_by(game_id: game_id, user_id: @context[:current_user])
     elsif !game_purchase_id.nil?
-      game_purchase = GamePurchase.find(game_purchase_id)
+      game_purchase = GamePurchase.find_by(id: game_purchase_id)
     else
       return false
     end
