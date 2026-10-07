@@ -21,7 +21,15 @@ class SteamImportService
     raise Error, 'No Steam account.' if steam_account.nil?
 
     uri = URI(steam_api_url)
-    response = Net::HTTP.get_response(uri)
+    begin
+      # The import runs synchronously inside a GraphQL request, so don't let a
+      # slow Steam API tie up the Puma thread for Net::HTTP's 60s defaults.
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 5, read_timeout: 20) do |http|
+        http.request(Net::HTTP::Get.new(uri))
+      end
+    rescue Net::OpenTimeout, Net::ReadTimeout
+      raise Error, 'Steam API Request timed out.'
+    end
 
     raise Error, 'Steam API Request failed.' unless response.is_a?(Net::HTTPSuccess)
 
