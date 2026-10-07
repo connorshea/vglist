@@ -233,6 +233,7 @@ import type {
   UserSearchResultFieldsFragment
 } from "@/types/graphql";
 import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "@lucide/vue";
+import { extractGqlError } from "@/utils/graphql-errors";
 
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();
@@ -339,8 +340,7 @@ const performSearch = debounce(async () => {
     results.value = data.globalSearch.nodes;
     hasSearched.value = true;
   } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : "Unknown error";
-    error.value = message;
+    error.value = extractGqlError(e);
     results.value = [];
     hasSearched.value = true;
   } finally {

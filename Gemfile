@@ -67,6 +67,9 @@ gem "doorkeeper", "~> 5.9.9"
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 3.0"
 
+# Rack::Attack for rate limiting sign-in, sign-up, and password reset requests.
+gem "rack-attack", "~> 6.7"
+
 # For parallel execution of long-running tasks.
 gem 'parallel', '~> 2.2', require: false
 

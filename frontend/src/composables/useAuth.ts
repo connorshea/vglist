@@ -3,6 +3,7 @@ import { useRouter } from "vue-router";
 import { gqlClient } from "@/graphql/client";
 import { SIGN_IN, SIGN_UP, REQUEST_PASSWORD_RESET } from "@/graphql/mutations/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
+import { extractGqlError } from "@/utils/graphql-errors";
 
 export function useAuth() {
   const authStore = useAuthStore();
@@ -36,7 +37,7 @@ export function useAuth() {
 
       return { success: true, errors: [] as string[] };
     } catch (e) {
-      return { success: false, errors: [e instanceof Error ? e.message : "Sign in failed"] };
+      return { success: false, errors: [extractGqlError(e)] };
     }
   }
 
@@ -53,7 +54,7 @@ export function useAuth() {
 
       return { success: true, errors: [] as string[] };
     } catch (e) {
-      return { success: false, errors: [e instanceof Error ? e.message : "Sign up failed"] };
+      return { success: false, errors: [extractGqlError(e)] };
     }
   }
 
@@ -86,7 +87,7 @@ export function useAuth() {
       }
       return { success: false, errors: data.errors ?? ["Password reset failed."] };
     } catch (e) {
-      return { success: false, errors: [e instanceof Error ? e.message : "Password reset failed."] };
+      return { success: false, errors: [extractGqlError(e)] };
     }
   }
 

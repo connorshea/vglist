@@ -1,6 +1,7 @@
 import { ref, watch, onMounted, type Ref, isRef } from "vue";
 import type { DocumentNode } from "graphql";
 import { gqlClient } from "@/graphql/client";
+import { extractGqlError } from "@/utils/graphql-errors";
 
 type MaybeRefOrGetter<T> = T | Ref<T> | (() => T);
 
@@ -8,6 +9,13 @@ function resolveValue<T>(source: MaybeRefOrGetter<T>): T {
   if (isRef(source)) return source.value;
   if (typeof source === "function") return (source as () => T)();
   return source;
+}
+
+// Errors are exposed to templates as `error.message`, so make sure that
+// message is the human-readable GraphQL error rather than graphql-request's
+// raw `ClientError.message`, which embeds the request variables as JSON.
+function toDisplayError(e: unknown): Error {
+  return new Error(extractGqlError(e));
 }
 
 interface UseQueryOptions<TVariables> {
@@ -60,7 +68,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
       data.value = result;
     } catch (e) {
       if (requestId !== latestRequestId || !isEnabled()) return;
-      error.value = e instanceof Error ? e : new Error(String(e));
+      error.value = toDisplayError(e);
     } finally {
       // Only the newest request owns the loading flag, so a superseded
       // response can't clear it while its replacement is still in flight.
@@ -83,7 +91,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
       }
     } catch (e) {
       if (requestId !== latestRequestId || !isEnabled()) return;
-      error.value = e instanceof Error ? e : new Error(String(e));
+      error.value = toDisplayError(e);
     } finally {
       if (requestId === latestRequestId) loading.value = false;
     }
@@ -147,7 +155,7 @@ export function useMutation<TData = Record<string, unknown>, TVariables = Record
       data.value = result;
       return result;
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error(String(e));
+      error.value = toDisplayError(e);
       throw e;
     } finally {
       loading.value = false;
