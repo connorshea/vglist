@@ -5,6 +5,13 @@ Rails.application.routes.draw do
   # Health check
   get '/health', to: 'api/health#show'
 
+  # ActiveStorage's direct upload endpoint has no authentication and hands out
+  # presigned upload URLs for the public bucket. Nothing in the app uses it, so
+  # shadow it here (app routes are matched before the engine's) instead of
+  # disabling `draw_routes` and redrawing the blob/representation routes and
+  # URL helpers we do need.
+  post '/rails/active_storage/direct_uploads', to: proc { [404, {}, []] }
+
   # JWT Authentication endpoints for the Vue SPA frontend
   namespace :api do
     post 'auth/sign_in', to: 'auth#sign_in'
