@@ -132,4 +132,41 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       end
     end
   end
+
+  # Rack::Attack runs before routing, so it must match the same paths the
+  # router does: optional format suffix, duplicate and trailing slashes.
+  describe "path variants" do
+    it "counts format-suffixed and slash-variant sign-in paths against the same email", :aggregate_failures do
+      paths = ['/api/auth/sign_in.json', '/api/auth/sign_in/', '//api/auth/sign_in', '/api/auth/sign_in.json/']
+      10.times do |i|
+        post paths[i % paths.length], params: { email: user.email, password: "wrong" }, headers: { 'REMOTE_ADDR' => "10.7.0.#{i}" }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      post '/api/auth/sign_in.json', params: { email: user.email, password: "wrong" }, headers: { 'REMOTE_ADDR' => '10.7.0.50' }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
+    it "throttles GraphQL sign-in mutations sent to /graphql.json", :aggregate_failures do
+      10.times do |i|
+        post '/graphql.json',
+          params: { query: sign_in_query, variables: { email: user.email, password: "wrong" } }.to_json,
+          headers: { 'Content-Type' => 'application/json', 'REMOTE_ADDR' => "10.8.0.#{i}" }
+        expect(response).to have_http_status(:success)
+      end
+
+      graphql_sign_in(email: user.email, password: "wrong", ip: '10.8.0.50')
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
+    it "limits password reset requests sent with a format suffix", :aggregate_failures do
+      5.times do |i|
+        post '/users/password.json', params: { user: { email: user.email } }, headers: { 'REMOTE_ADDR' => "10.9.0.#{i}" }
+        expect(response).not_to have_http_status(:too_many_requests)
+      end
+
+      post '/users/password.json', params: { user: { email: user.email } }, headers: { 'REMOTE_ADDR' => '10.9.0.50' }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+  end
 end
