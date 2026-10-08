@@ -15,6 +15,13 @@ const router = createRouter({
       name: "about",
       component: () => import("@/pages/AboutPage.vue")
     },
+    // Also the target of the OpenSearch description (browser address-bar
+    // search), so keep `?query=` stable.
+    {
+      path: "/search",
+      name: "search",
+      component: () => import("@/pages/search/SearchPage.vue")
+    },
 
     // Auth
     {
