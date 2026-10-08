@@ -7,10 +7,11 @@ module Resolvers
 
       description "Find a user by searching based on its username."
 
-      argument :query, String, required: true, description: "Username to search by."
+      search_query_argument "Username to search by."
 
       def resolve(query:)
-        User.search(query).with_attached_avatar
+        # Banned users are left out of every user listing, as in `users`.
+        User.search(query).where(banned: false).with_attached_avatar
       end
     end
   end
