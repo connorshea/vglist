@@ -7,10 +7,14 @@ module Resolvers
 
       description "Find a game by searching based on its name."
 
-      argument :query, String, required: true, description: "Name to search by."
+      search_query_argument "Name to search by."
 
-      def resolve(query:)
-        Game.search(query)
+      # Preload based on the fields the client actually selected. See
+      # `GamePreloads`.
+      extras [:lookahead]
+
+      def resolve(query:, lookahead:)
+        GamePreloads.apply(Game.search(query), lookahead)
       end
     end
   end
