@@ -112,6 +112,15 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
           expect(result.to_h['errors'].first['message']).to eq('The Steam API returned an unexpected response.')
         end.not_to change(ExternalAccount, :count)
       end
+
+      it "returns an error when the Steam API times out" do
+        stub_request(:get, /api\.steampowered\.com/).to_timeout
+
+        expect do
+          result = api_request(query_string, variables: { id: user.id, steam_username: 'foobar' }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq('The Steam API took too long to respond.')
+        end.not_to change(ExternalAccount, :count)
+      end
     end
   end
 end

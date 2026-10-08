@@ -34,9 +34,10 @@ class JwtService
   end
 
   # Increment the user's jwt_version to invalidate all existing tokens.
+  # Uses an atomic SQL increment that skips validations, so revocation still
+  # happens even if the user record is invalid for some unrelated reason.
   def self.revoke_all!(user)
-    user.jwt_version += 1
-    user.save!
+    user.increment!(:jwt_version) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def self.secret_key

@@ -12,6 +12,10 @@ class VideoGameListSchema < GraphQL::Schema
   # First-party queries bypass this via the controller (see GraphqlController#execute).
   max_complexity 500
 
+  # Prevent alias-batching the unauthenticated auth mutations into a single
+  # request (credential brute force / email bombing).
+  query_analyzer Analyzers::AuthMutationLimitAnalyzer
+
   default_max_page_size 100
   default_page_size 30
 

@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { UserRole } from "@/types/graphql";
 
+export const REVIEW_DRAFT_KEY_PREFIX = "vglist-review-draft-";
+
 interface AuthUser {
   id: string;
   username: string;
@@ -16,6 +18,15 @@ function loadStoredUser(): AuthUser | null {
   } catch {
     localStorage.removeItem("auth_user");
     return null;
+  }
+}
+
+// Unsaved review text from GameLibraryForm shouldn't survive sign-out on a
+// shared machine.
+function clearReviewDrafts() {
+  const draftKeys = Object.keys(localStorage).filter((key) => key.startsWith(REVIEW_DRAFT_KEY_PREFIX));
+  for (const key of draftKeys) {
+    localStorage.removeItem(key);
   }
 }
 
@@ -39,6 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
     localStorage.removeItem("auth_token");
     localStorage.removeItem("auth_user");
+    clearReviewDrafts();
   }
 
   function updateUser(updates: Partial<AuthUser>) {

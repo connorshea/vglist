@@ -9,7 +9,7 @@ ruby '>= 4.0.6'
 gem 'rails', '~> 7.2.2'
 
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.6'
+gem 'pg', '~> 1.7'
 
 # Use Puma as the app server
 gem 'puma', '~> 8.0'
@@ -18,7 +18,7 @@ gem 'puma', '~> 8.0'
 gem 'devise', '~> 5.0'
 
 # JWT for stateless API authentication with the Vue SPA frontend.
-gem 'jwt', '~> 3.2'
+gem 'jwt', '~> 3.3'
 
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.2'
@@ -33,11 +33,11 @@ gem 'pundit', '~> 2.5'
 gem 'pg_search', '~> 2.3'
 
 # Image transformation
-gem 'image_processing', '~> 2.0'
+gem 'image_processing', '~> 2.2'
 gem 'ruby-vips', '~> 2.3'
 
 # Validations for ActiveStorage.
-gem 'active_storage_validations', '~> 4.0.0'
+gem 'active_storage_validations', '~> 4.1.1'
 
 # Generate URL slugs for models, e.g. '/users/spiderman'.
 gem 'friendly_id', '~> 5.7.0'
@@ -59,16 +59,19 @@ gem 'sentry-ruby', '~> 6.4.0'
 gem 'sentry-rails', '~> 6.4.0'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 2.6.7'
+gem 'graphql', '~> 2.6.11'
 
 # Doorkeeper for OAuth API tokens
-gem "doorkeeper", "~> 5.9.3"
+gem "doorkeeper", "~> 5.9.9"
 
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 3.0"
 
+# Rack::Attack for rate limiting sign-in, sign-up, and password reset requests.
+gem "rack-attack", "~> 6.7"
+
 # For parallel execution of long-running tasks.
-gem 'parallel', '~> 2.1', require: false
+gem 'parallel', '~> 2.3', require: false
 
 # For tracking changes to records.
 gem 'paper_trail', '~> 17.0'
@@ -82,14 +85,14 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
 
   # Rubocop for linting
-  gem 'rubocop', '~> 1.89', require: false
+  gem 'rubocop', '~> 1.90', require: false
 
   # rubocop extensions
-  gem 'rubocop-performance', '~> 1.26.1', require: false
+  gem 'rubocop-performance', '~> 1.27.0', require: false
   gem 'rubocop-rspec', '~> 3.10.2', require: false
   gem 'rubocop-rspec_rails', '~> 2.32', require: false
   gem 'rubocop-factory_bot', '~> 2.28', require: false
-  gem 'rubocop-rails', '~> 2.36', require: false
+  gem 'rubocop-rails', '~> 2.37', require: false
 
   # Database cleaner for cleaning the database after tests/before seeding.
   gem 'database_cleaner', '~> 2.1'
@@ -101,7 +104,7 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.5'
 
   # Code coverage
-  gem 'simplecov', '~> 1.0', require: false
+  gem 'simplecov', '~> 1.3', require: false
 
   # Shoulda-matchers for writing better tests on models.
   gem 'shoulda-matchers', '8.0.1'
@@ -113,7 +116,7 @@ group :development, :test do
   gem 'fuubar', '~> 2.5.1'
 
   # Run the test suite across multiple processes to speed it up.
-  gem 'parallel_tests', '~> 5.3'
+  gem 'parallel_tests', '~> 5.8'
 
   # Pundit matchers for simplifying policy testing.
   gem 'pundit-matchers', '~> 4.0.0'

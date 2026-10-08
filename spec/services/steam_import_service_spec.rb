@@ -87,4 +87,15 @@ RSpec.describe SteamImportService, type: :service do
       end
     end
   end
+
+  describe "when the Steam API times out" do
+    let(:user) { create(:user, :external_account) }
+
+    it 'raises a SteamImportService::Error' do
+      stub_request(:get, /api\.steampowered\.com/).to_timeout
+
+      expect { SteamImportService.new(user: user).call }
+        .to raise_error(SteamImportService::Error, 'Steam API Request timed out.')
+    end
+  end
 end

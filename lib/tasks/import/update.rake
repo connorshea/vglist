@@ -6,8 +6,11 @@ namespace :import do
   require 'wikidata_helper'
   require 'ruby-progressbar'
 
+  # Deliberately not `=> :environment`: this task only orchestrates, so it stays
+  # a tiny process rather than booting Rails and holding it for the whole run.
+  # The subtasks it spawns each depend on :environment themselves.
   desc "Runs an import to update all data from Wikidata."
-  task update: :environment do
+  task :update do # rubocop:disable Rails/RakeEnvironment
     puts 'Running an import to update all existing games in the database...'
 
     import_tasks = [
@@ -26,9 +29,26 @@ namespace :import do
       "import:update:platforms"
     ]
 
+    # Run each subtask in its own process instead of Rake::Task#invoke. Every
+    # subtask loads a large Wikidata result set and builds big in-memory maps;
+    # in-process, MRI never returns that freed heap to the OS, so the whole run
+    # would sit at the peak footprint of the hungriest task. A fresh process per
+    # task reclaims everything on exit, keeping the run near a single task's
+    # footprint. with_original_env strips this process's Bundler setup so the
+    # child's `bundle exec` resolves the project Gemfile cleanly; chdir anchors
+    # it to the project root and RAILS_ENV is carried across explicitly.
+    rails_root = File.expand_path('../../..', __dir__)
+    child_env = { 'RAILS_ENV' => ENV['RAILS_ENV'] }.compact
+
     import_tasks.each do |task|
       puts "Running 'rake #{task}'."
-      Rake::Task[task].invoke
+
+      run_child = lambda do
+        system(child_env, 'bundle', 'exec', 'rake', task, chdir: rails_root)
+      end
+      succeeded = defined?(Bundler) ? Bundler.with_original_env(&run_child) : run_child.call
+      abort("Aborting import:update: 'rake #{task}' failed.") unless succeeded
+
       puts
       puts '-------------------------'
       puts
@@ -46,22 +66,39 @@ namespace :import do
       # this is membership-tested once per Wikidata row below.
       games_with_no_series = Game.where(series_id: nil).where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
-      rows = get_rows(games_with_series_query).map(&:to_h)
+      # The query returns every video game on Wikidata with a series (~140k
+      # rows), so iterate the RDF solutions directly and use delete_prefix
+      # rather than allocating a hash and gsubbing per row.
+      rows = get_rows(games_with_series_query)
 
-      games_to_update = []
+      # Series Wikidata ID to set, keyed by the game's Wikidata ID so the games
+      # can be batch-loaded below. The query isn't grouped by ?item, so a game
+      # with more than one series yields more than one row; the last wins, as
+      # the previous row-by-row version also did.
+      series_by_game_wikidata_id = {}
       rows.each do |row|
-        game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+        game_wikidata_id = row[:item].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
         next unless games_with_no_series.include?(game_wikidata_id)
 
-        series_id = row[:series].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
-        games_to_update << {
-          game: Game.find_by(wikidata_id: game_wikidata_id),
-          series_id: series_id
-        }
+        series_by_game_wikidata_id[game_wikidata_id] =
+          row[:series].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
       end
 
+      # The ~140k rows and the games_with_no_series set have been reduced into
+      # series_by_game_wikidata_id and aren't read again; drop them so they can
+      # be garbage-collected before the loop below rather than held alongside it.
+      # rubocop:disable Lint/UselessAssignment
+      rows = nil
+      games_with_no_series = nil
+      # rubocop:enable Lint/UselessAssignment
+
+      # Preload the games and a Wikidata ID -> Series ID map once, instead of a
+      # Game.find_by per row and a Series.find_by per game.
+      games_by_wikidata_id = Game.where(wikidata_id: series_by_game_wikidata_id.keys).index_by(&:wikidata_id)
+      series_id_by_wikidata_id = Series.where.not(wikidata_id: nil).pluck(:wikidata_id, :id).to_h
+
       progress_bar = ProgressBar.create(
-        total: games_to_update.count,
+        total: series_by_game_wikidata_id.count,
         format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
       )
 
@@ -71,19 +108,21 @@ namespace :import do
       Rails.logger.level = 2 if Rails.env.production?
 
       updated_games_count = 0
-      games_to_update.each do |hash|
+      series_by_game_wikidata_id.each do |game_wikidata_id, series_wikidata_id|
         progress_bar.increment
 
         progress_bar.log 'Adding series.' if ENV['DEBUG']
 
-        series = Series.find_by(wikidata_id: hash[:series_id])
-        progress_bar.log series.inspect if ENV['DEBUG']
-        next if series.nil?
+        game = games_by_wikidata_id[game_wikidata_id]
+        next if game.nil?
 
-        progress_bar.log "Adding series ID to #{hash[:game].name}."
+        series_id = series_id_by_wikidata_id[series_wikidata_id]
+        next if series_id.nil?
+
+        progress_bar.log "Adding series ID to #{game.name}."
 
         # Update the game to include the missing series ID.
-        Game.find(hash[:game].id).update!(series_id: series.id)
+        game.update!(series_id: series_id)
 
         updated_games_count += 1
       end
@@ -191,15 +230,20 @@ namespace :import do
   # @return [void]
   def add_props_to_games(property_name, klass_name = nil)
     klass_name = property_name if klass_name.nil?
+    plural = property_name.pluralize
 
-    puts "Adding game #{property_name.pluralize} from Wikidata to games."
+    puts "Adding game #{plural} from Wikidata to games."
 
     # Get all games that have Wikidata IDs. A set, because this is
     # membership-tested once per Wikidata row below.
     games = Game.where.not(wikidata_id: nil).pluck(:wikidata_id).to_set
 
     # This has to use send because methods in Rake tasks are private by default.
-    rows = get_rows(send("games_with_#{property_name.pluralize}_query")).map(&:to_h)
+    # Iterate the RDF solutions directly (they support `[:item]`) rather than
+    # mapping them all to hashes first — the query returns every video game on
+    # Wikidata with this property (~140k rows), so that intermediate array is
+    # pure allocation we filter away below.
+    rows = get_rows(send("games_with_#{plural}_query"))
 
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
@@ -208,62 +252,98 @@ namespace :import do
     # to prevent spamming the logs when running the command.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games_to_update = []
+    # Collect the prop Wikidata IDs each game should gain, keyed by the game's
+    # Wikidata ID so we can batch-load the games below. The query groups by
+    # ?item, so there's one row per game and no risk of clobbering.
+    props_by_game_wikidata_id = {}
     rows.each do |row|
-      game_wikidata_id = row[:item].to_s.gsub('http://www.wikidata.org/entity/Q', '').to_i
+      game_wikidata_id = row[:item].to_s.delete_prefix('http://www.wikidata.org/entity/Q').to_i
       next unless games.include?(game_wikidata_id)
 
-      prop_ids = row[property_name.pluralize.to_sym].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
-      games_to_update << {
-        game: Game.find_by(wikidata_id: game_wikidata_id),
-        props: prop_ids
-      }
+      props_by_game_wikidata_id[game_wikidata_id] =
+        row[plural.to_sym].to_s.split(', ').map { |prop| prop.delete('Q').to_i }
     end
 
+    prop_class = Object.const_get(klass_name.titleize)
+    join_class = Object.const_get("Game#{property_name.titleize}")
+    join_foreign_key = "#{klass_name}_id".to_sym
+
+    # The rows have been reduced into props_by_game_wikidata_id above and are
+    # never read again; drop the reference so the ~140k heavyweight RDF solutions
+    # can be garbage-collected before we build the maps below, instead of being
+    # held in memory alongside them.
+    rows = nil # rubocop:disable Lint/UselessAssignment
+
+    # Preload every lookup the loop below used to do one row at a time, but
+    # without instantiating a single Game or Genre/Company record — on a full
+    # update that eager-loaded AR object graph is where the memory went. We only
+    # need each game's id (to build the join rows) and name (to log), plus the
+    # Wikidata IDs of the props it already has:
+    #   * a Wikidata ID -> { id, name } map for the candidate games,
+    #   * the Wikidata IDs of the props each game already has, pulled straight
+    #     from the join without instantiating the associations (games with none
+    #     simply don't appear), and
+    #   * a Wikidata ID -> { id, name } map for the property records (Genre,
+    #     Company, ...), replacing a `find_by` per prop per game.
+    game_wikidata_ids = props_by_game_wikidata_id.keys
+    game_info_by_wikidata_id = Game.where(wikidata_id: game_wikidata_ids)
+                                   .pluck(:wikidata_id, :id, :name)
+                                   .to_h { |wikidata_id, id, name| [wikidata_id, { id: id, name: name }] }
+
+    existing_prop_wikidata_ids_by_game = {}
+    Game.where(wikidata_id: game_wikidata_ids)
+        .joins(plural.to_sym)
+        .pluck('games.wikidata_id', "#{prop_class.table_name}.wikidata_id")
+        .each do |game_wikidata_id, prop_wikidata_id|
+          (existing_prop_wikidata_ids_by_game[game_wikidata_id] ||= []) << prop_wikidata_id
+        end
+
+    prop_by_wikidata_id = prop_class.where.not(wikidata_id: nil)
+                                    .pluck(:wikidata_id, :id, :name)
+                                    .to_h { |wikidata_id, id, name| [wikidata_id, { id: id, name: name }] }
+
     progress_bar = ProgressBar.create(
-      total: games_to_update.count,
+      total: props_by_game_wikidata_id.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
     updated_games_count = 0
-    games_to_update.each do |hash|
+    props_by_game_wikidata_id.each do |game_wikidata_id, prop_wikidata_ids|
       progress_bar.increment
 
-      progress_bar.log "Adding #{property_name.pluralize}." if ENV['DEBUG']
+      progress_bar.log "Adding #{plural}." if ENV['DEBUG']
 
-      # Get the Wikidata IDs for the game's property.
-      wikidata_ids = hash[:game].public_send(property_name.pluralize).pluck(:wikidata_id)
+      game = game_info_by_wikidata_id[game_wikidata_id]
+      next if game.nil?
+
+      # Pulled from the join above, so this fires no query.
+      existing_wikidata_ids = existing_prop_wikidata_ids_by_game[game_wikidata_id] || []
 
       # Filter props down to just the ones not already represented by
       # an associated game join model, e.g. GamePlatform.
-      props_to_add = hash[:props].difference(wikidata_ids)
+      props_to_add = prop_wikidata_ids.difference(existing_wikidata_ids)
 
       game_was_updated = false
 
       props_to_add.each do |prop_wikidata_id|
-        prop = Object.const_get(klass_name.titleize).find_by(wikidata_id: prop_wikidata_id)
+        prop = prop_by_wikidata_id[prop_wikidata_id]
         progress_bar.log prop.inspect if ENV['DEBUG']
         # Go to the next iteration if there's no record for the
         # given Wikidata ID.
         next if prop.nil?
 
-        progress_bar.log "Adding #{prop.name} to #{hash[:game].name}."
+        progress_bar.log "Adding #{prop[:name]} to #{game[:name]}."
 
         # Create a record for a game join model, e.g. GamePlatform.
         # It needs game_id and then an id for the property, e.g. platform_id
-        game_join_args = { game_id: hash[:game].id }
-        game_join_args["#{klass_name}_id".to_sym] = prop.id
-
-        Object.const_get("Game#{property_name.titleize}").create(
-          game_join_args
-        )
+        join_class.create(game_id: game[:id], join_foreign_key => prop[:id])
         game_was_updated = true
       end
 
       updated_games_count += 1 if game_was_updated
     end
 
-    puts "Added #{property_name.pluralize} to #{updated_games_count} games."
+    puts "Added #{plural} to #{updated_games_count} games."
   end
 
   # Get rows from a SPARQL query.

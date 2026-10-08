@@ -242,6 +242,7 @@ import type {
   UserSearchResultFieldsFragment
 } from "@/types/graphql";
 import { Search, X, Gamepad2, Briefcase, Monitor, Users, ArrowRight } from "@lucide/vue";
+import { extractGqlError } from "@/utils/graphql-errors";
 
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();

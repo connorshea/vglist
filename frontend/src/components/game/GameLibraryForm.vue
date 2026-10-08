@@ -152,6 +152,7 @@ import { gqlClient } from "@/graphql/client";
 import { GET_GAME_PURCHASE } from "@/graphql/queries/games";
 import { ADD_GAME_TO_LIBRARY, UPDATE_GAME_IN_LIBRARY } from "@/graphql/mutations/games";
 import type { GetGamePurchaseQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
+import { REVIEW_DRAFT_KEY_PREFIX } from "@/stores/auth";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const props = defineProps<{
@@ -197,7 +198,7 @@ const saving = ref(false);
 let suppressDraftSync = false;
 
 function reviewDraftKey(): string {
-  return `vglist-review-draft-${props.gameId}`;
+  return `${REVIEW_DRAFT_KEY_PREFIX}${props.gameId}`;
 }
 
 function loadReviewDraft(): void {

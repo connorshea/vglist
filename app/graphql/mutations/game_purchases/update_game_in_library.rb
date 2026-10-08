@@ -38,7 +38,7 @@ class Mutations::GamePurchases::UpdateGameInLibrary < Mutations::BaseMutation
 
   # Only allow the user to update their own game purchases.
   def authorized?(object)
-    game_purchase = GamePurchase.find(object[:game_purchase_id])
+    game_purchase = GamePurchase.find_by(id: object[:game_purchase_id])
 
     raise GraphQL::ExecutionError, "You aren't allowed to update this game purchase." unless GamePurchasePolicy.new(@context[:current_user], game_purchase).update?
 

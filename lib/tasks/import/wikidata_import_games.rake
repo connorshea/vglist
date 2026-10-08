@@ -9,6 +9,23 @@ ADULT_GAME_BLOCKLIST_TERMS = ['hentai', 'futanari', 'porn', 'eroge'].freeze
 # (see WikidataSparql.client), so this isn't bounded by a GET URL-length limit.
 GAME_HYDRATION_CHUNK_SIZE = 500
 
+# Number of games per SPARQL round-trip for the release-dates import. Larger
+# than GAME_HYDRATION_CHUNK_SIZE because that pass fetches one heavyweight query
+# per chunk (labels, external IDs, and every multi-valued property), whereas
+# release_dates_query returns just an item + date per row — a small result set —
+# so we can pack more games per round-trip to cut the number of requests and the
+# per-request pacing sleep (see WikidataSparql::INTER_QUERY_DELAY_SECONDS).
+RELEASE_DATE_CHUNK_SIZE = 2500
+
+# Number of games written per transaction in the release-dates import. Kept much
+# smaller than RELEASE_DATE_CHUNK_SIZE (which is sized for the network) because
+# it optimizes a different axis: batching commits amortizes Postgres' per-commit
+# fsync, but each update! is its own statement round-trip, so wrapping a whole
+# 2500-game chunk in one transaction would hold thousands of row locks open for
+# the duration of all those round-trips and roll the entire chunk back on any
+# mid-batch DB error. A few hundred rows already captures the fsync savings.
+RELEASE_DATE_WRITE_BATCH_SIZE = 500
+
 # The multi-valued Wikidata properties we import per game, mapped to their
 # property IDs. Fetched together in a single UNION query (see
 # property_values_query) rather than one round-trip each.
@@ -38,11 +55,13 @@ namespace 'import:wikidata' do
     blocklisted_wikidata_ids = WikidataBlocklist.pluck(:wikidata_id).to_set
     blocklisted_steam_app_ids = SteamBlocklist.pluck(:steam_app_id).to_set
 
-    # Maps of Wikidata IDs to vglist IDs for platforms, engines, and genres, to
-    # avoid tons of extra queries later.
+    # Maps of Wikidata IDs to vglist IDs for companies, platforms, engines,
+    # genres, and series, to avoid tons of extra queries later.
+    vglist_companies = Company.where.not(wikidata_id: nil).pluck(:wikidata_id, :id).to_h
     vglist_engines = Engine.all.pluck(:wikidata_id, :id).to_h
     vglist_platforms = Platform.all.pluck(:wikidata_id, :id).to_h
     vglist_genres = Genre.all.pluck(:wikidata_id, :id).to_h
+    vglist_series = Series.all.pluck(:wikidata_id, :id).to_h
 
     # Numeric Wikidata IDs of games that aren't already in the database and
     # aren't blocklisted. These are the only games we hydrate and create.
@@ -52,6 +71,18 @@ namespace 'import:wikidata' do
 
       wikidata_id
     end.uniq
+
+    # driver_rows (~1M heavyweight RDF solutions) and the two filter-only sets
+    # have been reduced into new_wikidata_ids and are never read again. Drop the
+    # references so they can be garbage-collected before the hydration loop
+    # below, rather than staying resident alongside its per-chunk fetches and
+    # the vglist_* maps for the whole import. (blocklisted_steam_app_ids is kept
+    # — the loop still checks it.)
+    # rubocop:disable Lint/UselessAssignment
+    driver_rows = nil
+    existing_wikidata_ids = nil
+    blocklisted_wikidata_ids = nil
+    # rubocop:enable Lint/UselessAssignment
 
     puts "Found #{new_wikidata_ids.length} new games to import."
 
@@ -133,25 +164,20 @@ namespace 'import:wikidata' do
             end
           end
 
-          company_wikidata_ids = (game_props[:developers] + game_props[:publishers]).uniq
-          unless company_wikidata_ids.empty?
-            companies = Company.where(wikidata_id: company_wikidata_ids).pluck(:wikidata_id, :id).to_h
+          progress_bar.log 'Adding developers.' if ENV['DEBUG']
+          game_props[:developers].each do |developer_wikidata_id|
+            company_id = vglist_companies[developer_wikidata_id]
+            next if company_id.nil?
 
-            progress_bar.log 'Adding developers.' if ENV['DEBUG']
-            game_props[:developers].each do |developer_wikidata_id|
-              company_id = companies[developer_wikidata_id]
-              next if company_id.nil?
+            GameDeveloper.create!(game_id: game.id, company_id: company_id)
+          end
 
-              GameDeveloper.create!(game_id: game.id, company_id: company_id)
-            end
+          progress_bar.log 'Adding publishers.' if ENV['DEBUG']
+          game_props[:publishers].each do |publisher_wikidata_id|
+            company_id = vglist_companies[publisher_wikidata_id]
+            next if company_id.nil?
 
-            progress_bar.log 'Adding publishers.' if ENV['DEBUG']
-            game_props[:publishers].each do |publisher_wikidata_id|
-              company_id = companies[publisher_wikidata_id]
-              next if company_id.nil?
-
-              GamePublisher.create!(game_id: game.id, company_id: company_id)
-            end
+            GamePublisher.create!(game_id: game.id, company_id: company_id)
           end
 
           progress_bar.log 'Adding platforms.' if ENV['DEBUG']
@@ -175,11 +201,11 @@ namespace 'import:wikidata' do
           next if game_props[:series].empty?
 
           progress_bar.log 'Adding series.' if ENV['DEBUG']
-          series = Series.find_by(wikidata_id: game_props[:series].first)
-          progress_bar.log series.inspect if ENV['DEBUG']
-          next if series.nil?
+          series_id = vglist_series[game_props[:series].first]
+          progress_bar.log series_id.inspect if ENV['DEBUG']
+          next if series_id.nil?
 
-          game.update!(series_id: series.id)
+          game.update!(series_id: series_id)
         end
       end
     end
@@ -210,33 +236,67 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
-    wikidata_ids.each_slice(GAME_HYDRATION_CHUNK_SIZE) do |chunk|
+    release_dates_added_count = 0
+    no_release_date_count = 0
+    invalid_count = 0
+
+    wikidata_ids.each_slice(RELEASE_DATE_CHUNK_SIZE) do |chunk|
       release_dates = fetch_release_dates(chunk)
       games = Game.where(wikidata_id: chunk).index_by(&:wikidata_id)
 
-      chunk.each do |wikidata_id|
-        progress_bar.increment
-
+      # Pair each game with its fetched date, dropping (and logging) games with
+      # no day-precision release date so the transactions below wrap only real
+      # writes. Filtering first also packs each write batch with actual updates
+      # instead of padding it with skipped games, so every transaction commits a
+      # full batch rather than a mostly-empty one.
+      updates = chunk.filter_map do |wikidata_id|
         game = games[wikidata_id]
-        next if game.nil?
-
-        release_date = release_dates[wikidata_id]
-        if release_date.nil?
-          progress_bar.log "No release dates found for #{game.name}."
+        if game.nil?
+          progress_bar.increment
           next
         end
 
-        begin
-          game.update!(release_date: release_date)
-          progress_bar.log "Added release date for #{game.name}."
-        rescue ActiveRecord::RecordInvalid => e
-          progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
+        release_date = release_dates[wikidata_id]
+        if release_date.nil?
+          progress_bar.increment
+          progress_bar.log "No release dates found for #{game.name}."
+          no_release_date_count += 1
           next
+        end
+
+        [game, release_date]
+      end
+
+      # Write in sub-batches, each in one transaction, so Postgres commits (and
+      # fsyncs) once per batch instead of once per game while keeping the
+      # transaction — and the row locks it holds — bounded regardless of the
+      # (network-sized) chunk. update! still runs validations and records a
+      # PaperTrail version per game; we're only collapsing separate commits into
+      # one. A RecordInvalid is raised by validation before any SQL is issued,
+      # so rescuing it and continuing leaves the surrounding transaction usable.
+      updates.each_slice(RELEASE_DATE_WRITE_BATCH_SIZE) do |write_batch|
+        Game.transaction do
+          write_batch.each do |game, release_date|
+            progress_bar.increment
+
+            begin
+              game.update!(release_date: release_date)
+              release_dates_added_count += 1
+              progress_bar.log "Added release date for #{game.name}."
+            rescue ActiveRecord::RecordInvalid => e
+              invalid_count += 1
+              progress_bar.log "Invalid: #{game.name.ljust(30)} | #{e}"
+              next
+            end
+          end
         end
       end
     end
 
     progress_bar.finish unless progress_bar.finished?
+
+    puts "Done. Added release dates to #{release_dates_added_count} games."
+    puts "#{no_release_date_count} games had no day-precision release date, #{invalid_count} failed validation."
   end
 
   # The SPARQL query for getting all video games with English or mul labels on Wikidata.

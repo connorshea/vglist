@@ -14,9 +14,9 @@ class Mutations::Auth::SignInMutation < GraphQL::Schema::Mutation
   field :errors, [String], null: false, description: "Error messages if sign in failed."
 
   def resolve(email:, password:)
-    user = User.find_by(email: email)
+    user = User.authenticate_with_password(email, password)
 
-    return { token: nil, user_id: nil, username: nil, slug: nil, role: nil, errors: ["Invalid email or password."] } unless user&.valid_password?(password)
+    return { token: nil, user_id: nil, username: nil, slug: nil, role: nil, errors: ["Invalid email or password."] } if user.nil?
 
     return { token: nil, user_id: nil, username: nil, slug: nil, role: nil, errors: ["Your account has been banned."] } if user.banned?
 

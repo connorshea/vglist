@@ -10,6 +10,12 @@ RSpec.describe "Users::Passwords", type: :request do
       expect(response).to have_http_status(:redirect)
       expect(response).to redirect_to("http://localhost:5173/password/reset/confirm?reset_password_token=abc123")
     end
+
+    it "URL-encodes the token so it can't add query parameters" do
+      get edit_user_password_path(reset_password_token: "abc&next=/evil")
+
+      expect(response).to redirect_to("http://localhost:5173/password/reset/confirm?reset_password_token=abc%26next%3D%2Fevil")
+    end
   end
 
   describe "POST /users/password (request password reset email)" do

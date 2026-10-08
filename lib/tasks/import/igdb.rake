@@ -7,75 +7,22 @@ namespace :import do
 
   desc "Import IGDB IDs from Wikidata"
   task igdb: :environment do
-    puts "Importing IGDB IDs from Wikidata..."
-    rows = []
-    rows.concat(WikidataSparql.query(igdb_query))
-
-    games = rows.map do |row|
-      {
-        wikidata_id: row.to_h[:item].to_s.gsub('http://www.wikidata.org/entity/Q', ''),
-        igdb_id: row.to_h[:igdbId].to_s
-      }
+    import_external_id(query: igdb_query, column: :igdb_id, label: 'IGDB ID') do |row|
+      row[:igdbId].to_s
     end
-
-    # Reject any nil values that are returned.
-    games.compact!
-    games.uniq! { |e| e[:wikidata_id] }
-
-    puts "Found #{games.count} games on Wikidata with an IGDB ID."
-
-    igdb_added_count = 0
-
-    progress_bar = ProgressBar.create(
-      total: games.count,
-      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-    )
-
-    # Set whodunnit to 'system' for any audited changes made by this Rake task.
-    PaperTrail.request.whodunnit = 'system'
-
-    # Limit logging in production to allow the progress bar to work.
-    Rails.logger.level = 2 if Rails.env.production?
-
-    games.each_with_index do |game, _index|
-      game_record = Game.where(wikidata_id: game[:wikidata_id], igdb_id: nil).first
-
-      unless game_record
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Adding IGDB ID '#{game[:igdb_id]}' to #{game_record.name}." if ENV['DEBUG']
-
-      begin
-        Game.find(game_record.id).update!(igdb_id: game[:igdb_id])
-      rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Added IGDB ID '#{game[:igdb_id]}' to #{game_record.name}."
-
-      igdb_added_count += 1
-      progress_bar.increment
-    end
-
-    progress_bar.finish unless progress_bar.finished?
-
-    games_with_igdb_ids = Game.where.not(igdb_id: nil)
-    puts
-    puts "Done. #{games_with_igdb_ids.count} games now have IGDB IDs."
-    puts "#{igdb_added_count} IGDB IDs added."
   end
 
   desc "Attach covers to games, only applies to games that have an IGDB ID and don't already have a cover."
   task 'igdb:covers': :environment do
     puts "This task will attach covers to any games which have IGDB IDs and no cover."
 
+    # Load the set once; it's enumerated in both the metadata-fetch and the
+    # cover-download passes below, so a relation would re-run the query each
+    # time (and .count would fire its own).
     games = Game.includes(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
                 .where.not(igdb_id: [nil, ""])
+                .to_a
 
     puts "Found #{games.count} games with an IGDB ID and no cover."
 
@@ -93,6 +40,16 @@ namespace :import do
 
     puts "Getting game information from IGDB..."
 
+    # Authenticate with Twitch once up front rather than per batch: the app
+    # access token is valid for weeks, so re-requesting it for every group of
+    # 50 games was one wasted OAuth round-trip per batch.
+    access_token = twitch_auth['access_token']
+
+    fetch_progress_bar = ProgressBar.create(
+      total: games.count,
+      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
+    )
+
     games.in_groups_of(50, false) do |game_batch|
       slugs = game_batch.pluck(:igdb_id)
 
@@ -107,7 +64,7 @@ namespace :import do
 
       igdb_response = igdb_request(
         body: igdb_body,
-        access_token: twitch_auth['access_token'],
+        access_token: access_token,
         endpoint: 'games'
       )
 
@@ -130,28 +87,38 @@ namespace :import do
         igdb_games_by_slug[slug] = igdb_game unless igdb_games_by_slug.key?(slug)
       end
 
+      # Advance by the number of games in this batch (the last group may be
+      # smaller than 50).
+      fetch_progress_bar.progress += game_batch.size
+
       # Sleep to prevent the rate limiter from killing us.
       sleep 1
     end
+
+    fetch_progress_bar.finish unless fetch_progress_bar.finished?
+
+    # The fetch pass has told us which games IGDB actually returned a cover for;
+    # drop the rest before the download pass. There's nothing to do for a game
+    # with no IGDB cover, so keeping it only skews the progress bar's ETA and
+    # holds its record in memory. Reassigning games to the filtered subset lets
+    # the unmatched records be collected and removes the per-iteration nil check.
+    games_found_count = games.count
+    games = games.select { |game| igdb_games_by_slug.key?(game[:igdb_id]) }
+    # Seed with the games IGDB had no cover for, so the final tally still counts
+    # them; download errors add to it below.
+    cover_not_found_or_errored_count = games_found_count - games.count
+    cover_added_count = 0
+
+    puts "#{games.count} of #{games_found_count} games have a cover on IGDB; downloading those."
 
     progress_bar = ProgressBar.create(
       total: games.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    cover_not_found_or_errored_count = 0
-    cover_added_count = 0
-
     games.each do |game|
-      # Find the IGDB cover URL from the IGDB results for this game record.
+      # Every remaining game has an IGDB cover (filtered above).
       igdb_game = igdb_games_by_slug[game[:igdb_id]]
-
-      if igdb_game.nil?
-        progress_bar.log "#{game[:name].ljust(40)} | No cover found for the game's IGDB ID."
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
-      end
 
       # The cover URL comes out of the IGDB API response, so it's fetched
       # through RemoteImageFetcher, which refuses non-public addresses. This

@@ -7,64 +7,9 @@ namespace :import do
 
   desc "Import PCGamingWiki IDs from Wikidata"
   task pcgamingwiki: :environment do
-    puts "Importing PCGamingWiki IDs from Wikidata..."
-    rows = []
-    rows.concat(WikidataSparql.query(pcgamingwiki_query))
-
-    games = rows.map do |row|
-      {
-        wikidata_id: row.to_h[:item].to_s.gsub('http://www.wikidata.org/entity/Q', ''),
-        pcgamingwiki_id: row.to_h[:pcgamingwikiId]
-      }
+    import_external_id(query: pcgamingwiki_query, column: :pcgamingwiki_id, label: 'PCGamingWiki ID') do |row|
+      row[:pcgamingwikiId].to_s
     end
-
-    games.uniq! { |e| e[:wikidata_id] }
-
-    puts "Found #{games.count} games on Wikidata with a PCGamingWiki ID."
-
-    pcgamingwiki_added_count = 0
-
-    progress_bar = ProgressBar.create(
-      total: games.count,
-      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-    )
-
-    # Set whodunnit to 'system' for any audited changes made by this Rake task.
-    PaperTrail.request.whodunnit = 'system'
-
-    # Limit logging in production to allow the progress bar to work.
-    Rails.logger.level = 2 if Rails.env.production?
-
-    games.each_with_index do |game, _index|
-      game_record = Game.where(wikidata_id: game[:wikidata_id], pcgamingwiki_id: nil).first
-
-      unless game_record
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Adding PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}." if ENV['DEBUG']
-
-      begin
-        Game.find(game_record.id).update!(pcgamingwiki_id: game[:pcgamingwiki_id])
-      rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Invalid: #{game_record.name.ljust(30)} | #{e}"
-        progress_bar.increment
-        next
-      end
-
-      progress_bar.log "Added PCGamingWiki ID '#{game[:pcgamingwiki_id]}' to #{game_record.name}."
-
-      pcgamingwiki_added_count += 1
-      progress_bar.increment
-    end
-
-    progress_bar.finish unless progress_bar.finished?
-
-    games_with_pcgamingwiki_ids = Game.where.not(pcgamingwiki_id: nil)
-    puts
-    puts "Done. #{games_with_pcgamingwiki_ids.count} games now have PCGamingWiki IDs."
-    puts "#{pcgamingwiki_added_count} PCGamingWiki IDs added."
   end
 
   desc "Attach covers to games, only applies to games that have a PCGamingWiki ID and don't already have a cover."
@@ -94,35 +39,67 @@ namespace :import do
     games.each do |game|
       progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
 
-      # Cargo doesn't use underscores in page names, so they have to be replaced
-      # by a URL-encoded space character.
-      url_encoded_pcgw_id = game[:pcgamingwiki_id].gsub('"', '%22').gsub('_', '%20')
-      api_url = "https://www.pcgamingwiki.com/w/api.php?action=cargoquery&format=json&tables=Infobox_game&fields=Infobox_game.Cover_URL&where=Infobox_game._pageName%3D\"#{url_encoded_pcgw_id}\""
+      # The ID is interpolated into Cargo's SQL-like `where` clause as a
+      # double-quoted string, so a double quote would let it escape the string
+      # and rewrite the query. Real PCGamingWiki page names almost never
+      # contain one, so skip those rather than trying to escape them.
+      if game[:pcgamingwiki_id].include?('"')
+        progress_bar.log "#{game[:name].ljust(40)} | PCGamingWiki ID contains a double quote, skipping."
+        cover_not_found_or_errored_count += 1
+        progress_bar.increment
+        next
+      end
 
-      unless api_url.ascii_only?
-        progress_bar.log "#{game[:name].ljust(40)} | URL cannot contain non-ASCII characters: #{api_url}."
+      # Cargo doesn't use underscores in page names, so they have to be replaced
+      # by spaces. Everything is URL-encoded so characters like `&`, `=` and `%`
+      # in the ID can't add or override query parameters.
+      page_name = game[:pcgamingwiki_id].tr('_', ' ')
+      api_url = URI('https://www.pcgamingwiki.com/w/api.php')
+      api_url.query = URI.encode_www_form(
+        action: 'cargoquery',
+        format: 'json',
+        tables: 'Infobox_game',
+        fields: 'Infobox_game.Cover_URL',
+        where: %(Infobox_game._pageName="#{page_name}")
+      )
+
+      req = Net::HTTP::Get.new(api_url)
+      req['Cache-Control'] = 'no-cache'
+      # Identify ourselves. PCGamingWiki sits behind Cloudflare, which serves an
+      # HTML challenge/error page (not JSON) to requests without a User-Agent or
+      # sent too quickly.
+      req['User-Agent'] = WikidataSparql::USER_AGENT
+
+      res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
+        http.request(req)
+      end
+
+      # Pace requests so we stay under PCGamingWiki's rate limit rather than
+      # hammering it back-to-back (which is what gets us served the Cloudflare
+      # page handled below). Placed right after the request so every path from
+      # here on is paced, whether the game gets a cover or is skipped.
+      sleep(1)
+
+      # PCGamingWiki sometimes answers with an HTML error or Cloudflare page
+      # instead of JSON (typically when it's rate-limiting us). Parsing that as
+      # JSON used to abort the whole task; skip this game and carry on instead.
+      # A re-run picks up anything skipped here, since it only selects games that
+      # still have no cover.
+      unless res.is_a?(Net::HTTPSuccess) && res.content_type&.include?('json')
+        progress_bar.log "#{game[:name].ljust(40)} | Unexpected response (HTTP #{res.code}), skipping."
         cover_not_found_or_errored_count += 1
         progress_bar.increment
         next
       end
 
       begin
-        api_url = URI.parse(api_url)
-      rescue URI::InvalidURIError => e
-        progress_bar.log "#{game[:name].ljust(40)} | Invalid URL: #{e}."
+        json = JSON.parse(res.body)
+      rescue JSON::ParserError => e
+        progress_bar.log "#{game[:name].ljust(40)} | Could not parse response as JSON: #{e.message}, skipping."
         cover_not_found_or_errored_count += 1
         progress_bar.increment
         next
       end
-
-      req = Net::HTTP::Get.new(api_url)
-      req['Cache-Control'] = 'no-cache'
-
-      res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
-        http.request(req)
-      end
-
-      json = JSON.parse(res.body)
 
       json = json.dig('cargoquery', 0)
       if json.nil?

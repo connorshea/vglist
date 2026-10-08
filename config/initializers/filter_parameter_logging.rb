@@ -14,5 +14,13 @@ Rails.application.config.filter_parameters += [
   :variation_key,
   :api_token,
   :encrypted_api_token,
-  :secret
+  :secret,
+  # Devise confirmation/reset tokens and Doorkeeper OAuth tokens and
+  # authorization codes can arrive as query params (e.g.
+  # `GET /users/confirmation?confirmation_token=...`), and the logs are
+  # forwarded to Sentry.
+  :confirmation_token,
+  :token,
+  :code,
+  :access_token
 ]
