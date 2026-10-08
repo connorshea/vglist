@@ -19,9 +19,9 @@
             type="text"
             placeholder="Search games, companies, users…"
             @input="onSearch"
-            @keydown.enter="goToFirstResult"
+            @keydown.enter="onEnter"
           />
-          <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
+          <div class="search-hint"><kbd class="kbd">↵</kbd> to search · <kbd class="kbd">Esc</kbd> to close</div>
           <button class="search-close" aria-label="Close search" @click="close">
             <X :size="16" :stroke-width="2" />
           </button>
@@ -215,6 +215,13 @@
           </div>
         </div>
       </div>
+
+      <!-- Always reachable by tap or Tab, since Enter isn't on every keyboard. -->
+      <div v-if="hasMinQuery" class="search-footer">
+        <button class="see-all-results" type="button" @click="goToSearchPage">
+          See all results for "{{ trimmedQuery }}" <ArrowRight :size="14" :stroke-width="2" aria-hidden="true" />
+        </button>
+      </div>
     </div>
   </Teleport>
 </template>
@@ -226,13 +233,15 @@ import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
+import { extractGqlError } from "@/utils/graphql-errors";
+import { recordPath, searchableTypeKey } from "@/utils/search";
 import type {
   GlobalSearchQuery,
   SearchResultFieldsFragment,
   GameSearchResultFieldsFragment,
   UserSearchResultFieldsFragment
 } from "@/types/graphql";
-import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "@lucide/vue";
+import { Search, X, Gamepad2, Briefcase, Monitor, Users, ArrowRight } from "@lucide/vue";
 
 const router = useRouter();
 const { isOpen, close } = useSearchOverlay();
@@ -275,6 +284,9 @@ onBeforeUnmount(() => {
 
 const query = ref("");
 const results = ref<SearchResultFieldsFragment[]>([]);
+// The query `results` belong to. Lags behind `query` while the debounced
+// search is pending, which is how Enter knows the results are stale.
+const resultsQuery = ref("");
 const loading = ref(false);
 const hasSearched = ref(false);
 const error = ref<string | null>(null);
@@ -317,15 +329,22 @@ watch(isOpen, async (open) => {
     document.removeEventListener("keydown", onDocumentKeydown);
     query.value = "";
     results.value = [];
+    resultsQuery.value = "";
     hasSearched.value = false;
     loading.value = false;
     error.value = null;
   }
 });
 
+// Leading/trailing spaces don't change a search, so the request, the
+// minimum-length check, the staleness check and navigation all use this.
+const trimmedQuery = computed(() => query.value.trim());
+const hasMinQuery = computed(() => trimmedQuery.value.length >= 2);
+
 const performSearch = debounce(async () => {
-  if (query.value.length < 2) {
+  if (!hasMinQuery.value) {
     results.value = [];
+    resultsQuery.value = "";
     hasSearched.value = false;
     error.value = null;
     return;
@@ -334,13 +353,14 @@ const performSearch = debounce(async () => {
   loading.value = true;
   error.value = null;
   try {
-    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: query.value });
+    const searched = trimmedQuery.value;
+    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: searched });
 
     results.value = data.globalSearch.nodes;
+    resultsQuery.value = searched;
     hasSearched.value = true;
   } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : "Unknown error";
-    error.value = message;
+    error.value = extractGqlError(e);
     results.value = [];
     hasSearched.value = true;
   } finally {
@@ -352,35 +372,35 @@ function onSearch() {
   performSearch();
 }
 
-function goToFirstResult() {
-  if (results.value.length > 0) {
+// Enter goes straight to the only match, but several same-named results
+// (e.g. one "Ratatouille" per platform) need the results page to tell apart.
+// Stale or still-loading results also go there rather than to a guess.
+function onEnter(event: KeyboardEvent) {
+  // Enter also confirms an input method's composition (e.g. Japanese kana to
+  // kanji); that's not a request to search yet.
+  if (event.isComposing || event.keyCode === 229) return;
+  if (!hasMinQuery.value) return;
+
+  const settled = !loading.value && resultsQuery.value === trimmedQuery.value;
+  if (settled && results.value.length === 1) {
     goToResult(results.value[0]);
+  } else {
+    goToSearchPage();
   }
 }
 
-const typeRouteMap: Record<string, string> = {
-  GAME: "games",
-  USER: "users",
-  PLATFORM: "platforms",
-  COMPANY: "companies",
-  ENGINE: "engines",
-  GENRE: "genres",
-  SERIES: "series",
-  STORE: "stores"
-};
+function goToSearchPage() {
+  router.push({ name: "search", query: { query: trimmedQuery.value } });
+  close();
+}
 
 function resultHref(result: SearchResultFieldsFragment): string {
-  const path = typeRouteMap[result.searchableType];
-  if (!path) return "#";
   const id = result.searchableType === "USER" ? (result as UserSearchResultFieldsFragment).slug : result.searchableId;
-  return `/${path}/${id}`;
+  return recordPath(searchableTypeKey(result.searchableType), id);
 }
 
 function goToResult(result: SearchResultFieldsFragment) {
-  const href = resultHref(result);
-  if (href !== "#") {
-    router.push(href);
-  }
+  router.push(resultHref(result));
   close();
 }
 
@@ -581,6 +601,38 @@ function releaseYear(date: string): string {
 }
 
 /* ── Results area ── */
+.search-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 780px;
+  padding: 12px 24px 20px;
+}
+
+.see-all-results {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--s-300);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.see-all-results:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.see-all-results:focus-visible {
+  outline: 2px solid var(--p-400);
+  outline-offset: 2px;
+}
+
 .search-results {
   flex: 1;
   overflow-y: auto;

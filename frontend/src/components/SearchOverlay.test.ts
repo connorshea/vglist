@@ -438,4 +438,144 @@ describe("SearchOverlay", () => {
       expect(mockClose).toHaveBeenCalled();
     });
   });
+
+  // ── Results page entry points ──
+
+  describe("results page", () => {
+    const game = (id: string, content: string) => ({
+      searchableId: id,
+      searchableType: "GAME",
+      content,
+      coverUrl: null,
+      developerName: null,
+      releaseDate: null
+    });
+
+    it("goes straight to the result when Enter is pressed with exactly one result", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], "portal");
+
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).toHaveBeenCalledWith("/games/7");
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    it("opens the results page when Enter is pressed with several results", async () => {
+      const wrapper = await mountWithSearchResults([game("1", "Ratatouille"), game("2", "Ratatouille")], "ratatouille");
+
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "ratatouille" } });
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    it("opens the results page when Enter is pressed with no results", async () => {
+      const wrapper = await mountWithSearchResults([], "zzzz");
+
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "zzzz" } });
+    });
+
+    it("opens the results page when Enter is pressed before the results catch up", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], "portal");
+
+      // Typed more, but the debounced search hasn't run yet.
+      const input = wrapper.find(".search-input");
+      await input.setValue("portal 2");
+      await input.trigger("input");
+      await input.trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "portal 2" } });
+      expect(pushMock).not.toHaveBeenCalledWith("/games/7");
+    });
+
+    it("does nothing on Enter when the query is too short", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+      await input.setValue("a");
+      await input.trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).not.toHaveBeenCalled();
+      expect(wrapper.find(".see-all-results").exists()).toBeFalsy();
+    });
+
+    it("offers a See all results button that opens the results page", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], "portal");
+
+      const button = wrapper.find(".see-all-results");
+      expect(button.text()).toContain('See all results for "portal"');
+
+      await button.trigger("click");
+
+      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "portal" } });
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    // Enter opens the single result when there's exactly one, so the hint
+    // can't promise "all results".
+    it("describes Enter in a way that's true either way", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+
+      expect(wrapper.find(".search-hint").text()).toContain("↵ to search");
+    });
+
+    it("ignores Enter while an input method is composing", async () => {
+      const wrapper = await mountWithSearchResults([game("1", "ファイナル"), game("2", "ファイナル2")], "ファイ");
+
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter", isComposing: true });
+
+      expect(pushMock).not.toHaveBeenCalled();
+    });
+
+    it("searches, gates, and navigates with the same trimmed query", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], " portal  ");
+
+      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "portal" });
+
+      // Results for "portal" are current for " portal  ", so Enter opens the one result.
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+      expect(pushMock).toHaveBeenCalledWith("/games/7");
+    });
+
+    it("doesn't search for a query that's only long enough with spaces", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+      await input.setValue("a ");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(mockRequest).not.toHaveBeenCalled();
+    });
+
+    it("shows the API's error message rather than the raw response", async () => {
+      mockRequest.mockRejectedValueOnce(
+        Object.assign(new Error('{"response":{"errors":[{"message":"query is too long"}]}}'), {
+          response: { errors: [{ message: "query is too long" }] }
+        })
+      );
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+      await input.setValue("portal");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(300);
+      await flushPromises();
+
+      expect(wrapper.find(".search-error-text").text()).toBe("Search failed: query is too long");
+    });
+  });
 });
