@@ -137,7 +137,7 @@ end
 
 group :test do
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
-  gem 'webmock', '~> 3.26'
+  gem 'webmock', '~> 3.29'
   # Retry failed tests to reduce flakiness.
   gem 'rspec-rebound', '~> 0.2.1'
 end
