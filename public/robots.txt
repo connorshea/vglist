@@ -3,7 +3,7 @@ User-agent: GPTBot
 Disallow: /
 
 User-agent: ClaudeBot
-Disallow: /
+Crawl-delay: 20
 
 # SEO Bots
 User-agent: MJ12bot
