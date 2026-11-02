@@ -21,7 +21,7 @@ gem 'devise', '~> 5.0'
 gem 'jwt', '~> 3.3'
 
 # Use kaminari for pagination.
-gem 'kaminari', '~> 1.2'
+gem 'kaminari', '~> 1.3'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
