@@ -36,9 +36,9 @@ describe("PasswordResetPage", () => {
   it("renders the form with an email field", () => {
     const wrapper = mount(PasswordResetPage, mountOptions);
 
-    expect(wrapper.find("h1").text()).toBe("Reset Password");
+    expect(wrapper.find("h1").text()).toBe("Reset password");
     expect(wrapper.find("input[type='email']").exists()).toBeTruthy();
-    expect(wrapper.find("button[type='submit']").text()).toBe("Send Reset Instructions");
+    expect(wrapper.find("button[type='submit']").text()).toBe("Send reset instructions");
   });
 
   it("calls requestPasswordReset with the email on submit", async () => {
