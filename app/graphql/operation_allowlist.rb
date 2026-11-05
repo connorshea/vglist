@@ -18,6 +18,11 @@ module OperationAllowlist
     GraphQL::Language::Nodes::FragmentDefinition
   ].freeze
 
+  # Longer documents are rejected without being parsed, so a huge request body
+  # costs nothing to turn away. The SPA's largest operation is ~1 KB, and
+  # spec/requests/graphql/operation_allowlist_spec.rb checks they all fit.
+  MAX_QUERY_BYTES = 16 * 1024
+
   module_function
 
   # Whether the API should enforce the allowlist. On in production, off
@@ -29,6 +34,8 @@ module OperationAllowlist
   # @param query_string [String] The GraphQL document from the request.
   # @return [Boolean]
   def allowed?(query_string)
+    return false if query_string.to_s.bytesize > MAX_QUERY_BYTES
+
     key = canonical(query_string)
     !key.nil? && canonical_documents.include?(key)
   end

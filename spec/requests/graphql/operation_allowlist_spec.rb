@@ -26,6 +26,12 @@ RSpec.describe "GraphQL operation allowlist", type: :request do
 
       expect(invalid).to be_empty
     end
+
+    it 'only contains operations under the size limit' do
+      too_large = OperationAllowlist.operations.select { |_name, document| document.bytesize > OperationAllowlist::MAX_QUERY_BYTES }
+
+      expect(too_large.keys).to be_empty
+    end
   end
 
   describe '.canonical' do
@@ -92,6 +98,17 @@ RSpec.describe "GraphQL operation allowlist", type: :request do
       graphql('schema { query: Query }')
 
       expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'rejects an oversized document without parsing it' do
+      allow(GraphQL).to receive(:parse).and_call_original
+      # The allowlisted document plus a long comment, which wouldn't change it.
+      padded = "#{stats_query}\n# #{'x' * OperationAllowlist::MAX_QUERY_BYTES}"
+
+      graphql(padded)
+
+      expect(response).to have_http_status(:bad_request)
+      expect(GraphQL).not_to have_received(:parse)
     end
 
     it 'rejects ad-hoc operations from signed-in members' do
