@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# These seeds truncate every table and load sample data, so never run them in
+# production (e.g. via `db:prepare` against an empty production database).
+raise 'db/seeds.rb is for development only and refuses to run in production.' if Rails.env.production?
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 require 'database_cleaner'

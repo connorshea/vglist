@@ -1,0 +1,12 @@
+# Build context for frontend/Dockerfile. The context is the repo root (Vite
+# needs ../public), so allow-list only what the frontend build uses.
+*
+!frontend/
+!public/
+
+frontend/node_modules
+frontend/dist
+frontend/.env.local
+frontend/.env.*.local
+frontend/Dockerfile
+frontend/Dockerfile.dockerignore
