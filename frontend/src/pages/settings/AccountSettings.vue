@@ -1,105 +1,103 @@
 <template>
   <div>
-    <h2 class="title is-4">Account Settings</h2>
-
-    <!-- Change email -->
-    <form class="mb-5" @submit.prevent="handleUpdateEmail">
-      <h3 class="title is-5">Change Email</h3>
-      <div class="field">
-        <label class="label" for="current-email">Current email</label>
-        <div class="control">
-          <input id="current-email" class="input" type="email" :value="authStore.user?.email" disabled />
-        </div>
+    <form class="set-card" aria-labelledby="email-heading" @submit.prevent="handleUpdateEmail">
+      <h2 id="email-heading" class="set-card-title">Email</h2>
+      <p class="set-card-desc">We'll send a confirmation link to your new address before it changes.</p>
+      <div class="set-field">
+        <label for="current-email">Current email</label>
+        <input id="current-email" class="set-input" type="email" :value="authStore.user?.email" disabled />
       </div>
-      <div class="field">
-        <label class="label" for="new-email">New email</label>
-        <div class="control">
-          <input id="new-email" v-model="newEmail" class="input" type="email" required />
-        </div>
+      <div class="set-field">
+        <label for="new-email">New email</label>
+        <input id="new-email" v-model="newEmail" class="set-input" type="email" autocomplete="email" required />
       </div>
-      <div class="field">
-        <label class="label" for="email-password">Current password</label>
-        <div class="control">
-          <input id="email-password" v-model="emailPassword" class="input" type="password" required />
-        </div>
+      <div class="set-field">
+        <label for="email-password">Current password</label>
+        <input
+          id="email-password"
+          v-model="emailPassword"
+          class="set-input"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
       </div>
-      <button
-        class="button is-primary"
-        type="submit"
-        :class="{ 'is-loading': updatingEmail }"
-        :disabled="updatingEmail"
-      >
-        Update email
-      </button>
+      <div class="set-actions">
+        <button class="set-btn is-primary" type="submit" :disabled="updatingEmail">
+          {{ updatingEmail ? "Updating…" : "Update email" }}
+        </button>
+      </div>
     </form>
 
-    <hr />
-
-    <!-- Change password -->
-    <form class="mb-5" @submit.prevent="handleUpdatePassword">
-      <h3 class="title is-5">Change Password</h3>
-      <div class="field">
-        <label class="label" for="pw-current">Current password</label>
-        <div class="control">
-          <input id="pw-current" v-model="currentPassword" class="input" type="password" required />
-        </div>
+    <form class="set-card" aria-labelledby="password-heading" @submit.prevent="handleUpdatePassword">
+      <h2 id="password-heading" class="set-card-title">Password</h2>
+      <p class="set-card-desc">Use at least 8 characters.</p>
+      <div class="set-field">
+        <label for="pw-current">Current password</label>
+        <input
+          id="pw-current"
+          v-model="currentPassword"
+          class="set-input"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
       </div>
-      <div class="field">
-        <label class="label" for="pw-new">New password</label>
-        <div class="control">
-          <input id="pw-new" v-model="newPassword" class="input" type="password" required minlength="8" />
-        </div>
-        <p class="help">Minimum 8 characters.</p>
+      <div class="set-field">
+        <label for="pw-new">New password</label>
+        <input
+          id="pw-new"
+          v-model="newPassword"
+          class="set-input"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+        />
       </div>
-      <div class="field">
-        <label class="label" for="pw-confirm">Confirm new password</label>
-        <div class="control">
-          <input
-            id="pw-confirm"
-            v-model="newPasswordConfirmation"
-            class="input"
-            type="password"
-            required
-            minlength="8"
-          />
-        </div>
+      <div class="set-field">
+        <label for="pw-confirm">Confirm new password</label>
+        <input
+          id="pw-confirm"
+          v-model="newPasswordConfirmation"
+          class="set-input"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+        />
       </div>
-      <button
-        class="button is-primary"
-        type="submit"
-        :class="{ 'is-loading': updatingPassword }"
-        :disabled="updatingPassword"
-      >
-        Update password
-      </button>
+      <div class="set-actions">
+        <button class="set-btn is-primary" type="submit" :disabled="updatingPassword">
+          {{ updatingPassword ? "Updating…" : "Update password" }}
+        </button>
+      </div>
     </form>
 
-    <hr />
+    <section class="set-card" aria-labelledby="danger-heading">
+      <h2 id="danger-heading" class="set-card-title is-danger">Danger zone</h2>
+      <p class="set-card-desc">These can't be undone.</p>
 
-    <!-- Danger zone -->
-    <h3 class="title is-5 has-text-danger">Danger Zone</h3>
-
-    <div class="danger-zone">
-      <div class="danger-item">
-        <div>
-          <strong>Reset game library</strong>
-          <p class="has-text-grey is-size-7">Remove all games from your library. This cannot be undone.</p>
-        </div>
-        <button class="button is-warning is-outlined" :disabled="resettingLibrary" @click="showResetConfirm = true">
+      <div class="set-row">
+        <span>
+          <span class="set-row-title">Reset game library</span>
+          <span class="set-row-desc">Remove every game from your library, including ratings, statuses and notes.</span>
+        </span>
+        <button type="button" class="set-btn is-danger" :disabled="resettingLibrary" @click="showResetConfirm = true">
           Reset library
         </button>
       </div>
 
-      <div class="danger-item">
-        <div>
-          <strong>Delete account</strong>
-          <p class="has-text-grey is-size-7">Permanently delete your account and all associated data.</p>
-        </div>
-        <button class="button is-danger is-outlined" :disabled="deletingAccount" @click="showDeleteConfirm = true">
+      <div class="set-row">
+        <span>
+          <span class="set-row-title">Delete account</span>
+          <span class="set-row-desc">Permanently delete your account and all associated data.</span>
+        </span>
+        <button type="button" class="set-btn is-danger" :disabled="deletingAccount" @click="showDeleteConfirm = true">
           Delete account
         </button>
       </div>
-    </div>
+    </section>
 
     <!-- Reset library confirmation -->
     <ConfirmDialog
@@ -258,21 +256,8 @@ async function handleDeleteAccount() {
 </script>
 
 <style scoped>
-.danger-zone {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg, 8px);
-  overflow: hidden;
-}
-
-.danger-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-}
-
-.danger-item + .danger-item {
-  border-top: 1px solid var(--color-border);
+.set-row-desc {
+  display: block;
+  max-width: 420px;
 }
 </style>
