@@ -104,6 +104,15 @@ export type SearchableEnum =
   /** Self-explanatory. */
   | "USER";
 
+/** Options for sorting the list of series. */
+export type SeriesSort =
+  /** Sorted by the number of games in the series, most first. */
+  | "MOST_GAMES"
+  /** Sorted alphabetically by name, ignoring case. */
+  | "NAME"
+  /** Sorted with the series most recently added to vglist first. */
+  | "RECENTLY_ADDED";
+
 /** External services that an Unmatched Game can come from, currently only Steam. */
 export type UnmatchedGameExternalService =
   /** Imported from the Steam store. */
@@ -1361,6 +1370,28 @@ export type GetSeriesListQueryVariables = Exact<{
 export interface GetSeriesListQuery {
   seriesList: {
     nodes: Array<{ id: string; name: string }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
+export type GetSeriesIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: SeriesSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetSeriesIndexQuery {
+  seriesList: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      firstReleaseYear: number | null;
+      lastReleaseYear: number | null;
+      games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
 }

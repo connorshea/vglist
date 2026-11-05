@@ -8,7 +8,14 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
 
   def total_count
     items = object.items
-    return items.count unless items.is_a?(ActiveRecord::Relation) && items.group_values.any?
+    return items.count unless items.is_a?(ActiveRecord::Relation)
+
+    unless items.group_values.any?
+      # A relation that selects extra computed columns (e.g.
+      # `Series.with_game_stats`) can't be counted by its select list, which
+      # .count would try to do, so count rows instead.
+      return items.select_values.many? ? items.count(:all) : items.count
+    end
 
     # Grouped relations (e.g. the most_games and most_owners scopes) return a
     # Hash with one entry per group from `.count`, which would load every

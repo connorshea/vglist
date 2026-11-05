@@ -16,7 +16,9 @@ RSpec.describe "GraphQL complexity and depth limits", type: :request do
       'GetCompanies' => 500,
       'GetGenres' => 500,
       'GetEngines' => 500,
-      'GetSeriesList' => 500
+      'GetSeriesList' => 500,
+      # SeriesListPage.vue loads 24 series at a time, each with 4 covers.
+      'GetSeriesIndex' => 24
     )
   end
 
