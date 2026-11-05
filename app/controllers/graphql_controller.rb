@@ -42,7 +42,7 @@ class GraphqlController < ApplicationController
     doorkeeper_scopes = doorkeeper_token&.scopes&.to_a
     # Third-party OAuth tokens must carry the 'read' scope to query the API.
     # Token-authenticated requests don't have scopes, so they're exempt.
-    if !token_auth && doorkeeper_scopes && !doorkeeper_scopes.include?('read')
+    if !token_auth && doorkeeper_scopes&.exclude?('read')
       render_graphql_error("Your token must have the 'read' scope to perform a query.")
       return
     end
