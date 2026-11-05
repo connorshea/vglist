@@ -32,6 +32,8 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: postgres://postgres:password@127.0.0.1:5432/vglist_docker
+      # Required in production (CORS origin); any value works for a smoke test.
+      FRONTEND_URL: http://localhost:8080
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -47,7 +49,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/credentials"
           docker run --rm --user 0 \
             -v "$RUNNER_TEMP/credentials:/rails/config/credentials" \
-            -e EDITOR=true \
+            -e EDITOR=true -e FRONTEND_URL \
             vglist-api bin/rails credentials:edit --environment production
           sudo chmod -R a+r "$RUNNER_TEMP/credentials"
           echo "RAILS_MASTER_KEY=$(cat "$RUNNER_TEMP/credentials/production.key")" >> "$GITHUB_ENV"
@@ -56,14 +58,14 @@ jobs:
         run: |
           docker run --rm --network host \
             -v "$RUNNER_TEMP/credentials:/rails/config/credentials:ro" \
-            -e RAILS_MASTER_KEY -e DATABASE_URL \
+            -e RAILS_MASTER_KEY -e DATABASE_URL -e FRONTEND_URL \
             vglist-api bundle exec rails db:prepare
 
       - name: Boot Puma and check /health
         run: |
           docker run -d --name api --network host \
             -v "$RUNNER_TEMP/credentials:/rails/config/credentials:ro" \
-            -e RAILS_MASTER_KEY -e DATABASE_URL -e PORT=3000 \
+            -e RAILS_MASTER_KEY -e DATABASE_URL -e FRONTEND_URL -e PORT=3000 \
             vglist-api
           for _ in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:3000/health; then
