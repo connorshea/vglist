@@ -66,12 +66,14 @@ class GraphqlController < ApplicationController
     yield
   ensure
     # Connections are pooled and reused by other requests and jobs, so put the
-    # server default back. If the statement was cancelled inside a transaction
-    # this fails, but then Postgres rolls the SET back along with it.
+    # server default back. The SET ran outside any transaction, so nothing rolls
+    # it back for us. If the RESET fails, drop the connection instead: the next
+    # checkout reconnects with a fresh session and the default timeout.
     begin
       connection&.execute('RESET statement_timeout')
-    rescue ActiveRecord::StatementInvalid => e
-      Rails.logger.warn("Could not reset statement_timeout: #{e.message}")
+    rescue ActiveRecord::ActiveRecordError => e
+      Rails.logger.warn("Could not reset statement_timeout, disconnecting: #{e.message}")
+      connection.disconnect!
     end
   end
 
