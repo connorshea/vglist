@@ -860,6 +860,10 @@ export interface GetCompaniesQuery {
 
 export type GetCompanyQueryVariables = Exact<{
   id: string;
+  sortBy?: ResourceGameSort | null | undefined;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  developed: boolean;
 }>;
 
 export interface GetCompanyQuery {
@@ -867,8 +871,28 @@ export interface GetCompanyQuery {
     id: string;
     name: string;
     wikidataId: number | null;
-    developedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
-    publishedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    developedCount: { totalCount: number };
+    publishedCount: { totalCount: number };
+    developedGames?: {
+      nodes: Array<{
+        id: string;
+        name: string;
+        coverUrl: string | null;
+        releaseDate: string | null;
+        isInLibrary: boolean | null;
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
+    publishedGames?: {
+      nodes: Array<{
+        id: string;
+        name: string;
+        coverUrl: string | null;
+        releaseDate: string | null;
+        isInLibrary: boolean | null;
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
   } | null;
 }
 

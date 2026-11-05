@@ -73,23 +73,35 @@ export const GET_COMPANIES = gql`
 `;
 
 export const GET_COMPANY = gql`
-  query GetCompany($id: ID!) {
+  ${RESOURCE_GAME_FIELDS}
+
+  query GetCompany($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String, $developed: Boolean!) {
     company(id: $id) {
       id
       name
       wikidataId
-      developedGames(first: 30) {
+      developedCount: developedGames {
+        totalCount
+      }
+      publishedCount: publishedGames {
+        totalCount
+      }
+      developedGames(sortBy: $sortBy, first: $first, after: $after) @include(if: $developed) {
         nodes {
-          id
-          name
-          coverUrl(size: SMALL)
+          ...ResourceGameFields
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
-      publishedGames(first: 30) {
+      publishedGames(sortBy: $sortBy, first: $first, after: $after) @skip(if: $developed) {
         nodes {
-          id
-          name
-          coverUrl(size: SMALL)
+          ...ResourceGameFields
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
