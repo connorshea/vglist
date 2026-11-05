@@ -55,7 +55,7 @@ RSpec.describe VariantBackfillService, type: :service do
     # One worker: the specs share a single database connection between
     # threads, so concurrent transactions would interleave on it.
     it 'creates the variants for every record and reports progress' do
-      progress = ProgressBar.create(total: games.size, output: File::NULL)
+      progress = ProgressBar.create(total: games.size, output: StringIO.new)
 
       described_class.backfill(Game.where(id: games), attachment_name: :cover, variant_names: sizes, progress: progress)
 
