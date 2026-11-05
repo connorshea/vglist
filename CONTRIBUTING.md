@@ -44,7 +44,6 @@ This is a list of libraries used for various functionality across the app. It's 
 - [PgSearch](https://github.com/Casecommons/pg_search): Powers search for games, companies, series', etc.
 - [Devise](https://github.com/heartcombo/devise): Authentication framework, for logging in and other user authentication things.
 - [Pundit](https://github.com/varvet/pundit): Authorization framework, used for making sure users are actually authorized to perform a given action in the application.
-- [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper): OAuth authentication handler, for creating tokens used by the API.
 - [RSpec](https://rspec.info/): Ruby testing framework used for unit tests, request specs, feature specs, model specs, etc.
 - [FactoryBot](https://github.com/thoughtbot/factory_bot): Factories for seeding the database and writing tests.
 - [GraphQL](https://graphql.org) via [graphql-ruby](https://graphql-ruby.org): GraphQL is a query language that is used for the vglist API.

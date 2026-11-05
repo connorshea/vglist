@@ -8,8 +8,8 @@ class VideoGameListSchema < GraphQL::Schema
   # a depth of at least 13, but we don't really care for now.
   max_depth 10
 
-  # Default complexity limit for third-party API consumers.
-  # First-party queries bypass this via the controller (see GraphqlController#execute).
+  # Default complexity limit for anonymous requests. Signed-in users bypass
+  # this via the controller (see GraphqlController#execute).
   max_complexity 500
 
   # Prevent alias-batching the unauthenticated auth mutations into a single

@@ -55,7 +55,7 @@ RSpec.describe "GraphQL User Mutations", type: :request do
         GQL
       end
 
-      it "updates privacy with a first-party token", :aggregate_failures do
+      it "updates privacy", :aggregate_failures do
         post graphql_path, params: {
           query: privacy_query,
           variables: { privacy: "PRIVATE_ACCOUNT" }.to_json
