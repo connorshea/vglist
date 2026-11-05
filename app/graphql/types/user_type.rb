@@ -105,7 +105,7 @@ module Types
     # single page of game purchases, so that the numbers on a profile don't
     # change based on how many games the client has paged in.
     def library_statistics
-      return EMPTY_LIBRARY_STATISTICS unless user_visible?
+      return EMPTY_LIBRARY_STATISTICS.merge(game_purchases: GamePurchase.none) unless user_visible?
 
       purchases = @object.game_purchases
       counts_by_status = purchases.group(:completion_status).count
@@ -126,7 +126,8 @@ module Types
         completed_count: completed_count,
         completion_percentage: games_count.zero? ? 0 : (completed_count * 100.0 / games_count).round,
         average_rating: average_rating&.to_f&.round(1),
-        status_counts: status_counts.map { |status, count| { status: status, count: count } }
+        status_counts: status_counts.map { |status, count| { status: status, count: count } },
+        game_purchases: purchases
       }
     end
 

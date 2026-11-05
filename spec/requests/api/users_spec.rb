@@ -696,6 +696,59 @@ RSpec.describe "Users API", type: :request do
           averageRating: 100.0
         )
       end
+
+      context 'with platform and store counts' do
+        let(:counts_query_string) do
+          <<-GRAPHQL
+            query($id: ID!) {
+              user(id: $id) {
+                libraryStatistics {
+                  platformCounts {
+                    platform { id name }
+                    count
+                  }
+                  storeCounts {
+                    store { id name }
+                    count
+                  }
+                }
+              }
+            }
+          GRAPHQL
+        end
+
+        it "counts the games on each platform and from each store, most-owned first" do
+          windows = create(:platform, name: 'Windows')
+          switch = create(:platform, name: 'Nintendo Switch')
+          steam = create(:store, name: 'Steam')
+          create(:game_purchase, user: user, platforms: [windows, switch], stores: [steam])
+          create(:game_purchase, user: user, platforms: [windows], stores: [steam])
+          create(:game_purchase, user: user, platforms: [windows])
+          # Someone else's library doesn't count.
+          create(:game_purchase, platforms: [switch], stores: [steam])
+
+          result = api_request(counts_query_string, variables: { id: user.id }, token: access_token)
+          statistics = result.graphql_dig(:user, :library_statistics)
+
+          expect(statistics[:platformCounts]).to eq(
+            [
+              { platform: { id: windows.id.to_s, name: 'Windows' }, count: 3 },
+              { platform: { id: switch.id.to_s, name: 'Nintendo Switch' }, count: 1 }
+            ]
+          )
+          expect(statistics[:storeCounts]).to eq(
+            [{ store: { id: steam.id.to_s, name: 'Steam' }, count: 2 }]
+          )
+        end
+
+        it "returns no counts for a private user's library" do
+          create(:game_purchase, user: private_user, platforms: [create(:platform)], stores: [create(:store)])
+
+          result = api_request(counts_query_string, variables: { id: private_user.id }, token: access_token)
+
+          expect(result.graphql_dig(:user, :library_statistics)).to eq({ platformCounts: [], storeCounts: [] })
+        end
+      end
     end
 
     context 'with currentUser' do
