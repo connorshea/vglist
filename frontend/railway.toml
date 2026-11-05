@@ -1,7 +1,0 @@
-[build]
-builder = "railpack"
-watchPatterns = ["frontend/**", "mise.toml"]
-
-[deploy]
-healthcheckPath = "/"
-healthcheckTimeout = 60

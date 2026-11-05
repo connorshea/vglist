@@ -45,7 +45,7 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Enable being added to the Strict-Transport-Security preload list.
-  # Exclude the healthcheck path from SSL redirect so Railway's internal
+  # Exclude the healthcheck path from SSL redirect so the platform's internal
   # healthcheck (which hits the container directly over HTTP) gets a 200.
   config.ssl_options = {
     hsts: { preload: true },
