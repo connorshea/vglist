@@ -4,6 +4,8 @@ module Types::Enums
   class ResourceSortType < Types::BaseEnum
     description "Options for sorting resources that games belong to, like genres and platforms."
 
-    value 'MOST_GAMES', value: 'most_games', description: 'Sorted by the number of games in the given resource, most first.'
+    value 'MOST_GAMES', value: :most_games, description: 'Sorted by the number of games in the given resource, most first.'
+    value 'NAME', value: :alphabetical, description: 'Sorted alphabetically by name, ignoring case.'
+    value 'RECENTLY_ADDED', value: :recently_added, description: 'Sorted with the resources most recently added to vglist first.'
   end
 end

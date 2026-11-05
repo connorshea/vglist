@@ -26,7 +26,7 @@ module Types
     # page of series doesn't count each one's games separately. Elsewhere they
     # are computed for the one record.
     def games_count
-      preloaded(:games_count) { @object.games.count }
+      preloaded(:index_games_count) { @object.games.count }
     end
 
     def first_release_year

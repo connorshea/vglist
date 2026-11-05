@@ -3,17 +3,12 @@
 class Genre < ApplicationRecord
   include GlobalSearchable
   include Searchable
+  include GameCountScopes
 
   has_many :game_genres, dependent: :destroy
   has_many :games, through: :game_genres, source: :game
 
-  # Sort by the number of games, most first. Ties are broken by ID so the order
-  # is stable for cursor pagination.
-  scope :most_games, -> {
-    left_joins(:game_genres)
-      .group(:id)
-      .order(Arel.sql('count(game_genres.game_id) desc'), :id)
-  }
+  game_count_scopes '(SELECT COUNT(*) FROM game_genres WHERE game_genres.genre_id = genres.id)'
 
   has_paper_trail ignore: [:updated_at, :created_at],
                   versions: {

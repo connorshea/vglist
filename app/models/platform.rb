@@ -3,6 +3,7 @@
 class Platform < ApplicationRecord
   include GlobalSearchable
   include Searchable
+  include GameCountScopes
 
   has_many :game_platforms, dependent: :destroy
   has_many :games, through: :game_platforms, source: :game
@@ -10,13 +11,7 @@ class Platform < ApplicationRecord
   has_many :game_purchase_platforms, dependent: :destroy
   has_many :game_purchases, through: :game_purchase_platforms, source: :game_purchase
 
-  # Sort by the number of games, most first. Ties are broken by ID so the order
-  # is stable for cursor pagination.
-  scope :most_games, -> {
-    left_joins(:game_platforms)
-      .group(:id)
-      .order(Arel.sql('count(game_platforms.game_id) desc'), :id)
-  }
+  game_count_scopes '(SELECT COUNT(*) FROM game_platforms WHERE game_platforms.platform_id = platforms.id)'
 
   has_paper_trail ignore: [:updated_at, :created_at],
                   versions: {
