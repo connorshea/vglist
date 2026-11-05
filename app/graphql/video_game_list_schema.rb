@@ -20,6 +20,9 @@ class VideoGameListSchema < GraphQL::Schema
   # request (credential brute force / email bombing).
   query_analyzer Analyzers::AuthMutationLimitAnalyzer
 
+  # Negative `first:`/`last:` would lower a query's complexity score.
+  query_analyzer Analyzers::NonNegativePaginationAnalyzer
+
   default_max_page_size 100
   default_page_size 30
 
