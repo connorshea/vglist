@@ -63,6 +63,10 @@ Rails.application.configure do
   # Keep the cache in-memory, up to 64 megabytes of cached content.
   config.cache_store = :memory_store, { size: 64.megabytes }
 
+  # Reject GraphQL operations the SPA doesn't send. Set
+  # GRAPHQL_OPERATION_ALLOWLIST=false to turn this off in an emergency.
+  config.x.graphql_operation_allowlist = ENV['GRAPHQL_OPERATION_ALLOWLIST'] != 'false'
+
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "vglist_production"

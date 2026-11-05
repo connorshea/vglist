@@ -17,6 +17,14 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
 
+    unless operation_allowed?(query, current_user)
+      render json: {
+        data: nil,
+        errors: [{ message: "This GraphQL operation is not allowed. The vglist API only accepts operations sent by the vglist web app." }]
+      }, status: :bad_request
+      return
+    end
+
     context = {
       current_user: current_user,
       pundit: self
@@ -47,6 +55,15 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  # Only operations the SPA sends are executed, see OperationAllowlist. Admins
+  # may send anything, which is useful for debugging in production.
+  def operation_allowed?(query, user)
+    return true unless OperationAllowlist.enabled?
+    return true if user&.admin?
+
+    OperationAllowlist.allowed?(query)
+  end
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)
