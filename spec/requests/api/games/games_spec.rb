@@ -330,6 +330,29 @@ RSpec.describe "Games API", type: :request do
         expect(node4[:gamePurchaseId]).to be_nil
       end
 
+      it "returns the current user's completion status for each game", :aggregate_failures do
+        game_purchase1.update!(completion_status: :in_progress)
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                libraryCompletionStatus
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        statuses = result.graphql_dig(:games, :nodes).to_h { |n| [n[:id], n[:libraryCompletionStatus]] }
+
+        expect(statuses[games[0].id.to_s]).to eq('IN_PROGRESS')
+        # In the library, but without a status.
+        expect(statuses[games[2].id.to_s]).to be_nil
+        # Not in the library.
+        expect(statuses[games[1].id.to_s]).to be_nil
+      end
+
       it "returns nil for per-user fields when not authenticated", :aggregate_failures do
         query_string = <<~GRAPHQL
           query {
