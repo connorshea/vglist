@@ -1,26 +1,26 @@
 <template>
-  <div class="series-tile" :class="{ 'can-edit': canEdit, 'menu-open': menuOpen }">
-    <router-link :to="{ name: 'series', params: { id } }" class="series-link" :aria-label="accessibleName">
-      <span class="series-mosaic" aria-hidden="true">
-        <span v-for="(slot, i) in slots" :key="i" class="series-slot" :class="{ 'is-empty': !slot }">
+  <div class="resource-tile" :class="{ 'can-edit': canEdit, 'menu-open': menuOpen }">
+    <router-link :to="to" class="tile-link" :aria-label="accessibleName">
+      <span class="tile-mosaic" aria-hidden="true">
+        <span v-for="(slot, i) in slots" :key="i" class="tile-slot" :class="{ 'is-empty': !slot }">
           <template v-if="slot">
             <img v-if="slot.coverUrl" :src="slot.coverUrl" alt="" loading="lazy" />
-            <span v-else class="series-slot-placeholder">{{ initials(slot.name) }}</span>
+            <span v-else class="tile-slot-placeholder">{{ initials(slot.name) }}</span>
           </template>
         </span>
       </span>
-      <span class="series-text" aria-hidden="true">
-        <b class="series-name">{{ name }}</b>
-        <span class="series-meta">{{ meta }}</span>
+      <span class="tile-text" aria-hidden="true">
+        <b class="tile-name">{{ name }}</b>
+        <span class="tile-meta">{{ meta }}</span>
       </span>
-      <ChevronRight v-if="!canEdit" class="series-chevron" :size="18" aria-hidden="true" />
+      <ChevronRight v-if="!canEdit" class="tile-chevron" :size="18" aria-hidden="true" />
     </router-link>
 
-    <div v-if="canEdit" ref="menuWrapRef" class="series-actions">
+    <div v-if="canEdit" ref="menuWrapRef" class="tile-actions">
       <button
         ref="menuButtonRef"
         type="button"
-        class="series-more"
+        class="tile-more"
         aria-haspopup="menu"
         :aria-expanded="menuOpen"
         :aria-controls="menuId"
@@ -30,12 +30,12 @@
       >
         <Ellipsis :size="18" aria-hidden="true" />
       </button>
-      <div v-if="menuOpen" :id="menuId" ref="menuRef" class="series-menu" role="menu" @keydown="onMenuKeydown">
-        <router-link :to="{ name: 'seriesEdit', params: { id } }" class="series-menu-item" role="menuitem">
+      <div v-if="menuOpen" :id="menuId" ref="menuRef" class="tile-menu" role="menu" @keydown="onMenuKeydown">
+        <router-link :to="editTo" class="tile-menu-item" role="menuitem">
           <Pencil :size="14" aria-hidden="true" />
-          Edit series
+          Edit {{ kind }}
         </router-link>
-        <button type="button" class="series-menu-item is-danger" role="menuitem" @click="requestDelete">
+        <button type="button" class="tile-menu-item is-danger" role="menuitem" @click="requestDelete">
           <Trash2 :size="14" aria-hidden="true" />
           Delete&hellip;
         </button>
@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { ChevronRight, Ellipsis, Pencil, Trash2 } from "@lucide/vue";
-import { seriesMeta } from "./format";
+import type { RouteLocationRaw } from "vue-router";
 
 interface CoverGame {
   id: string;
@@ -59,25 +59,30 @@ const props = withDefaults(
   defineProps<{
     id: string;
     name: string;
-    gamesCount: number;
-    firstReleaseYear?: number | null;
-    lastReleaseYear?: number | null;
-    games: CoverGame[];
+    /** "38 games · 1996–2025" */
+    meta: string;
+    /** Up to four games whose covers make up the mosaic. */
+    coverGames: CoverGame[];
+    to: RouteLocationRaw;
+    editTo: RouteLocationRaw;
+    /** "series", "genre" or "platform", for the menu. */
+    kind: string;
     canEdit?: boolean;
   }>(),
-  { firstReleaseYear: null, lastReleaseYear: null, canEdit: false }
+  { canEdit: false }
 );
 
 const emit = defineEmits<{ delete: [] }>();
 
 const SLOT_COUNT = 4;
 
-// Always four slots, so every tile's mosaic lines up; a series with fewer
-// games shows empty slots.
-const slots = computed(() => Array.from({ length: SLOT_COUNT }, (_, i): CoverGame | null => props.games[i] ?? null));
+// Always four slots, so every tile's mosaic lines up; a tile with fewer
+// covers shows empty slots.
+const slots = computed(() =>
+  Array.from({ length: SLOT_COUNT }, (_, i): CoverGame | null => props.coverGames[i] ?? null)
+);
 
-const meta = computed(() => seriesMeta(props.gamesCount, props.firstReleaseYear, props.lastReleaseYear));
-const accessibleName = computed(() => `${props.name}, ${meta.value}`);
+const accessibleName = computed(() => `${props.name}, ${props.meta}`);
 
 function initials(name: string): string {
   return name
@@ -89,7 +94,7 @@ function initials(name: string): string {
 }
 
 // ── Actions menu (moderators and admins only) ──
-const menuId = `series-menu-${props.id}`;
+const menuId = `${props.kind}-menu-${props.id}`;
 const menuOpen = ref(false);
 const menuWrapRef = ref<HTMLElement | null>(null);
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
@@ -163,7 +168,7 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
 </script>
 
 <style scoped>
-.series-tile {
+.resource-tile {
   position: relative;
   height: 100%;
   border: 1px solid var(--color-border);
@@ -173,15 +178,15 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
 }
 
 /* Keep an open menu above the tiles after this one. */
-.series-tile.menu-open {
+.resource-tile.menu-open {
   z-index: 5;
 }
 
-.series-tile:hover {
+.resource-tile:hover {
   border-color: var(--p-300);
 }
 
-.series-link {
+.tile-link {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -190,12 +195,12 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   overflow: hidden;
 }
 
-.series-link:focus-visible {
+.tile-link:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-.series-mosaic {
+.tile-mosaic {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 3px;
@@ -203,21 +208,21 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   background: var(--color-bg-subtle);
 }
 
-.series-slot {
+.tile-slot {
   display: block;
   min-width: 0;
   height: 100%;
   overflow: hidden;
 }
 
-.series-slot img {
+.tile-slot img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.series-slot-placeholder {
+.tile-slot-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,17 +236,17 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   user-select: none;
 }
 
-.series-text {
+.tile-text {
   display: block;
   min-width: 0;
   padding: 12px 14px 14px;
 }
 
-.can-edit .series-text {
+.can-edit .tile-text {
   padding-right: 52px;
 }
 
-.series-name {
+.tile-name {
   display: block;
   overflow: hidden;
   font-size: 15px;
@@ -251,7 +256,7 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   text-overflow: ellipsis;
 }
 
-.series-meta {
+.tile-meta {
   display: block;
   margin-top: 3px;
   font-size: 12.5px;
@@ -259,17 +264,17 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   font-variant-numeric: tabular-nums;
 }
 
-.series-chevron {
+.tile-chevron {
   display: none;
 }
 
-.series-actions {
+.tile-actions {
   position: absolute;
   right: 8px;
   bottom: 10px;
 }
 
-.series-more {
+.tile-more {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,18 +287,18 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   cursor: pointer;
 }
 
-.series-more:hover,
-.series-more[aria-expanded="true"] {
+.tile-more:hover,
+.tile-more[aria-expanded="true"] {
   background: var(--color-bg-subtle);
   color: var(--color-text-primary);
 }
 
-.series-more:focus-visible {
+.tile-more:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;
 }
 
-.series-menu {
+.tile-menu {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
@@ -306,7 +311,7 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   box-shadow: var(--shadow-dialog, 0 8px 24px rgba(0, 0, 0, 0.18));
 }
 
-.series-menu-item {
+.tile-menu-item {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -322,30 +327,30 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   cursor: pointer;
 }
 
-.series-menu-item:hover,
-.series-menu-item:focus-visible {
+.tile-menu-item:hover,
+.tile-menu-item:focus-visible {
   background: var(--color-bg-subtle);
   outline: none;
 }
 
-.series-menu-item.is-danger {
+.tile-menu-item.is-danger {
   color: var(--r-500);
 }
 
 /* Phone: list rows with a small stack of covers instead of tiles. */
 @media screen and (max-width: 768px) {
-  .series-tile {
+  .resource-tile {
     border: 0;
     border-bottom: 1px solid var(--color-border);
     border-radius: 0;
     background: transparent;
   }
 
-  .series-tile:hover {
+  .resource-tile:hover {
     border-color: var(--color-border);
   }
 
-  .series-link {
+  .tile-link {
     flex-direction: row;
     align-items: center;
     gap: 12px;
@@ -354,11 +359,11 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
     overflow: visible;
   }
 
-  .series-link:focus-visible {
+  .tile-link:focus-visible {
     outline-offset: -2px;
   }
 
-  .series-mosaic {
+  .tile-mosaic {
     position: relative;
     flex-shrink: 0;
     width: 66px;
@@ -366,7 +371,7 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
     background: none;
   }
 
-  .series-slot {
+  .tile-slot {
     position: absolute;
     top: 0;
     width: 42px;
@@ -375,12 +380,12 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
   }
 
-  .series-slot:nth-child(1) {
+  .tile-slot:nth-child(1) {
     left: 0;
     z-index: 3;
   }
 
-  .series-slot:nth-child(2) {
+  .tile-slot:nth-child(2) {
     top: 3px;
     left: 12px;
     z-index: 2;
@@ -388,7 +393,7 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
     opacity: 0.85;
   }
 
-  .series-slot:nth-child(3) {
+  .tile-slot:nth-child(3) {
     top: 6px;
     left: 24px;
     z-index: 1;
@@ -396,43 +401,43 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
     opacity: 0.7;
   }
 
-  .series-slot:nth-child(4),
-  .series-slot.is-empty:not(:first-child) {
+  .tile-slot:nth-child(4),
+  .tile-slot.is-empty:not(:first-child) {
     display: none;
   }
 
-  .series-slot.is-empty {
+  .tile-slot.is-empty {
     background: var(--color-bg-subtle);
     box-shadow: none;
   }
 
-  .series-slot-placeholder {
+  .tile-slot-placeholder {
     font-size: 12px;
   }
 
-  .series-text {
+  .tile-text {
     flex: 1;
     padding: 0;
   }
 
-  .can-edit .series-text {
+  .can-edit .tile-text {
     padding-right: 44px;
   }
 
-  .series-chevron {
+  .tile-chevron {
     display: block;
     flex-shrink: 0;
     color: var(--color-text-tertiary);
   }
 
-  .series-actions {
+  .tile-actions {
     top: 50%;
     right: 0;
     bottom: auto;
     transform: translateY(-50%);
   }
 
-  .series-more {
+  .tile-more {
     width: 44px;
     height: 44px;
   }

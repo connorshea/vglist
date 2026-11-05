@@ -237,12 +237,10 @@ export const GET_SERIES_INDEX = gql`
         gamesCount
         firstReleaseYear
         lastReleaseYear
-        games(first: 4, sortBy: MOST_OWNERS) {
-          nodes {
-            id
-            name
-            coverUrl
-          }
+        coverGames {
+          id
+          name
+          coverUrl
         }
       }
       pageInfo {

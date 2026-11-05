@@ -1390,7 +1390,7 @@ export interface GetSeriesIndexQuery {
       gamesCount: number;
       firstReleaseYear: number | null;
       lastReleaseYear: number | null;
-      games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
     }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
