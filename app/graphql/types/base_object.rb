@@ -5,6 +5,7 @@ module Types
     include Pundit::Authorization
 
     connection_type_class(Types::BaseConnectionObject)
+    field_class Types::BaseField
 
     # Allow unauthenticated users to read public data.
     # When a user IS authenticated, check that they are not banned.

@@ -30,11 +30,7 @@ class GraphqlController < ApplicationController
       pundit: self
     }
 
-    # Skip the complexity limit for signed-in users (the SPA may need higher
-    # complexity for pages like the activity feed).
-    complexity_limit = current_user.present? ? nil : 500
-
-    result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name, max_complexity: complexity_limit)
+    result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name)
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?

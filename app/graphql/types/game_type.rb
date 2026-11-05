@@ -22,11 +22,11 @@ module Types
 
     # Assocations
     field :series, SeriesType, null: true, description: "The series that the game belongs to."
-    field :developers, CompanyType.connection_type, null: false, description: "Developers of the game."
-    field :publishers, CompanyType.connection_type, null: false, description: "Publishers of the game."
-    field :engines, EngineType.connection_type, null: false, description: "Game engines that the game runs on."
-    field :genres, GenreType.connection_type, null: false, description: "Genres of the game."
-    field :platforms, PlatformType.connection_type, null: false, description: "Platforms the game is available on."
+    field :developers, CompanyType.connection_type, null: false, short_list: true, description: "Developers of the game."
+    field :publishers, CompanyType.connection_type, null: false, short_list: true, description: "Publishers of the game."
+    field :engines, EngineType.connection_type, null: false, short_list: true, description: "Game engines that the game runs on."
+    field :genres, GenreType.connection_type, null: false, short_list: true, description: "Genres of the game."
+    field :platforms, PlatformType.connection_type, null: false, short_list: true, description: "Platforms the game is available on."
     field :owners, UserType.connection_type, null: false, description: "Users who have this game in their libraries."
     field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
 
