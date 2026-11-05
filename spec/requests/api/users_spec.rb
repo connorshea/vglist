@@ -531,6 +531,77 @@ RSpec.describe "Users API", type: :request do
       end
     end
 
+    context 'when filtering game purchases by platform, store and rating' do
+      let(:windows) { create(:platform) }
+      let(:switch) { create(:platform) }
+      let(:steam) { create(:store) }
+      let(:gog) { create(:store) }
+
+      let!(:steam_windows_purchase) { create(:game_purchase, user: user, platforms: [windows], stores: [steam], rating: 95) }
+      let!(:switch_purchase) { create(:game_purchase, user: user, platforms: [switch], rating: 60) }
+      let!(:gog_windows_purchase) { create(:game_purchase, user: user, platforms: [windows], stores: [gog]) }
+      let!(:both_platforms_purchase) { create(:game_purchase, user: user, platforms: [windows, switch], rating: 80) }
+
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!, $platformIds: [ID!], $storeIds: [ID!], $minRating: Int, $maxRating: Int) {
+            user(id: $id) {
+              gamePurchases(platformIds: $platformIds, storeIds: $storeIds, minRating: $minRating, maxRating: $maxRating) {
+                totalCount
+                nodes {
+                  id
+                }
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      def purchase_ids(**variables)
+        result = api_request(query_string, variables: { id: user.id, **variables }, token: access_token)
+        result.graphql_dig(:user, :game_purchases, :nodes).pluck(:id)
+      end
+
+      it "returns the games owned on any of the given platforms, each once" do
+        expect(purchase_ids(platform_ids: [windows.id, switch.id])).to contain_exactly(
+          steam_windows_purchase.id.to_s,
+          switch_purchase.id.to_s,
+          gog_windows_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+        expect(purchase_ids(platform_ids: [switch.id])).to contain_exactly(
+          switch_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+      end
+
+      it "returns the games owned from any of the given stores" do
+        expect(purchase_ids(store_ids: [steam.id, gog.id])).to contain_exactly(
+          steam_windows_purchase.id.to_s,
+          gog_windows_purchase.id.to_s
+        )
+      end
+
+      it "returns the rated games within an inclusive rating range" do
+        expect(purchase_ids(min_rating: 80)).to contain_exactly(
+          steam_windows_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+        expect(purchase_ids(min_rating: 60, max_rating: 80)).to contain_exactly(
+          switch_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+      end
+
+      it "combines the filters" do
+        expect(purchase_ids(platform_ids: [windows.id], min_rating: 90)).to eq([steam_windows_purchase.id.to_s])
+      end
+
+      it "ignores empty lists" do
+        expect(purchase_ids(platform_ids: [], store_ids: []).length).to eq(4)
+      end
+    end
+
     describe 'libraryStatistics' do
       let(:query_string) do
         <<-GRAPHQL

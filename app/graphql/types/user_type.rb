@@ -22,6 +22,10 @@ module Types
       argument :completion_status, Enums::GamePurchaseCompletionStatusType, required: false, description: "Only return the games with this completion status."
       argument :search, String, required: false, description: "Only return the games whose name contains this string, case-insensitively."
       argument :sort_by, Enums::GamePurchaseSortType, required: false, description: "The order to sort the games in, if any."
+      argument :platform_ids, [ID], required: false, description: "Only return the games the user owns on at least one of these platforms."
+      argument :store_ids, [ID], required: false, description: "Only return the games the user owns from at least one of these stores."
+      argument :min_rating, Integer, required: false, description: "Only return the games the user rated at least this highly, out of 100. Unrated games are left out."
+      argument :max_rating, Integer, required: false, description: "Only return the games the user rated at most this highly, out of 100. Unrated games are left out."
     end
     field :followers, UserType.connection_type, null: false, description: "Users that are following this user."
     field :following, UserType.connection_type, null: false, description: "Users that this user is following."
@@ -83,12 +87,13 @@ module Types
       end
     end
 
-    def game_purchases(completion_status: nil, search: nil, sort_by: nil)
+    def game_purchases(sort_by: nil, **filters)
       return [] unless user_visible?
 
-      purchases = @object.game_purchases.includes(:platforms, :stores, game: AttachmentPreloads::COVER)
-      purchases = purchases.where(completion_status: completion_status) unless completion_status.nil?
-      purchases = purchases.with_game_name_matching(search) if search.present?
+      purchases = filter_game_purchases(
+        @object.game_purchases.includes(:platforms, :stores, game: AttachmentPreloads::COVER),
+        **filters
+      )
 
       # Order by ID when no sort was requested: cursor-based pagination walks
       # the relation by offset, so an unordered relation can repeat or skip
@@ -132,6 +137,15 @@ module Types
     end
 
     private
+
+    def filter_game_purchases(purchases, completion_status: nil, search: nil, platform_ids: nil, store_ids: nil, min_rating: nil, max_rating: nil)
+      purchases = purchases.where(completion_status: completion_status) unless completion_status.nil?
+      purchases = purchases.with_game_name_matching(search) if search.present?
+      purchases = purchases.on_any_platform(platform_ids) if platform_ids.present?
+      purchases = purchases.from_any_store(store_ids) if store_ids.present?
+      purchases = purchases.rated_between(min_rating, max_rating) unless min_rating.nil? && max_rating.nil?
+      purchases
+    end
 
     # What a library's statistics look like when the viewer isn't allowed to see
     # the library at all.
