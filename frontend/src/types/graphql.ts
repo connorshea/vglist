@@ -863,7 +863,7 @@ export type GetCompanyQueryVariables = Exact<{
   sortBy?: ResourceGameSort | null | undefined;
   first?: number | null | undefined;
   after?: string | null | undefined;
-  developed: boolean;
+  developed?: boolean | null | undefined;
 }>;
 
 export interface GetCompanyQuery {

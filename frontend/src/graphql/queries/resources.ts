@@ -75,7 +75,7 @@ export const GET_COMPANIES = gql`
 export const GET_COMPANY = gql`
   ${RESOURCE_GAME_FIELDS}
 
-  query GetCompany($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String, $developed: Boolean!) {
+  query GetCompany($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String, $developed: Boolean = true) {
     company(id: $id) {
       id
       name
