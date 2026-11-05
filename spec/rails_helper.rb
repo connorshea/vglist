@@ -55,6 +55,7 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
 
   config.include ApiRequestTestHelper, type: :request
+  config.include ActiveStorageUrlHelper, type: :request
   config.include EnvHelper
   config.include SqlQueryTestHelper
 end

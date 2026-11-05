@@ -85,7 +85,7 @@ RSpec.describe "Game query API", type: :request do
         {
           id: game_with_cover.id.to_s,
           name: game_with_cover.name,
-          coverUrl: Rails.application.routes.url_helpers.rails_representation_url(cover_variant)
+          coverUrl: variant_url(cover_variant)
         }
       )
     end

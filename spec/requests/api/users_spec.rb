@@ -128,7 +128,7 @@ RSpec.describe "Users API", type: :request do
         {
           id: user_with_avatar.id.to_s,
           username: user_with_avatar.username,
-          avatarUrl: Rails.application.routes.url_helpers.rails_representation_url(avatar_variant)
+          avatarUrl: variant_url(avatar_variant)
         }
       )
     end

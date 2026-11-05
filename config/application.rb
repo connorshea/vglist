@@ -89,14 +89,6 @@ module VideoGameList
       generate.controller_specs false
     end
 
-    # Get the current commit SHA for the Rails app. This will surely have some
-    # sort of negative side-effect I haven't figured out yet. This is used for
-    # caching to make sure the cache is busted when a new version of the
-    # application is deployed.
-    # https://brandonhilkert.com/blog/understanding-the-rails-cache-id-environment-variable/
-    ENV['GIT_COMMIT_SHA'] ||= ENV.fetch('RAILWAY_GIT_COMMIT_SHA', nil)
-    ENV['GIT_COMMIT_SHA'] ||= `git rev-parse HEAD`.strip if system('which git > /dev/null 2>&1')
-
     # Add spec to the directories that 'rails notes' checks.
     config.annotations.register_directories("spec")
 

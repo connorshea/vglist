@@ -1,0 +1,213 @@
+# DigitalOcean App Platform spec for vglist.
+#
+# Components:
+#   - api        Rails API (repo-root Dockerfile), served at api.vglist.co
+#   - frontend   Vue SPA served by Caddy (frontend/Dockerfile), at vglist.co
+#   - migrate    PRE_DEPLOY job: `rails db:migrate` before each API rollout
+#   - update-stats  SCHEDULED job: daily `rake vglist:update:stats` (ported
+#                   from the VPS crontab, 00:00 UTC)
+#   - db         Existing managed PostgreSQL cluster, attached to the app
+#
+# Usage:
+#   doctl apps spec validate .do/app.yaml
+#   doctl apps create --spec .do/app.yaml          # first time
+#   doctl apps update <app-id> --spec .do/app.yaml # later changes
+#
+# Secrets: every `type: SECRET` env below is declared without a value so no
+# credentials live in git. Set the values once in the control panel (App →
+# Settings → component → Environment Variables). App Platform then stores
+# them encrypted. Before running `doctl apps update` with this file, pull the
+# live spec (`doctl apps spec get <app-id>`) and copy the encrypted `EV[...]`
+# values in, otherwise the update would blank them.
+#
+# Single-instance caveat: Rails.cache is an in-process :memory_store
+# (config/environments/production.rb), and Rack::Attack keeps its throttle
+# counters in Rails.cache. Each Puma worker therefore has its own cache and
+# its own counters, and so would each extra container. Keep the API at
+# instance_count: 1. Scaling out (or tightening rate limits) needs a shared
+# store first, e.g. a managed Valkey/Redis cluster wired to cache_store.
+
+name: vglist
+region: sfo
+
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+
+domains:
+  - domain: vglist.co
+    type: PRIMARY
+  - domain: api.vglist.co
+    type: ALIAS
+
+ingress:
+  rules:
+    - match:
+        authority:
+          exact: api.vglist.co
+        path:
+          prefix: /
+      component:
+        name: api
+    - match:
+        path:
+          prefix: /
+      component:
+        name: frontend
+
+databases:
+  # Reuses the existing DO Managed Postgres cluster the VPS already talks to
+  # (database vglist_production, user vglist). Cluster vglist-postgres,
+  # PostgreSQL 17. App Platform
+  # attaches it and adds the app to its trusted sources. The 1 GB plan allows
+  # ~22 connections: the API uses 2 workers x 3 threads = 6, plus 1 per job.
+  - name: db
+    engine: PG
+    version: "17"
+    production: true
+    cluster_name: vglist-postgres
+    db_name: vglist_production
+    db_user: vglist
+
+services:
+  - name: api
+    github:
+      repo: connorshea/vglist
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    dockerfile_path: Dockerfile
+    http_port: 3000
+    instance_size_slug: apps-s-1vcpu-2gb
+    # See the single-instance caveat at the top of this file.
+    instance_count: 1
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 20
+      period_seconds: 10
+      timeout_seconds: 5
+      failure_threshold: 6
+    envs:
+      - key: PORT
+        value: "3000"
+      # Two Puma workers x 3 threads. 2 GB matches the old VPS (1 vCPU / 2 GB).
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: RAILS_MAX_THREADS
+        value: "3"
+      - key: API_HOST
+        value: api.vglist.co
+      - key: FRONTEND_URL
+        value: https://vglist.co
+      # Release tag for Sentry and the home-page stats cache key.
+      - key: GIT_COMMIT_SHA
+        value: ${_self.COMMIT_HASH}
+      - key: DATABASE_URL
+        value: ${db.DATABASE_URL}
+      - key: RAILS_MASTER_KEY
+        type: SECRET
+      - key: SES_SMTP_USERNAME
+        type: SECRET
+      - key: SES_SMTP_PASSWORD
+        type: SECRET
+      - key: SENTRY_DSN_RAILS
+        type: SECRET
+      - key: STEAM_WEB_API_KEY
+        type: SECRET
+      - key: MOBYGAMES_API_KEY
+        type: SECRET
+      - key: TWITCH_CLIENT_ID
+        type: SECRET
+      - key: TWITCH_CLIENT_SECRET
+        type: SECRET
+      - key: WIKIDATA_CONTACT_EMAIL
+        type: SECRET
+      # Cloudflare R2 (Active Storage). R2_BUCKET and R2_PUBLIC_HOST default
+      # to "vglist" and https://files.vglist.co in config/storage.yml.
+      - key: R2_ENDPOINT
+        type: SECRET
+      - key: R2_ACCESS_KEY_ID
+        type: SECRET
+      - key: R2_SECRET_ACCESS_KEY
+        type: SECRET
+
+  - name: frontend
+    github:
+      repo: connorshea/vglist
+      branch: main
+      deploy_on_push: true
+    # Build context is the repo root because vite.config.ts uses ../public.
+    source_dir: /
+    dockerfile_path: frontend/Dockerfile
+    http_port: 8080
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    health_check:
+      http_path: /health
+    envs:
+      - key: PORT
+        value: "8080"
+        scope: RUN_TIME
+      # Used by the Caddyfile's CSP connect-src.
+      - key: API_ORIGIN
+        value: https://api.vglist.co
+        scope: RUN_TIME
+      # Baked into the Vite bundle at build time.
+      - key: VITE_API_URL
+        value: https://api.vglist.co
+        scope: BUILD_TIME
+      - key: VITE_SENTRY_DSN
+        scope: BUILD_TIME
+        type: SECRET
+
+jobs:
+  - name: migrate
+    kind: PRE_DEPLOY
+    github:
+      repo: connorshea/vglist
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    dockerfile_path: Dockerfile
+    instance_size_slug: apps-s-1vcpu-1gb
+    instance_count: 1
+    # db:migrate, not db:prepare: on an empty database db:prepare would also
+    # run db/seeds.rb, which is dev-only and truncates every table.
+    run_command: bundle exec rails db:migrate
+    envs:
+      - key: DATABASE_URL
+        value: ${db.DATABASE_URL}
+      - key: RAILS_MASTER_KEY
+        type: SECRET
+      - key: SENTRY_DSN_RAILS
+        type: SECRET
+      - key: FRONTEND_URL
+        value: https://vglist.co
+      - key: API_HOST
+        value: api.vglist.co
+
+  - name: update-stats
+    kind: SCHEDULED
+    schedule:
+      cron: "0 0 * * *"
+      time_zone: UTC
+    github:
+      repo: connorshea/vglist
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    dockerfile_path: Dockerfile
+    instance_size_slug: apps-s-1vcpu-1gb
+    instance_count: 1
+    run_command: bundle exec rake vglist:update:stats
+    envs:
+      - key: DATABASE_URL
+        value: ${db.DATABASE_URL}
+      - key: RAILS_MASTER_KEY
+        type: SECRET
+      - key: SENTRY_DSN_RAILS
+        type: SECRET
+      - key: FRONTEND_URL
+        value: https://vglist.co
+      - key: API_HOST
+        value: api.vglist.co

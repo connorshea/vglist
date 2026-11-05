@@ -28,7 +28,7 @@
 # be configured to provide at least as many connections as the number of
 # threads. This includes Active Record's `pool` parameter in `database.yml`.
 
-# Railway sets PORT; Puma 6 reads this automatically,
+# The platform (or Docker) sets PORT; Puma 6 reads this automatically,
 # but being explicit doesn't hurt.
 port ENV.fetch("PORT", 3000)
 

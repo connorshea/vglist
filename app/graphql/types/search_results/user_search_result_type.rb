@@ -16,7 +16,7 @@ module Types
         avatar = user&.sized_avatar(size)
         return if avatar.nil?
 
-        Rails.application.routes.url_helpers.rails_representation_url(avatar)
+        avatar.url
       end
 
       def slug
