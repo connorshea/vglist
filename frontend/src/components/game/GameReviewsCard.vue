@@ -148,13 +148,16 @@ function metaFor(review: GameReview): string {
 }
 
 .review-sorts button {
-  min-height: 32px;
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-text-secondary);
   font: inherit;
+  line-height: 1;
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
@@ -199,7 +202,8 @@ function metaFor(review: GameReview): string {
 .review-top {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  /* Baseline, so the name, score, status and time share one text line. */
+  align-items: baseline;
   gap: 6px 10px;
   margin-bottom: 6px;
   font-size: 0.875rem;
@@ -220,11 +224,21 @@ function metaFor(review: GameReview): string {
   color: var(--color-text-secondary);
 }
 
-.review-score {
-  padding: 2px 8px;
+.review-score,
+.review-status {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
   border-radius: var(--radius-pill);
+  line-height: 1;
+}
+
+.review-score {
+  position: relative;
+  font-variant-numeric: tabular-nums;
   color: #fff;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -243,8 +257,6 @@ function metaFor(review: GameReview): string {
 
 .review-status {
   --status: #6b7280;
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--status) 14%, transparent);
   color: color-mix(in srgb, var(--status) 80%, var(--color-text-primary));
   font-size: 0.75rem;
