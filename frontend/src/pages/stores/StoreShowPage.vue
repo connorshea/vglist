@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <div>
     <div v-if="loading && !data" class="has-text-centered">
       <p>Loading store...</p>
     </div>
@@ -8,13 +8,16 @@
       <p>Failed to load store: {{ error.message }}</p>
     </div>
 
-    <div v-if="data?.store">
-      <h1 class="title">{{ data.store.name }}</h1>
+    <template v-if="data?.store">
+      <ResourceHeader
+        kind="Store"
+        :icon="Store"
+        :name="data.store.name"
+        :edit-to="authStore.isModerator ? `/stores/${data.store.id}/edit` : null"
+        @delete="showDeleteConfirm = true"
+      />
 
-      <div v-if="authStore.isModerator" class="buttons">
-        <router-link :to="`/stores/${data.store.id}/edit`" class="button is-small">Edit</router-link>
-        <button class="button is-small is-danger is-light" @click="showDeleteConfirm = true">Delete</button>
-      </div>
+      <p class="store-note">A store where people can say they bought the games in their libraries.</p>
 
       <ConfirmDialog
         v-model="showDeleteConfirm"
@@ -30,14 +33,14 @@
         <strong>{{ data.store.name }}</strong> will be permanently deleted, and removed from every library entry that
         uses it. This cannot be undone.
       </ConfirmDialog>
-    </div>
-  </section>
+    </template>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CircleAlert } from "@lucide/vue";
+import { CircleAlert, Store } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
@@ -45,6 +48,7 @@ import { GET_STORE } from "@/graphql/queries/resources";
 import { DELETE_STORE } from "@/graphql/mutations/resources";
 import { extractGqlError } from "@/utils/graphql-errors";
 import type { GetStoreQuery, DeleteStoreMutation } from "@/types/graphql";
+import ResourceHeader from "@/components/resource/ResourceHeader.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 const route = useRoute("store");
@@ -77,3 +81,11 @@ async function confirmDelete() {
   }
 }
 </script>
+
+<style scoped>
+.store-note {
+  padding-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+</style>
