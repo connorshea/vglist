@@ -7,9 +7,13 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
   node_nullable(false)
 
   def total_count
-    count = object.items.count
-    # Grouped relations (e.g. most_games, most_followers scopes) return a
-    # Hash from .count — use its length (number of distinct groups) instead.
-    count.is_a?(Hash) ? count.length : count
+    items = object.items
+    return items.count unless items.is_a?(ActiveRecord::Relation) && items.group_values.any?
+
+    # Grouped relations (e.g. the most_games and most_owners scopes) return a
+    # Hash with one entry per group from `.count`, which would load every
+    # group into Ruby. Count the groups in Postgres instead. The order doesn't
+    # change the count, so drop it.
+    items.klass.from(items.unscope(:order), items.klass.table_name).count
   end
 end

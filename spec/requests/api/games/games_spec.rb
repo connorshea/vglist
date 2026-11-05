@@ -71,6 +71,40 @@ RSpec.describe "Games API", type: :request do
       end
     end
 
+    context 'when counting games under a sort that groups them' do
+      let!(:rated) { create(:game) }
+      let!(:other) { create(:game) }
+
+      before(:each) do
+        create_list(:game_purchase, 5, game: rated, rating: 80)
+        create(:game_purchase, game: other, rating: 40)
+      end
+
+      def total_count(sort_by)
+        query_string = <<~GRAPHQL
+          query {
+            games(sortBy: #{sort_by}, first: 1) {
+              totalCount
+            }
+          }
+        GRAPHQL
+
+        api_request(query_string, token: access_token).graphql_dig(:games, :total_count)
+      end
+
+      it "counts the games rather than returning one entry per group", :aggregate_failures do
+        expect(total_count('MOST_OWNERS')).to eq(2)
+        expect(total_count('MOST_FAVORITES')).to eq(2)
+        # Only games with five or more ratings make the cut.
+        expect(total_count('HIGHEST_AVG_RATING')).to eq(1)
+      end
+
+      it "counts in the database instead of loading every group" do
+        sql = queries_run { total_count('MOST_OWNERS') }.find { |q| q.include?('COUNT') }
+        expect(sql).to match(/SELECT COUNT\(\*\) FROM \(SELECT/)
+      end
+    end
+
     context 'when filtering by year' do
       let!(:game2017) { create(:game, release_date: Faker::Date.in_date_period(year: 2017)) }
       let!(:game2018) { create(:game, release_date: Faker::Date.in_date_period(year: 2018)) }
