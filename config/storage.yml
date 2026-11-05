@@ -1,6 +1,8 @@
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
+  # Matches production, and gives non-expiring (so deterministic) URLs.
+  public: true
 
 local:
   service: Disk

@@ -47,7 +47,7 @@ module Types
       avatar = @object.sized_avatar(size)
       return if avatar.nil?
 
-      Rails.application.routes.url_helpers.rails_representation_url(avatar)
+      avatar.url
     end
 
     # Preloading applied to the associations below once the viewer is allowed to

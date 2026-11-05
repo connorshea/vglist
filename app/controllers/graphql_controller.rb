@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class GraphqlController < ApplicationController
+  # Image fields (`coverUrl`, `avatarUrl`) return the storage service's URL for
+  # a variant. In production that's a public Spaces URL, but the Disk service
+  # used in development and tests builds URLs from the current request's host.
+  include ActiveStorage::SetCurrent
+
   # Skip authentication for GraphQL — the schema itself handles auth for
   # individual queries/mutations. This allows unauthenticated mutations like
   # signIn and signUp to work.
