@@ -41,6 +41,9 @@ class VideoGameListSchema < GraphQL::Schema
   # catches many fast ones.
   use QueryTimeout, max_seconds: 10
 
+  # Batches `Game.ownerCount` into one query per response.
+  lazy_resolve(LazyOwnerCount, :value)
+
   # A statement cancelled by the statement timeout (see GraphqlController).
   rescue_from(ActiveRecord::QueryCanceled) do |_err, _obj, _args, _ctx, _field|
     raise GraphQL::ExecutionError, "This request took too long and was cancelled."

@@ -734,7 +734,7 @@ export type GameTileFieldsFragment = {
   coverUrl: string | null;
   isInLibrary: boolean | null;
   libraryCompletionStatus: GamePurchaseCompletionStatus | null;
-  owners: { totalCount: number };
+  ownerCount: number;
 };
 
 export type GetGamesIndexQueryVariables = Exact<{
@@ -747,11 +747,12 @@ export type GetGamesIndexQueryVariables = Exact<{
   fromYear?: number | null | undefined;
   toYear?: number | null | undefined;
   excludeLibrary?: boolean | null | undefined;
+  withCount: boolean;
 }>;
 
 export interface GetGamesIndexQuery {
   games: {
-    totalCount: number;
+    totalCount?: number;
     nodes: Array<{
       id: string;
       name: string;
@@ -760,13 +761,14 @@ export interface GetGamesIndexQuery {
       coverUrl: string | null;
       isInLibrary: boolean | null;
       libraryCompletionStatus: GamePurchaseCompletionStatus | null;
-      owners: { totalCount: number };
+      ownerCount: number;
     }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
 }
 
 export type GetGamesIndexCountQueryVariables = Exact<{
+  sortBy?: GameSort | null | undefined;
   onPlatform?: string | null | undefined;
   byGenre?: string | null | undefined;
   byEngine?: string | null | undefined;

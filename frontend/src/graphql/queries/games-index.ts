@@ -12,9 +12,7 @@ export const GAME_TILE_FIELDS = gql`
     coverUrl(size: MEDIUM)
     isInLibrary
     libraryCompletionStatus
-    owners {
-      totalCount
-    }
+    ownerCount
   }
 `;
 
@@ -30,6 +28,7 @@ export const GET_GAMES_INDEX = gql`
     $fromYear: Int
     $toYear: Int
     $excludeLibrary: Boolean
+    $withCount: Boolean!
   ) {
     games(
       first: $first
@@ -45,7 +44,7 @@ export const GET_GAMES_INDEX = gql`
       nodes {
         ...GameTileFields
       }
-      totalCount
+      totalCount @include(if: $withCount)
       pageInfo {
         hasNextPage
         endCursor
@@ -54,10 +53,11 @@ export const GET_GAMES_INDEX = gql`
   }
 `;
 
-// How many games the filters being edited in the popover would show, for its
-// "Show N games" button.
+// How many games the filters being edited in the popover would show under the
+// current sort, for its "Show N games" button.
 export const GET_GAMES_INDEX_COUNT = gql`
   query GetGamesIndexCount(
+    $sortBy: GameSort
     $onPlatform: ID
     $byGenre: ID
     $byEngine: ID
@@ -66,6 +66,7 @@ export const GET_GAMES_INDEX_COUNT = gql`
     $excludeLibrary: Boolean
   ) {
     games(
+      sortBy: $sortBy
       onPlatform: $onPlatform
       byGenre: $byGenre
       byEngine: $byEngine
