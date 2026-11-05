@@ -8,9 +8,13 @@ class VideoGameListSchema < GraphQL::Schema
   # a depth of at least 13, but we don't really care for now.
   max_depth 10
 
-  # Default complexity limit for anonymous requests. Signed-in users bypass
-  # this via the controller (see GraphqlController#execute).
-  max_complexity 500
+  # Applies to every request, signed in or not. It's set just above what the
+  # SPA's own operations need at the page sizes it requests (checked by
+  # spec/requests/graphql/complexity_spec.rb), which mostly matters for
+  # requests that skip the operation allowlist (admins, or with the allowlist
+  # turned off). Short association lists are scored as ~10 records, see
+  # Types::BaseField::ShortListComplexity.
+  max_complexity 5000
 
   # Prevent alias-batching the unauthenticated auth mutations into a single
   # request (credential brute force / email bombing).

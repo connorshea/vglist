@@ -1,0 +1,68 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe "GraphQL complexity and depth limits", type: :request do
+  # The largest `first` the SPA passes to each operation. Anything not listed
+  # is checked at the maximum page size, 100.
+  let(:spa_page_sizes) do
+    Hash.new(100).merge(
+      # HomePage.vue
+      'GetRecentGames' => 6,
+      # GameFormPage.vue loads whole lists of resources for its pickers.
+      'GetPlatforms' => 500,
+      'GetCompanies' => 500,
+      'GetGenres' => 500,
+      'GetEngines' => 500,
+      'GetSeriesList' => 500
+    )
+  end
+
+  def analyze(document, variables = {})
+    query = GraphQL::Query.new(VideoGameListSchema, document, variables: variables)
+    complexity, depth = GraphQL::Analysis.analyze_query(
+      query,
+      [GraphQL::Analysis::QueryComplexity, GraphQL::Analysis::QueryDepth]
+    )
+    { complexity: complexity, depth: depth }
+  end
+
+  it 'fits every operation the SPA sends, at the page sizes it requests' do
+    over_limit = OperationAllowlist.operations.filter_map do |name, document|
+      variable_names = GraphQL.parse(document).definitions.first.variables.map(&:name)
+      variables = variable_names.include?('first') ? { 'first' => spa_page_sizes[name] } : {}
+      result = analyze(document, variables)
+
+      next if result[:complexity] <= VideoGameListSchema.max_complexity && result[:depth] <= VideoGameListSchema.max_depth
+
+      "#{name}: #{result}"
+    end
+
+    expect(over_limit).to be_empty
+  end
+
+  it 'scores short association lists as ~10 records' do
+    query = '{ games(first: 10) { nodes { platforms(first: 100) { nodes { id } } } } }'
+
+    # 10 games * (1 + 10 platforms * (nodes + id)) + games + nodes
+    expect(analyze(query)[:complexity]).to eq(10 * (1 + (10 * 2)) + 2)
+  end
+
+  it 'scores short association lists with a smaller `first` by that size' do
+    query = '{ games(first: 10) { nodes { developers(first: 3) { nodes { id } } } } }'
+
+    expect(analyze(query)[:complexity]).to eq(10 * (1 + (3 * 2)) + 2)
+  end
+
+  it 'rejects an over-complex query from a signed-in user' do
+    user = create(:confirmed_user)
+    query = '{ games(first: 100) { nodes { owners(first: 100) { nodes { gamePurchases(first: 100) { nodes { id } } } } } } }'
+
+    post graphql_path,
+      params: { query: query }.to_json,
+      headers: { 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{JwtService.encode(user)}" }
+
+    expect(response.parsed_body['errors'].first['message']).to match(/exceeds max complexity/)
+    expect(response.parsed_body['data']).to be_nil
+  end
+end
