@@ -1,102 +1,67 @@
 # frozen_string_literal: true
 
-# Rails 6.1 changes the way ActiveStorage works so that variants are
-# tracked in the database. The intent of this task is to create the
-# necessary variants for all game covers and user avatars in our database.
-# This way, the user isn't creating dozens of variant records as they
-# browse the site. We want to create them ahead-of-time, when we deploy
-# the change to track variants.
+# Creates the named variants (small/medium/large) for every existing game cover
+# and user avatar that doesn't have them yet, so nobody has to wait for one to
+# be generated mid-request. New uploads get theirs in the background, see the
+# `preprocessed: true` variants on Game and User.
 #
-# This is also useful because - until a change made to vglist in late 2025,
-# importing new covers from IGDB did not auto-process them with variants.
-# This task can be used to rectify that mistake.
+# Safe to stop and re-run: images that already have every variant are
+# skipped. Works on a few images at a time; set CONCURRENCY to change how
+# many (default 3, capped by the database pool size).
+#
+#   CONCURRENCY=3 bundle exec rake active_storage:vglist:variants:create
 namespace 'active_storage:vglist:variants' do
   require 'ruby-progressbar'
 
-  desc "Create all variants for game covers in the database."
-  task covers: :environment do
-    image_sizes = Game::COVER_SIZES.keys
+  # Records of `model` whose `attachment_name` is a resizable image that is
+  # missing at least one of `variant_count` variants.
+  variants_missing = lambda do |model, attachment_name, variant_count|
+    model.joins(:"#{attachment_name}_attachment")
+         .joins("JOIN active_storage_blobs ON active_storage_blobs.id = active_storage_attachments.blob_id")
+         .where(active_storage_blobs: { content_type: ActiveStorage.variable_content_types })
+         .where("(
+           SELECT COUNT(*)
+           FROM active_storage_variant_records
+           WHERE blob_id = active_storage_blobs.id
+         ) < ?", variant_count)
+         .preload("#{attachment_name}_attachment": { blob: :variant_records })
+  end
 
-    # Only get games with covers that are variable (image types that can be resized)
-    # and don't already have all variants created
-    games = Game.joins(:cover_attachment)
-                .joins("JOIN active_storage_blobs ON active_storage_blobs.id = active_storage_attachments.blob_id")
-                .where(active_storage_blobs: { content_type: ActiveStorage.variable_content_types })
-                .where("(
-                  SELECT COUNT(*)
-                  FROM active_storage_variant_records
-                  WHERE blob_id = active_storage_blobs.id
-                ) < ?", image_sizes.length)
-    puts 'Creating game cover variants...'
+  backfill = lambda do |model, attachment_name, variant_names|
+    records = variants_missing.call(model, attachment_name, variant_names.size)
+    concurrency = ENV.fetch('CONCURRENCY', 3).to_i
 
-    games_progress_bar = ProgressBar.create(
-      total: games.count,
+    puts "Creating #{model.name.downcase} #{attachment_name} variants (#{concurrency} at a time)..."
+    progress_bar = ProgressBar.create(
+      total: records.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
     # Disable logging in production to prevent log spam.
-    Rails.logger.level = 2 if Rails.env.production?
+    Rails.logger.level = :error if Rails.env.production?
 
-    games.find_in_batches(batch_size: 100) do |batch|
-      batch.each do |game|
-        ActiveRecord::Base.connection_pool.with_connection do
-          begin
-            image_sizes.each do |size|
-              # Use .processed so it only processes if necessary (some of them may not need to be re-processed)
-              game.sized_cover(size)&.processed
-            end
-          # Rescue Vips errors if they occur so that they don't block the
-          # task from continuing.
-          rescue Vips::Error => e
-            games_progress_bar.log "ERROR: #{e.message}"
-            games_progress_bar.log "Failed on game ID: #{game.id}"
-          end
-          games_progress_bar.increment
-        end
-      end
+    VariantBackfillService.backfill(
+      records,
+      attachment_name: attachment_name,
+      variant_names: variant_names,
+      concurrency: concurrency,
+      progress: progress_bar
+    ) do |record, error|
+      progress_bar.log "ERROR: #{error.class}: #{error.message}"
+      progress_bar.log "Failed on #{model.name.downcase} ID: #{record.id}"
     end
 
-    games_progress_bar.finish unless games_progress_bar.finished?
+    progress_bar.finish unless progress_bar.finished?
+  end
+
+  desc "Create all variants for game covers in the database."
+  task covers: :environment do
+    backfill.call(Game, :cover, Game::COVER_SIZES.keys)
   end
 
   desc "Create all variants for user avatars in the database."
   task avatars: :environment do
-    image_sizes = User::AVATAR_SIZES.keys
-
-    # Only get users with avatars that are variable (image types that can be resized).
-    users = User.joins(:avatar_attachment)
-                .joins("JOIN active_storage_blobs ON active_storage_blobs.id = active_storage_attachments.blob_id")
-                .where(active_storage_blobs: { content_type: ActiveStorage.variable_content_types })
-    puts 'Creating user avatar variants...'
-
-    users_progress_bar = ProgressBar.create(
-      total: users.count,
-      format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
-    )
-
-    # Disable logging in production to prevent log spam.
-    Rails.logger.level = 2 if Rails.env.production?
-
-    users.find_in_batches(batch_size: 100) do |batch|
-      batch.each do |user|
-        ActiveRecord::Base.connection_pool.with_connection do
-          begin
-            image_sizes.each do |size|
-              # Use .processed so it only processes if necessary
-              user.sized_avatar(size)&.processed
-            end
-          # Rescue Vips errors if they occur so that they don't block the
-          # task from continuing.
-          rescue Vips::Error => e
-            users_progress_bar.log "ERROR: #{e.message}"
-            users_progress_bar.log "Failed on user ID: #{user.id}"
-          end
-          users_progress_bar.increment
-        end
-      end
-    end
-
-    users_progress_bar.finish unless users_progress_bar.finished?
+    backfill.call(User, :avatar, User::AVATAR_SIZES.keys)
   end
 
   desc "Create all variants for covers and avatars in the database."
