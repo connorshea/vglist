@@ -117,6 +117,7 @@ RSpec.describe "Global Search API", type: :request do
           query($query: String!, $types: [SearchableEnum!]) {
             globalSearch(query: $query, searchableTypes: $types) {
               nodes {
+                __typename
                 ... on GameSearchResult {
                   searchableId
                   content
@@ -138,9 +139,11 @@ RSpec.describe "Global Search API", type: :request do
         nodes = result.graphql_dig(:global_search, :nodes)
 
         expect(nodes.length).to eq(2)
-        searchable_ids = nodes.pluck(:searchableId)
-        expect(searchable_ids).to include(game.id.to_s, company.id.to_s)
-        expect(searchable_ids).not_to include(platform.id.to_s)
+        typed_results = nodes.map { |n| [n[:__typename], n[:searchableId]] }
+        expect(typed_results).to contain_exactly(
+          ['GameSearchResult', game.id.to_s],
+          ['CompanySearchResult', company.id.to_s]
+        )
       end
 
       it "returns only a single type when one is specified" do
