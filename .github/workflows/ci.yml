@@ -113,7 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "3.4.12"
@@ -150,7 +150,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "3.4.12"
@@ -204,7 +204,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libvips-tools imagemagick
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "3.4.12"
