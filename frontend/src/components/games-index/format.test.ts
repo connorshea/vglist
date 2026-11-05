@@ -33,13 +33,13 @@ describe("countLabel", () => {
 
 describe("tileMeta", () => {
   it("joins the year and owner count", () => {
-    expect(tileMeta({ releaseDate: "2021-10-08", owners: { totalCount: 612 } })).toBe("2021 · 612 owners");
+    expect(tileMeta({ releaseDate: "2021-10-08", ownerCount: 612 })).toBe("2021 · 612 owners");
   });
 
   it("leaves out missing parts", () => {
-    expect(tileMeta({ releaseDate: null, owners: { totalCount: 3 } })).toBe("3 owners");
-    expect(tileMeta({ releaseDate: "2017-02-24", owners: { totalCount: 0 } })).toBe("2017");
-    expect(tileMeta({ releaseDate: null, owners: { totalCount: 0 } })).toBeNull();
+    expect(tileMeta({ releaseDate: null, ownerCount: 3 })).toBe("3 owners");
+    expect(tileMeta({ releaseDate: "2017-02-24", ownerCount: 0 })).toBe("2017");
+    expect(tileMeta({ releaseDate: null, ownerCount: 0 })).toBeNull();
   });
 });
 

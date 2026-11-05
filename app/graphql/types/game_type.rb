@@ -29,6 +29,7 @@ module Types
     field :platforms, PlatformType.connection_type, null: false, short_list: true, description: "Platforms the game is available on."
     field :owners, UserType.connection_type, null: false, description: "Users who have this game in their libraries."
     field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
+    field :owner_count, Integer, null: false, description: "The number of public, unbanned users who have this game in their library, the same as `owners.totalCount`. Unlike that, it is counted for a whole list of games in one query."
     field :reviews, GamePurchaseType.connection_type, null: false, description: "Library entries for this game that have comments, from public, unbanned users." do
       argument :sort_by, Enums::GameReviewSortType, required: false, default_value: 'recent', description: "The order to sort the reviews in."
     end
@@ -55,6 +56,10 @@ module Types
 
     def favoriters
       @object.favoriters.public_and_unbanned.with_attached_avatar
+    end
+
+    def owner_count
+      LazyOwnerCount.new(@context, @object.id)
     end
 
     REVIEW_ORDERS = {

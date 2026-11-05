@@ -243,6 +243,45 @@ RSpec.describe "Games API", type: :request do
       end
     end
 
+    context 'when requesting owner counts on a games list' do
+      let!(:popular) { create(:game) }
+      let!(:unowned) { create(:game) }
+      let(:query_string) do
+        <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                ownerCount
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      before(:each) do
+        create_list(:game_purchase, 2, game: popular)
+        create(:game_purchase, game: popular, user: create(:private_user))
+        create(:game_purchase, game: popular, user: create(:banned_user))
+      end
+
+      it "counts each game's public, unbanned owners" do
+        result = api_request(query_string, token: access_token)
+        counts = result.graphql_dig(:games, :nodes).to_h { |n| [n[:id], n[:ownerCount]] }
+
+        expect(counts).to eq(popular.id.to_s => 2, unowned.id.to_s => 0)
+      end
+
+      it "counts the owners of every game in one query" do
+        # The first request warms up caches that would inflate its count.
+        api_request(query_string, token: access_token)
+        baseline = query_count { api_request(query_string, token: access_token) }
+        create_list(:game, 3).each { |game| create(:game_purchase, game: game) }
+
+        expect(query_count { api_request(query_string, token: access_token) }).to eq(baseline)
+      end
+    end
+
     context 'when requesting per-user fields on a games list' do
       let!(:game) { create(:game) }
       let!(:game2) { create(:game) }

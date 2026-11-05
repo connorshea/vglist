@@ -19,11 +19,11 @@ export function countLabel(count: number, singular: string, plural = `${singular
 }
 
 /** "2021 · 612 owners", or whichever half of it the game has. */
-export function tileMeta(game: { releaseDate?: string | null; owners?: { totalCount: number } | null }): string | null {
+export function tileMeta(game: { releaseDate?: string | null; ownerCount?: number | null }): string | null {
   const parts: string[] = [];
   const year = releaseYear(game.releaseDate);
   if (year) parts.push(year);
-  if (game.owners && game.owners.totalCount > 0) parts.push(countLabel(game.owners.totalCount, "owner"));
+  if (game.ownerCount) parts.push(countLabel(game.ownerCount, "owner"));
   return parts.length > 0 ? parts.join(" · ") : null;
 }
 

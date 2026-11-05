@@ -12,9 +12,7 @@ export const GAME_TILE_FIELDS = gql`
     coverUrl(size: MEDIUM)
     isInLibrary
     libraryCompletionStatus
-    owners {
-      totalCount
-    }
+    ownerCount
   }
 `;
 

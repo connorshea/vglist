@@ -734,7 +734,7 @@ export type GameTileFieldsFragment = {
   coverUrl: string | null;
   isInLibrary: boolean | null;
   libraryCompletionStatus: GamePurchaseCompletionStatus | null;
-  owners: { totalCount: number };
+  ownerCount: number;
 };
 
 export type GetGamesIndexQueryVariables = Exact<{
@@ -760,7 +760,7 @@ export interface GetGamesIndexQuery {
       coverUrl: string | null;
       isInLibrary: boolean | null;
       libraryCompletionStatus: GamePurchaseCompletionStatus | null;
-      owners: { totalCount: number };
+      ownerCount: number;
     }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
