@@ -219,6 +219,7 @@ fieldset.set-field > legend {
 }
 
 .profile-seg-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
