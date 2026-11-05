@@ -58,7 +58,7 @@ ingress:
 databases:
   # Reuses the existing DO Managed Postgres cluster the VPS already talks to
   # (database vglist_production, user vglist). Set cluster_name to that
-  # cluster's name and version to its PostgreSQL major version; App Platform
+  # cluster's name (version 17 is confirmed). App Platform
   # attaches it and adds the app to its trusted sources. The 1 GB plan allows
   # ~22 connections: the API uses 2 workers x 3 threads = 6, plus 1 per job.
   - name: db
