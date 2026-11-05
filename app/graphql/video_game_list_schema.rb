@@ -27,10 +27,11 @@ class VideoGameListSchema < GraphQL::Schema
   default_page_size 30
 
   # Stop resolving fields once a query has run for this long. Fields that
-  # haven't resolved yet return null with an error. This complements the
-  # Postgres statement timeout set in GraphqlController, which catches a single
-  # slow statement, whereas this catches many fast ones.
-  use GraphQL::Schema::Timeout, max_seconds: 10
+  # haven't resolved yet return null with an error. Mutations are exempt, see
+  # QueryTimeout. This complements the Postgres statement timeout set in
+  # GraphqlController, which catches a single slow statement, whereas this
+  # catches many fast ones.
+  use QueryTimeout, max_seconds: 10
 
   # A statement cancelled by the statement timeout (see GraphqlController).
   rescue_from(ActiveRecord::QueryCanceled) do |_err, _obj, _args, _ctx, _field|
