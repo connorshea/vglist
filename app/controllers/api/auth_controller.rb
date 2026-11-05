@@ -2,7 +2,7 @@
 
 module Api
   class AuthController < ApplicationController
-    skip_before_action :sign_out_banned_users, only: [:sign_in]
+    skip_before_action :reject_banned_users, only: [:sign_in, :sign_out]
     skip_after_action :verify_authorized
 
     def sign_in
@@ -49,7 +49,7 @@ module Api
     end
 
     def me
-      user = jwt_user
+      user = current_user
       if user
         render json: {
           user: {
@@ -66,7 +66,7 @@ module Api
     end
 
     def sign_out
-      user = jwt_user
+      user = current_user
       if user
         JwtService.revoke_all!(user)
         render json: { message: "Signed out successfully." }
@@ -79,15 +79,6 @@ module Api
 
     def sign_up_params
       params.permit(:username, :email, :password, :password_confirmation)
-    end
-
-    # Decode JWT from Authorization header.
-    def jwt_user
-      auth_header = request.headers['Authorization']
-      return nil unless auth_header&.start_with?('Bearer ')
-
-      token = auth_header.sub(/^Bearer\s+/i, '')
-      JwtService.decode_and_verify(token)
     end
   end
 end

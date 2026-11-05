@@ -142,6 +142,14 @@ RSpec.describe "Api::Auth", type: :request do
       expect(json['error']).to eq("Not authenticated.")
     end
 
+    it "returns forbidden for a banned user's JWT", :aggregate_failures do
+      banned_user = create(:banned_user)
+      get api_auth_me_path, headers: { 'Authorization': "Bearer #{JwtService.encode(banned_user)}" }
+
+      expect(response).to have_http_status(:forbidden)
+      expect(JSON.parse(response.body)['error']).to eq("Your account has been banned.")
+    end
+
     it "returns unauthorized for an invalid JWT" do
       get api_auth_me_path, headers: { 'Authorization': "Bearer invalid.token.here" }
 

@@ -5,6 +5,8 @@ class GraphqlController < ApplicationController
   # individual queries/mutations. This allows unauthenticated mutations like
   # signIn and signUp to work.
   before_action :authenticate_user_if_possible
+  # Banned users get a GraphQL-shaped error from authenticate_user_if_possible.
+  skip_before_action :reject_banned_users
 
   def execute
     skip_authorization
@@ -140,8 +142,7 @@ class GraphqlController < ApplicationController
   # are allowed without authentication).
   def authenticate_user_if_possible
     if user_using_jwt?
-      token = request.headers['Authorization']&.sub(/^Bearer\s+/i, '')
-      user = JwtService.decode_and_verify(token)
+      user = current_user
       if user&.banned?
         render json: {
           data: nil,
