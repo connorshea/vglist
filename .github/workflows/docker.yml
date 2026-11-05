@@ -54,8 +54,16 @@ jobs:
           sudo chmod -R a+r "$RUNNER_TEMP/credentials"
           echo "RAILS_MASTER_KEY=$(cat "$RUNNER_TEMP/credentials/production.key")" >> "$GITHUB_ENV"
 
+      # Load structure.sql first (exercises psql in the image). Running
+      # db:prepare on an empty database would also run db/seeds.rb, which is
+      # dev-only (it needs database_cleaner and truncates every table). Then
+      # run db:prepare as the pre-deploy step does against an existing DB.
       - name: Prepare database
         run: |
+          docker run --rm --network host \
+            -v "$RUNNER_TEMP/credentials:/rails/config/credentials:ro" \
+            -e RAILS_MASTER_KEY -e DATABASE_URL -e FRONTEND_URL \
+            vglist-api bundle exec rails db:schema:load
           docker run --rm --network host \
             -v "$RUNNER_TEMP/credentials:/rails/config/credentials:ro" \
             -e RAILS_MASTER_KEY -e DATABASE_URL -e FRONTEND_URL \
