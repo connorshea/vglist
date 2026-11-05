@@ -77,6 +77,13 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'Avatar variants' do
+    it 'generates every avatar variant in the background once an avatar is attached' do
+      expect { create(:user, :avatar) }
+        .to have_enqueued_job(ActiveStorage::TransformJob).exactly(User::AVATAR_SIZES.size).times
+    end
+  end
+
   describe 'Custom Validations' do
     let(:user) { build(:user, username: 'system') }
 

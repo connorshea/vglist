@@ -84,9 +84,11 @@ class User < ApplicationRecord
   }.freeze
 
   has_one_attached :avatar do |attachable|
-    attachable.variant :small, resize_to_fill: AVATAR_SIZES[:small]
-    attachable.variant :medium, resize_to_fill: AVATAR_SIZES[:medium]
-    attachable.variant :large, resize_to_fill: AVATAR_SIZES[:large]
+    # `preprocessed: true` generates each variant in a background job right
+    # after upload, rather than on the first request that shows the avatar.
+    attachable.variant :small, resize_to_fill: AVATAR_SIZES[:small], preprocessed: true
+    attachable.variant :medium, resize_to_fill: AVATAR_SIZES[:medium], preprocessed: true
+    attachable.variant :large, resize_to_fill: AVATAR_SIZES[:large], preprocessed: true
   end
 
   friendly_id :username, use: [:slugged, :finders]
