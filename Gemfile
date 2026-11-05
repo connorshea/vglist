@@ -40,8 +40,8 @@ gem 'pundit', '~> 2.5'
 gem 'pg_search', '~> 2.3'
 
 # Image transformation
-gem 'image_processing', '~> 1.14'
-gem 'ruby-vips', '~> 2.2'
+gem 'image_processing', '~> 2.2'
+gem 'ruby-vips', '~> 2.3'
 
 # Validations for ActiveStorage.
 gem 'active_storage_validations', '~> 3.0.3'
