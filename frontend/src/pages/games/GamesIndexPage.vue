@@ -262,6 +262,17 @@ async function loadMore() {
   } finally {
     loadingMore.value = false;
   }
+  // The observer only fires when the sentinel crosses into view, so if this
+  // page wasn't enough to push it back out (a tall window, say), it wouldn't
+  // fire again until a scroll. Observing it afresh reports where it is now.
+  // Not after an error, which would retry in a loop.
+  if (error.value) return;
+  await nextTick();
+  const el = sentinelRef.value;
+  if (el && observer) {
+    observer.unobserve(el);
+    observer.observe(el);
+  }
 }
 
 // Load the next page as the end of the grid scrolls into view. The "Load
