@@ -137,6 +137,60 @@ RSpec.describe "Activity API", type: :request do
       )
     end
 
+    context "when returning completion status changes" do
+      let(:completion_status_query_string) do
+        <<-GRAPHQL
+          query {
+            activity(feedType: GLOBAL) {
+              nodes {
+                eventCategory
+                completionStatusChange {
+                  before
+                  after
+                }
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      def activity_nodes
+        result = api_request(completion_status_query_string, token: access_token)
+        result.graphql_dig(:activity, :nodes)
+      end
+
+      it "returns the status before and after each change, not the current status" do
+        game_purchase.update!(completion_status: :in_progress)
+        game_purchase.update!(completion_status: :completed)
+
+        changes = activity_nodes.select { |n| n[:eventCategory] == "CHANGE_COMPLETION_STATUS" }
+                                .pluck(:completionStatusChange)
+
+        expect(changes).to contain_exactly({ before: nil, after: "IN_PROGRESS" }, { before: "IN_PROGRESS", after: "COMPLETED" })
+      end
+
+      it "handles completion statuses stored as integers" do
+        create(
+          :game_purchase_completion_event,
+          user: user,
+          eventable: game_purchase,
+          differences: { completion_status: [GamePurchase.completion_statuses[:dropped], GamePurchase.completion_statuses[:paused]] }
+        )
+
+        change_node = activity_nodes.find { |n| n[:eventCategory] == "CHANGE_COMPLETION_STATUS" }
+        expect(change_node[:completionStatusChange]).to eq({ before: "DROPPED", after: "PAUSED" })
+      end
+
+      it "returns null for other kinds of events" do
+        game_purchase
+        favorite_game
+
+        nodes = activity_nodes
+        expect(nodes.pluck(:eventCategory)).to include("ADD_TO_LIBRARY", "FAVORITE_GAME", "NEW_USER")
+        expect(nodes.pluck(:completionStatusChange).uniq).to eq([nil])
+      end
+    end
+
     context "when returning eventable fields used by the activity feed frontend" do
       let(:eventable_query_string) do
         <<-GRAPHQL
