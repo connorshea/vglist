@@ -13,6 +13,10 @@
 # whitespace, comments and fragment order in the request don't matter.
 module OperationAllowlist
   MANIFEST_PATH = Rails.root.join('config/graphql/operations.json')
+  EXECUTABLE_DEFINITIONS = [
+    GraphQL::Language::Nodes::OperationDefinition,
+    GraphQL::Language::Nodes::FragmentDefinition
+  ].freeze
 
   module_function
 
@@ -41,6 +45,10 @@ module OperationAllowlist
   # A normalized string for a GraphQL document, or nil if it can't be parsed.
   def canonical(query_string)
     document = GraphQL.parse(query_string.to_s)
+    # GraphQL.parse also accepts SDL (`schema { ... }`, `type Foo { ... }`),
+    # which the SPA never sends and which has no name to sort by.
+    return nil unless document.definitions.all? { |definition| EXECUTABLE_DEFINITIONS.any? { |klass| definition.is_a?(klass) } }
+
     definitions = document.definitions.sort_by do |definition|
       [definition.is_a?(GraphQL::Language::Nodes::OperationDefinition) ? 0 : 1, definition.name.to_s]
     end
