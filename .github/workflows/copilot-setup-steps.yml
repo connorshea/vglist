@@ -46,6 +46,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
