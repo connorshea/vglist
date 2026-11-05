@@ -289,6 +289,8 @@ import LibraryPlayingCard from "@/components/library/LibraryPlayingCard.vue";
 import "@/assets/stylesheets/library.scss";
 
 const SHELF_SIZE = 12;
+// The Playing shelf's cards are larger, so it shows a row's worth at most.
+const PLAYING_SIZE = 6;
 const PAGE_SIZE = 48;
 const PHONE_QUERY = "(max-width: 768px)";
 
@@ -517,16 +519,17 @@ const SHELF_ORDER: { key: ShelfKey; status: LibraryStatusFilter }[] = [
 const shelves = computed(() => {
   const shelvesUser = shelvesData.value?.user;
   return SHELF_ORDER.map(({ key, status: shelfStatus }) => {
+    const nodes = shelvesUser?.[key].nodes ?? [];
     return {
       status: [...LIBRARY_STATUSES, NO_STATUS].find((s) => s.key === shelfStatus) as LibraryStatus<LibraryStatusFilter>,
       totalCount: shelvesUser?.[key].totalCount ?? 0,
-      purchases: shelvesUser?.[key].nodes ?? []
+      // What the shelf shows, so "Show all" appears whenever games are left out.
+      purchases: key === "inProgress" ? nodes.slice(0, PLAYING_SIZE) : nodes
     };
   });
 });
 
-// Playing games are shown as larger cards, a row's worth at most.
-const playing = computed(() => (shelvesData.value?.user?.inProgress.nodes ?? []).slice(0, 6));
+const playing = computed(() => (shelvesData.value?.user?.inProgress.nodes ?? []).slice(0, PLAYING_SIZE));
 
 // ── Single grid ─────────────────────────────────────────────────────────────
 const gamesVariables = computed(() => ({
