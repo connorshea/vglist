@@ -132,6 +132,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       COVERAGE_COMMAND_NAME: "RSpec:Unit"
+      # Split the suite across this many processes. GitHub-hosted ubuntu runners
+      # have 4 vCPUs; parallel_tests uses this for parallel:create/load_schema/rspec.
+      PARALLEL_TEST_PROCESSORS: "4"
     services:
       postgres:
         image: postgres:17
@@ -161,11 +164,12 @@ jobs:
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: cp config/database.yml.ci config/database.yml
-      - run: bundle exec rails db:create
-      - run: bundle exec rails db:schema:load
+      # Create and load one test database per parallel process (ci_test, ci_test2, ...).
+      - run: bundle exec rake parallel:create
+      - run: bundle exec rake parallel:load_schema
       - run: bundle exec rails zeitwerk:check
       - run: bundle exec rake assets:precompile
-      - run: bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb"
+      - run: bundle exec parallel_rspec --exclude-pattern "^spec/features/" spec
       - name: Coverage summary
         if: always()
         run: |

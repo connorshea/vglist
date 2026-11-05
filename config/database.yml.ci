@@ -1,6 +1,8 @@
 test:
   adapter: postgresql
-  database: ci_test
+  # TEST_ENV_NUMBER is set by parallel_tests so each parallel process gets its
+  # own database (blank for the first process, "2", "3", ... for the rest).
+  database: ci_test<%= ENV['TEST_ENV_NUMBER'] %>
   encoding: unicode
   pool: 5
   timeout: 5000
