@@ -317,10 +317,12 @@ function setPlatform(platform: NamedRecord | null) {
   updateFilters({ platform: platform?.id ?? "" });
 }
 
+// The count for the current sort and filters. Top rated and New releases leave
+// games out even with no filters set, so the site-wide count only stands in
+// until the games come back.
 const headerCount = computed(() => {
-  const anyFilter = Object.keys(filtersToQuery(filters.value)).length > 0;
   const shown = data.value?.games?.totalCount;
-  if (anyFilter && shown !== undefined) return countLabel(shown, "game");
+  if (shown !== undefined && shown !== null) return countLabel(shown, "game");
   const total = filtersData.value?.basicSiteStatistics.games;
   return total !== undefined ? countLabel(total, "game") : null;
 });
@@ -365,7 +367,8 @@ const draftNames = computed(() => ({
 }));
 
 const { data: countData } = useQuery<GetGamesIndexCountQuery>(GET_GAMES_INDEX_COUNT, {
-  variables: () => filterVariables(draft.value),
+  // The sort matters too: Top rated and New releases leave some games out.
+  variables: () => ({ sortBy: sort.value.value, ...filterVariables(draft.value) }),
   enabled: () => panelOpen.value
 });
 const draftCount = computed(() => countData.value?.games?.totalCount ?? null);

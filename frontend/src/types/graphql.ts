@@ -768,6 +768,7 @@ export interface GetGamesIndexQuery {
 }
 
 export type GetGamesIndexCountQueryVariables = Exact<{
+  sortBy?: GameSort | null | undefined;
   onPlatform?: string | null | undefined;
   byGenre?: string | null | undefined;
   byEngine?: string | null | undefined;
