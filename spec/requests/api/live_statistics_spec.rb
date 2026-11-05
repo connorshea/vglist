@@ -6,8 +6,7 @@ RSpec.describe "Live Statistics API", type: :request do
   describe "Query for data on current live statistics" do
     context 'when signed in as an admin' do
       let(:user) { create(:confirmed_admin) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
       let(:game) { create(:game_with_everything) }
 
       it "returns basic data for live statistics" do
@@ -108,8 +107,7 @@ RSpec.describe "Live Statistics API", type: :request do
 
     context 'when signed in as a normal user' do
       let(:user) { create(:confirmed_user) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
 
       it "returns a permissions error for statistics" do
         query_string = <<-GRAPHQL

@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "ConnectSteam Mutation API", type: :request do
   describe "Mutation creates the ExternalAccount" do
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:query_string) do
       <<-GRAPHQL
         mutation($id: ID!, $steamUsername: String!) {

@@ -7,8 +7,7 @@ RSpec.describe "Activity API", type: :request do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
     let(:user3) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:game_purchase) { create(:game_purchase, user: user) }
     let(:relationship) { create(:relationship, follower: user, followed: user2) }
     let(:favorite_game) { create(:favorite_game, user: user) }
@@ -500,7 +499,7 @@ RSpec.describe "Activity API", type: :request do
 
     it "includes a followed private user's events when the current user is an admin" do
       admin = create(:confirmed_admin)
-      admin_token = create(:access_token, resource_owner_id: admin.id, application: build(:application, owner: admin))
+      admin_token = JwtService.encode(admin)
       create(:relationship, follower: admin, followed: user2)
       create(:game_purchase, user: user2)
       user2.update!(privacy: :private_account)
@@ -542,8 +541,7 @@ RSpec.describe "Activity API", type: :request do
 
   describe "Preloading for the activity feed" do
     let(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     # Every field the feed renders that touches an association or an
     # attachment, so a missing preload shows up as extra queries.
     let(:activity_query) do

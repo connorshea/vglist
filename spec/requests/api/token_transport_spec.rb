@@ -47,7 +47,7 @@ RSpec.describe "API token transport", type: :request do
     end
 
     it "rejects a mutation when the token is in the Authorization header" do
-      result = api_request(mutation, variables: { game_id: game.id }, token: read_only_token)
+      result = api_request(mutation, variables: { game_id: game.id }, token: read_only_token.token)
 
       expect(result.to_h['errors'].first['message'])
         .to eq("Your token must have the 'write' scope to perform a mutation.")
@@ -73,7 +73,7 @@ RSpec.describe "API token transport", type: :request do
     end
 
     it "rejects a query when the token is in the Authorization header" do
-      result = api_request(query, token: revoked_token)
+      result = api_request(query, token: revoked_token.token)
 
       expect(response).to have_http_status(:unauthorized)
       expect(result.to_h.dig('data', 'currentUser')).to be_nil
@@ -110,7 +110,7 @@ RSpec.describe "API token transport", type: :request do
     end
 
     it "still authenticates via the Authorization header" do
-      result = api_request(query, token: access_token)
+      result = api_request(query, token: access_token.token)
 
       expect(result.graphql_dig(:current_user, :username)).to eq(user.username)
     end

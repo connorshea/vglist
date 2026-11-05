@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe "Games API", type: :request do
   describe "Query for data on games" do
     let(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
 
     context 'with basic games query' do
       let!(:game) { create(:game) }
@@ -316,7 +315,7 @@ RSpec.describe "Games API", type: :request do
       let!(:game2) { create(:game_with_everything) }
 
       # Authenticating lazily would otherwise create the user, its avatar and
-      # its OAuth application inside the measured block.
+      # its JWT inside the measured block.
       before(:each) { access_token }
 
       it "doesn't preload associations the query didn't select" do

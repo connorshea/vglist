@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "DeleteGenre Mutation API", type: :request do
   describe "Mutation deletes an existing genre record" do
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let!(:genre) { create(:genre) }
     let(:query_string) do
       <<-GRAPHQL

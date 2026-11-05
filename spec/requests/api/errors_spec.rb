@@ -4,10 +4,9 @@ require 'rails_helper'
 
 RSpec.describe "API Errors", type: :request do
   describe "API requests with invalid data" do
-    let(:invalid_access_token) { instance_double(Doorkeeper::AccessToken, token: 'foo') }
+    let(:invalid_access_token) { 'foo' }
     let(:banned_user) { create(:banned_user) }
-    let(:application) { build(:application, owner: banned_user) }
-    let(:banned_user_access_token) { create(:access_token, resource_owner_id: banned_user.id, application: application) }
+    let(:banned_user_access_token) { JwtService.encode(banned_user) }
     let(:game) { create(:game) }
     let(:query_string) do
       <<-GRAPHQL

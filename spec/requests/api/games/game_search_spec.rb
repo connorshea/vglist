@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe "Game Search API", type: :request do
   describe "Query for data on games" do
     let(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:game) { create(:game) }
     let(:game2) { create(:game) }
 

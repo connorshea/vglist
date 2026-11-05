@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe "Companies API", type: :request do
   describe "Query for data on companies" do
     let(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:company) { create(:company) }
     let(:company2) { create(:company) }
 

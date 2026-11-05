@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe "DeleteEvent Mutation API", type: :request do
   describe "Mutation deletes event" do
     let!(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:user2) { create(:confirmed_user) }
     let(:event) { create(:event, user: user) }
     let(:other_event) { create(:event, user: user2) }

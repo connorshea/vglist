@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "UpdateGenre Mutation API", type: :request do
   describe "Mutation updates an existing genre record" do
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let!(:genre) { create(:genre, name: 'First-person shooter') }
     let(:query_string) do
       <<-GRAPHQL
