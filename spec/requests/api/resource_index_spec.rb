@@ -60,4 +60,56 @@ RSpec.describe "Genre and platform index API", type: :request do
       end
     end
   end
+
+  describe "coverGames" do
+    let(:query_string) do
+      <<-GRAPHQL
+        query {
+          genres(sortBy: NAME) {
+            nodes {
+              name
+              coverGames {
+                name
+                coverUrl
+              }
+            }
+          }
+        }
+      GRAPHQL
+    end
+    let(:genre) { create(:genre, name: "Action") }
+
+    def cover_game_names
+      api_request(query_string, token: access_token).graphql_dig(:genres, :nodes).to_h do |node|
+        [node[:name], node[:coverGames].pluck(:name)]
+      end
+    end
+
+    it "returns up to four games with covers, most-owned first" do
+      games = Array.new(5) { |i| create(:game, :cover, name: "Game #{i}") }
+      games.each { |game| create(:game_genre, game: game, genre: genre) }
+      create(:game_genre, game: create(:game, name: "No cover"), genre: genre)
+      create_list(:game_purchase, 2, game: games[3])
+      create(:game_purchase, game: games[1])
+      create(:genre, name: "Empty")
+
+      expect(cover_game_names).to eq(
+        "Action" => ["Game 3", "Game 1", "Game 0", "Game 2"],
+        "Empty" => []
+      )
+    end
+
+    it "runs no more queries as the list grows" do
+      create(:game_genre, game: create(:game, :cover), genre: genre)
+      # The first request generates the cover variants, which writes records
+      # and is unrelated to batching, so warm those up and measure the second.
+      api_request(query_string, token: access_token)
+      baseline = query_count { api_request(query_string, token: access_token) }
+
+      2.times { |i| create(:game_genre, game: create(:game, :cover), genre: create(:genre, name: "Genre #{i}")) }
+      api_request(query_string, token: access_token)
+
+      expect(query_count { api_request(query_string, token: access_token) }).to eq(baseline)
+    end
+  end
 end
