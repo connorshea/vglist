@@ -8,10 +8,11 @@
 # Run:
 #   docker run -p 3000:3000 \
 #     -e RAILS_MASTER_KEY=... -e DATABASE_URL=postgres://... \
+#     -e FRONTEND_URL=https://vglist.co \
 #     vglist-api
 #
 # Run migrations before each release with the same image:
-#   docker run --rm -e RAILS_MASTER_KEY=... -e DATABASE_URL=... \
+#   docker run --rm -e RAILS_MASTER_KEY=... -e DATABASE_URL=... -e FRONTEND_URL=... \
 #     vglist-api bundle exec rails db:prepare
 #
 # The Vue frontend has its own image, see frontend/Dockerfile.
