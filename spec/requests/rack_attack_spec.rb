@@ -192,4 +192,23 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       expect(response).to have_http_status(:too_many_requests)
     end
   end
+
+  describe "per-IP GraphQL throttle" do
+    def graphql_from(ip)
+      post graphql_path, params: { query: '{ __typename }' }, headers: { 'REMOTE_ADDR' => ip }
+    end
+
+    it "blocks a client sending more than 120 GraphQL requests a minute", :aggregate_failures do
+      120.times { graphql_from('10.11.0.1') }
+      expect(response).to have_http_status(:success)
+
+      graphql_from('10.11.0.1')
+      expect(response).to have_http_status(:too_many_requests)
+      expect(response.parsed_body['errors'].first['message']).to eq('Too many requests. Please try again later.')
+
+      # A different client is unaffected.
+      graphql_from('10.11.0.2')
+      expect(response).to have_http_status(:success)
+    end
+  end
 end

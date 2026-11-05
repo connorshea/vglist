@@ -20,6 +20,10 @@ module RackAttackConfig
 
   module_function
 
+  def graphql_request?(req)
+    req.post? && path(req) == '/graphql'
+  end
+
   def auth_request?(req)
     return false unless req.post? || req.put? || req.patch?
 
@@ -143,6 +147,15 @@ module RackAttackConfig
 end
 
 Rack::Attack.cache.store = Rails.cache
+
+# Per-IP cap on all GraphQL requests, so a scraper can't page through the
+# whole catalog as fast as the server will answer. Normal browsing sends a few
+# requests per page, well under this. Counters live in Rails.cache, which is
+# per Puma worker in production, so the effective limit is this times the
+# number of workers. GRAPHQL_RATE_LIMIT overrides the per-minute limit.
+Rack::Attack.throttle('graphql/ip', limit: ENV.fetch('GRAPHQL_RATE_LIMIT', 120).to_i, period: 1.minute) do |req|
+  RackAttackConfig.client_ip(req) if RackAttackConfig.graphql_request?(req)
+end
 
 # Per-IP cap across every credential endpoint, so a single client can't
 # spray guesses across many accounts or trigger unbounded email delivery.
