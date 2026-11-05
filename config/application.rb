@@ -95,5 +95,9 @@ module VideoGameList
     # Devise needs session middleware even in API mode for Warden.
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+
+    # Only execute the GraphQL operations the SPA itself sends (see
+    # app/graphql/operation_allowlist.rb). Enabled in production.
+    config.x.graphql_operation_allowlist = false
   end
 end

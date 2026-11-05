@@ -22,6 +22,10 @@ const config: CodegenConfig = {
         // Make nullable fields use 'T | null'
         maybeValue: "T | null"
       }
+    },
+    // The operation allowlist the API enforces. See codegen/operation-manifest.mjs.
+    "../config/graphql/operations.json": {
+      plugins: ["./codegen/operation-manifest.mjs"]
     }
   }
 };
