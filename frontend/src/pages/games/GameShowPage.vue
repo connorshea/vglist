@@ -1131,15 +1131,19 @@ async function confirmDeleteGame() {
   display: inline-flex;
   align-items: center;
   height: 28px;
-  padding: 0 4px;
-  color: rgba(255, 255, 255, 0.75);
+  padding: 0 10px;
+  border-radius: 6px;
+  /* An inset ring rather than a border, so the box stays 28px like the chips. */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.8125rem;
   font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
+  transition: background var(--transition-fast);
 }
 
 .hero-tag-more:hover {
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
 }
 
