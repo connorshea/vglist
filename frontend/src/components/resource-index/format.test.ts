@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { seriesMeta } from "./format";
+import { gamesMeta, seriesMeta } from "./format";
 
 describe("seriesMeta", () => {
   it("shows the game count and year span", () => {
@@ -16,5 +16,16 @@ describe("seriesMeta", () => {
 
   it("says when a series has no games", () => {
     expect(seriesMeta(0, null, null)).toBe("No games yet");
+  });
+});
+
+describe("gamesMeta", () => {
+  it("shows the game count", () => {
+    expect(gamesMeta(1)).toBe("1 game");
+    expect(gamesMeta(18240)).toBe("18,240 games");
+  });
+
+  it("says when there are no games", () => {
+    expect(gamesMeta(0)).toBe("No games yet");
   });
 });

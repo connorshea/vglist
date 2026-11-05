@@ -7,12 +7,17 @@ module Resolvers
 
       description "List all platforms."
 
-      argument :sort_by, Types::Enums::ResourceSortType, required: false, description: "The order to sort the platforms in, if any."
+      argument :sort_by, Types::Enums::ResourceSortType, required: false, description: "The order to sort the platforms in. Without one, platforms are ordered by ID."
+      argument :name_contains, String, required: false, description: "Only return platforms whose name contains this text, ignoring case."
 
-      def resolve(sort_by: nil)
+      extras [:lookahead]
+
+      def resolve(lookahead:, sort_by: nil, name_contains: nil)
         platforms = Platform.all
+        platforms = platforms.with_games_count if ResourceIndex.selects_any?(lookahead, [:games_count])
+        platforms = platforms.name_contains(name_contains) if name_contains.present?
 
-        sort_by.nil? ? platforms : platforms.public_send(sort_by.to_sym)
+        ResourceIndex.sort(platforms, sort_by)
       end
     end
   end

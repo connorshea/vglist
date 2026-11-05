@@ -43,6 +43,8 @@ class VideoGameListSchema < GraphQL::Schema
 
   # Batches `Game.ownerCount` into one query per response.
   lazy_resolve(LazyOwnerCount, :value)
+  # Batches the `coverGames` of series, genres and platforms.
+  lazy_resolve(LazyCoverGames, :value)
 
   # A statement cancelled by the statement timeout (see GraphqlController).
   rescue_from(ActiveRecord::QueryCanceled) do |_err, _obj, _args, _ctx, _field|

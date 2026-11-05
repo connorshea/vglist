@@ -1,72 +1,75 @@
 <template>
-  <section class="section">
-    <h1 class="title">Platforms</h1>
-
-    <div v-if="authStore.isModerator" class="buttons">
-      <router-link to="/platforms/new" class="button is-small is-primary">New Platform</router-link>
-    </div>
-
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading platforms...</p>
-    </div>
-
-    <div v-if="error" class="notification is-danger">
-      <p>Failed to load platforms: {{ error.message }}</p>
-    </div>
-
-    <div v-if="data" class="content">
-      <ul>
-        <li v-for="platform in data?.platforms?.nodes" :key="platform.id">
-          <router-link :to="`/platforms/${platform.id}`">{{ platform.name }}</router-link>
-        </li>
-      </ul>
-    </div>
-
-    <PaginationNav
-      v-if="data && (currentPage > 1 || hasNextPage)"
-      :current-page="currentPage"
-      :has-next-page="hasNextPage"
-      :loading="loading"
-      @prev="prevPage"
-      @next="nextPage"
-    />
-  </section>
+  <ResourceIndex
+    v-model:search="index.searchText.value"
+    title="Platforms"
+    kind="platform"
+    kind-plural="platforms"
+    :items="items"
+    :total-count="index.totalCount.value"
+    :sort-links="index.sortLinks.value"
+    :name-filter="index.nameFilter.value"
+    :new-to="{ name: 'platformNew' }"
+    :can-edit="authStore.isModerator"
+    delete-consequence="removed from every game that uses it."
+    :loaded="index.loaded.value"
+    :loading="index.loading.value"
+    :loading-more="index.loadingMore.value"
+    :refreshing="index.refreshing.value"
+    :has-next-page="index.hasNextPage.value"
+    :deleting="deleting"
+    :error="index.error.value"
+    @load-more="index.loadMore"
+    @delete="onDelete"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import { useQuery } from "@/composables/useGraphQL";
-import { GET_PLATFORMS } from "@/graphql/queries/resources";
-import type { GetPlatformsQuery } from "@/types/graphql";
-import PaginationNav from "@/components/PaginationNav.vue";
+import { useMutation } from "@/composables/useGraphQL";
+import { useResourceIndex } from "@/composables/useResourceIndex";
+import { useSnackbar } from "@/composables/useSnackbar";
+import { GET_PLATFORMS_INDEX } from "@/graphql/queries/resources";
+import { DELETE_PLATFORM } from "@/graphql/mutations/resources";
+import { extractGqlError } from "@/utils/graphql-errors";
+import type { GetPlatformsIndexQuery, DeletePlatformMutation } from "@/types/graphql";
+import ResourceIndex, { type ResourceIndexItem } from "@/components/resource-index/ResourceIndex.vue";
+import { gamesMeta } from "@/components/resource-index/format";
 
 const authStore = useAuthStore();
+const { show: showSnackbar } = useSnackbar();
 
-const PAGE_SIZE = 25;
-const currentPage = ref(1);
-const pageCursors = ref<(string | null)[]>([null]);
-
-const { data, loading, error } = useQuery<GetPlatformsQuery>(GET_PLATFORMS, {
-  variables: () => ({
-    first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1]
-  })
+const index = useResourceIndex<
+  GetPlatformsIndexQuery,
+  NonNullable<GetPlatformsIndexQuery["platforms"]>["nodes"][number]
+>({
+  document: GET_PLATFORMS_INDEX,
+  connection: (data) => data.platforms,
+  withConnection: (data, connection) => ({ ...data, platforms: connection })
 });
 
-const hasNextPage = computed(() => data.value?.platforms?.pageInfo.hasNextPage ?? false);
+const items = computed<ResourceIndexItem[]>(() =>
+  index.nodes.value.map((node) => ({
+    id: node.id,
+    name: node.name,
+    meta: gamesMeta(node.gamesCount),
+    coverGames: node.coverGames,
+    to: { name: "platform", params: { id: node.id } },
+    editTo: { name: "platformEdit", params: { id: node.id } }
+  }))
+);
 
-watch(data, (val) => {
-  if (val?.platforms?.pageInfo.endCursor) {
-    pageCursors.value[currentPage.value] = val.platforms.pageInfo.endCursor;
+const { mutate: deleteRecord, loading: deleting } = useMutation<DeletePlatformMutation>(DELETE_PLATFORM);
+
+async function onDelete(item: ResourceIndexItem, done: () => void) {
+  try {
+    await deleteRecord({ platformId: item.id });
+    showSnackbar(`${item.name} has been deleted.`);
+    await index.removeNode(item.id);
+  } catch (e) {
+    showSnackbar(`Failed to delete platform: ${extractGqlError(e)}`, "error");
+  } finally {
+    done();
   }
-});
-
-function nextPage() {
-  if (hasNextPage.value) currentPage.value++;
-}
-
-function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
 }
 </script>

@@ -14,6 +14,7 @@ module Types
     field :last_release_year, Integer, null: true, description: "The year the series' latest game was released. `null` if none of its games have a release date."
 
     # Associations
+    field :cover_games, [GameType], null: false, description: "Up to four games in this series that have a cover, most-owned first, for showing the series as a mosaic of covers."
     field :games, GameType.connection_type, null: false, description: "Games in this series." do
       argument :sort_by, Enums::ResourceGameSortType, required: false, description: "The order to sort the games in, if any."
     end
@@ -26,7 +27,7 @@ module Types
     # page of series doesn't count each one's games separately. Elsewhere they
     # are computed for the one record.
     def games_count
-      preloaded(:games_count) { @object.games.count }
+      preloaded(:index_games_count) { @object.games.count }
     end
 
     def first_release_year
@@ -35,6 +36,10 @@ module Types
 
     def last_release_year
       preloaded(:last_release_year) { @object.games.maximum(:release_date)&.year }
+    end
+
+    def cover_games
+      LazyCoverGames.new(@context, @object)
     end
 
     private

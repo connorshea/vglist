@@ -153,5 +153,17 @@ RSpec.describe "Series API", type: :request do
 
       expect(result.graphql_dig(:series)).to eq({ gamesCount: 3, firstReleaseYear: 1986, lastReleaseYear: 2023 })
     end
+
+    it "returns the most-owned games with covers as coverGames" do
+      owned = create(:game, :cover, series: metroid, name: "Metroid Prime")
+      create(:game_purchase, game: owned)
+      result = api_request(
+        "query($id: ID!) { series(id: $id) { coverGames { name } } }",
+        variables: { id: metroid.id },
+        token: access_token
+      )
+
+      expect(result.graphql_dig(:series, :cover_games)).to eq([{ name: "Metroid Prime" }])
+    end
   end
 end

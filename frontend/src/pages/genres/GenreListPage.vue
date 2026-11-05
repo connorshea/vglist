@@ -1,72 +1,72 @@
 <template>
-  <section class="section">
-    <h1 class="title">Genres</h1>
-
-    <div v-if="authStore.isModerator" class="buttons">
-      <router-link to="/genres/new" class="button is-small is-primary">New Genre</router-link>
-    </div>
-
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading genres...</p>
-    </div>
-
-    <div v-if="error" class="notification is-danger">
-      <p>Failed to load genres: {{ error.message }}</p>
-    </div>
-
-    <div v-if="data" class="content">
-      <ul>
-        <li v-for="genre in data?.genres?.nodes" :key="genre.id">
-          <router-link :to="`/genres/${genre.id}`">{{ genre.name }}</router-link>
-        </li>
-      </ul>
-    </div>
-
-    <PaginationNav
-      v-if="data && (currentPage > 1 || hasNextPage)"
-      :current-page="currentPage"
-      :has-next-page="hasNextPage"
-      :loading="loading"
-      @prev="prevPage"
-      @next="nextPage"
-    />
-  </section>
+  <ResourceIndex
+    v-model:search="index.searchText.value"
+    title="Genres"
+    kind="genre"
+    kind-plural="genres"
+    :items="items"
+    :total-count="index.totalCount.value"
+    :sort-links="index.sortLinks.value"
+    :name-filter="index.nameFilter.value"
+    :new-to="{ name: 'genreNew' }"
+    :can-edit="authStore.isModerator"
+    delete-consequence="removed from every game in it."
+    :loaded="index.loaded.value"
+    :loading="index.loading.value"
+    :loading-more="index.loadingMore.value"
+    :refreshing="index.refreshing.value"
+    :has-next-page="index.hasNextPage.value"
+    :deleting="deleting"
+    :error="index.error.value"
+    @load-more="index.loadMore"
+    @delete="onDelete"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import { useQuery } from "@/composables/useGraphQL";
-import { GET_GENRES } from "@/graphql/queries/resources";
-import type { GetGenresQuery } from "@/types/graphql";
-import PaginationNav from "@/components/PaginationNav.vue";
+import { useMutation } from "@/composables/useGraphQL";
+import { useResourceIndex } from "@/composables/useResourceIndex";
+import { useSnackbar } from "@/composables/useSnackbar";
+import { GET_GENRES_INDEX } from "@/graphql/queries/resources";
+import { DELETE_GENRE } from "@/graphql/mutations/resources";
+import { extractGqlError } from "@/utils/graphql-errors";
+import type { GetGenresIndexQuery, DeleteGenreMutation } from "@/types/graphql";
+import ResourceIndex, { type ResourceIndexItem } from "@/components/resource-index/ResourceIndex.vue";
+import { gamesMeta } from "@/components/resource-index/format";
 
 const authStore = useAuthStore();
+const { show: showSnackbar } = useSnackbar();
 
-const PAGE_SIZE = 25;
-const currentPage = ref(1);
-const pageCursors = ref<(string | null)[]>([null]);
-
-const { data, loading, error } = useQuery<GetGenresQuery>(GET_GENRES, {
-  variables: () => ({
-    first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1]
-  })
+const index = useResourceIndex<GetGenresIndexQuery, NonNullable<GetGenresIndexQuery["genres"]>["nodes"][number]>({
+  document: GET_GENRES_INDEX,
+  connection: (data) => data.genres,
+  withConnection: (data, connection) => ({ ...data, genres: connection })
 });
 
-const hasNextPage = computed(() => data.value?.genres?.pageInfo.hasNextPage ?? false);
+const items = computed<ResourceIndexItem[]>(() =>
+  index.nodes.value.map((node) => ({
+    id: node.id,
+    name: node.name,
+    meta: gamesMeta(node.gamesCount),
+    coverGames: node.coverGames,
+    to: { name: "genre", params: { id: node.id } },
+    editTo: { name: "genreEdit", params: { id: node.id } }
+  }))
+);
 
-watch(data, (val) => {
-  if (val?.genres?.pageInfo.endCursor) {
-    pageCursors.value[currentPage.value] = val.genres.pageInfo.endCursor;
+const { mutate: deleteRecord, loading: deleting } = useMutation<DeleteGenreMutation>(DELETE_GENRE);
+
+async function onDelete(item: ResourceIndexItem, done: () => void) {
+  try {
+    await deleteRecord({ genreId: item.id });
+    showSnackbar(`${item.name} has been deleted.`);
+    await index.removeNode(item.id);
+  } catch (e) {
+    showSnackbar(`Failed to delete genre: ${extractGqlError(e)}`, "error");
+  } finally {
+    done();
   }
-});
-
-function nextPage() {
-  if (hasNextPage.value) currentPage.value++;
-}
-
-function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
 }
 </script>
