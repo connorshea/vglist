@@ -84,6 +84,11 @@ const router = createRouter({
       component: () => import("@/pages/users/UserShowPage.vue")
     },
     {
+      path: "/users/:slug/library",
+      name: "userLibrary",
+      component: () => import("@/pages/users/UserLibraryPage.vue")
+    },
+    {
       path: "/users/:slug/favorites",
       name: "userFavorites",
       component: () => import("@/pages/users/UserFavoritesPage.vue")

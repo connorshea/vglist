@@ -20,8 +20,13 @@ module Types
     # Associations
     field :game_purchases, GamePurchaseType.connection_type, null: false, description: "Games in this user's library." do
       argument :completion_status, Enums::GamePurchaseCompletionStatusType, required: false, description: "Only return the games with this completion status."
+      argument :no_completion_status, Boolean, required: false, description: "When `true`, only return the games that have no completion status. Combining it with `completionStatus` matches nothing."
       argument :search, String, required: false, description: "Only return the games whose name contains this string, case-insensitively."
       argument :sort_by, Enums::GamePurchaseSortType, required: false, description: "The order to sort the games in, if any."
+      argument :platform_ids, [ID], required: false, description: "Only return the games the user owns on at least one of these platforms."
+      argument :store_ids, [ID], required: false, description: "Only return the games the user owns from at least one of these stores."
+      argument :min_rating, Integer, required: false, description: "Only return the games the user rated at least this highly, out of 100. Unrated games are left out."
+      argument :max_rating, Integer, required: false, description: "Only return the games the user rated at most this highly, out of 100. Unrated games are left out."
     end
     field :followers, UserType.connection_type, null: false, description: "Users that are following this user."
     field :following, UserType.connection_type, null: false, description: "Users that this user is following."
@@ -84,12 +89,13 @@ module Types
       end
     end
 
-    def game_purchases(completion_status: nil, search: nil, sort_by: nil)
+    def game_purchases(sort_by: nil, **filters)
       return [] unless user_visible?
 
-      purchases = @object.game_purchases.includes(:platforms, :stores, game: AttachmentPreloads::COVER)
-      purchases = purchases.where(completion_status: completion_status) unless completion_status.nil?
-      purchases = purchases.with_game_name_matching(search) if search.present?
+      purchases = filter_game_purchases(
+        @object.game_purchases.includes(:platforms, :stores, game: AttachmentPreloads::COVER),
+        **filters
+      )
 
       # Order by ID when no sort was requested: cursor-based pagination walks
       # the relation by offset, so an unordered relation can repeat or skip
@@ -101,7 +107,7 @@ module Types
     # single page of game purchases, so that the numbers on a profile don't
     # change based on how many games the client has paged in.
     def library_statistics
-      return EMPTY_LIBRARY_STATISTICS unless user_visible?
+      return EMPTY_LIBRARY_STATISTICS.merge(game_purchases: GamePurchase.none) unless user_visible?
 
       purchases = @object.game_purchases
       counts_by_status = purchases.group(:completion_status).count
@@ -122,7 +128,8 @@ module Types
         completed_count: completed_count,
         completion_percentage: games_count.zero? ? 0 : (completed_count * 100.0 / games_count).round,
         average_rating: average_rating&.to_f&.round(1),
-        status_counts: status_counts.map { |status, count| { status: status, count: count } }
+        status_counts: status_counts.map { |status, count| { status: status, count: count } },
+        game_purchases: purchases
       }
     end
 
@@ -141,6 +148,16 @@ module Types
     end
 
     private
+
+    def filter_game_purchases(purchases, completion_status: nil, no_completion_status: false, search: nil, platform_ids: nil, store_ids: nil, min_rating: nil, max_rating: nil)
+      purchases = purchases.where(completion_status: completion_status) unless completion_status.nil?
+      purchases = purchases.where(completion_status: nil) if no_completion_status
+      purchases = purchases.with_game_name_matching(search) if search.present?
+      purchases = purchases.on_any_platform(platform_ids) if platform_ids.present?
+      purchases = purchases.from_any_store(store_ids) if store_ids.present?
+      purchases = purchases.rated_between(min_rating, max_rating) unless min_rating.nil? && max_rating.nil?
+      purchases
+    end
 
     # What a library's statistics look like when the viewer isn't allowed to see
     # the library at all.

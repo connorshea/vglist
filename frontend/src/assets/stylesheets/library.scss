@@ -1,0 +1,101 @@
+// Colours shared by the library page's components: completion status dots and
+// rating badges. Scoped to the page so they don't leak into the rest of the app.
+.library-page {
+  --status-in-progress: #3b82f6;
+  --status-completed: #22c55e;
+  --status-fully-completed: #16a34a;
+  --status-paused: #f59e0b;
+  --status-dropped: #ef4444;
+  --status-unplayed: #a855f7;
+  --status-not-applicable: #6b7280;
+
+  --rating-great: var(--status-completed);
+  --rating-good: var(--status-in-progress);
+  --rating-ok: var(--status-paused);
+  --rating-low: var(--status-dropped);
+
+  --cover-placeholder-1: #e879a0;
+  --cover-placeholder-2: #c266d6;
+  --cover-placeholder-3: #7c5ce7;
+
+  .status-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--status-not-applicable);
+  }
+
+  .st-in-progress {
+    background: var(--status-in-progress);
+  }
+  .st-completed {
+    background: var(--status-completed);
+  }
+  .st-fully-completed {
+    background: var(--status-fully-completed);
+  }
+  .st-paused {
+    background: var(--status-paused);
+  }
+  .st-dropped {
+    background: var(--status-dropped);
+  }
+  .st-unplayed {
+    background: var(--status-unplayed);
+  }
+  .st-na {
+    background: var(--status-not-applicable);
+  }
+  // A hollow dot, so "no status" doesn't read as one of the statuses.
+  .st-none {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--status-not-applicable);
+  }
+
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 5px;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .r-great {
+    background: var(--rating-great);
+  }
+  .r-good {
+    background: var(--rating-good);
+  }
+  .r-ok {
+    background: var(--rating-ok);
+  }
+  .r-low {
+    background: var(--rating-low);
+  }
+
+  .cover-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      var(--cover-placeholder-1) 0%,
+      var(--cover-placeholder-2) 50%,
+      var(--cover-placeholder-3) 100%
+    );
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+}

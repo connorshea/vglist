@@ -43,6 +43,24 @@ class GamePurchase < ApplicationRecord
     joins(:game).where('games.name ILIKE ?', "%#{sanitize_sql_like(query)}%")
   }
 
+  # Find the games in a library that the user owns on any of the given
+  # platforms (or from any of the given stores). These filter with a subquery
+  # rather than a join so that a game owned on two of the platforms is only
+  # returned once.
+  scope :on_any_platform, ->(platform_ids) {
+    where(id: GamePurchasePlatform.where(platform_id: platform_ids).select(:game_purchase_id))
+  }
+  scope :from_any_store, ->(store_ids) {
+    where(id: GamePurchaseStore.where(store_id: store_ids).select(:game_purchase_id))
+  }
+
+  # Find the games in a library that the user rated within the given range,
+  # inclusive. Either bound can be nil to leave that end open. Unrated games
+  # never match, since a rating filter is asking for rated games.
+  scope :rated_between, ->(min, max) {
+    where(rating: (min || 0)..(max || 100))
+  }
+
   validates :comments,
     length: { maximum: 2000 }
 

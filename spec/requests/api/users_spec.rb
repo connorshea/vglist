@@ -462,9 +462,9 @@ RSpec.describe "Users API", type: :request do
 
       let(:query_string) do
         <<-GRAPHQL
-          query($id: ID!, $completionStatus: GamePurchaseCompletionStatus, $search: String, $sortBy: GamePurchaseSort) {
+          query($id: ID!, $completionStatus: GamePurchaseCompletionStatus, $noCompletionStatus: Boolean, $search: String, $sortBy: GamePurchaseSort) {
             user(id: $id) {
-              gamePurchases(completionStatus: $completionStatus, search: $search, sortBy: $sortBy) {
+              gamePurchases(completionStatus: $completionStatus, noCompletionStatus: $noCompletionStatus, search: $search, sortBy: $sortBy) {
                 totalCount
                 nodes {
                   id
@@ -482,6 +482,13 @@ RSpec.describe "Users API", type: :request do
 
       it "filters by completion status" do
         expect(purchase_ids(completion_status: 'COMPLETED')).to eq([completed_purchase.id.to_s])
+      end
+
+      it "filters to the games with no completion status" do
+        no_status_purchase = create(:game_purchase, user: user, completion_status: nil)
+
+        expect(purchase_ids(no_completion_status: true)).to eq([no_status_purchase.id.to_s])
+        expect(purchase_ids(no_completion_status: false).length).to eq(4)
       end
 
       it "filters by a case-insensitive substring of the game's name" do
@@ -528,6 +535,77 @@ RSpec.describe "Users API", type: :request do
 
         expect(result.graphql_dig(:user, :game_purchases, :total_count)).to eq(3)
         expect(result.graphql_dig(:user, :game_purchases, :nodes).length).to eq(1)
+      end
+    end
+
+    context 'when filtering game purchases by platform, store and rating' do
+      let(:windows) { create(:platform) }
+      let(:switch) { create(:platform) }
+      let(:steam) { create(:store) }
+      let(:gog) { create(:store) }
+
+      let!(:steam_windows_purchase) { create(:game_purchase, user: user, platforms: [windows], stores: [steam], rating: 95) }
+      let!(:switch_purchase) { create(:game_purchase, user: user, platforms: [switch], rating: 60) }
+      let!(:gog_windows_purchase) { create(:game_purchase, user: user, platforms: [windows], stores: [gog]) }
+      let!(:both_platforms_purchase) { create(:game_purchase, user: user, platforms: [windows, switch], rating: 80) }
+
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!, $platformIds: [ID!], $storeIds: [ID!], $minRating: Int, $maxRating: Int) {
+            user(id: $id) {
+              gamePurchases(platformIds: $platformIds, storeIds: $storeIds, minRating: $minRating, maxRating: $maxRating) {
+                totalCount
+                nodes {
+                  id
+                }
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      def purchase_ids(**variables)
+        result = api_request(query_string, variables: { id: user.id, **variables }, token: access_token)
+        result.graphql_dig(:user, :game_purchases, :nodes).pluck(:id)
+      end
+
+      it "returns the games owned on any of the given platforms, each once" do
+        expect(purchase_ids(platform_ids: [windows.id, switch.id])).to contain_exactly(
+          steam_windows_purchase.id.to_s,
+          switch_purchase.id.to_s,
+          gog_windows_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+        expect(purchase_ids(platform_ids: [switch.id])).to contain_exactly(
+          switch_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+      end
+
+      it "returns the games owned from any of the given stores" do
+        expect(purchase_ids(store_ids: [steam.id, gog.id])).to contain_exactly(
+          steam_windows_purchase.id.to_s,
+          gog_windows_purchase.id.to_s
+        )
+      end
+
+      it "returns the rated games within an inclusive rating range" do
+        expect(purchase_ids(min_rating: 80)).to contain_exactly(
+          steam_windows_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+        expect(purchase_ids(min_rating: 60, max_rating: 80)).to contain_exactly(
+          switch_purchase.id.to_s,
+          both_platforms_purchase.id.to_s
+        )
+      end
+
+      it "combines the filters" do
+        expect(purchase_ids(platform_ids: [windows.id], min_rating: 90)).to eq([steam_windows_purchase.id.to_s])
+      end
+
+      it "ignores empty lists" do
+        expect(purchase_ids(platform_ids: [], store_ids: []).length).to eq(4)
       end
     end
 
@@ -624,6 +702,59 @@ RSpec.describe "Users API", type: :request do
           completionPercentage: 100,
           averageRating: 100.0
         )
+      end
+
+      context 'with platform and store counts' do
+        let(:counts_query_string) do
+          <<-GRAPHQL
+            query($id: ID!) {
+              user(id: $id) {
+                libraryStatistics {
+                  platformCounts {
+                    platform { id name }
+                    count
+                  }
+                  storeCounts {
+                    store { id name }
+                    count
+                  }
+                }
+              }
+            }
+          GRAPHQL
+        end
+
+        it "counts the games on each platform and from each store, most-owned first" do
+          windows = create(:platform, name: 'Windows')
+          switch = create(:platform, name: 'Nintendo Switch')
+          steam = create(:store, name: 'Steam')
+          create(:game_purchase, user: user, platforms: [windows, switch], stores: [steam])
+          create(:game_purchase, user: user, platforms: [windows], stores: [steam])
+          create(:game_purchase, user: user, platforms: [windows])
+          # Someone else's library doesn't count.
+          create(:game_purchase, platforms: [switch], stores: [steam])
+
+          result = api_request(counts_query_string, variables: { id: user.id }, token: access_token)
+          statistics = result.graphql_dig(:user, :library_statistics)
+
+          expect(statistics[:platformCounts]).to eq(
+            [
+              { platform: { id: windows.id.to_s, name: 'Windows' }, count: 3 },
+              { platform: { id: switch.id.to_s, name: 'Nintendo Switch' }, count: 1 }
+            ]
+          )
+          expect(statistics[:storeCounts]).to eq(
+            [{ store: { id: steam.id.to_s, name: 'Steam' }, count: 2 }]
+          )
+        end
+
+        it "returns no counts for a private user's library" do
+          create(:game_purchase, user: private_user, platforms: [create(:platform)], stores: [create(:store)])
+
+          result = api_request(counts_query_string, variables: { id: private_user.id }, token: access_token)
+
+          expect(result.graphql_dig(:user, :library_statistics)).to eq({ platformCounts: [], storeCounts: [] })
+        end
       end
     end
 
