@@ -1054,14 +1054,6 @@ export interface GetStoresQuery {
   } | null;
 }
 
-export type GetStoreQueryVariables = Exact<{
-  id: string;
-}>;
-
-export interface GetStoreQuery {
-  store: { id: string; name: string } | null;
-}
-
 export type GetStoreForEditQueryVariables = Exact<{
   id: string;
 }>;

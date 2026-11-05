@@ -274,15 +274,6 @@ export const GET_STORES = gql`
   }
 `;
 
-export const GET_STORE = gql`
-  query GetStore($id: ID!) {
-    store(id: $id) {
-      id
-      name
-    }
-  }
-`;
-
 export const GET_STORE_FOR_EDIT = gql`
   query GetStoreForEdit($id: ID!) {
     store(id: $id) {

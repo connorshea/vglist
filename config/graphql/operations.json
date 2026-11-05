@@ -47,7 +47,6 @@
   "GetSeriesForEdit": "query GetSeriesForEdit($id: ID!) {\n  series(id: $id) {\n    id\n    name\n    wikidataId\n  }\n}",
   "GetSeriesList": "query GetSeriesList($first: Int, $after: String) {\n  seriesList(first: $first, after: $after) {\n    nodes {\n      id\n      name\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}",
   "GetSteamBlocklist": "query GetSteamBlocklist($first: Int, $after: String) {\n  steamBlocklist(first: $first, after: $after) {\n    nodes {\n      id\n      name\n      steamAppId\n      user {\n        id\n        username\n        slug\n      }\n      createdAt\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}",
-  "GetStore": "query GetStore($id: ID!) {\n  store(id: $id) {\n    id\n    name\n  }\n}",
   "GetStoreForEdit": "query GetStoreForEdit($id: ID!) {\n  store(id: $id) {\n    id\n    name\n  }\n}",
   "GetStores": "query GetStores($first: Int, $after: String) {\n  stores(first: $first, after: $after) {\n    nodes {\n      id\n      name\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}",
   "GetUnmatchedGames": "query GetUnmatchedGames($first: Int, $after: String) {\n  groupedUnmatchedGames(first: $first, after: $after) {\n    nodes {\n      externalServiceName\n      externalServiceId\n      name\n      count\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}",
