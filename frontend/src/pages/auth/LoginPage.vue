@@ -1,7 +1,7 @@
 <template>
   <AuthLayout>
     <h1>Sign in</h1>
-    <p class="auth-sub">New to vglist? <router-link to="/signup" class="auth-link">Create an account</router-link></p>
+    <p class="auth-sub">New here? <router-link to="/signup" class="auth-link">Create an account</router-link></p>
 
     <div v-if="errors.length" class="notification is-danger" role="alert">
       <ul>
