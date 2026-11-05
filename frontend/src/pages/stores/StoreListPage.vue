@@ -92,6 +92,12 @@ const { data, loading, error, refetch } = useQuery<GetStoresQuery>(GET_STORES, {
 const hasNextPage = computed(() => data.value?.stores?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
+  // Deleting the last store on a later page leaves that page empty, so step
+  // back to the one before it.
+  if (val?.stores?.nodes.length === 0 && currentPage.value > 1) {
+    currentPage.value--;
+    return;
+  }
   if (val?.stores?.pageInfo.endCursor) {
     pageCursors.value[currentPage.value] = val.stores.pageInfo.endCursor;
   }

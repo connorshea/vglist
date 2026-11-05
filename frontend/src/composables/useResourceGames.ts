@@ -87,17 +87,24 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
   const loadingMore = ref(false);
   const loadMoreError = ref<string | null>(null);
 
-  // Bumped whenever the first page is replaced (new sort, new resource), so
-  // a page that was still loading for the old list is thrown away.
+  // Bumped whenever the list changes (new sort, tab or resource), so a page
+  // that was still loading for the old list is thrown away.
   let generation = 0;
 
-  watch(data, () => {
+  function resetPages() {
     generation++;
     morePages.value = [];
     latestPageInfo.value = null;
     loadingMore.value = false;
     loadMoreError.value = null;
-  });
+  }
+
+  // Reset as soon as the variables change, not only once the new first page
+  // arrives. Otherwise, while it loads, the extra pages of the old list (e.g.
+  // the other company tab) stay on screen, and "Show more" would use the old
+  // list's cursor.
+  watch(() => JSON.stringify(baseVariables()), resetPages);
+  watch(data, resetPages);
 
   const games = computed(() => [...(firstPage.value?.nodes ?? []), ...morePages.value]);
   const pageInfo = computed(() => latestPageInfo.value ?? firstPage.value?.pageInfo ?? null);
@@ -105,7 +112,8 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
 
   async function loadMore() {
     const cursor = pageInfo.value?.endCursor;
-    if (!hasNextPage.value || !cursor || loadingMore.value) return;
+    // While a new first page loads, the cursor belongs to the old list.
+    if (!hasNextPage.value || !cursor || loadingMore.value || loading.value) return;
 
     const requestGeneration = generation;
     loadingMore.value = true;

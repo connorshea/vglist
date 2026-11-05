@@ -58,6 +58,11 @@ RSpec.describe "Sorting the games on a resource", type: :request do
     expect(platform_game_names('NAME')).to eq(%w[Alpha Bravo Charlie Delta])
   end
 
+  it "orders by ID when no sort is given, so pages don't overlap" do
+    expect(platform_game_names(nil)).to eq(%w[Bravo Charlie Alpha Delta])
+    expect(ResourceGameSort.apply(platform.games, nil).to_sql).to end_with('ORDER BY games.id ASC')
+  end
+
   it "sorts a company's developed and published games independently" do
     company = create(:company)
     create(:game_developer, game: old_popular, company: company)
