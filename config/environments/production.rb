@@ -31,10 +31,12 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
-  # We actually use DigitalOcean for this, but the key is called Amazon because
-  # DigitalOcean Spaces is S3-compatible.
-  # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = :amazon
+  # Where new uploads are stored (see config/storage.yml). "amazon" is
+  # DigitalOcean Spaces (S3-compatible, hence the name), "r2" is Cloudflare R2.
+  # Set ACTIVE_STORAGE_SERVICE=r2 (with the R2_* variables) to send new uploads
+  # to R2. Existing blobs keep being read from the service in their
+  # service_name column until they are migrated.
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", "amazon").to_sym
 
   # Proxy storage requests directly to DigitalOcean rather than using a redirect.
   # config.active_storage.resolve_model_to_route = :rails_storage_proxy

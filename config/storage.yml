@@ -10,6 +10,25 @@ local:
   # Non-expiring URLs, so cached fragments (e.g. on the homepage) keep working.
   public: true
 
+# Cloudflare R2 (S3-compatible). Uploads go through the account's S3 API
+# endpoint; objects are served publicly from the custom domain connected to
+# the bucket (public_host). See ActiveStorage::Service::R2Service
+# (lib/active_storage/service/r2_service.rb).
+r2:
+  service: R2
+  access_key_id: <%= ENV["R2_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["R2_SECRET_ACCESS_KEY"] %>
+  endpoint: <%= ENV["R2_ENDPOINT"] %>
+  region: auto
+  bucket: <%= ENV.fetch("R2_BUCKET", "vglist") %>
+  public: true
+  public_host: <%= ENV.fetch("R2_PUBLIC_HOST", "https://files.vglist.co") %>
+  # Blob and variant keys are never reused, so objects can be cached forever
+  # by browsers and Cloudflare.
+  upload:
+    cache_control: "public, max-age=31536000, immutable"
+
+# Legacy: remove once everything has been migrated to R2.
 # Use DigitalOcean Spaces (which is S3-compatible) for ActiveStorage in production.
 # Use rails credentials:edit to set the AWS secrets (as digitalocean:access_key_id|secret_access_key)
 amazon:
