@@ -99,6 +99,11 @@ services:
         value: api.vglist.co
       - key: FRONTEND_URL
         value: https://vglist.co
+      # App Platform puts its ingress in X-Forwarded-For and the client in
+      # DO-Connecting-IP, so Rack::Attack must throttle by this header or
+      # every visitor shares one set of counters. See rack_attack.rb.
+      - key: CLIENT_IP_HEADER
+        value: DO-Connecting-IP
       # Release tag for Sentry and the home-page stats cache key.
       - key: GIT_COMMIT_SHA
         value: ${_self.COMMIT_HASH}
