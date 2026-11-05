@@ -321,6 +321,10 @@ export const GET_ACTIVITY = gql`
         id
         eventCategory
         createdAt
+        completionStatusChange {
+          before
+          after
+        }
         user {
           id
           username
