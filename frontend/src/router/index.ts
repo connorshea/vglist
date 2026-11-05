@@ -241,10 +241,10 @@ const router = createRouter({
       component: () => import("@/pages/stores/StoreFormPage.vue"),
       meta: { requiresAuth: true, requiresModerator: true }
     },
+    // Stores have no page of their own; send old links to the list.
     {
       path: "/stores/:id",
-      name: "store",
-      component: () => import("@/pages/stores/StoreShowPage.vue")
+      redirect: { name: "stores" }
     },
     {
       path: "/stores/:id/edit",

@@ -11,10 +11,12 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this engine was last updated."
 
     # Associations
-    field :games, GameType.connection_type, null: false, description: "Games built with this engine."
+    field :games, GameType.connection_type, null: false, description: "Games built with this engine." do
+      argument :sort_by, Enums::ResourceGameSortType, required: false, description: "The order to sort the games in, if any."
+    end
 
-    def games
-      @object.games.with_attached_cover
+    def games(sort_by: nil)
+      ResourceGameSort.apply(@object.games.with_attached_cover, sort_by)
     end
   end
 end

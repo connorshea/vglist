@@ -8,7 +8,7 @@
     :loading="isEditing && loading"
     :submitting="submitting"
     :submit-error="submitError"
-    :cancel-to="isEditing ? `/stores/${storeId}` : '/stores'"
+    cancel-to="/stores"
     @submit="handleSubmit"
   />
 </template>
@@ -86,14 +86,14 @@ async function handleSubmit() {
       const store = result?.updateStore?.store;
       if (store) {
         showSnackbar(`${store.name} has been updated.`);
-        router.push(`/stores/${store.id}`);
+        router.push({ name: "stores" });
       }
     } else {
       const result = await createStore({ name: trimmedName });
       const store = result?.createStore?.store;
       if (store) {
         showSnackbar(`${store.name} has been created.`);
-        router.push(`/stores/${store.id}`);
+        router.push({ name: "stores" });
       }
     }
   } catch (e) {

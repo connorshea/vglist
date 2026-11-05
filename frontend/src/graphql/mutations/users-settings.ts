@@ -64,3 +64,29 @@ export const UPDATE_PASSWORD = gql`
     }
   }
 `;
+
+export const CONNECT_STEAM = gql`
+  mutation ConnectSteam($userId: ID!, $steamUsername: String!) {
+    connectSteam(userId: $userId, steamUsername: $steamUsername) {
+      connected
+    }
+  }
+`;
+
+export const DISCONNECT_STEAM = gql`
+  mutation DisconnectSteam($userId: ID!) {
+    disconnectSteam(userId: $userId) {
+      disconnected
+    }
+  }
+`;
+
+export const IMPORT_STEAM_LIBRARY = gql`
+  mutation ImportSteamLibrary($userId: ID!, $updateHours: Boolean) {
+    importSteamLibrary(userId: $userId, updateHours: $updateHours) {
+      addedGamesCount
+      updatedGamesCount
+      unmatchedCount
+    }
+  }
+`;
