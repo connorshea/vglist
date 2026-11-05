@@ -41,6 +41,12 @@ const router = createRouter({
       component: () => import("@/pages/auth/PasswordResetConfirmPage.vue"),
       meta: { guestOnly: true }
     },
+    {
+      path: "/confirmation/resend",
+      name: "confirmationResend",
+      component: () => import("@/pages/auth/ConfirmationResendPage.vue"),
+      meta: { guestOnly: true }
+    },
 
     // Games
     {

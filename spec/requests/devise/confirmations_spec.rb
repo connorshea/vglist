@@ -32,5 +32,36 @@ RSpec.describe "Users::Confirmations", type: :request do
       json = JSON.parse(response.body)
       expect(json['message']).to include("Confirmation instructions sent")
     end
+
+    it "sends a new confirmation email to an unconfirmed user" do
+      user = create(:user)
+
+      expect do
+        post user_confirmation_path, params: { user: { email: user.email } }
+      end.to change { ActionMailer::Base.deliveries.count }.by(1)
+      expect(ActionMailer::Base.deliveries.last.to).to eq([user.email])
+    end
+
+    # Devise runs in paranoid mode, so the response mustn't reveal whether the
+    # email is registered or already confirmed.
+    it "returns the same success response for an unknown email", :aggregate_failures do
+      expect do
+        post user_confirmation_path, params: { user: { email: "nobody@example.com" } }
+      end.not_to(change { ActionMailer::Base.deliveries.count })
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['message']).to include("Confirmation instructions sent")
+    end
+
+    it "returns the same success response for an already-confirmed user", :aggregate_failures do
+      user = create(:confirmed_user)
+
+      expect do
+        post user_confirmation_path, params: { user: { email: user.email } }
+      end.not_to(change { ActionMailer::Base.deliveries.count })
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['message']).to include("Confirmation instructions sent")
+    end
   end
 end
