@@ -17,7 +17,7 @@ module Types
       ASSUMED_SIZE = 10
 
       def complexity_for(child_complexity:, query:, lookahead:) # rubocop:disable Lint/UnusedMethodArgument
-        size = [lookahead.arguments[:first], lookahead.arguments[:last], ASSUMED_SIZE].compact.min
+        size = [lookahead.arguments[:first], lookahead.arguments[:last], ASSUMED_SIZE].compact.min.clamp(0, ASSUMED_SIZE)
         1 + (child_complexity * size)
       end
     end

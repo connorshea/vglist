@@ -65,4 +65,28 @@ RSpec.describe "GraphQL complexity and depth limits", type: :request do
     expect(response.parsed_body['errors'].first['message']).to match(/exceeds max complexity/)
     expect(response.parsed_body['data']).to be_nil
   end
+
+  describe 'negative page sizes' do
+    def execute(query)
+      VideoGameListSchema.execute(query).to_h['errors']&.pluck('message')
+    end
+
+    it 'rejects a negative `first` on a top-level connection' do
+      expect(execute('{ games(first: -100000) { nodes { id } } }')).to include(/can't be negative/)
+    end
+
+    it 'rejects a negative `first` on a short association list' do
+      expect(execute('{ games(first: 2) { nodes { platforms(first: -100000) { nodes { id } } } } }')).to include(/can't be negative/)
+    end
+
+    it 'rejects a negative `last`' do
+      expect(execute('{ games(last: -5) { nodes { id } } }')).to include(/can't be negative/)
+    end
+
+    it 'never scores a short association list below zero' do
+      query = '{ games(first: 10) { nodes { platforms(first: -100) { nodes { id } } } } }'
+
+      expect(analyze(query)[:complexity]).to eq(10 * 1 + 2)
+    end
+  end
 end
