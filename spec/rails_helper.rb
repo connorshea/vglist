@@ -71,6 +71,7 @@ RSpec.configure do |config|
 
   config.include FeatureTestHelper, type: :feature
   config.include ApiRequestTestHelper, type: :request
+  config.include ActiveStorageUrlHelper, type: :request
   config.include EnvHelper
 
   # Prints JavaScript errors to the console if there are any.

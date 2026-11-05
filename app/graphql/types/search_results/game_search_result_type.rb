@@ -15,7 +15,7 @@ module Types
         cover = game&.sized_cover(size)
         return if cover.nil?
 
-        Rails.application.routes.url_helpers.rails_representation_url(cover)
+        cover.url
       end
 
       def developer_name

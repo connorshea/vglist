@@ -17,14 +17,14 @@ module ApplicationHelper
       # Resize the image, center it, and then crop it to a square.
       # This prevents users from having images that aren't either
       # too wide or too tall.
-      image_tag user.sized_avatar(size),
+      image_tag user.sized_avatar(size).url,
         height: "#{height}px",
         width: "#{width}px",
         class: css_class_name,
         alt: "Avatar for #{user.username}.",
         **options
     elsif user.avatar.attached? && !user.avatar.variable?
-      image_tag user.avatar,
+      image_tag user.avatar.url,
         width: "#{width}px",
         height: "#{height}px",
         class: css_class_name,
@@ -46,7 +46,7 @@ module ApplicationHelper
 
     if game.cover.attached? && game.cover.variable?
       begin
-        image_tag game.sized_cover(size),
+        image_tag game.sized_cover(size).url,
           width: "#{width}px",
           height: "#{height}px",
           alt: "Cover for #{game.name}.",
@@ -60,7 +60,7 @@ module ApplicationHelper
           **options
       end
     elsif game.cover.attached? && !game.cover.variable?
-      image_tag game.cover,
+      image_tag game.cover.url,
         width: "#{width}px",
         height: "#{height}px",
         alt: "Cover for #{game.name}.",

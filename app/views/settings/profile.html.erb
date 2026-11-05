@@ -16,7 +16,7 @@
           railsDirectUploadsPath: rails_direct_uploads_url,
           submitPath: user_path(@user.id),
           deletePath: remove_avatar_user_path(@user.id),
-          avatarPath: @user.avatar.attached? ? rails_blob_path(@user.avatar, disposition: 'attachment') : ''
+          avatarPath: @user.avatar.attached? ? @user.avatar.url : ''
         }.to_json
       %>">
     </div>

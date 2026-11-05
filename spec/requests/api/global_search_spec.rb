@@ -62,7 +62,7 @@ RSpec.describe "Global Search API", type: :request do
             {
               searchableId: game2.id.to_s,
               content: 'Super Mario Galaxy',
-              coverUrl: Rails.application.routes.url_helpers.rails_representation_url(cover_variant),
+              coverUrl: variant_url(cover_variant),
               releaseDate: 1.day.ago.strftime("%F"),
               developerName: 'Nintendo'
             }
@@ -99,7 +99,7 @@ RSpec.describe "Global Search API", type: :request do
             {
               searchableId: user.id.to_s,
               content: 'among.us.fan',
-              avatarUrl: Rails.application.routes.url_helpers.rails_representation_url(avatar_variant),
+              avatarUrl: variant_url(avatar_variant),
               slug: 'among-us-fan'
             }
           ]

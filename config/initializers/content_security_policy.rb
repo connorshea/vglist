@@ -22,13 +22,14 @@ Rails.application.config.content_security_policy do |policy|
   # Allow webpack connections in development.
   if Rails.env.development?
     policy.connect_src :self, :https, 'webpack://*'
-  # Allow Cloudflare Web Analytics in production, and allow loading and
-  # uploading images from DigitalOcean.
+  # Allow Cloudflare Web Analytics in production, and allow direct uploads to
+  # DigitalOcean Spaces and Cloudflare R2's S3 API endpoint.
   elsif Rails.env.production?
     policy.connect_src :self,
                        'https://cloudflareinsights.com',
                        'https://static.cloudflareinsights.com',
                        'https://vglist.sfo2.digitaloceanspaces.com',
+                       *ENV['R2_ENDPOINT'].presence,
                        'https://*.sentry.io'
   end
 

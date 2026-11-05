@@ -20,7 +20,7 @@ complex_types = ['Game', 'User'].freeze
         case type
         when 'Game'
           if pg_search.searchable.cover.attached?
-            json.image_url rails_blob_path(pg_search.searchable.cover, disposition: "attachment")
+            json.image_url pg_search.searchable.cover.url
           else
             json.image_url asset_path('no-cover.png')
           end
@@ -28,7 +28,7 @@ complex_types = ['Game', 'User'].freeze
           json.release_date pg_search.searchable.release_date
         when 'User'
           if pg_search.searchable.avatar.attached?
-            json.image_url rails_blob_path(pg_search.searchable.avatar, disposition: "attachment")
+            json.image_url pg_search.searchable.avatar.url
           else
             json.image_url asset_path('default-avatar.png')
           end
