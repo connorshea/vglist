@@ -74,8 +74,7 @@
       <div v-if="importResult" class="import-result" role="status">
         <p>
           Added <strong>{{ importResult.addedGamesCount }}</strong> {{ pluralize(importResult.addedGamesCount) }},
-          updated <strong>{{ importResult.updatedGamesCount }}</strong
-          >.
+          updated <strong>{{ importResult.updatedGamesCount }}</strong> {{ pluralize(importResult.updatedGamesCount) }}.
         </p>
         <p v-if="importResult.unmatchedCount > 0" class="set-help">
           {{ importResult.unmatchedCount }} {{ pluralize(importResult.unmatchedCount) }} couldn't be matched to a game
