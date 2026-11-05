@@ -16,6 +16,14 @@ class VideoGameListSchema < GraphQL::Schema
   # Types::BaseField::ShortListComplexity.
   max_complexity 5000
 
+  # Use GraphQL-Ruby's fixed complexity calculation (the default in a future
+  # version). When the same response key is selected more than once, e.g.
+  # through fragments on different types, it scores the most expensive
+  # selection rather than whichever came last, so it can only be higher than
+  # the legacy calculation. Every operation in the allowlist scores the same
+  # either way.
+  complexity_cost_calculation_mode :future
+
   # Prevent alias-batching the unauthenticated auth mutations into a single
   # request (credential brute force / email bombing).
   query_analyzer Analyzers::AuthMutationLimitAnalyzer
