@@ -217,9 +217,20 @@ export const GET_CURRENT_USER_PROFILE = gql`
   query GetCurrentUserProfile {
     currentUser {
       id
+      username
+      avatarUrl(size: LARGE)
       bio
       privacy
       hideDaysPlayed
+    }
+  }
+`;
+
+export const GET_CURRENT_USER_STEAM_ACCOUNT = gql`
+  query GetCurrentUserSteamAccount {
+    currentUser {
+      id
+      steamProfileUrl
     }
   }
 `;
