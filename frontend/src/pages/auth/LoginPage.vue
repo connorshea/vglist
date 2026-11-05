@@ -1,53 +1,50 @@
 <template>
-  <div class="columns is-centered">
-    <div class="column is-4">
-      <h1 class="title">Sign In</h1>
+  <AuthLayout>
+    <h1>Sign in</h1>
+    <p class="auth-sub">New here? <router-link to="/signup" class="auth-link">Create an account</router-link></p>
 
-      <div v-if="errors.length" class="notification is-danger">
-        <ul>
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-        </ul>
+    <div v-if="errors.length" class="notification is-danger" role="alert">
+      <ul>
+        <li v-for="error in errors" :key="error">{{ error }}</li>
+      </ul>
+    </div>
+
+    <form @submit.prevent="handleSubmit">
+      <div class="auth-field">
+        <label for="login-email">Email</label>
+        <input id="login-email" v-model="email" class="auth-input" type="email" autocomplete="email" required />
       </div>
 
-      <form @submit.prevent="handleSubmit">
-        <div class="field">
-          <label class="label">Email</label>
-          <div class="control">
-            <input v-model="email" class="input" type="email" placeholder="Email" required />
-          </div>
+      <div class="auth-field">
+        <div class="auth-label-row">
+          <label for="login-password">Password</label>
+          <router-link to="/password/reset" class="auth-link auth-link-small">Forgot your password?</router-link>
         </div>
+        <input
+          id="login-password"
+          v-model="password"
+          class="auth-input"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
 
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input v-model="password" class="input" type="password" placeholder="Password" required />
-          </div>
-        </div>
+      <button class="auth-submit" type="submit" :disabled="isLoading">
+        {{ isLoading ? "Signing in..." : "Sign in" }}
+      </button>
+    </form>
 
-        <div class="field">
-          <div class="control">
-            <button class="button is-primary" type="submit" :disabled="isLoading">
-              {{ isLoading ? "Signing in..." : "Sign In" }}
-            </button>
-          </div>
-        </div>
-
-        <p>
-          <router-link to="/password/reset">Forgot your password?</router-link>
-        </p>
-        <p>
-          <router-link to="/confirmation/resend">Didn't get a confirmation email?</router-link>
-        </p>
-        <p>Don't have an account? <router-link to="/signup">Sign up</router-link></p>
-      </form>
+    <div class="auth-footer">
+      <router-link to="/confirmation/resend" class="auth-link">Didn't get a confirmation email?</router-link>
     </div>
-  </div>
+  </AuthLayout>
 </template>
-
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAuth } from "@/composables/useAuth";
+import AuthLayout from "@/components/auth/AuthLayout.vue";
 
 const router = useRouter();
 const route = useRoute();

@@ -44,11 +44,11 @@ describe("SignupPage", () => {
   it("renders the form with all required fields", () => {
     const wrapper = mount(SignupPage, mountOptions);
 
-    expect(wrapper.find("h1").text()).toBe("Sign Up");
+    expect(wrapper.find("h1").text()).toBe("Create an account");
     expect(wrapper.find("input[type='text']").exists()).toBeTruthy();
     expect(wrapper.find("input[type='email']").exists()).toBeTruthy();
     expect(wrapper.findAll("input[type='password']")).toHaveLength(2);
-    expect(wrapper.find("button[type='submit']").text()).toBe("Sign Up");
+    expect(wrapper.find("button[type='submit']").text()).toBe("Create account");
   });
 
   it("calls signUp with all fields on submit", async () => {

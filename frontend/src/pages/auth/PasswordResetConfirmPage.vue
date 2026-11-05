@@ -1,59 +1,62 @@
 <template>
-  <div class="columns is-centered">
-    <div class="column is-4">
-      <h1 class="title">Set New Password</h1>
+  <AuthLayout>
+    <h1>Set a new password</h1>
+    <p class="auth-sub">Choose a password with at least 8 characters.</p>
 
-      <div v-if="message" class="notification is-success">
-        {{ message }}
-        <p class="mt-2"><router-link to="/login">Sign in</router-link></p>
-      </div>
-
-      <div v-if="errors.length" class="notification is-danger">
-        <ul>
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-        </ul>
-      </div>
-
-      <form v-if="!message" @submit.prevent="handleSubmit">
-        <div class="field">
-          <label class="label">New Password</label>
-          <div class="control">
-            <input v-model="password" class="input" type="password" placeholder="New password" required minlength="8" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Confirm Password</label>
-          <div class="control">
-            <input
-              v-model="passwordConfirmation"
-              class="input"
-              type="password"
-              placeholder="Confirm password"
-              required
-              minlength="8"
-            />
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <button class="button is-primary" type="submit" :disabled="isLoading">
-              {{ isLoading ? "Resetting..." : "Reset Password" }}
-            </button>
-          </div>
-        </div>
-
-        <p><router-link to="/login">Back to Sign In</router-link></p>
-      </form>
+    <div v-if="message" class="notification is-success" role="status">
+      {{ message }}
+      <p class="mt-2"><router-link to="/login">Sign in</router-link></p>
     </div>
-  </div>
+
+    <div v-if="errors.length" class="notification is-danger" role="alert">
+      <ul>
+        <li v-for="error in errors" :key="error">{{ error }}</li>
+      </ul>
+    </div>
+
+    <form v-if="!message" @submit.prevent="handleSubmit">
+      <div class="auth-field">
+        <label for="password-reset-new">New password</label>
+        <input
+          id="password-reset-new"
+          v-model="password"
+          class="auth-input"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+        />
+      </div>
+
+      <div class="auth-field">
+        <label for="password-reset-confirm">Confirm password</label>
+        <input
+          id="password-reset-confirm"
+          v-model="passwordConfirmation"
+          class="auth-input"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+        />
+      </div>
+
+      <button class="auth-submit" type="submit" :disabled="isLoading">
+        {{ isLoading ? "Resetting..." : "Reset password" }}
+      </button>
+    </form>
+
+    <div v-if="!message" class="auth-footer">
+      <router-link to="/login" class="auth-link">Back to sign in</router-link>
+    </div>
+  </AuthLayout>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { useAuth } from "@/composables/useAuth";
+import AuthLayout from "@/components/auth/AuthLayout.vue";
 
 const route = useRoute();
 const { resetPassword } = useAuth();

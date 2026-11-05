@@ -41,10 +41,10 @@ describe("LoginPage", () => {
   it("renders the form with email and password fields", () => {
     const wrapper = mount(LoginPage, mountOptions);
 
-    expect(wrapper.find("h1").text()).toBe("Sign In");
+    expect(wrapper.find("h1").text()).toBe("Sign in");
     expect(wrapper.find("input[type='email']").exists()).toBeTruthy();
     expect(wrapper.find("input[type='password']").exists()).toBeTruthy();
-    expect(wrapper.find("button[type='submit']").text()).toBe("Sign In");
+    expect(wrapper.find("button[type='submit']").text()).toBe("Sign in");
   });
 
   it("calls signIn with email and password on submit", async () => {
