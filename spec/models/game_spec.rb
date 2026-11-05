@@ -360,6 +360,34 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    context 'with games that tie on every sort' do
+      let(:release_date) { Date.new(2020, 1, 1) }
+      let(:time) { 1.day.ago }
+      let!(:games) { create_list(:game, 3, release_date: release_date, created_at: time, updated_at: time) }
+
+      # Without a tiebreaker, Postgres can return tied rows in a different
+      # order for each page, which repeats some games and skips others.
+      it "breaks ties by id so pages don't overlap", :aggregate_failures do
+        newest_first = games.sort_by(&:id).reverse
+        expect(Game.newest).to eq(newest_first)
+        expect(Game.oldest).to eq(newest_first.reverse)
+        expect(Game.recently_updated).to eq(newest_first)
+        expect(Game.least_recently_updated).to eq(newest_first.reverse)
+        expect(Game.most_owners).to eq(newest_first)
+        expect(Game.most_favorites).to eq(newest_first)
+        expect(Game.recently_released).to eq(newest_first)
+      end
+
+      it "breaks ties by id when sorting by average rating" do
+        games.each do |game|
+          create_list(:game_purchase, 5, game: game, rating: 50)
+          # Adding purchases recalculates the average, so set it afterwards.
+          game.update!(avg_rating: 50.0)
+        end
+        expect(Game.highest_avg_rating).to eq(games.sort_by(&:id).reverse)
+      end
+    end
+
     context 'with three games where two have platforms and one does not' do
       let(:platform1) { create(:platform) }
       let(:platform2) { create(:platform) }

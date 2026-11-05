@@ -8,12 +8,19 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
 
   def total_count
     items = object.items
-    # A relation that selects extra computed columns (e.g.
-    # `Series.with_game_stats`) can't be counted by its select list, which
-    # .count would try to do, so count rows instead.
-    count = items.respond_to?(:select_values) && items.select_values.many? ? items.count(:all) : items.count
-    # Grouped relations (e.g. most_games, most_followers scopes) return a
-    # Hash from .count — use its length (number of distinct groups) instead.
-    count.is_a?(Hash) ? count.length : count
+    return items.count unless items.is_a?(ActiveRecord::Relation)
+
+    unless items.group_values.any?
+      # A relation that selects extra computed columns (e.g.
+      # `Series.with_game_stats`) can't be counted by its select list, which
+      # .count would try to do, so count rows instead.
+      return items.select_values.many? ? items.count(:all) : items.count
+    end
+
+    # Grouped relations (e.g. the most_games and most_owners scopes) return a
+    # Hash with one entry per group from `.count`, which would load every
+    # group into Ruby. Count the groups in Postgres instead. The order doesn't
+    # change the count, so drop it.
+    items.klass.from(items.unscope(:order), items.klass.table_name).count
   end
 end

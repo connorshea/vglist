@@ -228,7 +228,10 @@ const variables = computed(() => ({
   first: PAGE_SIZE,
   after: null as string | null,
   sortBy: sort.value.value,
-  ...filterVariables(filters.value)
+  ...filterVariables(filters.value),
+  // Counting means grouping every game under some sorts, so only the first
+  // page asks for it. Later pages keep the count the first one got.
+  withCount: true
 }));
 
 const { data, loading, error, fetchMore } = useQuery<GetGamesIndexQuery>(GET_GAMES_INDEX, {
@@ -246,12 +249,29 @@ async function loadMore() {
   if (!cursor || loadingMore.value || refreshing.value) return;
   loadingMore.value = true;
   try {
-    await fetchMore({ ...variables.value, after: cursor }, (prev, next) => ({
+    await fetchMore({ ...variables.value, after: cursor, withCount: false }, (prev, next) => ({
       games:
-        prev.games && next.games ? { ...next.games, nodes: [...prev.games.nodes, ...next.games.nodes] } : next.games
+        prev.games && next.games
+          ? {
+              ...next.games,
+              totalCount: prev.games.totalCount,
+              nodes: [...prev.games.nodes, ...next.games.nodes]
+            }
+          : next.games
     }));
   } finally {
     loadingMore.value = false;
+  }
+  // The observer only fires when the sentinel crosses into view, so if this
+  // page wasn't enough to push it back out (a tall window, say), it wouldn't
+  // fire again until a scroll. Observing it afresh reports where it is now.
+  // Not after an error, which would retry in a loop.
+  if (error.value) return;
+  await nextTick();
+  const el = sentinelRef.value;
+  if (el && observer) {
+    observer.unobserve(el);
+    observer.observe(el);
   }
 }
 
@@ -308,10 +328,12 @@ function setPlatform(platform: NamedRecord | null) {
   updateFilters({ platform: platform?.id ?? "" });
 }
 
+// The count for the current sort and filters. Top rated and New releases leave
+// games out even with no filters set, so the site-wide count only stands in
+// until the games come back.
 const headerCount = computed(() => {
-  const anyFilter = Object.keys(filtersToQuery(filters.value)).length > 0;
   const shown = data.value?.games?.totalCount;
-  if (anyFilter && shown !== undefined) return countLabel(shown, "game");
+  if (shown !== undefined && shown !== null) return countLabel(shown, "game");
   const total = filtersData.value?.basicSiteStatistics.games;
   return total !== undefined ? countLabel(total, "game") : null;
 });
@@ -356,7 +378,8 @@ const draftNames = computed(() => ({
 }));
 
 const { data: countData } = useQuery<GetGamesIndexCountQuery>(GET_GAMES_INDEX_COUNT, {
-  variables: () => filterVariables(draft.value),
+  // The sort matters too: Top rated and New releases leave some games out.
+  variables: () => ({ sortBy: sort.value.value, ...filterVariables(draft.value) }),
   enabled: () => panelOpen.value
 });
 const draftCount = computed(() => countData.value?.games?.totalCount ?? null);
@@ -448,7 +471,11 @@ onBeforeUnmount(() => {
 .sort-tabs {
   display: flex;
   overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
+  overflow-y: hidden;
+  /* The baseline is an inset shadow rather than a border so the active tab's
+     underline can sit on it without a negative margin. That margin made the
+     tabs 1px taller than the bar, which let the bar scroll vertically. */
+  box-shadow: inset 0 -1px 0 var(--color-border);
   scrollbar-width: none;
 }
 
@@ -456,7 +483,6 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: -1px;
   padding: 10px 16px;
   border-bottom: 2px solid transparent;
   color: var(--color-text-secondary);

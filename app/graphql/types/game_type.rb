@@ -29,6 +29,7 @@ module Types
     field :platforms, PlatformType.connection_type, null: false, short_list: true, description: "Platforms the game is available on."
     field :owners, UserType.connection_type, null: false, description: "Users who have this game in their libraries."
     field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
+    field :owner_count, Integer, null: false, description: "The number of public, unbanned users who have this game in their library, the same as `owners.totalCount`. Unlike that, it is counted for a whole list of games in one query."
     field :reviews, GamePurchaseType.connection_type, null: false, description: "Library entries for this game that have comments, from public, unbanned users." do
       argument :sort_by, Enums::GameReviewSortType, required: false, default_value: 'recent', description: "The order to sort the reviews in."
     end
@@ -55,6 +56,10 @@ module Types
 
     def favoriters
       @object.favoriters.public_and_unbanned.with_attached_avatar
+    end
+
+    def owner_count
+      LazyOwnerCount.new(@context, @object.id)
     end
 
     REVIEW_ORDERS = {
@@ -117,35 +122,30 @@ module Types
     def in_library?
       return nil if @context[:current_user].nil?
 
-      game_purchase_map.key?(@object.id)
+      library_entries.key?(@object.id)
     end
 
     def game_purchase_id
       return nil if @context[:current_user].nil?
 
-      game_purchase_map[@object.id]
+      library_entries[@object.id]&.first
     end
 
     def library_completion_status
       return nil if @context[:current_user].nil?
 
-      library_completion_statuses[@object.id]
+      library_entries[@object.id]&.last
     end
 
     private
 
-    # Cache the current user's game purchase IDs keyed by game_id for the
-    # duration of the request, so isFavorited/isInLibrary/gamePurchaseId
-    # don't each fire a separate query per game.
-    def game_purchase_map
-      @context[:current_user_game_purchase_map] ||=
-        @context[:current_user].game_purchases.pluck(:game_id, :id).to_h
-    end
-
-    # Like `game_purchase_map`, but only loaded when a query asks for statuses.
-    def library_completion_statuses
-      @context[:current_user_library_completion_statuses] ||=
-        @context[:current_user].game_purchases.pluck(:game_id, :completion_status).to_h
+    # The current user's library entries as `game_id => [id, completion_status]`,
+    # cached for the duration of the request so isInLibrary/gamePurchaseId/
+    # libraryCompletionStatus don't each fire a query per game, nor one each.
+    def library_entries
+      @context[:current_user_library_entries] ||=
+        @context[:current_user].game_purchases.pluck(:game_id, :id, :completion_status)
+                               .to_h { |game_id, id, status| [game_id, [id, status]] }
     end
 
     def favorited_game_ids
