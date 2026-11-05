@@ -31,8 +31,13 @@ RSpec.describe "GraphQL complexity and depth limits", type: :request do
 
   it 'fits every operation the SPA sends, at the page sizes it requests' do
     over_limit = OperationAllowlist.operations.filter_map do |name, document|
-      variable_names = GraphQL.parse(document).definitions.first.variables.map(&:name)
-      variables = variable_names.include?('first') ? { 'first' => spa_page_sizes[name] } : {}
+      variable_definitions = GraphQL.parse(document).definitions.first.variables
+      variables = {}
+      variables['first'] = spa_page_sizes[name] if variable_definitions.any? { |v| v.name == 'first' }
+      # Score the worst case for `@include(if: $flag)` fields: all of them included.
+      variable_definitions.each do |v|
+        variables[v.name] = true if v.type.is_a?(GraphQL::Language::Nodes::NonNullType) && v.type.of_type.name == 'Boolean'
+      end
       result = analyze(document, variables)
 
       next if result[:complexity] <= VideoGameListSchema.max_complexity && result[:depth] <= VideoGameListSchema.max_depth

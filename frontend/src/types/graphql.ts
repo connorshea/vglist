@@ -48,6 +48,25 @@ export type GamePurchaseSort =
   /** Sorted with the games the user has played the most hours of first. Games with no hours logged are last. */
   | "MOST_HOURS_PLAYED";
 
+/** Options for sorting games. */
+export type GameSort =
+  /** Sorted by the games that have the highest average rating. */
+  | "HIGHEST_AVG_RATING"
+  /** Sorted with most recently updated game records last. */
+  | "LEAST_RECENTLY_UPDATED"
+  /** Sorted by the games that have been favorited the most times. */
+  | "MOST_FAVORITES"
+  /** Sorted by the games that are in the most users' libraries. */
+  | "MOST_OWNERS"
+  /** Sorted with newest game records first. */
+  | "NEWEST"
+  /** Sorted with newest game records last. */
+  | "OLDEST"
+  /** Sorted with the games that were most recently released first. */
+  | "RECENTLY_RELEASED"
+  /** Sorted with most recently updated game records first. */
+  | "RECENTLY_UPDATED";
+
 /** Options for sorting the games on a company, platform, engine, genre or series. */
 export type ResourceGameSort =
   /** Sorted by the games with the highest average rating. Games without a rating come last. */
@@ -707,6 +726,101 @@ export interface GetUnmatchedGamesQuery {
   } | null;
 }
 
+export type GameTileFieldsFragment = {
+  id: string;
+  name: string;
+  releaseDate: string | null;
+  avgRating: number | null;
+  coverUrl: string | null;
+  isInLibrary: boolean | null;
+  libraryCompletionStatus: GamePurchaseCompletionStatus | null;
+  owners: { totalCount: number };
+};
+
+export type GetGamesIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: GameSort | null | undefined;
+  onPlatform?: string | null | undefined;
+  byGenre?: string | null | undefined;
+  byEngine?: string | null | undefined;
+  fromYear?: number | null | undefined;
+  toYear?: number | null | undefined;
+  excludeLibrary?: boolean | null | undefined;
+}>;
+
+export interface GetGamesIndexQuery {
+  games: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      releaseDate: string | null;
+      avgRating: number | null;
+      coverUrl: string | null;
+      isInLibrary: boolean | null;
+      libraryCompletionStatus: GamePurchaseCompletionStatus | null;
+      owners: { totalCount: number };
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
+export type GetGamesIndexCountQueryVariables = Exact<{
+  onPlatform?: string | null | undefined;
+  byGenre?: string | null | undefined;
+  byEngine?: string | null | undefined;
+  fromYear?: number | null | undefined;
+  toYear?: number | null | undefined;
+  excludeLibrary?: boolean | null | undefined;
+}>;
+
+export interface GetGamesIndexCountQuery {
+  games: { totalCount: number } | null;
+}
+
+export type GetGamesIndexFiltersQueryVariables = Exact<{
+  platformId: string;
+  hasPlatform: boolean;
+  genreId: string;
+  hasGenre: boolean;
+  engineId: string;
+  hasEngine: boolean;
+}>;
+
+export interface GetGamesIndexFiltersQuery {
+  basicSiteStatistics: { games: number };
+  platforms: { nodes: Array<{ id: string; name: string }> } | null;
+  genres: { nodes: Array<{ id: string; name: string }> } | null;
+  platform?: { id: string; name: string } | null;
+  genre?: { id: string; name: string } | null;
+  engine?: { id: string; name: string } | null;
+}
+
+export type SearchPlatformsForFilterQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchPlatformsForFilterQuery {
+  platformSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchGenresForFilterQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchGenresForFilterQuery {
+  genreSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchEnginesForFilterQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchEnginesForFilterQuery {
+  engineSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
 export type GameFieldsFragment = {
   id: string;
   name: string;
@@ -757,24 +871,6 @@ export interface GetGameQuery {
     genres: { nodes: Array<{ id: string; name: string }> };
     engines: { nodes: Array<{ id: string; name: string }> };
     series: { id: string; name: string } | null;
-  } | null;
-}
-
-export type GetGamesQueryVariables = Exact<{
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-}>;
-
-export interface GetGamesQuery {
-  games: {
-    nodes: Array<{
-      id: string;
-      name: string;
-      releaseDate: string | null;
-      coverUrl: string | null;
-      developers: { nodes: Array<{ name: string }> };
-    }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
 }
 
