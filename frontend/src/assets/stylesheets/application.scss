@@ -238,6 +238,10 @@ nav.navbar {
     }
 
     .navbar-dropdown {
+      // Bulma draws a 2px border along the top, which shows up as an odd
+      // band above the first item.
+      border-top: 0;
+
       .navbar-item {
         transition: background-color 200ms;
 
