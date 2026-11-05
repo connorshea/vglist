@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe StorageCleanupService, type: :service do
   def upload_blob(created_at: 2.days.ago)
     blob = ActiveStorage::Blob.create_and_upload!(io: StringIO.new('not attached'), filename: 'orphan.txt')
-    blob.update_columns(created_at: created_at)
+    blob.update!(created_at: created_at)
     blob
   end
 
@@ -26,7 +26,9 @@ RSpec.describe StorageCleanupService, type: :service do
     end
 
     it 'skips record types that are not models' do
-      ActiveStorage::Attachment.insert_all!([{ name: 'cover', record_type: 'RemovedModel', record_id: 1, blob_id: upload_blob.id, created_at: Time.current }])
+      # Inserted directly: saving an attachment loads its record, and this
+      # record type no longer exists.
+      ActiveStorage::Attachment.insert_all!([{ name: 'cover', record_type: 'RemovedModel', record_id: 1, blob_id: upload_blob.id, created_at: Time.current }]) # rubocop:disable Rails/SkipsModelValidations
 
       expect(described_class.unknown_record_types).to eq(['RemovedModel'])
       expect(described_class.orphan_attachments).to be_empty
@@ -36,7 +38,7 @@ RSpec.describe StorageCleanupService, type: :service do
   describe '.orphan_blobs' do
     it 'finds blobs that nothing is attached to' do
       orphan = upload_blob
-      create(:game, :cover).cover.blob.update_columns(created_at: 2.days.ago)
+      create(:game, :cover).cover.blob.update!(created_at: 2.days.ago)
 
       expect(described_class.orphan_blobs).to contain_exactly(orphan)
     end

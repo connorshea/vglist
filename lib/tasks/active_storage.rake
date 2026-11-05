@@ -90,7 +90,7 @@ namespace 'active_storage:vglist:clean' do
     puts
     puts "#{dry_run.call ? 'Found' : 'Deleted'} #{count} files with no blob, total size #{megabytes.call(bytes)} MB."
     prefixes.sort_by { |_prefix, n| -n }.each { |prefix, n| puts "  #{prefix}: #{n}" }
-    puts "Examples:", examples.map { |key| "  #{key}" } if dry_run.call && examples.any?
+    puts("Examples:", *examples.map { |key| "  #{key}" }) if dry_run.call && examples.any?
   end
 
   desc "Run all ActiveStorage cleaning tasks."
