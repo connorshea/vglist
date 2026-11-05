@@ -222,8 +222,10 @@ nav.navbar {
   }
 
   @include mixins.from(bv.$desktop) {
-    .navbar-menu .navbar-item:not(.has-dropdown):not(:has(.navbar-search)),
-    .navbar-menu .navbar-item:not(.field):not(:has(.navbar-search)) {
+    // Only top-level items get the hover underline. Items inside a dropdown
+    // are left out, otherwise they get a white line under them on hover.
+    .navbar-start > .navbar-item:not(:has(.navbar-search)),
+    .navbar-end > .navbar-item:not(:has(.navbar-search)) {
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
       --bulma-navbar-item-background-a: 0;
@@ -237,15 +239,8 @@ nav.navbar {
 
     .navbar-dropdown {
       .navbar-item {
-        transition: border-bottom 0ms;
         transition: background-color 200ms;
         transition: color 0ms;
-        border-bottom: 0;
-
-        &:hover,
-        &:focus {
-          border-bottom: 0;
-        }
 
         &:hover,
         &:focus,
