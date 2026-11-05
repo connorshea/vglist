@@ -29,6 +29,10 @@ module Types
     field :platforms, PlatformType.connection_type, null: false, short_list: true, description: "Platforms the game is available on."
     field :owners, UserType.connection_type, null: false, description: "Users who have this game in their libraries."
     field :favoriters, UserType.connection_type, null: false, description: "Users who have favorited this game."
+    field :reviews, GamePurchaseType.connection_type, null: false, description: "Library entries for this game that have comments, from public, unbanned users." do
+      argument :sort_by, Enums::GameReviewSortType, required: false, default_value: 'recent', description: "The order to sort the reviews in."
+    end
+    field :activity, EventType.connection_type, null: false, description: "Activity Events about this game (library additions, completion status changes and favorites), from public, unbanned users."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
       argument :size, Enums::GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
@@ -50,6 +54,40 @@ module Types
 
     def favoriters
       @object.favoriters.public_and_unbanned.with_attached_avatar
+    end
+
+    REVIEW_ORDERS = {
+      'recent' => [{ updated_at: :desc }, { id: :desc }],
+      'highest_rating' => [Arel.sql('game_purchases.rating desc nulls last'), { id: :desc }],
+      'lowest_rating' => [Arel.sql('game_purchases.rating asc nulls last'), { id: :desc }]
+    }.freeze
+
+    # Reviews are library entries with non-blank comments. Like `owners`, this
+    # is a public list, so it only includes public, unbanned users for
+    # everyone; GamePurchaseType.authorized? would otherwise drop private
+    # users' entries one by one and break pagination.
+    def reviews(sort_by:)
+      @object.game_purchases
+             .joins(:user)
+             .merge(User.public_and_unbanned)
+             .where.not(comments: '')
+             .preload(:platforms, user: AttachmentPreloads::AVATAR)
+             .order(*REVIEW_ORDERS.fetch(sort_by))
+    end
+
+    # Events whose eventable is one of this game's library entries or
+    # favorites. The eventable_type filters let Postgres prune the other
+    # branches of the new_events UNION ALL view.
+    def activity
+      purchase_ids = @object.game_purchases.select(:id)
+      favorite_ids = @object.favorites.select(:id)
+
+      Views::NewEvent.where(eventable_type: 'GamePurchase', eventable_id: purchase_ids)
+                     .or(Views::NewEvent.where(eventable_type: 'FavoriteGame', eventable_id: favorite_ids))
+                     .joins(:user)
+                     .merge(User.public_and_unbanned)
+                     .preload(user: AttachmentPreloads::AVATAR)
+                     .recently_created
     end
 
     # Get the number of purchases for the game where rating is not nil.
