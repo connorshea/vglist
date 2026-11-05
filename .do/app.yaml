@@ -3,7 +3,7 @@
 # Components:
 #   - api        Rails API (repo-root Dockerfile), served at api.vglist.co
 #   - frontend   Vue SPA served by Caddy (frontend/Dockerfile), at vglist.co
-#   - migrate    PRE_DEPLOY job: `rails db:prepare` before each API rollout
+#   - migrate    PRE_DEPLOY job: `rails db:migrate` before each API rollout
 #   - update-stats  SCHEDULED job: daily `rake vglist:update:stats` (ported
 #                   from the VPS crontab, 00:00 UTC)
 #   - db         Existing managed PostgreSQL cluster, attached to the app
@@ -163,7 +163,9 @@ jobs:
     dockerfile_path: Dockerfile
     instance_size_slug: apps-s-1vcpu-1gb
     instance_count: 1
-    run_command: bundle exec rails db:prepare
+    # db:migrate, not db:prepare: on an empty database db:prepare would also
+    # run db/seeds.rb, which is dev-only and truncates every table.
+    run_command: bundle exec rails db:migrate
     envs:
       - key: DATABASE_URL
         value: ${db.DATABASE_URL}
