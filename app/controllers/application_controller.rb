@@ -3,8 +3,8 @@
 class ApplicationController < ActionController::API
   include Pundit::Authorization
 
-  # If the user has been banned, sign them out.
-  before_action :sign_out_banned_users
+  # If the user has been banned, reject the request.
+  before_action :reject_banned_users
   # Send context with error messages to Sentry.
   before_action :set_sentry_context
   # Set PaperTrail whodunnit to the current user.
@@ -19,11 +19,30 @@ class ApplicationController < ActionController::API
 
   protected
 
-  # Sign out the current user if they've been banned.
-  def sign_out_banned_users
+  # The user identified by the JWT in the `Authorization: Bearer` header, or
+  # nil if there isn't a valid one. The SPA authenticates statelessly with
+  # JWTs, so this replaces Devise's session-based `current_user`, which would
+  # always be nil here.
+  def current_user
+    return @current_user if defined?(@current_user)
+
+    @current_user = jwt_bearer_token && JwtService.decode_and_verify(jwt_bearer_token)
+  end
+
+  # The bearer token from the `Authorization` header if it looks like a JWT
+  # (three dot-separated segments), otherwise nil.
+  def jwt_bearer_token
+    auth_header = request.headers['Authorization']
+    return nil unless auth_header&.match?(/\ABearer\s+/i)
+
+    token = auth_header.sub(/\ABearer\s+/i, '')
+    token.count('.') == 2 ? token : nil
+  end
+
+  # Reject requests from banned users.
+  def reject_banned_users
     return unless current_user&.banned?
 
-    sign_out
     render json: { error: "Your account has been banned." }, status: :forbidden
   end
 

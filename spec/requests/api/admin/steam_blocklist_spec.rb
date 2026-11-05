@@ -6,8 +6,7 @@ RSpec.describe "Steam Blocklist API", type: :request do
   describe "Query for data on steam blocklist entries" do
     context 'when signed in as an admin' do
       let(:user) { create(:confirmed_admin) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
       let(:steam_blocklist_entries) { create_list(:steam_blocklist, 2) }
 
       it "returns basic data for steam blocklist entries" do
@@ -47,8 +46,7 @@ RSpec.describe "Steam Blocklist API", type: :request do
 
     context 'when signed in as a normal user' do
       let(:user) { create(:confirmed_user) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
       let(:steam_blocklist_entry) { create(:steam_blocklist) }
 
       it "returns a permissions error" do

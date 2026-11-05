@@ -28,7 +28,7 @@
 
 - **Vue Components**: Use Composition API and `<script setup>`. Props follow `modelValue`/`update:modelValue` for v-model. Prefer TypeScript for all new components.
 - **TypeScript Types**: Extend HTML attributes for new standards (e.g., `popover`) in `frontend/src/types/`. Use interface merging, not overrides.
-- **Authentication**: Devise for users, Doorkeeper for OAuth tokens.
+- **Authentication**: JWTs (`JwtService`) for the SPA; Devise for passwords, email confirmation, and password reset.
 - **Authorization**: Pundit policies in `app/policies/`.
 - **Data Imports**: Rake tasks for Wikidata, PCGamingWiki, MobyGames, IGDB. API keys via environment variables.
 - **Testing Factories**: FactoryBot in `spec/factories/`.

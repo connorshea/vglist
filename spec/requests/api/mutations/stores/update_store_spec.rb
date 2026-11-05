@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "UpdateStore Mutation API", type: :request do
   describe "Mutation updates an existing store record" do
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let!(:store) { create(:store, name: 'Origin') }
     let(:query_string) do
       <<-GRAPHQL

@@ -28,10 +28,6 @@ class SettingsPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
-  def api_token?
-    user_is_current_user?
-  end
-
   private
 
   def user_is_current_user?

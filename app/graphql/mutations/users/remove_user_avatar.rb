@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::RemoveUserAvatar < Mutations::BaseMutation
-  description "Remove the avatar from a user. **Only available when using a first-party OAuth application.**"
+  description "Remove the avatar from a user."
 
   argument :user_id, ID, required: true, description: "ID of user to remove avatar from."
 
@@ -20,8 +20,6 @@ class Mutations::Users::RemoveUserAvatar < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

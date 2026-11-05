@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Games::UpdateGame < Mutations::BaseMutation
-  description "Update an existing game. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Update an existing game. **Only available to moderators and admins.**"
 
   argument :game_id, ID, required: true, description: 'The ID of the game record.'
   argument :name, String, required: false, description: 'The name of the game.'
@@ -73,8 +73,6 @@ class Mutations::Games::UpdateGame < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     game = Game.find(object[:game_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this game." unless GamePolicy.new(@context[:current_user], game).update?
 

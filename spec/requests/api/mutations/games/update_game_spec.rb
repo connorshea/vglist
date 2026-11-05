@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe "UpdateGame Mutation API", type: :request do
   describe "Mutation updates an existing game record" do
     let(:user) { create(:confirmed_moderator) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
 
     context 'with basic game' do
       let(:game) { create(:game, name: 'Half-Life') }

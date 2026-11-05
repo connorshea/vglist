@@ -3,7 +3,7 @@
 module ApiRequestTestHelper
   # @param query_string [String]
   # @param variables [Hash]
-  # @param token [Doorkeeper::AccessToken]
+  # @param token [String] A JWT, e.g. from `JwtService.encode(user)`.
   # @return [VglistApiRequestResponse]
   def api_request(query_string, variables: nil, token:)
     # Allow variables to be sent as snake case, e.g. "giantbomb_id" by
@@ -16,7 +16,7 @@ module ApiRequestTestHelper
         variables: variables.to_json
       },
       headers: {
-        'Authorization': "Bearer #{token.token}"
+        'Authorization': "Bearer #{token}"
       }
 
     response_body = VglistApiRequestResponse.new(JSON.parse(response.body))

@@ -105,20 +105,6 @@ RSpec.describe User, type: :model do
     it { should have_many(:steam_blocklists).dependent(:nullify) }
     it { should have_one(:external_account).dependent(:destroy) }
 
-    it 'have many access grants' do
-      expect(user).to have_many(:access_grants)
-        .class_name('Doorkeeper::AccessGrant')
-        .with_foreign_key(:resource_owner_id)
-        .dependent(:destroy)
-    end
-
-    it 'have many access tokens' do
-      expect(user).to have_many(:access_tokens)
-        .class_name('Doorkeeper::AccessToken')
-        .with_foreign_key(:resource_owner_id)
-        .dependent(:destroy)
-    end
-
     it 'has many active relationships' do
       expect(user).to have_many(:active_relationships)
         .class_name('Relationship')
@@ -167,71 +153,6 @@ RSpec.describe User, type: :model do
 
       expect(User.authenticate_with_password('nobody@example.com', 'some-password')).to be_nil
       expect(Devise::Encryptor).to have_received(:digest).with(User, 'some-password')
-    end
-  end
-
-  describe '#verify_api_token!' do
-    let(:user) { create(:user) }
-
-    def stub_token(user, plaintext)
-      user.update!(encrypted_api_token: EncryptionService.encrypt(plaintext))
-    end
-
-    it 'returns true when the provided token matches the stored token' do
-      stub_token(user, 'a' * 32)
-      expect(user.verify_api_token!('a' * 32)).to be true
-    end
-
-    it 'returns false when the provided token does not match the stored token' do
-      stub_token(user, 'a' * 32)
-      expect(user.verify_api_token!('b' * 32)).to be false
-    end
-
-    it 'returns false when the provided token is nil' do
-      stub_token(user, 'a' * 32)
-      expect(user.verify_api_token!(nil)).to be false
-    end
-
-    it 'returns false when the provided token is an empty string' do
-      stub_token(user, 'a' * 32)
-      expect(user.verify_api_token!('')).to be false
-    end
-
-    it 'returns false when the user has no stored token' do
-      expect(user.encrypted_api_token).to be_nil
-      expect(user.verify_api_token!('a' * 32)).to be false
-    end
-
-    it 'returns false when the provided token has a different length than the stored token' do
-      stub_token(user, 'a' * 32)
-      expect(user.verify_api_token!('a' * 16)).to be false
-    end
-
-    it 'returns false when both the stored token and the provided token are nil' do
-      expect(user.encrypted_api_token).to be_nil
-      expect(user.verify_api_token!(nil)).to be false
-    end
-  end
-
-  describe '#reset_api_token' do
-    let(:user) { create(:user) }
-
-    it 'generates, persists, and returns a new plaintext token', :aggregate_failures do
-      token = user.reset_api_token
-      expect(token).to be_a(String)
-      expect(token.length).to eq(40)
-      # The stored value should be the encrypted form, not the plaintext.
-      expect(user.reload.encrypted_api_token).not_to eq(token)
-      expect(EncryptionService.decrypt(user.encrypted_api_token)).to eq(token)
-    end
-
-    it 'returns a token that verifies against verify_api_token!' do
-      token = user.reset_api_token
-      expect(user.verify_api_token!(token)).to be true
-    end
-
-    it 'generates a different token on each call' do
-      expect(user.reset_api_token).not_to eq(user.reset_api_token)
     end
   end
 

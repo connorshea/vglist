@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Companies::CreateCompany < Mutations::BaseMutation
-  description "Create a new game company. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Create a new game company. **Only available to moderators and admins.**"
 
   argument :name, String, required: true, description: 'The name of the company.'
   argument :wikidata_id, ID, required: true, description: 'The ID of the company item in Wikidata.'
@@ -19,8 +19,6 @@ class Mutations::Companies::CreateCompany < Mutations::BaseMutation
   end
 
   def authorized?(_object)
-    require_permissions!(:first_party)
-
     raise GraphQL::ExecutionError, "You aren't allowed to create a company." unless CompanyPolicy.new(@context[:current_user], nil).create?
 
     return true

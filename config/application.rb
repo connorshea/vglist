@@ -25,7 +25,7 @@ module VideoGameList
     # Initialize configuration defaults for Rails 7.2.
     config.load_defaults 7.2
 
-    # API-only mode: views/flash disabled; cookies/sessions enabled below for Devise/Doorkeeper.
+    # API-only mode: views/flash disabled; cookies/sessions enabled below for Devise.
     config.api_only = true
 
     # Rails 7.0 changes the digest class for the key generators to `OpenSSL::Digest::SHA256`.
@@ -92,7 +92,7 @@ module VideoGameList
     # Add spec to the directories that 'rails notes' checks.
     config.annotations.register_directories("spec")
 
-    # Devise needs session middleware even in API mode for Warden/Doorkeeper.
+    # Devise needs session middleware even in API mode for Warden.
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
   end

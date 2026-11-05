@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
-  description "Reset a user's game library. This will remove the user's entire game library from the database. **Only available to users resetting their own libraries using a first-party OAuth Application.**"
+  description "Reset a user's game library. This will remove the user's entire game library from the database. **Only available to users resetting their own libraries.**"
 
   argument :user_id, ID, required: true, description: "ID of user who's library will be reset."
 
@@ -22,8 +22,6 @@ class Mutations::Users::ResetUserLibrary < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

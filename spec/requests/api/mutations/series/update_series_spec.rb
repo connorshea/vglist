@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "UpdateSeries Mutation API", type: :request do
   describe "Mutation updates an existing series record" do
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let!(:series) { create(:series, name: 'Half-Life') }
     let(:query_string) do
       <<-GRAPHQL

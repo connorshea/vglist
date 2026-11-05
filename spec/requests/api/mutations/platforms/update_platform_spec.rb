@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "UpdatePlatform Mutation API", type: :request do
   describe "Mutation updates an existing platform record" do
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let!(:platform) { create(:platform, name: 'Xbox 360') }
     let(:query_string) do
       <<-GRAPHQL

@@ -66,6 +66,43 @@ export function useAuth() {
     return data.requestPasswordReset.message;
   }
 
+  // Resend the email confirmation link (links expire after a few days).
+  // Sent form-encoded rather than as JSON so Rack::Attack can read the email
+  // and apply its per-address throttle on outgoing mail.
+  async function resendConfirmation(email: string) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/confirmation`, {
+        method: "POST",
+        body: new URLSearchParams({ "user[email]": email })
+      });
+
+      if (response.ok) {
+        return {
+          success: true,
+          message: "If that email needs confirming, a new confirmation link is on its way.",
+          errors: [] as string[]
+        };
+      }
+
+      // Devise returns `errors` as strings, but Rack::Attack's 429 returns
+      // `error` (a string) alongside GraphQL-shaped `errors` objects, so
+      // prefer `error` and only use `errors` entries that are strings.
+      const data = (await response.json().catch(() => ({}))) as { error?: unknown; errors?: unknown };
+      const stringErrors = Array.isArray(data.errors)
+        ? data.errors.filter((error): error is string => typeof error === "string")
+        : [];
+      let errors = ["Couldn't send confirmation instructions."];
+      if (typeof data.error === "string") {
+        errors = [data.error];
+      } else if (stringErrors.length > 0) {
+        errors = stringErrors;
+      }
+      return { success: false, message: "", errors };
+    } catch {
+      return { success: false, message: "", errors: ["Couldn't send confirmation instructions."] };
+    }
+  }
+
   async function resetPassword(resetPasswordToken: string, password: string, passwordConfirmation: string) {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/users/password`, {
@@ -114,6 +151,7 @@ export function useAuth() {
     signUp,
     signOut,
     requestPasswordReset,
+    resendConfirmation,
     resetPassword
   };
 }

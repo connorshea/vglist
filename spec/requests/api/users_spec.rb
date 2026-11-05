@@ -6,16 +6,13 @@ RSpec.describe "Users API", type: :request do
   describe "Query for data on users" do
     let(:user) { create(:confirmed_user) }
     let(:user2) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:user_with_avatar) { create(:confirmed_user_with_avatar) }
-    let(:application_for_user_with_avatar) { build(:application, owner: user_with_avatar) }
-    let(:access_token_for_user_with_avatar) { create(:access_token, resource_owner_id: user_with_avatar.id, application: application_for_user_with_avatar) }
+    let(:access_token_for_user_with_avatar) { JwtService.encode(user_with_avatar) }
     let(:private_user) { create(:private_user) }
     let(:banned_user) { create(:banned_user) }
     let(:admin) { create(:confirmed_admin) }
-    let(:application_for_admin) { build(:application, owner: admin) }
-    let(:admin_access_token) { create(:access_token, resource_owner_id: admin.id, application: application_for_admin) }
+    let(:admin_access_token) { JwtService.encode(admin) }
 
     it "returns basic data for user" do
       query_string = <<-GRAPHQL
@@ -616,8 +613,7 @@ RSpec.describe "Users API", type: :request do
 
       it "returns a private user's library statistics to that user" do
         create(:game_purchase, user: private_user, completion_status: :completed, rating: 100, hours_played: 10.0)
-        private_user_application = build(:application, owner: private_user)
-        private_user_token = create(:access_token, resource_owner_id: private_user.id, application: private_user_application)
+        private_user_token = JwtService.encode(private_user)
 
         result = api_request(query_string, variables: { id: private_user.id }, token: private_user_token)
 

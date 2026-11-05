@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Series::UpdateSeries < Mutations::BaseMutation
-  description "Update an existing game series. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Update an existing game series. **Only available to moderators and admins.**"
 
   argument :series_id, ID, required: true, description: 'The ID of the series record.'
   argument :name, String, required: false, description: 'The name of the series.'
@@ -21,8 +21,6 @@ class Mutations::Series::UpdateSeries < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     series = Series.find(object[:series_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this series." unless SeriesPolicy.new(@context[:current_user], series).update?
 

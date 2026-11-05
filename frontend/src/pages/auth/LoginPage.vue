@@ -35,6 +35,9 @@
         <p>
           <router-link to="/password/reset">Forgot your password?</router-link>
         </p>
+        <p>
+          <router-link to="/confirmation/resend">Didn't get a confirmation email?</router-link>
+        </p>
         <p>Don't have an account? <router-link to="/signup">Sign up</router-link></p>
       </form>
     </div>

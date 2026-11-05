@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::UnbanUser < Mutations::BaseMutation
-  description "Unban a user. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Unban a user. **Only available to moderators and admins.**"
 
   argument :user_id, ID, required: true, description: "ID of user to unban."
 
@@ -22,8 +22,6 @@ class Mutations::Users::UnbanUser < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

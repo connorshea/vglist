@@ -41,6 +41,12 @@ const router = createRouter({
       component: () => import("@/pages/auth/PasswordResetConfirmPage.vue"),
       meta: { guestOnly: true }
     },
+    {
+      path: "/confirmation/resend",
+      name: "confirmationResend",
+      component: () => import("@/pages/auth/ConfirmationResendPage.vue"),
+      meta: { guestOnly: true }
+    },
 
     // Games
     {
@@ -276,11 +282,6 @@ const router = createRouter({
           path: "export",
           name: "settingsExport",
           component: () => import("@/pages/settings/ExportSettings.vue")
-        },
-        {
-          path: "api-token",
-          name: "settingsApiToken",
-          component: () => import("@/pages/settings/ApiTokenSettings.vue")
         }
       ]
     },

@@ -9,8 +9,7 @@ RSpec.describe "RemoveGameFromLibrary Mutation API", type: :request do
     let(:game_purchase) { create(:game_purchase, user: user, game: game) }
     let(:user2) { create(:confirmed_user) }
     let(:game_purchase_for_other_user) { create(:game_purchase, user: user2, game: game) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:query_string) do
       <<-GRAPHQL
         mutation($id: ID!) {

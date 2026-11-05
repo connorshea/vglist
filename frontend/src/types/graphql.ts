@@ -498,12 +498,6 @@ export interface UpdateUserMutation {
   } | null;
 }
 
-export type ResetApiTokenMutationVariables = Exact<{ [key: string]: never }>;
-
-export interface ResetApiTokenMutation {
-  resetApiToken: { apiToken: string | null; errors: Array<string> } | null;
-}
-
 export type ExportLibraryMutationVariables = Exact<{ [key: string]: never }>;
 
 export interface ExportLibraryMutation {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Stores::DeleteStore < Mutations::BaseMutation
-  description "Delete a game store. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Delete a game store. **Only available to moderators and admins.**"
 
   argument :store_id, ID, required: true, description: 'The ID of the store to delete.'
 
@@ -18,8 +18,6 @@ class Mutations::Stores::DeleteStore < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     store = Store.find(object[:store_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this store." unless StorePolicy.new(@context[:current_user], store).destroy?
 

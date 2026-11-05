@@ -6,8 +6,7 @@ RSpec.describe "Grouped Unmatched Games API", type: :request do
   describe "Query for data on UnmatchedGame entries" do
     context 'when signed in as a normal user' do
       let(:user) { create(:confirmed_user) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
       let(:unmatched_games) { create_list(:unmatched_game, 3, name: 'Half-Life', external_service_id: '123') }
       let(:unmatched_game1) { create(:unmatched_game, name: 'Half-Life 2', external_service_id: '124') }
       let(:query_string) do

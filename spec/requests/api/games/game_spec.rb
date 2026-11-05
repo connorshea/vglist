@@ -5,8 +5,7 @@ require 'rails_helper'
 RSpec.describe "Game query API", type: :request do
   describe "Query for data on games" do
     let(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:game) { create(:game) }
     let(:game_with_cover) { create(:game_with_cover) }
     let(:game_with_release_date) { create(:game_with_release_date) }
@@ -321,8 +320,7 @@ RSpec.describe "Game query API", type: :request do
       let(:private_user) { create(:private_user) }
       let(:banned_user) { create(:banned_user) }
       let(:admin) { create(:confirmed_admin) }
-      let(:admin_application) { build(:application, owner: admin) }
-      let(:admin_access_token) { create(:access_token, resource_owner_id: admin.id, application: admin_application) }
+      let(:admin_access_token) { JwtService.encode(admin) }
       let(:query_string) do
         <<-GRAPHQL
           query($id: ID!) {

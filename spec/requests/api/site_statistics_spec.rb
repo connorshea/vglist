@@ -6,8 +6,7 @@ RSpec.describe "Site Statistics API", type: :request do
   describe "Query for data on site statistics" do
     context 'when signed in as an admin' do
       let(:user) { create(:confirmed_admin) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
       let(:statistic) { create(:statistic) }
       let(:statistic2) { create(:statistic) }
 
@@ -153,8 +152,7 @@ RSpec.describe "Site Statistics API", type: :request do
 
     context 'when signed in as a normal user' do
       let(:user) { create(:confirmed_user) }
-      let(:application) { build(:application, owner: user) }
-      let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+      let(:access_token) { JwtService.encode(user) }
       let(:statistic) { create(:statistic) }
 
       it "returns a permissions error for statistic" do
@@ -181,8 +179,7 @@ RSpec.describe "Site Statistics API", type: :request do
 
   describe 'Query for basic site statistics' do
     let(:user) { create(:confirmed_user) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:companies) { create_list(:company, rand(1..15)) }
     let(:engines) { create_list(:engine, rand(1..15)) }
     let(:games) { create_list(:game, rand(1..15)) }

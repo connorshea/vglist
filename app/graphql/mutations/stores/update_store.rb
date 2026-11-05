@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Stores::UpdateStore < Mutations::BaseMutation
-  description "Update an existing game store. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Update an existing game store. **Only available to moderators and admins.**"
 
   argument :store_id, ID, required: true, description: 'The ID of the store record.'
   argument :name, String, required: false, description: 'The name of the store.'
@@ -20,8 +20,6 @@ class Mutations::Stores::UpdateStore < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     store = Store.find(object[:store_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this store." unless StorePolicy.new(@context[:current_user], store).update?
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Platforms::DeletePlatform < Mutations::BaseMutation
-  description "Delete a game platform. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Delete a game platform. **Only available to moderators and admins.**"
 
   argument :platform_id, ID, required: true, description: 'The ID of the platform to delete.'
 
@@ -18,8 +18,6 @@ class Mutations::Platforms::DeletePlatform < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     platform = Platform.find(object[:platform_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this platform." unless PlatformPolicy.new(@context[:current_user], platform).destroy?
 

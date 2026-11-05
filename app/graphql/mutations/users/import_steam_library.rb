@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
-  description "Import's the Steam library of the user. **Only available to users importing their own Steam library when using a first-party OAuth application.**"
+  description "Import's the Steam library of the user. **Only available to users importing their own Steam library.**"
 
   argument :user_id, ID, required: true, description: "ID of user who's Steam library we want to import."
   argument :update_hours, Boolean, required: false, description: "Whether the importer should update the hours on the imported games if they've already been added to the user's library previously."
@@ -35,8 +35,6 @@ class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

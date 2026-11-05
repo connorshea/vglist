@@ -11,6 +11,12 @@ declare module "vue-router" {
       login: RouteRecordInfo<"login", "/login", Record<never, never>, Record<never, never>>;
       signup: RouteRecordInfo<"signup", "/signup", Record<never, never>, Record<never, never>>;
       passwordReset: RouteRecordInfo<"passwordReset", "/password/reset", Record<never, never>, Record<never, never>>;
+      confirmationResend: RouteRecordInfo<
+        "confirmationResend",
+        "/confirmation/resend",
+        Record<never, never>,
+        Record<never, never>
+      >;
 
       // Games
       games: RouteRecordInfo<"games", "/games", Record<never, never>, Record<never, never>>;
@@ -91,13 +97,6 @@ declare module "vue-router" {
       settingsExport: RouteRecordInfo<
         "settingsExport",
         "/settings/export",
-        Record<never, never>,
-        Record<never, never>,
-        "settings"
-      >;
-      settingsApiToken: RouteRecordInfo<
-        "settingsApiToken",
-        "/settings/api-token",
         Record<never, never>,
         Record<never, never>,
         "settings"

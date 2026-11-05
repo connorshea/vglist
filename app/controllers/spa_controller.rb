@@ -2,8 +2,8 @@
 
 # Redirects browser visitors to the Vue SPA frontend.
 #
-# In this architecture the Rails app is API-only: GraphQL, REST, OAuth, and
-# Devise HTML pages are all routed explicitly. Anything else that arrives as
+# In this architecture the Rails app is API-only: GraphQL, REST, and the
+# Devise email-link endpoints are all routed explicitly. Anything else that arrives as
 # an HTML request — the root path, unknown paths, old bookmarks — gets
 # redirected to the separately-deployed frontend, preserving the full path
 # and query string so e.g. "/games?page=2" on the API host lands on the same

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::BanUser < Mutations::BaseMutation
-  description "Ban a user. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Ban a user. **Only available to moderators and admins.**"
 
   argument :user_id, ID, required: true, description: "ID of user to ban."
 
@@ -24,8 +24,6 @@ class Mutations::Users::BanUser < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

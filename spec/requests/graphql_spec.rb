@@ -4,22 +4,19 @@ require 'rails_helper'
 
 RSpec.describe "GraphQL", type: :request do
   describe "POST graphql_path" do
-    let(:token) { SecureRandom.alphanumeric(20) }
-    let(:user) { create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(token)) }
-    let(:user_with_no_token) { create(:confirmed_user) }
-    let(:token2) { SecureRandom.alphanumeric(20) }
-    let(:user2) { create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(token2)) }
+    let(:user) { create(:confirmed_user) }
 
-    it 'responds with http success when using a valid API token' do
+    # API tokens were removed along with the public API, so the old
+    # X-User-Email/X-User-Token headers must no longer authenticate anyone.
+    it "ignores the removed API token headers" do
       headers = {
-        'User-Agent': 'GraphQL Test',
         'X-User-Email': user.email,
-        'X-User-Token': token
+        'X-User-Token': SecureRandom.alphanumeric(40)
       }
 
-      expect(user.verify_api_token!(token)).to be true
-      post graphql_path(format: :json), headers: headers
+      post graphql_path(format: :json), params: { query: '{ currentUser { id } }' }, headers: headers
       expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body).dig('data', 'currentUser')).to be_nil
     end
 
     it 'allows unauthenticated requests (for signIn/signUp mutations)' do
@@ -42,15 +39,15 @@ RSpec.describe "GraphQL", type: :request do
       expect(json.dig('data', 'currentUser', 'id')).to eq(user.id.to_s)
     end
 
-    it 'responds with http unauthorized when both Authorization and X-User-Email headers are sent without a valid token' do
-      headers = {
-        'User-Agent': 'GraphQL Test',
-        'Authorization': 'Bearer fake',
-        'X-User-Email': user.email
-      }
+    # OAuth was removed along with the public API, so an old OAuth access
+    # token (not a JWT) must not authenticate anyone.
+    it 'treats a non-JWT bearer token as unauthenticated' do
+      post graphql_path(format: :json),
+        params: { query: '{ currentUser { id } }' },
+        headers: { 'Authorization': "Bearer #{SecureRandom.hex(32)}" }
 
-      post graphql_path(format: :json), headers: headers
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body).dig('data', 'currentUser')).to be_nil
     end
 
     it 'treats an expired JWT as unauthenticated' do

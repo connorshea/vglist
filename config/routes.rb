@@ -26,15 +26,6 @@ Rails.application.routes.draw do
     passwords: 'users/passwords'
   }, skip: [:sessions, :registrations]
 
-  # OAuth routes (Doorkeeper)
-  scope :settings do
-    use_doorkeeper do
-      controllers applications: 'oauth/applications',
-                  authorized_applications: 'oauth/authorized_applications',
-                  authorizations: 'oauth/authorizations'
-    end
-  end
-
   # Execute GraphQL queries posted to '/graphql'.
   post "/graphql", to: "graphql#execute"
 

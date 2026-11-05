@@ -8,6 +8,6 @@ GraphQL::RakeTask.new(
     VideoGameListSchema
   },
   load_context: ->(_task) {
-    { current_user: User.new(role: :admin), doorkeeper_scopes: ['read', 'write'] }
+    { current_user: User.new(role: :admin) }
   }
 )

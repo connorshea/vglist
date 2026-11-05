@@ -9,8 +9,7 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
     let(:game) { create(:game) }
     let(:game_purchase) { create(:game_purchase, game: game, user: user) }
     let(:game_purchase_for_other_user) { create(:game_purchase, game: game, user: user2) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:query_string) do
       <<-GRAPHQL
         mutation($id: ID!) {
@@ -68,8 +67,7 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
     let(:game) { create(:game) }
     let(:game_purchase) { create(:game_purchase, game: game, user: user) }
     let(:game_purchase2) { create(:game_purchase, game: game, user: user, hours_played: 5, rating: 1) }
-    let(:application) { build(:application, owner: user) }
-    let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+    let(:access_token) { JwtService.encode(user) }
     let(:query_string) do
       <<-GRAPHQL
         mutation($id: ID!) {

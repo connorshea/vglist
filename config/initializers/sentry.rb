@@ -11,7 +11,7 @@ Sentry.init do |config|
   # Never send request bodies, cookies, IP addresses, or the Authorization
   # header to Sentry. GraphQL request bodies for signIn/updatePassword/
   # updateEmail contain plaintext passwords, and the Authorization header
-  # carries live JWTs and OAuth tokens. The user's id and username are still
+  # carries live JWTs. The user's id and username are still
   # attached via Sentry.set_user in ApplicationController#set_sentry_context.
   config.send_default_pii = false
 

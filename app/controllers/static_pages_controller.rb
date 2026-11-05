@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StaticPagesController < ApplicationController
-  skip_before_action :sign_out_banned_users
+  skip_before_action :reject_banned_users
 
   def opensearch
     skip_authorization
