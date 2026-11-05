@@ -41,6 +41,7 @@ module Types
     field :is_favorited, Boolean, null: true, resolver_method: :favorited?, description: "Whether the game is in the current user's favorites, or `null` if there is no logged-in user."
     field :is_in_library, Boolean, null: true, resolver_method: :in_library?, description: "Whether the game is in the current user's library, or `null` if there is no logged-in user."
     field :game_purchase_id, ID, null: true, description: 'The ID of the GamePurchase record if the game is in the current user\'s library, or `null` otherwise.'
+    field :library_completion_status, Enums::GamePurchaseCompletionStatusType, null: true, description: "The current user's completion status for the game, or `null` if it isn't in their library, has no status, or there is no logged-in user."
 
     # These two connections are the inverse of `User#gamePurchases` and
     # `User#favoritedGames`, which UserType hides for private and banned users.
@@ -125,6 +126,12 @@ module Types
       game_purchase_map[@object.id]
     end
 
+    def library_completion_status
+      return nil if @context[:current_user].nil?
+
+      library_completion_statuses[@object.id]
+    end
+
     private
 
     # Cache the current user's game purchase IDs keyed by game_id for the
@@ -133,6 +140,12 @@ module Types
     def game_purchase_map
       @context[:current_user_game_purchase_map] ||=
         @context[:current_user].game_purchases.pluck(:game_id, :id).to_h
+    end
+
+    # Like `game_purchase_map`, but only loaded when a query asks for statuses.
+    def library_completion_statuses
+      @context[:current_user_library_completion_statuses] ||=
+        @context[:current_user].game_purchases.pluck(:game_id, :completion_status).to_h
     end
 
     def favorited_game_ids

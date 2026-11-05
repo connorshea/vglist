@@ -126,6 +126,88 @@ RSpec.describe "Games API", type: :request do
       end
     end
 
+    context 'when filtering by a range of release years' do
+      let!(:game2016) { create(:game, release_date: Date.new(2016, 12, 31)) }
+      let!(:game2017) { create(:game, release_date: Date.new(2017, 1, 1)) }
+      let!(:game2019) { create(:game, release_date: Date.new(2019, 12, 31)) }
+      let!(:game2020) { create(:game, release_date: Date.new(2020, 1, 1)) }
+
+      before(:each) do
+        create(:game, release_date: nil)
+      end
+
+      def ids_for(arguments)
+        query_string = <<~GRAPHQL
+          query {
+            games(#{arguments}) {
+              nodes {
+                id
+              }
+            }
+          }
+        GRAPHQL
+
+        api_request(query_string, token: access_token).graphql_dig(:games, :nodes).pluck(:id)
+      end
+
+      it "includes both ends of the range" do
+        expect(ids_for('fromYear: 2017, toYear: 2019')).to contain_exactly(game2017.id.to_s, game2019.id.to_s)
+      end
+
+      it "allows an open-ended range" do
+        expect(ids_for('fromYear: 2019')).to contain_exactly(game2019.id.to_s, game2020.id.to_s)
+        expect(ids_for('toYear: 2016')).to contain_exactly(game2016.id.to_s)
+      end
+
+      it "returns an error when given a year before 1950" do
+        query_string = <<~GRAPHQL
+          query {
+            games(fromYear: 1940) {
+              nodes {
+                id
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        expect(result.graphql_dig(:games)).to be_nil
+        expect(api_result_errors(result)).to include('fromYear must be greater than or equal to 1950')
+      end
+    end
+
+    context 'when excluding games in the library' do
+      let!(:owned_game) { create(:game) }
+      let!(:other_game) { create(:game) }
+      let(:query_string) do
+        <<~GRAPHQL
+          query {
+            games(excludeLibrary: true) {
+              nodes {
+                id
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      before(:each) do
+        create(:game_purchase, user: user, game: owned_game)
+        create(:game_purchase, game: other_game)
+      end
+
+      it "leaves out the current user's games" do
+        result = api_request(query_string, token: access_token)
+        expect(result.graphql_dig(:games, :nodes)).to eq([{ id: other_game.id.to_s }])
+      end
+
+      it "returns every game when not authenticated" do
+        post graphql_path, params: { query: query_string }
+        ids = JSON.parse(response.body).dig('data', 'games', 'nodes').pluck('id')
+        expect(ids).to contain_exactly(owned_game.id.to_s, other_game.id.to_s)
+      end
+    end
+
     context 'when requesting association fields on a games list' do
       let!(:game) { create(:game_with_everything) }
 
@@ -246,6 +328,29 @@ RSpec.describe "Games API", type: :request do
         expect(node4[:isFavorited]).to be true
         expect(node4[:isInLibrary]).to be false
         expect(node4[:gamePurchaseId]).to be_nil
+      end
+
+      it "returns the current user's completion status for each game", :aggregate_failures do
+        game_purchase1.update!(completion_status: :in_progress)
+        query_string = <<~GRAPHQL
+          query {
+            games {
+              nodes {
+                id
+                libraryCompletionStatus
+              }
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+        statuses = result.graphql_dig(:games, :nodes).to_h { |n| [n[:id], n[:libraryCompletionStatus]] }
+
+        expect(statuses[games[0].id.to_s]).to eq('IN_PROGRESS')
+        # In the library, but without a status.
+        expect(statuses[games[2].id.to_s]).to be_nil
+        # Not in the library.
+        expect(statuses[games[1].id.to_s]).to be_nil
       end
 
       it "returns nil for per-user fields when not authenticated", :aggregate_failures do

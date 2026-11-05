@@ -113,6 +113,16 @@ class Game < ApplicationRecord
     where('extract(year from release_date) = ?', year)
   }
 
+  # Find games released in or after a given year.
+  scope :released_from_year, ->(year) {
+    where(release_date: Date.new(year, 1, 1)..)
+  }
+
+  # Find games released in or before a given year.
+  scope :released_to_year, ->(year) {
+    where(release_date: ...Date.new(year + 1, 1, 1))
+  }
+
   validates :name,
     presence: true,
     length: { maximum: 120 }

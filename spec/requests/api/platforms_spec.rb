@@ -80,5 +80,29 @@ RSpec.describe "Platforms API", type: :request do
         }
       )
     end
+
+    it "returns platforms with the most games first when sorting by MOST_GAMES" do
+      platform
+      create_list(:game_platform, 2, platform: platform2)
+      create(:game_platform, platform: platform)
+      platform3 = create(:platform)
+      query_string = <<-GRAPHQL
+        query {
+          platforms(sortBy: MOST_GAMES) {
+            nodes {
+              id
+            }
+            totalCount
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+
+      expect(result.graphql_dig(:platforms, :nodes)).to eq(
+        [platform2, platform, platform3].map { |record| { id: record.id.to_s } }
+      )
+      expect(result.graphql_dig(:platforms, :total_count)).to eq(3)
+    end
   end
 end

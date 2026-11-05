@@ -15,7 +15,7 @@ RSpec.describe "GraphQL operation allowlist", type: :request do
 
   describe 'the manifest' do
     it 'lists the operations the SPA sends' do
-      expect(OperationAllowlist.operations).to include('GetGame', 'GetGames', 'SignIn', 'GetUserLibrary')
+      expect(OperationAllowlist.operations).to include('GetGame', 'GetGamesIndex', 'SignIn', 'GetUserLibrary')
     end
 
     it 'only contains operations that are valid against the current schema' do

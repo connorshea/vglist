@@ -82,28 +82,6 @@ export const GET_GAME = gql`
   }
 `;
 
-export const GET_GAMES = gql`
-  query GetGames($first: Int, $after: String) {
-    games(first: $first, after: $after) {
-      nodes {
-        id
-        name
-        releaseDate
-        coverUrl(size: SMALL)
-        developers(first: 3) {
-          nodes {
-            name
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
-
 export const GET_RECENT_GAMES = gql`
   query GetRecentGames($first: Int) {
     games(first: $first, sortBy: RECENTLY_UPDATED) {

@@ -80,5 +80,29 @@ RSpec.describe "Genres API", type: :request do
         }
       )
     end
+
+    it "returns genres with the most games first when sorting by MOST_GAMES" do
+      genre
+      create_list(:game_genre, 2, genre: genre2)
+      create(:game_genre, genre: genre)
+      genre3 = create(:genre)
+      query_string = <<-GRAPHQL
+        query {
+          genres(sortBy: MOST_GAMES) {
+            nodes {
+              id
+            }
+            totalCount
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+
+      expect(result.graphql_dig(:genres, :nodes)).to eq(
+        [genre2, genre, genre3].map { |record| { id: record.id.to_s } }
+      )
+      expect(result.graphql_dig(:genres, :total_count)).to eq(3)
+    end
   end
 end
