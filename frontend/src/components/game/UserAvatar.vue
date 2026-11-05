@@ -1,5 +1,8 @@
 <template>
-  <span class="user-avatar" :style="{ width: `${size}px`, height: `${size}px` }">
+  <span
+    class="user-avatar"
+    :style="{ width: `var(--avatar-size, ${size}px)`, height: `var(--avatar-size, ${size}px)` }"
+  >
     <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
     <span
       v-else
@@ -14,6 +17,7 @@
 <script setup lang="ts">
 import { avatarColor, userInitials } from "@/utils/avatar";
 
+// Ancestors can override the size with `--avatar-size` (e.g. in a media query).
 // Decorative: the username always sits next to it (or in the parent link's
 // accessible name), so the image has empty alt text.
 withDefaults(

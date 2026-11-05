@@ -205,7 +205,17 @@
 
       <!-- Content below hero -->
       <div class="game-body" :class="{ dimmed: showAddForm }">
-        <div class="game-body-main"></div>
+        <div class="game-body-main">
+          <GameReviewsCard
+            :reviews="reviews"
+            :total-count="reviewsTotal"
+            :sort="reviewSort"
+            :loading="reviewsLoading"
+            @update:sort="changeReviewSort"
+            @load-more="reviewLimit += REVIEW_PAGE_SIZE"
+          />
+          <GameActivityCard v-if="activity.length" :events="activity" />
+        </div>
         <aside class="game-body-side">
           <GameDetailsCard id="game-details" :game="game" />
         </aside>
@@ -288,7 +298,7 @@ import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useImageColors } from "@/composables/useImageColors";
 import { gqlClient } from "@/graphql/client";
-import { GET_GAME, GET_GAME_PURCHASE } from "@/graphql/queries/games";
+import { GET_GAME, GET_GAME_ACTIVITY, GET_GAME_PURCHASE, GET_GAME_REVIEWS } from "@/graphql/queries/games";
 import { GET_STORES } from "@/graphql/queries/resources";
 import {
   REMOVE_GAME_FROM_LIBRARY,
@@ -298,15 +308,24 @@ import {
   REMOVE_GAME_COVER
 } from "@/graphql/mutations/games";
 import { ADD_TO_WIKIDATA_BLOCKLIST } from "@/graphql/mutations/admin";
-import type { GetGamePurchaseQuery, GetGameQuery, GetStoresQuery } from "@/types/graphql";
+import type {
+  GameReviewSort,
+  GetGameActivityQuery,
+  GetGamePurchaseQuery,
+  GetGameQuery,
+  GetGameReviewsQuery,
+  GetStoresQuery
+} from "@/types/graphql";
 import { Check, CircleAlert, Ellipsis, Heart, Plus } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
+import GameActivityCard from "@/components/game/GameActivityCard.vue";
 import GameDetailsCard from "@/components/game/GameDetailsCard.vue";
 import GameHeroPanel, { type HeroPanelEntry } from "@/components/game/GameHeroPanel.vue";
 import LinkedNames from "@/components/game/LinkedNames.vue";
+import GameReviewsCard from "@/components/game/GameReviewsCard.vue";
 import { gameInitials as initialsFor } from "@/utils/library";
 import "@/assets/stylesheets/game-page.scss";
 
@@ -412,6 +431,44 @@ const myEntry = computed<HeroPanelEntry | null>(() => {
   return purchase;
 });
 
+// ── Reviews and recent activity ──
+const REVIEW_PAGE_SIZE = 5;
+const reviewSort = ref<GameReviewSort>("RECENT");
+const reviewLimit = ref(REVIEW_PAGE_SIZE);
+
+const {
+  data: reviewsData,
+  loading: reviewsLoading,
+  refetch: refetchReviews
+} = useQuery<GetGameReviewsQuery>(GET_GAME_REVIEWS, {
+  variables: () => ({ id: gameId.value, sortBy: reviewSort.value, first: reviewLimit.value })
+});
+const reviews = computed(() => reviewsData.value?.game?.reviews.nodes ?? []);
+const reviewsTotal = computed(() => reviewsData.value?.game?.reviews.totalCount ?? 0);
+
+function changeReviewSort(sort: GameReviewSort) {
+  reviewSort.value = sort;
+  reviewLimit.value = REVIEW_PAGE_SIZE;
+}
+
+// Start from the first page of reviews again on another game's page.
+watch(gameId, () => {
+  reviewSort.value = "RECENT";
+  reviewLimit.value = REVIEW_PAGE_SIZE;
+});
+
+const { data: activityData, refetch: refetchActivity } = useQuery<GetGameActivityQuery>(GET_GAME_ACTIVITY, {
+  variables: () => ({ id: gameId.value, first: 6 })
+});
+const activity = computed(() => activityData.value?.game?.activity.nodes ?? []);
+
+// After the signed-in user changes their entry or favorite, their review and
+// the activity it creates should show up without a reload.
+function refetchCommunity() {
+  void refetchReviews();
+  void refetchActivity();
+}
+
 function scrollToDetails(event: MouseEvent) {
   event.preventDefault();
   document.getElementById("game-details")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -482,6 +539,7 @@ function onFormSaved(message: string) {
   showSnackbar(message);
   refetch();
   refetchPurchase();
+  refetchCommunity();
 }
 
 function onFormError(message: string) {
@@ -508,6 +566,7 @@ async function confirmRemoveFromLibrary() {
     showRemoveConfirm.value = false;
     localStorage.removeItem(`vglist-review-draft-${gameId.value}`);
     refetch();
+    refetchCommunity();
   } catch (err) {
     actionMessage.value = `Failed to remove game from library: ${extractGqlError(err)}`;
     actionIsError.value = true;
@@ -569,6 +628,7 @@ async function toggleFavorite() {
     actionMessage.value = "";
     actionIsError.value = false;
     refetch();
+    refetchCommunity();
   } catch (err) {
     actionMessage.value = `Failed to ${currentlyFavorited ? "unfavorite" : "favorite"} game: ${extractGqlError(err)}`;
     actionIsError.value = true;
