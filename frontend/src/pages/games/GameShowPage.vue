@@ -1109,9 +1109,10 @@ async function confirmDeleteGame() {
 }
 
 .hero-tag {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
+  align-content: center;
   height: 28px;
+  text-box: trim-both cap alphabetic;
   padding: 0 10px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.12);
@@ -1128,9 +1129,10 @@ async function confirmDeleteGame() {
 }
 
 .hero-tag-more {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
+  align-content: center;
   height: 28px;
+  text-box: trim-both cap alphabetic;
   padding: 0 10px;
   border-radius: 6px;
   /* An inset ring rather than a border, so the box stays 28px like the chips. */
