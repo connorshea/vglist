@@ -185,6 +185,24 @@ describe("useQuery", () => {
     expect(query().data.value).toEqual({ platform: { id: "1" } });
   });
 
+  // e.g. switching the search page from its All tab to a list tab changes the
+  // list query's variables and enables it in the same tick.
+  it("sends one request when the variables change as the query is enabled", async () => {
+    mockRequest.mockResolvedValue({ platform: { id: "2" } });
+
+    const enabled = ref(false);
+    const { id } = mountQuery({ enabled });
+    await nextTick();
+
+    id.value = "2";
+    enabled.value = true;
+    await nextTick();
+    await nextTick();
+
+    expect(mockRequest).toHaveBeenCalledTimes(1);
+    expect(mockRequest).toHaveBeenCalledWith(GET_PLATFORM_FOR_EDIT, { id: "2" });
+  });
+
   it("still surfaces data and errors from the newest request", async () => {
     mockRequest.mockRejectedValueOnce(new Error("boom"));
 

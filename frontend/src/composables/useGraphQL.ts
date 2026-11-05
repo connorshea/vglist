@@ -97,32 +97,33 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     }
   }
 
-  // Watch reactive variables and re-execute
+  // Re-execute when the reactive variables or the enabled flag change. One
+  // watcher covers both, so a change that does both at once (new variables
+  // and newly enabled) sends one request rather than two. `execute` bails out
+  // while disabled.
+  const sources: (() => unknown)[] = [];
   if (options?.variables && (isRef(options.variables) || typeof options.variables === "function")) {
-    const varsGetter =
+    sources.push(
       typeof options.variables === "function"
         ? (options.variables as () => TVariables)
-        : () => (options.variables as Ref<TVariables>).value;
-
+        : () => (options.variables as Ref<TVariables>).value
+    );
+  }
+  if (options?.enabled && (isRef(options.enabled) || typeof options.enabled === "function")) {
+    sources.push(
+      typeof options.enabled === "function"
+        ? (options.enabled as () => boolean)
+        : () => (options.enabled as Ref<boolean>).value
+    );
+  }
+  if (sources.length) {
     watch(
-      varsGetter,
+      sources,
       () => {
         void execute();
       },
       { deep: true }
     );
-  }
-
-  // Watch enabled flag
-  if (options?.enabled && (isRef(options.enabled) || typeof options.enabled === "function")) {
-    const enabledGetter =
-      typeof options.enabled === "function"
-        ? (options.enabled as () => boolean)
-        : () => (options.enabled as Ref<boolean>).value;
-
-    watch(enabledGetter, (val) => {
-      if (val) void execute();
-    });
   }
 
   onMounted(() => {

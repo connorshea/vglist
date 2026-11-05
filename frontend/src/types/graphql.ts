@@ -1120,6 +1120,118 @@ export interface GetBasicSiteStatisticsQuery {
   };
 }
 
+export type SearchGameFieldsFragment = {
+  id: string;
+  name: string;
+  releaseDate: string | null;
+  coverUrl: string | null;
+  isInLibrary: boolean | null;
+  platforms: { totalCount: number; nodes: Array<{ id: string; name: string }> };
+  developers: { nodes: Array<{ id: string; name: string }> };
+  publishers: { nodes: Array<{ id: string; name: string }> };
+  series: { id: string; name: string } | null;
+};
+
+export type SearchUserFieldsFragment = { id: string; username: string; slug: string; avatarUrl: string | null };
+
+export type SearchOverviewQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchOverviewQuery {
+  games: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      releaseDate: string | null;
+      coverUrl: string | null;
+      isInLibrary: boolean | null;
+      platforms: { totalCount: number; nodes: Array<{ id: string; name: string }> };
+      developers: { nodes: Array<{ id: string; name: string }> };
+      publishers: { nodes: Array<{ id: string; name: string }> };
+      series: { id: string; name: string } | null;
+    }>;
+  } | null;
+  companies: { totalCount: number; nodes: Array<{ id: string; name: string }> } | null;
+  platforms: { totalCount: number; nodes: Array<{ id: string; name: string }> } | null;
+  series: { totalCount: number; nodes: Array<{ id: string; name: string }> } | null;
+  engines: { totalCount: number; nodes: Array<{ id: string; name: string }> } | null;
+  genres: { totalCount: number; nodes: Array<{ id: string; name: string }> } | null;
+  stores: { totalCount: number; nodes: Array<{ id: string; name: string }> } | null;
+  users: {
+    totalCount: number;
+    nodes: Array<{ id: string; username: string; slug: string; avatarUrl: string | null }>;
+  } | null;
+}
+
+export type SearchTabQueryVariables = Exact<{
+  query: string;
+  first: number;
+  after?: string | null | undefined;
+  games: boolean;
+  companies: boolean;
+  platforms: boolean;
+  series: boolean;
+  engines: boolean;
+  genres: boolean;
+  stores: boolean;
+  users: boolean;
+}>;
+
+export interface SearchTabQuery {
+  games?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{
+      id: string;
+      name: string;
+      releaseDate: string | null;
+      coverUrl: string | null;
+      isInLibrary: boolean | null;
+      platforms: { totalCount: number; nodes: Array<{ id: string; name: string }> };
+      developers: { nodes: Array<{ id: string; name: string }> };
+      publishers: { nodes: Array<{ id: string; name: string }> };
+      series: { id: string; name: string } | null;
+    }>;
+  } | null;
+  companies?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; name: string }>;
+  } | null;
+  platforms?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; name: string }>;
+  } | null;
+  series?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; name: string }>;
+  } | null;
+  engines?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; name: string }>;
+  } | null;
+  genres?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; name: string }>;
+  } | null;
+  stores?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; name: string }>;
+  } | null;
+  users?: {
+    totalCount: number;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: Array<{ id: string; username: string; slug: string; avatarUrl: string | null }>;
+  } | null;
+}
+
 export type GetUserQueryVariables = Exact<{
   slug: string;
 }>;
