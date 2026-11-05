@@ -11,15 +11,19 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this company was last updated."
 
     # Associations
-    field :published_games, GameType.connection_type, null: false, description: "Games published by this company."
-    field :developed_games, GameType.connection_type, null: false, description: "Games developed by this company."
-
-    def published_games
-      @object.published_games.with_attached_cover
+    field :published_games, GameType.connection_type, null: false, description: "Games published by this company." do
+      argument :sort_by, Enums::ResourceGameSortType, required: false, description: "The order to sort the games in, if any."
+    end
+    field :developed_games, GameType.connection_type, null: false, description: "Games developed by this company." do
+      argument :sort_by, Enums::ResourceGameSortType, required: false, description: "The order to sort the games in, if any."
     end
 
-    def developed_games
-      @object.developed_games.with_attached_cover
+    def published_games(sort_by: nil)
+      ResourceGameSort.apply(@object.published_games.with_attached_cover, sort_by)
+    end
+
+    def developed_games(sort_by: nil)
+      ResourceGameSort.apply(@object.developed_games.with_attached_cover, sort_by)
     end
   end
 end
