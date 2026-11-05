@@ -87,6 +87,15 @@ export type ResourceGameSort =
   /** Sorted with the most recently released games first. Games without a release date come last. */
   | "NEWEST_RELEASE";
 
+/** Options for sorting resources that games belong to, like genres and platforms. */
+export type ResourceSort =
+  /** Sorted by the number of games in the given resource, most first. */
+  | "MOST_GAMES"
+  /** Sorted alphabetically by name, ignoring case. */
+  | "NAME"
+  /** Sorted with the resources most recently added to vglist first. */
+  | "RECENTLY_ADDED";
+
 /** The types of records that can be returned as a `SearchResult`. */
 export type SearchableEnum =
   /** Self-explanatory. */
@@ -1591,6 +1600,46 @@ export interface GetBasicSiteStatisticsQuery {
     companies: number;
     genres: number;
   };
+}
+
+export type GetGenresIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: ResourceSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetGenresIndexQuery {
+  genres: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
+export type GetPlatformsIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: ResourceSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetPlatformsIndexQuery {
+  platforms: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
 }
 
 export type GetUserQueryVariables = Exact<{

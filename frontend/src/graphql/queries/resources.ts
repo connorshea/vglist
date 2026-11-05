@@ -408,3 +408,47 @@ export const GET_BASIC_SITE_STATISTICS = gql`
     }
   }
 `;
+
+export const GET_GENRES_INDEX = gql`
+  query GetGenresIndex($first: Int, $after: String, $sortBy: ResourceSort, $nameContains: String) {
+    genres(first: $first, after: $after, sortBy: $sortBy, nameContains: $nameContains) {
+      totalCount
+      nodes {
+        id
+        name
+        gamesCount
+        coverGames {
+          id
+          name
+          coverUrl
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+export const GET_PLATFORMS_INDEX = gql`
+  query GetPlatformsIndex($first: Int, $after: String, $sortBy: ResourceSort, $nameContains: String) {
+    platforms(first: $first, after: $after, sortBy: $sortBy, nameContains: $nameContains) {
+      totalCount
+      nodes {
+        id
+        name
+        gamesCount
+        coverGames {
+          id
+          name
+          coverUrl
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
