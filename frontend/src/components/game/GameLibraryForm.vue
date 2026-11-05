@@ -1,5 +1,5 @@
 <template>
-  <div class="form-card">
+  <div class="form-card" :class="{ 'is-sheet': isSheet }">
     <div class="form-grid">
       <!-- Left column: Status, Rating, Dates -->
       <div class="form-col form-col-left">
@@ -12,8 +12,10 @@
               type="button"
               class="form-pill"
               :class="formStatus === opt.value ? 'form-pill-on' : 'form-pill-off'"
+              :aria-pressed="formStatus === opt.value"
               @click="formStatus = formStatus === opt.value ? null : opt.value"
             >
+              <span v-if="isSheet" class="form-pill-dot" :style="{ background: opt.color }" aria-hidden="true"></span>
               {{ opt.label }}
             </button>
           </div>
@@ -31,7 +33,17 @@
               class="form-rating-input"
               @input="clampRating"
             />
-            <div class="form-rating-track" @click="setRatingFromClick">
+            <input
+              v-if="isSheet"
+              :value="formRating ?? 0"
+              type="range"
+              min="0"
+              max="100"
+              class="form-rating-range"
+              aria-label="Rating slider"
+              @input="formRating = Number(($event.target as HTMLInputElement).value)"
+            />
+            <div v-else class="form-rating-track" @click="setRatingFromClick">
               <div class="form-rating-fill" :style="{ width: (formRating ?? 0) + '%' }"></div>
             </div>
           </div>
@@ -100,14 +112,23 @@
           <label class="form-label">Store</label>
           <div class="form-pills">
             <button
-              v-for="store in allStores"
+              v-for="store in visibleStores"
               :key="store.id"
               type="button"
               class="form-pill"
               :class="formStoreIds.has(store.id) ? 'form-pill-on' : 'form-pill-off'"
+              :aria-pressed="formStoreIds.has(store.id)"
               @click="toggleFormStore(store.id)"
             >
               {{ store.name }}
+            </button>
+            <button
+              v-if="hiddenStoreCount > 0"
+              type="button"
+              class="form-pill form-pill-more"
+              @click="showAllStores = true"
+            >
+              + {{ hiddenStoreCount }} more
             </button>
             <span v-if="storesLoading" class="form-empty-hint"> Loading stores... </span>
           </div>
@@ -124,9 +145,20 @@
           ></textarea>
         </div>
 
+        <button
+          v-if="isEditing && isSheet"
+          type="button"
+          class="form-btn-remove form-btn-remove-wide"
+          :disabled="removingFromLibrary"
+          @click="$emit('requestRemove')"
+        >
+          <Trash2 :size="18" :stroke-width="1.8" aria-hidden="true" />
+          {{ removingFromLibrary ? "Removing…" : "Remove from library" }}
+        </button>
+
         <div class="form-actions">
           <button
-            v-if="isEditing"
+            v-if="isEditing && !isSheet"
             type="button"
             class="form-btn-remove"
             :disabled="removingFromLibrary"
@@ -137,7 +169,7 @@
           <div class="form-actions-right">
             <button type="button" class="form-btn-cancel" @click="$emit('cancel')">Cancel</button>
             <button type="button" class="form-btn-save" :disabled="saving || !!dateValidationError" @click="submit">
-              {{ saving ? "Saving\u2026" : "Save" }}
+              {{ saving ? "Saving\u2026" : saveLabel }}
             </button>
           </div>
         </div>
@@ -154,16 +186,22 @@ import { ADD_GAME_TO_LIBRARY, UPDATE_GAME_IN_LIBRARY } from "@/graphql/mutations
 import type { GetGamePurchaseQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
 import { REVIEW_DRAFT_KEY_PREFIX } from "@/stores/auth";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { Trash2 } from "@lucide/vue";
 
-const props = defineProps<{
-  gameId: string;
-  gameName: string;
-  gamePurchaseId: string | null;
-  gamePlatforms: { id: string; name: string }[];
-  allStores: { id: string; name: string }[];
-  storesLoading: boolean;
-  removingFromLibrary: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    gameId: string;
+    gameName: string;
+    gamePurchaseId: string | null;
+    gamePlatforms: { id: string; name: string }[];
+    allStores: { id: string; name: string }[];
+    storesLoading: boolean;
+    removingFromLibrary: boolean;
+    /** "inline" sits in the game hero on wide screens; "sheet" fills the phone bottom sheet. */
+    variant?: "inline" | "sheet";
+  }>(),
+  { variant: "inline" }
+);
 
 const emit = defineEmits<{
   cancel: [];
@@ -172,15 +210,35 @@ const emit = defineEmits<{
   error: [message: string];
 }>();
 
-const statusOptions: { value: GamePurchaseCompletionStatus; label: string }[] = [
-  { value: "UNPLAYED", label: "Unplayed" },
-  { value: "IN_PROGRESS", label: "Playing" },
-  { value: "PAUSED", label: "Paused" },
-  { value: "DROPPED", label: "Dropped" },
-  { value: "COMPLETED", label: "Completed" },
-  { value: "FULLY_COMPLETED", label: "100%" },
-  { value: "NOT_APPLICABLE", label: "N/A" }
+// Dot colours match the library page's status dots (library.scss).
+const statusOptions: { value: GamePurchaseCompletionStatus; label: string; color: string }[] = [
+  { value: "UNPLAYED", label: "Unplayed", color: "#a855f7" },
+  { value: "IN_PROGRESS", label: "Playing", color: "#3b82f6" },
+  { value: "PAUSED", label: "Paused", color: "#f59e0b" },
+  { value: "DROPPED", label: "Dropped", color: "#ef4444" },
+  { value: "COMPLETED", label: "Completed", color: "#22c55e" },
+  { value: "FULLY_COMPLETED", label: "100%", color: "#16a34a" },
+  { value: "NOT_APPLICABLE", label: "N/A", color: "#6b7280" }
 ];
+
+const isSheet = computed(() => props.variant === "sheet");
+
+const saveLabel = computed(() => {
+  if (!isSheet.value) return "Save";
+  return isEditing.value ? "Save changes" : "Add to library";
+});
+
+// On a phone the full store list is several rows of chips, so the sheet shows
+// the first few plus any you've picked, and the rest behind "+ N more".
+const COLLAPSED_STORE_COUNT = 3;
+const showAllStores = ref(false);
+
+const visibleStores = computed(() => {
+  if (!isSheet.value || showAllStores.value) return props.allStores;
+  return props.allStores.filter((store, i) => i < COLLAPSED_STORE_COUNT || formStoreIds.value.has(store.id));
+});
+
+const hiddenStoreCount = computed(() => props.allStores.length - visibleStores.value.length);
 
 const formStatus = ref<GamePurchaseCompletionStatus | null>(null);
 const formRating = ref<number | null>(null);
@@ -679,6 +737,196 @@ defineExpose({ openAsAdd, openAsEdit });
   cursor: not-allowed;
 }
 
+/* ── Sheet variant (phones) ──
+   The grid and columns drop out of the box tree so every group is a direct
+   child of the card. That lets the actions row stick to the bottom of the
+   sheet's scroll area for the whole scroll, not just the last column. */
+.form-card.is-sheet {
+  overflow: visible;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.is-sheet .form-grid,
+.is-sheet .form-col {
+  display: contents;
+}
+
+.is-sheet .form-group {
+  margin: 0;
+  padding: 16px 20px 0;
+}
+
+.is-sheet .form-label {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.is-sheet .form-pills {
+  gap: 8px;
+}
+
+.is-sheet .form-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 22px;
+  font-size: 15px;
+}
+
+.is-sheet .form-pill-off {
+  color: var(--color-text-primary);
+}
+
+.is-sheet .form-pill-on {
+  border-color: var(--p-500);
+  font-weight: 600;
+}
+
+.form-pill-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.is-sheet .form-pill-more {
+  border: 1px dashed var(--color-border);
+  background: transparent;
+  color: var(--n-500);
+}
+
+.is-sheet .form-rating-row {
+  gap: 14px;
+}
+
+/* 16px text stops iOS Safari zooming in when a field gets focus. */
+.is-sheet .form-rating-input,
+.is-sheet .form-hours-input,
+.is-sheet .form-date-input,
+.is-sheet .form-textarea {
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.is-sheet .form-rating-input,
+.is-sheet .form-hours-input,
+.is-sheet .form-date-input {
+  height: 44px;
+}
+
+.is-sheet .form-rating-input {
+  width: 72px;
+  font-weight: 600;
+}
+
+.is-sheet .form-hours-input {
+  width: 96px;
+}
+
+.form-rating-range {
+  flex: 1;
+  height: 44px;
+  margin: 0;
+  accent-color: var(--p-500);
+}
+
+.is-sheet .form-textarea {
+  min-height: 120px;
+  padding: 12px;
+  line-height: 1.45;
+  resize: none;
+}
+
+.is-sheet .form-dates {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px 20px 0;
+}
+
+.is-sheet .form-label-row {
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.is-sheet .form-label-row .form-label {
+  margin: 0;
+}
+
+.is-sheet .form-date-today {
+  min-height: 44px;
+  margin: -10px -8px -10px 0;
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+.is-sheet .form-date-error {
+  margin: 8px 20px 0;
+  font-size: 14px;
+}
+
+.form-btn-remove-wide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 40px);
+  min-height: 48px;
+  margin: 24px 20px 4px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.is-sheet .form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.is-sheet .form-actions-right {
+  flex: 1;
+  gap: 10px;
+}
+
+.is-sheet .form-btn-cancel,
+.is-sheet .form-btn-save {
+  min-height: 48px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.is-sheet .form-btn-cancel {
+  flex: 0 0 112px;
+  color: var(--color-text-primary);
+}
+
+.is-sheet .form-btn-save {
+  flex: 1;
+}
+
+.is-sheet .form-pill:focus-visible,
+.is-sheet .form-date-today:focus-visible,
+.is-sheet .form-btn-cancel:focus-visible,
+.is-sheet .form-btn-save:focus-visible,
+.is-sheet .form-btn-remove:focus-visible {
+  outline: 2px solid var(--p-500);
+  outline-offset: 2px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .form-grid {
@@ -747,5 +995,23 @@ defineExpose({ openAsAdd, openAsEdit });
   .form-date-today:hover {
     color: var(--p-200);
   }
+
+  .is-sheet .form-pill-on {
+    border-color: var(--p-300);
+  }
+
+  .is-sheet .form-pill-more {
+    color: var(--s-100);
+  }
+
+  .form-rating-range {
+    accent-color: var(--p-300);
+  }
+}
+
+/* Placeholders read as hints, not values. */
+.is-sheet .form-hours-input::placeholder,
+.is-sheet .form-textarea::placeholder {
+  color: var(--color-text-tertiary);
 }
 </style>
