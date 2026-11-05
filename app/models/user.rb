@@ -69,9 +69,11 @@ class User < ApplicationRecord
   has_one_attached :avatar do |attachable|
     # resize_to_fill scales and center-crops to exactly the target dimensions,
     # which is libvips-compatible (unlike ImageMagick's gravity/crop options).
-    attachable.variant :small, resize_to_fill: AVATAR_SIZES[:small]
-    attachable.variant :medium, resize_to_fill: AVATAR_SIZES[:medium]
-    attachable.variant :large, resize_to_fill: AVATAR_SIZES[:large]
+    # `preprocessed: true` generates each variant in a background job right
+    # after upload, rather than on the first request that shows the avatar.
+    attachable.variant :small, resize_to_fill: AVATAR_SIZES[:small], preprocessed: true
+    attachable.variant :medium, resize_to_fill: AVATAR_SIZES[:medium], preprocessed: true
+    attachable.variant :large, resize_to_fill: AVATAR_SIZES[:large], preprocessed: true
   end
 
   friendly_id :username, use: [:slugged, :finders]
