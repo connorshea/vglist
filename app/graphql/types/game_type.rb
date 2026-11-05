@@ -32,6 +32,7 @@ module Types
     field :reviews, GamePurchaseType.connection_type, null: false, description: "Library entries for this game that have comments, from public, unbanned users." do
       argument :sort_by, Enums::GameReviewSortType, required: false, default_value: 'recent', description: "The order to sort the reviews in."
     end
+    field :activity, EventType.connection_type, null: false, description: "Activity Events about this game (library additions, completion status changes and favorites), from public, unbanned users."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
       argument :size, Enums::GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
@@ -72,6 +73,21 @@ module Types
              .where.not(comments: '')
              .preload(:platforms, user: AttachmentPreloads::AVATAR)
              .order(*REVIEW_ORDERS.fetch(sort_by))
+    end
+
+    # Events whose eventable is one of this game's library entries or
+    # favorites. The eventable_type filters let Postgres prune the other
+    # branches of the new_events UNION ALL view.
+    def activity
+      purchase_ids = @object.game_purchases.select(:id)
+      favorite_ids = @object.favorites.select(:id)
+
+      Views::NewEvent.where(eventable_type: 'GamePurchase', eventable_id: purchase_ids)
+                     .or(Views::NewEvent.where(eventable_type: 'FavoriteGame', eventable_id: favorite_ids))
+                     .joins(:user)
+                     .merge(User.public_and_unbanned)
+                     .preload(user: AttachmentPreloads::AVATAR)
+                     .recently_created
     end
 
     # Get the number of purchases for the game where rating is not nil.
