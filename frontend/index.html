@@ -2,6 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <!--
+      Paint the dark background before the app's CSS loads, so reloads don't
+      flash white in dark mode. Keep in sync with the dark --bulma-scheme-*
+      values in src/assets/stylesheets/application.scss.
+    -->
+    <style>
+      @media (prefers-color-scheme: dark) {
+        html {
+          background-color: hsl(230, 17%, 20%);
+        }
+      }
+    </style>
     <link rel="icon" type="image/svg+xml" href="/vglist-favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
