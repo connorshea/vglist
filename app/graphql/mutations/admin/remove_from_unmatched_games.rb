@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Admin::RemoveFromUnmatchedGames < Mutations::BaseMutation
-  description "Remove game from Unmatched Games list. **Only available to admins using a first-party OAuth Application.**"
+  description "Remove game from Unmatched Games list. **Only available to admins.**"
 
   argument :external_service_id, ID, required: true, description: 'The ID of the game on the external service.'
   argument :external_service_name, Types::Enums::UnmatchedGameExternalServiceType, required: true, description: 'The name of the external service.'
@@ -24,8 +24,6 @@ class Mutations::Admin::RemoveFromUnmatchedGames < Mutations::BaseMutation
   end
 
   def authorized?(_object)
-    require_permissions!(:first_party)
-
     raise GraphQL::ExecutionError, "You aren't allowed to remove Unmatched Game entries." unless Admin::UnmatchedGamesPolicy.new(@context[:current_user], nil).destroy?
 
     return true

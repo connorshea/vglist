@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
-  description "Update an existing game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Update an existing game engine. **Only available to moderators and admins.**"
 
   argument :engine_id, ID, required: true, description: 'The ID of the engine record.'
   argument :name, String, required: false, description: 'The name of the engine.'
@@ -21,8 +21,6 @@ class Mutations::Engines::UpdateEngine < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     engine = Engine.find(object[:engine_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this engine." unless EnginePolicy.new(@context[:current_user], engine).update?
 

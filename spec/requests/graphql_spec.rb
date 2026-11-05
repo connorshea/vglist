@@ -39,15 +39,15 @@ RSpec.describe "GraphQL", type: :request do
       expect(json.dig('data', 'currentUser', 'id')).to eq(user.id.to_s)
     end
 
-    it 'responds with http unauthorized when both Authorization and X-User-Email headers are sent without a valid token' do
-      headers = {
-        'User-Agent': 'GraphQL Test',
-        'Authorization': 'Bearer fake',
-        'X-User-Email': user.email
-      }
+    # OAuth was removed along with the public API, so an old OAuth access
+    # token (not a JWT) must not authenticate anyone.
+    it 'treats a non-JWT bearer token as unauthenticated' do
+      post graphql_path(format: :json),
+        params: { query: '{ currentUser { id } }' },
+        headers: { 'Authorization': "Bearer #{SecureRandom.hex(32)}" }
 
-      post graphql_path(format: :json), headers: headers
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body).dig('data', 'currentUser')).to be_nil
     end
 
     it 'treats an expired JWT as unauthenticated' do

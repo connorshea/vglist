@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::UpdateUserRole < Mutations::BaseMutation
-  description "Update a user's role. **Only available to admins using a first-party OAuth Application.**"
+  description "Update a user's role. **Only available to admins.**"
 
   argument :user_id, ID, required: true, description: "ID of user to update the role of."
   argument :role, Types::Enums::UserRoleType, required: true, description: "The role to assign to the user."
@@ -23,8 +23,6 @@ class Mutations::Users::UpdateUserRole < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?

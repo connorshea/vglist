@@ -45,12 +45,6 @@ FactoryBot.define do
       end
     end
 
-    trait :application do
-      after(:create) do |user|
-        create :application, owner: user
-      end
-    end
-
     trait :moderator do
       role { :moderator }
     end
@@ -82,8 +76,6 @@ FactoryBot.define do
     factory :user_with_avatar,                traits: [:avatar]
     factory :user_with_game_purchase,         traits: [:game_purchase]
     factory :user_with_favorite_game,         traits: [:favorite_game]
-
-    factory :user_with_application,           traits: [:confirmed, :application]
 
     factory :banned_user,                     traits: [:confirmed, :banned]
   end

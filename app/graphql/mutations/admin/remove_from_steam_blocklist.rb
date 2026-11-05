@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Admin::RemoveFromSteamBlocklist < Mutations::BaseMutation
-  description "Remove game from Steam blocklist. **Only available to admins using a first-party OAuth Application.**"
+  description "Remove game from Steam blocklist. **Only available to admins.**"
 
   argument :steam_blocklist_entry_id, ID, required: true, description: 'The ID of the blocklist entry.'
 
@@ -18,8 +18,6 @@ class Mutations::Admin::RemoveFromSteamBlocklist < Mutations::BaseMutation
   end
 
   def authorized?(_object)
-    require_permissions!(:first_party)
-
     raise GraphQL::ExecutionError, "You aren't allowed to remove a Steam blocklist entry." unless AdminPolicy.new(@context[:current_user], nil).remove_from_steam_blocklist?
 
     return true

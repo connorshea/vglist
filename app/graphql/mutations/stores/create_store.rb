@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Stores::CreateStore < Mutations::BaseMutation
-  description "Create a new game store. **Only available when using a first-party OAuth Application.**"
+  description "Create a new game store."
 
   argument :name, String, required: true, description: 'The name of the store.'
 
@@ -18,8 +18,6 @@ class Mutations::Stores::CreateStore < Mutations::BaseMutation
   end
 
   def authorized?(_object)
-    require_permissions!(:first_party)
-
     raise GraphQL::ExecutionError, "You aren't allowed to create a store." unless StorePolicy.new(@context[:current_user], nil).create?
 
     return true

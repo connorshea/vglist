@@ -55,23 +55,6 @@ class User < ApplicationRecord
   has_many :wikidata_blocklists, dependent: :nullify
   has_many :steam_blocklists, dependent: :nullify
 
-  # rubocop:disable Rails/InverseOf
-  # Users have Doorkeeper access tokens and grants.
-  has_many :access_grants,
-    class_name: 'Doorkeeper::AccessGrant',
-    foreign_key: :resource_owner_id,
-    dependent: :destroy
-
-  has_many :access_tokens,
-    class_name: 'Doorkeeper::AccessToken',
-    foreign_key: :resource_owner_id,
-    dependent: :destroy
-  # rubocop:enable Rails/InverseOf
-
-  has_many :oauth_applications,
-    class_name: 'Doorkeeper::Application',
-    as: :owner
-
   # External accounts, e.g. Steam. Can be changed to a has_many association if
   # other external account types are added later.
   has_one :external_account, dependent: :destroy

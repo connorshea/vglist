@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Games::CreateGame < Mutations::BaseMutation
-  description "Create a new game. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Create a new game. **Only available to moderators and admins.**"
 
   argument :name, String, required: true, description: 'The name of the game.'
   argument :wikidata_id, ID, required: false, description: 'The ID of the game item in Wikidata.'
@@ -69,8 +69,6 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   end
 
   def authorized?(_object)
-    require_permissions!(:first_party)
-
     raise GraphQL::ExecutionError, "You aren't allowed to create a game." unless GamePolicy.new(@context[:current_user], nil).create?
 
     return true

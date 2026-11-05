@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
-  description "Remove the cover from a game. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Remove the cover from a game. **Only available to moderators and admins.**"
 
   argument :game_id, ID, required: true, description: "ID of game to remove cover from."
 
@@ -20,8 +20,6 @@ class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     game = Game.find_by(id: object[:game_id])
 
     return false if game.nil?

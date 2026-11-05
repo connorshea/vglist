@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
-  description "Update an existing game company. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Update an existing game company. **Only available to moderators and admins.**"
 
   argument :company_id, ID, required: true, description: 'The ID of the company record.'
   argument :name, String, required: false, description: 'The name of the company.'
@@ -21,8 +21,6 @@ class Mutations::Companies::UpdateCompany < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     company = Company.find(object[:company_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this company." unless CompanyPolicy.new(@context[:current_user], company).update?
 

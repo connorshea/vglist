@@ -4,7 +4,6 @@ require 'rails_helper'
 
 RSpec.describe "API Errors", type: :request do
   describe "API requests with invalid data" do
-    let(:invalid_access_token) { 'foo' }
     let(:banned_user) { create(:banned_user) }
     let(:banned_user_access_token) { JwtService.encode(banned_user) }
     let(:game) { create(:game) }
@@ -17,12 +16,6 @@ RSpec.describe "API Errors", type: :request do
           }
         }
       GRAPHQL
-    end
-
-    it "returns an error if an invalid access token is provided" do
-      result = api_request(query_string, variables: { id: game.id }, token: invalid_access_token)
-
-      expect(api_result_errors(result)).to include('The access token is invalid')
     end
 
     it "returns an error if banned user's access token is provided" do

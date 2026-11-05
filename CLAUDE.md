@@ -78,7 +78,7 @@ bundle exec rake graphql:schema:idl   # Regenerate schema.graphql
 - **GraphQL**: `app/graphql/` — Types, queries, and mutations. Endpoint at `POST /graphql`
 - **Policies**: `app/policies/` — Pundit authorization policies
 - **Services**: `app/services/` — Service objects for business logic
-- **Auth**: Devise for user authentication, Doorkeeper for OAuth tokens
+- **Auth**: JWTs (`JwtService`) for the SPA; Devise for passwords, email confirmation, and password reset
 
 ### Frontend
 

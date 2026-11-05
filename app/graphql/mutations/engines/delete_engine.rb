@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Engines::DeleteEngine < Mutations::BaseMutation
-  description "Delete a game engine. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Delete a game engine. **Only available to moderators and admins.**"
 
   argument :engine_id, ID, required: true, description: 'The ID of the engine to delete.'
 
@@ -18,8 +18,6 @@ class Mutations::Engines::DeleteEngine < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     engine = Engine.find(object[:engine_id])
     raise GraphQL::ExecutionError, "You aren't allowed to delete this engine." unless EnginePolicy.new(@context[:current_user], engine).destroy?
 

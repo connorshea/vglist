@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
-  description "Update an existing game genre. **Only available to moderators and admins using a first-party OAuth Application.**"
+  description "Update an existing game genre. **Only available to moderators and admins.**"
 
   argument :genre_id, ID, required: true, description: 'The ID of the genre record.'
   argument :name, String, required: false, description: 'The name of the genre.'
@@ -21,8 +21,6 @@ class Mutations::Genres::UpdateGenre < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     genre = Genre.find(object[:genre_id])
     raise GraphQL::ExecutionError, "You aren't allowed to update this genre." unless GenrePolicy.new(@context[:current_user], genre).update?
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Admin::MergeGames < Mutations::BaseMutation
-  description "Merge one game into another. Re-associates all favorites and game purchases (if possible). **Only available to admins using a first-party OAuth Application.**"
+  description "Merge one game into another. Re-associates all favorites and game purchases (if possible). **Only available to admins.**"
 
   argument :game_to_keep_id, ID, required: true, description: 'The ID of the game to keep.'
   argument :game_to_merge_id, ID, required: true, description: 'The ID of the game to merge. This game will be deleted.'
@@ -24,8 +24,6 @@ class Mutations::Admin::MergeGames < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     game = Game.find_by(id: object[:game_to_keep_id])
 
     raise GraphQL::ExecutionError, "You aren't allowed to merge these games." unless GamePolicy.new(@context[:current_user], game).merge?

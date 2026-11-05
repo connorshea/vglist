@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Users::ConnectSteam < Mutations::BaseMutation
-  description "Connect a Steam account for a user. **Only available to users connecting their own Steam account when using a first-party OAuth application.**"
+  description "Connect a Steam account for a user. **Only available to users connecting their own Steam account.**"
 
   argument :user_id, ID, required: true, description: 'ID of the User that we want to connect this Steam account to'
   argument :steam_username, String, required: true, description: 'The Steam username of the account being connected.'
@@ -58,8 +58,6 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
   end
 
   def authorized?(object)
-    require_permissions!(:first_party)
-
     user = User.find_by(id: object[:user_id])
 
     return false if user.nil?
