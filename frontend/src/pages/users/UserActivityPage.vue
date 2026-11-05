@@ -156,6 +156,7 @@ import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { Trash2 } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
+import { timeAgo } from "@/utils/time";
 
 const route = useRoute("userActivity");
 const router = useRouter();
@@ -341,29 +342,6 @@ function eventBadge(event: ActivityNode): BadgeInfo | null {
     return { label: "Followed", cssClass: "badge-followed" };
   }
   return null;
-}
-
-function timeAgo(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHr = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHr / 24);
-  const diffWeek = Math.floor(diffDay / 7);
-  const diffMonth = Math.floor(diffDay / 30);
-
-  if (diffMin < 1) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHr < 24) return `${diffHr}h ago`;
-  if (diffDay === 1) return "1 day ago";
-  if (diffDay < 7) return `${diffDay} days ago`;
-  if (diffWeek === 1) return "1 week ago";
-  if (diffWeek < 5) return `${diffWeek} weeks ago`;
-  if (diffMonth === 1) return "1 month ago";
-  if (diffMonth < 12) return `${diffMonth} months ago`;
-  return date.toLocaleDateString();
 }
 
 function canDeleteEvent(event: ActivityNode): boolean {

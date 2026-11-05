@@ -49,6 +49,7 @@ export const GET_GAME = gql`
   query GetGame($id: ID!) {
     game(id: $id) {
       ...GameFields
+      ratingCount
       isFavorited
       isInLibrary
       gamePurchaseId
@@ -136,6 +137,68 @@ export const GET_GAME_PURCHASE = gql`
         nodes {
           id
           name
+        }
+      }
+    }
+  }
+`;
+
+export const GET_GAME_REVIEWS = gql`
+  query GetGameReviews($id: ID!, $sortBy: GameReviewSort, $first: Int) {
+    game(id: $id) {
+      id
+      reviews(sortBy: $sortBy, first: $first) {
+        totalCount
+        nodes {
+          id
+          comments
+          rating
+          hoursPlayed
+          replayCount
+          completionStatus
+          updatedAt
+          user {
+            id
+            username
+            slug
+            avatarUrl(size: SMALL)
+          }
+          platforms {
+            nodes {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_GAME_ACTIVITY = gql`
+  query GetGameActivity($id: ID!, $first: Int) {
+    game(id: $id) {
+      id
+      activity(first: $first) {
+        nodes {
+          id
+          eventCategory
+          createdAt
+          user {
+            id
+            username
+            slug
+            avatarUrl(size: SMALL)
+          }
+          completionStatusChange {
+            after
+          }
+          eventable {
+            ... on GamePurchase {
+              id
+              completionStatus
+            }
+          }
         }
       }
     }

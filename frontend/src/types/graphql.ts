@@ -48,6 +48,15 @@ export type GamePurchaseSort =
   /** Sorted with the games the user has played the most hours of first. Games with no hours logged are last. */
   | "MOST_HOURS_PLAYED";
 
+/** Options for sorting the reviews of a game. */
+export type GameReviewSort =
+  /** Sorted with the highest-rated reviews first. Reviews without a rating are last. */
+  | "HIGHEST_RATING"
+  /** Sorted with the lowest-rated reviews first. Reviews without a rating are last. */
+  | "LOWEST_RATING"
+  /** Sorted with the most recently updated reviews first. */
+  | "RECENT";
+
 /** Options for sorting games. */
 export type GameSort =
   /** Sorted by the games that have the highest average rating. */
@@ -843,6 +852,7 @@ export type GetGameQueryVariables = Exact<{
 
 export interface GetGameQuery {
   game: {
+    ratingCount: number;
     isFavorited: boolean | null;
     isInLibrary: boolean | null;
     gamePurchaseId: string | null;
@@ -913,6 +923,53 @@ export interface GetGamePurchaseQuery {
     completionDate: string | null;
     platforms: { nodes: Array<{ id: string; name: string }> };
     stores: { nodes: Array<{ id: string; name: string }> };
+  } | null;
+}
+
+export type GetGameReviewsQueryVariables = Exact<{
+  id: string;
+  sortBy?: GameReviewSort | null | undefined;
+  first?: number | null | undefined;
+}>;
+
+export interface GetGameReviewsQuery {
+  game: {
+    id: string;
+    reviews: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        comments: string | null;
+        rating: number | null;
+        hoursPlayed: number | null;
+        replayCount: number;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        updatedAt: string;
+        user: { id: string; username: string; slug: string; avatarUrl: string | null };
+        platforms: { nodes: Array<{ id: string; name: string }> };
+      }>;
+    };
+  } | null;
+}
+
+export type GetGameActivityQueryVariables = Exact<{
+  id: string;
+  first?: number | null | undefined;
+}>;
+
+export interface GetGameActivityQuery {
+  game: {
+    id: string;
+    activity: {
+      nodes: Array<{
+        id: string;
+        eventCategory: EventCategory;
+        createdAt: string;
+        user: { id: string; username: string; slug: string; avatarUrl: string | null };
+        completionStatusChange: { after: GamePurchaseCompletionStatus | null } | null;
+        eventable: { id: string; completionStatus: GamePurchaseCompletionStatus | null } | Record<PropertyKey, never>;
+      }>;
+    };
   } | null;
 }
 
