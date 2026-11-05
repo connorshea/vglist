@@ -52,8 +52,8 @@ module VideoGameList
 
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
 
-    # Use mini magick explicitly since we haven't upgraded to vips.
-    config.active_storage.variant_processor = :mini_magick
+    # Use libvips for Active Storage variants.
+    config.active_storage.variant_processor = :vips
 
     # Allow cross-origin requests to GraphQL, ActiveStorage blobs, and OAuth
     # auth routes.

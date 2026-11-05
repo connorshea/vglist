@@ -44,16 +44,19 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.260.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
-          ruby-version: "3.4.6"
+          ruby-version: "3.4.12"
           bundler-cache: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5.0.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22"
           cache: "yarn"
