@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Library, table layout</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap" style="padding-top: 32px; padding-bottom: 64px;">
+    <div class="between">
+      <div class="row" style="gap: 12px;">
+        <div class="vg-pavatar" style="width: 40px; height: 40px; font-size: 16px; border-radius: 10px;">C</div>
+        <div><h1 class="vg-pname" style="font-size: 20px;">connorshea's library</h1><p class="vg-pstats" style="margin-top: 2px;">412 games · 1,830h played · 56% completed · avg 78</p></div>
+      </div>
+      <div class="row"><button class="vg-btn">Columns <svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><button class="vg-btn primary"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Add game</button></div>
+    </div>
+    <nav class="subnav" aria-label="Profile sections"><a href="Profile.dc.html">Overview</a><a class="on" href="LibraryTable.dc.html">Library <span class="n">412</span></a><a href="#fav">Favorites <span class="n">24</span></a><a href="#act">Activity</a><a href="#f">Followers <span class="n">148</span></a></nav>
+
+    <div class="toolbar" style="margin-top: 20px;">
+      <a class="vg-spill active" href="#all">All <span class="count">412</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-in-progress"></span>Playing <span class="count">6</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-completed"></span>Completed <span class="count">188</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-fully-completed"></span>100% <span class="count">41</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-paused"></span>Paused <span class="count">12</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-dropped"></span>Dropped <span class="count">23</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-unplayed"></span>Unplayed <span class="count">142</span></a>
+      <span class="grow"></span>
+      <label class="in search"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="ph">Search library…</span></label>
+      <div class="vg-seg"><a class="vg-seg-btn" href="LibraryShelves.dc.html" aria-label="Grid"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg></a><a class="vg-seg-btn active" href="LibraryTable.dc.html" aria-label="Table"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"></line><line x1="8" x2="21" y1="12" y2="12"></line><line x1="8" x2="21" y1="18" y2="18"></line><line x1="3" x2="3.01" y1="6" y2="6"></line><line x1="3" x2="3.01" y1="12" y2="12"></line><line x1="3" x2="3.01" y1="18" y2="18"></line></svg></a><a class="vg-seg-btn" href="LibraryJournal.dc.html" aria-label="Journal"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg></a></div>
+    </div>
+
+    <div class="tbl-box" style="position: relative;">
+      <div class="tbl" role="table" aria-label="Library">
+        <div class="tr th-row" role="row">
+            <div class="th" role="columnheader"><button class="chk-btn" aria-label="Select all" onClick="{{toggleAll}}"><span class="{{allCls}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span></button></div>
+            <div class="th" role="columnheader">Game</div><div class="th" role="columnheader">Status</div><div class="th sorted" role="columnheader" aria-sort="descending">Rating <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></div><div class="th num" role="columnheader">Hours</div><div class="th" role="columnheader">Platforms</div><div class="th" role="columnheader">Store</div><div class="th" role="columnheader">Started</div><div class="th" role="columnheader">Finished</div><div class="th" role="columnheader"><span class="sr">Edit</span></div>
+        </div>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+            <div class="{{r.rowCls}}" role="row">
+              <div class="td" role="cell"><button class="chk-btn" aria-label="Select {{r.name}}" onClick="{{r.pick}}"><span class="{{r.chkCls}}"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span></button></div>
+              <div class="td" role="cell"><a class="gcell" href="Game.dc.html"><span class="vg-cover"><span class="{{r.art}}" style="display: block;"></span></span><span><span class="gname" style="display: block;">{{r.name}}</span><span class="gdev">{{r.dev}}</span></span></a></div>
+              <div class="td" role="cell" style="position: relative; overflow: visible;"><span class="{{r.stCls}}"><span class="{{r.dot}}"></span>{{r.status}}<svg class="ico" style="width: 12px; height: 12px; color: var(--color-text-tertiary);" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+                <sc-if value="{{r.menu}}" hint-placeholder-val="{{ false }}">
+                  <div class="menu" role="menu" style="top: 38px; left: 8px;">
+                    <a role="menuitem" href="#s"><span class="vg-dot st-unplayed"></span>Unplayed</a>
+                    <a role="menuitem" href="#s"><span class="vg-dot st-in-progress"></span>Playing</a>
+                    <a role="menuitem" href="#s"><span class="vg-dot st-paused"></span>Paused</a>
+                    <a role="menuitem" class="on" href="#s"><span class="vg-dot st-completed"></span>Completed<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></a>
+                    <a role="menuitem" href="#s"><span class="vg-dot st-fully-completed"></span>100%</a>
+                    <a role="menuitem" href="#s"><span class="vg-dot st-dropped"></span>Dropped</a>
+                    <a role="menuitem" href="#s"><span class="vg-dot st-na"></span>N/A</a>
+                  </div>
+                </sc-if>
+              </div>
+              <div class="td" role="cell"><span class="rt"><span style="width: 22px; text-align: right; font-weight: 600;">{{r.rating}}</span><span class="bar"><i style="{{r.ratingBar}}"></i></span></span></div>
+              <div class="td num" role="cell">{{r.hours}}</div>
+              <div class="td" role="cell"><span class="row" style="gap: 4px; flex-wrap: nowrap;"><sc-for list="{{r.platforms}}" as="p" hint-placeholder-count="1"><span class="mini">{{p}}</span></sc-for></span></div>
+              <div class="td muted" role="cell">{{r.store}}</div>
+              <div class="td muted" role="cell">{{r.started}}</div>
+              <div class="td muted" role="cell">{{r.finished}}</div>
+              <div class="td" role="cell"><button aria-label="Edit {{r.name}}" style="background: none; border: none; color: var(--color-text-tertiary); padding: 4px; cursor: pointer;"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg></button></div>
+            </div>
+          </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+      <div class="editbar" role="toolbar" aria-label="Bulk edit">
+        <span class="count">{{selCount}} selected</span>
+        <a href="#status"><span class="vg-dot st-completed" style="width: 8px; height: 8px;"></span>Set status</a>
+        <a href="#rating">Set rating</a>
+        <a href="#platform">Add platform</a>
+        <a href="#store">Add store</a>
+        <span class="sep"></span>
+        <a class="danger" href="#remove"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>Remove</a>
+        <a href="#clear" aria-label="Clear selection" onClick="{{clear}}"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></a>
+      </div>
+    </sc-if>
+
+    <div class="between" style="margin-top: 16px; font-size: 12px; color: var(--color-text-tertiary);"><span>Showing 1–12 of 412</span><button class="vg-btn quiet">Load more games</button><span>Shift-click to select a range</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"preselect":{"editor":"boolean","default":false},"statusMenuOpen":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: null };
+  }
+  renderVals() {
+    const data = [
+      ['Outer Wilds', 'Mobius Digital', 'completed', 'Completed', 96, '22.5', ['PC'], 'Steam', 'Jun 12, 2024', 'Jul 3, 2024'],
+      ['Disco Elysium', 'ZA/UM', 'fully-completed', '100%', 97, '61', ['PC'], 'GOG', 'Jan 2, 2021', 'Feb 14, 2021'],
+      ['Hades', 'Supergiant Games', 'fully-completed', '100%', 97, '104', ['PC', 'Switch'], 'Steam', 'Sep 17, 2020', 'Dec 1, 2020'],
+      ['Celeste', 'Maddy Makes Games', 'completed', 'Completed', 96, '34', ['Switch'], 'eShop', 'Mar 3, 2019', 'Mar 30, 2019'],
+      ['Return of the Obra Dinn', 'Lucas Pope', 'completed', 'Completed', 95, '11.2', ['PC'], 'Steam', 'Oct 20, 2018', 'Nov 2, 2018'],
+      ['Portal 2', 'Valve', 'completed', 'Completed', 95, '14', ['PC'], 'Steam', '—', '—'],
+      ['Deus Ex', 'Ion Storm', 'completed', 'Completed', 94, '38', ['PC'], 'GOG', '—', 'Aug 9, 2016'],
+      ['Prey', 'Arkane Studios', 'completed', 'Completed', 94, '46', ['PC'], 'Steam', 'May 5, 2017', 'Jun 1, 2017'],
+      ['Hollow Knight: Silksong', 'Team Cherry', 'in-progress', 'Playing', 94, '31', ['PC'], 'Steam', 'Sep 4, 2025', '—'],
+      ['Hollow Knight', 'Team Cherry', 'completed', 'Completed', 93, '58', ['PC', 'Switch'], 'Steam', 'Feb 24, 2017', 'Apr 11, 2017'],
+      ['Animal Well', 'Shared Memory', 'completed', 'Completed', 92, '19', ['PC'], 'Steam', 'May 9, 2024', 'May 25, 2024'],
+      ['Elden Ring', 'FromSoftware', 'paused', 'Paused', 79, '88', ['PS5'], 'PS Store', 'Feb 25, 2022', '—']
+    ];
+    const preselect = this.props.preselect ?? false;
+    const sel = this.state.sel ?? (preselect ? [1, 4, 5] : []);
+    const menuOpen = this.props.statusMenuOpen ?? false;
+    const setSel = (s) => this.setState({ sel: s });
+    const rows = data.map((d, k) => {
+      const on = sel.indexOf(k) !== -1;
+      return {
+        name: d[0], dev: d[1], dot: 'vg-dot st-' + d[2], status: d[3], rating: d[4], ratingBar: 'width:' + d[4] + '%',
+        hours: d[5], platforms: d[6], store: d[7], started: d[8], finished: d[9],
+        art: 'vg-art art-' + ((k * 5 + 1) % 12 + 1),
+        rowCls: on ? 'tr sel' : 'tr', chkCls: on ? 'chk on' : 'chk',
+        stCls: (menuOpen && k === 1) ? 'st open' : 'st', menu: menuOpen && k === 1,
+        pick: () => setSel(on ? sel.filter((x) => x !== k) : sel.concat([k]))
+      };
+    });
+    const all = sel.length === data.length;
+    return {
+      theme: (this.props.dark ?? false) ? 'dark' : 'light',
+      rows: rows,
+      hasSel: sel.length > 0,
+      selCount: sel.length,
+      allCls: all ? 'chk on' : 'chk',
+      toggleAll: () => setSel(all ? [] : data.map((_, k) => k)),
+      clear: (e) => { if (e && e.preventDefault) e.preventDefault(); setSel([]); }
+    };
+  }
+}
+</script>
+</body>
+</html>

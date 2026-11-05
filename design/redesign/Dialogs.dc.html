@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Confirm dialog and snackbars</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 1280px; height: 800px; position: relative; overflow: hidden; font-family: var(--font-sans); background: var(--scheme-main); color: var(--color-text-primary);">
+  <div aria-hidden="true" style="position: absolute; inset: 0;">
+    <div style="height: 52px; background: var(--color-navbar-bg);"></div>
+    <div style="padding: 48px 120px; display: flex; gap: 16px;"><div style="width: 56px; height: 56px; border-radius: 14px; background: var(--p-300);"></div><div style="flex: 1;"><div style="width: 200px; height: 20px; border-radius: 4px; background: var(--color-border);"></div><div style="width: 360px; height: 12px; border-radius: 4px; background: var(--color-bg-subtle); margin-top: 12px;"></div></div></div>
+    <div style="padding: 0 120px; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px;"><div style="aspect-ratio: 3/4; border-radius: 10px; background: #2f4858;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #d1495b;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #edae49;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #00798c;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #30638e;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #8e7dbe;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #3a2e39;"></div><div style="aspect-ratio: 3/4; border-radius: 10px; background: #99c1b9;"></div></div>
+  </div>
+  <div style="position: absolute; inset: 0; background: var(--dialog-scrim); display: flex; align-items: center; justify-content: center; gap: 48px;">
+    <div class="vg-dialog" role="dialog" aria-modal="true" aria-label="Unfollow user?">
+      <div class="vg-dialog-body">
+        <div class="vg-dialog-icon"><svg class="vg-ico" style="width: 22px; height: 22px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="22" x2="16" y1="11" y2="11"></line></svg></div>
+        <div class="vg-dialog-title">Unfollow user?</div>
+        <div class="vg-dialog-desc">You will no longer see <strong>marin</strong>'s activity in your feed.</div>
+      </div>
+      <div class="vg-dialog-actions"><button class="vg-dbtn danger"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>Unfollow</button><button class="vg-dbtn cancel">Cancel</button></div>
+    </div>
+    <div class="vg-dialog primary" role="dialog" aria-modal="true" aria-label="Make moderator?">
+      <div class="vg-dialog-body">
+        <div class="vg-dialog-icon"><svg class="vg-ico" style="width: 22px; height: 22px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg></div>
+        <div class="vg-dialog-title">Make moderator?</div>
+        <div class="vg-dialog-desc"><strong>kestrel</strong> will be able to edit games, companies and other shared records.</div>
+      </div>
+      <div class="vg-dialog-actions"><button class="vg-dbtn primary">Make moderator</button><button class="vg-dbtn cancel">Cancel</button></div>
+    </div>
+  </div>
+  <div style="position: absolute; left: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
+    <div class="vg-snack success" role="status"><span>Outer Wilds has been favorited.</span><button aria-label="Dismiss">×</button></div>
+    <div class="vg-snack error" role="alert"><span>Failed to remove cover: not authorized</span><button aria-label="Dismiss">×</button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

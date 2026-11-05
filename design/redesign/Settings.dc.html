@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings, profile</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap" style="padding-top: 40px;">
+    <h1 class="h-page">Settings</h1>
+    <div class="split">
+      <nav class="rail set-nav" aria-label="Settings sections">
+        <a class="on" href="#profile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Profile</a>
+        <a href="#account"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>Account</a>
+        <a href="#import"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>Import</a>
+        <a href="#export"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Export</a>
+        <a href="#api"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>API token</a>
+      </nav>
+      <main class="main" style="max-width: 720px;">
+        <section class="set-card">
+          <h2 style="font-size: 16px; font-weight: 600; margin: 0 0 4px;">Profile</h2>
+          <p class="d">How you appear to other people on vglist.</p>
+          <div class="row" style="gap: 16px; margin-bottom: 24px;">
+            <div class="vg-pavatar" style="width: 72px; height: 72px; font-size: 28px; border-radius: 18px;">C</div>
+            <div><div class="row"><button class="vg-btn box" style="font-size: 13px;">Upload avatar</button><button class="vg-btn box" style="font-size: 13px; color: var(--color-text-secondary);">Remove</button></div><div class="faint" style="font-size: 12px; margin-top: 6px;">PNG or JPG, square works best.</div></div>
+          </div>
+          <div class="field"><label for="bio">Bio</label><textarea id="bio" class="ta">Maintainer of vglist. Mostly metroidvanias and immersive sims.</textarea><span class="help">Shown under your name on your profile.</span></div>
+          <div class="field"><label for="privacy">Privacy</label><div class="vg-seg" id="privacy" style="width: fit-content;"><a class="vg-seg-btn active" href="#pub" style="font-size: 13px; padding: 8px 16px;">Public</a><a class="vg-seg-btn" href="#priv" style="font-size: 13px; padding: 8px 16px;"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Private</a></div><span class="help">Private hides your library, favorites and activity. Your username and avatar stay visible.</span></div>
+          <label class="row" style="gap: 12px; font-size: 14px; margin-bottom: 8px;"><span class="toggle"></span>Hide hours played on my profile</label>
+          <div class="row" style="justify-content: flex-end; margin-top: 16px; border-top: 1px solid var(--color-border); padding-top: 16px;"><button class="vg-btn save" style="font-size: 14px; padding: 9px 22px;">Save changes</button></div>
+        </section>
+        <section class="set-card">
+          <h2 style="font-size: 16px; font-weight: 600; margin: 0 0 4px;">Connected accounts</h2>
+          <p class="d">Link a store account to import and keep your library in sync.</p>
+          <div class="between" style="padding: 12px 0; border-top: 1px solid var(--color-border);"><span class="row" style="gap: 12px;"><span style="width: 36px; height: 36px; border-radius: 10px; background: var(--color-bg-subtle); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">S</span><span><b style="font-size: 14px; display: block;">Steam</b><span class="muted" style="font-size: 12px;">Not connected</span></span></span><button class="vg-btn box" style="font-size: 13px;">Connect</button></div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

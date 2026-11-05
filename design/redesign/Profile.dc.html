@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>User profile</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap section">
+    <header class="vg-profile" style="margin-bottom: 32px;">
+      <div class="vg-profile-left">
+        <div class="vg-pavatar">C</div>
+        <div>
+          <h1 class="vg-pname">connorshea <span class="vg-role admin">Admin</span></h1>
+          <p class="vg-pbio">Maintainer of vglist. Mostly metroidvanias and immersive sims.</p>
+          <p class="vg-pstats">412 games · 1,830h played · 56% completed · avg 78</p>
+          <div class="vg-psocial"><a href="Users.dc.html"><b>148</b> followers</a><a href="Users.dc.html"><b>62</b> following</a></div>
+        </div>
+      </div>
+      <button class="vg-btn primary">Follow</button>
+    </header>
+
+    <h2 class="vg-section-label">Favorites</h2>
+    <div class="fav-row" style="margin-bottom: 32px;">
+      <sc-for list="{{favs}}" as="f" hint-placeholder-count="8">
+        <a href="Game.dc.html"><span class="vg-cover"><span class="{{f.art}}" style="display: block;"></span></span>{{f.name}}</a>
+      </sc-for>
+    </div>
+
+    <h2 class="vg-section-label">Library</h2>
+    <div class="row" style="gap: 6.4px; margin-bottom: 16px;">
+      <a class="vg-spill active" href="#all">All <span class="count">412</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-in-progress"></span>Playing <span class="count">6</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-completed"></span>Completed <span class="count">188</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-fully-completed"></span>100% <span class="count">41</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-paused"></span>Paused <span class="count">12</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-dropped"></span>Dropped <span class="count">23</span></a>
+      <a class="vg-spill" href="#s"><span class="vg-dot st-unplayed"></span>Unplayed <span class="count">142</span></a>
+    </div>
+    <div class="row" style="gap: 10.4px; margin-bottom: 16px;">
+      <label class="in" style="height: 30px; width: 260px; font-size: 12px;"><span class="ph">Search library...</span></label>
+      <span class="sel">A → Z <svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+      <span class="faint" style="margin-left: auto; font-size: 12px;">412 games</span>
+    </div>
+    <div class="vg-gallery">
+      <sc-for list="{{lib}}" as="g" hint-placeholder-count="24">
+        <a class="vg-gtile" href="Game.dc.html">
+          <span class="{{g.art}}" style="display: block;"></span>
+          <span class="{{g.dot}}"></span>
+          <sc-if value="{{g.rated}}" hint-placeholder-val="{{ true }}"><span class="{{g.rclass}}">{{g.rating}}</span></sc-if>
+          <span class="gname">{{g.name}}</span>
+        </a>
+      </sc-for>
+    </div>
+    <div style="display: flex; justify-content: center; margin-top: 20px;"><button class="vg-btn quiet">Load more games</button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const names = ['Animal Well','Baldur’s Gate 3','Celeste','Control','Dead Cells','Deus Ex','Disco Elysium','Dishonored 2','Elden Ring','Hades','Hollow Knight','Inscryption','Into the Breach','Metroid Dread','Outer Wilds','Portal 2','Prey','Return of the Obra Dinn','Sekiro','Slay the Spire','Subnautica','Tunic','UFO 50','Void Stranger'];
+    const st = ['completed','completed','fully-completed','in-progress','completed','completed','unplayed','paused','completed','fully-completed','completed','completed','dropped','completed','completed','fully-completed','completed','completed','paused','in-progress','completed','completed','in-progress','unplayed'];
+    const ratings = [92, 95, 96, null, 84, 90, null, 86, 94, 97, 93, 88, 61, 85, 96, 95, 89, 94, 79, 91, 87, 90, null, null];
+    const tier = (r) => r >= 90 ? 'r-great' : r >= 75 ? 'r-good' : r >= 60 ? 'r-ok' : 'r-low';
+    const lib = names.map((n, k) => ({
+      name: n,
+      art: k === 6 ? 'vg-cover-ph' : 'vg-art art-' + ((k * 5) % 12 + 1),
+      dot: 'gdot st-' + st[k],
+      rated: ratings[k] !== null,
+      rating: ratings[k],
+      rclass: 'vg-rbadge ' + tier(ratings[k] ?? 0)
+    }));
+    const favs = ['Outer Wilds','Hollow Knight','Deus Ex','Prey','Return of the Obra Dinn','Hades','Disco Elysium','Celeste'].map((n, k) => ({ name: n, art: 'vg-art art-' + ((k * 3) % 12 + 1) }));
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', lib: lib, favs: favs };
+  }
+}
+</script>
+</body>
+</html>

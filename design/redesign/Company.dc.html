@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Company page</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <header class="res-head">
+    <div class="wrap" style="padding-top: 40px; padding-bottom: 0;">
+      <div class="between" style="align-items: flex-start;">
+        <div>
+          <span class="res-kind"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path><rect width="20" height="14" x="2" y="6" rx="2"></rect></svg>Company</span>
+          <h1 class="res-name">Supergiant Games</h1>
+          <div class="res-facts"><span><b>5</b> developed</span><span><b>5</b> published</span><a class="lnk" href="#wd" style="display: inline-flex; gap: 4px; align-items: center;">Wikidata <svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg></a></div>
+        </div>
+        <div class="row"><button class="vg-btn box" style="font-size: 13px;">Edit</button><button class="vg-btn box" style="font-size: 13px; color: var(--r-500);">Delete</button></div>
+      </div>
+      <div class="vg-tabs" style="margin-top: 28px; border-bottom: none;"><a class="vg-tab active" href="#dev">Developed <span class="faint" style="font-size: 11px;">5</span></a><a class="vg-tab" href="#pub">Published <span class="faint" style="font-size: 11px;">5</span></a></div>
+    </div>
+  </header>
+  <div class="wrap" style="padding-top: 24px; padding-bottom: 64px;">
+    <div class="toolbar"><div class="vg-seg"><a class="vg-seg-btn active" href="#s">Newest release</a><a class="vg-seg-btn" href="#s">Most owners</a><a class="vg-seg-btn" href="#s">Highest rated</a><a class="vg-seg-btn" href="#s">A → Z</a></div></div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 24px 16px;">
+      <sc-for list="{{games}}" as="g" hint-placeholder-count="6">
+        <a class="gcard" href="Game.dc.html">
+          <span class="vg-cover"><span class="{{g.art}}" style="display: block;"></span><sc-if value="{{g.owned}}" hint-placeholder-val="{{ false }}"><span class="owned"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>In library</span></sc-if></span>
+          <b>{{g.name}}</b>
+          <span>{{g.meta}}</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const d = [['Hades II', '2025 · 1,102 owners', true], ['Hades', '2020 · 1,433 owners', true], ['Pyre', '2017 · 488 owners', true], ['Transistor', '2014 · 902 owners', false], ['Bastion', '2011 · 1,015 owners', true]];
+    const games = d.map((g, k) => ({ name: g[0], meta: g[1], owned: g[2], art: 'vg-art art-' + ((k * 7 + 5) % 12 + 1) }));
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', games: games };
+  }
+}
+</script>
+</body>
+</html>

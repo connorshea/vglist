@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Game page</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="games" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+
+  <section class="vg-hero" style="background: linear-gradient(135deg, #7a2632 0%, #3b1630 60%, #1f1430 100%); padding: 48px 24px;">
+    <div class="vg-hero-inner">
+      <div class="vg-hero-cover">
+        <div class="vg-cover" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.3);"><div class="vg-art art-3"></div></div>
+        <div class="vg-hero-actions">
+          <a class="vg-hbtn" href="GameEdit.dc.html">+ Add to library</a>
+          <button class="vg-hbtn icon" aria-label="Favorite"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></button>
+        </div>
+        <div style="margin-top: 8px;">
+          <a class="vg-hbtn" href="#admin" style="font-size: 12.8px; padding: 6px 0;">Admin Actions <svg class="vg-ico" style="width: 15px; height: 15px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a>
+        </div>
+      </div>
+      <div class="vg-hero-info">
+        <h1 class="vg-hero-title">Hollow Knight: Silksong</h1>
+        <p class="vg-hero-year">2025</p>
+        <div class="vg-hero-group">
+          <h2 class="vg-hero-label">Genres</h2>
+          <div class="vg-tags"><a class="vg-htag" href="#g">Metroidvania</a><a class="vg-htag" href="#g">Action-adventure</a><a class="vg-htag" href="#g">Platformer</a></div>
+        </div>
+        <div class="vg-hero-group">
+          <h2 class="vg-hero-label">Platforms</h2>
+          <div class="vg-tags"><a class="vg-htag" href="#p">Windows</a><a class="vg-htag" href="#p">Nintendo Switch</a><a class="vg-htag" href="#p">PlayStation 5</a><span class="vg-htag more">+4 more</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="game-cols">
+      <div>
+        <div class="vg-rating" style="margin-bottom: 40px;">
+          <div class="vg-ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="5"></circle><circle class="fill" cx="60" cy="60" r="52" fill="none" stroke-width="5" stroke-dasharray="326.7" stroke-dashoffset="41.2" stroke-linecap="round" transform="rotate(-90 60 60)"></circle></svg><span>87</span></div>
+          <div class="vg-rbar"><div class="vg-rbar-head"><span>Average rating</span><span>87.4 / 100</span></div><div class="vg-rbar-track"><div class="vg-rbar-fill" style="width: 87.4%;"></div></div></div>
+        </div>
+        <h3 class="vg-section-label">Details</h3>
+        <div class="vg-details">
+          <div class="vg-detail"><span class="lbl">Release date</span><span class="val">September 4, 2025</span></div>
+          <div class="vg-detail"><span class="lbl">Publisher</span><span class="val"><a href="Company.dc.html">Team Cherry</a></span></div>
+          <div class="vg-detail"><span class="lbl">Developers</span><span class="val"><a href="Company.dc.html">Team Cherry</a></span></div>
+          <div class="vg-detail"><span class="lbl">Engine</span><span class="val"><a href="Company.dc.html">Unity</a></span></div>
+          <div class="vg-detail"><span class="lbl">Series</span><span class="val"><a href="Company.dc.html">Hollow Knight</a></span></div>
+          <div class="vg-detail"><span class="lbl">Platform</span><span class="val"><a href="#p">Windows</a>, <a href="#p">macOS</a>, <a href="#p">Linux</a>, <a href="#p">Nintendo Switch</a>, <a href="#p">Nintendo Switch 2</a>, <a href="#p">PlayStation 4</a>, <a href="#p">PlayStation 5</a></span></div>
+        </div>
+      </div>
+      <div>
+        <div class="vg-scard"><h4>Genres</h4><div class="row"><a class="vg-tag" href="#g">Metroidvania</a><a class="vg-tag" href="#g">Action-adventure</a><a class="vg-tag" href="#g">Platformer</a><a class="vg-tag" href="#g">Soulslike</a></div></div>
+        <div class="vg-scard">
+          <div class="vg-shead"><h5>Owners</h5><span>1,204 total</span></div>
+          <div class="vg-avstack"><span class="vg-avc" style="background: #5957d6;">C</span><span class="vg-avc" style="background: #00798c;">M</span><span class="vg-avc" style="background: #d1495b;">J</span><span class="vg-avc" style="background: #30638e;">A</span><span class="vg-avc" style="background: #3a2e39;">K</span><span class="vg-avc" style="background: #8e7dbe;">R</span><span class="vg-avover">+1198</span></div>
+          <hr class="vg-shr">
+          <div class="vg-shead"><h5>Favorited by</h5><span>312 total</span></div>
+          <div class="vg-avstack"><span class="vg-avc" style="background: #edae49;">R</span><span class="vg-avc" style="background: #4f6d7a;">T</span><span class="vg-avc" style="background: #92140c;">L</span><span class="vg-avover">+309</span></div>
+        </div>
+        <div class="vg-scard"><h4>External links</h4><ul class="vg-xlinks"><li><a href="#x">Wikidata</a></li><li><a href="#x">MobyGames</a></li><li><a href="#x">IGDB</a></li><li><a href="#x">Steam</a></li><li><a href="#x">PCGamingWiki</a></li><li><a href="#x">GOG</a></li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

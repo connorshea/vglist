@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Users</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="users" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap section">
+    <div class="between" style="align-items: baseline; margin-bottom: 8px;"><h1 class="h-page">Users</h1><span class="h-sub">2,941 users</span></div>
+    <div style="margin-bottom: 20px;"><div class="vg-seg"><a class="vg-seg-btn" href="#d">Default</a><a class="vg-seg-btn active" href="#g">Most games</a><a class="vg-seg-btn" href="#f">Most followers</a></div></div>
+    <div class="users-grid">
+      <sc-for list="{{users}}" as="u" hint-placeholder-count="15">
+        <a class="{{u.cls}}" href="Profile.dc.html">
+          <sc-if value="{{u.hasRole}}" hint-placeholder-val="{{ false }}"><span class="{{u.roleCls}}">{{u.role}}</span></sc-if>
+          <sc-if value="{{u.private}}" hint-placeholder-val="{{ false }}"><svg class="vg-ico lock" viewBox="0 0 24 24" aria-label="Private profile" role="img"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></sc-if>
+          <div class="vg-uavatar" style="{{u.bg}}">{{u.initial}}</div>
+          <div class="uname">{{u.name}}</div>
+          <div class="ucount">{{u.games}} games</div>
+          <div class="ujoined">Joined {{u.joined}}</div>
+        </a>
+      </sc-for>
+    </div>
+    <div class="vg-pager" style="margin-top: 24px;"><button class="vg-page is-disabled" aria-label="Previous page"><svg class="vg-ico" style="width: 16px; height: 16px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><span class="vg-page active" aria-current="page">1</span><button class="vg-page" aria-label="Next page"><svg class="vg-ico" style="width: 16px; height: 16px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const colors = ['#5957d6','#00798c','#d1495b','#30638e','#3a2e39','#8e7dbe','#edae49','#4f6d7a','#92140c','#2f4858'];
+    const raw = [
+      ['connorshea', 1412, 'Mar 2019', 'Admin'], ['kestrel', 1104, 'Apr 2019', 'Mod'], ['marin', 988, 'Jan 2021', ''], ['jules', 871, 'Jun 2020', ''], ['aki', 802, 'Feb 2022', ''],
+      ['rowan', 744, 'Nov 2019', ''], ['tamsin', 690, 'Aug 2023', '', true], ['bram', 655, 'Sep 2020', ''], ['ines', 610, 'May 2024', ''], ['oskar', 598, 'Dec 2019', 'Mod'],
+      ['wren', 541, 'Mar 2022', ''], ['priya', 512, 'Jul 2021', '', true], ['dmitri', 488, 'Oct 2023', ''], ['lou', 463, 'Jan 2020', ''], ['fen', 450, 'Apr 2025', '']
+    ];
+    const users = raw.map((r, k) => ({
+      name: r[0], games: r[1].toLocaleString('en-US'), joined: r[2], role: r[3], hasRole: r[3] !== '',
+      roleCls: 'vg-role soft', private: !!r[4], cls: 'vg-ucard', initial: r[0][0].toUpperCase(), bg: 'background:' + colors[k % colors.length]
+    }));
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', users: users };
+  }
+}
+</script>
+</body>
+</html>

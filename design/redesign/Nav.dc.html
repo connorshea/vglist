@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>vglist navbar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.vg-nav a.vg-nav-item{color:#fff}
+</style>
+</helmet>
+<nav class="vg-nav" aria-label="Main navigation" style="font-family: var(--font-sans);">
+  <a href="Main.dc.html" aria-label="vglist home"><img class="vg-nav-logo" src="/_blob/503bd07cc9db428db201faa1614b492e" alt="vglist"></a>
+  <a class="{{activityClass}}" href="Activity.dc.html">Activity</a>
+  <a class="{{gamesClass}}" href="GamesFilter.dc.html">Games</a>
+  <a class="{{usersClass}}" href="Users.dc.html">Users</a>
+  <a class="vg-nav-item" href="#more">More <svg class="vg-ico" style="width: 14px; height: 14px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a>
+  <span class="vg-nav-spacer"></span>
+  <a href="Search.dc.html" class="vg-nav-search" style="display: block;" aria-label="Open search">
+    <span style="display: flex; align-items: center; height: 36px; background: rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,.15); border-radius: 6px; color: rgba(255,255,255,.6); font-size: 14px; padding: 0 10px;">Search...</span>
+    <kbd class="vg-kbd-nav">⌘K</kbd>
+  </a>
+  <sc-if value="{{signedIn}}" hint-placeholder-val="{{ true }}">
+    <a class="vg-nav-item" href="Profile.dc.html">connorshea <svg class="vg-ico" style="width: 14px; height: 14px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a>
+  </sc-if>
+  <sc-if value="{{signedOut}}" hint-placeholder-val="{{ false }}">
+    <a class="vg-nav-item" href="SignIn.dc.html">Sign up</a>
+    <a class="vg-nav-item" href="SignIn.dc.html">Sign in</a>
+    <a class="vg-nav-item" href="#more">More <svg class="vg-ico" style="width: 14px; height: 14px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a>
+  </sc-if>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["none","activity","games","users"],"default":"none"},"signedIn":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":52}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'none';
+    const signedIn = this.props.signedIn ?? true;
+    const cls = (k) => 'vg-nav-item' + (active === k ? ' is-active' : '');
+    return {
+      activityClass: cls('activity'),
+      gamesClass: cls('games'),
+      usersClass: cls('users'),
+      signedIn: signedIn,
+      signedOut: !signedIn
+    };
+  }
+}
+</script>
+</body>
+</html>

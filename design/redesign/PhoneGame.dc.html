@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Game page on a phone</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="phone" data-theme="{{theme}}">
+  <div class="nav-m">
+    <img src="/_blob/503bd07cc9db428db201faa1614b492e" alt="vglist">
+    <span class="sp"></span>
+    <a href="Search.dc.html" aria-label="Search" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #fff;"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></a>
+    <a href="PhoneNav.dc.html" aria-label="Menu" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;"><span class="burger"><i></i><i></i><i></i></span></a>
+  </div>
+  <section style="background: linear-gradient(160deg, #7a2632 0%, #3b1630 60%, #1f1430 100%); color: #fff; padding: 28px 24px 24px; text-align: center;">
+    <div class="vg-cover" style="width: 180px; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.3);"><div class="vg-art art-3"></div></div>
+    <div class="vg-hero-actions" style="width: 180px; margin: 12px auto 0;"><a class="vg-hbtn" href="GameEdit.dc.html" style="min-height: 40px;">+ Add to library</a><button class="vg-hbtn icon" aria-label="Favorite"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></button></div>
+    <h1 style="font-size: 28px; font-weight: 700; line-height: 1.15; margin: 20px 0 4px;">Hollow Knight: Silksong</h1>
+    <p style="font-size: 20px; color: rgba(255,255,255,.65); margin: 0 0 16px;">2025</p>
+    <h2 class="vg-hero-label">Genres</h2>
+    <div class="vg-tags" style="justify-content: center;"><a class="vg-htag" href="#g">Metroidvania</a><a class="vg-htag" href="#g">Action-adventure</a><a class="vg-htag" href="#g">Platformer</a></div>
+  </section>
+  <div style="padding: 24px 16px;">
+    <div class="vg-rating" style="gap: 16px; margin-bottom: 24px;">
+      <div class="vg-ring" style="width: 64px; height: 64px;"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="5"></circle><circle class="fill" cx="60" cy="60" r="52" fill="none" stroke-width="5" stroke-dasharray="326.7" stroke-dashoffset="41.2" stroke-linecap="round" transform="rotate(-90 60 60)"></circle></svg><span style="font-size: 20px;">87</span></div>
+      <div class="vg-rbar"><div class="vg-rbar-head"><span>Average rating</span><span>87.4 / 100</span></div><div class="vg-rbar-track"><div class="vg-rbar-fill" style="width: 87.4%;"></div></div></div>
+    </div>
+    <h3 class="vg-section-label">Details</h3>
+    <div class="vg-details" style="grid-template-columns: minmax(0, 1fr);">
+      <div class="vg-detail"><span class="lbl">Release date</span><span class="val">September 4, 2025</span></div>
+      <div class="vg-detail"><span class="lbl">Developers</span><span class="val"><a href="Company.dc.html">Team Cherry</a></span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

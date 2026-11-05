@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Activity</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}" style="background: var(--color-bg-subtle);">
+  <dc-import name="Nav" active="activity" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap section">
+    <h1 class="h-page" style="font-size: 32px; font-weight: 600; margin-bottom: 24px;">Activity</h1>
+    <div class="vg-tabs" style="margin-bottom: 24px;"><a class="vg-tab active" href="#following">Following</a><a class="vg-tab" href="#global">Global</a></div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <sc-for list="{{events}}" as="e" hint-placeholder-count="8">
+        <div class="vg-acard">
+          <sc-if value="{{e.isGame}}" hint-placeholder-val="{{ true }}"><a class="vg-acover" href="Game.dc.html"><span class="{{e.art}}" style="display: block;"></span></a></sc-if>
+          <sc-if value="{{e.isUser}}" hint-placeholder-val="{{ false }}"><span class="vg-acover user">{{e.initial}}</span></sc-if>
+          <div class="vg-abody">
+            <div class="vg-arow">
+              <span class="vg-asent"><span class="vg-aav">{{e.userInitial}}</span><a class="vg-auser" href="Profile.dc.html">{{e.user}}</a> <span class="vg-averb">{{e.verb}}</span> <a class="vg-agame" href="Game.dc.html">{{e.object}}</a> <span class="vg-averb">{{e.tail}}</span></span>
+              <span class="{{e.badge}}">{{e.badgeLabel}}</span>
+            </div>
+            <div class="vg-ameta"><span>{{e.time}}</span><sc-if value="{{e.hasRating}}" hint-placeholder-val="{{ false }}"><span class="vg-asep"></span><span>{{e.rating}} / 100</span></sc-if></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div class="vg-pager" style="margin-top: 24px;"><button class="vg-page is-disabled" aria-label="Previous page"><svg class="vg-ico" style="width: 16px; height: 16px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><span class="vg-page active" aria-current="page">1</span><button class="vg-page" aria-label="Next page"><svg class="vg-ico" style="width: 16px; height: 16px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ev = (user, verb, object, tail, badge, label, time, rating, art, isUser) => ({
+      user: user, userInitial: user[0].toUpperCase(), verb: verb, object: object, tail: tail,
+      badge: 'vg-abadge ' + badge, badgeLabel: label, time: time,
+      hasRating: rating !== null, rating: rating, art: art, isGame: !isUser, isUser: !!isUser, initial: object[0].toUpperCase()
+    });
+    const events = [
+      ev('marin', 'completed', 'Blue Prince', '', 'b-completed', 'Completed', '12 minutes ago', 91, 'vg-art art-6'),
+      ev('connorshea', 'added', 'Hades II', 'to their library', 'b-added', 'Added', '1 hour ago', null, 'vg-art art-12'),
+      ev('jules', 'started playing', 'Hollow Knight: Silksong', '', 'b-in-progress', 'Playing', '3 hours ago', null, 'vg-art art-3'),
+      ev('marin', 'favorited', 'Outer Wilds', '', 'b-favorited', 'Favorited', '5 hours ago', null, 'vg-art art-5'),
+      ev('aki', '100% completed', 'Celeste', '', 'b-fully-completed', '100%', 'yesterday', 97, 'vg-art art-4'),
+      ev('connorshea', 'started following', 'kestrel', '', 'b-followed', 'Followed', 'yesterday', null, '', true),
+      ev('jules', 'dropped', 'Starfield', '', 'b-dropped', 'Dropped', '2 days ago', 52, 'vg-art art-11'),
+      ev('rowan', 'paused', 'Elden Ring', '', 'b-muted', 'Paused', '3 days ago', null, 'vg-art art-7')
+    ];
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', events: events };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Games, filter rail</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="games" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap" style="padding-top: 40px;">
+    <div class="between" style="align-items: baseline;"><h1 class="h-page">Games</h1><span class="h-sub">84,312 games</span></div>
+    <div class="split">
+      <aside class="rail" aria-label="Sort and filter">
+        <div>
+          <h2 class="rail-h">Sort by</h2>
+          <div class="rail-list">
+            <a class="rail-item" href="#s"><span class="radio"></span>Newest in vglist</a>
+            <a class="rail-item on" href="#s"><span class="radio on"></span>Recently released</a>
+            <a class="rail-item" href="#s"><span class="radio"></span>Most owners</a>
+            <a class="rail-item" href="#s"><span class="radio"></span>Most favorites</a>
+            <a class="rail-item" href="#s"><span class="radio"></span>Highest rated</a>
+            <a class="rail-item" href="#s"><span class="radio"></span>Recently updated</a>
+          </div>
+        </div>
+        <div>
+          <h2 class="rail-h">Platform</h2>
+          <span class="in" style="width: 100%; justify-content: space-between;">Nintendo Switch 2 <svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span>
+        </div>
+        <div>
+          <h2 class="rail-h">Release year</h2>
+          <span class="in" style="width: 100%; justify-content: space-between;"><span class="ph">Any year</span><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </div>
+        <div>
+          <h2 class="rail-h">Genre</h2>
+          <div class="chip-row"><a class="vg-fpill on" href="#g">Metroidvania</a><a class="vg-fpill" href="#g">Roguelike</a><a class="vg-fpill" href="#g">Puzzle</a><a class="vg-fpill" href="#g">RPG</a><a class="vg-fpill" href="#g">Platformer</a><a class="vg-fpill" href="#g">Shooter</a><a class="vg-fpill" href="#g">More…</a></div>
+        </div>
+        <div>
+          <h2 class="rail-h">Engine</h2>
+          <span class="in" style="width: 100%; justify-content: space-between;"><span class="ph">Any engine</span><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </div>
+        <label class="row" style="font-size: 13px; color: var(--color-text-secondary);"><span class="toggle"></span>Hide games in my library</label>
+      </aside>
+      <main class="main">
+        <div class="toolbar">
+          <span class="fchip">Nintendo Switch 2 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span>
+          <span class="fchip">Metroidvania <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span>
+          <a class="lnk" href="#clear" style="font-size: 12px;">Clear all</a>
+          <span class="grow"></span>
+          <span class="faint" style="font-size: 12px;">38 results</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 24px 16px;">
+          <sc-for list="{{games}}" as="g" hint-placeholder-count="15">
+            <a class="gcard" href="Game.dc.html">
+              <span class="vg-cover"><span class="{{g.art}}" style="display: block;"></span><sc-if value="{{g.owned}}" hint-placeholder-val="{{ false }}"><span class="owned"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{{g.ownedLabel}}</span></sc-if></span>
+              <b>{{g.name}}</b>
+              <span>{{g.meta}}</span>
+            </a>
+          </sc-for>
+        </div>
+        <div class="vg-pager" style="margin: 32px 0 64px;"><button class="vg-page is-disabled" aria-label="Previous page"><svg class="vg-ico" style="width: 16px; height: 16px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><span class="vg-page active" aria-current="page">1</span><button class="vg-page" aria-label="Next page"><svg class="vg-ico" style="width: 16px; height: 16px;" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button></div>
+      </main>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const d = [
+      ['Hollow Knight: Silksong', '2025 · Team Cherry', 'Playing'], ['Metroid Prime 4: Beyond', '2025 · Retro Studios', ''], ['Ender Magnolia', '2025 · Adglobe', ''],
+      ['Nine Sols', '2024 · RedCandleGames', 'Completed'], ['Prince of Persia: The Lost Crown', '2024 · Ubisoft Montpellier', 'Completed'], ['Animal Well', '2024 · Shared Memory', 'Completed'],
+      ['Islets', '2022 · Kyle Thompson', ''], ['Haiku, the Robot', '2022 · Mister Morris Games', ''], ['Metroid Dread', '2021 · MercurySteam', 'Completed'],
+      ['Ori and the Will of the Wisps', '2020 · Moon Studios', 'Completed'], ['Bloodstained', '2019 · ArtPlay', 'Paused'], ['Dead Cells', '2018 · Motion Twin', 'Completed'],
+      ['Hollow Knight', '2017 · Team Cherry', 'Completed'], ['Axiom Verge', '2015 · Thomas Happ', ''], ['Guacamelee! 2', '2018 · DrinkBox Studios', '']
+    ];
+    const games = d.map((g, k) => ({ name: g[0], meta: g[1], owned: g[2] !== '', ownedLabel: g[2], art: 'vg-art art-' + ((k * 7 + 3) % 12 + 1) }));
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', games: games };
+  }
+}
+</script>
+</body>
+</html>

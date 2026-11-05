@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <div class="auth">
+    <div class="auth-art">
+      <div class="mosaic" aria-hidden="true">
+        <sc-for list="{{tiles}}" as="t" hint-placeholder-count="40"><div style="{{t.style}}"></div></sc-for>
+      </div>
+      <div class="home-vignette"></div>
+      <div style="position: relative; z-index: 2; max-width: 420px;">
+        <a href="Main.dc.html"><img src="/_blob/503bd07cc9db428db201faa1614b492e" alt="vglist" style="height: 48px; filter: drop-shadow(0 4px 20px rgba(0,0,0,.5));"></a>
+        <p style="font-size: 20px; line-height: 1.4; margin: 20px 0 0; color: rgba(255,255,255,.85);">Track your entire video game library across every store and platform.</p>
+      </div>
+    </div>
+    <div class="auth-form">
+      <div class="auth-card">
+        <h1>Sign in</h1>
+        <p class="muted" style="font-size: 14px; margin: 0 0 28px;">New to vglist? <a class="lnk" href="#signup">Create an account</a></p>
+        <div class="field" style="max-width: none;"><label for="em">Email</label><input id="em" class="in" type="email" value="connor@example.com"></div>
+        <div class="field" style="max-width: none;"><div class="between"><label for="pw">Password</label><a class="lnk" href="#reset" style="font-size: 12px;">Forgot your password?</a></div><input id="pw" class="in" type="password" value="hunter2hunter2"></div>
+        <label class="row" style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 24px;"><span class="chk on"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Remember me</label>
+        <button class="vg-btn primary btn-block">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const palette = ['#2f4858','#86bbd8','#d1495b','#edae49','#00798c','#30638e','#3a2e39','#8e7dbe','#99c1b9','#f2d0a9','#1e1e24','#92140c','#5c4d7d','#4f6d7a','#c0d6df','#e8a87c'];
+    const tiles = [];
+    for (let k = 0; k < 108; k++) tiles.push({ style: 'background:' + palette[(k * 5 + (k >> 2)) % palette.length] });
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', tiles: tiles };
+  }
+}
+</script>
+</body>
+</html>

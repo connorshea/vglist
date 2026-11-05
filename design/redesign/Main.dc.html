@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>vglist home</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ false }}" hint-size="100%,52px"></dc-import>
+
+  <section class="home-hero">
+    <div class="mosaic" aria-hidden="true">
+      <sc-for list="{{tiles}}" as="t" hint-placeholder-count="40">
+        <div style="{{t.style}}"></div>
+      </sc-for>
+    </div>
+    <div class="home-vignette"></div>
+    <div class="home-content">
+      <img class="home-logo" src="/_blob/503bd07cc9db428db201faa1614b492e" alt="vglist">
+      <p class="home-sub">Track your entire video game library across every store and platform.</p>
+      <div class="vg-statsbar">
+        <a class="vg-stat" href="GamesFilter.dc.html"><b>84,312</b><span>GAMES</span></a>
+        <a class="vg-stat" href="Users.dc.html"><b>2,941</b><span>USERS</span></a>
+        <a class="vg-stat" href="#platforms"><b>312</b><span>PLATFORMS</span></a>
+        <a class="vg-stat" href="Company.dc.html"><b>9,870</b><span>COMPANIES</span></a>
+        <a class="vg-stat" href="#series"><b>1,204</b><span>SERIES</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h2">Recently Added Games</h2>
+      <div class="recent-grid">
+        <sc-for list="{{recent}}" as="g" hint-placeholder-count="6">
+          <a class="recent" href="Game.dc.html">
+            <span class="vg-cover"><span class="{{g.art}}" style="display: block;"></span></span>
+            <span>
+              <b>{{g.name}}</b>
+              <span class="muted" style="display: block; font-size: 16px;">{{g.platforms}}</span>
+              <span class="muted" style="display: block; font-size: 12px; margin-top: 4px;">{{g.dev}}</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 32px 24px 48px;">
+    <div class="cta">
+      <i style="width: 260px; height: 260px; top: -60px; right: -40px;"></i>
+      <i style="width: 200px; height: 200px; bottom: -50px; left: -30px;"></i>
+      <h2 style="position: relative;">Start tracking your games today</h2>
+      <p style="position: relative;">Import your Steam library, rate what you've played, and follow what your friends are playing.</p>
+      <a href="SignIn.dc.html" style="position: relative;">Create an account</a>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const palette = ['#2f4858','#86bbd8','#d1495b','#edae49','#00798c','#30638e','#3a2e39','#8e7dbe','#99c1b9','#f2d0a9','#1e1e24','#92140c','#5c4d7d','#4f6d7a','#c0d6df','#e8a87c'];
+    const tiles = [];
+    for (let k = 0; k < 126; k++) tiles.push({ style: 'background:' + palette[(k * 7 + (k >> 3)) % palette.length] });
+    const recent = [
+      { name: 'Hollow Knight: Silksong', platforms: 'Windows, Nintendo Switch, PlayStation 5', dev: 'Team Cherry', art: 'vg-art art-3' },
+      { name: 'Hades II', platforms: 'Windows, macOS, Nintendo Switch 2', dev: 'Supergiant Games', art: 'vg-art art-12' },
+      { name: 'Blue Prince', platforms: 'Windows, PlayStation 5, Xbox Series X|S', dev: 'Dogubomb', art: 'vg-art art-6' },
+      { name: 'Clair Obscur: Expedition 33', platforms: 'Windows, PlayStation 5', dev: 'Sandfall Interactive', art: 'vg-art art-7' },
+      { name: 'Despelote', platforms: 'Windows, PlayStation 5', dev: 'Julián Cordero, Sebastian Valbuena', art: 'vg-art art-4' },
+      { name: 'Split Fiction', platforms: 'Windows, PlayStation 5', dev: 'Hazelight Studios', art: 'vg-art art-5' }
+    ];
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', tiles: tiles, recent: recent };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Games, shelves</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="games" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap" style="padding-top: 40px; padding-bottom: 64px;">
+    <div class="between" style="align-items: baseline; margin-bottom: 24px;"><h1 class="h-page">Games</h1><a class="lnk" href="GamesFilter.dc.html" style="font-size: 13px;">Browse all 84,312 with filters</a></div>
+
+    <a class="feature" href="Game.dc.html" style="background: linear-gradient(120deg, #1d4e5f 0%, #183245 55%, #141f33 100%); margin-bottom: 40px;">
+      <span class="vg-cover" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.3);"><span class="vg-art art-6" style="display: block;"></span></span>
+      <span>
+        <span class="vg-hero-label" style="display: block;">Highest rated release this year</span>
+        <h2>Blue Prince</h2>
+        <span style="display: block; font-size: 16px; color: rgba(255,255,255,.7); margin-bottom: 20px;">2025 · Dogubomb · Puzzle, Roguelike</span>
+        <span class="row" style="gap: 16px; font-size: 14px; color: rgba(255,255,255,.85);"><span><b style="font-size: 24px; color: #fff;">92</b> avg rating</span><span><b style="font-size: 24px; color: #fff;">418</b> owners</span><span><b style="font-size: 24px; color: #fff;">96</b> favorites</span></span>
+        <span class="vg-hero-actions" style="width: 260px; margin-top: 24px;"><span class="vg-hbtn">+ Add to library</span><span class="vg-hbtn icon" aria-hidden="true"><svg class="vg-ico" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></span></span>
+      </span>
+    </a>
+
+    <sc-for list="{{shelves}}" as="s" hint-placeholder-count="3">
+      <section class="shelf" style="margin-bottom: 40px;">
+        <div class="shelf-h"><h3 style="font-size: 18px; font-weight: 700;">{{s.title}}</h3><span class="n">{{s.sub}}</span><a class="more" href="GamesFilter.dc.html">See all</a></div>
+        <div class="shelf-scroll">
+          <sc-for list="{{s.games}}" as="g" hint-placeholder-count="8">
+            <a class="gcard" href="Game.dc.html"><span class="vg-cover"><span class="{{g.art}}" style="display: block;"></span></span><b>{{g.name}}</b><span>{{g.meta}}</span></a>
+          </sc-for>
+        </div>
+      </section>
+    </sc-for>
+
+    <section style="margin-bottom: 32px;">
+      <h3 class="vg-section-label">Browse by genre</h3>
+      <div class="chip-row"><a class="vg-tag" href="GamesFilter.dc.html">Action-adventure</a><a class="vg-tag" href="GamesFilter.dc.html">Metroidvania</a><a class="vg-tag" href="GamesFilter.dc.html">Roguelike</a><a class="vg-tag" href="GamesFilter.dc.html">Puzzle</a><a class="vg-tag" href="GamesFilter.dc.html">Role-playing</a><a class="vg-tag" href="GamesFilter.dc.html">Platformer</a><a class="vg-tag" href="GamesFilter.dc.html">First-person shooter</a><a class="vg-tag" href="GamesFilter.dc.html">Strategy</a><a class="vg-tag" href="GamesFilter.dc.html">Immersive sim</a><a class="vg-tag" href="GamesFilter.dc.html">Visual novel</a></div>
+    </section>
+    <section>
+      <h3 class="vg-section-label">Browse by platform</h3>
+      <div class="chip-row"><a class="vg-tag" href="GamesFilter.dc.html">Windows</a><a class="vg-tag" href="GamesFilter.dc.html">Nintendo Switch 2</a><a class="vg-tag" href="GamesFilter.dc.html">PlayStation 5</a><a class="vg-tag" href="GamesFilter.dc.html">Xbox Series X|S</a><a class="vg-tag" href="GamesFilter.dc.html">macOS</a><a class="vg-tag" href="GamesFilter.dc.html">Linux</a><a class="vg-tag" href="GamesFilter.dc.html">Nintendo Switch</a></div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mk = (list, seed) => list.map((g, k) => ({ name: g[0], meta: g[1], art: 'vg-art art-' + ((k * 5 + seed) % 12 + 1) }));
+    const shelves = [
+      { title: 'Recently released', sub: 'Sorted by release date', games: mk([['Hollow Knight: Silksong','2025 · Team Cherry'],['Hades II','2025 · Supergiant'],['Despelote','2025 · Cordero, Valbuena'],['Blue Prince','2025 · Dogubomb'],['Clair Obscur: Exp. 33','2025 · Sandfall'],['Split Fiction','2025 · Hazelight'],['Ender Magnolia','2025 · Adglobe'],['Lorelei and the Laser Eyes','2024 · Simogo']], 1) },
+      { title: 'Most owned', sub: 'In the most libraries', games: mk([['Portal 2','1,812 owners'],['The Witcher 3','1,744 owners'],['Half-Life 2','1,690 owners'],['Skyrim','1,655 owners'],['Hollow Knight','1,604 owners'],['Celeste','1,488 owners'],['Stardew Valley','1,470 owners'],['Hades','1,433 owners']], 4) },
+      { title: 'Highest rated', sub: 'Average of user ratings', games: mk([['Outer Wilds','92.9 avg'],['Disco Elysium','92.4 avg'],['Return of the Obra Dinn','91.8 avg'],['Hades','91.2 avg'],['Celeste','90.7 avg'],['Portal 2','90.5 avg'],['Into the Breach','89.9 avg'],['Deus Ex','89.6 avg']], 7) }
+    ];
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', shelves: shelves };
+  }
+}
+</script>
+</body>
+</html>

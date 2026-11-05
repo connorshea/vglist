@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Library, shelves layout</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap" style="padding-top: 32px;">
+    <div class="between">
+      <div class="row" style="gap: 12px;">
+        <div class="vg-pavatar" style="width: 40px; height: 40px; font-size: 16px; border-radius: 10px;">C</div>
+        <div><h1 class="vg-pname" style="font-size: 20px;">connorshea's library</h1><p class="vg-pstats" style="margin-top: 2px;">412 games · 1,830h played · 56% completed · avg 78</p></div>
+      </div>
+      <div class="row"><button class="vg-btn"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>Export</button><button class="vg-btn primary"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Add game</button></div>
+    </div>
+    <nav class="subnav" aria-label="Profile sections"><a href="Profile.dc.html">Overview</a><a class="on" href="LibraryShelves.dc.html">Library <span class="n">412</span></a><a href="#fav">Favorites <span class="n">24</span></a><a href="#act">Activity</a><a href="#f">Followers <span class="n">148</span></a></nav>
+
+    <div class="split">
+      <aside class="rail" aria-label="Filters">
+        <label class="in search" style="min-width: 0; width: 100%;"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="ph">Search library…</span></label>
+        <div>
+          <h2 class="rail-h">Status</h2>
+          <div class="rail-list">
+            <a class="rail-item on" href="#all">All games<span class="n">412</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-in-progress"></span>Playing<span class="n">6</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-paused"></span>Paused<span class="n">12</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-unplayed"></span>Unplayed<span class="n">142</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-completed"></span>Completed<span class="n">188</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-fully-completed"></span>100%<span class="n">41</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-dropped"></span>Dropped<span class="n">23</span></a>
+            <a class="rail-item" href="#s"><span class="vg-dot st-na"></span>N/A<span class="n">0</span></a>
+          </div>
+        </div>
+        <div>
+          <h2 class="rail-h">Platform</h2>
+          <div class="rail-list">
+            <a class="rail-item" href="#p"><span class="chk on"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Windows<span class="n">298</span></a>
+            <a class="rail-item" href="#p"><span class="chk"></span>Nintendo Switch<span class="n">61</span></a>
+            <a class="rail-item" href="#p"><span class="chk"></span>PlayStation 5<span class="n">27</span></a>
+            <a class="rail-item" href="#p"><span class="chk"></span>Steam Deck<span class="n">44</span></a>
+          </div>
+        </div>
+        <div>
+          <h2 class="rail-h">Store</h2>
+          <div class="rail-list">
+            <a class="rail-item" href="#st"><span class="chk"></span>Steam<span class="n">271</span></a>
+            <a class="rail-item" href="#st"><span class="chk"></span>GOG<span class="n">38</span></a>
+            <a class="rail-item" href="#st"><span class="chk"></span>Epic Games Store<span class="n">52</span></a>
+          </div>
+        </div>
+        <div>
+          <h2 class="rail-h">Your rating</h2>
+          <div class="range" aria-hidden="true"><i style="left: 60%; right: 0;"></i><b style="left: 60%;"></b><b style="left: 100%;"></b></div>
+          <div class="between" style="font-size: 12px; color: var(--color-text-secondary);"><span>60</span><span>100</span></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="toolbar">
+          <span class="fchip">Windows <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span>
+          <span class="fchip">Rating 60–100 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span>
+          <span class="grow"></span>
+          <span class="sel">Group by status <svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+          <span class="sel">Highest rating <svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+          <div class="vg-seg"><a class="vg-seg-btn active" href="LibraryShelves.dc.html" aria-label="Grid"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg></a><a class="vg-seg-btn" href="LibraryTable.dc.html" aria-label="Table"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"></line><line x1="8" x2="21" y1="12" y2="12"></line><line x1="8" x2="21" y1="18" y2="18"></line><line x1="3" x2="3.01" y1="6" y2="6"></line><line x1="3" x2="3.01" y1="12" y2="12"></line><line x1="3" x2="3.01" y1="18" y2="18"></line></svg></a><a class="vg-seg-btn" href="LibraryJournal.dc.html" aria-label="Journal"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg></a></div>
+        </div>
+
+        <section class="shelf">
+          <div class="shelf-h"><span class="vg-dot st-in-progress" style="width: 8px; height: 8px;"></span><h3>Playing</h3><span class="n">6</span></div>
+          <div class="playing-row">
+            <sc-for list="{{playing}}" as="p" hint-placeholder-count="3">
+              <a class="now" href="GameEdit.dc.html">
+                <span class="vg-cover"><span class="{{p.art}}" style="display: block;"></span></span>
+                <span style="flex: 1; min-width: 0;">
+                  <b>{{p.name}}</b>
+                  <span class="meta" style="display: block;">{{p.meta}}</span>
+                  <span class="meta" style="display: flex; gap: 6px; align-items: center; margin-top: 10px; font-size: 11px;"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>{{p.hours}}</span>
+                </span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="shelf">
+          <div class="shelf-h"><span class="vg-dot st-paused" style="width: 8px; height: 8px;"></span><h3>Paused</h3><span class="n">12</span><a class="more" href="#all">Show all 12</a></div>
+          <div class="grid-6">
+            <sc-for list="{{paused}}" as="g" hint-placeholder-count="6">
+              <a class="vg-gtile" href="Game.dc.html"><span class="{{g.art}}" style="display: block;"></span><span class="gdot st-paused"></span><sc-if value="{{g.rated}}" hint-placeholder-val="{{ true }}"><span class="{{g.rclass}}">{{g.rating}}</span></sc-if><span class="gname">{{g.name}}</span></a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="shelf">
+          <div class="shelf-h"><span class="vg-dot st-completed" style="width: 8px; height: 8px;"></span><h3>Completed</h3><span class="n">188</span><a class="more" href="#all">Show all 188</a></div>
+          <div class="grid-6">
+            <sc-for list="{{done}}" as="g" hint-placeholder-count="12">
+              <a class="vg-gtile" href="Game.dc.html"><span class="{{g.art}}" style="display: block;"></span><span class="gdot st-completed"></span><sc-if value="{{g.rated}}" hint-placeholder-val="{{ true }}"><span class="{{g.rclass}}">{{g.rating}}</span></sc-if><span class="gname">{{g.name}}</span></a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="shelf" style="margin-bottom: 0;">
+          <div class="shelf-h"><span class="vg-dot st-unplayed" style="width: 8px; height: 8px;"></span><h3>Unplayed</h3><span class="n">142</span><a class="more" href="#all">Show all 142</a></div>
+          <div class="grid-6">
+            <sc-for list="{{backlog}}" as="g" hint-placeholder-count="6">
+              <a class="vg-gtile" href="Game.dc.html"><span class="{{g.art}}" style="display: block;"></span><span class="gdot st-unplayed"></span><span class="gname">{{g.name}}</span></a>
+            </sc-for>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tier = (r) => r >= 90 ? 'r-great' : r >= 75 ? 'r-good' : r >= 60 ? 'r-ok' : 'r-low';
+    const tile = (n, k, r) => ({ name: n, art: 'vg-art art-' + ((k * 5 + 2) % 12 + 1), rated: r != null, rating: r, rclass: 'vg-rbadge ' + tier(r ?? 0) });
+    const playing = [
+      { name: 'Hollow Knight: Silksong', meta: 'Windows · Steam', hours: '31h · started Sep 4', bar: 'width:62%', art: 'vg-art art-3' },
+      { name: 'Hades II', meta: 'Nintendo Switch 2', hours: '12h · started Oct 1', bar: 'width:24%', art: 'vg-art art-12' },
+      { name: 'UFO 50', meta: 'Windows · Steam', hours: '48h · started Jul 18', bar: 'width:80%', art: 'vg-art art-9' }
+    ];
+    const paused = ['Elden Ring','Pathologic 2','Noita','Caves of Qud','Tears of the Kingdom','Pentiment'].map((n, k) => tile(n, k, [79, null, 84, null, 91, 88][k]));
+    const done = ['Outer Wilds','Return of the Obra Dinn','Deus Ex','Prey','Hollow Knight','Celeste','Disco Elysium','Portal 2','Hades','Tunic','Animal Well','Inscryption'].map((n, k) => tile(n, k + 3, [96, 95, 94, 94, 93, 96, 97, 95, 97, 90, 92, 88][k]));
+    const backlog = ['Pyre','Outer Wilds: Echoes of the Eye','Signalis','Citizen Sleeper','Rain World','Cocoon'].map((n, k) => tile(n, k + 7, null));
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', playing: playing, paused: paused, done: done, backlog: backlog };
+  }
+}
+</script>
+</body>
+</html>

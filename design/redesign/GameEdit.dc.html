@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Game page, editing library entry</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="games" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+
+  <section class="vg-hero" style="background: linear-gradient(135deg, #1d4e5f 0%, #183245 55%, #141f33 100%); padding: 48px 24px;">
+    <div class="vg-hero-inner">
+      <div class="vg-hero-cover">
+        <div class="vg-cover" style="border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.3);"><div class="vg-art art-6"></div></div>
+        <div class="vg-hero-actions">
+          <a class="vg-hbtn active" href="Game.dc.html">Editing…</a>
+          <button class="vg-hbtn icon fav" aria-label="Unfavorite"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></button>
+        </div>
+      </div>
+      <div class="vg-hero-info">
+        <h1 class="vg-hero-title">Outer Wilds</h1>
+        <p class="vg-hero-year">2019</p>
+        <div class="vg-form" style="max-width: none;">
+          <div class="vg-fcol">
+            <div class="vg-fgroup"><div class="vg-flabel">Status</div><div class="vg-fpills"><span class="vg-fpill">Unplayed</span><span class="vg-fpill">Playing</span><span class="vg-fpill">Paused</span><span class="vg-fpill on">Completed</span><span class="vg-fpill">100%</span><span class="vg-fpill">Dropped</span><span class="vg-fpill">N/A</span></div></div>
+            <div class="vg-fgroup"><label class="vg-flabel" for="r">Rating (out of 100)</label><div class="vg-frating"><input id="r" class="vg-finput" value="96"><div class="vg-ftrack"><i style="width: 96%;"></i></div></div></div>
+            <div class="vg-fgroup"><label class="vg-flabel" for="h">Hours played</label><input id="h" class="vg-finput" style="width: 80px;" value="22.5"></div>
+            <div class="vg-fdates">
+              <div><div class="vg-flabel"><label for="s">Started</label><a href="#today">Today</a></div><input id="s" class="vg-finput" style="width: 100%;" value="06/12/2024"></div>
+              <div><div class="vg-flabel"><label for="f">Finished</label><a href="#today">Today</a></div><input id="f" class="vg-finput" style="width: 100%;" value="07/03/2024"></div>
+            </div>
+          </div>
+          <div class="vg-fcol">
+            <div class="vg-fgroup"><div class="vg-flabel">Platforms played</div><div class="vg-fpills"><span class="vg-fpill on">Windows</span><span class="vg-fpill">PlayStation 4</span><span class="vg-fpill">Xbox One</span><span class="vg-fpill">Nintendo Switch</span></div></div>
+            <div class="vg-fgroup"><div class="vg-flabel">Store</div><div class="vg-fpills"><span class="vg-fpill on">Steam</span><span class="vg-fpill">GOG</span><span class="vg-fpill on">Epic Games Store</span><span class="vg-fpill">Nintendo eShop</span><span class="vg-fpill">PlayStation Store</span><span class="vg-fpill">Microsoft Store</span></div></div>
+            <div class="vg-fgroup" style="flex: 1; display: flex; flex-direction: column;"><label class="vg-flabel" for="n">Review / notes</label><textarea id="n" class="vg-ftext" style="color: var(--color-text-primary); font: inherit; font-size: 12.8px;">Went in blind. The best ending I've played in years.</textarea></div>
+            <div class="vg-factions"><button class="vg-btn danger-outline">Remove</button><span style="display: flex; gap: 8px;"><button class="vg-btn danger-outline" style="color: var(--color-text-secondary); border-color: var(--color-border);">Cancel</button><button class="vg-btn save">Save</button></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap dimmed" aria-hidden="true">
+    <div class="game-cols">
+      <div>
+        <div class="vg-rating" style="margin-bottom: 40px;">
+          <div class="vg-ring"><svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="5"></circle><circle class="fill" cx="60" cy="60" r="52" fill="none" stroke-width="5" stroke-dasharray="326.7" stroke-dashoffset="22.9" stroke-linecap="round" transform="rotate(-90 60 60)"></circle></svg><span>93</span></div>
+          <div class="vg-rbar"><div class="vg-rbar-head"><span>Average rating</span><span>92.9 / 100</span></div><div class="vg-rbar-track"><div class="vg-rbar-fill" style="width: 92.9%;"></div></div></div>
+        </div>
+        <h3 class="vg-section-label">Details</h3>
+        <div class="vg-details">
+          <div class="vg-detail"><span class="lbl">Release date</span><span class="val">May 28, 2019</span></div>
+          <div class="vg-detail"><span class="lbl">Publisher</span><span class="val"><a href="#c">Annapurna Interactive</a></span></div>
+        </div>
+      </div>
+      <div><div class="vg-scard" style="height: 160px;"><h4>Genres</h4></div></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

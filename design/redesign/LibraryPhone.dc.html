@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Library on a phone</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="phone" data-theme="{{theme}}">
+  <div class="nav-m">
+    <img src="/_blob/503bd07cc9db428db201faa1614b492e" alt="vglist">
+    <span class="sp"></span>
+    <a href="Search.dc.html" aria-label="Search" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #fff;"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></a>
+    <a href="PhoneNav.dc.html" aria-label="Menu" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;"><span class="burger"><i></i><i></i><i></i></span></a>
+  </div>
+  <div style="padding: 16px 16px 0;">
+    <h1 class="vg-pname" style="font-size: 20px;">Library</h1>
+    <p class="vg-pstats" style="margin-top: 2px;">412 games · 56% completed · avg 78</p>
+  </div>
+  <div style="display: flex; gap: 6px; overflow: hidden; padding: 12px 16px;">
+    <a class="vg-spill active" href="#all" style="min-height: 32px;">All <span class="count">412</span></a>
+    <a class="vg-spill" href="#s" style="min-height: 32px;"><span class="vg-dot st-in-progress"></span>Playing <span class="count">6</span></a>
+    <a class="vg-spill" href="#s" style="min-height: 32px;"><span class="vg-dot st-completed"></span>Completed <span class="count">188</span></a>
+    <a class="vg-spill" href="#s" style="min-height: 32px;"><span class="vg-dot st-paused"></span>Paused</a>
+  </div>
+  <div class="between" style="padding: 0 16px 8px;">
+    <label class="in" style="flex: 1; height: 40px;"><svg class="ico s14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span class="ph">Search library…</span></label>
+    <button class="vg-btn box" style="height: 40px;" aria-label="Sort"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 16-4 4-4-4"></path><path d="M17 20V4"></path><path d="m3 8 4-4 4 4"></path><path d="M7 4v16"></path></svg></button>
+  </div>
+  <div style="border-top: 1px solid var(--color-border);">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+      <a class="lrow" href="GameEdit.dc.html">
+        <span class="vg-cover"><span class="{{r.art}}" style="display: block;"></span></span>
+        <span style="min-width: 0;"><b>{{r.name}}</b><span class="m"><span class="{{r.dot}}"></span>{{r.status}} · {{r.hours}}</span></span>
+        <span class="score">{{r.rating}}</span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const d = [
+      ['Disco Elysium', 'fully-completed', '100%', '61h', 97], ['Hades', 'fully-completed', '100%', '104h', 97], ['Outer Wilds', 'completed', 'Completed', '22.5h', 96],
+      ['Celeste', 'completed', 'Completed', '34h', 96], ['Return of the Obra Dinn', 'completed', 'Completed', '11.2h', 95], ['Portal 2', 'completed', 'Completed', '14h', 95],
+      ['Hollow Knight: Silksong', 'in-progress', 'Playing', '31h', 94], ['Deus Ex', 'completed', 'Completed', '38h', 94], ['Prey', 'completed', 'Completed', '46h', 94]
+    ];
+    const rows = d.map((r, k) => ({ name: r[0], dot: 'vg-dot st-' + r[1], status: r[2], hours: r[3], rating: r[4], art: 'vg-art art-' + ((k * 5 + 1) % 12 + 1) }));
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', rows: rows };
+  }
+}
+</script>
+</body>
+</html>

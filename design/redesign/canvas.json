@@ -1,0 +1,279 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-17T19:12:06Z"
+  },
+  "title": "vglist redesign",
+  "launch": {
+    "view": "canvas",
+    "page": "current"
+  },
+  "pages": [
+    {
+      "id": "current",
+      "name": "Current redesign"
+    },
+    {
+      "id": "library",
+      "name": "New: Library"
+    },
+    {
+      "id": "browse",
+      "name": "New: Games & more"
+    }
+  ],
+  "boards": {
+    "Main.dc.html": {
+      "title": "Home",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1900,
+      "page": "current",
+      "expand": "fill"
+    },
+    "Game.dc.html": {
+      "title": "Game",
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1480,
+      "page": "current",
+      "expand": "fill"
+    },
+    "GameEdit.dc.html": {
+      "title": "Game · editing library entry",
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 1200,
+      "page": "current",
+      "expand": "fill"
+    },
+    "Profile.dc.html": {
+      "title": "User profile",
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 1560,
+      "page": "current",
+      "expand": "fill"
+    },
+    "Activity.dc.html": {
+      "title": "Activity",
+      "x": 6080,
+      "y": 0,
+      "w": 1440,
+      "h": 1240,
+      "page": "current",
+      "expand": "fill"
+    },
+    "Users.dc.html": {
+      "title": "Users",
+      "x": 7600,
+      "y": 0,
+      "w": 1440,
+      "h": 1080,
+      "page": "current",
+      "expand": "fill"
+    },
+    "Search.dc.html": {
+      "title": "Search overlay",
+      "x": 0,
+      "y": 2300,
+      "w": 1280,
+      "h": 800,
+      "page": "current"
+    },
+    "Dialogs.dc.html": {
+      "title": "Confirm dialog + snackbars",
+      "x": 1360,
+      "y": 2300,
+      "w": 1280,
+      "h": 800,
+      "page": "current"
+    },
+    "PhoneGame.dc.html": {
+      "title": "Game · phone",
+      "x": 2720,
+      "y": 2300,
+      "w": 390,
+      "h": 844,
+      "page": "current"
+    },
+    "PhoneNav.dc.html": {
+      "title": "Mobile nav sheet",
+      "x": 3190,
+      "y": 2300,
+      "w": 390,
+      "h": 844,
+      "page": "current"
+    },
+    "Nav.dc.html": {
+      "title": "NavBar (shared)",
+      "x": 0,
+      "y": 3300,
+      "w": 1440,
+      "h": 52,
+      "page": "current"
+    },
+    "LibraryShelves.dc.html": {
+      "title": "Library A · Shelves",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1560,
+      "page": "library",
+      "expand": "fill"
+    },
+    "LibraryTable.dc.html": {
+      "title": "Library B · Table",
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1200,
+      "page": "library",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "LibraryBulk.dc.html": {
+      "title": "Library B · bulk edit",
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 1200,
+      "page": "library",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "LibraryJournal.dc.html": {
+      "title": "Library C · Journal",
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 1700,
+      "page": "library",
+      "expand": "fill"
+    },
+    "LibraryPhone.dc.html": {
+      "title": "Library · phone",
+      "x": 6080,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "library"
+    },
+    "GamesFilter.dc.html": {
+      "title": "Games A · Filter rail",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1480,
+      "page": "browse",
+      "expand": "fill"
+    },
+    "GamesShelves.dc.html": {
+      "title": "Games B · Shelves",
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1700,
+      "page": "browse",
+      "expand": "fill"
+    },
+    "Company.dc.html": {
+      "title": "Resource page (Company)",
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 1300,
+      "page": "browse",
+      "expand": "fill"
+    },
+    "Settings.dc.html": {
+      "title": "Settings · Profile",
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 1040,
+      "page": "browse",
+      "expand": "fill"
+    },
+    "SignIn.dc.html": {
+      "title": "Sign in",
+      "x": 6080,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "browse",
+      "expand": "fill"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Game.dc.html",
+    "GameEdit.dc.html",
+    "Profile.dc.html",
+    "Activity.dc.html",
+    "Users.dc.html",
+    "Search.dc.html",
+    "Dialogs.dc.html",
+    "PhoneGame.dc.html",
+    "PhoneNav.dc.html",
+    "Nav.dc.html",
+    "LibraryShelves.dc.html",
+    "LibraryTable.dc.html",
+    "LibraryBulk.dc.html",
+    "LibraryJournal.dc.html",
+    "LibraryPhone.dc.html",
+    "GamesFilter.dc.html",
+    "GamesShelves.dc.html",
+    "Company.dc.html",
+    "Settings.dc.html",
+    "SignIn.dc.html"
+  ],
+  "notes": {
+    "t_cur": {
+      "x": 0,
+      "y": -300,
+      "text": "Built pages",
+      "kind": "title1",
+      "maxW": 9040,
+      "page": "current"
+    },
+    "t_cur2": {
+      "x": 0,
+      "y": 2020,
+      "text": "Overlays and mobile",
+      "kind": "title1",
+      "maxW": 3580,
+      "page": "current"
+    },
+    "t_lib": {
+      "x": 0,
+      "y": -300,
+      "text": "Library page — three directions",
+      "kind": "title1",
+      "maxW": 6470,
+      "page": "library"
+    },
+    "t_br": {
+      "x": 0,
+      "y": -300,
+      "text": "Games index, resource pages, settings, auth",
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "browse"
+    }
+  },
+  "designSystems": [
+    {
+      "title": "vglist",
+      "namespace": "vglist",
+      "artifact": "https://claude.ai/artifact/7mN2KmZcUVeCBbCj6cToNR",
+      "version": "1792264141-8c33",
+      "copiedAt": "2026-10-17T19:12:06Z"
+    }
+  ]
+}

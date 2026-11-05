@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Search overlay</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; position: relative; overflow: hidden; font-family: var(--font-sans); background: #ffffff;">
+  <div aria-hidden="true" style="position: absolute; inset: 0;">
+    <div style="height: 52px; background: #5957d6;"></div>
+    <div style="height: 300px; background: linear-gradient(135deg, #7a2632, #1f1430);"></div>
+    <div style="display: flex; gap: 24px; padding: 32px 64px;"><div style="flex: 2; height: 200px; border: 1px solid #d3d1c7; border-radius: 8px;"></div><div style="flex: 1; height: 200px; border: 1px solid #d3d1c7; border-radius: 8px;"></div></div>
+  </div>
+  <div class="vg-search" role="dialog" aria-modal="true" aria-label="Search" style="position: absolute; inset: 0; backdrop-filter: blur(28px) saturate(1.2);">
+    <div class="vg-search-inner">
+      <div class="vg-search-bar">
+        <svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <div class="vg-search-input">{{queryText}}<sc-if value="{{showPh}}" hint-placeholder-val="{{ false }}"><span class="ph">Search games, companies, users…</span></sc-if></div>
+        <div class="vg-search-hint"><kbd class="vg-kbd">Esc</kbd> to close</div>
+        <button class="vg-search-close" aria-label="Close search"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+      </div>
+
+      <sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+        <div class="vg-search-empty"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><p style="margin: 0;">Start typing to search games, companies, users, and more.</p></div>
+      </sc-if>
+      <sc-if value="{{isNone}}" hint-placeholder-val="{{ false }}">
+        <div class="vg-search-empty"><p style="margin: 0;">No results found for "<span style="color: var(--p-300); font-weight: 500;">zzyzx</span>"</p><p style="margin: 0; font-size: 13px;">Try a different search term</p></div>
+      </sc-if>
+      <sc-if value="{{isResults}}" hint-placeholder-val="{{ true }}">
+        <div class="vg-results">
+          <div class="vg-cat">
+            <div class="vg-cat-head"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><line x1="6" x2="10" y1="11" y2="11"></line><line x1="8" x2="8" y1="9" y2="13"></line><line x1="15" x2="15.01" y1="12" y2="12"></line><line x1="18" x2="18.01" y1="10" y2="10"></line><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path></svg><span class="vg-cat-title">Games</span><span class="vg-cat-count">5 results</span></div>
+            <a class="vg-result is-focus" href="Game.dc.html"><span class="vg-thumb"><span class="vg-art art-3" style="display: block;"></span></span><span style="min-width: 0;"><span class="vg-result-title" style="display: block;">Hollow Knight: Silksong</span><span class="vg-result-meta"><span>2025</span><span>Team Cherry</span></span></span></a>
+            <a class="vg-result" href="Game.dc.html"><span class="vg-thumb"><span class="vg-art art-1" style="display: block;"></span></span><span style="min-width: 0;"><span class="vg-result-title" style="display: block;">Hollow Knight</span><span class="vg-result-meta"><span>2017</span><span>Team Cherry</span></span></span></a>
+            <a class="vg-result" href="Game.dc.html"><span class="vg-thumb"><span class="vg-art art-7" style="display: block;"></span></span><span style="min-width: 0;"><span class="vg-result-title" style="display: block;">Hollow</span><span class="vg-result-meta"><span>2017</span><span>MMBB Games</span></span></span></a>
+            <a class="vg-result" href="Game.dc.html"><span class="vg-thumb"><span class="vg-art art-9" style="display: block;"></span></span><span style="min-width: 0;"><span class="vg-result-title" style="display: block;">Hollow Cocoon</span><span class="vg-result-meta"><span>2024</span><span>Nayuta Studio</span></span></span></a>
+            <a class="vg-result" href="Game.dc.html"><span class="vg-thumb"><span class="vg-art art-8" style="display: block;"></span></span><span style="min-width: 0;"><span class="vg-result-title" style="display: block;">The Hollow Ones</span><span class="vg-result-meta"><span>2023</span></span></span></a>
+          </div>
+          <div class="vg-cat">
+            <div class="vg-cat-head"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path><rect width="20" height="14" x="2" y="6" rx="2"></rect></svg><span class="vg-cat-title">Companies</span><span class="vg-cat-count">1 result</span></div>
+            <a class="vg-result" href="Company.dc.html"><span class="vg-thumb round">H</span><span class="vg-result-title">Hollow Ponds</span></a>
+            <div class="vg-cat-head" style="margin-top: 16px;"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path><rect width="20" height="14" x="2" y="6" rx="2"></rect></svg><span class="vg-cat-title">Other</span><span class="vg-cat-count">1 result</span></div>
+            <a class="vg-result" href="Company.dc.html"><span class="vg-thumb round">H</span><span style="min-width: 0;"><span class="vg-result-title" style="display: block;">Hollow Knight</span><span class="vg-result-meta"><span class="vg-type-tag">Series</span></span></span></a>
+          </div>
+          <div class="vg-cat">
+            <div class="vg-cat-head"><svg class="vg-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span class="vg-cat-title">Users</span><span class="vg-cat-count">2 results</span></div>
+            <a class="vg-result" href="Profile.dc.html"><span class="vg-thumb round">H</span><span class="vg-result-title">hollowpoint</span></a>
+            <a class="vg-result" href="Profile.dc.html"><span class="vg-thumb round">H</span><span class="vg-result-title">hollowell</span></a>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","options":["results","empty","no results"],"default":"results"},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.state ?? 'results';
+    return {
+      isResults: s === 'results', isEmpty: s === 'empty', isNone: s === 'no results',
+      queryText: s === 'results' ? 'hollow' : s === 'no results' ? 'zzyzx' : '',
+      showPh: s === 'empty'
+    };
+  }
+}
+</script>
+</body>
+</html>

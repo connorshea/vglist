@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Library, journal layout</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="vglist-tokens.css">
+<link rel="stylesheet" href="ds/vglist/components/bundle.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:inherit}
+</style>
+</helmet>
+<div class="pg" data-theme="{{theme}}">
+  <dc-import name="Nav" active="none" signed-in="{{ true }}" hint-size="100%,52px"></dc-import>
+  <div class="wrap" style="padding-top: 32px;">
+    <div class="between">
+      <div class="row" style="gap: 12px;">
+        <div class="vg-pavatar" style="width: 40px; height: 40px; font-size: 16px; border-radius: 10px;">C</div>
+        <div><h1 class="vg-pname" style="font-size: 20px;">connorshea's library</h1><p class="vg-pstats" style="margin-top: 2px;">412 games · 1,830h played · 56% completed · avg 78</p></div>
+      </div>
+      <div class="vg-seg"><a class="vg-seg-btn" href="LibraryShelves.dc.html">Grid</a><a class="vg-seg-btn" href="LibraryTable.dc.html">Table</a><a class="vg-seg-btn active" href="LibraryJournal.dc.html">Journal</a></div>
+    </div>
+    <nav class="subnav" aria-label="Profile sections"><a href="Profile.dc.html">Overview</a><a class="on" href="LibraryJournal.dc.html">Library <span class="n">412</span></a><a href="#fav">Favorites <span class="n">24</span></a><a href="#act">Activity</a><a href="#f">Followers <span class="n">148</span></a></nav>
+
+    <div class="stats-band">
+      <div class="stat-card"><span>Completed</span><b>229</b><div class="muted" style="font-size: 12px; margin-top: 4px;">188 completed · 41 at 100%</div></div>
+      <div class="stat-card"><span>Hours played</span><b>1,830</b><div class="muted" style="font-size: 12px; margin-top: 4px;">across 270 games with hours</div></div>
+      <div class="stat-card"><span>Average rating</span><b>78</b><div class="muted" style="font-size: 12px; margin-top: 4px;">from 301 rated games</div></div>
+      <div class="stat-card"><span>Backlog</span><b>154</b><div class="muted" style="font-size: 12px; margin-top: 4px;">142 unplayed · 12 paused</div></div>
+    </div>
+
+    <div class="split" style="padding-top: 0;">
+      <main class="main">
+        <h2 class="vg-section-label">Finished per year</h2>
+        <div class="years" role="img" aria-label="Games finished per year, 2019 to 2026">
+          <sc-for list="{{years}}" as="y" hint-placeholder-count="8">
+            <div class="{{y.cls}}"><span>{{y.n}}</span><i style="{{y.h}}"></i><span>{{y.label}}</span></div>
+          </sc-for>
+        </div>
+
+        <div class="tl-year"><h3>2026</h3><span class="muted" style="font-size: 13px;">31 finished · 412h</span></div>
+        <sc-for list="{{months}}" as="m" hint-placeholder-count="2">
+          <div>
+            <div class="tl-month">{{m.label}}</div>
+            <sc-for list="{{m.entries}}" as="e" hint-placeholder-count="2">
+              <article class="entry">
+                <a class="vg-cover" href="Game.dc.html"><span class="{{e.art}}" style="display: block;"></span></a>
+                <div class="entry-main">
+                  <div class="entry-top"><a href="Game.dc.html"><b>{{e.name}}</b></a><span class="{{e.badge}}">{{e.status}}</span></div>
+                  <div class="entry-meta"><span>{{e.dates}}</span><span class="vg-asep"></span><span>{{e.hours}}</span><span class="vg-asep"></span><span>{{e.platform}}</span></div>
+                  <sc-if value="{{e.hasNote}}" hint-placeholder-val="{{ true }}"><p class="entry-note">{{e.note}}</p></sc-if>
+                </div>
+                <div class="entry-score"><b>{{e.rating}}</b><span>/ 100</span></div>
+              </article>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="display: flex; justify-content: center; margin: 24px 0 64px;"><button class="vg-btn quiet">Show 2025</button></div>
+      </main>
+
+      <aside class="rail" style="max-width: 320px; flex-basis: 300px;">
+        <div class="side-card">
+          <h4>Now playing</h4>
+          <a class="row" href="GameEdit.dc.html" style="flex-wrap: nowrap; margin-bottom: 12px;"><span class="vg-cover" style="width: 40px; border-radius: 5px; flex-shrink: 0;"><span class="vg-art art-3" style="display: block;"></span></span><span><b style="font-size: 13px; display: block;">Hollow Knight: Silksong</b><span class="muted" style="font-size: 12px;">31h · since Sep 4</span></span></a>
+          <a class="row" href="GameEdit.dc.html" style="flex-wrap: nowrap; margin-bottom: 12px;"><span class="vg-cover" style="width: 40px; border-radius: 5px; flex-shrink: 0;"><span class="vg-art art-12" style="display: block;"></span></span><span><b style="font-size: 13px; display: block;">Hades II</b><span class="muted" style="font-size: 12px;">12h · since Oct 1</span></span></a>
+          <a class="row" href="GameEdit.dc.html" style="flex-wrap: nowrap;"><span class="vg-cover" style="width: 40px; border-radius: 5px; flex-shrink: 0;"><span class="vg-art art-9" style="display: block;"></span></span><span><b style="font-size: 13px; display: block;">UFO 50</b><span class="muted" style="font-size: 12px;">48h · since Jul 18</span></span></a>
+        </div>
+        <div class="side-card">
+          <h4>By status</h4>
+          <div class="pbar" role="img" aria-label="Library by status">
+            <span class="st-completed" style="width: 45.6%;"></span><span class="st-fully-completed" style="width: 10%;"></span><span class="st-in-progress" style="width: 1.5%;"></span><span class="st-paused" style="width: 2.9%;"></span><span class="st-dropped" style="width: 5.6%;"></span><span class="st-unplayed" style="width: 34.4%;"></span>
+          </div>
+          <div class="legend">
+            <span><i class="vg-dot st-completed"></i>Completed<em>188</em></span>
+            <span><i class="vg-dot st-fully-completed"></i>100%<em>41</em></span>
+            <span><i class="vg-dot st-in-progress"></i>Playing<em>6</em></span>
+            <span><i class="vg-dot st-paused"></i>Paused<em>12</em></span>
+            <span><i class="vg-dot st-dropped"></i>Dropped<em>23</em></span>
+            <span><i class="vg-dot st-unplayed"></i>Unplayed<em>142</em></span>
+          </div>
+        </div>
+        <div class="side-card">
+          <h4>Top platforms</h4>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+            <div><div class="between"><span>Windows</span><span class="faint">298</span></div><div class="bar" style="margin-top: 4px;"><i style="width: 72%;"></i></div></div>
+            <div><div class="between"><span>Nintendo Switch</span><span class="faint">61</span></div><div class="bar" style="margin-top: 4px;"><i style="width: 15%;"></i></div></div>
+            <div><div class="between"><span>Steam Deck</span><span class="faint">44</span></div><div class="bar" style="margin-top: 4px;"><i style="width: 11%;"></i></div></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const counts = [[2019, 22], [2020, 38], [2021, 29], [2022, 34], [2023, 27], [2024, 41], [2025, 36], [2026, 31]];
+    const max = 41;
+    const years = counts.map((c) => ({ label: String(c[0]), n: c[1], h: 'height:' + Math.round(c[1] / max * 64) + 'px', cls: c[0] === 2026 ? 'on' : '' }));
+    const e = (name, statusKey, status, dates, hours, platform, rating, note, art) => ({
+      name: name, badge: 'vg-abadge b-' + statusKey, status: status, dates: dates, hours: hours, platform: platform,
+      rating: rating, note: note, hasNote: note !== '', art: art
+    });
+    const months = [
+      { label: 'October', entries: [
+        e('Blue Prince', 'completed', 'Completed', 'Sep 21 → Oct 9', '38h', 'Windows', 91, 'Kept a paper notebook the whole way through. The room-drafting never stopped surprising me.', 'vg-art art-6')
+      ] },
+      { label: 'September', entries: [
+        e('Despelote', 'completed', 'Completed', 'Sep 14 → Sep 15', '2.5h', 'PlayStation 5', 88, '', 'vg-art art-4'),
+        e('Clair Obscur: Expedition 33', 'fully-completed', '100%', 'Jun 2 → Sep 10', '96h', 'Windows', 93, 'The parry timing finally clicked in Act II.', 'vg-art art-7'),
+        e('Split Fiction', 'completed', 'Completed', 'Aug 30 → Sep 6', '14h', 'Windows', 84, '', 'vg-art art-5')
+      ] }
+    ];
+    return { theme: (this.props.dark ?? false) ? 'dark' : 'light', years: years, months: months };
+  }
+}
+</script>
+</body>
+</html>
