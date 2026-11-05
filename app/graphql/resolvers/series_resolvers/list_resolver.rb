@@ -21,10 +21,21 @@ module Resolvers
         series = series.with_game_stats if selects_stats?(lookahead)
         series = series.name_contains(name_contains) if name_contains.present?
 
-        sort_by.nil? ? series.order(:id) : series.public_send(sort_by)
+        sorted(series, sort_by)
       end
 
       private
+
+      # An explicit mapping rather than public_send, so only these scopes can
+      # ever be called.
+      def sorted(series, sort_by)
+        case sort_by
+        when :most_games then series.most_games
+        when :alphabetical then series.alphabetical
+        when :recently_added then series.recently_added
+        else series.order(:id)
+        end
+      end
 
       def selects_stats?(lookahead)
         nodes = [lookahead.selection(:nodes), lookahead.selection(:edges).selection(:node)]
