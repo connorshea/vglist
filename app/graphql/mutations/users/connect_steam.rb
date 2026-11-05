@@ -40,6 +40,10 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
 
     raise GraphQL::ExecutionError, 'No Steam ID was found in the response from the Steam API.' if steam_id.nil?
 
+    # steam_id is unique across accounts, so say so plainly instead of letting
+    # the uniqueness validation surface as an internal error.
+    raise GraphQL::ExecutionError, "That Steam account is already connected to another vglist account." if steam_account_taken?(steam_id, user)
+
     # If one already exists, don't create it.
     # If not, create it and pass in the steam_id and steam_profile_url.
     @steam_account = ExternalAccount.create_with(
@@ -65,5 +69,11 @@ class Mutations::Users::ConnectSteam < Mutations::BaseMutation
     raise GraphQL::ExecutionError, "You aren't allowed to connect this user's Steam account." unless UserPolicy.new(@context[:current_user], user).connect_steam?
 
     return true
+  end
+
+  private
+
+  def steam_account_taken?(steam_id, user)
+    ExternalAccount.where(steam_id: steam_id).where.not(user_id: user.id).exists?
   end
 end

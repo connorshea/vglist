@@ -42,9 +42,9 @@ describe("PasswordResetConfirmPage", () => {
   it("renders the form with password fields", () => {
     const wrapper = mount(PasswordResetConfirmPage, mountOptions);
 
-    expect(wrapper.find("h1").text()).toBe("Set New Password");
+    expect(wrapper.find("h1").text()).toBe("Set a new password");
     expect(wrapper.findAll("input[type='password']")).toHaveLength(2);
-    expect(wrapper.find("button[type='submit']").text()).toBe("Reset Password");
+    expect(wrapper.find("button[type='submit']").text()).toBe("Reset password");
   });
 
   it("calls resetPassword with token and passwords on submit", async () => {

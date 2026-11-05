@@ -1,43 +1,55 @@
 <template>
   <div>
-    <h2 class="title is-4">Export Library</h2>
+    <section class="set-card" aria-labelledby="export-heading">
+      <h2 id="export-heading" class="set-card-title">Export library</h2>
+      <p class="set-card-desc">
+        Download your whole game library as JSON, including ratings, statuses and hours played.
+      </p>
 
-    <p class="mb-4">Export your game library as JSON.</p>
+      <p v-if="exportError" class="set-error" role="alert">{{ exportError }}</p>
 
-    <div v-if="exportError" class="notification is-danger">
-      <p>{{ exportError }}</p>
-    </div>
-
-    <div v-if="exportData" class="mb-4">
-      <div class="notification is-success">
-        <p>Export complete. Copy the JSON below or download it.</p>
+      <div v-if="exportData" class="export-result">
+        <p class="set-help" role="status">Export complete. Download it, or copy the JSON below.</p>
+        <pre class="export-json" tabindex="0" aria-label="Exported library JSON">{{ exportData }}</pre>
       </div>
-      <pre class="box" style="max-height: 400px; overflow: auto">{{ exportData }}</pre>
-    </div>
 
-    <button class="button is-primary" :class="{ 'is-loading': exporting }" :disabled="exporting" @click="exportLibrary">
-      Export Library
-    </button>
+      <div class="set-actions">
+        <a v-if="downloadUrl" class="set-btn" :href="downloadUrl" download="vglist-library.json">
+          <Download :size="15" :stroke-width="2" aria-hidden="true" />
+          Download JSON
+        </a>
+        <button type="button" class="set-btn is-primary" :disabled="exporting" @click="exportLibrary">
+          {{ exporting ? "Exporting…" : exportData ? "Export again" : "Export library" }}
+        </button>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
+import { Download } from "@lucide/vue";
 import { useMutation } from "@/composables/useGraphQL";
 import { EXPORT_LIBRARY } from "@/graphql/mutations/users-settings";
+import type { ExportLibraryMutation } from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
-
-interface ExportLibraryResult {
-  exportLibrary?: {
-    libraryJson?: string | null;
-    errors: string[];
-  } | null;
-}
 
 const exportData = ref("");
 const exportError = ref("");
+const downloadUrl = ref<string | null>(null);
 
-const { mutate, loading: exporting } = useMutation<ExportLibraryResult>(EXPORT_LIBRARY);
+const { mutate, loading: exporting } = useMutation<ExportLibraryMutation>(EXPORT_LIBRARY);
+
+// Keep a blob URL for the current export so it can be downloaded as a file,
+// and release the old one whenever it changes.
+watch(exportData, (json) => {
+  if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value);
+  downloadUrl.value = json ? URL.createObjectURL(new Blob([json], { type: "application/json" })) : null;
+});
+
+onBeforeUnmount(() => {
+  if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value);
+});
 
 async function exportLibrary() {
   exportError.value = "";
@@ -57,3 +69,27 @@ async function exportLibrary() {
   }
 }
 </script>
+
+<style scoped>
+.export-json {
+  max-height: 400px;
+  overflow: auto;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+}
+
+.export-json:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+a.set-btn {
+  text-decoration: none;
+}
+</style>

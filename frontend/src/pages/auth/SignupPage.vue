@@ -1,73 +1,70 @@
 <template>
-  <div class="columns is-centered">
-    <div class="column is-4">
-      <h1 class="title">Sign Up</h1>
+  <AuthLayout>
+    <h1>Create an account</h1>
+    <p class="auth-sub">Already have an account? <router-link to="/login" class="auth-link">Sign in</router-link></p>
 
-      <div v-if="successMessage" class="notification is-success">{{ successMessage }}</div>
-      <div v-if="errors.length" class="notification is-danger">
-        <ul>
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-        </ul>
+    <div v-if="successMessage" class="notification is-success" role="status">{{ successMessage }}</div>
+    <div v-if="errors.length" class="notification is-danger" role="alert">
+      <ul>
+        <li v-for="error in errors" :key="error">{{ error }}</li>
+      </ul>
+    </div>
+
+    <form v-if="!successMessage" @submit.prevent="handleSubmit">
+      <div class="auth-field">
+        <label for="signup-username">Username</label>
+        <input
+          id="signup-username"
+          v-model="username"
+          class="auth-input"
+          type="text"
+          placeholder="3 to 20 characters"
+          autocomplete="username"
+          required
+        />
       </div>
 
-      <form v-if="!successMessage" @submit.prevent="handleSubmit">
-        <div class="field">
-          <label class="label">Username</label>
-          <div class="control">
-            <input v-model="username" class="input" type="text" placeholder="Username (3-20 characters)" required />
-          </div>
-        </div>
+      <div class="auth-field">
+        <label for="signup-email">Email</label>
+        <input id="signup-email" v-model="email" class="auth-input" type="email" autocomplete="email" required />
+      </div>
 
-        <div class="field">
-          <label class="label">Email</label>
-          <div class="control">
-            <input v-model="email" class="input" type="email" placeholder="Email" required />
-          </div>
-        </div>
+      <div class="auth-field">
+        <label for="signup-password">Password</label>
+        <input
+          id="signup-password"
+          v-model="password"
+          class="auth-input"
+          type="password"
+          placeholder="At least 8 characters"
+          autocomplete="new-password"
+          required
+        />
+      </div>
 
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input
-              v-model="password"
-              class="input"
-              type="password"
-              placeholder="Password (minimum 8 characters)"
-              required
-            />
-          </div>
-        </div>
+      <div class="auth-field">
+        <label for="signup-password-confirmation">Confirm password</label>
+        <input
+          id="signup-password-confirmation"
+          v-model="passwordConfirmation"
+          class="auth-input"
+          type="password"
+          autocomplete="new-password"
+          required
+        />
+      </div>
 
-        <div class="field">
-          <label class="label">Password Confirmation</label>
-          <div class="control">
-            <input
-              v-model="passwordConfirmation"
-              class="input"
-              type="password"
-              placeholder="Confirm password"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <button class="button is-primary" type="submit" :disabled="isLoading">
-              {{ isLoading ? "Creating account..." : "Sign Up" }}
-            </button>
-          </div>
-        </div>
-
-        <p>Already have an account? <router-link to="/login">Sign in</router-link></p>
-      </form>
-    </div>
-  </div>
+      <button class="auth-submit" type="submit" :disabled="isLoading">
+        {{ isLoading ? "Creating account..." : "Create account" }}
+      </button>
+    </form>
+  </AuthLayout>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAuth } from "@/composables/useAuth";
+import AuthLayout from "@/components/auth/AuthLayout.vue";
 
 const { signUp } = useAuth();
 

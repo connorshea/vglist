@@ -550,6 +550,32 @@ export interface UpdatePasswordMutation {
   updatePassword: { errors: Array<string>; user: { id: string } | null } | null;
 }
 
+export type ConnectSteamMutationVariables = Exact<{
+  userId: string;
+  steamUsername: string;
+}>;
+
+export interface ConnectSteamMutation {
+  connectSteam: { connected: boolean } | null;
+}
+
+export type DisconnectSteamMutationVariables = Exact<{
+  userId: string;
+}>;
+
+export interface DisconnectSteamMutation {
+  disconnectSteam: { disconnected: boolean } | null;
+}
+
+export type ImportSteamLibraryMutationVariables = Exact<{
+  userId: string;
+  updateHours?: boolean | null | undefined;
+}>;
+
+export interface ImportSteamLibraryMutation {
+  importSteamLibrary: { addedGamesCount: number; updatedGamesCount: number; unmatchedCount: number } | null;
+}
+
 export type FollowUserMutationVariables = Exact<{
   userId: string;
 }>;
@@ -1352,5 +1378,18 @@ export interface GetUserActivityQuery {
 export type GetCurrentUserProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export interface GetCurrentUserProfileQuery {
-  currentUser: { id: string; bio: string | null; privacy: UserPrivacy; hideDaysPlayed: boolean } | null;
+  currentUser: {
+    id: string;
+    username: string;
+    avatarUrl: string | null;
+    bio: string | null;
+    privacy: UserPrivacy;
+    hideDaysPlayed: boolean;
+  } | null;
+}
+
+export type GetCurrentUserSteamAccountQueryVariables = Exact<{ [key: string]: never }>;
+
+export interface GetCurrentUserSteamAccountQuery {
+  currentUser: { id: string; steamProfileUrl: string | null } | null;
 }
