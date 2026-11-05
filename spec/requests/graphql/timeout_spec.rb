@@ -54,4 +54,18 @@ RSpec.describe "GraphQL timeouts", type: :request do
     expect(response.parsed_body['errors'].first['message']).to eq('Timeout on Query.basicSiteStatistics')
     expect(response.parsed_body['data']).to be_nil
   end
+
+  it "doesn't apply the time limit to mutations", :aggregate_failures do
+    # The same past deadline as above. QueryTimeout falls through to it for
+    # queries, but a mutation has already made its changes by the time its
+    # payload fields resolve, so it must not be cut off.
+    # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(GraphQL::Schema::Timeout).to receive(:max_seconds).and_return(-1)
+    # rubocop:enable RSpec/AnyInstance
+
+    graphql('mutation { signIn(email: "nobody@example.com", password: "wrong") { token errors } }')
+
+    expect(response.parsed_body['errors']).to be_nil
+    expect(response.parsed_body.dig('data', 'signIn', 'errors')).to eq(['Invalid email or password.'])
+  end
 end
