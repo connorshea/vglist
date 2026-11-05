@@ -9,7 +9,7 @@
       </div>
       <router-link v-if="canEdit" :to="newTo" class="new-btn">
         <Plus :size="15" aria-hidden="true" />
-        New {{ kind }}
+        <span class="new-btn-label">New {{ kind }}</span>
       </router-link>
     </div>
 
@@ -209,12 +209,19 @@ onBeforeUnmount(() => observer?.disconnect());
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-sm);
   background: var(--p-500);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
+}
+
+/* Trimmed to cap height and baseline so the letters, not the line box, are
+   centered next to the icon. */
+.new-btn-label {
+  text-box: trim-both cap alphabetic;
 }
 
 .new-btn:hover {
