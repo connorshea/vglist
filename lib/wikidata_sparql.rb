@@ -53,6 +53,18 @@ module WikidataSparql
   # (4, 8, 16, 32 seconds).
   INITIAL_BACKOFF_SECONDS = 4
 
+  # Seconds to wait before the first retry when QLever rejects a query because
+  # all of its query-processing threads are busy; doubles each attempt (15, 30,
+  # 60, 120 seconds). This is longer than the 429 backoff because a saturated
+  # server needs time to drain its queue, and hammering it sooner would only add
+  # to the load.
+  BUSY_INITIAL_BACKOFF_SECONDS = 15
+
+  # Substring of the error QLever returns when every query-processing thread was
+  # busy for longer than its `query-queue-max-wait`. The body asks clients to
+  # "retry later", so it's transient and safe to retry.
+  BUSY_ERROR_MESSAGE = 'threads for processing queries were busy'
+
   # Run a SPARQL query against Wikidata, prepending the standard prefixes.
   #
   # @param [String] sparql the query body (without prefix declarations)
@@ -64,10 +76,17 @@ module WikidataSparql
     with_retry { client.query(PREFIXES + sparql) }
   end
 
-  # Retry a SPARQL request with exponential backoff when the endpoint
-  # rate-limits us (HTTP 429). QLever's nginx returns 429 under bursts of rapid
-  # queries (e.g. the chunked hydration in the games import); backing off clears
-  # it. Other errors propagate immediately.
+  # Retry a SPARQL request with exponential backoff when the endpoint tells us
+  # to come back later:
+  #
+  #   * HTTP 429: QLever's nginx rate-limits bursts of rapid queries (e.g. the
+  #     chunked hydration in the games import).
+  #   * "All N threads for processing queries were busy": QLever is saturated
+  #     by other users' queries and rejected ours without running it.
+  #
+  # Both clear up after backing off. Attempts are capped, so a persistently
+  # overloaded server still fails the task rather than being retried forever.
+  # Other errors propagate immediately.
   #
   # @return [Array<RDF::Query::Solution>]
   def self.with_retry(max_attempts: 5)
@@ -76,14 +95,29 @@ module WikidataSparql
       attempt += 1
       yield
     rescue SPARQL::Client::ClientError => e
-      raise unless e.message.include?('429') && attempt < max_attempts
+      initial_backoff, reason = retryable_error(e)
+      raise unless initial_backoff && attempt < max_attempts
 
-      backoff_seconds = INITIAL_BACKOFF_SECONDS * (2**(attempt - 1)) # 4, 8, 16, 32 seconds
-      warn "SPARQL endpoint returned 429 (attempt #{attempt}/#{max_attempts}); retrying in #{backoff_seconds}s..."
+      backoff_seconds = initial_backoff * (2**(attempt - 1))
+      warn "SPARQL endpoint #{reason} (attempt #{attempt}/#{max_attempts}); retrying in #{backoff_seconds}s..."
       sleep(backoff_seconds)
       retry
     end
   end
+
+  # Classify a SPARQL client error as retryable or not.
+  #
+  # @param [SPARQL::Client::ClientError] error
+  # @return [Array(Integer, String), nil] the initial backoff in seconds and a
+  #   description for the log line, or nil if the error shouldn't be retried.
+  def self.retryable_error(error)
+    if error.message.include?(BUSY_ERROR_MESSAGE)
+      [BUSY_INITIAL_BACKOFF_SECONDS, 'was too busy to accept the query']
+    elsif error.message.include?('429')
+      [INITIAL_BACKOFF_SECONDS, 'returned 429']
+    end
+  end
+  private_class_method :retryable_error
 
   # Build a SPARQL client pointed at the Wikidata endpoint.
   #
