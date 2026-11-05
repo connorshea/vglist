@@ -1,0 +1,44 @@
+# Build context for the Rails API image (root Dockerfile).
+# frontend/Dockerfile uses frontend/Dockerfile.dockerignore instead.
+#
+# If you update this, check .gitignore too.
+
+# Git and editor/tooling metadata
+/.git
+/.github
+/.claude
+/.vscode
+/.playwright-mcp
+.DS_Store
+
+# Docker files themselves
+/Dockerfile
+/.dockerignore
+
+# Secrets and local env files. Production gets RAILS_MASTER_KEY via env.
+/config/master.key
+/config/credentials/*.key
+.env
+.env.*
+/prod.env
+
+# Runtime and generated state
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/shared/*
+!/shared/.keep
+/coverage
+/.bundle
+/vendor/*
+/node_modules
+/schema.json
+/schema.graphql
+
+# Not needed in the API image
+/frontend
+/spec
+/sbin
