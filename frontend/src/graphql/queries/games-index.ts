@@ -28,6 +28,7 @@ export const GET_GAMES_INDEX = gql`
     $fromYear: Int
     $toYear: Int
     $excludeLibrary: Boolean
+    $withCount: Boolean!
   ) {
     games(
       first: $first
@@ -43,7 +44,7 @@ export const GET_GAMES_INDEX = gql`
       nodes {
         ...GameTileFields
       }
-      totalCount
+      totalCount @include(if: $withCount)
       pageInfo {
         hasNextPage
         endCursor

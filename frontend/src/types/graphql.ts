@@ -747,11 +747,12 @@ export type GetGamesIndexQueryVariables = Exact<{
   fromYear?: number | null | undefined;
   toYear?: number | null | undefined;
   excludeLibrary?: boolean | null | undefined;
+  withCount: boolean;
 }>;
 
 export interface GetGamesIndexQuery {
   games: {
-    totalCount: number;
+    totalCount?: number;
     nodes: Array<{
       id: string;
       name: string;

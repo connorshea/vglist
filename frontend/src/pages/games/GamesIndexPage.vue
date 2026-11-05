@@ -228,7 +228,10 @@ const variables = computed(() => ({
   first: PAGE_SIZE,
   after: null as string | null,
   sortBy: sort.value.value,
-  ...filterVariables(filters.value)
+  ...filterVariables(filters.value),
+  // Counting means grouping every game under some sorts, so only the first
+  // page asks for it. Later pages keep the count the first one got.
+  withCount: true
 }));
 
 const { data, loading, error, fetchMore } = useQuery<GetGamesIndexQuery>(GET_GAMES_INDEX, {
@@ -246,9 +249,15 @@ async function loadMore() {
   if (!cursor || loadingMore.value || refreshing.value) return;
   loadingMore.value = true;
   try {
-    await fetchMore({ ...variables.value, after: cursor }, (prev, next) => ({
+    await fetchMore({ ...variables.value, after: cursor, withCount: false }, (prev, next) => ({
       games:
-        prev.games && next.games ? { ...next.games, nodes: [...prev.games.nodes, ...next.games.nodes] } : next.games
+        prev.games && next.games
+          ? {
+              ...next.games,
+              totalCount: prev.games.totalCount,
+              nodes: [...prev.games.nodes, ...next.games.nodes]
+            }
+          : next.games
     }));
   } finally {
     loadingMore.value = false;
