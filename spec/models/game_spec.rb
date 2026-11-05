@@ -161,6 +161,13 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  describe "Cover variants" do
+    it "generates every cover variant in the background once a cover is attached" do
+      expect { create(:game, :cover) }
+        .to have_enqueued_job(ActiveStorage::TransformJob).exactly(Game::COVER_SIZES.size).times
+    end
+  end
+
   describe 'Custom Validations' do
     let!(:wikidata_blocklist) { create(:wikidata_blocklist, wikidata_id: 420) }
     let(:game) { build(:game, wikidata_id: 420) }

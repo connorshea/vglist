@@ -41,10 +41,13 @@ class Game < ApplicationRecord
     large: [500, 800]
   }.freeze
 
+  # `preprocessed: true` enqueues an ActiveStorage::TransformJob for each
+  # variant as soon as a cover is attached, so the first page to show a new
+  # cover doesn't have to download, resize, and upload it mid-request.
   has_one_attached :cover do |attachable|
-    attachable.variant :small, resize_to_limit: COVER_SIZES[:small]
-    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium]
-    attachable.variant :large, resize_to_limit: COVER_SIZES[:large]
+    attachable.variant :small, resize_to_limit: COVER_SIZES[:small], preprocessed: true
+    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium], preprocessed: true
+    attachable.variant :large, resize_to_limit: COVER_SIZES[:large], preprocessed: true
   end
 
   # Use PaperTrail to track changes to the record.
