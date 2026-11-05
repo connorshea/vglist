@@ -65,7 +65,6 @@ declare module "vue-router" {
       // Stores
       stores: RouteRecordInfo<"stores", "/stores", Record<never, never>, Record<never, never>>;
       storeNew: RouteRecordInfo<"storeNew", "/stores/new", Record<never, never>, Record<never, never>>;
-      store: RouteRecordInfo<"store", "/stores/:id", { id: string | number }, { id: string }>;
       storeEdit: RouteRecordInfo<"storeEdit", "/stores/:id/edit", { id: string | number }, { id: string }>;
 
       // Activity

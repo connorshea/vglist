@@ -1,48 +1,50 @@
 <template>
-  <section class="section">
+  <div>
     <div v-if="loading && !data" class="has-text-centered">
       <p>Loading company...</p>
     </div>
 
-    <div v-if="error" class="notification is-danger">
+    <div v-if="error && !data?.company" class="notification is-danger">
       <p>Failed to load company: {{ error.message }}</p>
     </div>
 
-    <div v-if="data?.company">
-      <h1 class="title">{{ data.company.name }}</h1>
+    <template v-if="data?.company">
+      <ResourceHeader
+        kind="Company"
+        :icon="BriefcaseBusiness"
+        :name="data.company.name"
+        :wikidata-id="data.company.wikidataId"
+        :edit-to="authStore.isModerator ? `/companies/${data.company.id}/edit` : null"
+        @delete="showDeleteConfirm = true"
+      >
+        <template #facts>
+          <span
+            ><b>{{ data.company.developedCount.totalCount.toLocaleString() }}</b> developed</span
+          >
+          <span
+            ><b>{{ data.company.publishedCount.totalCount.toLocaleString() }}</b> published</span
+          >
+        </template>
+        <template #tabs>
+          <ResourceTabs label="Company games" :tabs="tabs" />
+        </template>
+      </ResourceHeader>
 
-      <!-- TODO: Figure out how to do this without the style tag. -->
-      <p v-if="data.company.wikidataId" class="subtitle is-6" style="margin-bottom: 1.5rem">
-        <a :href="`https://www.wikidata.org/wiki/Q${data.company.wikidataId}`" target="_blank" rel="noopener noreferrer"
-          >Wikidata</a
-        >
-      </p>
-
-      <div v-if="authStore.isModerator" class="buttons">
-        <router-link :to="`/companies/${data.company.id}/edit`" class="button is-small">Edit</router-link>
-        <button class="button is-small is-danger is-light" @click="showDeleteConfirm = true">Delete</button>
+      <div v-if="error" class="notification is-danger mt-5">
+        <p>Failed to load games: {{ error.message }}</p>
       </div>
 
-      <div v-if="data.company.developedGames.nodes.length" class="mb-6">
-        <h2 class="title is-4">Developed Games</h2>
-
-        <div class="columns is-multiline">
-          <div v-for="game in data.company.developedGames.nodes" :key="game.id" class="column is-2">
-            <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
-          </div>
-        </div>
-      </div>
-
-      <!-- TODO: Figure out how to do this without the style tag. -->
-      <div v-if="data.company.publishedGames.nodes.length" class="mb-6" style="margin-top: 2.5rem">
-        <h2 class="title is-4">Published Games</h2>
-
-        <div class="columns is-multiline">
-          <div v-for="game in data.company.publishedGames.nodes" :key="game.id" class="column is-2">
-            <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
-          </div>
-        </div>
-      </div>
+      <ResourceGameList
+        v-model:sort-by="sortBy"
+        :label="developed ? 'Developed games' : 'Published games'"
+        :games="games"
+        :empty-text="developed ? 'No games developed by this company yet.' : 'No games published by this company yet.'"
+        :refreshing="loading"
+        :has-next-page="hasNextPage"
+        :loading-more="loadingMore"
+        :load-more-error="loadMoreError"
+        @load-more="loadMore"
+      />
 
       <ConfirmDialog
         v-model="showDeleteConfirm"
@@ -58,22 +60,25 @@
         <strong>{{ data.company.name }}</strong> will be permanently deleted, and removed from every game it developed
         or published. This cannot be undone.
       </ConfirmDialog>
-    </div>
-  </section>
+    </template>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CircleAlert } from "@lucide/vue";
+import { BriefcaseBusiness, CircleAlert } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
-import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useMutation } from "@/composables/useGraphQL";
+import { useResourceGames } from "@/composables/useResourceGames";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_COMPANY } from "@/graphql/queries/resources";
 import { DELETE_COMPANY } from "@/graphql/mutations/resources";
 import { extractGqlError } from "@/utils/graphql-errors";
 import type { GetCompanyQuery, DeleteCompanyMutation } from "@/types/graphql";
-import GameCard from "@/components/GameCard.vue";
+import ResourceHeader from "@/components/resource/ResourceHeader.vue";
+import ResourceTabs from "@/components/resource/ResourceTabs.vue";
+import ResourceGameList from "@/components/resource/ResourceGameList.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 const route = useRoute("company");
@@ -81,12 +86,37 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
-const { data, loading, error } = useQuery<GetCompanyQuery>(GET_COMPANY, {
-  variables: { id: route.params.id }
+// The Developed tab is the default and is left out of the URL.
+const developed = computed(() => route.query.tab !== "published");
+
+const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore, loadMoreError } =
+  useResourceGames<GetCompanyQuery>(GET_COMPANY, {
+    variables: () => ({ id: route.params.id, developed: developed.value }),
+    select: (result) => (developed.value ? result.company?.developedGames : result.company?.publishedGames)
+  });
+
+const tabs = computed(() => {
+  const company = data.value?.company;
+  return [
+    {
+      label: "Developed",
+      count: company?.developedCount.totalCount ?? 0,
+      to: { query: { ...route.query, tab: undefined } },
+      active: developed.value
+    },
+    {
+      label: "Published",
+      count: company?.publishedCount.totalCount ?? 0,
+      to: { query: { ...route.query, tab: "published" } },
+      active: !developed.value
+    }
+  ];
 });
 
+// Only a failed first load means the company doesn't exist. Once it has
+// loaded, an error from changing the sort or tab is shown above the games.
 watch([data, error, loading], () => {
-  if (!loading.value && (error.value || (data.value && !data.value.company))) {
+  if (!loading.value && ((error.value && !data.value) || (data.value && !data.value.company))) {
     router.replace({ name: "notFound" });
   }
 });
