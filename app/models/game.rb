@@ -60,10 +60,13 @@ class Game < ApplicationRecord
                     class_name: 'Versions::GameVersion'
                   }
 
-  scope :newest, -> { order("created_at desc") }
-  scope :oldest, -> { order("created_at asc") }
-  scope :recently_updated, -> { order("updated_at desc") }
-  scope :least_recently_updated, -> { order("updated_at asc") }
+  # Every sort ends with `games.id`, so games that tie on the main key (say,
+  # the many with no owners) keep the same order from one query to the next.
+  # Without it, offset pagination repeats some games and skips others.
+  scope :newest, -> { order(created_at: :desc, id: :desc) }
+  scope :oldest, -> { order(created_at: :asc, id: :asc) }
+  scope :recently_updated, -> { order(updated_at: :desc, id: :desc) }
+  scope :least_recently_updated, -> { order(updated_at: :asc, id: :asc) }
   # Sort by average rating.
   # Must have at least 5 owners w/ ratings to be included.
   # Also check that the avg_rating column isn't nil to preven[t weirdness in
@@ -74,23 +77,23 @@ class Game < ApplicationRecord
       .where.not('games.avg_rating': nil)
       .group('games.id')
       .having("count(game_purchases.id) >= ?", 5)
-      .order("avg_rating desc")
+      .order(avg_rating: :desc, id: :desc)
   }
   # Sort by most favorites.
   scope :most_favorites, -> {
     left_joins(:favorites)
       .group(:id)
-      .order(Arel.sql('count(favorite_games.game_id) desc'))
+      .order(Arel.sql('count(favorite_games.game_id) desc'), id: :desc)
   }
   # Sort by most owners.
   scope :most_owners, -> {
     left_joins(:game_purchases)
       .group(:id)
-      .order(Arel.sql('count(game_purchases.game_id) desc'))
+      .order(Arel.sql('count(game_purchases.game_id) desc'), id: :desc)
   }
   # Sort by recently released.
   scope :recently_released, -> {
-    where("release_date < ?", 1.day.from_now).order("release_date desc")
+    where("release_date < ?", 1.day.from_now).order(release_date: :desc, id: :desc)
   }
 
   # Find games available on a given platform.

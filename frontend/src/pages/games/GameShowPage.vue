@@ -21,7 +21,9 @@
 
             <div v-if="authStore.isAuthenticated" class="hero-actions">
               <button
+                ref="libraryButtonRef"
                 class="hero-btn primary"
+                :aria-haspopup="isPhone ? 'dialog' : undefined"
                 :disabled="addingToLibrary"
                 :aria-expanded="showAddForm"
                 @click="toggleLibraryForm"
@@ -98,7 +100,7 @@
             </div>
           </div>
 
-          <div class="hero-split" :class="{ 'form-open': showAddForm }">
+          <div class="hero-split" :class="{ 'form-open': showAddForm && !isPhone }">
             <div ref="heroInfoRef" class="game-hero-info">
               <h1 class="game-title" :class="{ 'is-long': game.name.length > LONG_TITLE_LENGTH }">{{ game.name }}</h1>
               <p v-if="releaseYear || game.developers.nodes.length || game.series" class="hero-meta">
@@ -123,7 +125,7 @@
                 @after-enter="onHeroAfterEnter"
               >
                 <!-- Show tags when form is closed -->
-                <div v-if="!showAddForm" key="tags">
+                <div v-if="!showAddForm || isPhone" key="tags">
                   <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
                     <h2 class="hero-tag-label">Genres</h2>
                     <div class="hero-tags">
@@ -190,7 +192,7 @@
             </div>
 
             <GameHeroPanel
-              v-if="!showAddForm"
+              v-if="!showAddForm || isPhone"
               :avg-rating="game.avgRating ?? null"
               :rating-count="game.ratingCount"
               :entry="myEntry"
@@ -204,7 +206,7 @@
       </section>
 
       <!-- Content below hero -->
-      <div class="game-body" :class="{ dimmed: showAddForm }">
+      <div class="game-body" :class="{ dimmed: showAddForm && !isPhone }">
         <div class="game-body-main">
           <GameReviewsCard
             :reviews="reviews"
@@ -226,6 +228,30 @@
         <button class="delete" @click="actionMessage = ''"></button>
         {{ actionMessage }}
       </div>
+
+      <!-- On phones the library form opens in a bottom sheet instead of the hero -->
+      <GameLibrarySheet
+        v-if="showAddForm && isPhone"
+        :title="game.isInLibrary ? 'Edit library entry' : 'Add to library'"
+        :game-name="game.name"
+        :cover-url="game.coverUrl ?? null"
+        @close="cancelAddForm"
+      >
+        <GameLibraryForm
+          variant="sheet"
+          :game-id="gameId"
+          :game-name="game.name"
+          :game-purchase-id="game.gamePurchaseId ?? null"
+          :game-platforms="game.platforms.nodes"
+          :all-stores="allStores"
+          :stores-loading="storesLoading"
+          :removing-from-library="removingFromLibrary"
+          @cancel="cancelAddForm"
+          @saved="onFormSaved"
+          @request-remove="showRemoveConfirm = true"
+          @error="onFormError"
+        />
+      </GameLibrarySheet>
 
       <!-- Remove from library confirmation modal -->
       <ConfirmDialog
@@ -292,7 +318,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
@@ -321,6 +347,7 @@ import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
+import GameLibrarySheet from "@/components/game/GameLibrarySheet.vue";
 import GameActivityCard from "@/components/game/GameActivityCard.vue";
 import GameDetailsCard from "@/components/game/GameDetailsCard.vue";
 import GameHeroPanel, { type HeroPanelEntry } from "@/components/game/GameHeroPanel.vue";
@@ -543,9 +570,41 @@ function onFormSaved(message: string) {
 }
 
 function onFormError(message: string) {
+  // The notification under the page body is hidden behind the phone sheet.
+  if (isPhone.value) {
+    showSnackbar(message, "error");
+    return;
+  }
   actionMessage.value = message;
   actionIsError.value = true;
 }
+
+// ── Phone layout: the form opens in a bottom sheet ──
+const PHONE_QUERY = "(max-width: 768px)";
+const isPhone = ref(false);
+let phoneMedia: MediaQueryList | null = null;
+const libraryButtonRef = ref<HTMLButtonElement | null>(null);
+
+function updateIsPhone() {
+  isPhone.value = phoneMedia?.matches ?? false;
+}
+
+onMounted(() => {
+  if (typeof window.matchMedia !== "function") return;
+  phoneMedia = window.matchMedia(PHONE_QUERY);
+  updateIsPhone();
+  phoneMedia.addEventListener("change", updateIsPhone);
+});
+
+onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
+
+// When the sheet closes, put focus back on the button that opened it.
+watch(
+  () => showAddForm.value && isPhone.value,
+  (open, wasOpen) => {
+    if (wasOpen && !open) void nextTick(() => libraryButtonRef.value?.focus());
+  }
+);
 
 // ── Remove from library ──
 const removingFromLibrary = ref(false);
