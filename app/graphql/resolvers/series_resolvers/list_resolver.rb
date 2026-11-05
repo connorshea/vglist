@@ -7,8 +7,28 @@ module Resolvers
 
       description "List all series'. This is different from the other list queries because series is the plural of series. :("
 
-      def resolve
-        Series.all
+      argument :sort_by, Types::Enums::SeriesSortType, required: false, description: "The order to sort the series in. Without one, series are ordered by ID."
+      argument :name_contains, String, required: false, description: "Only return series whose name contains this text, ignoring case."
+
+      extras [:lookahead]
+
+      STAT_FIELDS = [:games_count, :first_release_year, :last_release_year].freeze
+
+      def resolve(lookahead:, sort_by: nil, name_contains: nil)
+        series = Series.all
+        # Only pay for the per-series subqueries when a row shows them, not
+        # for e.g. the game form's series picker, which loads names only.
+        series = series.with_game_stats if selects_stats?(lookahead)
+        series = series.name_contains(name_contains) if name_contains.present?
+
+        sort_by.nil? ? series.order(:id) : series.public_send(sort_by)
+      end
+
+      private
+
+      def selects_stats?(lookahead)
+        nodes = [lookahead.selection(:nodes), lookahead.selection(:edges).selection(:node)]
+        nodes.any? { |node| STAT_FIELDS.any? { |field| node.selects?(field) } }
       end
     end
   end
