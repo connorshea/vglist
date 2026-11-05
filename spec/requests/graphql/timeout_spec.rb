@@ -40,4 +40,18 @@ RSpec.describe "GraphQL timeouts", type: :request do
     expect(response).to have_http_status(:success)
     expect(response.parsed_body['errors'].first['message']).to eq('This request took too long and was cancelled.')
   end
+
+  it 'stops resolving fields once the whole request runs past its time limit', :aggregate_failures do
+    # A deadline already in the past, so the first field resolved times out.
+    # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(GraphQL::Schema::Timeout).to receive(:max_seconds).and_return(-1)
+    # rubocop:enable RSpec/AnyInstance
+    allow(Game).to receive(:count).and_call_original
+
+    graphql(query)
+
+    expect(Game).not_to have_received(:count)
+    expect(response.parsed_body['errors'].first['message']).to eq('Timeout on Query.basicSiteStatistics')
+    expect(response.parsed_body['data']).to be_nil
+  end
 end
