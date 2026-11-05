@@ -111,6 +111,19 @@ function initials(name: string): string {
   cursor: pointer;
 }
 
+/* Fit all four options across a phone screen instead of scrolling. */
+@media screen and (max-width: 480px) {
+  .res-seg {
+    display: flex;
+  }
+
+  .res-seg-btn {
+    flex: 1 1 auto;
+    padding: 6px 8px;
+    font-size: 0.6875rem;
+  }
+}
+
 .res-seg-btn + .res-seg-btn::before {
   content: "";
   position: absolute;
