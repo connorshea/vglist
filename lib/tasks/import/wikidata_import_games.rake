@@ -91,6 +91,8 @@ namespace 'import:wikidata' do
       format: formatting
     )
 
+    games_added_count = 0
+
     # Set whodunnit to 'system' for any audited changes made by this Rake task.
     PaperTrail.request.whodunnit = 'system'
 
@@ -145,6 +147,7 @@ namespace 'import:wikidata' do
 
           begin
             game = Game.create!(hash)
+            games_added_count += 1
             progress_bar.log "Created #{hash[:name]}."
           rescue ActiveRecord::RecordInvalid => e
             progress_bar.log "Invalid: #{hash[:name].ljust(30)} | #{e}"
@@ -215,6 +218,7 @@ namespace 'import:wikidata' do
     puts 'Rebuilding search index...'
     PgSearch::Multisearch.rebuild(Game)
 
+    puts "Done. Added #{games_added_count} new games."
     puts "There are now #{Game.count} games in the database."
   end
 
