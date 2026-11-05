@@ -77,6 +77,15 @@ RSpec.describe User, type: :model do
       expect(user).to validate_content_type_of(:avatar).rejecting([]).allowing('image/png', 'image/jpeg')
       expect(user).to validate_size_of(:avatar).less_than(3.megabytes)
     end
+
+    it 'does not re-check an existing avatar when saving other changes' do
+      user_with_avatar = create(:user, :avatar)
+      # Simulate the stored file being unreachable, e.g. missing storage
+      # credentials. Validating the avatar again would need to download it.
+      user_with_avatar.avatar.blob.service.delete(user_with_avatar.avatar.blob.key)
+
+      expect { user_with_avatar.reload.update!(bio: 'Hello') }.not_to raise_error
+    end
   end
 
   describe 'Custom Validations' do
