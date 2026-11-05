@@ -6,7 +6,7 @@
 #   - migrate    PRE_DEPLOY job: `rails db:prepare` before each API rollout
 #   - update-stats  SCHEDULED job: daily `rake vglist:update:stats` (ported
 #                   from the VPS crontab, 00:00 UTC)
-#   - db         Managed PostgreSQL 17 cluster, attached to the app
+#   - db         Existing managed PostgreSQL cluster, attached to the app
 #
 # Usage:
 #   doctl apps spec validate .do/app.yaml
@@ -56,10 +56,11 @@ ingress:
         name: frontend
 
 databases:
-  # Production clusters must exist before the app is created, e.g.:
-  #   doctl databases create vglist-db --engine pg --version 17 \
-  #     --region sfo3 --size db-s-1vcpu-1gb --num-nodes 1
-  # Then restore the VPS dump into it (pg_dump -Fc / pg_restore).
+  # Reuses the existing DO Managed Postgres cluster the VPS already talks to
+  # (database vglist_production, user vglist). Set cluster_name to that
+  # cluster's name and version to its PostgreSQL major version; App Platform
+  # attaches it and adds the app to its trusted sources. The 1 GB plan allows
+  # ~22 connections: the API uses 2 workers x 3 threads = 6, plus 1 per job.
   - name: db
     engine: PG
     version: "17"
