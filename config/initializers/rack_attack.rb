@@ -48,9 +48,24 @@ module RackAttackConfig
       ActionDispatch::Journey::Router::Utils.normalize_path(req.path).sub(%r{\.[^/.]+\z}, '')
   end
 
-  # Prefer the IP computed by ActionDispatch::RemoteIp (which knows about
-  # trusted proxies) and fall back to Rack's best guess.
+  # The client's IP address.
+  #
+  # Behind a proxy that puts the client IP in its own header, set
+  # CLIENT_IP_HEADER to that header's name. DigitalOcean App Platform uses
+  # `DO-Connecting-IP` and puts its ingress server, not the client, in
+  # X-Forwarded-For, so without this every visitor would share the ingress's
+  # counters. Only set it where the proxy always overwrites the header,
+  # otherwise clients could pick their own IP.
+  #
+  # Otherwise, use the IP computed by ActionDispatch::RemoteIp (which knows
+  # about trusted proxies) and fall back to Rack's best guess.
   def client_ip(req)
+    header = ENV.fetch('CLIENT_IP_HEADER', nil)
+    if header.present?
+      forwarded = req.get_header("HTTP_#{header.upcase.tr('-', '_')}")
+      return forwarded.strip if forwarded.present?
+    end
+
     req.env['action_dispatch.remote_ip']&.to_s || req.ip
   end
 

@@ -169,4 +169,27 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       expect(response).to have_http_status(:too_many_requests)
     end
   end
+
+  describe "client IP header" do
+    def sign_in_from(proxy_ip, client_ip, email: "nobody-#{SecureRandom.hex(4)}@example.com")
+      post api_auth_sign_in_path,
+        params: { email: email, password: "wrong" },
+        headers: { 'REMOTE_ADDR' => proxy_ip, 'DO-Connecting-IP' => client_ip }
+    end
+
+    it "counts clients behind the same proxy separately when CLIENT_IP_HEADER is set", :aggregate_failures do
+      with_environment('CLIENT_IP_HEADER' => 'DO-Connecting-IP') do
+        20.times { |i| sign_in_from('10.10.0.1', "203.0.113.#{i}") }
+        expect(response).to have_http_status(:unauthorized)
+
+        21.times { sign_in_from('10.10.0.1', '198.51.100.7') }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+    end
+
+    it "ignores the header when CLIENT_IP_HEADER is not set" do
+      21.times { |i| sign_in_from('10.10.0.2', "203.0.113.#{i}") }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+  end
 end
