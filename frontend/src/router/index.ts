@@ -276,11 +276,6 @@ const router = createRouter({
           path: "export",
           name: "settingsExport",
           component: () => import("@/pages/settings/ExportSettings.vue")
-        },
-        {
-          path: "api-token",
-          name: "settingsApiToken",
-          component: () => import("@/pages/settings/ApiTokenSettings.vue")
         }
       ]
     },

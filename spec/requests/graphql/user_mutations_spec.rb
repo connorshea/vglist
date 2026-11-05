@@ -7,14 +7,6 @@ RSpec.describe "GraphQL User Mutations", type: :request do
   let(:jwt_token) { JwtService.encode(user) }
   let(:auth_headers) { { 'Authorization': "Bearer #{jwt_token}" } }
 
-  # Legacy API-token auth never counts as first-party (see `first_party?` in
-  # GraphqlController), so it stands in for any non-first-party credential.
-  let(:api_token) { SecureRandom.alphanumeric(20) }
-  let(:api_token_user) { create(:confirmed_user, encrypted_api_token: EncryptionService.encrypt(api_token)) }
-  let(:api_token_headers) do
-    { 'X-User-Email': api_token_user.email, 'X-User-Token': api_token }
-  end
-
   describe "updateUser mutation" do
     let(:query) do
       <<~GQL
@@ -51,17 +43,6 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       expect(json['errors'].first['message']).to include("logged in")
     end
 
-    it "updates the bio when using a non-first-party API token", :aggregate_failures do
-      post graphql_path, params: {
-        query: query,
-        variables: { bio: "Third-party bio" }.to_json
-      }, headers: api_token_headers
-
-      json = JSON.parse(response.body)
-      expect(json.dig('data', 'updateUser', 'errors')).to be_empty
-      expect(api_token_user.reload.bio).to eq("Third-party bio")
-    end
-
     context "when changing privacy" do
       let(:privacy_query) do
         <<~GQL
@@ -84,61 +65,6 @@ RSpec.describe "GraphQL User Mutations", type: :request do
         expect(json.dig('data', 'updateUser', 'errors')).to be_empty
         expect(user.reload.privacy).to eq("private_account")
       end
-
-      it "returns an error when using a non-first-party API token", :aggregate_failures do
-        api_token_user.update!(privacy: :private_account)
-
-        post graphql_path, params: {
-          query: privacy_query,
-          variables: { privacy: "PUBLIC_ACCOUNT" }.to_json
-        }, headers: api_token_headers
-
-        json = JSON.parse(response.body)
-        expect(json['errors'].first['message']).to include("first-party")
-        expect(api_token_user.reload.privacy).to eq("private_account")
-      end
-    end
-  end
-
-  describe "resetApiToken mutation" do
-    let(:query) do
-      <<~GQL
-        mutation ResetApiToken {
-          resetApiToken {
-            apiToken
-            errors
-          }
-        }
-      GQL
-    end
-
-    it "generates a new API token", :aggregate_failures do
-      post graphql_path, params: { query: query }, headers: auth_headers
-
-      expect(response).to have_http_status(:success)
-      json = JSON.parse(response.body)
-      data = json.dig('data', 'resetApiToken')
-      expect(data['errors']).to be_empty
-      expect(data['apiToken']).to be_present
-      expect(data['apiToken'].length).to eq(40)
-    end
-
-    it "returns an error when not authenticated" do
-      post graphql_path, params: { query: query }
-
-      json = JSON.parse(response.body)
-      expect(json['errors'].first['message']).to include("logged in")
-    end
-
-    it "returns an error when using a non-first-party API token", :aggregate_failures do
-      post graphql_path, params: { query: query }, headers: api_token_headers
-
-      json = JSON.parse(response.body)
-      expect(json['errors'].first['message']).to include("first-party")
-      expect(json.dig('data', 'resetApiToken')).to be_nil
-      # The existing token must survive a rejected reset, otherwise this is a
-      # denial-of-service against the user's other integrations.
-      expect(api_token_user.reload.verify_api_token!(api_token)).to be true
     end
   end
 
@@ -203,18 +129,6 @@ RSpec.describe "GraphQL User Mutations", type: :request do
 
       json = JSON.parse(response.body)
       expect(json['errors'].first['message']).to include("logged in")
-    end
-
-    it "returns an error when using a non-first-party API token", :aggregate_failures do
-      post graphql_path, params: {
-        query: query,
-        variables: { newEmail: "attacker@example.com", currentPassword: "password" }.to_json
-      }, headers: api_token_headers
-
-      json = JSON.parse(response.body)
-      expect(json['errors'].first['message']).to include("first-party")
-      # Rejected even though the correct password was supplied.
-      expect(api_token_user.reload.unconfirmed_email).to be_nil
     end
   end
 
@@ -310,22 +224,6 @@ RSpec.describe "GraphQL User Mutations", type: :request do
       expect(json['errors'].first['message']).to include("logged in")
     end
 
-    it "returns an error when using a non-first-party API token", :aggregate_failures do
-      post graphql_path, params: {
-        query: query,
-        variables: {
-          currentPassword: "password",
-          newPassword: "newpassword123",
-          newPasswordConfirmation: "newpassword123"
-        }.to_json
-      }, headers: api_token_headers
-
-      json = JSON.parse(response.body)
-      expect(json['errors'].first['message']).to include("first-party")
-      # Rejected even though the correct password was supplied.
-      expect(api_token_user.reload.valid_password?("password")).to be true
-    end
-
     it "revokes previously issued JWTs after a successful password update", :aggregate_failures do
       # Capture the token as it stood before the password change, then make
       # sure a fresh token works (sanity check) before asserting that the
@@ -413,13 +311,6 @@ RSpec.describe "GraphQL User Mutations", type: :request do
 
       json = JSON.parse(response.body)
       expect(json['errors'].first['message']).to include("logged in")
-    end
-
-    it "returns an error when using a non-first-party API token" do
-      post graphql_path, params: { query: query }, headers: api_token_headers
-
-      json = JSON.parse(response.body)
-      expect(json['errors'].first['message']).to include("first-party")
     end
   end
 end

@@ -95,13 +95,6 @@ declare module "vue-router" {
         Record<never, never>,
         "settings"
       >;
-      settingsApiToken: RouteRecordInfo<
-        "settingsApiToken",
-        "/settings/api-token",
-        Record<never, never>,
-        Record<never, never>,
-        "settings"
-      >;
 
       // Admin
       admin: RouteRecordInfo<"admin", "/admin", Record<never, never>, Record<never, never>>;

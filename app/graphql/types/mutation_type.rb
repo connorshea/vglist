@@ -39,7 +39,6 @@ module Types
     field :remove_user_avatar, mutation: Mutations::Users::RemoveUserAvatar
     field :reset_user_library, mutation: Mutations::Users::ResetUserLibrary
     field :delete_user, mutation: Mutations::Users::DeleteUser
-    field :reset_api_token, mutation: Mutations::Users::ResetApiToken
     field :export_library, mutation: Mutations::Users::ExportLibrary
 
     # GamePurchase mutations

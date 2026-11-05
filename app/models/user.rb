@@ -201,34 +201,6 @@ class User < ApplicationRecord
     banned? ? :account_banned : super
   end
 
-  # Generate and persist a new API token for this user. Returns the plaintext
-  # token on success or `nil` if the save fails (errors are available via
-  # `user.errors`). This is the only public entry point for reading a freshly
-  # generated token — the raw accessor is private so that plaintext tokens
-  # can't be accidentally pulled off a persisted user elsewhere in the app.
-  def reset_api_token
-    token = SecureRandom.alphanumeric(40)
-    self.api_token = token
-    save ? token : nil
-  end
-
-  # Verify that the token passed into the application matches the user's
-  # actual token.
-  def verify_api_token!(token)
-    # Return false if either the provided token or the user's stored token
-    # is blank. This prevents other users from hijacking an account that
-    # doesn't have a token, and avoids secure_compare crashing on `nil`
-    # (it calls `bytesize` on both arguments).
-    return false if token.blank?
-
-    user_token = api_token
-    return false if user_token.blank?
-
-    # `secure_compare` does its own bytesize check before the constant-time
-    # comparison, so no extra length guard is required here.
-    ActiveSupport::SecurityUtils.secure_compare(user_token, token)
-  end
-
   # Generate an avatar variant with a specific size, size must be a Symbol
   # matching one of the keys in `User::AVATAR_SIZES`.
   def sized_avatar(size)
@@ -236,23 +208,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  # Decrypt and return the raw API token. Private so the plaintext token
-  # can't be accidentally exposed via a serializer, logger, or API field —
-  # callers that need to read it should go through `verify_api_token!`.
-  def api_token
-    return nil if encrypted_api_token.nil?
-
-    EncryptionService.decrypt(encrypted_api_token)
-  end
-
-  # Private so API tokens can only be set via `reset_api_token`, which
-  # generates a secure random value. This prevents mass-assignment (e.g.
-  # `user.update(api_token: ...)`) from silently encrypting a caller-supplied
-  # value.
-  def api_token=(value)
-    self.encrypted_api_token = EncryptionService.encrypt(value)
-  end
 
   # Usernames that are reserved so they cannot be used.
   RESERVED_USERNAMES = %w[

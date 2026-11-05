@@ -14,7 +14,7 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    graphql_current_user = @jwt_user || @api_token_user || doorkeeper_user
+    graphql_current_user = @jwt_user || doorkeeper_user
 
     context = {
       current_user: graphql_current_user,
@@ -167,10 +167,6 @@ class GraphqlController < ApplicationController
         end
         @doorkeeper_user = user
       end
-    elsif request.headers.key?('X-User-Email') && request.headers.key?('X-User-Token')
-      # Token auth — only authenticate if both email and token are provided and valid
-      user = User.find_by(email: request.headers['X-User-Email'])
-      @api_token_user = user if user&.verify_api_token!(request.headers['X-User-Token']) && !user.banned?
     end
   end
 end

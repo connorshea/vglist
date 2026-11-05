@@ -8,12 +8,12 @@ RSpec.describe SettingsPolicy, type: :policy do
   describe 'A logged-in user' do
     let(:current_user) { build_stubbed(:user) }
 
-    it { should permit_actions([:profile, :account, :import, :export, :api_token]) }
+    it { should permit_actions([:profile, :account, :import, :export]) }
   end
 
   describe 'An anonymous user' do
     let(:current_user) { nil }
 
-    it { should forbid_actions([:profile, :account, :import, :export, :api_token]) }
+    it { should forbid_actions([:profile, :account, :import, :export]) }
   end
 end

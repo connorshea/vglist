@@ -17,9 +17,6 @@
             <li>
               <router-link to="/settings/export">Export</router-link>
             </li>
-            <li>
-              <router-link to="/settings/api-token">API Token</router-link>
-            </li>
           </ul>
         </aside>
       </div>
