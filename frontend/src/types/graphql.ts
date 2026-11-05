@@ -48,6 +48,17 @@ export type GamePurchaseSort =
   /** Sorted with the games the user has played the most hours of first. Games with no hours logged are last. */
   | "MOST_HOURS_PLAYED";
 
+/** Options for sorting the games on a company, platform, engine, genre or series. */
+export type ResourceGameSort =
+  /** Sorted by the games with the highest average rating. Games without a rating come last. */
+  | "HIGHEST_RATED"
+  /** Sorted by the games that are in the most users' libraries. */
+  | "MOST_OWNERS"
+  /** Sorted alphabetically by name. */
+  | "NAME"
+  /** Sorted with the most recently released games first. Games without a release date come last. */
+  | "NEWEST_RELEASE";
+
 /** The types of records that can be returned as a `SearchResult`. */
 export type SearchableEnum =
   /** Self-explanatory. */
@@ -781,6 +792,14 @@ export interface GetGamePurchaseQuery {
   } | null;
 }
 
+export type ResourceGameFieldsFragment = {
+  id: string;
+  name: string;
+  coverUrl: string | null;
+  releaseDate: string | null;
+  isInLibrary: boolean | null;
+};
+
 export type GetPlatformsQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
@@ -795,6 +814,9 @@ export interface GetPlatformsQuery {
 
 export type GetPlatformQueryVariables = Exact<{
   id: string;
+  sortBy?: ResourceGameSort | null | undefined;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
 }>;
 
 export interface GetPlatformQuery {
@@ -802,7 +824,17 @@ export interface GetPlatformQuery {
     id: string;
     name: string;
     wikidataId: number | null;
-    games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    games: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        name: string;
+        coverUrl: string | null;
+        releaseDate: string | null;
+        isInLibrary: boolean | null;
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
   } | null;
 }
 
@@ -862,6 +894,9 @@ export interface GetGenresQuery {
 
 export type GetGenreQueryVariables = Exact<{
   id: string;
+  sortBy?: ResourceGameSort | null | undefined;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
 }>;
 
 export interface GetGenreQuery {
@@ -869,7 +904,17 @@ export interface GetGenreQuery {
     id: string;
     name: string;
     wikidataId: number | null;
-    games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    games: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        name: string;
+        coverUrl: string | null;
+        releaseDate: string | null;
+        isInLibrary: boolean | null;
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
   } | null;
 }
 
@@ -895,6 +940,9 @@ export interface GetEnginesQuery {
 
 export type GetEngineQueryVariables = Exact<{
   id: string;
+  sortBy?: ResourceGameSort | null | undefined;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
 }>;
 
 export interface GetEngineQuery {
@@ -902,7 +950,17 @@ export interface GetEngineQuery {
     id: string;
     name: string;
     wikidataId: number | null;
-    games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    games: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        name: string;
+        coverUrl: string | null;
+        releaseDate: string | null;
+        isInLibrary: boolean | null;
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
   } | null;
 }
 
@@ -928,6 +986,9 @@ export interface GetSeriesListQuery {
 
 export type GetSeriesQueryVariables = Exact<{
   id: string;
+  sortBy?: ResourceGameSort | null | undefined;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
 }>;
 
 export interface GetSeriesQuery {
@@ -935,7 +996,17 @@ export interface GetSeriesQuery {
     id: string;
     name: string;
     wikidataId: number | null;
-    games: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    games: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        name: string;
+        coverUrl: string | null;
+        releaseDate: string | null;
+        isInLibrary: boolean | null;
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
   } | null;
 }
 

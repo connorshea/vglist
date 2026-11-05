@@ -1,5 +1,15 @@
 import gql from "graphql-tag";
 
+export const RESOURCE_GAME_FIELDS = gql`
+  fragment ResourceGameFields on Game {
+    id
+    name
+    coverUrl(size: SMALL)
+    releaseDate
+    isInLibrary
+  }
+`;
+
 export const GET_PLATFORMS = gql`
   query GetPlatforms($first: Int, $after: String) {
     platforms(first: $first, after: $after) {
@@ -16,16 +26,21 @@ export const GET_PLATFORMS = gql`
 `;
 
 export const GET_PLATFORM = gql`
-  query GetPlatform($id: ID!) {
+  ${RESOURCE_GAME_FIELDS}
+
+  query GetPlatform($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String) {
     platform(id: $id) {
       id
       name
       wikidataId
-      games(first: 30) {
+      games(sortBy: $sortBy, first: $first, after: $after) {
+        totalCount
         nodes {
-          id
-          name
-          coverUrl(size: SMALL)
+          ...ResourceGameFields
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
@@ -107,16 +122,21 @@ export const GET_GENRES = gql`
 `;
 
 export const GET_GENRE = gql`
-  query GetGenre($id: ID!) {
+  ${RESOURCE_GAME_FIELDS}
+
+  query GetGenre($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String) {
     genre(id: $id) {
       id
       name
       wikidataId
-      games(first: 30) {
+      games(sortBy: $sortBy, first: $first, after: $after) {
+        totalCount
         nodes {
-          id
-          name
-          coverUrl(size: SMALL)
+          ...ResourceGameFields
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
@@ -149,16 +169,21 @@ export const GET_ENGINES = gql`
 `;
 
 export const GET_ENGINE = gql`
-  query GetEngine($id: ID!) {
+  ${RESOURCE_GAME_FIELDS}
+
+  query GetEngine($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String) {
     engine(id: $id) {
       id
       name
       wikidataId
-      games(first: 30) {
+      games(sortBy: $sortBy, first: $first, after: $after) {
+        totalCount
         nodes {
-          id
-          name
-          coverUrl(size: SMALL)
+          ...ResourceGameFields
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
@@ -191,16 +216,21 @@ export const GET_SERIES_LIST = gql`
 `;
 
 export const GET_SERIES = gql`
-  query GetSeries($id: ID!) {
+  ${RESOURCE_GAME_FIELDS}
+
+  query GetSeries($id: ID!, $sortBy: ResourceGameSort, $first: Int, $after: String) {
     series(id: $id) {
       id
       name
       wikidataId
-      games(first: 30) {
+      games(sortBy: $sortBy, first: $first, after: $after) {
+        totalCount
         nodes {
-          id
-          name
-          coverUrl(size: SMALL)
+          ...ResourceGameFields
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
