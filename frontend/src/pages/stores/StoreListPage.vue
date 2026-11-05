@@ -14,13 +14,27 @@
       <p>Failed to load stores: {{ error.message }}</p>
     </div>
 
-    <div v-if="data" class="content">
-      <ul>
-        <li v-for="store in data?.stores?.nodes" :key="store.id">
-          <router-link :to="`/stores/${store.id}`">{{ store.name }}</router-link>
-        </li>
-      </ul>
-    </div>
+    <ul v-if="data" class="store-list">
+      <li v-for="store in data?.stores?.nodes" :key="store.id" class="store-row">
+        <span class="store-name">{{ store.name }}</span>
+        <span v-if="authStore.isModerator" class="store-actions">
+          <router-link
+            :to="{ name: 'storeEdit', params: { id: store.id } }"
+            class="button is-small"
+            :aria-label="`Edit ${store.name}`"
+            >Edit</router-link
+          >
+          <button
+            type="button"
+            class="button is-small is-danger is-light"
+            :aria-label="`Delete ${store.name}`"
+            @click="storeToDelete = store"
+          >
+            Delete
+          </button>
+        </span>
+      </li>
+    </ul>
 
     <PaginationNav
       v-if="data && (currentPage > 1 || hasNextPage)"
@@ -30,24 +44,45 @@
       @prev="prevPage"
       @next="nextPage"
     />
+
+    <ConfirmDialog
+      v-model="showDeleteConfirm"
+      title="Delete store?"
+      confirm-label="Delete store"
+      loading-label="Deleting…"
+      :loading="deleting"
+      @confirm="confirmDelete"
+    >
+      <template #icon>
+        <CircleAlert :size="22" :stroke-width="1.8" />
+      </template>
+      <strong>{{ storeToDelete?.name }}</strong> will be permanently deleted, and removed from every library entry that
+      uses it. This cannot be undone.
+    </ConfirmDialog>
   </section>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
+import { CircleAlert } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
-import { useQuery } from "@/composables/useGraphQL";
+import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_STORES } from "@/graphql/queries/resources";
-import type { GetStoresQuery } from "@/types/graphql";
+import { DELETE_STORE } from "@/graphql/mutations/resources";
+import { extractGqlError } from "@/utils/graphql-errors";
+import type { GetStoresQuery, DeleteStoreMutation } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 const authStore = useAuthStore();
+const { show: showSnackbar } = useSnackbar();
 
 const PAGE_SIZE = 25;
 const currentPage = ref(1);
 const pageCursors = ref<(string | null)[]>([null]);
 
-const { data, loading, error } = useQuery<GetStoresQuery>(GET_STORES, {
+const { data, loading, error, refetch } = useQuery<GetStoresQuery>(GET_STORES, {
   variables: () => ({
     first: PAGE_SIZE,
     after: pageCursors.value[currentPage.value - 1]
@@ -69,4 +104,57 @@ function nextPage() {
 function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
+
+type StoreNode = NonNullable<GetStoresQuery["stores"]>["nodes"][number];
+
+const storeToDelete = ref<StoreNode | null>(null);
+const showDeleteConfirm = computed({
+  get: () => storeToDelete.value !== null,
+  set: (open) => {
+    if (!open) storeToDelete.value = null;
+  }
+});
+
+const { mutate: deleteStore, loading: deleting } = useMutation<DeleteStoreMutation>(DELETE_STORE);
+
+async function confirmDelete() {
+  const store = storeToDelete.value;
+  if (!store) return;
+
+  try {
+    await deleteStore({ storeId: store.id });
+    showSnackbar(`${store.name} has been deleted.`);
+    void refetch();
+  } catch (e) {
+    showSnackbar(`Failed to delete store: ${extractGqlError(e)}`, "error");
+  } finally {
+    storeToDelete.value = null;
+  }
+}
 </script>
+
+<style scoped>
+.store-list {
+  max-width: 40rem;
+}
+
+.store-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.store-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.store-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+</style>
