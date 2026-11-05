@@ -855,5 +855,39 @@ RSpec.describe "Users API", type: :request do
         expect(warm_then_count_queries).to eq(baseline)
       end
     end
+
+    describe "steamProfileUrl" do
+      let(:query_string) do
+        <<-GRAPHQL
+          query($id: ID!) {
+            user(id: $id) {
+              steamProfileUrl
+            }
+          }
+        GRAPHQL
+      end
+
+      it "returns the connected Steam profile to the user themselves" do
+        create(:external_account, user: user, steam_profile_url: 'https://steamcommunity.com/id/connor/')
+
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user, :steamProfileUrl)).to eq('https://steamcommunity.com/id/connor/')
+      end
+
+      it "returns nil when the user has no Steam account connected" do
+        result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+        expect(result.graphql_dig(:user, :steamProfileUrl)).to be_nil
+      end
+
+      it "returns nil to other users" do
+        create(:external_account, user: user2)
+
+        result = api_request(query_string, variables: { id: user2.id }, token: access_token)
+
+        expect(result.graphql_dig(:user, :steamProfileUrl)).to be_nil
+      end
+    end
   end
 end
