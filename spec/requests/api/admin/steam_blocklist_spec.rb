@@ -42,6 +42,17 @@ RSpec.describe "Steam Blocklist API", type: :request do
           }
         )
       end
+
+      it "runs no more queries as the list grows" do
+        query_string = '{ steamBlocklist { nodes { id user { id username } } } }'
+        create_list(:steam_blocklist, 2)
+        api_request(query_string, token: access_token)
+        baseline = query_count { api_request(query_string, token: access_token) }
+
+        create_list(:steam_blocklist, 3)
+
+        expect(query_count { api_request(query_string, token: access_token) }).to eq(baseline)
+      end
     end
 
     context 'when signed in as a normal user' do

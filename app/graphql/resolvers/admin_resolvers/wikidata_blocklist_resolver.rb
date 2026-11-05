@@ -7,7 +7,7 @@ module Resolvers::AdminResolvers
     description "List all Wikidata blocklist entries. **Only available to admins.**"
 
     def resolve
-      WikidataBlocklist.all
+      WikidataBlocklist.includes(:user)
     end
 
     def authorized?
