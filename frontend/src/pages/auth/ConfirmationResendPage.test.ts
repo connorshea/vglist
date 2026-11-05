@@ -38,10 +38,10 @@ describe("ConfirmationResendPage", () => {
   it("renders the form with a labelled email field", () => {
     const wrapper = mount(ConfirmationResendPage, mountOptions);
 
-    expect(wrapper.find("h1").text()).toBe("Resend Confirmation Email");
+    expect(wrapper.find("h1").text()).toBe("Resend confirmation email");
     expect(wrapper.find("label[for='confirmation-resend-email']").exists()).toBeTruthy();
     expect(wrapper.find("input#confirmation-resend-email[type='email']").exists()).toBeTruthy();
-    expect(wrapper.find("button[type='submit']").text()).toBe("Resend Confirmation Email");
+    expect(wrapper.find("button[type='submit']").text()).toBe("Resend confirmation email");
   });
 
   it("calls resendConfirmation with the email and shows the success message", async () => {
