@@ -8,7 +8,7 @@
 - Postgres 17.x
 - Node.js 22.x
 - Yarn 1.x
-- ImageMagick (for images, like avatars or game covers)
+- libvips 8.13 or later (for images, like avatars or game covers)
 
 ### Setup instructions
 
