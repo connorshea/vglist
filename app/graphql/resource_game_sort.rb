@@ -21,10 +21,11 @@ module ResourceGameSort
   module_function
 
   # @param relation [ActiveRecord::Relation] A relation of games.
-  # @param sort_by [Symbol, nil] A `ResourceGameSortType` value.
+  # @param sort_by [Symbol, nil] A `ResourceGameSortType` value. Without one,
+  #   the games are ordered by ID so that pagination is still stable.
   # @return [ActiveRecord::Relation]
   def apply(relation, sort_by)
-    return relation if sort_by.nil?
+    return relation.order('games.id ASC') if sort_by.nil?
 
     relation.order(Arel.sql(ORDERS.fetch(sort_by)))
   end
