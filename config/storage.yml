@@ -1,10 +1,14 @@
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
+  # Matches production, and gives non-expiring (so deterministic) URLs.
+  public: true
 
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
+  # Non-expiring URLs, so cached fragments (e.g. on the homepage) keep working.
+  public: true
 
 # Use DigitalOcean Spaces (which is S3-compatible) for ActiveStorage in production.
 # Use rails credentials:edit to set the AWS secrets (as digitalocean:access_key_id|secret_access_key)

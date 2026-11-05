@@ -1,6 +1,11 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
+  # Images are rendered with the storage service's URL for each attachment or
+  # variant. In production that's a public URL, but the Disk service used in
+  # development and tests builds URLs from the current request's host.
+  include ActiveStorage::SetCurrent
+
   # Require a valid CSRF token, throw an exception if there isn't one.
   protect_from_forgery with: :exception, unless: -> {
     request.format.json?
