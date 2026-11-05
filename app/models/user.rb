@@ -141,11 +141,15 @@ class User < ApplicationRecord
   validates :role,
     presence: true
 
+  # Only validate a newly attached avatar. For an existing one, the validators
+  # fall back to the stored file, and spoofing protection downloads it from
+  # storage on every save, even ones that don't touch the avatar.
   validates :avatar,
     attached: false,
     content_type: { in: ActiveStorage.variable_content_types, spoofing_protection: true },
     size: { less_than: 3.megabytes },
-    aspect_ratio: :square
+    aspect_ratio: :square,
+    if: -> { attachment_changes["avatar"].present? }
 
   global_searchable :username
   searchable :username
