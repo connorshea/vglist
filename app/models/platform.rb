@@ -10,6 +10,14 @@ class Platform < ApplicationRecord
   has_many :game_purchase_platforms, dependent: :destroy
   has_many :game_purchases, through: :game_purchase_platforms, source: :game_purchase
 
+  # Sort by the number of games, most first. Ties are broken by ID so the order
+  # is stable for cursor pagination.
+  scope :most_games, -> {
+    left_joins(:game_platforms)
+      .group(:id)
+      .order(Arel.sql('count(game_platforms.game_id) desc'), :id)
+  }
+
   has_paper_trail ignore: [:updated_at, :created_at],
                   versions: {
                     class_name: 'Versions::PlatformVersion'
