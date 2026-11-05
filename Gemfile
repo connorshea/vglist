@@ -48,7 +48,7 @@ gem 'sparql', '~> 3.3.2', require: false
 # Use Addressable for use with the Wikidata API.
 gem 'addressable', '~> 2.9.2', require: false
 
-# Use the AWS SDK S3 gem for DigitalOcean Spaces - which are S3-compatible.
+# Use the AWS SDK S3 gem for Cloudflare R2, which is S3-compatible.
 gem 'aws-sdk-s3', '~> 1.208', require: false
 
 # A CLI progress bar for use with the import rake tasks.
