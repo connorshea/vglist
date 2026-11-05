@@ -70,8 +70,10 @@ RSpec.describe ActiveStorage::Service::R2Service do
       expect(url).to start_with('https://example-account.r2.cloudflarestorage.com/vglist-test-bucket/some-blob-key?')
     end
 
-    it 'signs Cache-Control and tells the browser to send it' do
-      expect(CGI.unescape(URI.parse(url).query)).to include('cache-control')
+    it 'tells the browser to send Cache-Control, which the presigned URL leaves unsigned' do
+      signed_headers = Rack::Utils.parse_query(URI.parse(url).query)['X-Amz-SignedHeaders'].split(';')
+
+      expect(signed_headers).not_to include('cache-control')
       expect(headers).to include('Cache-Control' => 'public, max-age=31536000, immutable')
     end
   end

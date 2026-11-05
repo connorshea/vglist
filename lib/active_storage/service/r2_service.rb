@@ -13,10 +13,11 @@ module ActiveStorage
   # - R2 ignores S3 ACLs, so the "public-read" ACL that the stock S3Service
   #   adds to uploads when `public: true` is stripped.
   #
-  # It also makes `upload: { cache_control: ... }` work with direct uploads.
-  # The stock S3Service signs the presigned PUT URL with every upload option,
-  # which makes Cache-Control a signed header, but doesn't tell the browser to
-  # send it, so the upload fails with SignatureDoesNotMatch.
+  # It also makes `upload: { cache_control: ... }` apply to direct uploads. The
+  # presigned PUT URL can't carry Cache-Control (aws-sdk-s3 never signs or
+  # hoists it), so the stock S3Service drops it and browser-uploaded objects
+  # end up without one. Here the browser is told to send it as an (unsigned)
+  # header instead.
   #
   # Configured via the `r2` entry in config/storage.yml.
   class Service::R2Service < Service::S3Service
