@@ -51,7 +51,7 @@ module ApplicationHelper
           height: "#{height}px",
           alt: "Cover for #{game.name}.",
           **options
-      rescue MiniMagick::Error
+      rescue Vips::Error
         Rails.logger.error("Failed to process cover variant for game #{game.id} (#{game.name})")
         image_tag 'no-cover.png',
           width: "#{width}px",
