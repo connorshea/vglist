@@ -13,34 +13,31 @@
       <section class="game-hero" :style="heroStyle">
         <div class="game-hero-inner">
           <div class="game-hero-cover">
-            <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
-            <div v-else class="game-cover-placeholder">
+            <!-- Covers keep their own shape (square, 16:9, …) in a fixed-width column. -->
+            <img v-if="game.coverUrl" :src="game.coverUrl" :alt="`Cover for ${game.name}`" />
+            <div v-else class="game-cover-placeholder" aria-hidden="true">
               <span>{{ gameInitials }}</span>
             </div>
 
-            <div v-if="authStore.isAuthenticated" class="hero-cover-actions">
+            <div v-if="authStore.isAuthenticated" class="hero-actions">
               <button
-                v-if="!game.isInLibrary"
-                class="hero-btn hero-cover-btn"
+                class="hero-btn primary"
                 :disabled="addingToLibrary"
-                @click="toggleAddForm"
-              >
-                {{ showAddForm ? "Adding\u2026" : "+ Add to library" }}
-              </button>
-              <button
-                v-else
-                class="hero-btn hero-cover-btn hero-btn-active"
-                @click="toggleEditForm"
+                :aria-expanded="showAddForm"
+                @click="toggleLibraryForm"
                 @mouseenter="inLibraryHovered = true"
                 @mouseleave="inLibraryHovered = false"
               >
-                {{ showAddForm ? "Editing\u2026" : inLibraryHovered ? "Edit\u2026" : "In library" }}
+                <Check v-if="game.isInLibrary" :size="18" aria-hidden="true" />
+                <Plus v-else :size="18" aria-hidden="true" />
+                {{ libraryButtonLabel }}
               </button>
               <button
-                class="hero-btn hero-fav-btn"
-                :class="{ 'hero-fav-active': game.isFavorited }"
+                class="hero-btn icon"
+                :class="{ on: game.isFavorited }"
                 :disabled="favoriting"
                 :aria-label="game.isFavorited ? 'Unfavorite' : 'Favorite'"
+                :aria-pressed="Boolean(game.isFavorited)"
                 @click="toggleFavorite"
               >
                 <span class="hero-fav-wrap">
@@ -55,127 +52,163 @@
                   </span>
                 </span>
               </button>
-            </div>
 
-            <!-- Mod/admin actions -->
-            <div v-if="authStore.isModerator" class="hero-admin-actions">
-              <div class="dropdown hero-admin-dropdown" :class="{ 'is-hoverable': !showAddForm }">
-                <div class="dropdown-trigger">
+              <!-- Mod/admin actions -->
+              <div
+                v-if="authStore.isModerator"
+                ref="adminMenuRef"
+                class="hero-admin"
+                @keydown.esc="closeAdminMenu(true)"
+              >
+                <button
+                  ref="adminButtonRef"
+                  class="hero-btn icon"
+                  aria-label="Admin actions"
+                  aria-haspopup="menu"
+                  aria-controls="game-admin-menu"
+                  :aria-expanded="adminMenuOpen"
+                  :disabled="showAddForm"
+                  @click="toggleAdminMenu"
+                >
+                  <Ellipsis :size="18" aria-hidden="true" />
+                </button>
+                <div v-if="adminMenuOpen" id="game-admin-menu" class="hero-admin-menu" role="menu">
+                  <router-link class="hero-admin-item" role="menuitem" :to="`/games/${game.id}/edit`">Edit</router-link>
                   <button
-                    class="hero-btn hero-cover-btn hero-admin-btn"
-                    :disabled="showAddForm"
-                    aria-haspopup="true"
-                    aria-controls="game-admin-menu"
+                    v-if="game.coverUrl"
+                    class="hero-admin-item danger"
+                    role="menuitem"
+                    @click="openAdminDialog('removeCover')"
                   >
-                    <span>Admin Actions</span>
-                    <ChevronDown :size="15" />
+                    Remove cover
                   </button>
-                </div>
-                <div id="game-admin-menu" class="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    <router-link class="dropdown-item" :to="`/games/${game.id}/edit`">Edit</router-link>
-                    <a
-                      v-if="game.coverUrl"
-                      class="dropdown-item has-text-danger"
-                      @click="showRemoveCoverConfirm = true"
-                    >
-                      Remove cover
-                    </a>
-                    <a
-                      v-if="game.wikidataId"
-                      class="dropdown-item has-text-danger"
-                      @click="showWikidataBlocklistConfirm = true"
-                    >
-                      Add to Wikidata Blocklist
-                    </a>
-                    <a class="dropdown-item has-text-danger" @click="showDeleteGameConfirm = true">Delete game</a>
-                  </div>
+                  <button
+                    v-if="game.wikidataId"
+                    class="hero-admin-item danger"
+                    role="menuitem"
+                    @click="openAdminDialog('wikidataBlocklist')"
+                  >
+                    Add to Wikidata Blocklist
+                  </button>
+                  <button class="hero-admin-item danger" role="menuitem" @click="openAdminDialog('deleteGame')">
+                    Delete game
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div ref="heroInfoRef" class="game-hero-info">
-            <h1 class="game-title">{{ game.name }}</h1>
-            <p class="game-year">{{ releaseYear ?? "\u2014" }}</p>
+          <div class="hero-split" :class="{ 'form-open': showAddForm }">
+            <div ref="heroInfoRef" class="game-hero-info">
+              <h1 class="game-title" :class="{ 'is-long': game.name.length > LONG_TITLE_LENGTH }">{{ game.name }}</h1>
+              <p v-if="releaseYear || game.developers.nodes.length || game.series" class="hero-meta">
+                <span v-if="releaseYear">{{ releaseYear }}</span>
+                <template v-if="game.developers.nodes.length">
+                  <span v-if="releaseYear" class="dot" aria-hidden="true"></span>
+                  <span>by <LinkedNames :items="game.developers.nodes.slice(0, 2)" base="/companies" /></span>
+                </template>
+                <template v-if="game.series">
+                  <span v-if="releaseYear || game.developers.nodes.length" class="dot" aria-hidden="true"></span>
+                  <span
+                    ><router-link :to="`/series/${game.series.id}`">{{ game.series.name }}</router-link> series</span
+                  >
+                </template>
+              </p>
 
-            <Transition
-              name="hero-swap"
-              mode="out-in"
-              @before-leave="onHeroBeforeLeave"
-              @enter="onHeroEnter"
-              @after-enter="onHeroAfterEnter"
-            >
-              <!-- Show tags when form is closed -->
-              <div v-if="!showAddForm" key="tags">
-                <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
-                  <h2 class="hero-tag-label">Genres</h2>
-                  <div class="hero-tag-list">
-                    <router-link
-                      v-for="genre in visibleGenres"
-                      :key="'g-' + genre.id"
-                      :to="`/genres/${genre.id}`"
-                      class="hero-tag"
-                    >
-                      {{ genre.name }}
-                    </router-link>
-                    <span v-if="hiddenGenreCount > 0" class="hero-tag hero-tag-more">
-                      +{{ hiddenGenreCount }} more
-                    </span>
+              <Transition
+                name="hero-swap"
+                mode="out-in"
+                @before-leave="onHeroBeforeLeave"
+                @enter="onHeroEnter"
+                @after-enter="onHeroAfterEnter"
+              >
+                <!-- Show tags when form is closed -->
+                <div v-if="!showAddForm" key="tags">
+                  <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
+                    <h2 class="hero-tag-label">Genres</h2>
+                    <div class="hero-tags">
+                      <router-link
+                        v-for="genre in visibleGenres"
+                        :key="'g-' + genre.id"
+                        :to="`/genres/${genre.id}`"
+                        class="hero-tag"
+                      >
+                        {{ genre.name }}
+                      </router-link>
+                      <a
+                        v-if="hiddenGenreCount > 0"
+                        class="hero-tag-more"
+                        href="#game-details"
+                        @click="scrollToDetails"
+                      >
+                        +{{ hiddenGenreCount }} more
+                      </a>
+                    </div>
+                  </div>
+
+                  <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
+                    <h2 class="hero-tag-label">Platforms</h2>
+                    <div class="hero-tags">
+                      <router-link
+                        v-for="platform in visiblePlatforms"
+                        :key="'p-' + platform.id"
+                        :to="`/platforms/${platform.id}`"
+                        class="hero-tag"
+                      >
+                        {{ platform.name }}
+                      </router-link>
+                      <a
+                        v-if="hiddenPlatformCount > 0"
+                        class="hero-tag-more"
+                        href="#game-details"
+                        @click="scrollToDetails"
+                      >
+                        +{{ hiddenPlatformCount }} more
+                      </a>
+                    </div>
                   </div>
                 </div>
 
-                <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
-                  <h2 class="hero-tag-label">Platforms</h2>
-                  <div class="hero-tag-list">
-                    <router-link
-                      v-for="platform in visiblePlatforms"
-                      :key="'p-' + platform.id"
-                      :to="`/platforms/${platform.id}`"
-                      class="hero-tag"
-                    >
-                      {{ platform.name }}
-                    </router-link>
-                    <span v-if="hiddenPlatformCount > 0" class="hero-tag hero-tag-more">
-                      +{{ hiddenPlatformCount }} more
-                    </span>
-                  </div>
+                <!-- Inline form replaces tags when open -->
+                <div v-else key="form">
+                  <GameLibraryForm
+                    ref="libraryFormRef"
+                    :game-id="gameId"
+                    :game-name="game.name"
+                    :game-purchase-id="game.gamePurchaseId ?? null"
+                    :game-platforms="game.platforms.nodes"
+                    :all-stores="allStores"
+                    :stores-loading="storesLoading"
+                    :removing-from-library="removingFromLibrary"
+                    @cancel="cancelAddForm"
+                    @saved="onFormSaved"
+                    @request-remove="showRemoveConfirm = true"
+                    @error="onFormError"
+                  />
                 </div>
-              </div>
+              </Transition>
+            </div>
 
-              <!-- Inline form replaces tags when open -->
-              <div v-else key="form">
-                <GameLibraryForm
-                  ref="libraryFormRef"
-                  :game-id="gameId"
-                  :game-name="game.name"
-                  :game-purchase-id="game.gamePurchaseId ?? null"
-                  :game-platforms="game.platforms.nodes"
-                  :all-stores="allStores"
-                  :stores-loading="storesLoading"
-                  :removing-from-library="removingFromLibrary"
-                  @cancel="cancelAddForm"
-                  @saved="onFormSaved"
-                  @request-remove="showRemoveConfirm = true"
-                  @error="onFormError"
-                />
-              </div>
-            </Transition>
+            <GameHeroPanel
+              v-if="!showAddForm"
+              :avg-rating="game.avgRating ?? null"
+              :rating-count="game.ratingCount"
+              :entry="myEntry"
+              :owners="game.owners"
+              :favoriters="game.favoriters"
+              :external-links="externalLinks"
+              @edit-entry="toggleLibraryForm"
+            />
           </div>
         </div>
       </section>
 
       <!-- Content below hero -->
       <div class="game-body" :class="{ dimmed: showAddForm }">
-        <div class="columns is-variable is-6">
-          <GameDetailsSection :game="game" />
-          <GameSidebar
-            :genres="game.genres.nodes"
-            :owners="game.owners"
-            :favoriters="game.favoriters"
-            :external-links="externalLinks"
-          />
-        </div>
+        <div class="game-body-main"></div>
+        <aside class="game-body-side">
+          <GameDetailsCard id="game-details" :game="game" />
+        </aside>
       </div>
 
       <!-- Action notification -->
@@ -249,13 +282,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useImageColors } from "@/composables/useImageColors";
 import { gqlClient } from "@/graphql/client";
-import { GET_GAME } from "@/graphql/queries/games";
+import { GET_GAME, GET_GAME_PURCHASE } from "@/graphql/queries/games";
 import { GET_STORES } from "@/graphql/queries/resources";
 import {
   REMOVE_GAME_FROM_LIBRARY,
@@ -265,14 +298,17 @@ import {
   REMOVE_GAME_COVER
 } from "@/graphql/mutations/games";
 import { ADD_TO_WIKIDATA_BLOCKLIST } from "@/graphql/mutations/admin";
-import type { GetGameQuery, GetStoresQuery } from "@/types/graphql";
-import { Heart, CircleAlert, ChevronDown } from "@lucide/vue";
+import type { GetGamePurchaseQuery, GetGameQuery, GetStoresQuery } from "@/types/graphql";
+import { Check, CircleAlert, Ellipsis, Heart, Plus } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
-import GameDetailsSection from "@/components/game/GameDetailsSection.vue";
-import GameSidebar from "@/components/game/GameSidebar.vue";
+import GameDetailsCard from "@/components/game/GameDetailsCard.vue";
+import GameHeroPanel, { type HeroPanelEntry } from "@/components/game/GameHeroPanel.vue";
+import LinkedNames from "@/components/game/LinkedNames.vue";
+import { gameInitials as initialsFor } from "@/utils/library";
+import "@/assets/stylesheets/game-page.scss";
 
 const route = useRoute("game");
 const router = useRouter();
@@ -305,20 +341,15 @@ const { data: storesData, loading: storesLoading } = useQuery<GetStoresQuery>(GE
 });
 const allStores = computed(() => storesData.value?.stores?.nodes ?? []);
 
-const gameInitials = computed(() => {
-  if (!game.value) return "";
-  return game.value.name
-    .split(/[\s:]+/)
-    .filter((w) => w.length > 0)
-    .slice(0, 3)
-    .map((w) => w[0].toUpperCase())
-    .join("");
-});
+const gameInitials = computed(() => (game.value ? initialsFor(game.value.name) : ""));
 
 const releaseYear = computed(() => {
   if (!game.value?.releaseDate) return null;
   return new Date(game.value.releaseDate).getFullYear();
 });
+
+// Titles longer than this drop a size so they don't take over the hero.
+const LONG_TITLE_LENGTH = 28;
 
 const HERO_TAG_LIMIT = 3;
 
@@ -366,6 +397,26 @@ const externalLinks = computed<ExternalLink[]>(() => {
   return links;
 });
 
+// The signed-in user's library entry, for the "You:" row in the hero panel.
+const { data: purchaseData, refetch: refetchPurchase } = useQuery<GetGamePurchaseQuery>(GET_GAME_PURCHASE, {
+  variables: () => ({ id: game.value?.gamePurchaseId ?? "" }),
+  enabled: () => Boolean(game.value?.gamePurchaseId)
+});
+
+const myEntry = computed<HeroPanelEntry | null>(() => {
+  if (!game.value?.gamePurchaseId) return null;
+  const purchase = purchaseData.value?.gamePurchase;
+  if (!purchase || purchase.id !== game.value.gamePurchaseId) {
+    return { completionStatus: null, rating: null, hoursPlayed: null };
+  }
+  return purchase;
+});
+
+function scrollToDetails(event: MouseEvent) {
+  event.preventDefault();
+  document.getElementById("game-details")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 // ── Form visibility ──
 const showAddForm = ref(false);
 const addingToLibrary = ref(false);
@@ -409,11 +460,16 @@ function onHeroAfterEnter() {
   }
 }
 
-function toggleAddForm() {
-  showAddForm.value = !showAddForm.value;
-}
+const libraryButtonLabel = computed(() => {
+  if (!game.value) return "";
+  if (game.value.isInLibrary) {
+    if (showAddForm.value) return "Editing\u2026";
+    return inLibraryHovered.value ? "Edit\u2026" : "In library";
+  }
+  return showAddForm.value ? "Adding\u2026" : "Add to library";
+});
 
-function toggleEditForm() {
+function toggleLibraryForm() {
   showAddForm.value = !showAddForm.value;
 }
 
@@ -425,6 +481,7 @@ function onFormSaved(message: string) {
   showAddForm.value = false;
   showSnackbar(message);
   refetch();
+  refetchPurchase();
 }
 
 function onFormError(message: string) {
@@ -533,6 +590,43 @@ const addingToBlocklist = ref(false);
 const showDeleteGameConfirm = ref(false);
 const deletingGame = ref(false);
 
+const adminMenuOpen = ref(false);
+const adminMenuRef = ref<HTMLElement | null>(null);
+const adminButtonRef = ref<HTMLButtonElement | null>(null);
+
+function onDocumentPointerDown(event: PointerEvent) {
+  if (adminMenuRef.value && !adminMenuRef.value.contains(event.target as Node)) {
+    closeAdminMenu(false);
+  }
+}
+
+function toggleAdminMenu() {
+  if (adminMenuOpen.value) {
+    closeAdminMenu(false);
+    return;
+  }
+  adminMenuOpen.value = true;
+  document.addEventListener("pointerdown", onDocumentPointerDown);
+  // Move focus into the menu so keyboard users land on the first action.
+  nextTick(() => adminMenuRef.value?.querySelector<HTMLElement>("[role='menuitem']")?.focus());
+}
+
+function closeAdminMenu(restoreFocus: boolean) {
+  if (!adminMenuOpen.value) return;
+  adminMenuOpen.value = false;
+  document.removeEventListener("pointerdown", onDocumentPointerDown);
+  if (restoreFocus) adminButtonRef.value?.focus();
+}
+
+onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPointerDown));
+
+function openAdminDialog(dialog: "removeCover" | "wikidataBlocklist" | "deleteGame") {
+  closeAdminMenu(false);
+  if (dialog === "removeCover") showRemoveCoverConfirm.value = true;
+  else if (dialog === "wikidataBlocklist") showWikidataBlocklistConfirm.value = true;
+  else showDeleteGameConfirm.value = true;
+}
+
 async function confirmRemoveCover() {
   removingCover.value = true;
   try {
@@ -580,26 +674,6 @@ async function confirmDeleteGame() {
 </script>
 
 <style scoped>
-/* ── Page-level custom properties (reference global tokens) ── */
-.game-show {
-  --game-border: var(--color-border);
-  --game-border-light: var(--color-bg-subtle);
-  --game-text-muted: var(--color-text-secondary);
-  --game-text-label: var(--color-text-tertiary);
-  --game-track-bg: var(--color-border);
-}
-
-@media (prefers-color-scheme: dark) {
-  .game-show {
-    --game-border: var(--s-300);
-    --game-border-light: var(--s-300);
-    --game-text-muted: var(--s-200);
-    --game-text-label: var(--s-200);
-    --game-track-bg: var(--s-300);
-    --game-link-color: var(--p-300);
-  }
-}
-
 /* ── Hero: full-width breakout ── */
 .game-hero {
   width: 100vw;
@@ -610,6 +684,7 @@ async function confirmDeleteGame() {
   margin-right: -50vw;
   margin-top: -3rem;
   background: #4b46af;
+  color: #fff;
   padding: 3rem 0;
   transition: background 0.6s ease;
 }
@@ -629,21 +704,23 @@ async function confirmDeleteGame() {
   align-items: flex-start;
 }
 
-/* Cover image */
+/* Cover image: a fixed-width column; the image keeps its own aspect ratio. */
 .game-hero-cover {
+  width: 240px;
   flex-shrink: 0;
 }
 
 .game-hero-cover img {
-  width: 240px;
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: var(--radius-lg);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  display: block;
 }
 
 .game-cover-placeholder {
-  width: 240px;
-  height: 320px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   display: flex;
@@ -660,38 +737,70 @@ async function confirmDeleteGame() {
   letter-spacing: 0.05em;
 }
 
-/* Buttons below cover */
-.hero-cover-actions {
+/* ── Hero buttons: one row under the cover ── */
+.hero-actions {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+  gap: 8px;
+  margin-top: 14px;
 }
 
-.hero-cover-btn {
-  flex: 1;
-  font-size: 0.85rem;
-  padding: 0.5rem 0;
-  text-align: center;
-}
-
-.hero-fav-btn {
-  flex: 0 0 auto;
-  padding: 0.6rem;
-  display: flex;
+.hero-btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
-.hero-fav-active {
+.hero-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.hero-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.hero-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hero-btn.primary {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border-color: #fff;
+  color: #1f1430;
+}
+
+.hero-btn.primary:hover {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.hero-btn.icon {
+  width: 40px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.hero-btn.on {
   color: #ff4d6a;
-  border-color: rgba(255, 75, 106, 0.5);
-  background: rgba(255, 75, 106, 0.15);
-}
-
-.hero-fav-active:hover {
-  color: #ff6b83;
-  border-color: rgba(255, 107, 131, 0.6);
-  background: rgba(255, 75, 106, 0.25);
 }
 
 .hero-fav-wrap {
@@ -747,31 +856,74 @@ async function confirmDeleteGame() {
   }
 }
 
-/* Admin actions below cover buttons */
-.hero-admin-actions {
-  margin-top: 0.5rem;
+@media (prefers-reduced-motion: reduce) {
+  .hero-fav-pop,
+  .hero-sparkle {
+    animation: none;
+  }
 }
 
-.hero-admin-dropdown,
-.hero-admin-dropdown .dropdown-trigger,
-.hero-admin-dropdown .dropdown-menu {
+/* Admin menu, opened from the ⋯ button */
+.hero-admin {
+  position: relative;
+}
+
+.hero-admin-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 220px;
+  padding: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  text-align: left;
+}
+
+.hero-admin-item {
+  display: block;
   width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
 }
 
-.hero-admin-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  padding: 0.4rem 0;
+.hero-admin-item:hover,
+.hero-admin-item:focus-visible {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  outline: none;
 }
 
-/* Hero info */
-.game-hero-info {
+.hero-admin-item.danger {
+  color: var(--r-500);
+}
+
+/* ── Hero info + community panel ── */
+.hero-split {
   flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 2rem;
+  align-items: start;
   padding-top: 0.75rem;
+}
+
+.hero-split.form-open {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.game-hero-info {
+  min-width: 0;
 }
 
 .game-title {
@@ -779,13 +931,42 @@ async function confirmDeleteGame() {
   font-weight: 700;
   color: #fff;
   line-height: 1.15;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.4rem;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
-.game-year {
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 1.25rem;
+.game-title.is-long {
+  font-size: 2rem;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-meta :deep(a) {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 3px;
+}
+
+.hero-meta :deep(a:hover) {
+  text-decoration-color: #fff;
+}
+
+.hero-meta .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .hero-tag-group {
@@ -795,98 +976,59 @@ async function confirmDeleteGame() {
 .hero-tag-label {
   font-size: 0.7rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 0.4rem;
 }
 
-.hero-tag-list {
+.hero-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 6px;
 }
 
 .hero-tag {
-  display: inline-block;
-  padding: 0.35rem 1rem;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
-  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   text-decoration: none;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  transition: background var(--transition-fast);
 }
 
-a.hero-tag:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #fff;
+.hero-tag:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .hero-tag-more {
-  color: rgba(255, 255, 255, 0.65);
-  border-style: dashed;
-  cursor: default;
-}
-
-.hero-btn {
-  padding: 0.6rem 1.5rem;
-  border-radius: var(--radius-pill);
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
-  background: transparent;
-  color: #fff;
-  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 4px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8125rem;
   font-weight: 500;
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.hero-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #fff;
+.hero-tag-more:hover {
+  color: #fff;
 }
 
-.hero-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.hero-btn-active {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.8);
-}
-
-/* GitHub-style overrides for the cover action buttons */
-.hero-btn.hero-cover-btn {
-  border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-}
-
-.hero-btn.hero-cover-btn:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.hero-btn.hero-cover-btn:active {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.12) 100%);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
-}
-
-.hero-btn.hero-fav-btn {
-  border-radius: 6px;
+.hero-tag:focus-visible,
+.hero-tag-more:focus-visible,
+.hero-meta :deep(a:focus-visible) {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 /* ── Hero swap transition ── */
@@ -912,16 +1054,26 @@ a.hero-tag:hover {
   transform: translateY(-8px);
 }
 
+/* ── Body: reviews and activity, with details alongside ── */
+.game-body {
+  display: grid;
+  max-width: 1104px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 2rem;
+  align-items: start;
+  margin: 2.25rem auto 0;
+  transition: opacity 0.3s;
+}
+
+.game-body-main,
+.game-body-side {
+  min-width: 0;
+}
+
 /* Dimmed body when form is open */
 .game-body.dimmed {
   opacity: 0.3;
   pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-.game-body {
-  margin-top: 2rem;
-  transition: opacity 0.3s;
 }
 
 .game-notification {
@@ -929,28 +1081,86 @@ a.hero-tag:hover {
 }
 
 /* ── Responsive ── */
+@media (max-width: 1023px) {
+  .hero-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .game-hero {
+    padding: 1.5rem 0 1.25rem;
+  }
+
   .game-hero-inner {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .game-hero-cover {
+    width: 100%;
   }
 
   .game-hero-cover img,
   .game-cover-placeholder {
-    width: 180px;
+    width: 150px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
   }
 
-  .game-cover-placeholder {
-    height: 240px;
+  .game-cover-placeholder span {
+    font-size: 2.25rem;
+  }
+
+  .hero-actions {
+    margin-top: 16px;
+  }
+
+  .hero-btn {
+    height: 44px;
+  }
+
+  .hero-btn.icon {
+    width: 44px;
+  }
+
+  .hero-split {
+    padding-top: 0;
+    gap: 1.25rem;
+  }
+
+  .game-hero-info {
+    text-align: center;
   }
 
   .game-title {
-    font-size: 1.75rem;
+    font-size: 1.625rem;
   }
 
-  .hero-tag-list {
+  .game-title.is-long {
+    font-size: 1.375rem;
+  }
+
+  .hero-meta,
+  .hero-tags {
     justify-content: center;
+  }
+
+  .hero-meta {
+    margin-bottom: 1rem;
+  }
+
+  .game-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    margin-top: 1rem;
+  }
+
+  /* Details first on phones, before the longer reviews and activity cards. */
+  .game-body-side {
+    order: -1;
   }
 }
 </style>

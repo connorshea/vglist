@@ -1,0 +1,54 @@
+// Card chrome shared by the game page's body cards (reviews, activity,
+// details). Scoped to the page so it doesn't leak into the rest of the app.
+.game-show {
+  .game-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+
+  .game-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+
+  .game-card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .game-card-count {
+    margin-left: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .game-card-label {
+    margin-bottom: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .game-card-empty {
+    padding: 12px 0 4px;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media screen and (max-width: 768px) {
+    .game-card {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+  }
+}
