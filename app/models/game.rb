@@ -114,10 +114,14 @@ class Game < ApplicationRecord
     presence: true,
     length: { maximum: 120 }
 
+  # Only validate a newly attached cover. For an existing one, the validators
+  # fall back to the stored file, and spoofing protection downloads it from
+  # storage on every save, even ones that don't touch the cover.
   validates :cover,
     attached: false,
     content_type: { in: ActiveStorage.variable_content_types, spoofing_protection: true },
-    size: { less_than: 4.megabytes }
+    size: { less_than: 4.megabytes },
+    if: -> { attachment_changes["cover"].present? }
 
   validates :avg_rating,
     numericality: {

@@ -152,6 +152,15 @@ RSpec.describe Game, type: :model do
       expect(game).to validate_content_type_of(:cover).rejecting([]).allowing('image/png', 'image/jpeg')
       expect(game).to validate_size_of(:cover).less_than(4.megabytes)
     end
+
+    it 'does not re-check an existing cover when saving other changes' do
+      game_with_cover = create(:game, :cover)
+      # Simulate the stored file being unreachable, e.g. missing storage
+      # credentials. Validating the cover again would need to download it.
+      game_with_cover.cover.blob.service.delete(game_with_cover.cover.blob.key)
+
+      expect { game_with_cover.reload.update!(name: 'Crysis Remastered') }.not_to raise_error
+    end
   end
 
   describe 'Custom Validations' do
