@@ -781,6 +781,171 @@ export interface GetGamePurchaseQuery {
   } | null;
 }
 
+export type GetLibraryPageQueryVariables = Exact<{
+  slug: string;
+}>;
+
+export interface GetLibraryPageQuery {
+  user: {
+    id: string;
+    username: string;
+    slug: string;
+    privacy: UserPrivacy;
+    avatarUrl: string | null;
+    hideDaysPlayed: boolean;
+    libraryStatistics: {
+      gamesCount: number;
+      totalHoursPlayed: number;
+      completionPercentage: number;
+      averageRating: number | null;
+      statusCounts: Array<{ status: GamePurchaseCompletionStatus; count: number }>;
+      platformCounts: Array<{ count: number; platform: { id: string; name: string } }>;
+      storeCounts: Array<{ count: number; store: { id: string; name: string } }>;
+    };
+    favoritedGames: { totalCount: number };
+    followers: { totalCount: number };
+  } | null;
+}
+
+export type LibraryGamePurchaseFieldsFragment = {
+  id: string;
+  hoursPlayed: number | null;
+  completionStatus: GamePurchaseCompletionStatus | null;
+  rating: number | null;
+  game: { id: string; name: string; coverUrl: string | null };
+};
+
+export type GetLibraryGamesQueryVariables = Exact<{
+  slug: string;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  completionStatus?: GamePurchaseCompletionStatus | null | undefined;
+  search?: string | null | undefined;
+  sortBy?: GamePurchaseSort | null | undefined;
+  platformIds?: Array<string> | string | null | undefined;
+  storeIds?: Array<string> | string | null | undefined;
+  minRating?: number | null | undefined;
+  maxRating?: number | null | undefined;
+}>;
+
+export interface GetLibraryGamesQuery {
+  user: {
+    id: string;
+    gamePurchases: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    };
+  } | null;
+}
+
+export type GetLibraryShelvesQueryVariables = Exact<{
+  slug: string;
+  first: number;
+  search?: string | null | undefined;
+  sortBy?: GamePurchaseSort | null | undefined;
+  platformIds?: Array<string> | string | null | undefined;
+  storeIds?: Array<string> | string | null | undefined;
+  minRating?: number | null | undefined;
+  maxRating?: number | null | undefined;
+}>;
+
+export interface GetLibraryShelvesQuery {
+  user: {
+    id: string;
+    inProgress: {
+      totalCount: number;
+      nodes: Array<{
+        startDate: string | null;
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        platforms: { nodes: Array<{ id: string; name: string }> };
+        stores: { nodes: Array<{ id: string; name: string }> };
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    paused: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    completed: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    fullyCompleted: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    unplayed: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    dropped: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    notApplicable: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+  } | null;
+}
+
+export type LibraryShelfFieldsFragment = {
+  totalCount: number;
+  nodes: Array<{
+    id: string;
+    hoursPlayed: number | null;
+    completionStatus: GamePurchaseCompletionStatus | null;
+    rating: number | null;
+    game: { id: string; name: string; coverUrl: string | null };
+  }>;
+};
+
 export type GetPlatformsQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
