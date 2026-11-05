@@ -47,17 +47,16 @@
 		#   strict apart from Vite's build-time CSS injection which also needs
 		#   it. We never render untrusted HTML, so this is low-risk.
 		# - img-src includes the Cloudflare R2 custom domain that serves game
-		#   covers and user avatars, plus the legacy DigitalOcean Spaces
-		#   bucket (drop the Spaces host once the R2 migration is complete).
+		#   covers and user avatars.
 		# - connect-src uses {$API_ORIGIN} (set per-environment on the service)
-		#   so the API origin can change
-		#   per environment without editing this file. *.sentry.io is whitelisted
+		#   so the API origin can change per
+		#   environment without editing this file. *.sentry.io is whitelisted
 		#   preemptively for the browser Sentry SDK envelope endpoint.
 		# - frame-ancestors 'none' replaces the old X-Frame-Options: DENY
 		#   (only works as a real header, not via <meta>).
 		# - upgrade-insecure-requests auto-upgrades any stray http:// asset
 		#   URLs (e.g. from older cached data) to https://.
-		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co https://vglist.sfo2.digitaloceanspaces.com; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
 	}
 
 	root * /app/dist
