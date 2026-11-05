@@ -122,6 +122,14 @@ services:
         type: SECRET
       - key: WIKIDATA_CONTACT_EMAIL
         type: SECRET
+      # Cloudflare R2 (Active Storage). R2_BUCKET and R2_PUBLIC_HOST default
+      # to "vglist" and https://files.vglist.co in config/storage.yml.
+      - key: R2_ENDPOINT
+        type: SECRET
+      - key: R2_ACCESS_KEY_ID
+        type: SECRET
+      - key: R2_SECRET_ACCESS_KEY
+        type: SECRET
 
   - name: frontend
     github:
