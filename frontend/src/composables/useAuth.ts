@@ -84,12 +84,20 @@ export function useAuth() {
         };
       }
 
-      const data = (await response.json().catch(() => ({}))) as { error?: string; errors?: string[] };
-      return {
-        success: false,
-        message: "",
-        errors: data.errors ?? (data.error ? [data.error] : ["Couldn't send confirmation instructions."])
-      };
+      // Devise returns `errors` as strings, but Rack::Attack's 429 returns
+      // `error` (a string) alongside GraphQL-shaped `errors` objects, so
+      // prefer `error` and only use `errors` entries that are strings.
+      const data = (await response.json().catch(() => ({}))) as { error?: unknown; errors?: unknown };
+      const stringErrors = Array.isArray(data.errors)
+        ? data.errors.filter((error): error is string => typeof error === "string")
+        : [];
+      let errors = ["Couldn't send confirmation instructions."];
+      if (typeof data.error === "string") {
+        errors = [data.error];
+      } else if (stringErrors.length > 0) {
+        errors = stringErrors;
+      }
+      return { success: false, message: "", errors };
     } catch {
       return { success: false, message: "", errors: ["Couldn't send confirmation instructions."] };
     }
