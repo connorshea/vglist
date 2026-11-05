@@ -1,8 +1,9 @@
 # Caddyfile for the vglist frontend image (frontend/Dockerfile), which serves
 # the Vite build from /app/dist.
 #
-# Beyond static file serving and the SPA fallback, the main addition is the `header` block below, which adds a full
-# Content-Security-Policy plus other hardening headers.
+# Beyond static file serving and the SPA fallback, the main addition is the
+# `header` block below, which adds a full Content-Security-Policy plus other
+# hardening headers.
 
 {
 	admin off
