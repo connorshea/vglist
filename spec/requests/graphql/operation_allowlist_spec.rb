@@ -40,6 +40,10 @@ RSpec.describe "GraphQL operation allowlist", type: :request do
     it 'returns nil for an unparseable document' do
       expect(OperationAllowlist.canonical('query {')).to be_nil
     end
+
+    it 'returns nil for a schema definition document' do
+      expect(OperationAllowlist.canonical('schema { query: Query }')).to be_nil
+    end
   end
 
   context 'when the allowlist is enforced' do
@@ -80,6 +84,12 @@ RSpec.describe "GraphQL operation allowlist", type: :request do
 
     it 'rejects an unparseable document' do
       graphql('query {')
+
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'rejects a schema definition document' do
+      graphql('schema { query: Query }')
 
       expect(response).to have_http_status(:bad_request)
     end
