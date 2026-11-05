@@ -78,7 +78,7 @@ services:
     source_dir: /
     dockerfile_path: Dockerfile
     http_port: 3000
-    instance_size_slug: apps-s-1vcpu-1gb
+    instance_size_slug: apps-s-1vcpu-2gb
     # See the single-instance caveat at the top of this file.
     instance_count: 1
     health_check:
@@ -90,7 +90,7 @@ services:
     envs:
       - key: PORT
         value: "3000"
-      # Two Puma workers x 3 threads fits comfortably in 1 GB.
+      # Two Puma workers x 3 threads. 2 GB matches the old VPS (1 vCPU / 2 GB).
       - key: WEB_CONCURRENCY
         value: "2"
       - key: RAILS_MAX_THREADS
