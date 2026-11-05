@@ -227,6 +227,32 @@ export const GET_SERIES_LIST = gql`
   }
 `;
 
+export const GET_SERIES_INDEX = gql`
+  query GetSeriesIndex($first: Int, $after: String, $sortBy: SeriesSort, $nameContains: String) {
+    seriesList(first: $first, after: $after, sortBy: $sortBy, nameContains: $nameContains) {
+      totalCount
+      nodes {
+        id
+        name
+        gamesCount
+        firstReleaseYear
+        lastReleaseYear
+        games(first: 4, sortBy: MOST_OWNERS) {
+          nodes {
+            id
+            name
+            coverUrl
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
 export const GET_SERIES = gql`
   ${RESOURCE_GAME_FIELDS}
 
