@@ -590,6 +590,7 @@ DEPENDENCIES
   rubocop-rspec (~> 3.9.0)
   rubocop-rspec_rails (~> 2.32)
   ruby-progressbar (~> 1.13)
+  ruby-vips (~> 2.2)
   selenium-webdriver (~> 4.41)
   sentry-rails (~> 6.4.0)
   sentry-ruby (~> 6.4.0)
