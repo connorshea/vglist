@@ -7,7 +7,7 @@ module Resolvers::AdminResolvers
     description "List all steam blocklist entries. **Only available to admins.**"
 
     def resolve
-      SteamBlocklist.all
+      SteamBlocklist.includes(:user)
     end
 
     def authorized?
