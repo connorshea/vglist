@@ -134,7 +134,12 @@
 
         <!-- Library Section -->
         <div class="library-section">
-          <h2 class="section-label">LIBRARY</h2>
+          <div class="section-header">
+            <h2 class="section-label">LIBRARY</h2>
+            <router-link :to="{ name: 'userLibrary', params: { slug: user.slug } }" class="section-link">
+              View full library
+            </router-link>
+          </div>
 
           <!-- Status filter pills -->
           <div class="status-pills">
@@ -948,6 +953,23 @@ onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickO
   letter-spacing: 0.1em;
   color: var(--vglist-theme);
   margin-bottom: 0.75rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+.section-link:hover {
+  text-decoration: underline;
 }
 
 /* ── Private Notice ── */
