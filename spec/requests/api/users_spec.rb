@@ -462,9 +462,9 @@ RSpec.describe "Users API", type: :request do
 
       let(:query_string) do
         <<-GRAPHQL
-          query($id: ID!, $completionStatus: GamePurchaseCompletionStatus, $search: String, $sortBy: GamePurchaseSort) {
+          query($id: ID!, $completionStatus: GamePurchaseCompletionStatus, $noCompletionStatus: Boolean, $search: String, $sortBy: GamePurchaseSort) {
             user(id: $id) {
-              gamePurchases(completionStatus: $completionStatus, search: $search, sortBy: $sortBy) {
+              gamePurchases(completionStatus: $completionStatus, noCompletionStatus: $noCompletionStatus, search: $search, sortBy: $sortBy) {
                 totalCount
                 nodes {
                   id
@@ -482,6 +482,13 @@ RSpec.describe "Users API", type: :request do
 
       it "filters by completion status" do
         expect(purchase_ids(completion_status: 'COMPLETED')).to eq([completed_purchase.id.to_s])
+      end
+
+      it "filters to the games with no completion status" do
+        no_status_purchase = create(:game_purchase, user: user, completion_status: nil)
+
+        expect(purchase_ids(no_completion_status: true)).to eq([no_status_purchase.id.to_s])
+        expect(purchase_ids(no_completion_status: false).length).to eq(4)
       end
 
       it "filters by a case-insensitive substring of the game's name" do

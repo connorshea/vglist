@@ -20,6 +20,7 @@ module Types
     # Associations
     field :game_purchases, GamePurchaseType.connection_type, null: false, description: "Games in this user's library." do
       argument :completion_status, Enums::GamePurchaseCompletionStatusType, required: false, description: "Only return the games with this completion status."
+      argument :no_completion_status, Boolean, required: false, description: "When `true`, only return the games that have no completion status. Combining it with `completionStatus` matches nothing."
       argument :search, String, required: false, description: "Only return the games whose name contains this string, case-insensitively."
       argument :sort_by, Enums::GamePurchaseSortType, required: false, description: "The order to sort the games in, if any."
       argument :platform_ids, [ID], required: false, description: "Only return the games the user owns on at least one of these platforms."
@@ -139,8 +140,9 @@ module Types
 
     private
 
-    def filter_game_purchases(purchases, completion_status: nil, search: nil, platform_ids: nil, store_ids: nil, min_rating: nil, max_rating: nil)
+    def filter_game_purchases(purchases, completion_status: nil, no_completion_status: false, search: nil, platform_ids: nil, store_ids: nil, min_rating: nil, max_rating: nil)
       purchases = purchases.where(completion_status: completion_status) unless completion_status.nil?
+      purchases = purchases.where(completion_status: nil) if no_completion_status
       purchases = purchases.with_game_name_matching(search) if search.present?
       purchases = purchases.on_any_platform(platform_ids) if platform_ids.present?
       purchases = purchases.from_any_store(store_ids) if store_ids.present?
