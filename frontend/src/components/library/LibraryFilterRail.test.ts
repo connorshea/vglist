@@ -39,6 +39,18 @@ describe("LibraryFilterRail", () => {
     expect(wrapper.emitted("update:status")).toEqual([[null]]);
   });
 
+  it("only lists No status when some game has no status", async () => {
+    expect(mountRail().text()).not.toContain("No status");
+
+    const wrapper = mountRail({ statusCounts: { COMPLETED: 10, NONE: 2 } });
+    const noStatus = wrapper.findAll("button").find((b) => b.text().startsWith("No status"));
+
+    expect(noStatus?.text()).toContain("2");
+    await noStatus?.trigger("click");
+
+    expect(wrapper.emitted("update:status")).toEqual([["NONE"]]);
+  });
+
   it("emits the platform to toggle when its checkbox changes", async () => {
     const wrapper = mountRail();
     await wrapper.find('input[type="checkbox"]').trigger("change");

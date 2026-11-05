@@ -1,7 +1,11 @@
 import type { GamePurchaseCompletionStatus, GamePurchaseSort } from "@/types/graphql";
 
-export interface LibraryStatus {
-  key: GamePurchaseCompletionStatus;
+// What the library can be filtered to: a completion status, or "NONE" for the
+// games with no completion status (which is most games imported from Steam).
+export type LibraryStatusFilter = GamePurchaseCompletionStatus | "NONE";
+
+export interface LibraryStatus<K extends LibraryStatusFilter = GamePurchaseCompletionStatus> {
+  key: K;
   label: string;
   // The modifier for the status' colour, e.g. `st-in-progress`.
   className: string;
@@ -32,6 +36,13 @@ export function libraryStatus(key: string | null | undefined): LibraryStatus | n
 
 export function isLibraryStatus(value: unknown): value is GamePurchaseCompletionStatus {
   return typeof value === "string" && libraryStatus(value) !== null;
+}
+
+// Listed after the real statuses, and only when some game has no status.
+export const NO_STATUS: LibraryStatus<"NONE"> = { key: "NONE", label: "No status", className: "st-none" };
+
+export function isLibraryStatusFilter(value: unknown): value is LibraryStatusFilter {
+  return value === NO_STATUS.key || isLibraryStatus(value);
 }
 
 export function isLibrarySort(value: unknown): value is GamePurchaseSort {

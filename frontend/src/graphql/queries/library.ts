@@ -67,6 +67,7 @@ export const GET_LIBRARY_GAMES = gql`
     $first: Int
     $after: String
     $completionStatus: GamePurchaseCompletionStatus
+    $noCompletionStatus: Boolean
     $search: String
     $sortBy: GamePurchaseSort
     $platformIds: [ID!]
@@ -80,6 +81,7 @@ export const GET_LIBRARY_GAMES = gql`
         first: $first
         after: $after
         completionStatus: $completionStatus
+        noCompletionStatus: $noCompletionStatus
         search: $search
         sortBy: $sortBy
         platformIds: $platformIds
@@ -101,7 +103,8 @@ export const GET_LIBRARY_GAMES = gql`
   ${LIBRARY_GAME_PURCHASE_FIELDS}
 `;
 
-// The first few games of each status, for the library grouped into shelves.
+// The first few games of each status (and of the games with no status), for
+// the library grouped into shelves.
 // Fetched as one request so the shelves load together.
 export const GET_LIBRARY_SHELVES = gql`
   query GetLibraryShelves(
@@ -208,6 +211,18 @@ export const GET_LIBRARY_SHELVES = gql`
       notApplicable: gamePurchases(
         first: $first
         completionStatus: NOT_APPLICABLE
+        search: $search
+        sortBy: $sortBy
+        platformIds: $platformIds
+        storeIds: $storeIds
+        minRating: $minRating
+        maxRating: $maxRating
+      ) {
+        ...LibraryShelfFields
+      }
+      noStatus: gamePurchases(
+        first: $first
+        noCompletionStatus: true
         search: $search
         sortBy: $sortBy
         platformIds: $platformIds

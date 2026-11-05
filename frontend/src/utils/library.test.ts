@@ -5,6 +5,7 @@ import {
   gameInitials,
   isLibrarySort,
   isLibraryStatus,
+  isLibraryStatusFilter,
   parseIdList,
   parseRating,
   ratingTier
@@ -76,5 +77,15 @@ describe("query string parsing", () => {
     expect(isLibraryStatus("paused")).toBeFalsy();
     expect(isLibrarySort("GAME_NAME")).toBeTruthy();
     expect(isLibrarySort("NEWEST")).toBeFalsy();
+  });
+});
+
+describe("isLibraryStatusFilter", () => {
+  it("accepts the statuses and NONE, but nothing else", () => {
+    expect(isLibraryStatusFilter("COMPLETED")).toBeTruthy();
+    expect(isLibraryStatusFilter("NONE")).toBeTruthy();
+    expect(isLibraryStatus("NONE")).toBeFalsy();
+    expect(isLibraryStatusFilter("none")).toBeFalsy();
+    expect(isLibraryStatusFilter(undefined)).toBeFalsy();
   });
 });

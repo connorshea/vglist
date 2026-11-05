@@ -26,7 +26,7 @@
             <span class="library-rail-count">{{ gamesCount }}</span>
           </button>
         </li>
-        <li v-for="s in LIBRARY_STATUSES" :key="s.key">
+        <li v-for="s in statuses" :key="s.key">
           <button
             type="button"
             class="library-rail-item"
@@ -138,8 +138,7 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { debounce } from "lodash-es";
 import { Check, Search } from "@lucide/vue";
-import type { GamePurchaseCompletionStatus } from "@/types/graphql";
-import { LIBRARY_STATUSES } from "@/utils/library";
+import { LIBRARY_STATUSES, NO_STATUS, type LibraryStatusFilter } from "@/utils/library";
 
 interface PlatformCount {
   platform: { id: string; name: string };
@@ -153,9 +152,9 @@ interface StoreCount {
 
 const props = defineProps<{
   search: string;
-  status: GamePurchaseCompletionStatus | null;
+  status: LibraryStatusFilter | null;
   gamesCount: number;
-  statusCounts: Partial<Record<GamePurchaseCompletionStatus, number>>;
+  statusCounts: Partial<Record<LibraryStatusFilter, number>>;
   platforms: PlatformCount[];
   stores: StoreCount[];
   platformIds: string[];
@@ -166,11 +165,18 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:search": [value: string];
-  "update:status": [value: GamePurchaseCompletionStatus | null];
+  "update:status": [value: LibraryStatusFilter | null];
   "toggle-platform": [id: string];
   "toggle-store": [id: string];
   "update:rating": [min: number | null, max: number | null];
 }>();
+
+// "No status" is only listed when some game has no status, or it's the active filter.
+const statuses = computed(() =>
+  (props.statusCounts.NONE ?? 0) > 0 || props.status === NO_STATUS.key
+    ? [...LIBRARY_STATUSES, NO_STATUS]
+    : LIBRARY_STATUSES
+);
 
 // Long lists of platforms or stores are cut short until the user asks for
 // the rest, but a selected one always stays visible.

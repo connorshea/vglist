@@ -48,6 +48,11 @@
   .st-na {
     background: var(--status-not-applicable);
   }
+  // A hollow dot, so "no status" doesn't read as one of the statuses.
+  .st-none {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--status-not-applicable);
+  }
 
   .rating-badge {
     display: inline-flex;

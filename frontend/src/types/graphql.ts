@@ -820,6 +820,7 @@ export type GetLibraryGamesQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
   completionStatus?: GamePurchaseCompletionStatus | null | undefined;
+  noCompletionStatus?: boolean | null | undefined;
   search?: string | null | undefined;
   sortBy?: GamePurchaseSort | null | undefined;
   platformIds?: Array<string> | string | null | undefined;
@@ -923,6 +924,16 @@ export interface GetLibraryShelvesQuery {
       }>;
     };
     notApplicable: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    noStatus: {
       totalCount: number;
       nodes: Array<{
         id: string;

@@ -63,7 +63,7 @@
             All <span class="library-pill-count">{{ gamesCount }}</span>
           </button>
           <button
-            v-for="s in LIBRARY_STATUSES"
+            v-for="s in statusFilters"
             :key="s.key"
             type="button"
             class="library-pill"
@@ -268,21 +268,18 @@ import { debounce } from "lodash-es";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { GET_LIBRARY_GAMES, GET_LIBRARY_PAGE, GET_LIBRARY_SHELVES } from "@/graphql/queries/library";
-import type {
-  GamePurchaseCompletionStatus,
-  GetLibraryGamesQuery,
-  GetLibraryPageQuery,
-  GetLibraryShelvesQuery
-} from "@/types/graphql";
+import type { GetLibraryGamesQuery, GetLibraryPageQuery, GetLibraryShelvesQuery } from "@/types/graphql";
 import {
   DEFAULT_LIBRARY_SORT,
   LIBRARY_SORTS,
   LIBRARY_STATUSES,
+  NO_STATUS,
   isLibrarySort,
-  isLibraryStatus,
+  isLibraryStatusFilter,
   parseIdList,
   parseRating,
-  type LibraryStatus
+  type LibraryStatus,
+  type LibraryStatusFilter
 } from "@/utils/library";
 import LibraryEmptyState from "@/components/library/LibraryEmptyState.vue";
 import LibraryFilterRail from "@/components/library/LibraryFilterRail.vue";
@@ -337,9 +334,16 @@ const user = computed(() => pageData.value?.user ?? null);
 const statistics = computed(() => user.value?.libraryStatistics ?? null);
 const gamesCount = computed(() => statistics.value?.gamesCount ?? 0);
 
+// The statistics leave out the games with no status, so they're whatever the
+// statuses don't add up to.
 const statusCounts = computed(() => {
-  const counts: Partial<Record<GamePurchaseCompletionStatus, number>> = {};
-  for (const { status: key, count } of statistics.value?.statusCounts ?? []) counts[key] = count;
+  const counts: Partial<Record<LibraryStatusFilter, number>> = {};
+  let counted = 0;
+  for (const { status: key, count } of statistics.value?.statusCounts ?? []) {
+    counts[key] = count;
+    counted += count;
+  }
+  if (gamesCount.value > counted) counts[NO_STATUS.key] = gamesCount.value - counted;
   return counts;
 });
 
@@ -364,7 +368,7 @@ const statsLine = computed(() => {
 // ── Filters ─────────────────────────────────────────────────────────────────
 // Every filter lives in the query string, so a filtered library can be linked
 // to and survives a reload.
-const status = computed(() => (isLibraryStatus(route.query.status) ? route.query.status : null));
+const status = computed(() => (isLibraryStatusFilter(route.query.status) ? route.query.status : null));
 const sortBy = computed(() => (isLibrarySort(route.query.sort) ? route.query.sort : DEFAULT_LIBRARY_SORT));
 const groupBy = computed(() => (route.query.group === "none" ? "none" : "status"));
 const platformIds = computed(() => parseIdList(route.query.platforms));
@@ -385,7 +389,15 @@ function updateQuery(patch: Record<string, LocationQueryValueRaw>) {
   void router.replace({ query });
 }
 
-function setStatus(value: GamePurchaseCompletionStatus | null) {
+// "No status" is only offered when some game has no status, or it's the
+// active filter (say, from a link).
+const statusFilters = computed<readonly LibraryStatus<LibraryStatusFilter>[]>(() =>
+  (statusCounts.value.NONE ?? 0) > 0 || status.value === NO_STATUS.key
+    ? [...LIBRARY_STATUSES, NO_STATUS]
+    : LIBRARY_STATUSES
+);
+
+function setStatus(value: LibraryStatusFilter | null) {
   updateQuery({ status: value });
 }
 
@@ -491,23 +503,26 @@ const {
 
 type ShelfKey = Exclude<keyof NonNullable<GetLibraryShelvesQuery["user"]>, "id">;
 
-const SHELF_ORDER: { key: ShelfKey; status: GamePurchaseCompletionStatus }[] = [
+const SHELF_ORDER: { key: ShelfKey; status: LibraryStatusFilter }[] = [
   { key: "inProgress", status: "IN_PROGRESS" },
   { key: "paused", status: "PAUSED" },
   { key: "completed", status: "COMPLETED" },
   { key: "fullyCompleted", status: "FULLY_COMPLETED" },
   { key: "unplayed", status: "UNPLAYED" },
   { key: "dropped", status: "DROPPED" },
-  { key: "notApplicable", status: "NOT_APPLICABLE" }
+  { key: "notApplicable", status: "NOT_APPLICABLE" },
+  { key: "noStatus", status: NO_STATUS.key }
 ];
 
 const shelves = computed(() => {
   const shelvesUser = shelvesData.value?.user;
-  return SHELF_ORDER.map(({ key, status: shelfStatus }) => ({
-    status: LIBRARY_STATUSES.find((s) => s.key === shelfStatus) as LibraryStatus,
-    totalCount: shelvesUser?.[key].totalCount ?? 0,
-    purchases: shelvesUser?.[key].nodes ?? []
-  }));
+  return SHELF_ORDER.map(({ key, status: shelfStatus }) => {
+    return {
+      status: [...LIBRARY_STATUSES, NO_STATUS].find((s) => s.key === shelfStatus) as LibraryStatus<LibraryStatusFilter>,
+      totalCount: shelvesUser?.[key].totalCount ?? 0,
+      purchases: shelvesUser?.[key].nodes ?? []
+    };
+  });
 });
 
 // Playing games are shown as larger cards, a row's worth at most.
@@ -517,7 +532,8 @@ const playing = computed(() => (shelvesData.value?.user?.inProgress.nodes ?? [])
 const gamesVariables = computed(() => ({
   ...filterVariables.value,
   first: PAGE_SIZE,
-  completionStatus: status.value
+  completionStatus: status.value === NO_STATUS.key ? null : status.value,
+  noCompletionStatus: status.value === NO_STATUS.key ? true : null
 }));
 
 const {
