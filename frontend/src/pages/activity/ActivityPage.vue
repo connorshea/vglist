@@ -268,11 +268,22 @@ const completionStatusVerbs: Record<GamePurchaseCompletionStatus, string> = {
   PAUSED: "paused"
 };
 
-function completionStatusVerb(event: ActivityEvent): string {
-  if ("completionStatus" in event.eventable && event.eventable.completionStatus) {
-    return completionStatusVerbs[event.eventable.completionStatus];
+// The status a completion status event changed the game to. Uses the status
+// recorded on the event, so older events don't show the game's current status.
+// Falls back to the current status for events with no recorded change.
+function eventCompletionStatus(event: ActivityEvent): GamePurchaseCompletionStatus | null {
+  if (event.completionStatusChange) {
+    return event.completionStatusChange.after;
   }
-  return "changed the status of";
+  if ("completionStatus" in event.eventable && event.eventable.completionStatus) {
+    return event.eventable.completionStatus;
+  }
+  return null;
+}
+
+function completionStatusVerb(event: ActivityEvent): string {
+  const status = eventCompletionStatus(event);
+  return status ? completionStatusVerbs[status] : "changed the status of";
 }
 
 interface BadgeInfo {
@@ -287,12 +298,8 @@ function eventBadge(event: ActivityEvent): BadgeInfo | null {
   if (event.eventCategory === "FAVORITE_GAME") {
     return { label: "Favorited", cssClass: "badge-favorited" };
   }
-  if (
-    event.eventCategory === "CHANGE_COMPLETION_STATUS" &&
-    "completionStatus" in event.eventable &&
-    event.eventable.completionStatus
-  ) {
-    const status = event.eventable.completionStatus;
+  const status = event.eventCategory === "CHANGE_COMPLETION_STATUS" ? eventCompletionStatus(event) : null;
+  if (status) {
     return {
       label: completionStatusLabels[status],
       cssClass: `badge-${status.toLowerCase().replace("_", "-")}`

@@ -1086,6 +1086,10 @@ export interface GetActivityQuery {
       id: string;
       eventCategory: EventCategory;
       createdAt: string;
+      completionStatusChange: {
+        before: GamePurchaseCompletionStatus | null;
+        after: GamePurchaseCompletionStatus | null;
+      } | null;
       user: { id: string; username: string; slug: string; avatarUrl: string | null };
       eventable:
         | { game: { id: string; name: string; coverUrl: string | null } }
@@ -1246,6 +1250,10 @@ export interface GetUserActivityQuery {
         id: string;
         eventCategory: EventCategory;
         createdAt: string;
+        completionStatusChange: {
+          before: GamePurchaseCompletionStatus | null;
+          after: GamePurchaseCompletionStatus | null;
+        } | null;
         user: { id: string; username: string; slug: string; avatarUrl: string | null };
         eventable:
           | { game: { id: string; name: string; coverUrl: string | null } }

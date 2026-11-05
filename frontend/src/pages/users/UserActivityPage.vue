@@ -191,6 +191,10 @@ interface ActivityNode {
   id: string;
   eventCategory: string;
   createdAt: string;
+  completionStatusChange?: {
+    before: GamePurchaseCompletionStatus | null;
+    after: GamePurchaseCompletionStatus | null;
+  } | null;
   user: ActivityEventUser;
   eventable: ActivityEventable;
 }
@@ -293,11 +297,22 @@ const completionStatusVerbs: Record<GamePurchaseCompletionStatus, string> = {
   PAUSED: "paused"
 };
 
-function completionStatusVerb(event: ActivityNode): string {
-  if ("completionStatus" in event.eventable && event.eventable.completionStatus) {
-    return completionStatusVerbs[event.eventable.completionStatus as GamePurchaseCompletionStatus];
+// The status a completion status event changed the game to. Uses the status
+// recorded on the event, so older events don't show the game's current status.
+// Falls back to the current status for events with no recorded change.
+function eventCompletionStatus(event: ActivityNode): GamePurchaseCompletionStatus | null {
+  if (event.completionStatusChange) {
+    return event.completionStatusChange.after;
   }
-  return "changed the status of";
+  if ("completionStatus" in event.eventable && event.eventable.completionStatus) {
+    return event.eventable.completionStatus as GamePurchaseCompletionStatus;
+  }
+  return null;
+}
+
+function completionStatusVerb(event: ActivityNode): string {
+  const status = eventCompletionStatus(event);
+  return status ? completionStatusVerbs[status] : "changed the status of";
 }
 
 interface BadgeInfo {
@@ -312,12 +327,8 @@ function eventBadge(event: ActivityNode): BadgeInfo | null {
   if (event.eventCategory === "FAVORITE_GAME") {
     return { label: "Favorited", cssClass: "badge-favorited" };
   }
-  if (
-    event.eventCategory === "CHANGE_COMPLETION_STATUS" &&
-    "completionStatus" in event.eventable &&
-    event.eventable.completionStatus
-  ) {
-    const status = event.eventable.completionStatus as GamePurchaseCompletionStatus;
+  const status = event.eventCategory === "CHANGE_COMPLETION_STATUS" ? eventCompletionStatus(event) : null;
+  if (status) {
     return {
       label: completionStatusLabels[status],
       cssClass: `badge-${status.toLowerCase().replace("_", "-")}`
