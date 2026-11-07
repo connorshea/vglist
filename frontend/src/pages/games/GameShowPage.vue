@@ -94,7 +94,7 @@
               <button
                 ref="libraryButtonRef"
                 class="hero-btn primary"
-                :aria-haspopup="isPhone ? 'dialog' : undefined"
+                aria-haspopup="dialog"
                 :disabled="addingToLibrary"
                 :aria-expanded="showAddForm"
                 @click="toggleLibraryForm"
@@ -140,7 +140,6 @@
                   aria-haspopup="menu"
                   aria-controls="game-admin-menu"
                   :aria-expanded="adminMenuOpen"
-                  :disabled="showAddForm"
                   @click="toggleAdminMenu"
                 >
                   <Ellipsis :size="18" aria-hidden="true" />
@@ -179,8 +178,8 @@
             </div>
           </div>
 
-          <div class="hero-split" :class="{ 'form-open': showAddForm && !isPhone }">
-            <div ref="heroInfoRef" class="game-hero-info">
+          <div class="hero-split">
+            <div class="game-hero-info">
               <h1 class="game-title" :class="{ 'is-long': game.name.length > LONG_TITLE_LENGTH }">{{ game.name }}</h1>
               <p v-if="releaseYear || game.developers.nodes.length || game.series" class="hero-meta">
                 <span v-if="releaseYear">{{ releaseYear }}</span>
@@ -196,82 +195,49 @@
                 </template>
               </p>
 
-              <Transition
-                name="hero-swap"
-                mode="out-in"
-                @before-leave="onHeroBeforeLeave"
-                @enter="onHeroEnter"
-                @after-enter="onHeroAfterEnter"
-              >
-                <!-- Show tags when form is closed -->
-                <div v-if="!showAddForm || isPhone" key="tags">
-                  <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
-                    <h2 class="hero-tag-label">Genres</h2>
-                    <div class="hero-tags">
-                      <router-link
-                        v-for="genre in visibleGenres"
-                        :key="'g-' + genre.id"
-                        :to="`/genres/${genre.id}`"
-                        class="hero-tag"
-                      >
-                        {{ genre.name }}
-                      </router-link>
-                      <a
-                        v-if="hiddenGenreCount > 0"
-                        class="hero-tag-more"
-                        href="#game-details"
-                        @click="scrollToDetails"
-                      >
-                        +{{ hiddenGenreCount }} more
-                      </a>
-                    </div>
-                  </div>
-
-                  <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
-                    <h2 class="hero-tag-label">Platforms</h2>
-                    <div class="hero-tags">
-                      <router-link
-                        v-for="platform in visiblePlatforms"
-                        :key="'p-' + platform.id"
-                        :to="`/platforms/${platform.id}`"
-                        class="hero-tag"
-                      >
-                        {{ platform.name }}
-                      </router-link>
-                      <a
-                        v-if="hiddenPlatformCount > 0"
-                        class="hero-tag-more"
-                        href="#game-details"
-                        @click="scrollToDetails"
-                      >
-                        +{{ hiddenPlatformCount }} more
-                      </a>
-                    </div>
+              <div>
+                <div v-if="game.genres.nodes.length > 0" class="hero-tag-group">
+                  <h2 class="hero-tag-label">Genres</h2>
+                  <div class="hero-tags">
+                    <router-link
+                      v-for="genre in visibleGenres"
+                      :key="'g-' + genre.id"
+                      :to="`/genres/${genre.id}`"
+                      class="hero-tag"
+                    >
+                      {{ genre.name }}
+                    </router-link>
+                    <a v-if="hiddenGenreCount > 0" class="hero-tag-more" href="#game-details" @click="scrollToDetails">
+                      +{{ hiddenGenreCount }} more
+                    </a>
                   </div>
                 </div>
 
-                <!-- Inline form replaces tags when open -->
-                <div v-else key="form">
-                  <GameLibraryForm
-                    ref="libraryFormRef"
-                    :game-id="gameId"
-                    :game-name="game.name"
-                    :game-purchase-id="game.gamePurchaseId ?? null"
-                    :game-platforms="game.platforms.nodes"
-                    :all-stores="allStores"
-                    :stores-loading="storesLoading"
-                    :removing-from-library="removingFromLibrary"
-                    @cancel="cancelAddForm"
-                    @saved="onFormSaved"
-                    @request-remove="showRemoveConfirm = true"
-                    @error="onFormError"
-                  />
+                <div v-if="game.platforms.nodes.length > 0" class="hero-tag-group">
+                  <h2 class="hero-tag-label">Platforms</h2>
+                  <div class="hero-tags">
+                    <router-link
+                      v-for="platform in visiblePlatforms"
+                      :key="'p-' + platform.id"
+                      :to="`/platforms/${platform.id}`"
+                      class="hero-tag"
+                    >
+                      {{ platform.name }}
+                    </router-link>
+                    <a
+                      v-if="hiddenPlatformCount > 0"
+                      class="hero-tag-more"
+                      href="#game-details"
+                      @click="scrollToDetails"
+                    >
+                      +{{ hiddenPlatformCount }} more
+                    </a>
+                  </div>
                 </div>
-              </Transition>
+              </div>
             </div>
 
             <GameHeroPanel
-              v-if="!showAddForm || isPhone"
               :avg-rating="game.avgRating ?? null"
               :rating-count="game.ratingCount"
               :entry="myEntry"
@@ -285,7 +251,7 @@
       </section>
 
       <!-- Content below hero -->
-      <div class="game-body" :class="{ dimmed: showAddForm && !isPhone }">
+      <div class="game-body">
         <div class="game-body-main">
           <GameReviewsCard
             :reviews="reviews"
@@ -309,16 +275,17 @@
         {{ actionMessage }}
       </div>
 
-      <!-- On phones the library form opens in a bottom sheet instead of the hero -->
+      <!-- The library form opens in a side drawer, or a bottom sheet on phones -->
       <GameLibrarySheet
-        v-if="showAddForm && isPhone"
+        v-if="showAddForm"
+        :variant="isPhone ? 'sheet' : 'drawer'"
         :title="game.isInLibrary ? 'Edit library entry' : 'Add to library'"
         :game-name="game.name"
         :cover-url="game.coverUrl ?? null"
         @close="cancelAddForm"
       >
         <GameLibraryForm
-          variant="sheet"
+          :variant="isPhone ? 'sheet' : 'drawer'"
           :game-id="gameId"
           :game-name="game.name"
           :game-purchase-id="game.gamePurchaseId ?? null"
@@ -608,43 +575,6 @@ const showAddForm = ref(false);
 const addingToLibrary = ref(false);
 const inLibraryHovered = ref(false);
 const showRemoveConfirm = ref(false);
-const libraryFormRef = ref<InstanceType<typeof GameLibraryForm> | null>(null);
-
-// ── Hero height animation (smooth expand/collapse) ──
-const heroInfoRef = ref<HTMLElement | null>(null);
-let savedInfoHeight = 0;
-
-function onHeroBeforeLeave() {
-  const el = heroInfoRef.value;
-  if (el) {
-    savedInfoHeight = el.getBoundingClientRect().height;
-    el.style.height = `${savedInfoHeight}px`;
-    el.style.overflow = "hidden";
-  }
-}
-
-function onHeroEnter() {
-  const el = heroInfoRef.value;
-  if (!el) return;
-
-  nextTick(() => {
-    el.style.height = "auto";
-    const newHeight = el.getBoundingClientRect().height;
-    el.style.height = `${savedInfoHeight}px`;
-    void el.offsetHeight; // force reflow
-    el.style.transition = "height 0.35s ease";
-    el.style.height = `${newHeight}px`;
-  });
-}
-
-function onHeroAfterEnter() {
-  const el = heroInfoRef.value;
-  if (el) {
-    el.style.height = "";
-    el.style.overflow = "";
-    el.style.transition = "";
-  }
-}
 
 const libraryButtonLabel = computed(() => {
   if (!game.value) return "";
@@ -672,16 +602,11 @@ function onFormSaved(message: string) {
 }
 
 function onFormError(message: string) {
-  // The notification under the page body is hidden behind the phone sheet.
-  if (isPhone.value) {
-    showSnackbar(message, "error");
-    return;
-  }
-  actionMessage.value = message;
-  actionIsError.value = true;
+  // The notification under the page body is hidden behind the drawer or sheet.
+  showSnackbar(message, "error");
 }
 
-// ── Phone layout: the form opens in a bottom sheet ──
+// ── Phone layout: the form opens in a bottom sheet instead of the drawer ──
 const PHONE_QUERY = "(max-width: 768px)";
 const isPhone = ref(false);
 let phoneMedia: MediaQueryList | null = null;
@@ -700,13 +625,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
 
-// When the sheet closes, put focus back on the button that opened it.
-watch(
-  () => showAddForm.value && isPhone.value,
-  (open, wasOpen) => {
-    if (wasOpen && !open) void nextTick(() => libraryButtonRef.value?.focus());
-  }
-);
+// When the drawer or sheet closes, put focus back on the button that opened it.
+watch(showAddForm, (open, wasOpen) => {
+  if (wasOpen && !open) void nextTick(() => libraryButtonRef.value?.focus());
+});
 
 // ── Remove from library ──
 const removingFromLibrary = ref(false);
@@ -1146,10 +1068,6 @@ function onGameMerged(kept: { id: string; name: string }) {
   padding-top: 0.75rem;
 }
 
-.hero-split.form-open {
-  grid-template-columns: minmax(0, 1fr);
-}
-
 .game-hero-info {
   min-width: 0;
 }
@@ -1265,29 +1183,6 @@ function onGameMerged(kept: { id: string; name: string }) {
   outline-offset: 2px;
 }
 
-/* ── Hero swap transition ── */
-.hero-swap-enter-active {
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-}
-
-.hero-swap-leave-active {
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-
-.hero-swap-enter-from {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-.hero-swap-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
 /* ── Body: reviews and activity, with details alongside ── */
 .game-body {
   display: grid;
@@ -1296,18 +1191,11 @@ function onGameMerged(kept: { id: string; name: string }) {
   gap: 2rem;
   align-items: start;
   margin: 2.25rem auto 0;
-  transition: opacity 0.3s;
 }
 
 .game-body-main,
 .game-body-side {
   min-width: 0;
-}
-
-/* Dimmed body when form is open */
-.game-body.dimmed {
-  opacity: 0.3;
-  pointer-events: none;
 }
 
 .game-notification {
