@@ -70,6 +70,17 @@ describe("ResourceForm", () => {
     expect(wrapper.emitted("update:wikidataId")).toEqual([["13361286"]]);
   });
 
+  it("normalizes a pasted Q-prefixed ID or Wikidata URL right away", async () => {
+    const wrapper = mountForm();
+    const input = wrapper.find<HTMLInputElement>("#platform-wikidata-id");
+
+    input.element.value = "https://www.wikidata.org/wiki/Q13361286";
+    input.element.dispatchEvent(new InputEvent("input", { inputType: "insertFromPaste" }));
+
+    expect(input.element.value).toBe("13361286");
+    expect(wrapper.emitted("update:wikidataId")).toEqual([["13361286"]]);
+  });
+
   it("emits submit when the form is submitted", async () => {
     const wrapper = mountForm();
 

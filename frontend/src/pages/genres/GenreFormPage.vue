@@ -23,6 +23,7 @@ import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_GENRE_FOR_EDIT } from "@/graphql/queries/resources";
 import { CREATE_GENRE, UPDATE_GENRE } from "@/graphql/mutations/resources";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { isValidWikidataId, normalizeWikidataId } from "@/utils/wikidata";
 import type { GetGenreForEditQuery, CreateGenreMutation, UpdateGenreMutation } from "@/types/graphql";
 import ResourceForm from "@/components/ResourceForm.vue";
 
@@ -84,15 +85,16 @@ async function handleSubmit() {
   submitError.value = "";
 
   const trimmedName = name.value.trim();
-  const trimmedWikidataId = wikidataId.value.trim();
+  const normalizedWikidataId = normalizeWikidataId(wikidataId.value);
+  wikidataId.value = normalizedWikidataId;
 
   if (!trimmedName) {
     submitError.value = "Name is required.";
     return;
   }
 
-  if (!/^\d+$/.test(trimmedWikidataId) || Number(trimmedWikidataId) <= 0) {
-    submitError.value = "Wikidata ID must be a positive number.";
+  if (!isValidWikidataId(normalizedWikidataId)) {
+    submitError.value = 'Wikidata ID must be a number, like "12345" or "Q12345".';
     return;
   }
 
@@ -101,7 +103,7 @@ async function handleSubmit() {
       const result = await updateGenre({
         genreId: genreId.value,
         name: trimmedName,
-        wikidataId: trimmedWikidataId
+        wikidataId: normalizedWikidataId
       });
       const genre = result?.updateGenre?.genre;
       if (genre) {
@@ -109,7 +111,7 @@ async function handleSubmit() {
         router.push(`/genres/${genre.id}`);
       }
     } else {
-      const result = await createGenre({ name: trimmedName, wikidataId: trimmedWikidataId });
+      const result = await createGenre({ name: trimmedName, wikidataId: normalizedWikidataId });
       const genre = result?.createGenre?.genre;
       if (genre) {
         showSnackbar(`${genre.name} has been created.`);
