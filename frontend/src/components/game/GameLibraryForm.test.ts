@@ -274,3 +274,79 @@ describe("GameLibraryForm while an entry loads", () => {
     expect(wrapper.emitted("cancel")).toHaveLength(1);
   });
 });
+
+describe("GameLibraryForm clearing fields", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+  });
+
+  function fullPurchase() {
+    return {
+      gamePurchase: {
+        ...gamePurchase(1).gamePurchase,
+        completionStatus: "IN_PROGRESS",
+        rating: 80,
+        hoursPlayed: 12,
+        comments: "Pretty good",
+        startDate: "2026-01-02",
+        completionDate: "2026-02-03"
+      }
+    };
+  }
+
+  it("sends null for fields you cleared while editing", async () => {
+    mockRequest.mockImplementation((query) => Promise.resolve(query === GET_GAME_PURCHASE ? fullPurchase() : {}));
+    const wrapper = await mountForm("7");
+
+    const playing = wrapper.findAll(".form-tile").find((t) => t.text() === "Playing");
+    await playing?.trigger("click");
+    await wrapper.find("#form-rating").setValue("");
+    await wrapper.find("#form-hours-played").setValue("");
+    await wrapper.find("#form-start-date").setValue("");
+    await wrapper.find("#form-completion-date").setValue("");
+    await wrapper.find("#form-comments").setValue("   ");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+
+    expect(variablesFor(UPDATE_GAME_IN_LIBRARY)).toMatchObject({
+      gamePurchaseId: "7",
+      completionStatus: null,
+      rating: null,
+      hoursPlayed: null,
+      startDate: null,
+      completionDate: null,
+      comments: null
+    });
+  });
+
+  it("keeps the values you didn't touch while editing", async () => {
+    mockRequest.mockImplementation((query) => Promise.resolve(query === GET_GAME_PURCHASE ? fullPurchase() : {}));
+    const wrapper = await mountForm("7");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+
+    expect(variablesFor(UPDATE_GAME_IN_LIBRARY)).toMatchObject({
+      completionStatus: "IN_PROGRESS",
+      rating: 80,
+      hoursPlayed: 12,
+      startDate: "2026-01-02",
+      completionDate: "2026-02-03",
+      comments: "Pretty good"
+    });
+  });
+
+  it("leaves empty fields out when adding, including an emptied rating", async () => {
+    mockRequest.mockResolvedValue({});
+    const wrapper = await mountForm(null);
+    await wrapper.find("#form-rating").setValue("50");
+    await wrapper.find("#form-rating").setValue("");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+
+    const variables = variablesFor(ADD_GAME_TO_LIBRARY);
+    for (const key of ["completionStatus", "rating", "hoursPlayed", "startDate", "completionDate", "comments"]) {
+      expect(variables).not.toHaveProperty(key);
+    }
+  });
+});

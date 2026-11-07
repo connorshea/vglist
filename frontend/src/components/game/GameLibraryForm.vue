@@ -563,39 +563,45 @@ const dateValidationError = computed(() => {
   return "";
 });
 
+// v-model.number leaves "" behind when a number field is emptied.
+function numberOrNull(value: number | string | null): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
 function buildFormVariables(): Record<string, unknown> {
   const variables: Record<string, unknown> = {};
+  // When editing, a cleared field goes out as null so the server clears it
+  // too; leaving it out would keep the old value.
+  const put = (key: string, value: unknown) => {
+    if (value !== null) {
+      variables[key] = value;
+    } else if (isEditing.value) {
+      variables[key] = null;
+    }
+  };
 
-  if (formStatus.value) {
-    variables.completionStatus = formStatus.value;
-  }
-  if (formRating.value != null && formRating.value >= 0) {
-    variables.rating = Math.round(Math.min(100, Math.max(0, formRating.value)));
-  }
-  if (formHoursPlayed.value != null && formHoursPlayed.value >= 0) {
-    variables.hoursPlayed = formHoursPlayed.value;
-  }
+  const rating = numberOrNull(formRating.value);
+  const hours = numberOrNull(formHoursPlayed.value);
+  const replays = numberOrNull(formReplayCount.value);
+
+  put("completionStatus", formStatus.value);
+  put("rating", rating !== null && rating >= 0 ? Math.round(Math.min(100, rating)) : null);
+  put("hoursPlayed", hours !== null && hours >= 0 ? hours : null);
   // An emptied field means no replays, so an edit can clear an existing count.
-  if (typeof formReplayCount.value === "number" && formReplayCount.value >= 0) {
-    variables.replayCount = Math.floor(formReplayCount.value);
+  if (replays !== null && replays >= 0) {
+    variables.replayCount = Math.floor(replays);
   } else if (isEditing.value) {
     variables.replayCount = 0;
   }
-  if (formStartDate.value) {
-    variables.startDate = formStartDate.value;
-  }
-  if (formCompletionDate.value) {
-    variables.completionDate = formCompletionDate.value;
-  }
+  put("startDate", formStartDate.value || null);
+  put("completionDate", formCompletionDate.value || null);
   if (formPlatformIds.value.size > 0) {
     variables.platforms = [...formPlatformIds.value];
   }
   if (formStoreIds.value.size > 0) {
     variables.stores = [...formStoreIds.value];
   }
-  if (formComments.value.trim()) {
-    variables.comments = formComments.value.trim();
-  }
+  put("comments", formComments.value.trim() || null);
 
   return variables;
 }
