@@ -1,222 +1,225 @@
 <template>
-  <div class="form-card" :class="isSheet ? 'is-sheet' : 'is-drawer'">
-    <!-- Status: one tap picks it, a second tap clears it -->
-    <div class="form-group" role="group" aria-labelledby="form-status-label">
-      <div id="form-status-label" class="form-label">Status</div>
-      <div class="form-tiles">
-        <button
-          v-for="opt in statusOptions"
-          :key="opt.value"
-          type="button"
-          class="form-tile"
-          :aria-pressed="formStatus === opt.value"
-          @click="pickStatus(opt.value)"
-        >
-          <span class="form-tile-dot" :style="{ background: opt.color }" aria-hidden="true"></span>
-          {{ opt.label }}
-        </button>
-      </div>
-      <p v-if="dateHint" class="form-hint" role="status">
-        <Info :size="16" aria-hidden="true" />
-        <span>{{ dateHint.message }}</span>
-        <button type="button" class="form-hint-undo" @click="undoDateHint">Undo</button>
-      </p>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="form-rating">Rating <small>out of 100</small></label>
-      <div class="form-rating-row">
-        <input
-          id="form-rating"
-          v-model.number="formRating"
-          type="number"
-          min="0"
-          max="100"
-          inputmode="numeric"
-          class="form-input form-rating-input"
-          placeholder="–"
-          @input="clampRating"
-        />
-        <input
-          :value="formRating ?? 0"
-          type="range"
-          min="0"
-          max="100"
-          class="form-rating-range"
-          aria-label="Rating slider"
-          @input="formRating = Number(($event.target as HTMLInputElement).value)"
-        />
-      </div>
-    </div>
-
-    <!-- Progress: hours, replays and dates -->
-    <section class="form-section">
-      <h3 class="form-section-heading">
-        <button
-          type="button"
-          class="form-section-toggle"
-          :aria-expanded="isOpen('progress')"
-          aria-controls="form-section-progress"
-          @click="toggleSection('progress')"
-        >
-          <ChevronDown v-if="isOpen('progress')" :size="18" aria-hidden="true" />
-          <ChevronRight v-else :size="18" aria-hidden="true" />
-          Progress
-          <span v-if="!isOpen('progress')" class="form-section-summary">{{ progressSummary }}</span>
-        </button>
-      </h3>
-      <div v-show="isOpen('progress')" id="form-section-progress" class="form-section-body">
-        <div class="form-grid2">
-          <div>
-            <label class="form-label" for="form-hours-played">Hours played</label>
-            <input
-              id="form-hours-played"
-              v-model.number="formHoursPlayed"
-              type="number"
-              min="0"
-              step="0.1"
-              inputmode="decimal"
-              class="form-input"
-              placeholder="0"
-            />
-          </div>
-          <div>
-            <label class="form-label" for="form-replay-count">Times replayed</label>
-            <input
-              id="form-replay-count"
-              v-model.number="formReplayCount"
-              type="number"
-              min="0"
-              step="1"
-              inputmode="numeric"
-              class="form-input"
-              placeholder="0"
-              @change="normalizeReplayCount"
-            />
-          </div>
-          <div>
-            <div class="form-label-row">
-              <label class="form-label" for="form-start-date">Started</label>
-              <button type="button" class="form-date-today" @click="setDate('start', today)">Today</button>
-            </div>
-            <input
-              id="form-start-date"
-              :value="formStartDate"
-              type="date"
-              class="form-input"
-              :max="today"
-              @input="setDate('start', ($event.target as HTMLInputElement).value)"
-            />
-          </div>
-          <div>
-            <div class="form-label-row">
-              <label class="form-label" for="form-completion-date">Finished</label>
-              <button type="button" class="form-date-today" @click="setDate('completion', today)">Today</button>
-            </div>
-            <input
-              id="form-completion-date"
-              :value="formCompletionDate"
-              type="date"
-              class="form-input"
-              :max="today"
-              @input="setDate('completion', ($event.target as HTMLInputElement).value)"
-            />
-          </div>
+  <div class="form-card" :class="isSheet ? 'is-sheet' : 'is-drawer'" :aria-busy="!entryLoaded">
+    <!-- Disabled until an existing entry has loaded, so nothing saves over it half-filled -->
+    <fieldset class="form-fields" :disabled="!entryLoaded">
+      <!-- Status: one tap picks it, a second tap clears it -->
+      <div class="form-group" role="group" aria-labelledby="form-status-label">
+        <div id="form-status-label" class="form-label">Status</div>
+        <div class="form-tiles">
+          <button
+            v-for="opt in statusOptions"
+            :key="opt.value"
+            type="button"
+            class="form-tile"
+            :aria-pressed="formStatus === opt.value"
+            @click="pickStatus(opt.value)"
+          >
+            <span class="form-tile-dot" :style="{ background: opt.color }" aria-hidden="true"></span>
+            {{ opt.label }}
+          </button>
         </div>
-        <p v-if="dateValidationError" class="form-date-error">
-          {{ dateValidationError }}
+        <p v-if="dateHint" class="form-hint" role="status">
+          <Info :size="16" aria-hidden="true" />
+          <span>{{ dateHint.message }}</span>
+          <button type="button" class="form-hint-undo" @click="undoDateHint">Undo</button>
         </p>
       </div>
-    </section>
 
-    <!-- Platforms and stores -->
-    <section class="form-section">
-      <h3 class="form-section-heading">
-        <button
-          type="button"
-          class="form-section-toggle"
-          :aria-expanded="isOpen('owned')"
-          aria-controls="form-section-owned"
-          @click="toggleSection('owned')"
-        >
-          <ChevronDown v-if="isOpen('owned')" :size="18" aria-hidden="true" />
-          <ChevronRight v-else :size="18" aria-hidden="true" />
-          Platforms &amp; store
-          <span v-if="!isOpen('owned')" class="form-section-summary">{{ ownedSummary }}</span>
-        </button>
-      </h3>
-      <div v-show="isOpen('owned')" id="form-section-owned" class="form-section-body">
-        <div class="form-group-inner" role="group" aria-labelledby="form-platforms-label">
-          <div id="form-platforms-label" class="form-label">Platforms played</div>
-          <div class="form-pills">
-            <button
-              v-for="plat in gamePlatforms"
-              :key="plat.id"
-              type="button"
-              class="form-pill"
-              :aria-pressed="formPlatformIds.has(plat.id)"
-              @click="toggleFormPlatform(plat.id)"
-            >
-              {{ plat.name }}
-            </button>
-            <span v-if="gamePlatforms.length === 0" class="form-empty-hint">No platforms listed for this game.</span>
-          </div>
-        </div>
-        <div class="form-group-inner" role="group" aria-labelledby="form-stores-label">
-          <div id="form-stores-label" class="form-label">Store</div>
-          <div class="form-pills">
-            <button
-              v-for="store in visibleStores"
-              :key="store.id"
-              type="button"
-              class="form-pill"
-              :aria-pressed="formStoreIds.has(store.id)"
-              @click="toggleFormStore(store.id)"
-            >
-              {{ store.name }}
-            </button>
-            <button
-              v-if="hiddenStoreCount > 0"
-              type="button"
-              class="form-pill form-pill-more"
-              @click="showAllStores = true"
-            >
-              + {{ hiddenStoreCount }} more
-            </button>
-            <span v-if="storesLoading" class="form-empty-hint">Loading stores…</span>
-          </div>
+      <div class="form-group">
+        <label class="form-label" for="form-rating">Rating <small>out of 100</small></label>
+        <div class="form-rating-row">
+          <input
+            id="form-rating"
+            v-model.number="formRating"
+            type="number"
+            min="0"
+            max="100"
+            inputmode="numeric"
+            class="form-input form-rating-input"
+            placeholder="–"
+            @input="clampRating"
+          />
+          <input
+            :value="formRating ?? 0"
+            type="range"
+            min="0"
+            max="100"
+            class="form-rating-range"
+            aria-label="Rating slider"
+            @input="formRating = Number(($event.target as HTMLInputElement).value)"
+          />
         </div>
       </div>
-    </section>
 
-    <!-- Review -->
-    <section class="form-section form-section-last">
-      <h3 class="form-section-heading">
-        <button
-          type="button"
-          class="form-section-toggle"
-          :aria-expanded="isOpen('review')"
-          aria-controls="form-section-review"
-          @click="toggleSection('review')"
-        >
-          <ChevronDown v-if="isOpen('review')" :size="18" aria-hidden="true" />
-          <ChevronRight v-else :size="18" aria-hidden="true" />
-          Review
-          <span v-if="!isOpen('review')" class="form-section-summary">{{ reviewSummary }}</span>
-        </button>
-      </h3>
-      <div v-show="isOpen('review')" id="form-section-review" class="form-section-body">
-        <label class="form-label" for="form-comments">Review / notes <small>shows on the game page</small></label>
-        <textarea
-          id="form-comments"
-          v-model="formComments"
-          class="form-input form-textarea"
-          placeholder="What did you think?"
-          maxlength="2000"
-        ></textarea>
-        <div class="form-count">{{ formComments.length }} / 2000</div>
-      </div>
-    </section>
+      <!-- Progress: hours, replays and dates -->
+      <section class="form-section">
+        <h3 class="form-section-heading">
+          <button
+            type="button"
+            class="form-section-toggle"
+            :aria-expanded="isOpen('progress')"
+            aria-controls="form-section-progress"
+            @click="toggleSection('progress')"
+          >
+            <ChevronDown v-if="isOpen('progress')" :size="18" aria-hidden="true" />
+            <ChevronRight v-else :size="18" aria-hidden="true" />
+            Progress
+            <span v-if="!isOpen('progress')" class="form-section-summary">{{ progressSummary }}</span>
+          </button>
+        </h3>
+        <div v-show="isOpen('progress')" id="form-section-progress" class="form-section-body">
+          <div class="form-grid2">
+            <div>
+              <label class="form-label" for="form-hours-played">Hours played</label>
+              <input
+                id="form-hours-played"
+                v-model.number="formHoursPlayed"
+                type="number"
+                min="0"
+                step="0.1"
+                inputmode="decimal"
+                class="form-input"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label class="form-label" for="form-replay-count">Times replayed</label>
+              <input
+                id="form-replay-count"
+                v-model.number="formReplayCount"
+                type="number"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                class="form-input"
+                placeholder="0"
+                @change="normalizeReplayCount"
+              />
+            </div>
+            <div>
+              <div class="form-label-row">
+                <label class="form-label" for="form-start-date">Started</label>
+                <button type="button" class="form-date-today" @click="setDate('start', today)">Today</button>
+              </div>
+              <input
+                id="form-start-date"
+                :value="formStartDate"
+                type="date"
+                class="form-input"
+                :max="today"
+                @input="setDate('start', ($event.target as HTMLInputElement).value)"
+              />
+            </div>
+            <div>
+              <div class="form-label-row">
+                <label class="form-label" for="form-completion-date">Finished</label>
+                <button type="button" class="form-date-today" @click="setDate('completion', today)">Today</button>
+              </div>
+              <input
+                id="form-completion-date"
+                :value="formCompletionDate"
+                type="date"
+                class="form-input"
+                :max="today"
+                @input="setDate('completion', ($event.target as HTMLInputElement).value)"
+              />
+            </div>
+          </div>
+          <p v-if="dateValidationError" class="form-date-error">
+            {{ dateValidationError }}
+          </p>
+        </div>
+      </section>
+
+      <!-- Platforms and stores -->
+      <section class="form-section">
+        <h3 class="form-section-heading">
+          <button
+            type="button"
+            class="form-section-toggle"
+            :aria-expanded="isOpen('owned')"
+            aria-controls="form-section-owned"
+            @click="toggleSection('owned')"
+          >
+            <ChevronDown v-if="isOpen('owned')" :size="18" aria-hidden="true" />
+            <ChevronRight v-else :size="18" aria-hidden="true" />
+            Platforms &amp; store
+            <span v-if="!isOpen('owned')" class="form-section-summary">{{ ownedSummary }}</span>
+          </button>
+        </h3>
+        <div v-show="isOpen('owned')" id="form-section-owned" class="form-section-body">
+          <div class="form-group-inner" role="group" aria-labelledby="form-platforms-label">
+            <div id="form-platforms-label" class="form-label">Platforms played</div>
+            <div class="form-pills">
+              <button
+                v-for="plat in gamePlatforms"
+                :key="plat.id"
+                type="button"
+                class="form-pill"
+                :aria-pressed="formPlatformIds.has(plat.id)"
+                @click="toggleFormPlatform(plat.id)"
+              >
+                {{ plat.name }}
+              </button>
+              <span v-if="gamePlatforms.length === 0" class="form-empty-hint">No platforms listed for this game.</span>
+            </div>
+          </div>
+          <div class="form-group-inner" role="group" aria-labelledby="form-stores-label">
+            <div id="form-stores-label" class="form-label">Store</div>
+            <div class="form-pills">
+              <button
+                v-for="store in visibleStores"
+                :key="store.id"
+                type="button"
+                class="form-pill"
+                :aria-pressed="formStoreIds.has(store.id)"
+                @click="toggleFormStore(store.id)"
+              >
+                {{ store.name }}
+              </button>
+              <button
+                v-if="hiddenStoreCount > 0"
+                type="button"
+                class="form-pill form-pill-more"
+                @click="showAllStores = true"
+              >
+                + {{ hiddenStoreCount }} more
+              </button>
+              <span v-if="storesLoading" class="form-empty-hint">Loading stores…</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Review -->
+      <section class="form-section form-section-last">
+        <h3 class="form-section-heading">
+          <button
+            type="button"
+            class="form-section-toggle"
+            :aria-expanded="isOpen('review')"
+            aria-controls="form-section-review"
+            @click="toggleSection('review')"
+          >
+            <ChevronDown v-if="isOpen('review')" :size="18" aria-hidden="true" />
+            <ChevronRight v-else :size="18" aria-hidden="true" />
+            Review
+            <span v-if="!isOpen('review')" class="form-section-summary">{{ reviewSummary }}</span>
+          </button>
+        </h3>
+        <div v-show="isOpen('review')" id="form-section-review" class="form-section-body">
+          <label class="form-label" for="form-comments">Review / notes <small>shows on the game page</small></label>
+          <textarea
+            id="form-comments"
+            v-model="formComments"
+            class="form-input form-textarea"
+            placeholder="What did you think?"
+            maxlength="2000"
+          ></textarea>
+          <div class="form-count">{{ formComments.length }} / 2000</div>
+        </div>
+      </section>
+    </fieldset>
 
     <button
       v-if="isEditing && isSheet"
@@ -241,8 +244,13 @@
       </button>
       <div class="form-actions-right">
         <button type="button" class="form-btn-cancel" @click="$emit('cancel')">Cancel</button>
-        <button type="button" class="form-btn-save" :disabled="saving || !!dateValidationError" @click="submit">
-          {{ saving ? "Saving…" : saveLabel }}
+        <button
+          type="button"
+          class="form-btn-save"
+          :disabled="saving || !entryLoaded || !!dateValidationError"
+          @click="submit"
+        >
+          {{ saving ? "Saving…" : entryLoaded ? saveLabel : "Loading…" }}
         </button>
       </div>
     </div>
@@ -322,6 +330,10 @@ const formReplayCount = ref<number | null>(null);
 const formComments = ref("");
 const isEditing = ref(false);
 const saving = ref(false);
+// False while an existing entry is loading, and stays false if it fails to
+// load. Saving a half-filled form would wipe the entry: the API reads missing
+// platforms and stores as "none".
+const entryLoaded = ref(true);
 
 // ── localStorage draft persistence ──
 let suppressDraftSync = false;
@@ -382,6 +394,7 @@ async function openAsEdit() {
   suppressDraftSync = true;
   resetForm();
   isEditing.value = true;
+  entryLoaded.value = false;
 
   try {
     const result = await gqlClient.request<GetGamePurchaseQuery>(GET_GAME_PURCHASE, {
@@ -404,6 +417,7 @@ async function openAsEdit() {
     loadReviewDraft();
     formPlatformIds.value = new Set(gp.platforms.nodes.map((p) => p.id));
     formStoreIds.value = new Set(gp.stores.nodes.map((s) => s.id));
+    entryLoaded.value = true;
   } catch {
     suppressDraftSync = false;
     emit("error", "Failed to load game purchase details.");
@@ -587,6 +601,7 @@ function buildFormVariables(): Record<string, unknown> {
 }
 
 async function submit() {
+  if (!entryLoaded.value) return;
   if (dateValidationError.value) {
     emit("error", dateValidationError.value);
     return;
@@ -634,6 +649,13 @@ defineExpose({ openAsAdd, openAsEdit });
   --form-pad: 24px;
   color: var(--color-text-primary);
   text-align: left;
+}
+
+.form-fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 .form-group {

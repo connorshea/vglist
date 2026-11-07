@@ -219,3 +219,58 @@ describe("GameLibraryForm sections", () => {
     expect(toggle(wrapper, "form-section-progress").text()).toContain("12.5 h · started Oct 30, 2026");
   });
 });
+
+describe("GameLibraryForm while an entry loads", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  it("keeps Save and the fields disabled until the entry has loaded", async () => {
+    let finishLoad: (value: unknown) => void = () => {};
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAME_PURCHASE ? new Promise((resolve) => (finishLoad = resolve)) : Promise.resolve({})
+    );
+    const wrapper = await mountForm("7");
+
+    const save = wrapper.find(".form-btn-save");
+    expect(save.attributes("disabled")).toBeDefined();
+    expect(save.text()).toBe("Loading…");
+    expect(wrapper.find("fieldset.form-fields").attributes("disabled")).toBeDefined();
+    await save.trigger("click");
+    await flushPromises();
+    expect(variablesFor(UPDATE_GAME_IN_LIBRARY)).toBeUndefined();
+
+    finishLoad(gamePurchase(2));
+    await flushPromises();
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeUndefined();
+    expect(wrapper.find(".form-btn-save").text()).toBe("Save changes");
+  });
+
+  it("stays disabled when the entry fails to load", async () => {
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAME_PURCHASE ? Promise.reject(new Error("boom")) : Promise.resolve({})
+    );
+    const wrapper = await mountForm("7");
+    expect(wrapper.emitted("error")).toHaveLength(1);
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeDefined();
+  });
+
+  it("stays disabled when the entry no longer exists", async () => {
+    mockRequest.mockImplementation((query) =>
+      Promise.resolve(query === GET_GAME_PURCHASE ? { gamePurchase: null } : {})
+    );
+    const wrapper = await mountForm("7");
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeDefined();
+  });
+
+  it("leaves Cancel usable while loading", async () => {
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAME_PURCHASE ? new Promise(() => {}) : Promise.resolve({})
+    );
+    const wrapper = await mountForm("7");
+    await wrapper.find(".form-btn-cancel").trigger("click");
+    expect(wrapper.emitted("cancel")).toHaveLength(1);
+  });
+});
