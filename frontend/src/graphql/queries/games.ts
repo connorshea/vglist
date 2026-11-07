@@ -83,30 +83,6 @@ export const GET_GAME = gql`
   }
 `;
 
-export const GET_RECENT_GAMES = gql`
-  query GetRecentGames($first: Int) {
-    games(first: $first, sortBy: RECENTLY_UPDATED) {
-      nodes {
-        id
-        name
-        coverUrl(size: SMALL)
-        platforms {
-          nodes {
-            id
-            name
-          }
-        }
-        developers {
-          nodes {
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const GET_HERO_COVERS = gql`
   query GetHeroCovers {
     games(first: 100, sortBy: RECENTLY_UPDATED) {
