@@ -134,6 +134,7 @@ describe("GameShowPage loading skeleton", () => {
 
     expect(wrapper.find(".game-skeleton").exists()).toBeFalsy();
     expect(wrapper.find(".game-title").text()).toBe("Game 1");
+    expect(wrapper.find("[role='status']").text()).toBe("");
   });
 
   it("shows the skeleton again instead of the previous game when moving to another game", async () => {

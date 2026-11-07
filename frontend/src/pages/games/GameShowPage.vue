@@ -1,8 +1,10 @@
 <template>
   <div>
+    <!-- Always mounted so screen readers announce the text when it changes -->
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading game…" : "" }}</p>
+
     <!-- Skeleton in the shape of the page while the game loads -->
     <div v-if="showSkeleton" class="game-show game-skeleton" aria-busy="true">
-      <p class="is-sr-only" role="status">Loading game…</p>
       <section class="game-hero" aria-hidden="true">
         <div class="game-hero-inner">
           <div class="game-hero-cover">
