@@ -15,18 +15,22 @@ class LazyGamePurchase
     @state[:pending] << game_purchase_id unless @state[:loaded].key?(game_purchase_id)
   end
 
-  # @return [GamePurchase]
+  # nil if the purchase was deleted after the comparison was queried, which
+  # graphql-ruby reports as an error on that one row rather than failing the
+  # whole request.
+  #
+  # @return [GamePurchase, nil]
   def value
     load_pending unless @state[:loaded].key?(@game_purchase_id)
-    @state[:loaded].fetch(@game_purchase_id)
+    @state[:loaded][@game_purchase_id]
   end
 
   private
 
   def load_pending
-    GamePurchase.where(id: @state[:pending].to_a).find_each do |purchase|
-      @state[:loaded][purchase.id] = purchase
-    end
+    ids = @state[:pending].to_a
+    found = GamePurchase.where(id: ids).index_by(&:id)
+    ids.each { |id| @state[:loaded][id] = found[id] }
     @state[:pending].clear
   end
 end
