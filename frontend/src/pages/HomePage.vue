@@ -66,7 +66,7 @@
         <span class="home-banner-icon" aria-hidden="true"><LibraryBig :size="20" /></span>
         <p class="home-banner-text">
           <strong>Keep track of your own library.</strong>
-          Import from Steam, mark what you’ve finished, and rate what you’ve played. Free and open source.
+          Import from Steam, mark what you’ve finished, and rate what you’ve played.
         </p>
         <router-link to="/signup" class="home-banner-btn">Create an account</router-link>
       </aside>
