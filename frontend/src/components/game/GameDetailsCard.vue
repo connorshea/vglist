@@ -101,11 +101,11 @@ function formatReleaseDate(date: string): string {
   color: var(--color-text-primary);
 }
 
-.details-list a {
+.details-list :deep(a) {
   color: var(--color-accent);
 }
 
-.details-list a:hover {
+.details-list :deep(a:hover) {
   text-decoration: underline;
 }
 </style>
