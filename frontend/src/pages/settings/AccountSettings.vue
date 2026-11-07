@@ -74,6 +74,8 @@
       </div>
     </form>
 
+    <PasskeysCard />
+
     <section class="set-card" aria-labelledby="danger-heading">
       <h2 id="danger-heading" class="set-card-title is-danger">Danger zone</h2>
       <p class="set-card-desc">These can't be undone.</p>
@@ -142,6 +144,7 @@ import { gqlClient } from "@/graphql/client";
 import { DELETE_USER, RESET_USER_LIBRARY, UPDATE_EMAIL, UPDATE_PASSWORD } from "@/graphql/mutations/users-settings";
 import { extractGqlError } from "@/utils/graphql-errors";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import PasskeysCard from "@/components/settings/PasskeysCard.vue";
 import { CircleAlert } from "@lucide/vue";
 
 interface MutationResult {
