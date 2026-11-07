@@ -289,13 +289,15 @@ function handleSignOut() {
   transition: box-shadow 200ms;
 }
 
-.navbar-mobile-avatar[aria-expanded="true"] .nav-avatar,
-.navbar-mobile-avatar:focus-visible .nav-avatar {
+.navbar-mobile-avatar[aria-expanded="true"] .nav-avatar {
   box-shadow: 0 0 0 2px #fff;
 }
 
+/* A separate ring around the whole 44px button, so keyboard focus is
+   distinct from the open state's brighter avatar ring. */
 .navbar-mobile-avatar:focus-visible {
-  outline: none;
+  outline: 2px solid #fff;
+  outline-offset: 0;
 }
 
 /* Remove Bulma's margin-left:auto from the burger so it sits
