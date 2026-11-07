@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <nav class="sort-tabs" aria-label="Sort games">
+    <nav class="sort-tabs scroll-fade-x" aria-label="Sort games">
       <router-link
         v-for="option in GAME_SORTS"
         :key="option.slug"

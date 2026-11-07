@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <div>
     <h1 class="title">Stores</h1>
 
     <div v-if="authStore.isModerator" class="buttons">
@@ -59,7 +59,7 @@
       <strong>{{ storeToDelete?.name }}</strong> will be permanently deleted, and removed from every library entry that
       uses it. This cannot be undone.
     </ConfirmDialog>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">

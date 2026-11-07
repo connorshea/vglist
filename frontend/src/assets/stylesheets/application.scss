@@ -56,6 +56,8 @@
   --color-text-primary: #2c2c2a;
   --color-text-secondary: #888780;
   --color-text-tertiary: #b4b2a9;
+  /* Input placeholders: >= 4.5:1 on white and on --color-bg-subtle */
+  --color-placeholder: #686c76;
   --color-border: #d3d1c7;
   --color-bg-subtle: #f4f3ef;
   --color-surface: #fff;
@@ -148,6 +150,8 @@
     --color-text-primary: var(--s-50);
     --color-text-secondary: var(--s-200);
     --color-text-tertiary: var(--s-200);
+    /* Input placeholders: >= 4.5:1 on dark inputs (--s-400 and darker) */
+    --color-placeholder: var(--s-100);
     --color-border: var(--s-300);
     --color-bg-subtle: var(--s-600);
     --color-surface: var(--s-400);
@@ -300,7 +304,7 @@ nav.navbar {
       border-color 200ms;
 
     &::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.75);
     }
 
     &:hover {
@@ -614,9 +618,11 @@ nav.navbar {
   overflow: initial;
 }
 
-.input::placeholder {
-  color: var(--bulma-input-placeholder-color);
-  opacity: 0.5;
+/* Default for inputs that don't use Bulma's .input/.textarea (e.g. the
+   searchable selects); otherwise they get the browser's faint grey. */
+::placeholder {
+  color: var(--color-placeholder);
+  opacity: 1;
 }
 
 .infobox {
@@ -652,6 +658,67 @@ nav.navbar {
 .is-fullwidth-mobile {
   @include mixins.touch {
     width: 100%;
+  }
+}
+
+// Horizontal scroll strips (tabs, filter pills) that overflow on phones.
+// Fades whichever edge has more content past it, so it's obvious the strip
+// scrolls instead of looking clipped. Uses a scroll-driven animation; when the
+// strip doesn't overflow, the timeline is inactive and nothing fades. Browsers
+// without support just get the plain strip.
+@property --scroll-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes scroll-fade-x {
+  0% {
+    --scroll-fade-start: 0px;
+    --scroll-fade-end: 32px;
+  }
+
+  8%,
+  92% {
+    --scroll-fade-start: 32px;
+    --scroll-fade-end: 32px;
+  }
+
+  100% {
+    --scroll-fade-start: 32px;
+    --scroll-fade-end: 0px;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade-x {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--scroll-fade-start),
+      #000 calc(100% - var(--scroll-fade-end)),
+      transparent
+    );
+    animation: scroll-fade-x linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+
+// iOS Safari zooms the whole page when a text control under 16px gets focus,
+// and stays zoomed after blur. Component styles set 13–14px on many of these,
+// so this floor has to win over scoped styles. No control in the app is
+// larger than 16px on mobile, so pinning to 16px never shrinks one.
+@include mixins.mobile {
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="hidden"]),
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }
 

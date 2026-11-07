@@ -35,18 +35,17 @@
                 Wikidata ID <span class="has-text-danger">*</span>
               </label>
               <div class="control">
-                <input
+                <WikidataIdInput
                   :id="`${slug}-wikidata-id`"
-                  :value="wikidataId"
-                  class="input"
-                  type="text"
+                  :model-value="wikidataId"
                   required
-                  inputmode="numeric"
-                  placeholder="e.g. 12345"
-                  @input="emit('update:wikidataId', ($event.target as HTMLInputElement).value)"
+                  :aria-describedby="`${slug}-wikidata-id-help`"
+                  @update:model-value="emit('update:wikidataId', $event)"
                 />
               </div>
-              <p class="help">The numeric portion of the Wikidata item ID, without the leading "Q".</p>
+              <p :id="`${slug}-wikidata-id-help`" class="help">
+                The Wikidata item ID, like "Q12345". You can also paste the item's Wikidata URL.
+              </p>
             </div>
 
             <div v-if="submitError" class="notification is-danger mt-4">
@@ -78,6 +77,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import WikidataIdInput from "@/components/WikidataIdInput.vue";
 
 const props = withDefaults(
   defineProps<{

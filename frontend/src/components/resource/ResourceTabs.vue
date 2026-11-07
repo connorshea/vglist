@@ -1,5 +1,5 @@
 <template>
-  <nav class="res-tabs" :aria-label="label">
+  <nav class="res-tabs scroll-fade-x" :aria-label="label">
     <router-link
       v-for="tab in tabs"
       :key="tab.label"

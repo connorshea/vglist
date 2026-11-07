@@ -1,7 +1,7 @@
 <template>
   <section class="res-games" :aria-label="label">
     <div class="res-toolbar">
-      <div class="res-seg" role="group" aria-label="Sort games">
+      <div class="res-seg scroll-fade-x" role="group" aria-label="Sort games">
         <button
           v-for="option in RESOURCE_GAME_SORTS"
           :key="option.value"
@@ -111,16 +111,16 @@ function initials(name: string): string {
   cursor: pointer;
 }
 
-/* Fit all four options across a phone screen instead of scrolling. */
+/* On phones the four options don't fit at a readable size, so the control
+   scrolls (with an edge fade from .scroll-fade-x) rather than shrinking the
+   text. */
 @media screen and (max-width: 480px) {
   .res-seg {
-    display: flex;
+    scrollbar-width: none;
   }
 
   .res-seg-btn {
-    flex: 1 1 auto;
-    padding: 6px 8px;
-    font-size: 0.6875rem;
+    padding: 8px 12px;
   }
 }
 
@@ -161,10 +161,12 @@ function initials(name: string): string {
   transition: opacity var(--transition-normal);
 }
 
+/* Match the /games grid on phones: three narrower tiles per row rather than
+   two very large ones. */
 @media screen and (max-width: 768px) {
   .res-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 20px 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px 10px;
   }
 }
 
@@ -260,6 +262,17 @@ function initials(name: string): string {
   margin-top: 2px;
   font-size: 0.72rem;
   color: var(--color-text-secondary);
+}
+
+@media screen and (max-width: 768px) {
+  .res-card-name {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 12px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
 }
 
 .res-load-error {

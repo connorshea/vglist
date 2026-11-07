@@ -595,7 +595,14 @@ async function confirmDeleteEvent() {
   color: var(--color-text-tertiary);
   font-size: 18px;
   cursor: pointer;
-  padding: 0 4px;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  margin: -4px -6px -4px 0;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
   flex-shrink: 0;
   opacity: 0;
@@ -604,7 +611,8 @@ async function confirmDeleteEvent() {
     color 0.15s;
 }
 
-.a-card:hover .a-delete-btn {
+.a-card:hover .a-delete-btn,
+.a-delete-btn:focus-visible {
   opacity: 1;
 }
 
@@ -626,6 +634,8 @@ async function confirmDeleteEvent() {
 @media (max-width: 768px) {
   .a-card {
     flex-direction: column;
+    /* Stretch the body so the badge and delete button can sit at the right edge. */
+    align-items: stretch;
     gap: 10px;
     padding: 12px 14px;
   }
@@ -645,6 +655,10 @@ async function confirmDeleteEvent() {
   .a-delete-btn {
     order: 2;
     opacity: 1;
+    /* Bigger touch target on phones; the negative margin keeps the row height unchanged. */
+    width: 36px;
+    height: 36px;
+    margin: -8px -10px -8px 0;
   }
 }
 </style>

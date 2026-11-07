@@ -178,11 +178,15 @@ const accessibleName = computed(() => {
 }
 
 @media (max-width: 768px) {
+  /* Two lines, not one: at three tiles per row a single line cuts most titles
+     down to a word or two ("Command & Co…"). */
   .game-tile-name {
+    display: -webkit-box;
     overflow: hidden;
     font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .game-tile-meta {

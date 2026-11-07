@@ -46,17 +46,15 @@
         <router-link class="navbar-item" to="/games">Games</router-link>
         <router-link class="navbar-item" to="/users">Users</router-link>
 
-        <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
-          <a class="navbar-link" tabindex="0">More</a>
-          <div v-show="!dropdownsClosed" class="navbar-dropdown nav-menu">
-            <router-link class="nav-menu-item" to="/platforms">Platforms</router-link>
-            <router-link class="nav-menu-item" to="/genres">Genres</router-link>
-            <router-link class="nav-menu-item" to="/companies">Companies</router-link>
-            <router-link class="nav-menu-item" to="/engines">Engines</router-link>
-            <router-link class="nav-menu-item" to="/series">Series</router-link>
-            <router-link class="nav-menu-item" to="/stores">Stores</router-link>
-          </div>
-        </div>
+        <NavDropdown>
+          <template #trigger>More</template>
+          <router-link class="nav-menu-item" to="/platforms">Platforms</router-link>
+          <router-link class="nav-menu-item" to="/genres">Genres</router-link>
+          <router-link class="nav-menu-item" to="/companies">Companies</router-link>
+          <router-link class="nav-menu-item" to="/engines">Engines</router-link>
+          <router-link class="nav-menu-item" to="/series">Series</router-link>
+          <router-link class="nav-menu-item" to="/stores">Stores</router-link>
+        </NavDropdown>
       </div>
 
       <div class="navbar-end">
@@ -64,80 +62,76 @@
           <NavSearch />
         </div>
         <template v-if="authStore.isAuthenticated">
-          <div class="navbar-item has-dropdown is-hoverable navbar-user" @mouseenter="dropdownsClosed = false">
-            <a class="navbar-link is-arrowless" tabindex="0">
+          <NavDropdown class="navbar-user" align-right trigger-class="is-arrowless" menu-class="user-menu">
+            <template #trigger>
               <span class="navbar-user-pill">
                 <NavAvatar :username="username" :avatar-url="authStore.user?.avatarUrl" />
                 <span class="navbar-user-name">{{ username }}</span>
                 <ChevronDown class="navbar-user-chevron" :size="14" :stroke-width="2" />
               </span>
-            </a>
-            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right nav-menu user-menu">
-              <router-link class="user-menu-header" :to="profilePath">
-                <NavAvatar :username="username" :avatar-url="authStore.user?.avatarUrl" />
-                <span class="user-menu-identity">
-                  <span class="user-menu-name">{{ username }}</span>
-                  <span class="user-menu-sub">View profile</span>
-                </span>
-              </router-link>
-              <router-link class="nav-menu-item" :to="profilePath">
-                <User :size="16" :stroke-width="1.8" />
-                Profile
-              </router-link>
-              <router-link v-if="authStore.isAdmin" class="nav-menu-item" to="/admin">
-                <Shield :size="16" :stroke-width="1.8" />
-                Admin
-              </router-link>
-              <router-link class="nav-menu-item" to="/settings">
-                <Settings :size="16" :stroke-width="1.8" />
-                Settings
-              </router-link>
-              <hr class="nav-menu-divider" />
-              <button type="button" class="nav-menu-item" @click="handleSignOut">
-                <LogOut :size="16" :stroke-width="1.8" />
-                Sign out
-              </button>
-              <hr class="nav-menu-divider" />
-              <div class="nav-menu-links">
-                <router-link to="/about">About</router-link>
-                <a
-                  href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Changelog</a
-                >
-                <a href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer">Discord</a>
-              </div>
-            </div>
-          </div>
-        </template>
-        <template v-else>
-          <router-link class="navbar-item" to="/signup">Sign up</router-link>
-          <router-link class="navbar-item" to="/login">Sign in</router-link>
-          <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
-            <a class="navbar-link" tabindex="0">More</a>
-            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right nav-menu">
-              <router-link class="nav-menu-item" to="/about">About</router-link>
+            </template>
+            <router-link class="user-menu-header" :to="profilePath">
+              <NavAvatar :username="username" :avatar-url="authStore.user?.avatarUrl" />
+              <span class="user-menu-identity">
+                <span class="user-menu-name">{{ username }}</span>
+                <span class="user-menu-sub">View profile</span>
+              </span>
+            </router-link>
+            <router-link class="nav-menu-item" :to="profilePath">
+              <User :size="16" :stroke-width="1.8" />
+              Profile
+            </router-link>
+            <router-link v-if="authStore.isAdmin" class="nav-menu-item" to="/admin">
+              <Shield :size="16" :stroke-width="1.8" />
+              Admin
+            </router-link>
+            <router-link class="nav-menu-item" to="/settings">
+              <Settings :size="16" :stroke-width="1.8" />
+              Settings
+            </router-link>
+            <hr class="nav-menu-divider" />
+            <button type="button" class="nav-menu-item" @click="handleSignOut">
+              <LogOut :size="16" :stroke-width="1.8" />
+              Sign out
+            </button>
+            <hr class="nav-menu-divider" />
+            <div class="nav-menu-links">
+              <router-link to="/about">About</router-link>
               <a
-                class="nav-menu-item"
                 href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
                 target="_blank"
                 rel="noopener noreferrer"
                 >Changelog</a
               >
-              <a
-                class="nav-menu-item"
-                href="https://github.com/connorshea/vglist"
-                target="_blank"
-                rel="noopener noreferrer"
-                >GitHub</a
-              >
-              <a class="nav-menu-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
-                >Discord</a
-              >
+              <a href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer">Discord</a>
             </div>
-          </div>
+          </NavDropdown>
+        </template>
+        <template v-else>
+          <router-link class="navbar-item" to="/signup">Sign up</router-link>
+          <router-link class="navbar-item" to="/login">Sign in</router-link>
+          <NavDropdown align-right>
+            <template #trigger>More</template>
+            <router-link class="nav-menu-item" to="/about">About</router-link>
+            <a
+              class="nav-menu-item"
+              href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Changelog</a
+            >
+            <a
+              class="nav-menu-item"
+              href="https://github.com/connorshea/vglist"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub</a
+            >
+            <a class="nav-menu-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
+              >Discord</a
+            >
+          </NavDropdown>
         </template>
       </div>
     </div>
@@ -156,6 +150,7 @@ import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { ChevronDown, LogOut, Search, Settings, Shield, User } from "@lucide/vue";
 import { refreshCurrentUserAvatar } from "@/utils/current-user-avatar";
 import NavAvatar from "./NavAvatar.vue";
+import NavDropdown from "./NavDropdown.vue";
 import NavSearch from "./NavSearch.vue";
 import MobileNavSheet from "./MobileNavSheet.vue";
 
@@ -164,7 +159,6 @@ const authStore = useAuthStore();
 const { signOut } = useAuth();
 const { open: openSearch } = useSearchOverlay();
 const isSheetOpen = ref(false);
-const dropdownsClosed = ref(false);
 const username = computed(() => authStore.user?.username ?? "");
 const profilePath = computed(() => `/users/${authStore.user?.slug}`);
 
@@ -183,7 +177,6 @@ watch(
   () => route.path,
   () => {
     isSheetOpen.value = false;
-    dropdownsClosed.value = true;
   }
 );
 
@@ -240,12 +233,14 @@ function handleSignOut() {
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-.navbar-user:focus-within .navbar-user-pill {
+.navbar-user:focus-within .navbar-user-pill,
+.navbar-user.is-active .navbar-user-pill {
   background-color: rgba(0, 0, 0, 0.3);
   border-color: rgba(255, 255, 255, 0.35);
 }
 
-.navbar-user .navbar-link:focus-visible {
+/* The pill draws its own focus ring, so drop the trigger's. */
+.navbar-user :deep(.navbar-link:focus-visible) {
   outline: none;
 }
 
@@ -315,33 +310,8 @@ function handleSignOut() {
   outline-offset: 0;
 }
 
-/* Navbar dropdowns (More and the user menu) are cards that follow the page
-   theme, with rounded items. */
-.navbar-dropdown.nav-menu {
-  --nav-menu-muted: var(--n-500);
-  min-width: 200px;
-  padding: 6px;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  background-color: var(--color-surface);
-  box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.06);
-  color: var(--color-text-primary);
-  font-size: 0.875rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .navbar-dropdown.nav-menu {
-    --nav-menu-muted: var(--s-100);
-    box-shadow:
-      0 16px 48px rgba(0, 0, 0, 0.4),
-      0 2px 8px rgba(0, 0, 0, 0.25);
-  }
-}
-
 /* The signed-in user's menu adds an avatar header and a footer row of links. */
-.navbar-dropdown.user-menu {
+.navbar-user :deep(.user-menu) {
   width: 264px;
 }
 
