@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Shared by the list resolvers behind the series, genre and platform index
-# pages (see `GameCountScopes` for the scopes they use).
+# Shared by the list resolvers behind the series, genre, platform, company and
+# engine index pages (see `GameCountScopes` for the scopes they use).
 module ResourceIndex
   module_function
 

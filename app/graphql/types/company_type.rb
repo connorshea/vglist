@@ -9,8 +9,10 @@ module Types
     field :wikidata_id, Integer, null: true, description: 'Wikidata identifier'
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this company was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this company was last updated."
+    field :games_count, Integer, null: false, description: "The number of games this company developed or published, counting each game once."
 
     # Associations
+    field :cover_games, [GameType], null: false, description: "Up to four games this company developed or published that have a cover, most-owned first, for showing the company as a mosaic of covers."
     field :published_games, GameType.connection_type, null: false, description: "Games published by this company." do
       argument :sort_by, Enums::ResourceGameSortType, required: false, description: "The order to sort the games in, if any."
     end
@@ -24,6 +26,16 @@ module Types
 
     def developed_games(sort_by: nil)
       ResourceGameSort.apply(@object.developed_games.with_attached_cover, sort_by)
+    end
+
+    # The list resolver loads this with the records (`with_games_count`), so a
+    # page of them doesn't count each one's games separately.
+    def games_count
+      @object.has_attribute?(:index_games_count) ? @object[:index_games_count] : @object.games.count
+    end
+
+    def cover_games
+      LazyCoverGames.new(@context, @object)
     end
   end
 end

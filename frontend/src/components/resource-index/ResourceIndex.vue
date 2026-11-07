@@ -108,7 +108,7 @@ export interface ResourceIndexItem {
 
 const props = defineProps<{
   title: string;
-  /** "series", "genre" or "platform". */
+  /** "series", "genre", "platform", "company" or "engine". */
   kind: string;
   kindPlural: string;
   items: ResourceIndexItem[];

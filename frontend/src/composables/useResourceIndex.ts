@@ -45,9 +45,10 @@ const SEARCH_DEBOUNCE_MS = 250;
 const MAX_PAGE_SIZE = 100;
 
 /**
- * State for a series, genre or platform index page: the sort and name search
- * (kept in the URL as `?sort=` and `?q=`, so a view can be reloaded, shared
- * and navigated back to), the list query, and loading more pages.
+ * State for a resource index page (series, genres, platforms, companies,
+ * engines): the sort and name search (kept in the URL as `?sort=` and `?q=`,
+ * so a view can be reloaded, shared and navigated back to), the list query,
+ * and loading more pages.
  */
 export function useResourceIndex<TData, TNode extends { id: string }>(options: Options<TData, TNode>) {
   const route = useRoute();
