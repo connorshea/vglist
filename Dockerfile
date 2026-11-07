@@ -11,9 +11,11 @@
 #     -e FRONTEND_URL=https://vglist.co \
 #     vglist-api
 #
-# Run migrations before each release with the same image:
+# Run migrations before each release with the same image (App Platform does
+# this in the PRE_DEPLOY `migrate` job). Use db:migrate, not db:prepare: on an
+# empty database db:prepare would also run the dev-only db/seeds.rb.
 #   docker run --rm -e RAILS_MASTER_KEY=... -e DATABASE_URL=... -e FRONTEND_URL=... \
-#     vglist-api bundle exec rails db:prepare
+#     vglist-api bundle exec rails db:migrate
 #
 # The Vue frontend has its own image, see frontend/Dockerfile.
 
@@ -30,8 +32,9 @@ WORKDIR /rails
 # - libvips42t64: Active Storage image variants via ruby-vips. Trixie ships
 #   libvips 8.16, which satisfies image_processing's >= 8.13 requirement.
 # - libpq5: PostgreSQL client library for the pg gem.
-# - postgresql-client: psql, which `db:prepare` shells out to when loading
-#   db/structure.sql into an empty database. Trixie's default is v17.
+# - postgresql-client: psql, which `db:schema:load` shells out to when loading
+#   db/structure.sql into an empty database (the Docker CI workflow does
+#   this). Trixie's default is v17.
 # - libjemalloc2: lower memory fragmentation for Puma's threads/workers.
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
