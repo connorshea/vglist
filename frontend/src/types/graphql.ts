@@ -421,7 +421,9 @@ export interface SignInWithPasskeyMutation {
   } | null;
 }
 
-export type PasskeyRegistrationOptionsMutationVariables = Exact<{ [key: string]: never }>;
+export type PasskeyRegistrationOptionsMutationVariables = Exact<{
+  currentPassword: string;
+}>;
 
 export interface PasskeyRegistrationOptionsMutation {
   passkeyRegistrationOptions: { options: unknown; errors: Array<string> } | null;

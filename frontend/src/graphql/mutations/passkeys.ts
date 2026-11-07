@@ -28,8 +28,8 @@ export const SIGN_IN_WITH_PASSKEY = gql`
 // Managing the signed-in user's passkeys.
 
 export const PASSKEY_REGISTRATION_OPTIONS = gql`
-  mutation PasskeyRegistrationOptions {
-    passkeyRegistrationOptions {
+  mutation PasskeyRegistrationOptions($currentPassword: String!) {
+    passkeyRegistrationOptions(currentPassword: $currentPassword) {
       options
       errors
     }

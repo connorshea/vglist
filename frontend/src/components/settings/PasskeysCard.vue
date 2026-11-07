@@ -66,12 +66,42 @@
 
     <div class="set-actions">
       <span v-if="!supported" class="set-help pk-help">This browser doesn't support passkeys.</span>
-      <button class="set-btn is-primary" type="button" :disabled="!supported || adding" @click="handleAdd">
+      <button class="set-btn is-primary" type="button" :disabled="!supported || adding" @click="openAdd">
         <LoaderCircle v-if="adding" class="pk-spin" :size="16" :stroke-width="2" aria-hidden="true" />
         <Plus v-else :size="16" :stroke-width="2" aria-hidden="true" />
         <span>{{ adding ? "Waiting for your browser…" : "Add a passkey" }}</span>
       </button>
     </div>
+
+    <!-- Confirm the password before adding a passkey -->
+    <ConfirmDialog
+      v-model="showPasswordDialog"
+      variant="primary"
+      title="Confirm your password"
+      confirm-label="Continue"
+      loading-label="Checking…"
+      :loading="adding"
+      initial-focus="#passkey-password"
+      @confirm="handleAdd"
+    >
+      <template #icon>
+        <KeyRound :size="22" :stroke-width="1.8" />
+      </template>
+      Enter your password to add a passkey. Then your browser will ask you to create it.
+      <form class="pk-field" @submit.prevent="handleAdd">
+        <label for="passkey-password">Current password</label>
+        <input
+          id="passkey-password"
+          v-model="passwordInput"
+          class="set-input"
+          type="password"
+          autocomplete="current-password"
+          :aria-invalid="passwordError ? true : undefined"
+          :aria-describedby="passwordError ? 'passkey-password-error' : undefined"
+        />
+        <p v-if="passwordError" id="passkey-password-error" class="pk-field-error" role="alert">{{ passwordError }}</p>
+      </form>
+    </ConfirmDialog>
 
     <!-- Name a new passkey, or rename an existing one -->
     <ConfirmDialog
@@ -92,7 +122,7 @@
         Next time, pick it from the email field when you sign in. Give it a name so you can tell your passkeys apart.
       </template>
       <template v-else>Give this passkey a name so you can tell your passkeys apart.</template>
-      <div class="pk-name-field">
+      <div class="pk-field">
         <label for="passkey-name">Name</label>
         <input
           id="passkey-name"
@@ -180,19 +210,41 @@ const adding = ref(false);
 const addError = ref("");
 const newPasskeyId = ref<string | null>(null);
 
-async function handleAdd() {
-  adding.value = true;
+// The server asks for the current password before it hands out registration
+// options, so a stolen session token alone can't add a passkey.
+const showPasswordDialog = ref(false);
+const passwordInput = ref("");
+const passwordError = ref("");
+
+function openAdd() {
   addError.value = "";
+  passwordInput.value = "";
+  passwordError.value = "";
+  showPasswordDialog.value = true;
+}
+
+async function handleAdd() {
+  if (adding.value) return;
+  if (passwordInput.value === "") {
+    passwordError.value = "Enter your current password.";
+    return;
+  }
+
+  adding.value = true;
+  passwordError.value = "";
 
   try {
-    // To require the current password before adding a passkey, collect it
-    // here and pass it to passkeyRegistrationOptions.
-    const optionsData = await gqlClient.request<PasskeyRegistrationOptionsMutation>(PASSKEY_REGISTRATION_OPTIONS);
+    const optionsData = await gqlClient.request<PasskeyRegistrationOptionsMutation>(PASSKEY_REGISTRATION_OPTIONS, {
+      currentPassword: passwordInput.value
+    });
     const optionsResult = optionsData.passkeyRegistrationOptions;
     if (!optionsResult?.options || optionsResult.errors.length > 0) {
-      addError.value = optionsResult?.errors.join(" ") || "Couldn't start adding a passkey.";
+      // Keep the dialog open so a mistyped password can be fixed.
+      passwordError.value = optionsResult?.errors.join(" ") || "Couldn't start adding a passkey.";
       return;
     }
+    showPasswordDialog.value = false;
+    passwordInput.value = "";
 
     let response;
     try {
@@ -216,7 +268,9 @@ async function handleAdd() {
     await refetch();
     openName({ ...result.passkey, isNew: true });
   } catch (e) {
-    addError.value = `Couldn't add the passkey: ${extractGqlError(e)}`;
+    const message = `Couldn't add the passkey: ${extractGqlError(e)}`;
+    if (showPasswordDialog.value) passwordError.value = message;
+    else addError.value = message;
   } finally {
     adding.value = false;
   }
@@ -453,7 +507,7 @@ async function handleRemove() {
   }
 }
 
-.pk-name-field {
+.pk-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -461,15 +515,21 @@ async function handleRemove() {
   text-align: left;
 }
 
-.pk-name-field label {
+.pk-field label {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-text-secondary);
 }
 
-/* ConfirmDialog teleports to <body>, outside .settings-page, so the input
-   needs its own copy of the settings input styles. */
-.pk-name-field .set-input {
+.pk-field-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-danger-text);
+}
+
+/* ConfirmDialog teleports to <body>, outside .settings-page, so the inputs
+   need their own copy of the settings input styles. */
+.pk-field .set-input {
   height: 38px;
   width: 100%;
   padding: 0 10px;
@@ -481,7 +541,7 @@ async function handleRemove() {
   font-size: 14px;
 }
 
-.pk-name-field .set-input:focus-visible {
+.pk-field .set-input:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 0;
   border-color: var(--color-accent);

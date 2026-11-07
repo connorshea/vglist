@@ -72,6 +72,17 @@ function bodyButton(label: string): HTMLButtonElement {
   return button;
 }
 
+// Clicks "Add a passkey", then confirms the password in the dialog.
+async function startAdding(wrapper: ReturnType<typeof mountCard>, password = "hunter2") {
+  await wrapper.get("button.is-primary").trigger("click");
+  const input = document.body.querySelector<HTMLInputElement>("#passkey-password");
+  if (!input) throw new Error("no password input");
+  input.value = password;
+  input.dispatchEvent(new Event("input"));
+  bodyButton("Continue").click();
+  await flushPromises();
+}
+
 describe("PasskeysCard", () => {
   beforeEach(() => {
     mockRequest.mockReset();
@@ -134,10 +145,10 @@ describe("PasskeysCard", () => {
     mockStartRegistration.mockResolvedValue(registrationResponse);
     const wrapper = mountCard();
 
-    await wrapper.get("button.is-primary").trigger("click");
-    await flushPromises();
+    await startAdding(wrapper);
 
     expect(mockStartRegistration).toHaveBeenCalledWith({ optionsJSON: { challenge: "abc" } });
+    expect(mockRequest).toHaveBeenCalledWith(PASSKEY_REGISTRATION_OPTIONS, { currentPassword: "hunter2" });
     expect(mockRequest).toHaveBeenCalledWith(
       REGISTER_PASSKEY,
       expect.objectContaining({ response: registrationResponse })
@@ -161,8 +172,7 @@ describe("PasskeysCard", () => {
     mockStartRegistration.mockRejectedValue(domError("NotAllowedError"));
     const wrapper = mountCard();
 
-    await wrapper.get("button.is-primary").trigger("click");
-    await flushPromises();
+    await startAdding(wrapper);
 
     expect(wrapper.find(".pk-note").exists()).toBeFalsy();
     expect(mockRequest).not.toHaveBeenCalledWith(REGISTER_PASSKEY, expect.anything());
@@ -174,8 +184,7 @@ describe("PasskeysCard", () => {
     mockStartRegistration.mockRejectedValue(domError("InvalidStateError"));
     const wrapper = mountCard();
 
-    await wrapper.get("button.is-primary").trigger("click");
-    await flushPromises();
+    await startAdding(wrapper);
 
     expect(wrapper.get(".pk-note").text()).toBe("This passkey is already registered to your account.");
   });
@@ -186,11 +195,33 @@ describe("PasskeysCard", () => {
     });
     const wrapper = mountCard();
 
-    await wrapper.get("button.is-primary").trigger("click");
-    await flushPromises();
+    await startAdding(wrapper);
 
     expect(mockStartRegistration).not.toHaveBeenCalled();
-    expect(wrapper.get(".pk-note").text()).toContain("Confirm your email address");
+    expect(document.body.querySelector("#passkey-password-error")?.textContent).toContain("Confirm your email address");
+  });
+
+  it("keeps the password dialog open when the password is wrong", async () => {
+    mockRequest.mockResolvedValue({
+      passkeyRegistrationOptions: { options: null, errors: ["Current password is incorrect."] }
+    });
+    const wrapper = mountCard();
+
+    await startAdding(wrapper, "wrong");
+
+    expect(mockStartRegistration).not.toHaveBeenCalled();
+    expect(document.body.querySelector("#passkey-password-error")?.textContent).toBe("Current password is incorrect.");
+    expect(document.body.querySelector("#passkey-password")?.getAttribute("aria-invalid")).toBe("true");
+    expect(bodyButton("Continue")).toBeTruthy();
+  });
+
+  it("asks for the password before calling the server", async () => {
+    const wrapper = mountCard();
+
+    await startAdding(wrapper, "");
+
+    expect(mockRequest).not.toHaveBeenCalled();
+    expect(document.body.querySelector("#passkey-password-error")?.textContent).toBe("Enter your current password.");
   });
 
   it("removes a passkey after confirmation", async () => {
