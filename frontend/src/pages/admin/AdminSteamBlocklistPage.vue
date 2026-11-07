@@ -69,7 +69,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
@@ -79,6 +80,8 @@ import { extractGqlError } from "@/utils/graphql-errors";
 import type { GetSteamBlocklistQuery } from "@/types/graphql";
 
 const { show: showSnackbar } = useSnackbar();
+const route = useRoute();
+const router = useRouter();
 
 const {
   data: sbData,
@@ -90,6 +93,19 @@ const {
 const newSteamName = ref("");
 const newSteamAppId = ref<number | undefined>(undefined);
 
+// Prefill the form from `?name=…&steamAppId=…`, e.g.
+// `/admin/steam-blocklist?name=Half-Life+OST&steamAppId=12345`.
+watch(
+  () => [route.query.name, route.query.steamAppId] as const,
+  ([name, steamAppId]) => {
+    if (typeof name === "string" && name !== "") newSteamName.value = name;
+    if (typeof steamAppId === "string" && /^[1-9]\d*$/.test(steamAppId)) {
+      newSteamAppId.value = Number(steamAppId);
+    }
+  },
+  { immediate: true }
+);
+
 async function addSteamBlocklistEntry() {
   if (!newSteamName.value || !newSteamAppId.value) return;
   try {
@@ -100,6 +116,10 @@ async function addSteamBlocklistEntry() {
     showSnackbar("Added to Steam blocklist.");
     newSteamName.value = "";
     newSteamAppId.value = undefined;
+    // Drop any prefill params so a reload doesn't refill the form.
+    if (route.query.name !== undefined || route.query.steamAppId !== undefined) {
+      router.replace({ query: {} });
+    }
     sbRefetch();
   } catch (err) {
     showSnackbar(extractGqlError(err), "error");
