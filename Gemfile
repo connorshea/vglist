@@ -20,6 +20,9 @@ gem 'devise', '~> 5.0'
 # JWT for stateless API authentication with the Vue SPA frontend.
 gem 'jwt', '~> 3.3'
 
+# WebAuthn relying party, for passkey sign-in.
+gem 'webauthn', '~> 3.5'
+
 # Use kaminari for pagination.
 gem 'kaminari', '~> 1.3'
 
