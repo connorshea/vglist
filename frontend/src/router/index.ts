@@ -292,7 +292,9 @@ const router = createRouter({
     // Stores have no page of their own; send old links to the list.
     {
       path: "/stores/:id",
-      redirect: { name: "stores" }
+      // A plain path, so the :id param isn't carried over to /stores (which
+      // has none) and logged as discarded.
+      redirect: "/stores"
     },
     {
       path: "/stores/:id/edit",
