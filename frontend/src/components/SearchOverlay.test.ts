@@ -534,6 +534,118 @@ describe("SearchOverlay", () => {
     });
   });
 
+  // ── Out-of-order and late responses ──
+
+  describe("stale responses", () => {
+    function game(id: string, content: string) {
+      return {
+        searchableId: id,
+        searchableType: "GAME",
+        content,
+        coverUrl: null,
+        developerName: null,
+        releaseDate: null
+      };
+    }
+
+    function deferred() {
+      let resolve: (value: unknown) => void = () => {};
+      const promise = new Promise<unknown>((r) => {
+        resolve = r;
+      });
+      return { promise, resolve };
+    }
+
+    async function openAndMount(): Promise<VueWrapper> {
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+      return wrapper;
+    }
+
+    async function type(wrapper: VueWrapper, value: string) {
+      const input = wrapper.find(".search-input");
+      await input.setValue(value);
+      await input.trigger("input");
+    }
+
+    function titles(wrapper: VueWrapper): string[] {
+      return wrapper.findAll(".result-title").map((title) => title.text());
+    }
+
+    it("ignores a response for an older query that arrives after a newer one", async () => {
+      const older = deferred();
+      const newer = deferred();
+      mockRequest.mockReturnValueOnce(older.promise).mockReturnValueOnce(newer.promise);
+      const wrapper = await openAndMount();
+
+      await type(wrapper, "hal");
+      await vi.advanceTimersByTimeAsync(300);
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(300);
+      expect(mockRequest).toHaveBeenCalledTimes(2);
+
+      newer.resolve({ globalSearch: { nodes: [game("2", "Halo 3")] } });
+      await flushPromises();
+      older.resolve({ globalSearch: { nodes: [game("1", "Half-Life")] } });
+      await flushPromises();
+
+      expect(titles(wrapper)).toEqual(["Halo 3"]);
+    });
+
+    it("doesn't keep a response that lands after it closes for the next search", async () => {
+      const pending = deferred();
+      mockRequest.mockReturnValueOnce(pending.promise);
+      const wrapper = await openAndMount();
+
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(300);
+
+      mockIsOpen.value = false;
+      await nextTick();
+      pending.resolve({ globalSearch: { nodes: [game("2", "Halo 3")] } });
+      await flushPromises();
+
+      // Reopen and start a new search: until its debounce fires, nothing from
+      // the closed search should show (or be opened by Enter).
+      mockIsOpen.value = true;
+      await flushPromises();
+      await type(wrapper, "zelda");
+      expect(titles(wrapper)).toEqual([]);
+    });
+
+    it("opens the new query's top hit on Enter pressed before the debounce fires", async () => {
+      const wrapper = await mountWithSearchResults([game("1", "Half-Life")], "hal");
+      mockRequest.mockResolvedValueOnce({ globalSearch: { nodes: [game("2", "Halo 3")] } });
+
+      await type(wrapper, "halo");
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+      await flushPromises();
+
+      expect(mockRequest).toHaveBeenLastCalledWith("GLOBAL_SEARCH_QUERY", { query: "halo" });
+      expect(pushMock).toHaveBeenCalledTimes(1);
+      expect(pushMock).toHaveBeenCalledWith("/games/2");
+    });
+
+    it("opens the new query's top hit on Enter pressed while its search is in flight", async () => {
+      const wrapper = await mountWithSearchResults([game("1", "Half-Life")], "hal");
+      const pending = deferred();
+      mockRequest.mockReturnValueOnce(pending.promise);
+
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(300);
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+      await flushPromises();
+      expect(pushMock).not.toHaveBeenCalled();
+
+      pending.resolve({ globalSearch: { nodes: [game("2", "Halo 3")] } });
+      await flushPromises();
+      expect(pushMock).toHaveBeenCalledTimes(1);
+      expect(pushMock).toHaveBeenCalledWith("/games/2");
+    });
+  });
+
   // ── Additional edge cases ──
 
   describe("empty and loading states", () => {
