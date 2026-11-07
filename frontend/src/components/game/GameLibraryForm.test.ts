@@ -113,3 +113,109 @@ describe("GameLibraryForm replay count", () => {
     expect(input.element.value).toBe("0");
   });
 });
+
+describe("GameLibraryForm status and date defaults", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  function tile(wrapper: Awaited<ReturnType<typeof mountForm>>, label: string) {
+    const found = wrapper.findAll(".form-tile").find((t) => t.text() === label);
+    if (!found) throw new Error(`no ${label} tile`);
+    return found;
+  }
+
+  it("fills an empty start date with today when you pick Playing, and Undo takes it back", async () => {
+    const wrapper = await mountForm(null);
+    await tile(wrapper, "Playing").trigger("click");
+
+    expect(tile(wrapper, "Playing").attributes("aria-pressed")).toBe("true");
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe(today);
+    expect(wrapper.find(".form-hint").text()).toContain("Started set to today");
+
+    await wrapper.find(".form-hint-undo").trigger("click");
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("");
+    expect(wrapper.find(".form-hint").exists()).toBeFalsy();
+    expect(tile(wrapper, "Playing").attributes("aria-pressed")).toBe("true");
+  });
+
+  it("fills the finished date for Completed and reverts the start date when switching from Playing", async () => {
+    const wrapper = await mountForm(null);
+    await tile(wrapper, "Playing").trigger("click");
+    await tile(wrapper, "Completed").trigger("click");
+
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("");
+    expect(wrapper.find<HTMLInputElement>("#form-completion-date").element.value).toBe(today);
+    expect(wrapper.find(".form-hint").text()).toContain("Finished set to today");
+  });
+
+  it("leaves a date you already set alone", async () => {
+    const wrapper = await mountForm(null);
+    await wrapper.find("#form-start-date").setValue("2026-01-02");
+    await tile(wrapper, "Playing").trigger("click");
+
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("2026-01-02");
+    expect(wrapper.find(".form-hint").exists()).toBeFalsy();
+  });
+
+  it("clears the status on a second tap", async () => {
+    const wrapper = await mountForm(null);
+    await tile(wrapper, "Paused").trigger("click");
+    await tile(wrapper, "Paused").trigger("click");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+    expect(variablesFor(ADD_GAME_TO_LIBRARY)).not.toHaveProperty("completionStatus");
+  });
+});
+
+describe("GameLibraryForm sections", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  function toggle(wrapper: Awaited<ReturnType<typeof mountForm>>, controls: string) {
+    return wrapper.find(`.form-section-toggle[aria-controls="${controls}"]`);
+  }
+
+  it("opens Progress by default in the drawer and summarises closed sections", async () => {
+    const wrapper = await mountForm(null);
+    expect(toggle(wrapper, "form-section-progress").attributes("aria-expanded")).toBe("true");
+    expect(toggle(wrapper, "form-section-owned").attributes("aria-expanded")).toBe("false");
+    expect(toggle(wrapper, "form-section-owned").text()).toContain("Not set");
+    expect(toggle(wrapper, "form-section-review").text()).toContain("Optional");
+
+    await toggle(wrapper, "form-section-review").trigger("click");
+    expect(toggle(wrapper, "form-section-review").attributes("aria-expanded")).toBe("true");
+  });
+
+  it("starts with every section closed in the phone sheet", async () => {
+    const wrapper = mount(GameLibraryForm, {
+      props: {
+        gameId: "1",
+        gameName: "Outer Wilds",
+        gamePurchaseId: null,
+        gamePlatforms: [],
+        allStores: [],
+        storesLoading: false,
+        removingFromLibrary: false,
+        variant: "sheet"
+      }
+    });
+    await flushPromises();
+    expect(wrapper.findAll(".form-section-toggle[aria-expanded='true']")).toHaveLength(0);
+  });
+
+  it("shows hours and dates in the Progress summary once it's closed", async () => {
+    const wrapper = await mountForm(null);
+    await wrapper.find("#form-hours-played").setValue("12.5");
+    await wrapper.find("#form-start-date").setValue("2026-10-30");
+    await toggle(wrapper, "form-section-progress").trigger("click");
+    expect(toggle(wrapper, "form-section-progress").text()).toContain("12.5 h · started Oct 30, 2026");
+  });
+});
