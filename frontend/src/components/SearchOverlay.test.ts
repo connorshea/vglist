@@ -185,6 +185,19 @@ describe("SearchOverlay", () => {
       await vi.advanceTimersByTimeAsync(300);
       expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "hollow" });
     });
+
+    it("starts searching when it mounts already open (e.g. from /search)", async () => {
+      mockRequest.mockResolvedValueOnce({ globalSearch: { nodes: [] } });
+      mockInitialQuery.value = "celeste";
+      mockIsOpen.value = true;
+
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      expect((wrapper.find(".search-input").element as HTMLInputElement).value).toBe("celeste");
+      await vi.advanceTimersByTimeAsync(300);
+      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "celeste" });
+    });
   });
 
   // ── 3. Escape key closes the overlay ──

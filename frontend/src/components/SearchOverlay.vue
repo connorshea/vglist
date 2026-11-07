@@ -220,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onBeforeUnmount } from "vue";
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
@@ -306,18 +306,23 @@ const gridColumnsClass = computed(() => {
   return `grid-cols-${Math.min(cols, 4)}`;
 });
 
-// Focus input when overlay opens, and listen for Escape globally
+// Start with the query the overlay was opened with, focus the input, and
+// listen for Escape globally.
+async function onOpened() {
+  const initial = takeInitialQuery();
+  if (initial) {
+    query.value = initial;
+    performSearch();
+  }
+  await nextTick();
+  searchInputRef.value?.focus();
+  document.body.style.overflow = "hidden";
+  document.addEventListener("keydown", onDocumentKeydown);
+}
+
 watch(isOpen, async (open) => {
   if (open) {
-    const initial = takeInitialQuery();
-    if (initial) {
-      query.value = initial;
-      performSearch();
-    }
-    await nextTick();
-    searchInputRef.value?.focus();
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", onDocumentKeydown);
+    await onOpened();
   } else {
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onDocumentKeydown);
@@ -326,6 +331,14 @@ watch(isOpen, async (open) => {
     hasSearched.value = false;
     loading.value = false;
     error.value = null;
+  }
+});
+
+// /search (the OpenSearch target) can open the overlay before this component
+// mounts on a fresh page load, so the watch above never sees it change.
+onMounted(() => {
+  if (isOpen.value) {
+    void onOpened();
   }
 });
 
