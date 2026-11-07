@@ -385,6 +385,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
 import { ArrowLeftRight, ChevronDown, Search, UserSearch } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useAuthStore } from "@/stores/auth";
 import { GET_COMPARISON_IN_COMMON, GET_COMPARISON_ONLY, GET_LIBRARY_COMPARISON } from "@/graphql/queries/compare";
 import type {
@@ -463,6 +464,13 @@ const comparison = computed(() => data.value?.libraryComparison ?? null);
 // Only read once `comparison` is non-null, which the template guards on.
 const userA = computed(() => comparison.value?.userA ?? { id: "", username: "", slug: "", avatarUrl: null });
 const userB = computed(() => comparison.value?.userB ?? { id: "", username: "", slug: "", avatarUrl: null });
+
+// As on the old app: "Comparing connor and dana's game libraries".
+usePageTitle(() =>
+  comparison.value
+    ? `Comparing ${comparison.value.userA.username} and ${comparison.value.userB.username}'s game libraries`
+    : null
+);
 const countA = computed(() => (comparison.value ? comparison.value.onlyACount + comparison.value.inCommonCount : 0));
 const countB = computed(() => (comparison.value ? comparison.value.onlyBCount + comparison.value.inCommonCount : 0));
 
