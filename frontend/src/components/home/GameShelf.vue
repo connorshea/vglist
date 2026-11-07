@@ -1,5 +1,5 @@
 <template>
-  <section v-if="!loaded || games.length > 0" class="game-shelf" :aria-labelledby="headingId">
+  <section v-if="!loaded || games.length > 0" class="game-shelf" :aria-labelledby="headingId" :aria-busy="!loaded">
     <div class="game-shelf-head">
       <h2 :id="headingId" class="game-shelf-title">{{ sort.label }}</h2>
       <router-link :to="seeAllLink" class="game-shelf-more">
@@ -21,7 +21,7 @@
       </li>
     </ul>
     <ul v-else class="game-shelf-grid" aria-hidden="true">
-      <li v-for="n in SHELF_SIZE" :key="n" class="game-shelf-placeholder"></li>
+      <li v-for="n in SHELF_SIZE" :key="n"><GameTileSkeleton /></li>
     </ul>
   </section>
 </template>
@@ -33,6 +33,7 @@ import { useQuery } from "@/composables/useGraphQL";
 import { GET_GAMES_INDEX } from "@/graphql/queries/games-index";
 import type { GetGamesIndexQuery } from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
+import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
 import {
   DEFAULT_GAME_SORT,
   EMPTY_FILTERS,
@@ -113,12 +114,6 @@ const loaded = computed(() => data.value !== null || error.value !== null);
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.game-shelf-placeholder {
-  aspect-ratio: 3 / 4;
-  border-radius: 10px;
-  background: var(--color-bg-subtle);
 }
 
 @media (max-width: 1023px) {
