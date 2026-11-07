@@ -9,6 +9,10 @@ module Api
   # uploads are disabled (see config/routes.rb). It authenticates with the
   # same JWT bearer token the SPA uses for GraphQL.
   class AvatarsController < ApplicationController
+    # The Disk service (development and test) needs the request host to build
+    # the returned avatar URL.
+    include ActiveStorage::SetCurrent
+
     before_action :require_current_user
 
     def create
