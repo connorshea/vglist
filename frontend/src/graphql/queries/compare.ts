@@ -131,6 +131,8 @@ export const SEARCH_USERS_TO_COMPARE = gql`
     userSearch(query: $query, first: 8) {
       nodes {
         ...ComparisonUserFields
+        privacy
+        banned
       }
     }
   }

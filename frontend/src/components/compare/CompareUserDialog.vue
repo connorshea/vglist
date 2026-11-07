@@ -71,6 +71,7 @@ import { Search, X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { SEARCH_USERS_TO_COMPARE } from "@/graphql/queries/compare";
 import type { SearchUsersToCompareQuery } from "@/types/graphql";
+import { useAuthStore } from "@/stores/auth";
 import UserAvatar from "@/components/game/UserAvatar.vue";
 
 const props = defineProps<{
@@ -86,6 +87,7 @@ const emit = defineEmits<{
   select: [slug: string];
 }>();
 
+const authStore = useAuthStore();
 const dialogRef = ref<HTMLElement | null>(null);
 const inputRef = ref<HTMLInputElement | null>(null);
 const term = ref("");
@@ -106,8 +108,18 @@ const { data, loading } = useQuery<SearchUsersToCompareQuery>(SEARCH_USERS_TO_CO
   enabled: () => props.modelValue && debouncedTerm.value.length > 0
 });
 
+// Leave out the users whose libraries the server would refuse to compare:
+// banned and private users, except for admins, who can see every library. (A
+// private user who follows the viewer could be compared, but the search
+// doesn't say who does, so they're left out too.)
+function comparable(user: { privacy: string; banned: boolean }): boolean {
+  return authStore.isAdmin || (!user.banned && user.privacy !== "PRIVATE_ACCOUNT");
+}
+
 const results = computed(() =>
-  debouncedTerm.value ? (data.value?.userSearch?.nodes ?? []).filter((user) => !props.exclude.includes(user.slug)) : []
+  debouncedTerm.value
+    ? (data.value?.userSearch?.nodes ?? []).filter((user) => !props.exclude.includes(user.slug) && comparable(user))
+    : []
 );
 
 watch(results, () => {

@@ -886,7 +886,16 @@ export type SearchUsersToCompareQueryVariables = Exact<{
 }>;
 
 export interface SearchUsersToCompareQuery {
-  userSearch: { nodes: Array<{ id: string; username: string; slug: string; avatarUrl: string | null }> } | null;
+  userSearch: {
+    nodes: Array<{
+      privacy: UserPrivacy;
+      banned: boolean;
+      id: string;
+      username: string;
+      slug: string;
+      avatarUrl: string | null;
+    }>;
+  } | null;
 }
 
 export type GameTileFieldsFragment = {
