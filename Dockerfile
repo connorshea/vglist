@@ -17,12 +17,13 @@
 #
 # The Vue frontend has its own image, see frontend/Dockerfile.
 
-ARG RUBY_VERSION=4.0.9
-
 # ---------------------------------------------------------------------------
 # Base: Ruby plus the shared libraries the app needs at runtime.
 # ---------------------------------------------------------------------------
-FROM ruby:${RUBY_VERSION}-slim-trixie AS base
+# Pinned by digest so every build uses the exact same base. Dependabot
+# (docker ecosystem) bumps the tag and digest together; keep the Ruby
+# version in step with mise.toml, Gemfile and the CI workflows.
+FROM ruby:4.0.9-slim-trixie@sha256:22cfdec4c490b9e7e4913527a126ddc34bf30cf5432711f70eb1aa4b3ac388a5 AS base
 
 WORKDIR /rails
 
