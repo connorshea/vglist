@@ -27,6 +27,18 @@ declare module "vue-router" {
       // Users
       users: RouteRecordInfo<"users", "/users", Record<never, never>, Record<never, never>>;
       user: RouteRecordInfo<"user", "/users/:slug", { slug: string }, { slug: string }>;
+      userCompare: RouteRecordInfo<
+        "userCompare",
+        "/users/:slug/compare/:otherSlug",
+        { slug: string; otherSlug: string },
+        { slug: string; otherSlug: string }
+      >;
+      userCompareWithMe: RouteRecordInfo<
+        "userCompareWithMe",
+        "/users/:slug/compare",
+        { slug: string },
+        { slug: string }
+      >;
       userLibrary: RouteRecordInfo<"userLibrary", "/users/:slug/library", { slug: string }, { slug: string }>;
       userFavorites: RouteRecordInfo<"userFavorites", "/users/:slug/favorites", { slug: string }, { slug: string }>;
       userFollowing: RouteRecordInfo<"userFollowing", "/users/:slug/following", { slug: string }, { slug: string }>;

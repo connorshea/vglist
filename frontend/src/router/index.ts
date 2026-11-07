@@ -78,6 +78,24 @@ const router = createRouter({
       name: "users",
       component: () => import("@/pages/users/UserListPage.vue")
     },
+    // Comparing two users' libraries. `/users/:slug/compare` compares the
+    // signed-in user with that user, so the profile's button can link to it.
+    {
+      path: "/users/:slug/compare/:otherSlug",
+      name: "userCompare",
+      component: () => import("@/pages/users/UserComparePage.vue")
+    },
+    {
+      path: "/users/:slug/compare",
+      name: "userCompareWithMe",
+      redirect: (to) => {
+        const authStore = useAuthStore();
+        const slug = "slug" in to.params ? to.params.slug : "";
+        const viewer = authStore.isAuthenticated ? authStore.user : null;
+        if (!viewer || viewer.slug === slug) return { name: "user", params: { slug } };
+        return { name: "userCompare", params: { slug: viewer.slug, otherSlug: slug } };
+      }
+    },
     // A user's profile: one header and tab bar, with each tab a child route.
     {
       path: "/users/:slug",
