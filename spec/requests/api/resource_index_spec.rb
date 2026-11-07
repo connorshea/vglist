@@ -156,4 +156,32 @@ RSpec.describe "Resource index API", type: :request do
       expect(query_count { api_request(query_string, token: access_token) }).to eq(baseline)
     end
   end
+
+  describe "coverGames on companies and engines" do
+    def covers(field)
+      query = "query { #{field}(sortBy: NAME) { nodes { name coverGames { name } } } }"
+      api_request(query, token: access_token).graphql_dig(field, :nodes).to_h do |node|
+        [node[:name], node[:coverGames].pluck(:name)]
+      end
+    end
+
+    it "uses games a company developed or published, each once" do
+      company = create(:company, name: "Valve")
+      both = create(:game, :cover, name: "Both")
+      create(:game_developer, company: company, game: both)
+      create(:game_publisher, company: company, game: both)
+      create(:game_purchase, game: both)
+      create(:game_publisher, company: company, game: create(:game, :cover, name: "Published"))
+
+      expect(covers(:companies)).to eq("Valve" => ["Both", "Published"])
+    end
+
+    it "uses games built with an engine" do
+      engine = create(:engine, name: "Source")
+      create(:game_engine, engine: engine, game: create(:game, :cover, name: "Half-Life 2"))
+      create(:game_engine, engine: engine, game: create(:game, name: "No cover"))
+
+      expect(covers(:engines)).to eq("Source" => ["Half-Life 2"])
+    end
+  end
 end

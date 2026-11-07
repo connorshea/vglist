@@ -12,6 +12,7 @@ module Types
     field :games_count, Integer, null: false, description: "The number of games this company developed or published, counting each game once."
 
     # Associations
+    field :cover_games, [GameType], null: false, description: "Up to four games this company developed or published that have a cover, most-owned first, for showing the company as a mosaic of covers."
     field :published_games, GameType.connection_type, null: false, description: "Games published by this company." do
       argument :sort_by, Enums::ResourceGameSortType, required: false, description: "The order to sort the games in, if any."
     end
@@ -31,6 +32,10 @@ module Types
     # page of them doesn't count each one's games separately.
     def games_count
       @object.has_attribute?(:index_games_count) ? @object[:index_games_count] : @object.games.count
+    end
+
+    def cover_games
+      LazyCoverGames.new(@context, @object)
     end
   end
 end
