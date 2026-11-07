@@ -83,9 +83,11 @@ export const GET_GAME = gql`
   }
 `;
 
+// Covers for the home page hero's mosaic. The most-owned games almost all have
+// covers, where recently updated ones are often newly imported and have none.
 export const GET_HERO_COVERS = gql`
   query GetHeroCovers {
-    games(first: 100, sortBy: RECENTLY_UPDATED) {
+    games(first: 100, sortBy: MOST_OWNERS) {
       nodes {
         coverUrl(size: SMALL)
       }
