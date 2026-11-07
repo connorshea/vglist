@@ -59,6 +59,10 @@ class User < ApplicationRecord
   # other external account types are added later.
   has_one :external_account, dependent: :destroy
 
+  # Passkeys the user can sign in with.
+  has_many :webauthn_credentials, dependent: :delete_all
+  has_many :webauthn_challenges, dependent: :delete_all
+
   # Only use one of the pre-set sizes for these images.
   AVATAR_SIZES = {
     small: [80, 80],
@@ -194,6 +198,16 @@ class User < ApplicationRecord
   # matching one of the keys in `User::AVATAR_SIZES`.
   def sized_avatar(size)
     avatar.variant(size)&.processed
+  end
+
+  # The user's WebAuthn user handle, generated and saved the first time it's
+  # needed (when they first register a passkey). It's random rather than the
+  # numeric ID so authenticators never store anything that identifies them.
+  def webauthn_id!
+    # update_column skips validations, so an old account that fails a newer
+    # validation (e.g. a now-reserved username) can still add a passkey.
+    update_column(:webauthn_id, WebAuthn.generate_user_id) if webauthn_id.nil? # rubocop:disable Rails/SkipsModelValidations
+    webauthn_id
   end
 
   private
