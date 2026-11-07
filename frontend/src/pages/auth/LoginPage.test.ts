@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import LoginPage from "./LoginPage.vue";
 
@@ -12,7 +12,11 @@ const { mockRoute, mockPush, mockSignIn, mockSignInWithPasskey, webauthn } = vi.
     vi.fn<
       (options?: {
         useBrowserAutofill?: boolean;
-      }) => Promise<{ status: "success" } | { status: "cancelled" } | { status: "error"; errors: string[] }>
+      }) => Promise<
+        | { status: "success" }
+        | { status: "cancelled" }
+        | { status: "error"; stage: "options" | "browser" | "verify"; errors: string[] }
+      >
     >(),
   webauthn: { supported: false, autofill: false }
 }));
@@ -201,6 +205,7 @@ describe("LoginPage passkeys", () => {
   it("explains a failed passkey and falls back to the password", async () => {
     mockSignInWithPasskey.mockResolvedValue({
       status: "error",
+      stage: "verify",
       errors: ["That passkey isn't linked to a vglist account."]
     });
     const wrapper = mount(LoginPage, mountOptions);
@@ -231,5 +236,62 @@ describe("LoginPage passkeys", () => {
     await flushPromises();
 
     expect(mockPush).toHaveBeenCalledWith("/");
+  });
+
+  describe("when the autofill request fails before the user picks a passkey", () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("stays quiet and doesn't retry straight away when the options request fails", async () => {
+      webauthn.autofill = true;
+      mockSignInWithPasskey.mockResolvedValue({ status: "error", stage: "options", errors: ["Too many requests."] });
+      const wrapper = mount(LoginPage, mountOptions);
+      await flushPromises();
+      await flushPromises();
+
+      expect(mockSignInWithPasskey).toHaveBeenCalledTimes(1);
+      expect(wrapper.find(".auth-alert").exists()).toBeFalsy();
+    });
+
+    it("retries a failed options request on the refresh timer", async () => {
+      vi.useFakeTimers();
+      webauthn.autofill = true;
+      mockSignInWithPasskey.mockResolvedValue({ status: "error", stage: "options", errors: ["Server error."] });
+      mount(LoginPage, mountOptions);
+      await flushPromises();
+      expect(mockSignInWithPasskey).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(4 * 60 * 1000);
+      expect(mockSignInWithPasskey).toHaveBeenCalledTimes(2);
+    });
+
+    it("gives up on autofill when the browser call fails", async () => {
+      vi.useFakeTimers();
+      webauthn.autofill = true;
+      mockSignInWithPasskey.mockResolvedValue({ status: "error", stage: "browser", errors: ["Browser error."] });
+      const wrapper = mount(LoginPage, mountOptions);
+      await flushPromises();
+
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000);
+      expect(mockSignInWithPasskey).toHaveBeenCalledTimes(1);
+      expect(wrapper.find(".auth-alert").exists()).toBeFalsy();
+    });
+  });
+
+  it("shows the alert and waits for another pick when the server rejects an autofilled passkey", async () => {
+    webauthn.autofill = true;
+    mockSignInWithPasskey
+      .mockResolvedValueOnce({
+        status: "error",
+        stage: "verify",
+        errors: ["That passkey isn't linked to a vglist account."]
+      })
+      .mockReturnValue(new Promise(() => {}));
+    const wrapper = mount(LoginPage, mountOptions);
+    await flushPromises();
+
+    expect(wrapper.find(".auth-alert").text()).toContain("isn't linked to a vglist account");
+    expect(mockSignInWithPasskey).toHaveBeenCalledTimes(2);
   });
 });

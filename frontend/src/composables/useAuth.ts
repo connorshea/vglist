@@ -12,7 +12,9 @@ import { extractGqlError } from "@/utils/graphql-errors";
 export type PasskeySignInResult =
   | { status: "success" }
   | { status: "cancelled" }
-  | { status: "error"; errors: string[] };
+  // `stage` says where it failed: fetching the options, in the browser's
+  // WebAuthn call, or verifying the passkey on the server.
+  | { status: "error"; stage: "options" | "browser" | "verify"; errors: string[] };
 
 export function useAuth() {
   const authStore = useAuthStore();
@@ -66,7 +68,7 @@ export function useAuth() {
       const data = await gqlClient.request<PasskeyAuthenticationOptionsMutation>(PASSKEY_AUTHENTICATION_OPTIONS);
       optionsJSON = data.passkeyAuthenticationOptions?.options as PublicKeyCredentialRequestOptionsJSON;
     } catch (e) {
-      return { status: "error", errors: [extractGqlError(e)] };
+      return { status: "error", stage: "options", errors: [extractGqlError(e)] };
     }
 
     let response;
@@ -74,14 +76,18 @@ export function useAuth() {
       response = await startAuthentication({ optionsJSON, useBrowserAutofill });
     } catch (e) {
       if (isPasskeyCancellation(e)) return { status: "cancelled" };
-      return { status: "error", errors: ["Your browser couldn't use a passkey. Please try again."] };
+      return { status: "error", stage: "browser", errors: ["Your browser couldn't use a passkey. Please try again."] };
     }
 
     try {
       const data = await gqlClient.request<SignInWithPasskeyMutation>(SIGN_IN_WITH_PASSKEY, { response });
       const result = data.signInWithPasskey;
       if (!result || result.errors.length > 0 || !result.token || !result.userId) {
-        return { status: "error", errors: result?.errors.length ? result.errors : ["Passkey sign in failed."] };
+        return {
+          status: "error",
+          stage: "verify",
+          errors: result?.errors.length ? result.errors : ["Passkey sign in failed."]
+        };
       }
 
       authStore.setAuth(result.token, {
@@ -94,7 +100,7 @@ export function useAuth() {
       });
       return { status: "success" };
     } catch (e) {
-      return { status: "error", errors: [extractGqlError(e)] };
+      return { status: "error", stage: "verify", errors: [extractGqlError(e)] };
     }
   }
 

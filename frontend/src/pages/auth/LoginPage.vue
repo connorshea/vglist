@@ -150,7 +150,18 @@ async function startAutofill() {
   const result = await signInWithPasskey({ useBrowserAutofill: true });
   if (unmounted) return;
 
+  // The options request or the browser's WebAuthn call failed before the
+  // user did anything. Stay quiet (the button and password still work) and
+  // don't retry straight away, which would loop and burn the sign-in rate
+  // limit. A failed options request is retried by the refresh timer; a
+  // browser failure won't fix itself, so give up on autofill.
+  if (result.status === "error" && result.stage !== "verify") {
+    if (result.stage === "browser") clearTimeout(autofillTimer);
+    return;
+  }
+
   handlePasskeyResult(result);
+  // The user picked a passkey the server rejected: wait for another pick.
   if (result.status === "error") void startAutofill();
 }
 
