@@ -43,7 +43,7 @@
     "oxlint": "^1.91.0",
     "oxlint-tsgolint": "^7.0.2006",
     "typescript": "~6.0.3",
-    "vite": "^8.2.4",
+    "vite": "^8.3.5",
     "vitest": "^5.0.0",
     "vue-tsc": "^3.3.11"
   },
