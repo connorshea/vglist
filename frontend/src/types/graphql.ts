@@ -2034,3 +2034,9 @@ export type GetCurrentUserSteamAccountQueryVariables = Exact<{ [key: string]: ne
 export interface GetCurrentUserSteamAccountQuery {
   currentUser: { id: string; steamProfileUrl: string | null } | null;
 }
+
+export type GetCurrentUserAvatarQueryVariables = Exact<{ [key: string]: never }>;
+
+export interface GetCurrentUserAvatarQuery {
+  currentUser: { id: string; avatarUrl: string | null } | null;
+}
