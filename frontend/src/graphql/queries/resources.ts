@@ -328,14 +328,15 @@ export const GET_SERIES_FOR_EDIT = gql`
 `;
 
 export const GET_STORES = gql`
-  query GetStores($first: Int, $after: String) {
-    stores(first: $first, after: $after) {
+  query GetStores($first: Int, $after: String, $last: Int, $before: String) {
+    stores(first: $first, after: $after, last: $last, before: $before) {
       nodes {
         id
         name
       }
       pageInfo {
         hasNextPage
+        startCursor
         endCursor
       }
     }
@@ -383,8 +384,8 @@ export const GLOBAL_SEARCH = gql`
 `;
 
 export const GET_ACTIVITY = gql`
-  query GetActivity($feedType: ActivityFeed, $first: Int, $after: String) {
-    activity(feedType: $feedType, first: $first, after: $after) {
+  query GetActivity($feedType: ActivityFeed, $first: Int, $after: String, $last: Int, $before: String) {
+    activity(feedType: $feedType, first: $first, after: $after, last: $last, before: $before) {
       nodes {
         id
         eventCategory
@@ -434,6 +435,7 @@ export const GET_ACTIVITY = gql`
       }
       pageInfo {
         hasNextPage
+        startCursor
         endCursor
       }
     }

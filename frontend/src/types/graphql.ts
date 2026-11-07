@@ -1727,12 +1727,14 @@ export interface GetSeriesForEditQuery {
 export type GetStoresQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
+  last?: number | null | undefined;
+  before?: string | null | undefined;
 }>;
 
 export interface GetStoresQuery {
   stores: {
     nodes: Array<{ id: string; name: string }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    pageInfo: { hasNextPage: boolean; startCursor: string | null; endCursor: string | null };
   } | null;
 }
 
@@ -1847,6 +1849,8 @@ export type GetActivityQueryVariables = Exact<{
   feedType?: ActivityFeed | null | undefined;
   first?: number | null | undefined;
   after?: string | null | undefined;
+  last?: number | null | undefined;
+  before?: string | null | undefined;
 }>;
 
 export interface GetActivityQuery {
@@ -1870,7 +1874,7 @@ export interface GetActivityQuery {
         | { followed: { id: string; username: string; slug: string; avatarUrl: string | null } }
         | { id: string; username: string; slug: string; avatarUrl: string | null };
     }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    pageInfo: { hasNextPage: boolean; startCursor: string | null; endCursor: string | null };
   } | null;
 }
 
@@ -2012,6 +2016,8 @@ export interface GetUserFavoritesQuery {
 export type GetUsersQueryVariables = Exact<{
   first?: number | null | undefined;
   after?: string | null | undefined;
+  last?: number | null | undefined;
+  before?: string | null | undefined;
   sortBy?: UserSort | null | undefined;
 }>;
 
@@ -2029,7 +2035,7 @@ export interface GetUsersQuery {
       createdAt: string;
       gamePurchases: { totalCount: number };
     }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    pageInfo: { hasNextPage: boolean; startCursor: string | null; endCursor: string | null };
   } | null;
 }
 
@@ -2073,6 +2079,8 @@ export type GetUserActivityQueryVariables = Exact<{
   slug: string;
   first?: number | null | undefined;
   after?: string | null | undefined;
+  last?: number | null | undefined;
+  before?: string | null | undefined;
 }>;
 
 export interface GetUserActivityQuery {
@@ -2100,7 +2108,7 @@ export interface GetUserActivityQuery {
           | { followed: { id: string; username: string; slug: string; avatarUrl: string | null } }
           | { id: string; username: string; slug: string; avatarUrl: string | null };
       }>;
-      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+      pageInfo: { hasNextPage: boolean; startCursor: string | null; endCursor: string | null };
     };
   } | null;
 }
