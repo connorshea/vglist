@@ -162,7 +162,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch, type Component } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CalendarDays, Flame, Heart, ListFilter, Plus, Star, X } from "@lucide/vue";
+import { CalendarDays, Clock, Flame, Heart, ListFilter, Star, X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_GAMES_INDEX, GET_GAMES_INDEX_COUNT, GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import { useAuthStore } from "@/stores/auth";
@@ -196,7 +196,7 @@ const SORT_ICONS: Record<GameSortOption["slug"], Component> = {
   new: CalendarDays,
   top: Star,
   favorited: Heart,
-  added: Plus
+  added: Clock
 };
 
 const route = useRoute();
