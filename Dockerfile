@@ -17,7 +17,7 @@
 #
 # The Vue frontend has its own image, see frontend/Dockerfile.
 
-ARG RUBY_VERSION=4.0.6
+ARG RUBY_VERSION=4.0.9
 
 # ---------------------------------------------------------------------------
 # Base: Ruby plus the shared libraries the app needs at runtime.
