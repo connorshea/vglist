@@ -5,8 +5,7 @@
     <p v-if="error" class="set-error" role="alert">Failed to load profile: {{ error.message }}</p>
 
     <form v-if="data" class="set-card" aria-labelledby="profile-heading" @submit.prevent="saveProfile">
-      <h2 id="profile-heading" class="set-card-title">Profile</h2>
-      <p class="set-card-desc">How you appear to other people on vglist.</p>
+      <h2 id="profile-heading" class="set-card-title profile-heading">Profile</h2>
 
       <div class="profile-avatar-row">
         <img v-if="avatarUrl" class="profile-avatar" :src="avatarUrl" alt="Your avatar" />
@@ -42,14 +41,7 @@
 
       <div class="set-field">
         <label for="bio">Bio</label>
-        <textarea
-          id="bio"
-          v-model="bio"
-          class="set-textarea"
-          placeholder="Tell people about yourself…"
-          aria-describedby="bio-help"
-        ></textarea>
-        <span id="bio-help" class="set-help">Shown under your name on your profile.</span>
+        <textarea id="bio" v-model="bio" class="set-textarea" placeholder="Tell people about yourself…"></textarea>
       </div>
 
       <fieldset class="set-field">
@@ -66,9 +58,7 @@
             Private
           </label>
         </div>
-        <span class="set-help">
-          Private hides your library, favorites and activity. Your username and avatar stay visible.
-        </span>
+        <span class="set-help">Private hides your library, favorites and activity.</span>
       </fieldset>
 
       <label class="set-switch">
@@ -230,6 +220,11 @@ async function removeAvatar() {
 </script>
 
 <style scoped>
+/* No description under the title, so give it the spacing the description would have. */
+.profile-heading {
+  margin-bottom: 20px;
+}
+
 .profile-avatar-row {
   display: flex;
   align-items: center;
