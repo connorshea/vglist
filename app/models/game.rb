@@ -85,12 +85,9 @@ class Game < ApplicationRecord
       .group(:id)
       .order(Arel.sql('count(favorite_games.game_id) desc'), id: :desc)
   }
-  # Sort by most owners.
-  scope :most_owners, -> {
-    left_joins(:game_purchases)
-      .group(:id)
-      .order(Arel.sql('count(game_purchases.game_id) desc'), id: :desc)
-  }
+  # Sort by most owners. Reads the game_purchases_count counter cache, which
+  # is indexed, rather than counting every game's library entries per query.
+  scope :most_owners, -> { order(game_purchases_count: :desc, id: :desc) }
   # Sort by recently released.
   scope :recently_released, -> {
     where("release_date < ?", 1.day.from_now).order(release_date: :desc, id: :desc)

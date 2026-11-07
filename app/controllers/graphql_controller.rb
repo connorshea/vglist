@@ -33,7 +33,15 @@ class GraphqlController < ApplicationController
       pundit: self
     }
 
+    cache_key = PublicResponseCache.key_for(query, operation_name, variables, current_user)
+    if cache_key && (cached = Rails.cache.read(cache_key))
+      render json: cached
+      return
+    end
+
     result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name)
+    # Only successful responses are cached, so a timeout isn't served for minutes.
+    Rails.cache.write(cache_key, result.to_json, expires_in: PublicResponseCache::EXPIRES_IN) if cache_key && result['errors'].blank?
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?

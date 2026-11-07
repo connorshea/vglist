@@ -11,9 +11,9 @@
 module ResourceGameSort
   ORDERS = {
     newest_release: 'games.release_date DESC NULLS LAST, games.id DESC',
-    # A correlated subquery rather than a join + GROUP BY, so the relation
-    # stays ungrouped and `totalCount` is still a plain count.
-    most_owners: '(SELECT COUNT(*) FROM game_purchases WHERE game_purchases.game_id = games.id) DESC, games.id DESC',
+    # The counter cache that Game.most_owners also sorts on, rather than
+    # counting each game's library entries per query.
+    most_owners: 'games.game_purchases_count DESC, games.id DESC',
     highest_rated: 'games.avg_rating DESC NULLS LAST, games.id DESC',
     name: 'games.name ASC, games.id ASC'
   }.freeze

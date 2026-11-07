@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@lucide/vue": "^1.49.0",
-    "@sentry/vue": "^10.71.0",
+    "@sentry/vue": "^11.10.0",
     "@simplewebauthn/browser": "^14.0.0",
     "bulma": "^1.0.4",
     "graphql": "^16.14.2",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^7.4.6",
     "@graphql-codegen/typescript": "^6.1.0",
-    "@graphql-codegen/typescript-operations": "^6.1.10",
+    "@graphql-codegen/typescript-operations": "^6.2.0",
     "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.5.1",
@@ -44,9 +44,9 @@
     "oxlint": "^1.91.0",
     "oxlint-tsgolint": "^7.0.2006",
     "typescript": "~6.0.3",
-    "vite": "^8.2.4",
+    "vite": "^8.3.5",
     "vitest": "^5.0.0",
-    "vue-tsc": "^3.3.11"
+    "vue-tsc": "^3.3.14"
   },
   "packageManager": "pnpm@11.10.0"
 }

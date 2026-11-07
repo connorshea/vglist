@@ -51,3 +51,19 @@ updates:
       - connorshea
     cooldown:
       default-days: 3
+  # Base images in Dockerfile and frontend/Dockerfile (pinned by digest).
+  # A Ruby bump here must also update mise.toml, Gemfile and the CI
+  # workflows' ruby-version.
+  - package-ecosystem: docker
+    directories:
+      - "/"
+      - "/frontend"
+    schedule:
+      interval: weekly
+      time: "12:00"
+    open-pull-requests-limit: 5
+    target-branch: main
+    assignees:
+      - connorshea
+    cooldown:
+      default-days: 3

@@ -776,7 +776,8 @@ CREATE TABLE public.games (
     gog_id text,
     avg_rating double precision,
     igdb_id text,
-    mobygames_id bigint
+    mobygames_id bigint,
+    game_purchases_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2477,10 +2478,24 @@ CREATE INDEX index_game_versions_on_item_type_and_item_id ON public.game_version
 
 
 --
+-- Name: index_games_on_created_at_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_created_at_and_id ON public.games USING btree (created_at, id);
+
+
+--
 -- Name: index_games_on_epic_games_store_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_games_on_epic_games_store_id ON public.games USING btree (epic_games_store_id);
+
+
+--
+-- Name: index_games_on_game_purchases_count_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_game_purchases_count_and_id ON public.games USING btree (game_purchases_count, id);
 
 
 --
@@ -2502,6 +2517,13 @@ CREATE UNIQUE INDEX index_games_on_igdb_id ON public.games USING btree (igdb_id)
 --
 
 CREATE UNIQUE INDEX index_games_on_mobygames_id ON public.games USING btree (mobygames_id);
+
+
+--
+-- Name: index_games_on_release_date_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_release_date_and_id ON public.games USING btree (release_date, id);
 
 
 --
@@ -2992,6 +3014,9 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261107230200'),
+('20261107230100'),
+('20261107230000'),
 ('20261107220200'),
 ('20261107220100'),
 ('20261107220000'),

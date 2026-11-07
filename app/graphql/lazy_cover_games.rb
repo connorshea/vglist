@@ -53,9 +53,8 @@ class LazyCoverGames
     @state[:pending].clear
   end
 
-  # The top games per record. Owners are counted with a correlated subquery,
-  # like `ResourceGameSort`'s most_owners order, so only games in these
-  # records are counted.
+  # The top games per record, by the same owner counter cache as
+  # `ResourceGameSort`'s most_owners order.
   def ranking_sql(record_ids)
     source = SOURCES.fetch(@kind)
     sql = <<~SQL.squish
@@ -64,7 +63,7 @@ class LazyCoverGames
         SELECT #{source[:key]} AS record_id, games.id AS game_id,
           ROW_NUMBER() OVER (
             PARTITION BY #{source[:key]}
-            ORDER BY (SELECT COUNT(*) FROM game_purchases WHERE game_purchases.game_id = games.id) DESC, games.id ASC
+            ORDER BY games.game_purchases_count DESC, games.id ASC
           ) AS position
         FROM #{source[:from]}
         JOIN active_storage_attachments cover

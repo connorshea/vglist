@@ -13,14 +13,13 @@
 # Run (API_ORIGIN feeds the CSP connect-src in frontend/Caddyfile):
 #   docker run -p 8080:8080 -e API_ORIGIN=https://api.vglist.co vglist-frontend
 
-ARG NODE_VERSION=24
 ARG PNPM_VERSION=11.10.0
-ARG CADDY_VERSION=2.11
 
 # ---------------------------------------------------------------------------
 # Build the static bundle.
 # ---------------------------------------------------------------------------
-FROM node:${NODE_VERSION}-trixie-slim AS build
+# Base images are pinned by digest; Dependabot bumps tag and digest together.
+FROM node:24.22.2-trixie-slim@sha256:0820eaa85e07d0490446dd01d14707e17e6108a36988cf374899cd057eb3812d AS build
 
 ARG PNPM_VERSION
 RUN npm install -g "pnpm@${PNPM_VERSION}"
@@ -47,7 +46,7 @@ RUN [ -n "$VITE_API_URL" ] || unset VITE_API_URL; \
 # ---------------------------------------------------------------------------
 # Serve with Caddy.
 # ---------------------------------------------------------------------------
-FROM caddy:${CADDY_VERSION}-alpine
+FROM caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf50056ea1246559fee
 
 COPY frontend/Caddyfile /etc/caddy/Caddyfile
 COPY --from=build /app/frontend/dist /app/dist

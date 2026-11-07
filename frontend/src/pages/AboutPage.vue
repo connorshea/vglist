@@ -12,7 +12,10 @@
         </h1>
       </div>
 
-      <p class="about-copy">[TODO: About copy goes here. One or two sentences on what vglist is and who it's for.]</p>
+      <p class="about-copy">
+        vglist is a video game database for tracking your collection, because I wanted to get through my massive
+        backlog. I've been building it since 2017, and I hope it's as useful to others as it has been to me.
+      </p>
 
       <div class="about-links">
         <a class="about-btn" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer"
