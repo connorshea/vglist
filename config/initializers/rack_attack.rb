@@ -18,10 +18,17 @@ module RackAttackConfig
   EMAIL_DELIVERY_PATHS = %w[/api/auth/sign_up /users/password /users/confirmation].freeze
   AUTH_PATHS = (SIGN_IN_PATHS + EMAIL_DELIVERY_PATHS).freeze
 
+  # Avatar uploads, which store a file and generate variants.
+  AVATAR_UPLOAD_PATHS = %w[/api/users/me/avatar].freeze
+
   module_function
 
   def graphql_request?(req)
     req.post? && path(req) == '/graphql'
+  end
+
+  def avatar_upload_request?(req)
+    req.post? && AVATAR_UPLOAD_PATHS.include?(path(req))
   end
 
   def auth_request?(req)
@@ -172,6 +179,12 @@ end
 # confirmation resend), to prevent mail-bombing a victim's inbox.
 Rack::Attack.throttle('auth/email_delivery/email', limit: 5, period: 15.minutes) do |req|
   RackAttackConfig.email(req) if RackAttackConfig.email_delivery_request?(req)
+end
+
+# Per-IP cap on avatar uploads. Each one stores a file and generates three
+# variants, so keep it well below anything a person would hit by retrying.
+Rack::Attack.throttle('avatar_upload/ip', limit: 10, period: 1.minute) do |req|
+  RackAttackConfig.client_ip(req) if RackAttackConfig.avatar_upload_request?(req)
 end
 
 Rack::Attack.throttled_responder = lambda do |req|
