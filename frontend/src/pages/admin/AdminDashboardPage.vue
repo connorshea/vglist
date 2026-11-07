@@ -1,28 +1,12 @@
 <template>
-  <div>
+  <div class="admin-dashboard">
     <div v-if="statsLoading" class="has-text-centered py-6">Loading statistics...</div>
     <div v-if="statsError" class="notification is-danger">{{ statsError.message }}</div>
 
     <template v-if="stats">
-      <div class="box">
-        <h3 class="has-text-centered has-text-weight-bold mb-4">Statistics</h3>
-        <div class="columns is-multiline has-text-centered">
-          <div v-for="item in coreStats" :key="item.label" class="column is-2">
-            <p class="heading">{{ item.label }}</p>
-            <p class="title is-5">{{ item.value.toLocaleString() }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="box mt-5">
-        <h3 class="has-text-centered has-text-weight-bold mb-4">External Identifiers</h3>
-        <div class="columns is-multiline has-text-centered">
-          <div v-for="item in externalIdStats" :key="item.label" class="column is-2">
-            <p class="heading">{{ item.label }}</p>
-            <p class="title is-5">{{ item.value.toLocaleString() }}</p>
-          </div>
-        </div>
-      </div>
+      <StatisticsOverview :stats="stats" :history="trendHistory" />
+      <p v-if="trendError" class="trend-error">Trends couldn't be loaded: {{ trendError.message }}</p>
+      <DataCoverage :stats="stats" />
     </template>
 
     <StatisticsHistory />
@@ -32,9 +16,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useQuery } from "@/composables/useGraphQL";
+import DataCoverage from "@/components/admin/DataCoverage.vue";
 import StatisticsHistory from "@/components/admin/StatisticsHistory.vue";
-import { GET_LIVE_STATISTICS } from "@/graphql/queries/admin";
-import type { GetLiveStatisticsQuery } from "@/types/graphql";
+import StatisticsOverview from "@/components/admin/StatisticsOverview.vue";
+import { GET_LIVE_STATISTICS, GET_SITE_STATISTICS } from "@/graphql/queries/admin";
+import type { GetLiveStatisticsQuery, GetSiteStatisticsQuery } from "@/types/graphql";
+
+// The longest trend range is 90 days, so one snapshot more than that covers
+// its baseline. Also within the API's 100-per-page limit.
+const TREND_SNAPSHOTS = 91;
 
 const {
   data: statsData,
@@ -43,37 +33,65 @@ const {
 } = useQuery<GetLiveStatisticsQuery>(GET_LIVE_STATISTICS);
 const stats = computed(() => statsData.value?.liveStatistics ?? null);
 
-const coreStats = computed(() => {
-  if (!stats.value) return [];
-  return [
-    { label: "Users", value: stats.value.users },
-    { label: "Games", value: stats.value.games },
-    { label: "Platforms", value: stats.value.platforms },
-    { label: "Series", value: stats.value.series },
-    { label: "Engines", value: stats.value.engines },
-    { label: "Companies", value: stats.value.companies },
-    { label: "Genres", value: stats.value.genres },
-    { label: "Stores", value: stats.value.stores },
-    { label: "Events", value: stats.value.events },
-    { label: "Game Purchases", value: stats.value.gamePurchases },
-    { label: "Relationships", value: stats.value.relationships },
-    { label: "Banned Users", value: stats.value.bannedUsers },
-    { label: "Games with Covers", value: stats.value.gamesWithCovers },
-    { label: "Games with Release Dates", value: stats.value.gamesWithReleaseDates }
-  ];
+const { data: trendData, error: trendError } = useQuery<GetSiteStatisticsQuery>(GET_SITE_STATISTICS, {
+  variables: { first: TREND_SNAPSHOTS }
 });
-
-const externalIdStats = computed(() => {
-  if (!stats.value) return [];
-  return [
-    { label: "MobyGames", value: stats.value.mobygamesIds },
-    { label: "PCGamingWiki", value: stats.value.pcgamingwikiIds },
-    { label: "Wikidata", value: stats.value.wikidataIds },
-    { label: "GiantBomb", value: stats.value.giantbombIds },
-    { label: "Steam", value: stats.value.steamAppIds },
-    { label: "Epic Games Store", value: stats.value.epicGamesStoreIds },
-    { label: "GOG", value: stats.value.gogIds },
-    { label: "IGDB", value: stats.value.igdbIds ?? 0 }
-  ];
-});
+const trendHistory = computed(() => trendData.value?.siteStatistics?.nodes ?? []);
 </script>
+
+<style scoped>
+.trend-error {
+  margin: -24px 0 24px;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+</style>
+
+<style>
+/*
+  Shared by the dashboard's sections, which all render inside .admin-dashboard.
+  Kept unscoped (but namespaced) so each section doesn't repeat it.
+*/
+.admin-dashboard {
+  --admin-up: #17703f;
+  --admin-spark: var(--p-500);
+  --admin-track: var(--color-bg-subtle);
+  --admin-low: #c76a12;
+}
+
+@media (prefers-color-scheme: dark) {
+  .admin-dashboard {
+    --admin-up: #7fdca4;
+    --admin-spark: var(--p-300);
+    --admin-track: var(--s-500);
+    --admin-low: #e8a053;
+  }
+}
+
+.admin-dashboard .admin-section {
+  margin-bottom: 2.25rem;
+}
+
+.admin-dashboard .admin-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.admin-dashboard .admin-section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.admin-dashboard .admin-section-note {
+  margin-left: 8px;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+</style>
