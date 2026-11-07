@@ -2855,6 +2855,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261107220200'),
 ('20261107220100'),
 ('20261107220000'),
 ('20261105020100'),
