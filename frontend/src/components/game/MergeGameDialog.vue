@@ -40,6 +40,7 @@
               @keydown.down.prevent="move(1)"
               @keydown.up.prevent="move(-1)"
               @keydown.enter.prevent="chooseActive"
+              @keydown.esc="clearSearch"
             />
           </label>
 
@@ -209,6 +210,17 @@ function choose(candidate: Candidate) {
 function chooseActive() {
   const candidate = results.value[activeIndex.value];
   if (candidate) choose(candidate);
+}
+
+// Escape in a non-empty search box clears it rather than closing the dialog.
+// An empty box lets Escape through to close the dialog as usual.
+function clearSearch(event: KeyboardEvent) {
+  if (!term.value) return;
+  event.preventDefault();
+  event.stopPropagation();
+  clearTimeout(debounceTimer);
+  term.value = "";
+  debouncedTerm.value = "";
 }
 
 function back() {
