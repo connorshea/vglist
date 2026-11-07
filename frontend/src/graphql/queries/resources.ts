@@ -202,6 +202,28 @@ export const GET_ENGINES = gql`
   }
 `;
 
+export const GET_ENGINES_INDEX = gql`
+  query GetEnginesIndex($first: Int, $after: String, $sortBy: ResourceSort, $nameContains: String) {
+    engines(first: $first, after: $after, sortBy: $sortBy, nameContains: $nameContains) {
+      totalCount
+      nodes {
+        id
+        name
+        gamesCount
+        coverGames {
+          id
+          name
+          coverUrl
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
 export const GET_ENGINE = gql`
   ${RESOURCE_GAME_FIELDS}
 

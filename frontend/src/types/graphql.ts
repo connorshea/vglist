@@ -1553,6 +1553,26 @@ export interface GetEnginesQuery {
   } | null;
 }
 
+export type GetEnginesIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: ResourceSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetEnginesIndexQuery {
+  engines: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
 export type GetEngineQueryVariables = Exact<{
   id: string;
   sortBy?: ResourceGameSort | null | undefined;
