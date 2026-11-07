@@ -23,3 +23,24 @@ export function notFoundLocation(route: CurrentLocation): RouteLocationRaw {
     hash: route.hash
   };
 }
+
+/**
+ * A search query guessed from a missing URL's last path segment, so the 404
+ * page can offer to search for it: `/games/hollow-knight-silksongg` becomes
+ * "hollow knight silksongg". Empty for `/` or an all-numeric segment (an id,
+ * which isn't worth searching for).
+ */
+export function searchQueryFromPath(path: string): string {
+  const segment = path.split("/").findLast((part) => part !== "") ?? "";
+  let decoded = segment;
+  try {
+    decoded = decodeURIComponent(segment);
+  } catch {
+    // Malformed percent-encoding: search for the raw segment.
+  }
+  const query = decoded
+    .replace(/[-_+.]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return /^\d+$/.test(query) ? "" : query;
+}
