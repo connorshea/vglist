@@ -66,6 +66,8 @@
           </div>
         </div>
       </template>
+
+      <StatisticsHistory />
     </div>
 
     <!-- Wikidata Blocklist tab -->
@@ -262,6 +264,7 @@ import { Download } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import StatisticsHistory from "@/components/admin/StatisticsHistory.vue";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import {

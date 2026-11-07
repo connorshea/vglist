@@ -764,6 +764,50 @@ export interface GetUnmatchedGamesQuery {
   } | null;
 }
 
+export type GetSiteStatisticsQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+}>;
+
+export interface GetSiteStatisticsQuery {
+  siteStatistics: {
+    nodes: Array<{
+      id: string;
+      timestamp: string;
+      users: number;
+      games: number;
+      platforms: number;
+      series: number;
+      engines: number;
+      companies: number;
+      genres: number;
+      stores: number;
+      events: number;
+      gamePurchases: number;
+      relationships: number;
+      gamesWithCovers: number;
+      gamesWithReleaseDates: number;
+      bannedUsers: number;
+      unmatchedGames: number | null;
+      mobygamesIds: number;
+      pcgamingwikiIds: number;
+      wikidataIds: number;
+      giantbombIds: number;
+      steamAppIds: number;
+      epicGamesStoreIds: number;
+      gogIds: number;
+      igdbIds: number | null;
+      companyVersions: number | null;
+      gameVersions: number | null;
+      genreVersions: number | null;
+      engineVersions: number | null;
+      platformVersions: number | null;
+      seriesVersions: number | null;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
 export type ComparisonUserFieldsFragment = { id: string; username: string; slug: string; avatarUrl: string | null };
 
 export type GetLibraryComparisonQueryVariables = Exact<{
