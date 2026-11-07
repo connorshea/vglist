@@ -17,7 +17,7 @@
       </router-link>
     </nav>
 
-    <div v-if="users.length" class="follow-grid">
+    <div v-if="users.length" class="follow-grid" :aria-busy="loading">
       <UserCard
         v-for="listed in users"
         :key="listed.id"
@@ -30,9 +30,24 @@
     <div v-else class="follow-empty" role="status">
       <p v-if="loading">Loading…</p>
       <p v-else-if="error">{{ error.message }}</p>
+      <p v-else-if="page > 1">
+        There's nothing on page {{ page }}.
+        <router-link :to="{ query: {} }">Go to the first page</router-link>
+      </p>
       <p v-else-if="kind === 'followers'">No followers yet.</p>
       <p v-else>Not following anyone yet.</p>
     </div>
+
+    <p v-if="error && users.length" class="follow-error" role="alert">{{ error.message }}</p>
+
+    <PaginationNav
+      v-if="users.length && (page > 1 || hasNextPage)"
+      :current-page="page"
+      :has-next-page="hasNextPage"
+      :loading="loading"
+      @prev="emit('goToPage', page - 1)"
+      @next="emit('goToPage', page + 1)"
+    />
   </div>
 </template>
 
@@ -40,19 +55,20 @@
 import { computed } from "vue";
 import { useUserProfile } from "@/composables/useUserProfile";
 import UserCard from "@/components/UserCard.vue";
-
-interface ListedUser {
-  id: string;
-  slug: string;
-  username: string;
-  avatarUrl?: string | null;
-}
+import PaginationNav from "@/components/PaginationNav.vue";
+import type { FollowListUser } from "@/composables/useFollowList";
 
 defineProps<{
   kind: "followers" | "following";
-  users: ListedUser[];
+  users: FollowListUser[];
   loading: boolean;
   error: Error | null;
+  page: number;
+  hasNextPage: boolean;
+}>();
+
+const emit = defineEmits<{
+  goToPage: [page: number];
 }>();
 
 const { user } = useUserProfile();
@@ -113,6 +129,12 @@ const slug = computed(() => user.value?.slug ?? "");
 .follow-empty {
   padding: 48px 16px;
   color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.follow-error {
+  margin-top: 16px;
+  color: var(--color-danger-text);
   text-align: center;
 }
 

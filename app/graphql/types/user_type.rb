@@ -60,9 +60,13 @@ module Types
     # Preloading applied to the associations below once the viewer is allowed to
     # see them, so that a page of users doesn't load an avatar (or cover) one
     # record at a time.
+    #
+    # Followers and following are listed most recent follow first. The
+    # connection's cursors are offsets, so without an ORDER BY a page could
+    # repeat or skip users.
     FIELD_PRELOADS = {
-      followers: ->(relation) { relation.with_attached_avatar },
-      following: ->(relation) { relation.with_attached_avatar },
+      followers: ->(relation) { relation.with_attached_avatar.order(relationships: { id: :desc }) },
+      following: ->(relation) { relation.with_attached_avatar.order(relationships: { id: :desc }) },
       favorited_games: ->(relation) { relation.with_attached_cover }
     }.freeze
 
