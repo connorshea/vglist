@@ -16,11 +16,11 @@
             <span v-else aria-hidden="true">{{ user.username.charAt(0).toUpperCase() }}</span>
           </span>
           <div class="profile-identity-text">
-            <h1 class="profile-name">
-              {{ user.username }}
+            <div class="profile-name-row">
+              <h1 class="profile-name">{{ user.username }}</h1>
               <span v-if="user.role === 'ADMIN'" class="profile-role is-admin">Admin</span>
               <span v-else-if="user.role === 'MODERATOR'" class="profile-role is-mod">Mod</span>
-            </h1>
+            </div>
             <p v-if="!isPrivate" class="profile-stats">{{ statsLine }}</p>
           </div>
         </div>
@@ -538,11 +538,15 @@ function changeRole() {
   object-fit: cover;
 }
 
-.profile-name {
+.profile-name-row {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 8px;
   align-items: center;
+}
+
+.profile-name {
+  min-width: 0;
   margin: 0;
   color: var(--color-text-primary);
   font-size: 1.25rem;
