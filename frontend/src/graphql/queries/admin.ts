@@ -89,3 +89,47 @@ export const GET_UNMATCHED_GAMES = gql`
     }
   }
 `;
+
+export const GET_SITE_STATISTICS = gql`
+  query GetSiteStatistics($first: Int, $after: String) {
+    siteStatistics(first: $first, after: $after) {
+      nodes {
+        id
+        timestamp
+        users
+        games
+        platforms
+        series
+        engines
+        companies
+        genres
+        stores
+        events
+        gamePurchases
+        relationships
+        gamesWithCovers
+        gamesWithReleaseDates
+        bannedUsers
+        unmatchedGames
+        mobygamesIds
+        pcgamingwikiIds
+        wikidataIds
+        giantbombIds
+        steamAppIds
+        epicGamesStoreIds
+        gogIds
+        igdbIds
+        companyVersions
+        gameVersions
+        genreVersions
+        engineVersions
+        platformVersions
+        seriesVersions
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
