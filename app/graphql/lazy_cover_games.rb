@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# The games whose covers make up a series', genre's or platform's tile on its
-# index page: up to four games that have a cover, most-owned first. Batched
-# like `LazyOwnerCount`: every `coverGames` field in the response returns one
-# of these, and the first to be resolved loads the covers for all the records
-# of its kind queued so far, with one ranking query and one preload of the
-# games and their covers.
+# The games whose covers make up a series', genre's, platform's, company's or
+# engine's tile on its index page: up to four games that have a cover,
+# most-owned first. Batched like `LazyOwnerCount`: every `coverGames` field in
+# the response returns one of these, and the first to be resolved loads the
+# covers for all the records of its kind queued so far, with one ranking query
+# and one preload of the games and their covers.
 #
 # Without this, a page of 24 tiles runs a `games(first: 4)` query plus the
 # attachment and variant lookups for every tile, about 145 queries in all.
@@ -17,7 +17,14 @@ class LazyCoverGames
   SOURCES = {
     'Series' => { from: 'games', key: 'games.series_id' },
     'Genre' => { from: 'game_genres JOIN games ON games.id = game_genres.game_id', key: 'game_genres.genre_id' },
-    'Platform' => { from: 'game_platforms JOIN games ON games.id = game_platforms.game_id', key: 'game_platforms.platform_id' }
+    'Platform' => { from: 'game_platforms JOIN games ON games.id = game_platforms.game_id', key: 'game_platforms.platform_id' },
+    'Engine' => { from: 'game_engines JOIN games ON games.id = game_engines.game_id', key: 'game_engines.engine_id' },
+    # Developed or published, once per game.
+    'Company' => {
+      from: '(SELECT company_id, game_id FROM game_developers UNION SELECT company_id, game_id FROM game_publishers) company_games ' \
+            'JOIN games ON games.id = company_games.game_id',
+      key: 'company_games.company_id'
+    }
   }.freeze
 
   def initialize(context, record)

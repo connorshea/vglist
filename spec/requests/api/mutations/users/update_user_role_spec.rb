@@ -20,7 +20,7 @@ RSpec.describe "UpdateUserRole Mutation API", type: :request do
     end
 
     context 'when the current user is an admin' do
-      let!(:user) { create(:confirmed_admin) } # rubocop:disable RSpec/LetSetup
+      let!(:user) { create(:confirmed_admin) }
       let(:user2) { create(:confirmed_user) }
       let(:user3) { create(:confirmed_admin) }
 
@@ -68,6 +68,28 @@ RSpec.describe "UpdateUserRole Mutation API", type: :request do
             role: 'MODERATOR'
           }
         )
+      end
+
+      it "demotes another admin to a moderator" do
+        result = api_request(query_string, variables: { id: user3.id, role: 'MODERATOR' }, token: access_token)
+
+        expect(result.graphql_dig(:update_user_role, :user, :role)).to eq('MODERATOR')
+        expect(user3.reload).to be_moderator
+      end
+
+      it "does not let an admin demote themselves" do
+        expect do
+          result = api_request(query_string, variables: { id: user.id, role: 'MEMBER' }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to update the role of this user.")
+        end.not_to change(User.where(role: :admin), :count)
+      end
+
+      it "does not let the only admin demote themselves" do
+        expect(User.where(role: :admin)).to eq([user])
+
+        api_request(query_string, variables: { id: user.id, role: 'MODERATOR' }, token: access_token)
+
+        expect(user.reload).to be_admin
       end
 
       it "does not change if the user already has the role" do

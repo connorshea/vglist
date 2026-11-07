@@ -58,9 +58,11 @@
 
         <!-- User row (authenticated) -->
         <div v-if="authStore.isAuthenticated" class="mn-user mn-stagger">
-          <div class="mn-avatar">
-            {{ authStore.user?.username?.charAt(0).toUpperCase() }}
-          </div>
+          <NavAvatar
+            class="mn-avatar"
+            :username="authStore.user?.username ?? ''"
+            :avatar-url="authStore.user?.avatarUrl"
+          />
           <router-link class="mn-user-info" :to="`/users/${authStore.user?.slug}`" @click="close">
             <div class="mn-user-name">{{ authStore.user?.username }}</div>
             <div class="mn-user-sub">View profile</div>
@@ -109,6 +111,7 @@ import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
+import NavAvatar from "./NavAvatar.vue";
 import { Activity, Gamepad2, User, ChevronRight, LogOut, Settings } from "@lucide/vue";
 
 const props = defineProps<{ isOpen: boolean }>();

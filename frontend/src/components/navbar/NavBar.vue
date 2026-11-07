@@ -10,8 +10,21 @@
         <Search :size="18" :stroke-width="1.8" />
       </button>
 
-      <!-- Hamburger (mobile only, opens bottom sheet) -->
+      <!-- Signed in: the avatar opens the bottom sheet (mobile only) -->
+      <button
+        v-if="authStore.isAuthenticated"
+        type="button"
+        class="navbar-mobile-avatar is-hidden-desktop"
+        :aria-label="`Menu for ${username}`"
+        :aria-expanded="isSheetOpen"
+        @click="isSheetOpen = !isSheetOpen"
+      >
+        <NavAvatar :username="username" :avatar-url="authStore.user?.avatarUrl" />
+      </button>
+
+      <!-- Signed out: hamburger (mobile only, opens bottom sheet) -->
       <a
+        v-else
         role="button"
         class="navbar-burger"
         :class="{ 'is-active': isSheetOpen }"
@@ -51,9 +64,13 @@
           <NavSearch />
         </div>
         <template v-if="authStore.isAuthenticated">
-          <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
-            <a class="navbar-link" tabindex="0">
-              {{ authStore.user?.username }}
+          <div class="navbar-item has-dropdown is-hoverable navbar-user" @mouseenter="dropdownsClosed = false">
+            <a class="navbar-link is-arrowless" tabindex="0">
+              <span class="navbar-user-pill">
+                <NavAvatar :username="username" :avatar-url="authStore.user?.avatarUrl" />
+                <span class="navbar-user-name">{{ username }}</span>
+                <ChevronDown class="navbar-user-chevron" :size="14" :stroke-width="2" />
+              </span>
             </a>
             <div v-show="!dropdownsClosed" class="navbar-dropdown is-right">
               <router-link class="navbar-item" :to="`/users/${authStore.user?.slug}`"> Profile </router-link>
@@ -119,12 +136,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
-import { Search } from "@lucide/vue";
+import { ChevronDown, Search } from "@lucide/vue";
+import { refreshCurrentUserAvatar } from "@/utils/current-user-avatar";
+import NavAvatar from "./NavAvatar.vue";
 import NavSearch from "./NavSearch.vue";
 import MobileNavSheet from "./MobileNavSheet.vue";
 
@@ -134,6 +153,18 @@ const { signOut } = useAuth();
 const { open: openSearch } = useSearchOverlay();
 const isSheetOpen = ref(false);
 const dropdownsClosed = ref(false);
+const username = computed(() => authStore.user?.username ?? "");
+
+// signIn stores the avatar, so it shows straight away; this refresh keeps it
+// current if it changed on another device. The sign-in page has no navbar,
+// so this also runs once when the navbar mounts after signing in.
+watch(
+  () => authStore.token,
+  (token) => {
+    if (token) void refreshCurrentUserAvatar();
+  },
+  { immediate: true }
+);
 
 watch(
   () => route.path,
@@ -170,6 +201,105 @@ function handleSignOut() {
 
 .navbar-mobile-search:active {
   background: rgba(255, 255, 255, 0.15);
+}
+
+/* The user menu trigger: avatar + username in a box that matches the
+   search field beside it (same height, radius and translucent fill). */
+.navbar-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 10px 0 5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-weight: 500;
+  transition:
+    background-color 200ms,
+    border-color 200ms;
+}
+
+.navbar-user:hover .navbar-user-pill {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.navbar-user:focus-within .navbar-user-pill {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.navbar-user .navbar-link:focus-visible {
+  outline: none;
+}
+
+.navbar-user .navbar-link:focus-visible .navbar-user-pill {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.navbar-user-pill .nav-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* No avatar: white tile with the initial, so it stands out on the purple bar. */
+.navbar-user-pill .nav-avatar.is-initial,
+.navbar-mobile-avatar .nav-avatar.is-initial {
+  background: #fff;
+  color: var(--p-600);
+}
+
+.navbar-user-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-user-chevron {
+  opacity: 0.8;
+}
+
+/* Signed in on mobile, the avatar replaces the hamburger and opens the same sheet. */
+.navbar-mobile-avatar {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navbar-mobile-avatar .nav-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 13px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
+  transition: box-shadow 200ms;
+}
+
+.navbar-mobile-avatar[aria-expanded="true"] .nav-avatar {
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* A separate ring around the whole 44px button, so keyboard focus is
+   distinct from the open state's brighter avatar ring. */
+.navbar-mobile-avatar:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 0;
 }
 
 /* Remove Bulma's margin-left:auto from the burger so it sits

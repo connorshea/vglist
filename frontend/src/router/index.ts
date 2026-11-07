@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { installPageTitles } from "@/composables/usePageTitle";
+import { useSearchOverlay } from "@/composables/useSearchOverlay";
 
 // Old ?tab= values on /admin, and the section route each one now lives at.
 const ADMIN_TAB_ROUTES: Record<string, "adminWikidataBlocklist" | "adminSteamBlocklist" | "adminUnmatchedGames"> = {
@@ -23,6 +24,18 @@ const router = createRouter({
       name: "about",
       component: () => import("@/pages/AboutPage.vue"),
       meta: { title: "About" }
+    },
+    // Target of the OpenSearch description (public/opensearch.xml), so
+    // browsers can use vglist as a search engine. Opens the search overlay
+    // with the query over the home page.
+    {
+      path: "/search",
+      name: "search",
+      redirect: (to) => {
+        const query = typeof to.query.query === "string" ? to.query.query : "";
+        useSearchOverlay().open(query);
+        return { name: "home", query: {} };
+      }
     },
 
     // Auth

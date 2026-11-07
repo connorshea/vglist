@@ -18,6 +18,7 @@ export function useAuth() {
           username: string;
           slug: string;
           role: string;
+          avatarUrl: string | null;
           errors: string[];
         };
       }>(SIGN_IN, { email, password });
@@ -32,7 +33,8 @@ export function useAuth() {
         username: result.username,
         email,
         role: result.role.toUpperCase() as "MEMBER" | "MODERATOR" | "ADMIN",
-        slug: result.slug
+        slug: result.slug,
+        avatarUrl: result.avatarUrl
       });
 
       return { success: true, errors: [] as string[] };

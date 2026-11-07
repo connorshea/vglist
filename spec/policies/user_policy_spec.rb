@@ -177,6 +177,26 @@ RSpec.describe UserPolicy, type: :policy do
     end
   end
 
+  describe "An admin looking at another admin's profile" do
+    let(:current_user) { create(:admin) }
+    let(:user) { create(:admin) }
+
+    it "permits updating their role" do
+      expect(user_policy).to permit_action(:update_role)
+    end
+  end
+
+  # Admins can't change their own role, so the admin changing a role is always
+  # left as an admin and the last admin can never be demoted.
+  describe "An admin looking at their own profile" do
+    let(:current_user) { create(:admin) }
+    let(:user) { current_user }
+
+    it "does not permit updating their role" do
+      expect(user_policy).to forbid_action(:update_role)
+    end
+  end
+
   describe 'A user editing/looking at their own profile' do
     let(:current_user) { create(:user) }
     let(:user) { current_user }

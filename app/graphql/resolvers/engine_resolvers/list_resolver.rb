@@ -7,8 +7,17 @@ module Resolvers
 
       description "List all game engines."
 
-      def resolve
-        Engine.all
+      argument :sort_by, Types::Enums::ResourceSortType, required: false, description: "The order to sort the engines in. Without one, engines are ordered by ID."
+      argument :name_contains, String, required: false, description: "Only return engines whose name contains this text, ignoring case."
+
+      extras [:lookahead]
+
+      def resolve(lookahead:, sort_by: nil, name_contains: nil)
+        engines = Engine.all
+        engines = engines.with_games_count if ResourceIndex.selects_any?(lookahead, [:games_count])
+        engines = engines.name_contains(name_contains) if name_contains.present?
+
+        ResourceIndex.sort(engines, sort_by)
       end
     end
   end
