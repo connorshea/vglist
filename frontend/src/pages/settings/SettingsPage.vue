@@ -292,13 +292,32 @@ const sections = [
   border-color: var(--p-600);
 }
 
+/* A soft red tint at rest that fills solid red on hover, so the
+   destructive action reads clearly without shouting. */
 .settings-page .set-btn.is-danger {
-  color: var(--r-500);
-  border-color: var(--r-200);
+  /* Same height and type size as the primary buttons, with a shared
+     minimum width so stacked danger rows line up. */
+  min-height: 40px;
+  min-width: 152px;
+  padding: 0 18px;
+  font-size: 14px;
+  background: var(--r-50);
+  border-color: color-mix(in srgb, var(--r-500) 30%, transparent);
+  color: var(--r-700);
 }
 
 .settings-page .set-btn.is-danger:hover:not(:disabled) {
-  background: var(--r-50);
+  background: var(--r-600);
+  border-color: var(--r-600);
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .settings-page .set-btn.is-danger {
+    background: color-mix(in srgb, var(--r-500) 14%, transparent);
+    border-color: color-mix(in srgb, var(--r-500) 45%, transparent);
+    color: var(--r-200);
+  }
 }
 
 /* Toggle switch: a native checkbox styled as a switch. */
