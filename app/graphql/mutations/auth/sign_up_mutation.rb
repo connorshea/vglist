@@ -13,7 +13,9 @@ class Mutations::Auth::SignUpMutation < GraphQL::Schema::Mutation
   field :errors, [String], null: false, description: "Error messages if sign up failed."
 
   def resolve(username:, email:, password:, password_confirmation:, turnstile_token: nil)
-    verified = TurnstileVerifier.verify(token: turnstile_token, remote_ip: context[:client_ip])
+    verified = TurnstileVerifier.verify(
+      token: turnstile_token, action: TurnstileVerifier::SIGN_UP_ACTION, remote_ip: context[:client_ip]
+    )
     return { message: nil, errors: [TurnstileVerifier::ERROR_MESSAGE] } unless verified
 
     user = User.new(

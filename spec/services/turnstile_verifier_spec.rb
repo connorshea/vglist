@@ -23,7 +23,7 @@ RSpec.describe TurnstileVerifier do
     end
 
     it 'passes without calling Cloudflare' do
-      expect(described_class.verify(token: nil)).to be(true)
+      expect(described_class.verify(token: nil, action: 'signup')).to be(true)
       expect(a_request(:post, siteverify_url)).not_to have_been_made
     end
   end
@@ -41,7 +41,7 @@ RSpec.describe TurnstileVerifier do
     it 'sends the secret, token and client IP, and passes on success', :aggregate_failures do
       stub_siteverify({ success: true })
 
-      expect(described_class.verify(token: 'token', remote_ip: '203.0.113.7')).to be(true)
+      expect(described_class.verify(token: 'token', remote_ip: '203.0.113.7', action: 'signup')).to be(true)
       expect(
         a_request(:post, siteverify_url).with(
           body: { secret: '1x0000000000000000000000000000000AA', response: 'token', remoteip: '203.0.113.7' }
@@ -52,44 +52,62 @@ RSpec.describe TurnstileVerifier do
     it 'leaves out the client IP when there is none' do
       stub_siteverify({ success: true })
 
-      described_class.verify(token: 'token')
+      described_class.verify(token: 'token', action: 'signup')
       expect(
         a_request(:post, siteverify_url).with(body: { secret: '1x0000000000000000000000000000000AA', response: 'token' })
       ).to have_been_made.once
     end
 
+    it 'passes when the action matches' do
+      stub_siteverify({ success: true, action: 'signup' })
+
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(true)
+    end
+
+    it 'fails when the token was minted for a different action' do
+      stub_siteverify({ success: true, action: 'password_reset' })
+
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(false)
+    end
+
+    it 'fails when the token was minted with no action' do
+      stub_siteverify({ success: true, action: '' })
+
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(false)
+    end
+
     it 'fails when Cloudflare rejects the token' do
       stub_siteverify({ success: false, 'error-codes' => ['invalid-input-response'] })
 
-      expect(described_class.verify(token: 'token')).to be(false)
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(false)
     end
 
     it 'fails without calling Cloudflare when the token is blank' do
-      expect(described_class.verify(token: '')).to be(false)
+      expect(described_class.verify(token: '', action: 'signup')).to be(false)
       expect(a_request(:post, siteverify_url)).not_to have_been_made
     end
 
     it 'fails without calling Cloudflare when the token is too long' do
-      expect(described_class.verify(token: 'a' * 2049)).to be(false)
+      expect(described_class.verify(token: 'a' * 2049, action: 'signup')).to be(false)
       expect(a_request(:post, siteverify_url)).not_to have_been_made
     end
 
     it 'fails on an HTTP error' do
       stub_siteverify('oops', status: 500)
 
-      expect(described_class.verify(token: 'token')).to be(false)
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(false)
     end
 
     it 'fails on a malformed response' do
       stub_siteverify('not json')
 
-      expect(described_class.verify(token: 'token')).to be(false)
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(false)
     end
 
     it 'fails on a timeout' do
       stub_request(:post, siteverify_url).to_timeout
 
-      expect(described_class.verify(token: 'token')).to be(false)
+      expect(described_class.verify(token: 'token', action: 'signup')).to be(false)
     end
   end
 end

@@ -20,6 +20,9 @@ class TurnstileVerifier
   # expire after 5 minutes, so retrying with a fresh one is the fix.
   ERROR_MESSAGE = "We couldn't verify that you're human. Please complete the challenge and try again."
 
+  # The action the sign-up form's widget renders with (SignupPage.vue).
+  SIGN_UP_ACTION = 'signup'
+
   # Cloudflare's own limit on token length.
   MAX_TOKEN_LENGTH = 2048
 
@@ -32,15 +35,28 @@ class TurnstileVerifier
   end
 
   # Returns true when the token is valid, or when verification is disabled.
-  def self.verify(token:, remote_ip: nil)
+  #
+  # `action` is the action the widget was rendered with. A token minted by a
+  # widget with any other action is rejected, so a token from some other
+  # Turnstile form can't be replayed here. Cloudflare's dummy test secret
+  # keys leave `action` out of the response entirely, so the check only
+  # applies when the field is present; real keys always include it.
+  def self.verify(token:, action:, remote_ip: nil)
     return true unless enabled?
     return false if token.blank? || token.length > MAX_TOKEN_LENGTH
 
     body = siteverify(token: token, remote_ip: remote_ip)
-    return true if body['success'] == true
+    unless body['success'] == true
+      Rails.logger.info("Turnstile verification failed: #{Array(body['error-codes']).join(', ')}")
+      return false
+    end
 
-    Rails.logger.info("Turnstile verification failed: #{Array(body['error-codes']).join(', ')}")
-    false
+    if body.key?('action') && body['action'] != action
+      Rails.logger.info("Turnstile action mismatch: expected #{action.inspect}, got #{body['action'].inspect}")
+      return false
+    end
+
+    true
   rescue Net::OpenTimeout, Net::ReadTimeout, SocketError, SystemCallError, IOError,
          OpenSSL::SSL::SSLError, Net::HTTPBadResponse, Net::ProtocolError, JSON::ParserError => e
     Rails.logger.warn("Turnstile verification errored: #{e.class}: #{e.message}")
