@@ -1,8 +1,9 @@
 <template>
   <div class="activity-tab">
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading...</p>
-    </div>
+    <!-- Always mounted so screen readers announce the text when it changes -->
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading activity…" : "" }}</p>
+
+    <ActivityFeedSkeleton v-if="showSkeleton" class="user-activity-skeleton" aria-busy="true" />
 
     <div v-if="error" class="notification is-danger">
       <p>{{ error.message }}</p>
@@ -147,6 +148,7 @@ import { useCursorPages } from "@/composables/useCursorPages";
 import { GET_USER_ACTIVITY } from "@/graphql/queries/users";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
 import type { GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
+import ActivityFeedSkeleton from "@/components/activity/ActivityFeedSkeleton.vue";
 import PaginationNav from "@/components/PaginationNav.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { Trash2 } from "@lucide/vue";
@@ -225,6 +227,7 @@ const { data, loading, error } = useQuery<GetUserActivityResult>(GET_USER_ACTIVI
 
 const user = computed(() => data.value?.user ?? null);
 const events = computed(() => user.value?.activity?.nodes ?? []);
+const showSkeleton = computed(() => loading.value && !data.value);
 const hasNextPage = computed(() => user.value?.activity?.pageInfo.hasNextPage ?? false);
 
 function nextPage() {
@@ -374,6 +377,11 @@ async function confirmDeleteEvent() {
 </script>
 
 <style scoped>
+/* Match this tab's card border (the global feed uses a fainter one). */
+.user-activity-skeleton {
+  --activity-card-border: var(--color-border);
+}
+
 .activity-tab {
   padding-top: 24px;
 }

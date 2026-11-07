@@ -16,9 +16,10 @@
       </button>
     </div>
 
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading activity...</p>
-    </div>
+    <!-- Always mounted so screen readers announce the text when it changes -->
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading activity…" : "" }}</p>
+
+    <ActivityFeedSkeleton v-if="showSkeleton" aria-busy="true" />
 
     <div v-if="error" class="notification is-danger">
       <p>Failed to load activity: {{ error.message }}</p>
@@ -163,6 +164,7 @@ import { useCursorPages, withoutPage } from "@/composables/useCursorPages";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
 import type { GetActivityQuery, GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
+import ActivityFeedSkeleton from "@/components/activity/ActivityFeedSkeleton.vue";
 import PaginationNav from "@/components/PaginationNav.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { Trash2 } from "@lucide/vue";
@@ -205,6 +207,7 @@ const { data, loading, error } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
   })
 });
 
+const showSkeleton = computed(() => loading.value && !data.value);
 const hasNextPage = computed(() => data.value?.activity?.pageInfo.hasNextPage ?? false);
 
 function switchFeed(type: FeedType) {
