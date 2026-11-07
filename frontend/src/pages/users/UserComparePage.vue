@@ -617,7 +617,7 @@ const commonHasNextPage = computed(() => commonConnection.value?.pageInfo.hasNex
 const commonEmptyMessage = computed(() => {
   if (commonSearchTerm.value) return `No shared games match “${commonSearchTerm.value}”.`;
   if (bothRated.value && (comparison.value?.inCommonCount ?? 0) > 0)
-    return "There are no shared games you've both rated yet.";
+    return `There are no shared games ${viewerIsA.value ? "you've" : "they've"} both rated yet.`;
   return "These libraries have no games in common.";
 });
 
