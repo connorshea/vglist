@@ -30,7 +30,11 @@
 @forward "bulma/sass/form" with (
   $input-shadow: none,
   $input-focus-shadow-size: 0,
-  $input-radius: 4px
+  $input-radius: 4px,
+  // Opaque theme token (see application.scss) so placeholders meet 4.5:1
+  // contrast in both colour schemes. Bulma's default is text-strong at 30%
+  // alpha, which is unreadable on the dark input background.
+  $input-placeholder-color: var(--color-placeholder)
 );
 
 @forward "bulma/sass/helpers" with (
