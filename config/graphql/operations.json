@@ -86,6 +86,7 @@
   "RequestPasswordReset": "mutation RequestPasswordReset($email: String!) {\n  requestPasswordReset(email: $email) {\n    message\n  }\n}",
   "ResetUserLibrary": "mutation ResetUserLibrary($userId: ID!) {\n  resetUserLibrary(userId: $userId) {\n    deleted\n  }\n}",
   "SearchEnginesForFilter": "query SearchEnginesForFilter($query: String!) {\n  engineSearch(query: $query, first: 10) {\n    nodes {\n      id\n      name\n    }\n  }\n}",
+  "SearchGamesToMerge": "query SearchGamesToMerge($query: String!) {\n  gameSearch(query: $query, first: 8) {\n    nodes {\n      id\n      name\n      releaseDate\n      coverUrl(size: SMALL)\n      ownerCount\n    }\n  }\n}",
   "SearchGenresForFilter": "query SearchGenresForFilter($query: String!) {\n  genreSearch(query: $query, first: 10) {\n    nodes {\n      id\n      name\n    }\n  }\n}",
   "SearchPlatformsForFilter": "query SearchPlatformsForFilter($query: String!) {\n  platformSearch(query: $query, first: 10) {\n    nodes {\n      id\n      name\n    }\n  }\n}",
   "SearchUsersToCompare": "query SearchUsersToCompare($query: String!) {\n  userSearch(query: $query, first: 8) {\n    nodes {\n      ...ComparisonUserFields\n      privacy\n      banned\n    }\n  }\n}\n\nfragment ComparisonUserFields on User {\n  id\n  username\n  slug\n  avatarUrl(size: SMALL)\n}",
