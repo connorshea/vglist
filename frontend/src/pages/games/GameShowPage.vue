@@ -228,6 +228,12 @@
         </div>
         <aside class="game-body-side">
           <GameDetailsCard id="game-details" :game="game" />
+          <GameSeriesShelf
+            v-if="game.series"
+            :series="game.series"
+            :games="game.moreFromSeries.nodes"
+            :total-count="game.moreFromSeries.totalCount"
+          />
         </aside>
       </div>
 
@@ -371,6 +377,7 @@ import GameDetailsCard from "@/components/game/GameDetailsCard.vue";
 import GameHeroPanel, { type HeroPanelEntry } from "@/components/game/GameHeroPanel.vue";
 import LinkedNames from "@/components/game/LinkedNames.vue";
 import GameReviewsCard from "@/components/game/GameReviewsCard.vue";
+import GameSeriesShelf from "@/components/game/GameSeriesShelf.vue";
 import { gameInitials as initialsFor } from "@/utils/library";
 import "@/assets/stylesheets/game-page.scss";
 
@@ -1309,8 +1316,13 @@ function onGameMerged(kept: { id: string; name: string }) {
     margin-top: 1rem;
   }
 
-  /* Details first on phones, before the longer reviews and activity cards. */
+  /* Details first on phones, before the longer reviews and activity cards,
+     and the series shelf after them. */
   .game-body-side {
+    display: contents;
+  }
+
+  #game-details {
     order: -1;
   }
 }

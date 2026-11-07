@@ -79,6 +79,15 @@ export const GET_GAME = gql`
         }
         totalCount
       }
+      moreFromSeries(first: 3) {
+        nodes {
+          id
+          name
+          releaseDate
+          coverUrl(size: SMALL)
+        }
+        totalCount
+      }
     }
   }
 `;
