@@ -10,7 +10,21 @@
 
       <div v-if="exportData" class="export-result">
         <p class="set-help" role="status">Export complete. Download it, or copy the JSON below.</p>
-        <pre class="export-json" tabindex="0" aria-label="Exported library JSON">{{ exportData }}</pre>
+        <div class="export-json-wrap">
+          <pre class="export-json" tabindex="0" aria-label="Exported library JSON">{{ exportData }}</pre>
+          <button
+            type="button"
+            class="export-copy"
+            :class="{ 'is-copied': copyState === 'copied' }"
+            aria-label="Copy JSON to clipboard"
+            @click="copyJson"
+          >
+            <Check v-if="copyState === 'copied'" :size="14" :stroke-width="2" aria-hidden="true" />
+            <Copy v-else :size="14" :stroke-width="2" aria-hidden="true" />
+            <span aria-hidden="true">{{ copyButtonText }}</span>
+          </button>
+          <span class="is-sr-only" role="status">{{ copyAnnouncement }}</span>
+        </div>
       </div>
 
       <div class="set-actions">
@@ -27,8 +41,8 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from "vue";
-import { Download } from "@lucide/vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { Check, Copy, Download } from "@lucide/vue";
 import { useMutation } from "@/composables/useGraphQL";
 import { EXPORT_LIBRARY } from "@/graphql/mutations/users-settings";
 import type { ExportLibraryMutation } from "@/types/graphql";
@@ -49,7 +63,38 @@ watch(exportData, (json) => {
 
 onBeforeUnmount(() => {
   if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value);
+  if (copyResetTimer) clearTimeout(copyResetTimer);
 });
+
+type CopyState = "idle" | "copied" | "failed";
+
+const copyState = ref<CopyState>("idle");
+let copyResetTimer: ReturnType<typeof setTimeout> | undefined;
+
+const copyButtonText = computed(() =>
+  copyState.value === "copied" ? "Copied" : copyState.value === "failed" ? "Copy failed" : "Copy"
+);
+
+const copyAnnouncement = computed(() =>
+  copyState.value === "copied"
+    ? "JSON copied to clipboard"
+    : copyState.value === "failed"
+      ? "Couldn't copy the JSON. Select it and copy manually."
+      : ""
+);
+
+async function copyJson() {
+  if (copyResetTimer) clearTimeout(copyResetTimer);
+  try {
+    await navigator.clipboard.writeText(exportData.value);
+    copyState.value = "copied";
+  } catch {
+    copyState.value = "failed";
+  }
+  copyResetTimer = setTimeout(() => {
+    copyState.value = "idle";
+  }, 2000);
+}
 
 // The API returns compact JSON on one line; indent it so the preview is
 // readable and the copied or downloaded file is easy to diff.
@@ -96,9 +141,45 @@ async function exportLibrary() {
   white-space: pre;
 }
 
+.export-json-wrap {
+  position: relative;
+}
+
 .export-json:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+.export-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.export-copy:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-subtle);
+}
+
+.export-copy:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.export-copy.is-copied {
+  color: var(--color-accent);
 }
 
 a.set-btn {
