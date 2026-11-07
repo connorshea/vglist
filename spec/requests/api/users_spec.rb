@@ -316,6 +316,48 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
+    it "pages through followers and following, most recent follow first" do
+      followers = create_list(:confirmed_user, 3)
+      followers.each { |follower| create(:relationship, follower: follower, followed: user) }
+      followed = create_list(:confirmed_user, 3)
+      followed.each { |other| create(:relationship, follower: user, followed: other) }
+      ids = ->(users) { users.map { |u| { id: u.id.to_s } } }
+      # The SPA builds the cursor for `?page=N` itself, as the offset encoded
+      # in unpadded URL-safe Base64 (see frontend/src/utils/pagination.ts).
+      offset_cursor = Base64.urlsafe_encode64("2", padding: false)
+
+      query_string = <<-GRAPHQL
+        query($id: ID!, $after: String) {
+          user(id: $id) {
+            followers(first: 2, after: $after) {
+              nodes { id }
+              pageInfo { hasNextPage endCursor }
+            }
+            following(first: 2, after: $after) {
+              nodes { id }
+              pageInfo { hasNextPage endCursor }
+            }
+          }
+        }
+      GRAPHQL
+
+      first_page = api_request(query_string, variables: { id: user.id }, token: access_token)
+      expect(first_page.graphql_dig(:user)).to eq(
+        {
+          followers: { nodes: ids.call(followers.last(2).reverse), pageInfo: { hasNextPage: true, endCursor: offset_cursor } },
+          following: { nodes: ids.call(followed.last(2).reverse), pageInfo: { hasNextPage: true, endCursor: offset_cursor } }
+        }
+      )
+
+      second_page = api_request(query_string, variables: { id: user.id, after: offset_cursor }, token: access_token)
+      expect(second_page.graphql_dig(:user)).to eq(
+        {
+          followers: { nodes: ids.call([followers.first]), pageInfo: { hasNextPage: false, endCursor: Base64.urlsafe_encode64("3", padding: false) } },
+          following: { nodes: ids.call([followed.first]), pageInfo: { hasNextPage: false, endCursor: Base64.urlsafe_encode64("3", padding: false) } }
+        }
+      )
+    end
+
     it "returns data for users when listing" do
       user
       user2
