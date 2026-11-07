@@ -19,7 +19,7 @@
 
     <span class="library-tile-hover" aria-hidden="true">
       <b>{{ purchase.game.name }}</b>
-      <span class="library-tile-meta">
+      <span v-if="status || hours || purchase.rating !== null" class="library-tile-meta">
         <span v-if="status" class="library-tile-status" :class="status.className">{{ status.label }}</span>
         <span v-if="hours">{{ hours }}</span>
         <span v-if="purchase.rating !== null">{{ purchase.rating }}/100</span>
@@ -139,8 +139,11 @@ const ariaLabel = computed(() => {
   opacity: 1;
 }
 
-.library-tile-hover b {
+.library-tile-hover b:not(:last-child) {
   margin-bottom: 6px;
+}
+
+.library-tile-hover b {
   font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.3;
