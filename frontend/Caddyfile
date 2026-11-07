@@ -100,6 +100,14 @@
 		redir /settings/account 302
 	}
 
+	# W3C Passkey Endpoints: tells password managers where users add and
+	# manage passkeys (the Passkeys card in account settings). Passkeys are
+	# bound to vglist.co, so the URLs are on the production origin.
+	handle /.well-known/passkey-endpoints {
+		header Content-Type application/json
+		respond `{"enroll":"https://vglist.co/settings/account","manage":"https://vglist.co/settings/account"}` 200
+	}
+
 	# Every other /.well-known/ path (Chrome DevTools' appspecific JSON,
 	# crawler probes, etc.) gets a real 404 instead of the SPA's HTML 200.
 	handle /.well-known/* {
