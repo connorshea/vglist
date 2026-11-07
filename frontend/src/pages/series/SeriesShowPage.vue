@@ -66,6 +66,7 @@ import { CircleAlert, Library } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useMutation } from "@/composables/useGraphQL";
 import { useResourceGames } from "@/composables/useResourceGames";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_SERIES } from "@/graphql/queries/resources";
 import { DELETE_SERIES } from "@/graphql/mutations/resources";
@@ -85,6 +86,8 @@ const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore,
     variables: () => ({ id: route.params.id }),
     select: (result) => result.series?.games
   });
+
+usePageTitle(() => data.value?.series?.name);
 
 // Only a failed first load means the series doesn't exist. Once it has
 // loaded, an error from changing the sort is shown above the games instead.

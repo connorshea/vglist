@@ -17,6 +17,7 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_GENRE_FOR_EDIT } from "@/graphql/queries/resources";
 import { CREATE_GENRE, UPDATE_GENRE } from "@/graphql/mutations/resources";
@@ -40,6 +41,11 @@ const submitError = ref("");
 const { data, loading, error } = useQuery<GetGenreForEditQuery>(GET_GENRE_FOR_EDIT, {
   variables: () => ({ id: genreId.value }),
   enabled: () => isEditing.value
+});
+
+usePageTitle(() => {
+  const genreName = isEditing.value ? data.value?.genre?.name : null;
+  return genreName ? `Edit ${genreName}` : null;
 });
 
 watch(

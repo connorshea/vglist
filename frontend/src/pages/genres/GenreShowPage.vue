@@ -66,6 +66,7 @@ import { CircleAlert, Tag } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useMutation } from "@/composables/useGraphQL";
 import { useResourceGames } from "@/composables/useResourceGames";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_GENRE } from "@/graphql/queries/resources";
 import { DELETE_GENRE } from "@/graphql/mutations/resources";
@@ -85,6 +86,8 @@ const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore,
     variables: () => ({ id: route.params.id }),
     select: (result) => result.genre?.games
   });
+
+usePageTitle(() => data.value?.genre?.name);
 
 // Only a failed first load means the genre doesn't exist. Once it has
 // loaded, an error from changing the sort is shown above the games instead.

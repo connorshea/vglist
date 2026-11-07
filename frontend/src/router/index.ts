@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { installPageTitles } from "@/composables/usePageTitle";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,7 +14,8 @@ const router = createRouter({
     {
       path: "/about",
       name: "about",
-      component: () => import("@/pages/AboutPage.vue")
+      component: () => import("@/pages/AboutPage.vue"),
+      meta: { title: "About" }
     },
 
     // Auth
@@ -21,44 +23,45 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: () => import("@/pages/auth/LoginPage.vue"),
-      meta: { guestOnly: true, layout: "bare" }
+      meta: { title: "Sign in", guestOnly: true, layout: "bare" }
     },
     {
       path: "/signup",
       name: "signup",
       component: () => import("@/pages/auth/SignupPage.vue"),
-      meta: { guestOnly: true, layout: "bare" }
+      meta: { title: "Sign up", guestOnly: true, layout: "bare" }
     },
     {
       path: "/password/reset",
       name: "passwordReset",
       component: () => import("@/pages/auth/PasswordResetPage.vue"),
-      meta: { guestOnly: true, layout: "bare" }
+      meta: { title: "Forgot your password?", guestOnly: true, layout: "bare" }
     },
     {
       path: "/password/reset/confirm",
       name: "passwordResetConfirm",
       component: () => import("@/pages/auth/PasswordResetConfirmPage.vue"),
-      meta: { guestOnly: true, layout: "bare" }
+      meta: { title: "Set a new password", guestOnly: true, layout: "bare" }
     },
     {
       path: "/confirmation/resend",
       name: "confirmationResend",
       component: () => import("@/pages/auth/ConfirmationResendPage.vue"),
-      meta: { guestOnly: true, layout: "bare" }
+      meta: { title: "Resend confirmation email", guestOnly: true, layout: "bare" }
     },
 
     // Games
     {
       path: "/games",
       name: "games",
-      component: () => import("@/pages/games/GamesIndexPage.vue")
+      component: () => import("@/pages/games/GamesIndexPage.vue"),
+      meta: { title: "Games" }
     },
     {
       path: "/games/new",
       name: "gameNew",
       component: () => import("@/pages/games/GameFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new game", requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/games/:id",
@@ -76,7 +79,8 @@ const router = createRouter({
     {
       path: "/users",
       name: "users",
-      component: () => import("@/pages/users/UserListPage.vue")
+      component: () => import("@/pages/users/UserListPage.vue"),
+      meta: { title: "Users" }
     },
     // Comparing two users' libraries. `/users/:slug/compare` compares the
     // signed-in user with that user, so the profile's button can link to it.
@@ -138,13 +142,14 @@ const router = createRouter({
     {
       path: "/platforms",
       name: "platforms",
-      component: () => import("@/pages/platforms/PlatformListPage.vue")
+      component: () => import("@/pages/platforms/PlatformListPage.vue"),
+      meta: { title: "Platforms" }
     },
     {
       path: "/platforms/new",
       name: "platformNew",
       component: () => import("@/pages/platforms/PlatformFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new platform", requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/platforms/:id",
@@ -162,13 +167,14 @@ const router = createRouter({
     {
       path: "/companies",
       name: "companies",
-      component: () => import("@/pages/companies/CompanyListPage.vue")
+      component: () => import("@/pages/companies/CompanyListPage.vue"),
+      meta: { title: "Companies" }
     },
     {
       path: "/companies/new",
       name: "companyNew",
       component: () => import("@/pages/companies/CompanyFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new company", requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/companies/:id",
@@ -186,13 +192,14 @@ const router = createRouter({
     {
       path: "/engines",
       name: "engines",
-      component: () => import("@/pages/engines/EngineListPage.vue")
+      component: () => import("@/pages/engines/EngineListPage.vue"),
+      meta: { title: "Engines" }
     },
     {
       path: "/engines/new",
       name: "engineNew",
       component: () => import("@/pages/engines/EngineFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new engine", requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/engines/:id",
@@ -210,13 +217,14 @@ const router = createRouter({
     {
       path: "/genres",
       name: "genres",
-      component: () => import("@/pages/genres/GenreListPage.vue")
+      component: () => import("@/pages/genres/GenreListPage.vue"),
+      meta: { title: "Genres" }
     },
     {
       path: "/genres/new",
       name: "genreNew",
       component: () => import("@/pages/genres/GenreFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new genre", requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/genres/:id",
@@ -234,13 +242,14 @@ const router = createRouter({
     {
       path: "/series",
       name: "seriesList",
-      component: () => import("@/pages/series/SeriesListPage.vue")
+      component: () => import("@/pages/series/SeriesListPage.vue"),
+      meta: { title: "Series" }
     },
     {
       path: "/series/new",
       name: "seriesNew",
       component: () => import("@/pages/series/SeriesFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new series", requiresAuth: true, requiresModerator: true }
     },
     {
       path: "/series/:id",
@@ -258,13 +267,14 @@ const router = createRouter({
     {
       path: "/stores",
       name: "stores",
-      component: () => import("@/pages/stores/StoreListPage.vue")
+      component: () => import("@/pages/stores/StoreListPage.vue"),
+      meta: { title: "Stores" }
     },
     {
       path: "/stores/new",
       name: "storeNew",
       component: () => import("@/pages/stores/StoreFormPage.vue"),
-      meta: { requiresAuth: true, requiresModerator: true }
+      meta: { title: "Create a new store", requiresAuth: true, requiresModerator: true }
     },
     // Stores have no page of their own; send old links to the list.
     {
@@ -282,7 +292,8 @@ const router = createRouter({
     {
       path: "/activity",
       name: "activity",
-      component: () => import("@/pages/activity/ActivityPage.vue")
+      component: () => import("@/pages/activity/ActivityPage.vue"),
+      meta: { title: "Activity" }
     },
 
     // Settings
@@ -296,22 +307,26 @@ const router = createRouter({
         {
           path: "profile",
           name: "settingsProfile",
-          component: () => import("@/pages/settings/ProfileSettings.vue")
+          component: () => import("@/pages/settings/ProfileSettings.vue"),
+          meta: { title: "Profile Settings" }
         },
         {
           path: "account",
           name: "settingsAccount",
-          component: () => import("@/pages/settings/AccountSettings.vue")
+          component: () => import("@/pages/settings/AccountSettings.vue"),
+          meta: { title: "Account Settings" }
         },
         {
           path: "import",
           name: "settingsImport",
-          component: () => import("@/pages/settings/ImportSettings.vue")
+          component: () => import("@/pages/settings/ImportSettings.vue"),
+          meta: { title: "Import Settings" }
         },
         {
           path: "export",
           name: "settingsExport",
-          component: () => import("@/pages/settings/ExportSettings.vue")
+          component: () => import("@/pages/settings/ExportSettings.vue"),
+          meta: { title: "Export Library" }
         }
       ]
     },
@@ -321,14 +336,15 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("@/pages/admin/AdminDashboardPage.vue"),
-      meta: { requiresAuth: true, requiresAdmin: true }
+      meta: { title: "Admin Dashboard", requiresAuth: true, requiresAdmin: true }
     },
 
     // Catch-all 404
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
-      component: () => import("@/pages/NotFoundPage.vue")
+      component: () => import("@/pages/NotFoundPage.vue"),
+      meta: { title: "Page not found" }
     }
   ],
   scrollBehavior(_to, _from, savedPosition) {
@@ -359,5 +375,7 @@ router.beforeEach((to) => {
     return { name: "home" };
   }
 });
+
+installPageTitles(router);
 
 export default router;

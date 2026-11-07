@@ -253,6 +253,7 @@ import { computed, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_GAME } from "@/graphql/queries/games";
 import { GET_PLATFORMS, GET_COMPANIES, GET_GENRES, GET_ENGINES, GET_SERIES_LIST } from "@/graphql/queries/resources";
@@ -337,6 +338,11 @@ const {
 } = useQuery<GetGameResult>(GET_GAME, {
   variables: () => ({ id: gameId.value }),
   enabled: () => isEditing.value
+});
+
+usePageTitle(() => {
+  const gameName = isEditing.value ? gameData.value?.game?.name : null;
+  return gameName ? `Edit ${gameName}` : null;
 });
 
 // Populate form when game data loads

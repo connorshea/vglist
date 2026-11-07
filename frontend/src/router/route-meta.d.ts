@@ -13,6 +13,11 @@ declare module "vue-router" {
     /** Redirect home when the visitor is already signed in. */
     guestOnly?: boolean;
     /**
+     * The page's title, shown as "<title> | vglist". Pages whose title comes
+     * from loaded data leave this unset and call `usePageTitle()` instead.
+     */
+    title?: string;
+    /**
      * Which app shell to render around the page.
      *
      * - `"default"` (or unset): the global navbar, with the page inside

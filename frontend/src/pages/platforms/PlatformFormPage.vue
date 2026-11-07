@@ -17,6 +17,7 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_PLATFORM_FOR_EDIT } from "@/graphql/queries/resources";
 import { CREATE_PLATFORM, UPDATE_PLATFORM } from "@/graphql/mutations/resources";
@@ -40,6 +41,11 @@ const submitError = ref("");
 const { data, loading, error } = useQuery<GetPlatformForEditQuery>(GET_PLATFORM_FOR_EDIT, {
   variables: () => ({ id: platformId.value }),
   enabled: () => isEditing.value
+});
+
+usePageTitle(() => {
+  const platformName = isEditing.value ? data.value?.platform?.name : null;
+  return platformName ? `Edit ${platformName}` : null;
 });
 
 watch(

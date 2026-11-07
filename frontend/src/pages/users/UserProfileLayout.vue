@@ -237,6 +237,7 @@ import {
   UserPlus
 } from "@lucide/vue";
 import { useMutation, useQuery } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { USER_PROFILE_KEY } from "@/composables/useUserProfile";
 import { useAuthStore } from "@/stores/auth";
@@ -271,6 +272,21 @@ watch([data, error, loading], () => {
 });
 
 const user = computed(() => data.value?.user ?? null);
+
+// "connor", "connor's Library", ... as on the old app.
+const TAB_TITLES: Partial<Record<RouteRecordName, string>> = {
+  userLibrary: "Library",
+  userFavorites: "Favorites",
+  userActivity: "Activity",
+  userFollowers: "Followers",
+  userFollowing: "Following"
+};
+usePageTitle(() => {
+  const username = user.value?.username;
+  if (!username) return null;
+  const tab = route.name ? TAB_TITLES[route.name] : undefined;
+  return tab ? `${username}'s ${tab}` : username;
+});
 
 const isOwnProfile = computed(
   () => authStore.isAuthenticated && user.value !== null && authStore.user?.id === user.value.id

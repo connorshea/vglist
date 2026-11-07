@@ -17,6 +17,7 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_STORE_FOR_EDIT } from "@/graphql/queries/resources";
 import { CREATE_STORE, UPDATE_STORE } from "@/graphql/mutations/resources";
@@ -39,6 +40,11 @@ const submitError = ref("");
 const { data, loading, error } = useQuery<GetStoreForEditQuery>(GET_STORE_FOR_EDIT, {
   variables: () => ({ id: storeId.value }),
   enabled: () => isEditing.value
+});
+
+usePageTitle(() => {
+  const storeName = isEditing.value ? data.value?.store?.name : null;
+  return storeName ? `Edit ${storeName}` : null;
 });
 
 watch(
