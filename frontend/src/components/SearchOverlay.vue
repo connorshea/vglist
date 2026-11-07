@@ -19,8 +19,17 @@
               class="search-input"
               type="text"
               placeholder="Search games, companies, users…"
+              aria-label="Search games, companies, users, and more"
+              role="combobox"
+              autocomplete="off"
+              aria-autocomplete="list"
+              :aria-expanded="totalResults > 0"
+              aria-controls="search-results-listbox"
+              :aria-activedescendant="activeIndex >= 0 ? `search-result-${activeIndex}` : undefined"
               @input="onSearch"
-              @keydown.enter="goToFirstResult"
+              @keydown.down.prevent="move(1)"
+              @keydown.up.prevent="move(-1)"
+              @keydown.enter.prevent="chooseActive"
             />
             <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
             <button class="search-close" aria-label="Close search" @click="close">
@@ -58,10 +67,17 @@
           </div>
 
           <!-- Results grid -->
-          <div v-else-if="totalResults > 0" class="results-grid" :class="gridColumnsClass">
+          <div
+            v-else-if="totalResults > 0"
+            id="search-results-listbox"
+            class="results-grid"
+            :class="gridColumnsClass"
+            role="listbox"
+            aria-label="Search results"
+          >
             <!-- Games column -->
-            <div v-if="gameResults.length" class="category">
-              <div class="category-header">
+            <div v-if="gameResults.length" class="category" role="group" aria-label="Games">
+              <div class="category-header" aria-hidden="true">
                 <Gamepad2 class="category-icon" />
                 <span class="category-title">Games</span>
                 <span class="category-count"
@@ -75,10 +91,15 @@
                 :href="resultHref(game)"
                 class="result-item"
                 :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
+                :id="optionId(game)"
+                role="option"
+                :aria-selected="isActive(game)"
+                :class="{ 'is-active': isActive(game) }"
+                @mousemove="setActive(game)"
                 @click.prevent="goToResult(game)"
               >
                 <div class="result-thumb">
-                  <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.content" />
+                  <img v-if="game.coverUrl" :src="game.coverUrl" alt="" />
                   <div v-else class="result-thumb-placeholder">
                     {{ gameInitials(game.content) }}
                   </div>
@@ -94,8 +115,8 @@
             </div>
 
             <!-- Companies column -->
-            <div v-if="companyResults.length" class="category">
-              <div class="category-header">
+            <div v-if="companyResults.length" class="category" role="group" aria-label="Companies">
+              <div class="category-header" aria-hidden="true">
                 <Briefcase class="category-icon" />
                 <span class="category-title">Companies</span>
                 <span class="category-count"
@@ -109,6 +130,11 @@
                 :href="resultHref(company)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
+                :id="optionId(company)"
+                role="option"
+                :aria-selected="isActive(company)"
+                :class="{ 'is-active': isActive(company) }"
+                @mousemove="setActive(company)"
                 @click.prevent="goToResult(company)"
               >
                 <div class="result-thumb">
@@ -123,8 +149,8 @@
             </div>
 
             <!-- Platforms column -->
-            <div v-if="platformResults.length" class="category">
-              <div class="category-header">
+            <div v-if="platformResults.length" class="category" role="group" aria-label="Platforms">
+              <div class="category-header" aria-hidden="true">
                 <Monitor class="category-icon" />
                 <span class="category-title">Platforms</span>
                 <span class="category-count"
@@ -138,6 +164,11 @@
                 :href="resultHref(platform)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                :id="optionId(platform)"
+                role="option"
+                :aria-selected="isActive(platform)"
+                :class="{ 'is-active': isActive(platform) }"
+                @mousemove="setActive(platform)"
                 @click.prevent="goToResult(platform)"
               >
                 <div class="result-thumb">
@@ -152,8 +183,8 @@
             </div>
 
             <!-- Other resources column -->
-            <div v-if="otherResults.length" class="category">
-              <div class="category-header">
+            <div v-if="otherResults.length" class="category" role="group" aria-label="Other">
+              <div class="category-header" aria-hidden="true">
                 <Briefcase class="category-icon" />
                 <span class="category-title">Other</span>
                 <span class="category-count"
@@ -167,6 +198,11 @@
                 :href="resultHref(item)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                :id="optionId(item)"
+                role="option"
+                :aria-selected="isActive(item)"
+                :class="{ 'is-active': isActive(item) }"
+                @mousemove="setActive(item)"
                 @click.prevent="goToResult(item)"
               >
                 <div class="result-thumb">
@@ -186,8 +222,8 @@
             </div>
 
             <!-- Users column -->
-            <div v-if="userResults.length" class="category">
-              <div class="category-header">
+            <div v-if="userResults.length" class="category" role="group" aria-label="Users">
+              <div class="category-header" aria-hidden="true">
                 <Users class="category-icon" />
                 <span class="category-title">Users</span>
                 <span class="category-count"
@@ -201,10 +237,15 @@
                 :href="resultHref(user)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
+                :id="optionId(user)"
+                role="option"
+                :aria-selected="isActive(user)"
+                :class="{ 'is-active': isActive(user) }"
+                @mousemove="setActive(user)"
                 @click.prevent="goToResult(user)"
               >
                 <div class="result-thumb">
-                  <img v-if="user.avatarUrl" :src="user.avatarUrl" :alt="user.content" />
+                  <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
                   <div v-else class="result-thumb-placeholder">
                     {{ user.content.charAt(0).toUpperCase() }}
                   </div>
@@ -296,6 +337,41 @@ const otherResults = computed(() => results.value.filter((r) => !dedicatedTypes.
 
 const totalResults = computed(() => results.value.length);
 
+// Every result in the order it's shown (column by column), so Up and Down
+// step through them the way they read.
+const orderedResults = computed(() => [
+  ...gameResults.value,
+  ...companyResults.value,
+  ...platformResults.value,
+  ...otherResults.value,
+  ...userResults.value
+]);
+const resultIndexes = computed(() => new Map(orderedResults.value.map((result, index) => [result, index])));
+
+// The highlighted result, which Enter opens. The first result is highlighted
+// whenever new results arrive, so Enter keeps opening the top hit by default.
+const activeIndex = ref(-1);
+
+watch(orderedResults, (ordered) => {
+  activeIndex.value = ordered.length > 0 ? 0 : -1;
+});
+
+function resultIndex(result: SearchResultFieldsFragment): number {
+  return resultIndexes.value.get(result) ?? -1;
+}
+
+function optionId(result: SearchResultFieldsFragment): string {
+  return `search-result-${resultIndex(result)}`;
+}
+
+function isActive(result: SearchResultFieldsFragment): boolean {
+  return activeIndex.value >= 0 && resultIndex(result) === activeIndex.value;
+}
+
+function setActive(result: SearchResultFieldsFragment) {
+  activeIndex.value = resultIndex(result);
+}
+
 // Dynamically set grid columns based on which categories have results
 const gridColumnsClass = computed(() => {
   const cols = [
@@ -372,10 +448,18 @@ function onSearch() {
   performSearch();
 }
 
-function goToFirstResult() {
-  if (results.value.length > 0) {
-    goToResult(results.value[0]);
-  }
+function move(step: number) {
+  const count = orderedResults.value.length;
+  if (count === 0) return;
+  activeIndex.value = (activeIndex.value + step + count) % count;
+  void nextTick(() => {
+    overlayRef.value?.querySelector(".result-item.is-active")?.scrollIntoView?.({ block: "nearest" });
+  });
+}
+
+function chooseActive() {
+  const active = orderedResults.value[activeIndex.value];
+  if (active) goToResult(active);
 }
 
 const typeRouteMap: Record<string, string> = {
@@ -759,7 +843,8 @@ function releaseYear(date: string): string {
   background: rgba(206, 203, 246, 0.1);
 }
 
-.result-item:focus-visible {
+.result-item:focus-visible,
+.result-item.is-active {
   background: var(--s-400);
   outline: 1px solid var(--s-300);
 }
