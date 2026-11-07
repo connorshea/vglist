@@ -102,6 +102,7 @@ export const GET_GAME_PURCHASE = gql`
       completionStatus
       rating
       hoursPlayed
+      replayCount
       comments
       startDate
       completionDate
