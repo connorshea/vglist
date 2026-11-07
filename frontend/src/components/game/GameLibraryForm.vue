@@ -1020,7 +1020,7 @@ defineExpose({ openAsAdd, openAsEdit });
   .form-number-input::placeholder,
   .form-date-input::placeholder,
   .form-textarea::placeholder {
-    color: var(--s-300);
+    color: var(--color-placeholder);
   }
 
   .form-btn-remove {
@@ -1062,6 +1062,6 @@ defineExpose({ openAsAdd, openAsEdit });
 /* Placeholders read as hints, not values. */
 .is-sheet .form-number-input::placeholder,
 .is-sheet .form-textarea::placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--color-placeholder);
 }
 </style>
