@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="wbLoading" class="has-text-centered py-6">Loading...</div>
-    <div v-if="wbError" class="notification is-danger">{{ wbError.message }}</div>
+    <div v-if="!wbLoaded && wbLoading" class="has-text-centered py-6">Loading...</div>
+    <div v-if="wbError" class="notification is-danger">{{ wbError }}</div>
 
-    <template v-if="wbData">
+    <template v-if="wbLoaded">
       <div class="table-container">
         <table class="table is-fullwidth is-striped">
           <thead>
@@ -15,7 +15,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="entry in wbData.wikidataBlocklist?.nodes" :key="entry.id">
+            <tr v-for="entry in wbEntries" :key="entry.id">
               <td>
                 <a
                   :href="`https://www.wikidata.org/wiki/Q${entry.wikidataId}`"
@@ -40,7 +40,14 @@
           </tbody>
         </table>
       </div>
-      <p v-if="wbData.wikidataBlocklist?.nodes.length === 0" class="has-text-centered has-text-grey py-4">
+      <AdminLoadMore
+        :has-next-page="wbHasNextPage"
+        :loading="wbLoadingMore"
+        :error="wbLoadMoreError"
+        noun="entries"
+        @load-more="wbLoadMore"
+      />
+      <p v-if="wbEntries.length === 0" class="has-text-centered has-text-grey py-4">
         No entries in the Wikidata blocklist.
       </p>
     </template>
@@ -48,7 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from "@/composables/useGraphQL";
+import AdminLoadMore from "@/components/admin/AdminLoadMore.vue";
+import { useConnectionList } from "@/composables/useConnectionList";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import { GET_WIKIDATA_BLOCKLIST } from "@/graphql/queries/admin";
@@ -59,11 +67,18 @@ import type { GetWikidataBlocklistQuery } from "@/types/graphql";
 const { show: showSnackbar } = useSnackbar();
 
 const {
-  data: wbData,
+  nodes: wbEntries,
+  loaded: wbLoaded,
   loading: wbLoading,
   error: wbError,
-  refetch: wbRefetch
-} = useQuery<GetWikidataBlocklistQuery>(GET_WIKIDATA_BLOCKLIST, { variables: { first: 50 } });
+  hasNextPage: wbHasNextPage,
+  loadMore: wbLoadMore,
+  loadingMore: wbLoadingMore,
+  loadMoreError: wbLoadMoreError,
+  reload: wbRefetch
+} = useConnectionList(GET_WIKIDATA_BLOCKLIST, {
+  select: (data: GetWikidataBlocklistQuery) => data.wikidataBlocklist
+});
 
 async function removeFromWikidataBlocklist(id: string) {
   try {
