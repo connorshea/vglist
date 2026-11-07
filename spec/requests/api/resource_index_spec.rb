@@ -2,14 +2,17 @@
 
 require 'rails_helper'
 
-# The genre and platform index pages. `series_spec.rb` covers seriesList.
-RSpec.describe "Genre and platform index API", type: :request do
+# The genre, platform, company and engine index pages. `series_spec.rb` covers
+# seriesList.
+RSpec.describe "Resource index API", type: :request do
   let(:user) { create(:confirmed_user) }
   let(:access_token) { JwtService.encode(user) }
 
   {
     genres: { model: :genre, join: :game_genre },
-    platforms: { model: :platform, join: :game_platform }
+    platforms: { model: :platform, join: :game_platform },
+    companies: { model: :company, join: :game_developer },
+    engines: { model: :engine, join: :game_engine }
   }.each do |field, config|
     describe field.to_s do
       let(:query_string) do
@@ -58,6 +61,47 @@ RSpec.describe "Genre and platform index API", type: :request do
         expect(result[:totalCount]).to eq(1)
         expect(result[:nodes].pluck(:name)).to eq(["Zeta"])
       end
+    end
+  end
+
+  describe "companies gamesCount" do
+    let(:query_string) do
+      <<-GRAPHQL
+        query {
+          companies(sortBy: MOST_GAMES) {
+            nodes {
+              name
+              gamesCount
+            }
+          }
+        }
+      GRAPHQL
+    end
+
+    it "counts developed and published games, each game once" do
+      company = create(:company, name: "Valve")
+      both = create(:game)
+      create(:game_developer, company: company, game: both)
+      create(:game_publisher, company: company, game: both)
+      create(:game_developer, company: company)
+      create(:game_publisher, company: company)
+      create(:game_publisher, company: create(:company, name: "Other"))
+
+      expect(api_request(query_string, token: access_token).graphql_dig(:companies, :nodes)).to eq(
+        [{ name: "Valve", gamesCount: 3 }, { name: "Other", gamesCount: 1 }]
+      )
+    end
+
+    it "counts the same games for a single company" do
+      company = create(:company)
+      game = create(:game)
+      create(:game_developer, company: company, game: game)
+      create(:game_publisher, company: company, game: game)
+      create(:game_publisher, company: company)
+
+      result = api_request('query($id: ID!) { company(id: $id) { gamesCount } }', variables: { id: company.id }, token: access_token)
+
+      expect(result.graphql_dig(:company, :gamesCount)).to eq(2)
     end
   end
 

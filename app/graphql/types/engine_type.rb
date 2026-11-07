@@ -9,6 +9,7 @@ module Types
     field :wikidata_id, Integer, null: true, description: 'Wikidata identifier'
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this engine was first created."
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false, description: "When this engine was last updated."
+    field :games_count, Integer, null: false, description: "The number of games built with this engine."
 
     # Associations
     field :games, GameType.connection_type, null: false, description: "Games built with this engine." do
@@ -17,6 +18,12 @@ module Types
 
     def games(sort_by: nil)
       ResourceGameSort.apply(@object.games.with_attached_cover, sort_by)
+    end
+
+    # The list resolver loads this with the records (`with_games_count`), so a
+    # page of them doesn't count each one's games separately.
+    def games_count
+      @object.has_attribute?(:index_games_count) ? @object[:index_games_count] : @object.games.count
     end
   end
 end
