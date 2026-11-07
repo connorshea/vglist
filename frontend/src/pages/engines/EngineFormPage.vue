@@ -17,6 +17,7 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_ENGINE_FOR_EDIT } from "@/graphql/queries/resources";
 import { CREATE_ENGINE, UPDATE_ENGINE } from "@/graphql/mutations/resources";
@@ -40,6 +41,11 @@ const submitError = ref("");
 const { data, loading, error } = useQuery<GetEngineForEditQuery>(GET_ENGINE_FOR_EDIT, {
   variables: () => ({ id: engineId.value }),
   enabled: () => isEditing.value
+});
+
+usePageTitle(() => {
+  const engineName = isEditing.value ? data.value?.engine?.name : null;
+  return engineName ? `Edit ${engineName}` : null;
 });
 
 watch(

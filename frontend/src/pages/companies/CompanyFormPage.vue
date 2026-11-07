@@ -17,6 +17,7 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_COMPANY_FOR_EDIT } from "@/graphql/queries/resources";
 import { CREATE_COMPANY, UPDATE_COMPANY } from "@/graphql/mutations/resources";
@@ -40,6 +41,11 @@ const submitError = ref("");
 const { data, loading, error } = useQuery<GetCompanyForEditQuery>(GET_COMPANY_FOR_EDIT, {
   variables: () => ({ id: companyId.value }),
   enabled: () => isEditing.value
+});
+
+usePageTitle(() => {
+  const companyName = isEditing.value ? data.value?.company?.name : null;
+  return companyName ? `Edit ${companyName}` : null;
 });
 
 watch(
