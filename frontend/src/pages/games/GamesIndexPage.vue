@@ -77,7 +77,7 @@
           @click="togglePanel"
         >
           <ListFilter :size="14" aria-hidden="true" />
-          More filters
+          <span class="more-btn-label">More filters</span>
           <span v-if="moreCount > 0" class="count-badge"> {{ moreCount }}<span class="is-sr-only"> active</span> </span>
         </button>
         <GamesFilterPanel
@@ -575,6 +575,12 @@ onBeforeUnmount(() => {
   font: inherit;
   font-size: 13px;
   cursor: pointer;
+}
+
+/* Trimmed to cap height and baseline so the letters, not the line box, are
+   centered next to the icon. */
+.more-btn-label {
+  text-box: trim-both cap alphabetic;
 }
 
 .more-btn.on {
