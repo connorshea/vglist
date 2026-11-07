@@ -57,7 +57,7 @@
             type="number"
             min="0"
             step="0.1"
-            class="form-hours-input"
+            class="form-number-input"
             placeholder="0"
           />
         </div>
@@ -71,7 +71,7 @@
             min="0"
             step="1"
             inputmode="numeric"
-            class="form-hours-input"
+            class="form-number-input"
             placeholder="0"
             @change="normalizeReplayCount"
           />
@@ -662,8 +662,8 @@ defineExpose({ openAsAdd, openAsEdit });
   margin-top: 0.25rem;
 }
 
-/* Hours played input */
-.form-hours-input {
+/* Hours played and times replayed inputs */
+.form-number-input {
   width: 80px;
   font-size: 0.8rem;
   border: 1px solid var(--color-border);
@@ -673,7 +673,7 @@ defineExpose({ openAsAdd, openAsEdit });
   font-family: inherit;
 }
 
-.form-hours-input:focus {
+.form-number-input:focus {
   border-color: var(--color-text-secondary);
 }
 
@@ -841,7 +841,7 @@ defineExpose({ openAsAdd, openAsEdit });
 
 /* 16px text stops iOS Safari zooming in when a field gets focus. */
 .is-sheet .form-rating-input,
-.is-sheet .form-hours-input,
+.is-sheet .form-number-input,
 .is-sheet .form-date-input,
 .is-sheet .form-textarea {
   box-sizing: border-box;
@@ -850,7 +850,7 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 .is-sheet .form-rating-input,
-.is-sheet .form-hours-input,
+.is-sheet .form-number-input,
 .is-sheet .form-date-input {
   height: 44px;
 }
@@ -860,7 +860,7 @@ defineExpose({ openAsAdd, openAsEdit });
   font-weight: 600;
 }
 
-.is-sheet .form-hours-input {
+.is-sheet .form-number-input {
   width: 96px;
 }
 
@@ -992,7 +992,7 @@ defineExpose({ openAsAdd, openAsEdit });
   }
 
   .form-rating-input,
-  .form-hours-input,
+  .form-number-input,
   .form-date-input,
   .form-textarea {
     background: var(--s-600);
@@ -1000,7 +1000,7 @@ defineExpose({ openAsAdd, openAsEdit });
   }
 
   .form-rating-input::placeholder,
-  .form-hours-input::placeholder,
+  .form-number-input::placeholder,
   .form-date-input::placeholder,
   .form-textarea::placeholder {
     color: var(--s-300);
@@ -1043,7 +1043,7 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 /* Placeholders read as hints, not values. */
-.is-sheet .form-hours-input::placeholder,
+.is-sheet .form-number-input::placeholder,
 .is-sheet .form-textarea::placeholder {
   color: var(--color-text-tertiary);
 }
