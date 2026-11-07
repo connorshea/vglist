@@ -94,7 +94,7 @@ RSpec.describe GamePurchase, type: :model do
   end
 
   describe "Associations" do
-    it { should belong_to(:game) }
+    it { should belong_to(:game).counter_cache(true) }
     it { should belong_to(:user) }
     it { should have_many(:game_purchase_platforms) }
     it { should have_many(:platforms).through(:game_purchase_platforms).source(:platform) }
@@ -189,6 +189,14 @@ RSpec.describe GamePurchase, type: :model do
         game_purchase1
         game_purchase2
         expect { game_purchase2.destroy }.to change(game, :avg_rating).from(15).to(nil)
+      end
+
+      it "keeps the game's game_purchases_count up to date" do
+        game_purchase1
+        game_purchase2
+        expect(game.reload.game_purchases_count).to eq(2)
+        game_purchase2.destroy
+        expect(game.reload.game_purchases_count).to eq(1)
       end
     end
   end

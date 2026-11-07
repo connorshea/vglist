@@ -43,6 +43,8 @@ class GameMergeService
 
     # Update all the game purchase records
     @game_b.game_purchases.update_all(game_id: @game_a.id) # rubocop:disable Rails/SkipsModelValidations
+    # update_all skips the counter cache callbacks.
+    Game.reset_counters(@game_a.id, :game_purchases)
   end
 
   def handle_favorites

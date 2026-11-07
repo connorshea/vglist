@@ -100,7 +100,7 @@ RSpec.describe "Games API", type: :request do
       end
 
       it "counts in the database instead of loading every group" do
-        sql = queries_run { total_count('MOST_OWNERS') }.find { |q| q.include?('COUNT') }
+        sql = queries_run { total_count('MOST_FAVORITES') }.find { |q| q.include?('COUNT') }
         expect(sql).to match(/SELECT COUNT\(\*\) FROM \(SELECT/)
       end
     end

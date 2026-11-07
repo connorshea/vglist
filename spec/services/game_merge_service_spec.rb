@@ -25,6 +25,20 @@ RSpec.describe GameMergeService, type: :service do
       expect(game_b_purchase.reload.game_id).to eq(game_a.id)
     end
 
+    it "moves game_b's purchases into game_a's game_purchases_count" do
+      create(:game_purchase, game: game_a)
+      create_list(:game_purchase, 2, game: game_b)
+      GameMergeService.new(game_a, game_b).merge!
+      expect(game_a.reload.game_purchases_count).to eq(3)
+    end
+
+    it 'does not count a purchase twice when the user owns both games' do
+      game_a_purchase
+      game_b_purchase
+      GameMergeService.new(game_a, game_b).merge!
+      expect(game_a.reload.game_purchases_count).to eq(1)
+    end
+
     it 'results in favorites of game_b being updated' do
       user
       game_b_favorite
