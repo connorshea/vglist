@@ -49,32 +49,34 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="form-hours-played">Hours played</label>
-          <input
-            id="form-hours-played"
-            v-model.number="formHoursPlayed"
-            type="number"
-            min="0"
-            step="0.1"
-            class="form-number-input"
-            placeholder="0"
-          />
-        </div>
+        <div class="form-pair">
+          <div class="form-group">
+            <label class="form-label" for="form-hours-played">Hours played</label>
+            <input
+              id="form-hours-played"
+              v-model.number="formHoursPlayed"
+              type="number"
+              min="0"
+              step="0.1"
+              class="form-number-input"
+              placeholder="0"
+            />
+          </div>
 
-        <div class="form-group">
-          <label class="form-label" for="form-replay-count">Times replayed</label>
-          <input
-            id="form-replay-count"
-            v-model.number="formReplayCount"
-            type="number"
-            min="0"
-            step="1"
-            inputmode="numeric"
-            class="form-number-input"
-            placeholder="0"
-            @change="normalizeReplayCount"
-          />
+          <div class="form-group">
+            <label class="form-label" for="form-replay-count">Times replayed</label>
+            <input
+              id="form-replay-count"
+              v-model.number="formReplayCount"
+              type="number"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              class="form-number-input"
+              placeholder="0"
+              @change="normalizeReplayCount"
+            />
+          </div>
         </div>
 
         <div class="form-dates">
@@ -663,6 +665,12 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 /* Hours played and times replayed inputs */
+.form-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+}
+
 .form-number-input {
   width: 80px;
   font-size: 0.8rem;
@@ -876,6 +884,15 @@ defineExpose({ openAsAdd, openAsEdit });
   padding: 12px;
   line-height: 1.45;
   resize: none;
+}
+
+.is-sheet .form-pair {
+  gap: 12px;
+  padding: 16px 20px 0;
+}
+
+.is-sheet .form-pair .form-group {
+  padding: 0;
 }
 
 .is-sheet .form-dates {
