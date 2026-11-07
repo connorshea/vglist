@@ -475,7 +475,7 @@ watch([data, error, loading], () => {
 
 // Extract dominant colors from the cover image for the hero background gradient.
 const coverUrl = computed(() => game.value?.coverUrl ?? null);
-const { gradient: heroGradient } = useImageColors(coverUrl);
+const { gradient: heroGradient } = useImageColors(coverUrl, { resetKey: () => game.value?.id });
 const heroStyle = computed(() => (heroGradient.value ? { background: heroGradient.value } : undefined));
 
 // Fetch all stores for the form

@@ -1,4 +1,4 @@
-import { ref, watch, type Ref } from "vue";
+import { ref, toValue, watch, type MaybeRefOrGetter, type Ref } from "vue";
 
 interface RGB {
   r: number;
@@ -11,6 +11,16 @@ interface ImageColorsResult {
   gradient: Ref<string | null>;
 }
 
+interface ImageColorsOptions {
+  /**
+   * What the image belongs to, such as a game id. The gradient is normally
+   * kept while a new URL loads (signed URLs change on every refetch), but
+   * when this key changes it is cleared straight away, so one game's colours
+   * never show on another game's page.
+   */
+  resetKey?: MaybeRefOrGetter<unknown>;
+}
+
 /**
  * Extracts dominant colors from an image URL using the Canvas API and returns
  * a reactive CSS gradient string.
@@ -18,7 +28,10 @@ interface ImageColorsResult {
  * Falls back gracefully (gradient stays null) if the image fails to load,
  * CORS prevents canvas read-back, or no image URL is provided.
  */
-export function useImageColors(imageUrl: Ref<string | null | undefined>): ImageColorsResult {
+export function useImageColors(
+  imageUrl: Ref<string | null | undefined>,
+  options: ImageColorsOptions = {}
+): ImageColorsResult {
   const gradient = ref<string | null>(null);
 
   // Only the newest image may write the gradient, so a slow load for a URL
@@ -26,9 +39,12 @@ export function useImageColors(imageUrl: Ref<string | null | undefined>): ImageC
   let latestUrl: string | null = null;
 
   watch(
-    imageUrl,
-    (url) => {
+    () => [imageUrl.value, toValue(options.resetKey)] as const,
+    ([url, key], previous) => {
       latestUrl = url ?? null;
+      // A different owner (e.g. another game): drop the old colours now
+      // rather than showing them until the new image has been sampled.
+      if (previous && key !== previous[1]) gradient.value = null;
       if (!url) {
         gradient.value = null;
         return;
