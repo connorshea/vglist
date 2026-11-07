@@ -21,31 +21,31 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: () => import("@/pages/auth/LoginPage.vue"),
-      meta: { guestOnly: true }
+      meta: { guestOnly: true, layout: "bare" }
     },
     {
       path: "/signup",
       name: "signup",
       component: () => import("@/pages/auth/SignupPage.vue"),
-      meta: { guestOnly: true }
+      meta: { guestOnly: true, layout: "bare" }
     },
     {
       path: "/password/reset",
       name: "passwordReset",
       component: () => import("@/pages/auth/PasswordResetPage.vue"),
-      meta: { guestOnly: true }
+      meta: { guestOnly: true, layout: "bare" }
     },
     {
       path: "/password/reset/confirm",
       name: "passwordResetConfirm",
       component: () => import("@/pages/auth/PasswordResetConfirmPage.vue"),
-      meta: { guestOnly: true }
+      meta: { guestOnly: true, layout: "bare" }
     },
     {
       path: "/confirmation/resend",
       name: "confirmationResend",
       component: () => import("@/pages/auth/ConfirmationResendPage.vue"),
-      meta: { guestOnly: true }
+      meta: { guestOnly: true, layout: "bare" }
     },
 
     // Games
