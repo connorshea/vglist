@@ -559,37 +559,7 @@ async function loadMoreGames() {
   outline-offset: 2px;
 }
 
-/* ── Desktop layout ── */
-.library-split {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  align-items: flex-start;
-  padding-top: 24px;
-}
-
-.library-split-rail {
-  flex: 1 1 220px;
-  max-width: 240px;
-}
-
-.library-split-main {
-  flex: 999 1 560px;
-  min-width: 0;
-}
-
-.library-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.library-toolbar-grow {
-  flex: 1;
-}
-
+/* ── Toolbar ── */
 .library-chips {
   display: flex;
   flex-wrap: wrap;
@@ -673,17 +643,6 @@ async function loadMoreGames() {
 }
 
 /* ── Shelves ── */
-.library-shelf {
-  margin-bottom: 32px;
-}
-
-.library-shelf-header {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
 .library-shelf-header h2 {
   margin: 0;
   color: var(--color-text-primary);
@@ -715,18 +674,6 @@ async function loadMoreGames() {
 .library-shelf-more:focus-visible {
   outline: 2px solid var(--color-accent);
   border-radius: var(--radius-sm);
-}
-
-.library-playing {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
-
-.library-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 10px;
 }
 
 .library-result-count {
@@ -761,14 +708,6 @@ async function loadMoreGames() {
   margin: 0 calc(-1 * var(--library-inset));
 }
 
-.library-pills {
-  display: flex;
-  gap: 6px;
-  padding: 12px var(--library-inset);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
 .library-pill {
   display: inline-flex;
   flex-shrink: 0;
@@ -801,12 +740,6 @@ async function loadMoreGames() {
 .library-pill-count {
   font-size: 0.65rem;
   opacity: 0.6;
-}
-
-.library-phone-controls {
-  display: flex;
-  gap: 8px;
-  padding: 0 var(--library-inset) 8px;
 }
 
 .library-search {
