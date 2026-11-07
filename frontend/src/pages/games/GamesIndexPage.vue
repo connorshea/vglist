@@ -2,7 +2,13 @@
   <div class="games-index">
     <div class="page-header">
       <h1 class="page-title">Games</h1>
-      <span v-if="headerCount !== null" class="page-sub" aria-live="polite">{{ headerCount }}</span>
+      <div class="header-end">
+        <span v-if="headerCount !== null" class="page-sub" aria-live="polite">{{ headerCount }}</span>
+        <router-link v-if="authStore.isModerator" :to="{ name: 'gameNew' }" class="new-btn">
+          <Plus :size="15" aria-hidden="true" />
+          <span class="new-btn-label">New game</span>
+        </router-link>
+      </div>
     </div>
 
     <nav class="sort-tabs" aria-label="Sort games">
@@ -158,7 +164,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch, type Component } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CalendarDays, Clock, Flame, Heart, ListFilter, Star, X } from "@lucide/vue";
+import { CalendarDays, Clock, Flame, Heart, ListFilter, Plus, Star, X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { GET_GAMES_INDEX, GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import { useAuthStore } from "@/stores/auth";
@@ -435,7 +441,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .page-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
@@ -452,6 +458,43 @@ onBeforeUnmount(() => {
 .page-sub {
   font-size: 13px;
   color: var(--color-text-secondary);
+}
+
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Same as the New button on the other index pages, with the 8px button
+   radius. */
+.new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  background: var(--p-500);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Trimmed to cap height and baseline so the letters, not the line box, are
+   centered next to the icon. */
+.new-btn-label {
+  text-box: trim-both cap alphabetic;
+}
+
+.new-btn:hover {
+  background: var(--p-600);
+  color: #fff;
+}
+
+.new-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* Sort tabs */
