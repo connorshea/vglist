@@ -12,17 +12,30 @@
         <img v-if="avatarUrl" class="profile-avatar" :src="avatarUrl" alt="Your avatar" />
         <div v-else class="profile-avatar is-placeholder" aria-hidden="true">{{ avatarInitial }}</div>
         <div>
-          <button
-            v-if="avatarUrl"
-            type="button"
-            class="set-btn is-muted"
-            :disabled="removingAvatar"
-            @click="showRemoveAvatarConfirm = true"
-          >
-            Remove avatar
-          </button>
+          <div class="profile-avatar-actions">
+            <button type="button" class="set-btn" :disabled="uploadingAvatar" @click="avatarInput?.click()">
+              <ImageUp :size="15" :stroke-width="2" aria-hidden="true" />
+              {{ avatarUrl ? "Change avatar" : "Upload avatar" }}
+            </button>
+            <button
+              v-if="avatarUrl"
+              type="button"
+              class="set-btn is-muted"
+              :disabled="removingAvatar"
+              @click="showRemoveAvatarConfirm = true"
+            >
+              Remove avatar
+            </button>
+          </div>
+          <input
+            ref="avatarInput"
+            class="profile-avatar-input"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            @change="onAvatarFileChosen"
+          />
           <p class="set-help profile-avatar-help">
-            {{ avatarUrl ? "Removing your avatar replaces it with the default." : "You're using the default avatar." }}
+            PNG, JPEG, WebP or GIF. You can crop it to a square before it's saved.
           </p>
         </div>
       </div>
@@ -82,15 +95,26 @@
     >
       Your avatar will be removed and replaced with the default.
     </ConfirmDialog>
+
+    <AvatarCropper
+      v-if="avatarFile"
+      :file="avatarFile"
+      :saving="uploadingAvatar"
+      :error="avatarUploadError"
+      @cancel="closeAvatarCropper"
+      @save="saveAvatar"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { Globe, Lock } from "@lucide/vue";
+import { Globe, ImageUp, Lock } from "@lucide/vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import AvatarCropper from "@/components/users/AvatarCropper.vue";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
+import { useAuthStore } from "@/stores/auth";
 import { REMOVE_USER_AVATAR } from "@/graphql/mutations/users";
 import { UPDATE_USER } from "@/graphql/mutations/users-settings";
 import { GET_CURRENT_USER_PROFILE } from "@/graphql/queries/users";
@@ -100,6 +124,7 @@ import type {
   UpdateUserMutation,
   UserPrivacy
 } from "@/types/graphql";
+import { uploadAvatar } from "@/utils/avatar-upload";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const bio = ref("");
@@ -149,6 +174,42 @@ async function saveProfile() {
   }
 }
 
+const authStore = useAuthStore();
+const avatarInput = ref<HTMLInputElement | null>(null);
+const avatarFile = ref<File | null>(null);
+const uploadingAvatar = ref(false);
+const avatarUploadError = ref("");
+
+function onAvatarFileChosen(e: Event) {
+  const input = e.target as HTMLInputElement;
+  const file = input.files?.[0] ?? null;
+  // Clear the input so choosing the same file again still fires `change`.
+  input.value = "";
+  if (!file) return;
+  avatarUploadError.value = "";
+  avatarFile.value = file;
+}
+
+function closeAvatarCropper() {
+  if (uploadingAvatar.value) return;
+  avatarFile.value = null;
+  avatarUploadError.value = "";
+}
+
+async function saveAvatar(blob: Blob) {
+  uploadingAvatar.value = true;
+  avatarUploadError.value = "";
+  try {
+    avatarUrl.value = await uploadAvatar(blob, authStore.token);
+    avatarFile.value = null;
+    showSnackbar("Your avatar has been updated.");
+  } catch (e) {
+    avatarUploadError.value = e instanceof Error ? e.message : "Failed to upload avatar.";
+  } finally {
+    uploadingAvatar.value = false;
+  }
+}
+
 const showRemoveAvatarConfirm = ref(false);
 const { mutate: removeAvatarMutate, loading: removingAvatar } =
   useMutation<RemoveUserAvatarMutation>(REMOVE_USER_AVATAR);
@@ -192,6 +253,17 @@ async function removeAvatar() {
   color: var(--p-700);
   font-size: 28px;
   font-weight: 600;
+}
+
+.profile-avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Opened by the Upload button instead. */
+.profile-avatar-input {
+  display: none;
 }
 
 .profile-avatar-help {
