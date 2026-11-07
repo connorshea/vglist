@@ -27,7 +27,7 @@
           :disabled="disconnecting"
           @click="showDisconnectConfirm = true"
         >
-          Disconnect
+          <span>Disconnect</span>
         </button>
       </div>
 
@@ -49,7 +49,7 @@
           </span>
         </div>
         <button type="submit" class="set-btn" :disabled="connecting || steamUsername.trim() === ''">
-          {{ connecting ? "Connecting…" : "Connect" }}
+          <span>{{ connecting ? "Connecting…" : "Connect" }}</span>
         </button>
       </form>
     </section>
@@ -84,7 +84,7 @@
 
       <div class="set-actions">
         <button type="submit" class="set-btn is-primary" :disabled="importing">
-          {{ importing ? "Importing…" : "Import library" }}
+          <span>{{ importing ? "Importing…" : "Import library" }}</span>
         </button>
       </div>
     </form>

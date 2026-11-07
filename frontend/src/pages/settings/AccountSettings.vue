@@ -24,7 +24,7 @@
       </div>
       <div class="set-actions">
         <button class="set-btn is-primary" type="submit" :disabled="updatingEmail">
-          {{ updatingEmail ? "Updating…" : "Update email" }}
+          <span>{{ updatingEmail ? "Updating…" : "Update email" }}</span>
         </button>
       </div>
     </form>
@@ -69,7 +69,7 @@
       </div>
       <div class="set-actions">
         <button class="set-btn is-primary" type="submit" :disabled="updatingPassword">
-          {{ updatingPassword ? "Updating…" : "Update password" }}
+          <span>{{ updatingPassword ? "Updating…" : "Update password" }}</span>
         </button>
       </div>
     </form>
@@ -84,7 +84,7 @@
           <span class="set-row-desc">Remove every game from your library, including ratings, statuses and notes.</span>
         </span>
         <button type="button" class="set-btn is-danger" :disabled="resettingLibrary" @click="showResetConfirm = true">
-          Reset library
+          <span>Reset library</span>
         </button>
       </div>
 
@@ -94,7 +94,7 @@
           <span class="set-row-desc">Permanently delete your account and all associated data.</span>
         </span>
         <button type="button" class="set-btn is-danger" :disabled="deletingAccount" @click="showDeleteConfirm = true">
-          Delete account
+          <span>Delete account</span>
         </button>
       </div>
     </section>

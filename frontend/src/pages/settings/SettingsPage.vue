@@ -240,7 +240,8 @@ const sections = [
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 7px 14px;
+  min-height: 36px;
+  padding: 0 14px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
@@ -250,6 +251,13 @@ const sections = [
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+}
+
+/* Wrap a button's label in a <span> so it can be trimmed to its cap height
+   and baseline, which the button then centres. Untrimmed, the line box's
+   extra ascent leaves the capitals sitting a couple of pixels high. */
+.settings-page .set-btn > span {
+  text-box: trim-both cap alphabetic;
 }
 
 .settings-page .set-btn:hover:not(:disabled) {
@@ -275,7 +283,8 @@ const sections = [
   border-color: var(--p-500);
   color: #fff;
   font-size: 14px;
-  padding: 9px 22px;
+  min-height: 40px;
+  padding: 0 22px;
 }
 
 .settings-page .set-btn.is-primary:hover:not(:disabled) {
