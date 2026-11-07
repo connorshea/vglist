@@ -93,7 +93,8 @@ describe("GameShowPage loading skeleton", () => {
     mockRequest.mockReset();
     mockRequest.mockImplementation((query, variables) => {
       if (query === GET_GAME) {
-        const id = String(variables?.id);
+        // Like the server, read "0001" or "1-foo" as game 1.
+        const id = String(Number.parseInt(String(variables?.id), 10));
         return new Promise((resolve) => {
           pendingGames.push(() => resolve(gameFixture(id, `Game ${id}`)));
         });
@@ -168,6 +169,20 @@ describe("GameShowPage loading skeleton", () => {
     expect(wrapper.find(".game-title").text()).toBe("Game 1");
 
     await resolveGames();
+    expect(wrapper.find(".game-title").text()).toBe("Game 1");
+  });
+
+  it("treats a non-canonical id in the URL as the same game when refetching", async () => {
+    authState.isAuthenticated = true;
+    mockRoute.params.id = "0001";
+    const wrapper = mountPage();
+    await resolveGames();
+    expect(wrapper.find(".game-title").text()).toBe("Game 1");
+
+    await wrapper.find("button[aria-label='Favorite']").trigger("click");
+    await flushPromises();
+
+    expect(wrapper.find(".game-skeleton").exists()).toBeFalsy();
     expect(wrapper.find(".game-title").text()).toBe("Game 1");
   });
 });

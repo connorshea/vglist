@@ -462,7 +462,10 @@ const game = computed(() => data.value?.game ?? null);
 // Show the skeleton on first load, and when moving to another game's page
 // (vue-router reuses this component, so the previous game is still in `data`).
 // Refetches of the same game keep the page in place.
-const showSkeleton = computed(() => loading.value && (!game.value || game.value.id !== gameId.value));
+// Compared as numbers: the server reads "/games/0123" or "/games/123-foo" as
+// game 123, and those must not count as a different game on every refetch.
+const isCurrentGame = (id: string) => Number.parseInt(id, 10) === Number.parseInt(gameId.value, 10);
+const showSkeleton = computed(() => loading.value && (!game.value || !isCurrentGame(game.value.id)));
 
 usePageTitle(() => game.value?.name);
 
