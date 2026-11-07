@@ -38,7 +38,7 @@ const hours = computed(() => (props.hideHours ? null : formatHours(props.purchas
   gap: 12px;
   align-items: center;
   min-height: 44px;
-  padding: 10px 16px;
+  padding: 10px var(--library-inset, 16px);
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text-primary);
 }

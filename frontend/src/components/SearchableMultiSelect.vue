@@ -244,6 +244,18 @@ onBeforeUnmount(() => {
   opacity: 1;
 }
 
+/* The icon is 12px; extend the hit area so it's tappable on touch screens
+   without changing how the tag looks. */
+.ss-tag-remove {
+  position: relative;
+}
+
+.ss-tag-remove::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
 /* Dropdown */
 .ss-dropdown {
   position: absolute;

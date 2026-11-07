@@ -96,6 +96,9 @@ const loaded = computed(() => data.value !== null || error.value !== null);
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 4px;
+  /* Taller tap target without shifting the heading row. */
+  padding: 10px 0;
+  margin: -10px 0;
 }
 
 .game-shelf-more:focus-visible {

@@ -868,8 +868,9 @@ defineExpose({ openAsAdd, openAsEdit });
   font-weight: 600;
 }
 
+/* Fill the half-width column, matching the full-width date inputs below. */
 .is-sheet .form-number-input {
-  width: 96px;
+  width: 100%;
 }
 
 .form-rating-range {

@@ -128,7 +128,7 @@
         </div>
       </header>
 
-      <nav class="profile-tabs" aria-label="Profile sections">
+      <nav class="profile-tabs scroll-fade-x" aria-label="Profile sections">
         <router-link
           v-for="tab in tabs"
           :key="tab.label"

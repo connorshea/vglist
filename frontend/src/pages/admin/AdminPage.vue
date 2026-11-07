@@ -23,7 +23,7 @@
       This downloads every game's name, vglist ID, Steam app IDs, and Wikidata ID as a JSON file.
     </ConfirmDialog>
 
-    <nav class="admin-tabs" aria-label="Admin sections">
+    <nav class="admin-tabs scroll-fade-x" aria-label="Admin sections">
       <router-link
         v-for="section in sections"
         :key="section.name"

@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <nav class="sort-tabs" aria-label="Sort games">
+    <nav class="sort-tabs scroll-fade-x" aria-label="Sort games">
       <router-link
         v-for="option in GAME_SORTS"
         :key="option.slug"
@@ -27,7 +27,7 @@
 
     <div class="facets">
       <span class="facets-label" id="platform-pills-label">Platform</span>
-      <div class="platform-pills" role="group" aria-labelledby="platform-pills-label">
+      <div class="platform-pills scroll-fade-x" role="group" aria-labelledby="platform-pills-label">
         <button
           type="button"
           class="filter-pill"
