@@ -9,7 +9,7 @@ const { mockRequest, mockReplace, mockPush, mockRoute } = vi.hoisted(() => ({
   mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>(),
   mockReplace: vi.fn<(to: unknown) => Promise<void>>(),
   mockPush: vi.fn<(to: unknown) => Promise<void>>(),
-  mockRoute: { params: { slug: "connorshea", otherSlug: "kestrel" }, query: {} as Record<string, string> }
+  mockRoute: { params: { slug: "connorshea", otherSlug: "kestrel" }, query: {} }
 }));
 
 vi.mock("@/graphql/client", () => ({

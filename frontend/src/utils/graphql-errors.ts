@@ -39,7 +39,7 @@ function hasResponse(err: unknown): err is ErrorWithResponse {
     typeof err === "object" &&
     err !== null &&
     "response" in err &&
-    typeof (err as { response: unknown }).response === "object" &&
-    (err as { response: unknown }).response !== null
+    typeof err.response === "object" &&
+    err.response !== null
   );
 }

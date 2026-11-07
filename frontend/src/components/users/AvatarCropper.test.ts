@@ -19,7 +19,7 @@ const fakeContext = {
 const toBlobTypes: string[] = [];
 
 function fakeBitmap(width: number, height: number): ImageBitmap {
-  return { width, height, close: vi.fn<() => void>() } as unknown as ImageBitmap;
+  return { width, height, close: vi.fn<() => void>() };
 }
 
 let wrapper: VueWrapper | null = null;

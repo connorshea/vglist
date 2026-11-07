@@ -5,7 +5,7 @@ import LoginPage from "./LoginPage.vue";
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
 const { mockRoute, mockPush, mockSignIn } = vi.hoisted(() => ({
-  mockRoute: { query: {} as Record<string, string> },
+  mockRoute: { query: {} },
   mockPush: vi.fn<() => void>(),
   mockSignIn: vi.fn<(email: string, password: string) => Promise<{ success: boolean; errors: string[] }>>()
 }));
