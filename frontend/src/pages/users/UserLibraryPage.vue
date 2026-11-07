@@ -11,7 +11,7 @@
     <template v-if="user">
       <!-- Phone: status pills, search and sort, then a list -->
       <template v-if="isPhone">
-        <div class="library-pills" role="group" aria-label="Filter by status">
+        <div class="library-pills scroll-fade-x" role="group" aria-label="Filter by status">
           <button
             type="button"
             class="library-pill"
@@ -750,14 +750,17 @@ async function loadMoreGames() {
 
 /* ── Phone layout ── */
 .library-page.is-phone {
-  /* Rows and pills run edge to edge, so undo the page's side padding. */
-  margin: 0 calc(-1 * var(--library-phone-gutter, 1.5rem));
+  /* Rows and pills run edge to edge, so undo the page's side padding, then
+     inset their content by the same amount so it lines up with the profile
+     header and tabs above. */
+  --library-inset: var(--library-phone-gutter, 1.5rem);
+  margin: 0 calc(-1 * var(--library-inset));
 }
 
 .library-pills {
   display: flex;
   gap: 6px;
-  padding: 12px 16px;
+  padding: 12px var(--library-inset);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -799,7 +802,7 @@ async function loadMoreGames() {
 .library-phone-controls {
   display: flex;
   gap: 8px;
-  padding: 0 16px 8px;
+  padding: 0 var(--library-inset) 8px;
 }
 
 .library-search {
@@ -859,7 +862,7 @@ async function loadMoreGames() {
 }
 
 .library-phone-chips {
-  padding: 0 16px 8px;
+  padding: 0 var(--library-inset) 8px;
 }
 
 .library-rows {
@@ -867,7 +870,7 @@ async function loadMoreGames() {
 }
 
 .is-phone .library-message {
-  padding: 32px 16px;
+  padding: 32px var(--library-inset);
 }
 
 @media (prefers-color-scheme: dark) {

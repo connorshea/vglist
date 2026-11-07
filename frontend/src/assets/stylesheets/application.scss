@@ -655,6 +655,67 @@ nav.navbar {
   }
 }
 
+// Horizontal scroll strips (tabs, filter pills) that overflow on phones.
+// Fades whichever edge has more content past it, so it's obvious the strip
+// scrolls instead of looking clipped. Uses a scroll-driven animation; when the
+// strip doesn't overflow, the timeline is inactive and nothing fades. Browsers
+// without support just get the plain strip.
+@property --scroll-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes scroll-fade-x {
+  0% {
+    --scroll-fade-start: 0px;
+    --scroll-fade-end: 32px;
+  }
+
+  8%,
+  92% {
+    --scroll-fade-start: 32px;
+    --scroll-fade-end: 32px;
+  }
+
+  100% {
+    --scroll-fade-start: 32px;
+    --scroll-fade-end: 0px;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade-x {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--scroll-fade-start),
+      #000 calc(100% - var(--scroll-fade-end)),
+      transparent
+    );
+    animation: scroll-fade-x linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+
+// iOS Safari zooms the whole page when a text control under 16px gets focus,
+// and stays zoomed after blur. Component styles set 13–14px on many of these,
+// so this floor has to win over scoped styles. No control in the app is
+// larger than 16px on mobile, so pinning to 16px never shrinks one.
+@include mixins.mobile {
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="hidden"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 .level {
   .level-item {
     white-space: nowrap;

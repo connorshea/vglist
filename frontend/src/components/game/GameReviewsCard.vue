@@ -354,6 +354,32 @@ function metaFor(review: GameReview): string {
 
   .review {
     --avatar-size: 32px;
+    align-items: center;
+    row-gap: 10px;
+  }
+
+  /* Let the header sit beside the avatar while the review text and meta span
+     the full card width, instead of leaving a column of dead space under the
+     avatar on narrow screens. */
+  .review-body {
+    display: contents;
+  }
+
+  .review-top {
+    margin-bottom: 0;
+  }
+
+  .review-text,
+  .review-meta {
+    grid-column: 1 / -1;
+  }
+
+  /* Always put the time on its own line. Otherwise it wraps or doesn't
+     depending on name length and which badges a review has, so neighbouring
+     reviews end up with different header layouts. */
+  .review-top time {
+    flex-basis: 100%;
+    margin-left: 0;
   }
 
   .review-sorts {

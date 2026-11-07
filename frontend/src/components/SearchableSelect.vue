@@ -242,6 +242,17 @@ onBeforeUnmount(() => {
   background: var(--color-bg-subtle, #f5f5f5);
 }
 
+/* Extend the hit area past the 18px button for touch screens. */
+.ss-clear {
+  position: relative;
+}
+
+.ss-clear::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
 /* Dropdown */
 .ss-dropdown {
   position: absolute;

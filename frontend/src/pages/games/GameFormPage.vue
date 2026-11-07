@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <div>
     <div class="columns is-centered">
       <div class="column is-8">
         <div v-if="!authStore.isModerator" class="notification is-warning">
@@ -245,7 +245,7 @@
         </template>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
