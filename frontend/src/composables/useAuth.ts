@@ -10,7 +10,7 @@ import { useSnackbar } from "@/composables/useSnackbar";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 export type PasskeySignInResult =
-  | { status: "success" }
+  | { status: "success"; username: string }
   | { status: "cancelled" }
   // `stage` says where it failed: fetching the options, in the browser's
   // WebAuthn call, or verifying the passkey on the server.
@@ -98,7 +98,7 @@ export function useAuth() {
         slug: result.slug ?? "",
         avatarUrl: result.avatarUrl
       });
-      return { status: "success" };
+      return { status: "success", username: result.username ?? "" };
     } catch (e) {
       return { status: "error", stage: "verify", errors: [extractGqlError(e)] };
     }

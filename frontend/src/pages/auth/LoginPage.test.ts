@@ -13,7 +13,7 @@ const { mockRoute, mockPush, mockSignIn, mockSignInWithPasskey, webauthn } = vi.
       (options?: {
         useBrowserAutofill?: boolean;
       }) => Promise<
-        | { status: "success" }
+        | { status: "success"; username: string }
         | { status: "cancelled" }
         | { status: "error"; stage: "options" | "browser" | "verify"; errors: string[] }
       >
@@ -166,16 +166,59 @@ describe("LoginPage passkeys", () => {
     expect(wrapper.find("#login-email").attributes("autocomplete")).toBe("username webauthn");
   });
 
-  it("signs in with a passkey from the button and redirects", async () => {
-    mockRoute.query = { redirect: "/settings" };
-    mockSignInWithPasskey.mockResolvedValue({ status: "success" });
-    const wrapper = mount(LoginPage, mountOptions);
+  describe("after a passkey sign-in", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      mockSignInWithPasskey.mockResolvedValue({ status: "success", username: "connor" });
+    });
 
-    await wrapper.find(".auth-passkey").trigger("click");
-    await flushPromises();
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
-    expect(mockSignInWithPasskey).toHaveBeenCalledWith();
-    expect(mockPush).toHaveBeenCalledWith("/settings");
+    it("confirms the passkey worked, then redirects", async () => {
+      mockRoute.query = { redirect: "/settings" };
+      const wrapper = mount(LoginPage, { ...mountOptions, attachTo: document.body });
+
+      await wrapper.find(".auth-passkey").trigger("click");
+      await flushPromises();
+
+      expect(mockSignInWithPasskey).toHaveBeenCalledWith();
+      const success = wrapper.find(".auth-success");
+      expect(success.text()).toContain("You're signed in");
+      expect(success.text()).toContain("Welcome back, connor!");
+      expect(success.text()).toContain("Taking you back to where you were");
+      expect(document.activeElement).toBe(success.find("h1").element);
+      expect(wrapper.find("form").exists()).toBeFalsy();
+      expect(mockPush).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(2000);
+      expect(mockPush).toHaveBeenCalledWith("/settings");
+      wrapper.unmount();
+    });
+
+    it('redirects straight away from "Continue now"', async () => {
+      const wrapper = mount(LoginPage, mountOptions);
+
+      await wrapper.find(".auth-passkey").trigger("click");
+      await flushPromises();
+      await wrapper.find(".auth-link-button").trigger("click");
+
+      expect(mockPush).toHaveBeenCalledExactlyOnceWith("/");
+      vi.advanceTimersByTime(2000);
+      expect(mockPush).toHaveBeenCalledOnce();
+    });
+
+    it("doesn't redirect after leaving the page", async () => {
+      const wrapper = mount(LoginPage, mountOptions);
+
+      await wrapper.find(".auth-passkey").trigger("click");
+      await flushPromises();
+      wrapper.unmount();
+      vi.advanceTimersByTime(2000);
+
+      expect(mockPush).not.toHaveBeenCalled();
+    });
   });
 
   it("shows a waiting state while the browser prompt is open", async () => {
@@ -230,10 +273,13 @@ describe("LoginPage passkeys", () => {
   });
 
   it("signs in when a passkey is picked from autofill", async () => {
+    vi.useFakeTimers();
     webauthn.autofill = true;
-    mockSignInWithPasskey.mockResolvedValue({ status: "success" });
+    mockSignInWithPasskey.mockResolvedValue({ status: "success", username: "connor" });
     mount(LoginPage, mountOptions);
     await flushPromises();
+    vi.advanceTimersByTime(2000);
+    vi.useRealTimers();
 
     expect(mockPush).toHaveBeenCalledWith("/");
   });

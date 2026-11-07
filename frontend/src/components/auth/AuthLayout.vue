@@ -344,9 +344,88 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
   }
 }
 
+/* Passkey sign-in confirmation (LoginPage) */
+
+.auth-card :slotted(.auth-success) {
+  text-align: center;
+}
+
+.auth-card :slotted(.auth-success h1:focus) {
+  outline: none;
+}
+
+.auth-card :slotted(.auth-success .auth-sub) {
+  margin-bottom: 24px;
+}
+
+.auth-card :slotted(.auth-success-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #eaf3de;
+  color: #3b6d11;
+  animation: auth-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.auth-card :slotted(.auth-success-bar) {
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+}
+
+.auth-card :slotted(.auth-success-bar span) {
+  display: block;
+  height: 100%;
+  background: var(--p-500);
+  transform-origin: left;
+  animation: auth-fill linear forwards;
+}
+
+.auth-card :slotted(.auth-link-button) {
+  padding: 0;
+  margin-left: 4px;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.auth-card :slotted(.auth-link-button:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@keyframes auth-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+
+@keyframes auth-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .auth-card :slotted(.auth-spin) {
     animation: none;
+  }
+
+  .auth-card :slotted(.auth-success-icon) {
+    animation: none;
+  }
+
+  /* A bar that fills up is motion too, so show the text alone. */
+  .auth-card :slotted(.auth-success-bar) {
+    display: none;
   }
 }
 
@@ -354,6 +433,11 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
   .auth-card :slotted(.auth-alert) {
     background: color-mix(in srgb, var(--r-500) 14%, transparent);
     border-color: color-mix(in srgb, var(--r-500) 45%, transparent);
+  }
+
+  .auth-card :slotted(.auth-success-icon) {
+    background: rgba(99, 153, 34, 0.2);
+    color: #c0dd97;
   }
 }
 
