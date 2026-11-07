@@ -193,6 +193,24 @@ RSpec.describe "Rack::Attack throttling", type: :request do
     end
   end
 
+  describe "per-IP avatar upload throttle" do
+    def upload_from(ip)
+      post '/api/users/me/avatar', headers: { 'REMOTE_ADDR' => ip }
+    end
+
+    it "blocks a client sending more than 10 avatar uploads a minute", :aggregate_failures do
+      10.times { upload_from('10.12.0.1') }
+      expect(response).to have_http_status(:unauthorized)
+
+      upload_from('10.12.0.1')
+      expect(response).to have_http_status(:too_many_requests)
+
+      # A different client is unaffected.
+      upload_from('10.12.0.2')
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
   describe "per-IP GraphQL throttle" do
     def graphql_from(ip)
       post graphql_path, params: { query: '{ __typename }' }, headers: { 'REMOTE_ADDR' => ip }
