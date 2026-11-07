@@ -50,12 +50,22 @@
                 </a>
               </td>
               <td>
-                <button
-                  class="button is-small is-danger is-outlined"
-                  @click="removeUnmatchedGame(game.externalServiceId, game.externalServiceName)"
-                >
-                  Delete
-                </button>
+                <div class="unmatched-actions">
+                  <button
+                    v-if="game.externalServiceName === 'STEAM'"
+                    type="button"
+                    class="button is-small is-warning is-outlined"
+                    @click="blocklistCandidate = { name: game.name, steamAppId: game.externalServiceId }"
+                  >
+                    Add to blocklist
+                  </button>
+                  <button
+                    class="button is-small is-danger is-outlined"
+                    @click="removeUnmatchedGame(game.externalServiceId, game.externalServiceName)"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -65,15 +75,37 @@
         No unmatched games.
       </p>
     </template>
+
+    <ConfirmDialog
+      :model-value="blocklistCandidate !== null"
+      title="Add to the Steam blocklist?"
+      confirm-label="Add to blocklist"
+      loading-label="Adding…"
+      variant="primary"
+      :loading="addingToBlocklist"
+      @update:model-value="blocklistCandidate = null"
+      @confirm="blocklistUnmatchedGame"
+    >
+      <template #icon>
+        <Ban :size="20" :stroke-width="2" aria-hidden="true" />
+      </template>
+      <template v-if="blocklistCandidate">
+        <strong>{{ blocklistCandidate.name }}</strong> (Steam app {{ blocklistCandidate.steamAppId }}) will be skipped
+        by future Steam imports, and its unmatched entries will be removed.
+      </template>
+    </ConfirmDialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { Ban } from "@lucide/vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import { GET_UNMATCHED_GAMES } from "@/graphql/queries/admin";
-import { REMOVE_FROM_UNMATCHED_GAMES } from "@/graphql/mutations/admin";
+import { ADD_TO_STEAM_BLOCKLIST, REMOVE_FROM_UNMATCHED_GAMES } from "@/graphql/mutations/admin";
 import { extractGqlError } from "@/utils/graphql-errors";
 import type { GetUnmatchedGamesQuery } from "@/types/graphql";
 
@@ -86,6 +118,30 @@ const {
   refetch: ugRefetch
 } = useQuery<GetUnmatchedGamesQuery>(GET_UNMATCHED_GAMES, { variables: { first: 50 } });
 
+// One-click blocklisting. The mutation also clears every unmatched entry for
+// that Steam app, so refetching drops the row.
+const blocklistCandidate = ref<{ name: string; steamAppId: string } | null>(null);
+const addingToBlocklist = ref(false);
+
+async function blocklistUnmatchedGame() {
+  const candidate = blocklistCandidate.value;
+  if (!candidate) return;
+  addingToBlocklist.value = true;
+  try {
+    await gqlClient.request(ADD_TO_STEAM_BLOCKLIST, {
+      name: candidate.name,
+      steamAppId: Number(candidate.steamAppId)
+    });
+    showSnackbar(`Added ${candidate.name} to the Steam blocklist.`);
+    blocklistCandidate.value = null;
+    ugRefetch();
+  } catch (err) {
+    showSnackbar(extractGqlError(err), "error");
+  } finally {
+    addingToBlocklist.value = false;
+  }
+}
+
 async function removeUnmatchedGame(externalServiceId: string, externalServiceName: string) {
   try {
     await gqlClient.request(REMOVE_FROM_UNMATCHED_GAMES, { externalServiceId, externalServiceName });
@@ -96,3 +152,11 @@ async function removeUnmatchedGame(externalServiceId: string, externalServiceNam
   }
 }
 </script>
+
+<style scoped>
+.unmatched-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+</style>
