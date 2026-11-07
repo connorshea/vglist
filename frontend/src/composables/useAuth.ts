@@ -2,8 +2,17 @@ import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { gqlClient } from "@/graphql/client";
 import { SIGN_IN, SIGN_UP, REQUEST_PASSWORD_RESET } from "@/graphql/mutations/auth";
+import { PASSKEY_AUTHENTICATION_OPTIONS, SIGN_IN_WITH_PASSKEY } from "@/graphql/mutations/passkeys";
+import { startAuthentication, type PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/browser";
+import { isPasskeyCancellation } from "@/utils/passkeys";
+import type { PasskeyAuthenticationOptionsMutation, SignInWithPasskeyMutation } from "@/types/graphql";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { extractGqlError } from "@/utils/graphql-errors";
+
+export type PasskeySignInResult =
+  | { status: "success" }
+  | { status: "cancelled" }
+  | { status: "error"; errors: string[] };
 
 export function useAuth() {
   const authStore = useAuthStore();
@@ -40,6 +49,52 @@ export function useAuth() {
       return { success: true, errors: [] as string[] };
     } catch (e) {
       return { success: false, errors: [extractGqlError(e)] };
+    }
+  }
+
+  /**
+   * Sign in with a passkey. With `useBrowserAutofill`, the request waits
+   * quietly until the user picks a passkey from the email field's autofill
+   * (conditional UI); otherwise the browser shows its passkey prompt now.
+   *
+   * Starting a new request aborts any pending one, so a button-triggered
+   * sign-in cancels the autofill request, which resolves as "cancelled".
+   */
+  async function signInWithPasskey({ useBrowserAutofill = false } = {}): Promise<PasskeySignInResult> {
+    let optionsJSON: PublicKeyCredentialRequestOptionsJSON;
+    try {
+      const data = await gqlClient.request<PasskeyAuthenticationOptionsMutation>(PASSKEY_AUTHENTICATION_OPTIONS);
+      optionsJSON = data.passkeyAuthenticationOptions?.options as PublicKeyCredentialRequestOptionsJSON;
+    } catch (e) {
+      return { status: "error", errors: [extractGqlError(e)] };
+    }
+
+    let response;
+    try {
+      response = await startAuthentication({ optionsJSON, useBrowserAutofill });
+    } catch (e) {
+      if (isPasskeyCancellation(e)) return { status: "cancelled" };
+      return { status: "error", errors: ["Your browser couldn't use a passkey. Please try again."] };
+    }
+
+    try {
+      const data = await gqlClient.request<SignInWithPasskeyMutation>(SIGN_IN_WITH_PASSKEY, { response });
+      const result = data.signInWithPasskey;
+      if (!result || result.errors.length > 0 || !result.token || !result.userId) {
+        return { status: "error", errors: result?.errors.length ? result.errors : ["Passkey sign in failed."] };
+      }
+
+      authStore.setAuth(result.token, {
+        id: result.userId,
+        username: result.username ?? "",
+        email: result.email ?? "",
+        role: (result.role ?? "member").toUpperCase() as "MEMBER" | "MODERATOR" | "ADMIN",
+        slug: result.slug ?? "",
+        avatarUrl: result.avatarUrl
+      });
+      return { status: "success" };
+    } catch (e) {
+      return { status: "error", errors: [extractGqlError(e)] };
     }
   }
 
@@ -156,6 +211,7 @@ export function useAuth() {
 
   return {
     signIn,
+    signInWithPasskey,
     signUp,
     signOut,
     requestPasswordReset,
