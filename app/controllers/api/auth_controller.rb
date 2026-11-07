@@ -36,6 +36,11 @@ module Api
     end
 
     def sign_up
+      unless TurnstileVerifier.verify(token: params[:turnstile_token].presence&.to_s, remote_ip: RackAttackConfig.client_ip(request))
+        render json: { errors: [TurnstileVerifier::ERROR_MESSAGE] }, status: :unprocessable_content
+        return
+      end
+
       user = User.new(sign_up_params)
 
       if user.save

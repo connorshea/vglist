@@ -7,11 +7,15 @@ class Mutations::Auth::SignUpMutation < GraphQL::Schema::Mutation
   argument :email, String, required: true, description: "The user's email address."
   argument :password, String, required: true, description: "The user's password (minimum 8 characters)."
   argument :password_confirmation, String, required: true, description: "Password confirmation (must match password)."
+  argument :turnstile_token, String, required: false, description: "Cloudflare Turnstile token from the sign-up form's challenge. Required when the server has Turnstile enabled."
 
   field :message, String, null: true, description: "Success message."
   field :errors, [String], null: false, description: "Error messages if sign up failed."
 
-  def resolve(username:, email:, password:, password_confirmation:)
+  def resolve(username:, email:, password:, password_confirmation:, turnstile_token: nil)
+    verified = TurnstileVerifier.verify(token: turnstile_token, remote_ip: context[:client_ip])
+    return { message: nil, errors: [TurnstileVerifier::ERROR_MESSAGE] } unless verified
+
     user = User.new(
       username: username,
       email: email,
