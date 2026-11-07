@@ -110,6 +110,52 @@ RSpec.describe "Rack::Attack throttling", type: :request do
     end
   end
 
+  describe "per-IP sign-up throttle" do
+    let(:sign_up_query) do
+      <<~GQL
+        mutation SignUp($username: String!, $email: String!, $password: String!, $passwordConfirmation: String!) {
+          signUp(username: $username, email: $email, password: $password, passwordConfirmation: $passwordConfirmation) { message errors }
+        }
+      GQL
+    end
+
+    def graphql_sign_up(index, ip:)
+      post graphql_path,
+        params: {
+          query: sign_up_query,
+          variables: { username: "signup#{index}", email: "signup#{index}@example.com", password: "password123", passwordConfirmation: "password123" }
+        }.to_json,
+        headers: { 'Content-Type' => 'application/json', 'REMOTE_ADDR' => ip }
+    end
+
+    it "allows 5 sign-ups an hour from one IP across GraphQL and REST", :aggregate_failures do
+      3.times do |i|
+        graphql_sign_up(i, ip: '10.9.0.1')
+        expect(JSON.parse(response.body).dig('data', 'signUp', 'errors')).to be_empty
+      end
+      2.times do |i|
+        post api_auth_sign_up_path,
+          params: { username: "rest#{i}", email: "rest#{i}@example.com", password: "password123", password_confirmation: "password123" },
+          headers: { 'REMOTE_ADDR' => '10.9.0.1' }
+        expect(response).to have_http_status(:created)
+      end
+
+      graphql_sign_up(99, ip: '10.9.0.1')
+      expect(response).to have_http_status(:too_many_requests)
+
+      # A different client is unaffected.
+      graphql_sign_up(101, ip: '10.9.0.2')
+      expect(JSON.parse(response.body).dig('data', 'signUp', 'errors')).to be_empty
+    end
+
+    it "does not count sign-ins", :aggregate_failures do
+      6.times do
+        graphql_sign_in(email: user.email, password: "password", ip: '10.9.1.1')
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
   describe "per-IP throttle" do
     it "blocks a single client spraying attempts across many accounts", :aggregate_failures do
       20.times do |i|
