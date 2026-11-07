@@ -11,7 +11,10 @@ const config: CodegenConfig = {
         scalars: {
           ID: "string",
           ISO8601Date: "string",
-          ISO8601DateTime: "string"
+          ISO8601DateTime: "string",
+          // Only used for WebAuthn options and responses, which are narrowed to
+          // @simplewebauthn/browser's types where they're used.
+          JSON: "unknown"
         },
         // Avoid __typename in generated types
         skipTypename: true,

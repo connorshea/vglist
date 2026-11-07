@@ -249,3 +249,19 @@ export const GET_CURRENT_USER_AVATAR = gql`
     }
   }
 `;
+
+// The signed-in user's passkeys, for the Passkeys card in Settings › Account.
+export const GET_CURRENT_USER_PASSKEYS = gql`
+  query GetCurrentUserPasskeys {
+    currentUser {
+      id
+      passkeys {
+        id
+        nickname
+        backedUp
+        lastUsedAt
+        createdAt
+      }
+    }
+  }
+`;

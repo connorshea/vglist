@@ -14,6 +14,9 @@ importers:
       '@sentry/vue':
         specifier: ^10.71.0
         version: 10.71.0(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.43(typescript@6.0.3)))(vue@3.5.43(typescript@6.0.3))
+      '@simplewebauthn/browser':
+        specifier: ^14.0.0
+        version: 14.0.0
       bulma:
         specifier: ^1.0.4
         version: 1.0.4
@@ -1241,6 +1244,9 @@ packages:
         optional: true
       pinia:
         optional: true
+
+  '@simplewebauthn/browser@14.0.0':
+    resolution: {integrity: sha512-1odWVqeEBTl7lJ9zMKLEsmTlnyrDO5iRcTvfMKKk1WThUnp/i8JJdffdj2icP+tty159s4PgwE3BiMoEW9NFow==}
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -4104,6 +4110,8 @@ snapshots:
       vue: 3.5.43(typescript@6.0.3)
     optionalDependencies:
       pinia: 4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.43(typescript@6.0.3))
+
+  '@simplewebauthn/browser@14.0.0': {}
 
   '@types/chai@5.2.3':
     dependencies:

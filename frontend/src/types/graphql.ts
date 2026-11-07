@@ -398,6 +398,64 @@ export interface UpdateGameMutation {
   updateGame: { game: { id: string; name: string } } | null;
 }
 
+export type PasskeyAuthenticationOptionsMutationVariables = Exact<{ [key: string]: never }>;
+
+export interface PasskeyAuthenticationOptionsMutation {
+  passkeyAuthenticationOptions: { options: unknown } | null;
+}
+
+export type SignInWithPasskeyMutationVariables = Exact<{
+  response: unknown;
+}>;
+
+export interface SignInWithPasskeyMutation {
+  signInWithPasskey: {
+    token: string | null;
+    userId: string | null;
+    username: string | null;
+    slug: string | null;
+    role: string | null;
+    email: string | null;
+    avatarUrl: string | null;
+    errors: Array<string>;
+  } | null;
+}
+
+export type PasskeyRegistrationOptionsMutationVariables = Exact<{ [key: string]: never }>;
+
+export interface PasskeyRegistrationOptionsMutation {
+  passkeyRegistrationOptions: { options: unknown; errors: Array<string> } | null;
+}
+
+export type RegisterPasskeyMutationVariables = Exact<{
+  response: unknown;
+  nickname?: string | null | undefined;
+}>;
+
+export interface RegisterPasskeyMutation {
+  registerPasskey: {
+    errors: Array<string>;
+    passkey: { id: string; nickname: string; backedUp: boolean; lastUsedAt: string | null; createdAt: string } | null;
+  } | null;
+}
+
+export type RenamePasskeyMutationVariables = Exact<{
+  id: string;
+  nickname: string;
+}>;
+
+export interface RenamePasskeyMutation {
+  renamePasskey: { errors: Array<string>; passkey: { id: string; nickname: string } | null } | null;
+}
+
+export type DeletePasskeyMutationVariables = Exact<{
+  id: string;
+}>;
+
+export interface DeletePasskeyMutation {
+  deletePasskey: { deleted: boolean } | null;
+}
+
 export type CreatePlatformMutationVariables = Exact<{
   name: string;
   wikidataId: string;
@@ -2068,4 +2126,19 @@ export type GetCurrentUserAvatarQueryVariables = Exact<{ [key: string]: never }>
 
 export interface GetCurrentUserAvatarQuery {
   currentUser: { id: string; avatarUrl: string | null } | null;
+}
+
+export type GetCurrentUserPasskeysQueryVariables = Exact<{ [key: string]: never }>;
+
+export interface GetCurrentUserPasskeysQuery {
+  currentUser: {
+    id: string;
+    passkeys: Array<{
+      id: string;
+      nickname: string;
+      backedUp: boolean;
+      lastUsedAt: string | null;
+      createdAt: string;
+    }> | null;
+  } | null;
 }
