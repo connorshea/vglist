@@ -78,7 +78,7 @@
         </p>
         <p v-if="importResult.unmatchedCount > 0" class="set-help">
           {{ importResult.unmatchedCount }} {{ pluralize(importResult.unmatchedCount) }} couldn't be matched to a game
-          on vglist.
+          on vglist. They're listed under Import results below.
         </p>
       </div>
 
@@ -88,6 +88,8 @@
         </button>
       </div>
     </form>
+
+    <SteamImportResults v-if="importResult" :result="importResult" />
 
     <ConfirmDialog
       v-model="showDisconnectConfirm"
@@ -105,6 +107,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import SteamImportResults from "@/components/settings/SteamImportResults.vue";
 import { useMutation, useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { CONNECT_STEAM, DISCONNECT_STEAM, IMPORT_STEAM_LIBRARY } from "@/graphql/mutations/users-settings";
