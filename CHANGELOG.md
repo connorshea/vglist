@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v2026.11.07
+
+### Added
+
+- **A complete redesign of the website to modernize the UI and improve the user experience.**
+- Improved Library view with a grid of cover images.
+- **Passkey support for logins.** ([#4897])
+- Moved to a new hosting setup so site updates go out automatically.
+- Updated image hosting configuration to load images faster. ([#4765])
+- Add support for better embeds when linking to a vglist.co URL in Discord. ([#4814])
+
+### Changed
+
+- Moved the Wikidata import tasks to a different backend so they can actually finish again.
+
+### Removed
+
+- Removed API support to keep the codebase simple, it wasn't used much anyway.
+- Remove OAuth apps as part of the API removal.
+
 ## v2026.02.13
 
 ### Changed
@@ -1355,3 +1375,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#4319]: https://github.com/connorshea/vglist/pull/4319
 [#4321]: https://github.com/connorshea/vglist/pull/4321
 [#4329]: https://github.com/connorshea/vglist/pull/4329
+[#4765]: https://github.com/connorshea/vglist/pull/4765
+[#4814]: https://github.com/connorshea/vglist/pull/4814
+[#4897]: https://github.com/connorshea/vglist/pull/4897
