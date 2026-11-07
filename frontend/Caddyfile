@@ -42,7 +42,9 @@
 		# Content Security Policy (enforced, not report-only).
 		#
 		# - script-src 'self': Vite emits hashed ES module bundles with no
-		#   inline <script> tags, so 'self' is sufficient.
+		#   inline <script> tags. challenges.cloudflare.com serves the
+		#   Turnstile script for the sign-up form's bot check, and frame-src
+		#   allows the challenge iframe it renders.
 		# - style-src 'self' 'unsafe-inline' + style-src-attr 'unsafe-inline':
 		#   Vue's :style bindings render inline style="" attributes at runtime.
 		#   'unsafe-inline' on style-src-attr covers those; style-src stays
@@ -58,7 +60,7 @@
 		#   (only works as a real header, not via <meta>).
 		# - upgrade-insecure-requests auto-upgrades any stray http:// asset
 		#   URLs (e.g. from older cached data) to https://.
-		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
 	}
 
 	encode {
