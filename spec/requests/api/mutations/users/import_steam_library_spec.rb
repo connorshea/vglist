@@ -21,6 +21,10 @@ RSpec.describe "ImportSteamLibrary Mutation API", type: :request do
             addedGamesCount
             unmatchedCount
             updatedGamesCount
+            unmatchedGames {
+              name
+              steamAppId
+            }
           }
         }
       GRAPHQL
@@ -99,6 +103,26 @@ RSpec.describe "ImportSteamLibrary Mutation API", type: :request do
             id: user.id.to_s
           }
         )
+      end
+
+      context "when some games couldn't be matched" do
+        let(:unmatched) do
+          [
+            SteamImportService::Unmatched.new(name: 'zeta', steam_id: 20),
+            SteamImportService::Unmatched.new(name: 'Alpha', steam_id: 10)
+          ]
+        end
+
+        it "returns them sorted by name" do
+          result = api_request(query_string, variables: { id: user.id }, token: access_token)
+          expect(result.graphql_dig(:import_steam_library, :unmatched_games)).to eq(
+            [
+              { name: 'Alpha', steamAppId: 10 },
+              { name: 'zeta', steamAppId: 20 }
+            ]
+          )
+          expect(result.graphql_dig(:import_steam_library, :unmatched_count)).to eq(2)
+        end
       end
     end
   end
