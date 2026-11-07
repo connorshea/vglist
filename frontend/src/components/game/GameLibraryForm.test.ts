@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import GameLibraryForm from "./GameLibraryForm.vue";
 import { GET_GAME_PURCHASE } from "@/graphql/queries/games";
@@ -121,7 +121,8 @@ describe("GameLibraryForm status and date defaults", () => {
     mockRequest.mockResolvedValue({});
   });
 
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   function tile(wrapper: Awaited<ReturnType<typeof mountForm>>, label: string) {
     const found = wrapper.findAll(".form-tile").find((t) => t.text() === label);
@@ -348,5 +349,32 @@ describe("GameLibraryForm clearing fields", () => {
     for (const key of ["completionStatus", "rating", "hoursPlayed", "startDate", "completionDate", "comments"]) {
       expect(variables).not.toHaveProperty(key);
     }
+  });
+});
+
+describe("GameLibraryForm today", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+  });
+
+  it("uses the local date, not the UTC one, on an evening in the Americas", async () => {
+    vi.stubEnv("TZ", "America/Los_Angeles");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    // 7pm on Nov 7 in Los Angeles is already Nov 8 in UTC.
+    vi.setSystemTime(new Date("2026-11-08T03:00:00Z"));
+
+    const wrapper = await mountForm(null);
+    await wrapper
+      .findAll(".form-tile")
+      .find((t) => t.text() === "Playing")
+      ?.trigger("click");
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("2026-11-07");
   });
 });

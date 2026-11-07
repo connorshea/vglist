@@ -322,7 +322,14 @@ const formStatus = ref<GamePurchaseCompletionStatus | null>(null);
 const formRating = ref<number | null>(null);
 const formStartDate = ref("");
 const formCompletionDate = ref("");
-const today = computed(() => new Date().toISOString().slice(0, 10));
+// The local calendar date as YYYY-MM-DD. toISOString() would give the UTC date,
+// which is already tomorrow on an evening in the Americas.
+function localDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+const today = computed(() => localDate(new Date()));
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formHoursPlayed = ref<number | null>(null);
