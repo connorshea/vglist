@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="ugLoading" class="has-text-centered py-6">Loading...</div>
-    <div v-if="ugError" class="notification is-danger">{{ ugError.message }}</div>
+    <div v-if="!ugLoaded && ugLoading" class="has-text-centered py-6">Loading...</div>
+    <div v-if="ugError" class="notification is-danger">{{ ugError }}</div>
 
-    <template v-if="ugData">
+    <template v-if="ugLoaded">
       <div class="table-container">
         <table class="table is-fullwidth is-striped is-narrow">
           <thead>
@@ -17,7 +17,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="game in ugData.groupedUnmatchedGames?.nodes" :key="game.externalServiceId">
+            <tr v-for="game in ugGames" :key="`${game.externalServiceName}:${game.externalServiceId}`">
               <td>{{ game.count }}</td>
               <td>{{ game.externalServiceName }}</td>
               <td>
@@ -71,9 +71,14 @@
           </tbody>
         </table>
       </div>
-      <p v-if="ugData.groupedUnmatchedGames?.nodes.length === 0" class="has-text-centered has-text-grey py-4">
-        No unmatched games.
-      </p>
+      <AdminLoadMore
+        :has-next-page="ugHasNextPage"
+        :loading="ugLoadingMore"
+        :error="ugLoadMoreError"
+        noun="games"
+        @load-more="ugLoadMore"
+      />
+      <p v-if="ugGames.length === 0" class="has-text-centered has-text-grey py-4">No unmatched games.</p>
     </template>
 
     <ConfirmDialog
@@ -101,7 +106,8 @@
 import { ref } from "vue";
 import { Ban } from "@lucide/vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import { useQuery } from "@/composables/useGraphQL";
+import AdminLoadMore from "@/components/admin/AdminLoadMore.vue";
+import { useConnectionList } from "@/composables/useConnectionList";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import { GET_UNMATCHED_GAMES } from "@/graphql/queries/admin";
@@ -112,11 +118,18 @@ import type { GetUnmatchedGamesQuery } from "@/types/graphql";
 const { show: showSnackbar } = useSnackbar();
 
 const {
-  data: ugData,
+  nodes: ugGames,
+  loaded: ugLoaded,
   loading: ugLoading,
   error: ugError,
-  refetch: ugRefetch
-} = useQuery<GetUnmatchedGamesQuery>(GET_UNMATCHED_GAMES, { variables: { first: 50 } });
+  hasNextPage: ugHasNextPage,
+  loadMore: ugLoadMore,
+  loadingMore: ugLoadingMore,
+  loadMoreError: ugLoadMoreError,
+  reload: ugRefetch
+} = useConnectionList(GET_UNMATCHED_GAMES, {
+  select: (data: GetUnmatchedGamesQuery) => data.groupedUnmatchedGames
+});
 
 // One-click blocklisting. The mutation also clears every unmatched entry for
 // that Steam app, so refetching drops the row.
