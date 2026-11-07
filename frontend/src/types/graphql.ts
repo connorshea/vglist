@@ -1003,20 +1003,6 @@ export interface GetGamesIndexQuery {
   } | null;
 }
 
-export type GetGamesIndexCountQueryVariables = Exact<{
-  sortBy?: GameSort | null | undefined;
-  onPlatform?: string | null | undefined;
-  byGenre?: string | null | undefined;
-  byEngine?: string | null | undefined;
-  fromYear?: number | null | undefined;
-  toYear?: number | null | undefined;
-  excludeLibrary?: boolean | null | undefined;
-}>;
-
-export interface GetGamesIndexCountQuery {
-  games: { totalCount: number } | null;
-}
-
 export type GetGamesIndexFiltersQueryVariables = Exact<{
   platformId: string;
   hasPlatform: boolean;

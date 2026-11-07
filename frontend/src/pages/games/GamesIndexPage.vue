@@ -65,7 +65,6 @@
           variant="popover"
           :names="draftNames"
           :genres="topGenres"
-          :count="draftCount"
           :signed-in="authStore.isAuthenticated"
           @named="rememberName"
           @apply="applyDraft"
@@ -149,7 +148,6 @@
         variant="sheet"
         :names="draftNames"
         :genres="topGenres"
-        :count="draftCount"
         :signed-in="authStore.isAuthenticated"
         @named="rememberName"
         @apply="applyDraft"
@@ -164,9 +162,9 @@ import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch, t
 import { useRoute, useRouter } from "vue-router";
 import { CalendarDays, Flame, Heart, ListFilter, Plus, Star, X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_GAMES_INDEX, GET_GAMES_INDEX_COUNT, GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
+import { GET_GAMES_INDEX, GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import { useAuthStore } from "@/stores/auth";
-import type { GetGamesIndexCountQuery, GetGamesIndexFiltersQuery, GetGamesIndexQuery } from "@/types/graphql";
+import type { GetGamesIndexFiltersQuery, GetGamesIndexQuery } from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
 import GamesFilterPanel from "@/components/games-index/GamesFilterPanel.vue";
 import {
@@ -376,13 +374,6 @@ const draftNames = computed(() => ({
   genre: nameFor(draft.value.genre, filtersData.value?.genre),
   engine: nameFor(draft.value.engine, filtersData.value?.engine)
 }));
-
-const { data: countData } = useQuery<GetGamesIndexCountQuery>(GET_GAMES_INDEX_COUNT, {
-  // The sort matters too: Top rated and New releases leave some games out.
-  variables: () => ({ sortBy: sort.value.value, ...filterVariables(draft.value) }),
-  enabled: () => panelOpen.value
-});
-const draftCount = computed(() => countData.value?.games?.totalCount ?? null);
 
 function togglePanel() {
   if (panelOpen.value) {

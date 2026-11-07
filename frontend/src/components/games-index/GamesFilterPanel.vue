@@ -133,9 +133,7 @@
 
     <div class="filter-panel-foot">
       <button type="button" class="clear-btn" @click="emit('update:modelValue', { ...EMPTY_FILTERS })">Clear</button>
-      <button type="button" class="apply-btn" @click="emit('apply')">
-        {{ count === null ? "Show games" : `Show ${countLabel(count, "game")}` }}
-      </button>
+      <button type="button" class="apply-btn" @click="emit('apply')">Apply Filters</button>
     </div>
   </div>
 </template>
@@ -154,7 +152,7 @@ import type {
   SearchPlatformsForFilterQuery
 } from "@/types/graphql";
 import FilterSearchSelect from "./FilterSearchSelect.vue";
-import { EARLIEST_YEAR, EMPTY_FILTERS, countLabel, type GameFilters } from "./format";
+import { EARLIEST_YEAR, EMPTY_FILTERS, type GameFilters } from "./format";
 
 interface NamedRecord {
   id: string;
@@ -168,8 +166,6 @@ const props = defineProps<{
   names: { platform: string | null; genre: string | null; engine: string | null };
   /** The most common genres, offered as pills. */
   genres: NamedRecord[];
-  /** How many games the edited filters match, or null while unknown. */
-  count: number | null;
   signedIn: boolean;
   /** A popover under its button on wide screens, a bottom sheet on phones. */
   variant: "popover" | "sheet";

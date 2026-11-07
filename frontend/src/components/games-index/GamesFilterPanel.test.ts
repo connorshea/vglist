@@ -13,7 +13,6 @@ function mountPanel(modelValue: Partial<GameFilters> = {}, variant: "popover" | 
         { id: "1", name: "Metroidvania" },
         { id: "2", name: "Roguelike" }
       ],
-      count: 38,
       signedIn: true,
       variant
     }
@@ -26,9 +25,9 @@ function lastModelValue(wrapper: ReturnType<typeof mountPanel>): GameFilters {
 }
 
 describe("GamesFilterPanel", () => {
-  it("labels the apply button with the match count", () => {
+  it("labels the apply button without a match count", () => {
     const wrapper = mountPanel();
-    expect(wrapper.find(".apply-btn").text()).toBe("Show 38 games");
+    expect(wrapper.find(".apply-btn").text()).toBe("Apply Filters");
     wrapper.unmount();
   });
 
