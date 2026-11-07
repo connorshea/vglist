@@ -42,9 +42,6 @@ Rails.application.routes.draw do
   # pages. frontend/Caddyfile proxies link-preview crawlers here.
   get '/embeds/games/:id', to: 'embeds#game', constraints: { id: /\d+/ }, format: false
 
-  # For exposing the OpenSearch XML definition
-  get '/opensearch', to: 'static_pages#opensearch', defaults: { format: :xml }
-
   # SPA fallback — serve the Vue frontend's index.html for all unmatched routes.
   # This must be the last route. In production, Rails serves the built frontend
   # from public/. In development, the Vite dev server handles frontend routes.
