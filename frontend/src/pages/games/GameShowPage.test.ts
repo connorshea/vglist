@@ -7,7 +7,8 @@ import { GET_GAME } from "@/graphql/queries/games";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
-const { mockRequest, mockRoute } = vi.hoisted(() => ({
+const { mockRequest, mockRoute, authState } = vi.hoisted(() => ({
+  authState: { isAuthenticated: false, isModerator: false, isAdmin: false },
   mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>(),
   mockRoute: { params: { id: "1" } }
 }));
@@ -17,7 +18,7 @@ vi.mock("@/graphql/client", () => ({
 }));
 
 vi.mock("@/stores/auth", () => ({
-  useAuthStore: () => ({ isAuthenticated: false, isModerator: false, isAdmin: false })
+  useAuthStore: () => authState
 }));
 
 vi.mock("vue-router", async () => {
@@ -88,6 +89,7 @@ describe("GameShowPage loading skeleton", () => {
   beforeEach(() => {
     pendingGames = [];
     mockRoute.params.id = "1";
+    authState.isAuthenticated = false;
     mockRequest.mockReset();
     mockRequest.mockImplementation((query, variables) => {
       if (query === GET_GAME) {
@@ -149,5 +151,23 @@ describe("GameShowPage loading skeleton", () => {
 
     expect(wrapper.find(".game-skeleton").exists()).toBeFalsy();
     expect(wrapper.find(".game-title").text()).toBe("Game 2");
+  });
+
+  it("keeps the page in place while the same game refetches", async () => {
+    authState.isAuthenticated = true;
+    const wrapper = mountPage();
+    await resolveGames();
+    expect(wrapper.find(".game-title").text()).toBe("Game 1");
+
+    // Favoriting refetches the game; that request is held open here.
+    await wrapper.find("button[aria-label='Favorite']").trigger("click");
+    await flushPromises();
+    expect(pendingGames).toHaveLength(1);
+
+    expect(wrapper.find(".game-skeleton").exists()).toBeFalsy();
+    expect(wrapper.find(".game-title").text()).toBe("Game 1");
+
+    await resolveGames();
+    expect(wrapper.find(".game-title").text()).toBe("Game 1");
   });
 });
