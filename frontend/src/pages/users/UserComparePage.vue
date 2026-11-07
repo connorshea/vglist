@@ -328,7 +328,6 @@
               >Show all</router-link
             >
           </div>
-          <p class="compare-shelf-desc">{{ shelf.description }}</p>
           <div v-if="shelf.purchases.length" class="compare-grid is-shelf">
             <LibraryGameTile v-for="purchase in shelf.purchases" :key="purchase.id" :purchase="purchase" hide-hours />
           </div>
@@ -676,16 +675,14 @@ const shelves = computed(() => {
       tab: "only-a" as const,
       user: c.userA,
       count: c.onlyACount,
-      purchases: c.onlyA.nodes,
-      description: `${possessive(c.userA.username).replace(/^your$/, "Your")} highest rated games that ${c.userB.username} doesn't have`
+      purchases: c.onlyA.nodes
     },
     {
       side: "b" as const,
       tab: "only-b" as const,
       user: c.userB,
       count: c.onlyBCount,
-      purchases: c.onlyB.nodes,
-      description: `${c.userB.username}'s highest rated games ${viewerIsA.value ? "you don't have yet" : `that ${c.userA.username} doesn't have`}`
+      purchases: c.onlyB.nodes
     }
   ];
 });
@@ -1485,12 +1482,6 @@ function useDebounced(source: typeof commonSearch) {
 
 .compare-shelf-more {
   margin-left: auto;
-  font-size: 0.75rem;
-}
-
-.compare-shelf-desc {
-  margin: -4px 0 12px;
-  color: var(--color-text-secondary);
   font-size: 0.75rem;
 }
 
