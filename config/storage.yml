@@ -7,6 +7,9 @@ test:
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
+  # Matches production: non-expiring URLs, so a refetch returns the same image
+  # URLs and the browser doesn't reload images that haven't changed.
+  public: true
 
 # Cloudflare R2 (S3-compatible) for ActiveStorage in production. Uploads go
 # through the account's S3 API endpoint; objects are served publicly from the
