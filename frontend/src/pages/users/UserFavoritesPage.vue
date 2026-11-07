@@ -1,51 +1,133 @@
 <template>
-  <section class="section">
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading...</p>
+  <div class="favorites">
+    <div class="favorites-grid">
+      <LibraryGameTile v-for="tile in tiles" :key="tile.id" :purchase="tile" />
     </div>
 
-    <div v-if="error" class="notification is-danger">
-      <p>{{ error.message }}</p>
+    <div v-if="!tiles.length" class="favorites-empty" role="status">
+      <p v-if="loading">Loading favorites…</p>
+      <p v-else-if="error">Couldn't load favorites: {{ error.message }}</p>
+      <p v-else>No favorite games yet.</p>
     </div>
 
-    <div v-if="user">
-      <h1 class="title">
-        <router-link :to="`/users/${route.params.slug}`">{{ user.username }}</router-link>
-        &rsaquo; Favorite Games
-      </h1>
-
-      <p v-if="!favoritedGames.length" class="has-text-centered has-text-grey py-6">No favorite games yet.</p>
-
-      <div class="columns is-multiline">
-        <div v-for="game in favoritedGames" :key="game.id" class="column is-2">
-          <GameCard :id="game.id" :name="game.name" :cover-url="game.coverUrl ?? null" />
-        </div>
-      </div>
+    <div v-if="hasNextPage" class="favorites-more">
+      <button type="button" class="favorites-more-button" :disabled="loading" @click="loadMore">
+        {{ loading ? "Loading…" : "Load more" }}
+      </button>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_USER } from "@/graphql/queries/users";
-import type { GetUserQuery } from "@/types/graphql";
-import GameCard from "@/components/GameCard.vue";
+import { GET_USER_FAVORITES } from "@/graphql/queries/users";
+import type { GetUserFavoritesQuery, LibraryGamePurchaseFieldsFragment } from "@/types/graphql";
+import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
+
+const PAGE_SIZE = 48;
 
 const route = useRoute("userFavorites");
-const router = useRouter();
 
-const { data, loading, error } = useQuery<GetUserQuery>(GET_USER, {
-  variables: () => ({ slug: route.params.slug })
+const variables = computed(() => ({ slug: route.params.slug, first: PAGE_SIZE }));
+
+const { data, loading, error, fetchMore } = useQuery<GetUserFavoritesQuery>(GET_USER_FAVORITES, {
+  variables: () => variables.value
 });
 
-watch([data, error, loading], () => {
-  if (!loading.value && (error.value || (data.value && !data.value.user))) {
-    router.replace({ name: "notFound" });
-  }
-});
+const connection = computed(() => data.value?.user?.favoritedGames ?? null);
+const hasNextPage = computed(() => connection.value?.pageInfo.hasNextPage ?? false);
 
-const user = computed(() => data.value?.user ?? null);
-const favoritedGames = computed(() => user.value?.favoritedGames?.nodes ?? []);
+// Favorites aren't library entries, so their tiles have no status or rating.
+const tiles = computed<LibraryGamePurchaseFieldsFragment[]>(() =>
+  (connection.value?.nodes ?? []).map((game) => ({
+    id: game.id,
+    game,
+    hoursPlayed: null,
+    completionStatus: null,
+    rating: null
+  }))
+);
+
+async function loadMore() {
+  const cursor = connection.value?.pageInfo.endCursor;
+  if (!hasNextPage.value || loading.value || !cursor) return;
+
+  await fetchMore({ ...variables.value, after: cursor }, (prev, next) => {
+    if (!prev.user || !next.user) return next;
+    return {
+      ...next,
+      user: {
+        ...next.user,
+        favoritedGames: {
+          ...next.user.favoritedGames,
+          nodes: [...prev.user.favoritedGames.nodes, ...next.user.favoritedGames.nodes]
+        }
+      }
+    };
+  });
+}
 </script>
+
+<style scoped>
+.favorites {
+  padding-top: 24px;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.favorites-empty {
+  padding: 48px 16px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.favorites-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.favorites-more-button {
+  padding: 7px 20px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.favorites-more-button:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.favorites-more-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.favorites-more-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .favorites {
+    padding-top: 16px;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+</style>

@@ -1,21 +1,14 @@
 import gql from "graphql-tag";
 
-// The header, navigation and filter rail of a user's library page. The
-// statistics are for the whole library, so they don't change with the filters.
+// The counts in a user's library's filter rail. They're for the whole library,
+// so they don't change with the filters.
 export const GET_LIBRARY_PAGE = gql`
   query GetLibraryPage($slug: String!) {
     user(slug: $slug) {
       id
-      username
-      slug
-      privacy
-      avatarUrl(size: SMALL)
       hideDaysPlayed
       libraryStatistics {
         gamesCount
-        totalHoursPlayed
-        completionPercentage
-        averageRating
         statusCounts {
           status
           count
@@ -34,12 +27,6 @@ export const GET_LIBRARY_PAGE = gql`
           }
           count
         }
-      }
-      favoritedGames {
-        totalCount
-      }
-      followers {
-        totalCount
       }
     }
   }

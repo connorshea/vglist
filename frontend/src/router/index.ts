@@ -78,35 +78,42 @@ const router = createRouter({
       name: "users",
       component: () => import("@/pages/users/UserListPage.vue")
     },
+    // A user's profile: one header and tab bar, with each tab a child route.
     {
       path: "/users/:slug",
-      name: "user",
-      component: () => import("@/pages/users/UserShowPage.vue")
-    },
-    {
-      path: "/users/:slug/library",
-      name: "userLibrary",
-      component: () => import("@/pages/users/UserLibraryPage.vue")
-    },
-    {
-      path: "/users/:slug/favorites",
-      name: "userFavorites",
-      component: () => import("@/pages/users/UserFavoritesPage.vue")
-    },
-    {
-      path: "/users/:slug/following",
-      name: "userFollowing",
-      component: () => import("@/pages/users/UserFollowingPage.vue")
-    },
-    {
-      path: "/users/:slug/followers",
-      name: "userFollowers",
-      component: () => import("@/pages/users/UserFollowersPage.vue")
-    },
-    {
-      path: "/users/:slug/activity",
-      name: "userActivity",
-      component: () => import("@/pages/users/UserActivityPage.vue")
+      component: () => import("@/pages/users/UserProfileLayout.vue"),
+      children: [
+        {
+          path: "",
+          name: "user",
+          component: () => import("@/pages/users/UserOverviewPage.vue")
+        },
+        {
+          path: "library",
+          name: "userLibrary",
+          component: () => import("@/pages/users/UserLibraryPage.vue")
+        },
+        {
+          path: "favorites",
+          name: "userFavorites",
+          component: () => import("@/pages/users/UserFavoritesPage.vue")
+        },
+        {
+          path: "activity",
+          name: "userActivity",
+          component: () => import("@/pages/users/UserActivityPage.vue")
+        },
+        {
+          path: "followers",
+          name: "userFollowers",
+          component: () => import("@/pages/users/UserFollowersPage.vue")
+        },
+        {
+          path: "following",
+          name: "userFollowing",
+          component: () => import("@/pages/users/UserFollowingPage.vue")
+        }
+      ]
     },
 
     // Platforms

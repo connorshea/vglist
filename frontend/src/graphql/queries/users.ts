@@ -1,15 +1,16 @@
 import gql from "graphql-tag";
+import { LIBRARY_PLAYING_PURCHASE_FIELDS } from "@/graphql/queries/library";
 
-export const GET_USER = gql`
-  query GetUser($slug: String!) {
+// The header and tab bar shared by every page of a user's profile. The tabs'
+// own content is fetched by each tab, so switching tabs doesn't refetch this.
+export const GET_USER_PROFILE = gql`
+  query GetUserProfile($slug: String!) {
     user(slug: $slug) {
       id
       username
-      bio
       slug
       role
       privacy
-      createdAt
       banned
       avatarUrl(size: LARGE)
       isFollowed
@@ -19,10 +20,9 @@ export const GET_USER = gql`
         totalHoursPlayed
         completionPercentage
         averageRating
-        statusCounts {
-          status
-          count
-        }
+      }
+      favoritedGames {
+        totalCount
       }
       followers {
         totalCount
@@ -30,51 +30,52 @@ export const GET_USER = gql`
       following {
         totalCount
       }
-      favoritedGames(first: 10) {
+    }
+  }
+`;
+
+// The Overview tab: the user's bio, a few favorites, what they're playing, and
+// their highest-rated games.
+export const GET_USER_OVERVIEW = gql`
+  query GetUserOverview($slug: String!, $favoritesCount: Int!, $playingCount: Int!, $topRatedCount: Int!) {
+    user(slug: $slug) {
+      id
+      bio
+      favoritedGames(first: $favoritesCount) {
+        totalCount
         nodes {
           id
           name
           coverUrl(size: SMALL)
         }
       }
+      playing: gamePurchases(first: $playingCount, completionStatus: IN_PROGRESS, sortBy: MOST_HOURS_PLAYED) {
+        totalCount
+        nodes {
+          ...LibraryPlayingPurchaseFields
+        }
+      }
+      topRated: gamePurchases(first: $topRatedCount, sortBy: HIGHEST_RATING) {
+        totalCount
+        nodes {
+          ...LibraryGamePurchaseFields
+        }
+      }
     }
   }
+  ${LIBRARY_PLAYING_PURCHASE_FIELDS}
 `;
 
-// The library is fetched separately from the rest of the profile so that
-// changing a filter, the sort order, or the search term doesn't refetch the
-// avatar, favorites, and library statistics along with it. Filtering, sorting,
-// and counting all happen on the server, so they cover the user's whole
-// library rather than the page of it that's been loaded.
-export const GET_USER_LIBRARY = gql`
-  query GetUserLibrary(
-    $slug: String!
-    $first: Int
-    $after: String
-    $completionStatus: GamePurchaseCompletionStatus
-    $search: String
-    $sortBy: GamePurchaseSort
-  ) {
+export const GET_USER_FAVORITES = gql`
+  query GetUserFavorites($slug: String!, $first: Int, $after: String) {
     user(slug: $slug) {
       id
-      gamePurchases(
-        first: $first
-        after: $after
-        completionStatus: $completionStatus
-        search: $search
-        sortBy: $sortBy
-      ) {
+      favoritedGames(first: $first, after: $after) {
         totalCount
         nodes {
           id
-          game {
-            id
-            name
-            coverUrl(size: SMALL)
-          }
-          hoursPlayed
-          completionStatus
-          rating
+          name
+          coverUrl(size: SMALL)
         }
         pageInfo {
           hasNextPage

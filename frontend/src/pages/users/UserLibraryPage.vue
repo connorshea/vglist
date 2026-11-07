@@ -9,49 +9,8 @@
     </div>
 
     <template v-if="user">
-      <header class="library-header">
-        <div class="library-header-identity">
-          <router-link :to="{ name: 'user', params: { slug: user.slug } }" class="library-avatar" tabindex="-1">
-            <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
-            <span v-else aria-hidden="true">{{ user.username.charAt(0).toUpperCase() }}</span>
-          </router-link>
-          <div>
-            <h1 class="library-title">{{ user.username }}'s library</h1>
-            <p v-if="!isPrivate" class="library-stats">{{ statsLine }}</p>
-          </div>
-        </div>
-        <div v-if="isOwnLibrary && !isPhone" class="library-header-actions">
-          <router-link :to="{ name: 'settingsExport' }" class="library-button">
-            <Download :size="14" aria-hidden="true" />
-            Export
-          </router-link>
-          <router-link :to="{ name: 'games' }" class="library-button is-primary">
-            <Plus :size="14" aria-hidden="true" />
-            Add game
-          </router-link>
-        </div>
-      </header>
-
-      <nav class="library-subnav" aria-label="Profile sections">
-        <router-link :to="{ name: 'user', params: { slug: user.slug } }">Overview</router-link>
-        <router-link :to="{ name: 'userLibrary', params: { slug: user.slug } }" aria-current="page" class="is-active">
-          Library <span class="library-subnav-count">{{ gamesCount }}</span>
-        </router-link>
-        <router-link :to="{ name: 'userFavorites', params: { slug: user.slug } }">
-          Favorites <span class="library-subnav-count">{{ user.favoritedGames.totalCount }}</span>
-        </router-link>
-        <router-link :to="{ name: 'userActivity', params: { slug: user.slug } }">Activity</router-link>
-        <router-link :to="{ name: 'userFollowers', params: { slug: user.slug } }">
-          Followers <span class="library-subnav-count">{{ user.followers.totalCount }}</span>
-        </router-link>
-      </nav>
-
-      <div v-if="isPrivate" class="library-message">
-        <p class="library-message-title">This user's library is private.</p>
-      </div>
-
       <!-- Phone: status pills, search and sort, then a list -->
-      <template v-else-if="isPhone">
+      <template v-if="isPhone">
         <div class="library-pills" role="group" aria-label="Filter by status">
           <button
             type="button"
@@ -263,10 +222,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQuery, type LocationQueryValueRaw } from "vue-router";
-import { ArrowUpDown, ChevronDown, Download, Plus, Search, X } from "@lucide/vue";
+import { ArrowUpDown, ChevronDown, Search, X } from "@lucide/vue";
 import { debounce } from "lodash-es";
 import { useQuery } from "@/composables/useGraphQL";
-import { useAuthStore } from "@/stores/auth";
 import { GET_LIBRARY_GAMES, GET_LIBRARY_PAGE, GET_LIBRARY_SHELVES } from "@/graphql/queries/library";
 import type { GetLibraryGamesQuery, GetLibraryPageQuery, GetLibraryShelvesQuery } from "@/types/graphql";
 import {
@@ -296,7 +254,6 @@ const PHONE_QUERY = "(max-width: 768px)";
 
 const route = useRoute("userLibrary");
 const router = useRouter();
-const authStore = useAuthStore();
 
 // ── Layout ──────────────────────────────────────────────────────────────────
 // The phone layout is a different arrangement rather than a squeezed one, so
@@ -317,19 +274,14 @@ onMounted(() => {
 
 onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
 
-// ── Header ──────────────────────────────────────────────────────────────────
+// ── Statistics ──────────────────────────────────────────────────────────────
+// The filter rail's counts. The header above the tabs is the profile layout's.
 const {
   data: pageData,
   loading: pageLoading,
   error: pageError
 } = useQuery<GetLibraryPageQuery>(GET_LIBRARY_PAGE, {
   variables: () => ({ slug: route.params.slug })
-});
-
-watch([pageData, pageLoading], () => {
-  if (!pageLoading.value && pageData.value && !pageData.value.user) {
-    void router.replace({ name: "notFound" });
-  }
 });
 
 const user = computed(() => pageData.value?.user ?? null);
@@ -347,24 +299,6 @@ const statusCounts = computed(() => {
   }
   if (gamesCount.value > counted) counts[NO_STATUS.key] = gamesCount.value - counted;
   return counts;
-});
-
-const isOwnLibrary = computed(
-  () => authStore.isAuthenticated && user.value !== null && authStore.user?.id === user.value.id
-);
-const isPrivate = computed(() => user.value?.privacy === "PRIVATE_ACCOUNT" && !isOwnLibrary.value);
-
-// "412 games · 1,830h played · 56% completed · avg 78"
-const statsLine = computed(() => {
-  const stats = statistics.value;
-  if (!stats) return "";
-  const parts = [`${stats.gamesCount.toLocaleString()} game${stats.gamesCount === 1 ? "" : "s"}`];
-  if (stats.totalHoursPlayed > 0 && !user.value?.hideDaysPlayed) {
-    parts.push(`${Math.round(stats.totalHoursPlayed).toLocaleString()}h played`);
-  }
-  if (stats.completionPercentage > 0) parts.push(`${stats.completionPercentage}% completed`);
-  if (stats.averageRating !== null) parts.push(`avg ${Math.round(stats.averageRating)}`);
-  return parts.join(" · ");
 });
 
 // ── Filters ─────────────────────────────────────────────────────────────────
@@ -500,7 +434,7 @@ const {
   error: shelvesError
 } = useQuery<GetLibraryShelvesQuery>(GET_LIBRARY_SHELVES, {
   variables: () => ({ ...filterVariables.value, first: SHELF_SIZE }),
-  enabled: () => grouped.value && !isPrivate.value
+  enabled: () => grouped.value
 });
 
 type ShelfKey = Exclude<keyof NonNullable<GetLibraryShelvesQuery["user"]>, "id">;
@@ -546,7 +480,7 @@ const {
   fetchMore: fetchMoreGames
 } = useQuery<GetLibraryGamesQuery>(GET_LIBRARY_GAMES, {
   variables: () => gamesVariables.value,
-  enabled: () => !grouped.value && !isPrivate.value
+  enabled: () => !grouped.value
 });
 
 const gamesConnection = computed(() => gamesData.value?.user?.gamePurchases ?? null);
@@ -577,62 +511,6 @@ async function loadMoreGames() {
 <style scoped>
 .library-page {
   padding-bottom: 64px;
-}
-
-/* ── Header ── */
-.library-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.library-header-identity {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  min-width: 0;
-}
-
-.library-avatar {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--p-400), var(--p-300));
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.library-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.library-title {
-  margin: 0;
-  color: var(--color-text-primary);
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.library-stats {
-  margin: 2px 0 0;
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
-}
-
-.library-header-actions {
-  display: flex;
-  gap: 8px;
 }
 
 .library-button {
@@ -675,47 +553,6 @@ async function loadMoreGames() {
 .library-button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-}
-
-/* ── Profile sub-navigation ── */
-.library-subnav {
-  display: flex;
-  margin-top: 24px;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
-  scrollbar-width: none;
-}
-
-.library-subnav a {
-  display: flex;
-  flex-shrink: 0;
-  gap: 6px;
-  align-items: center;
-  margin-bottom: -1px;
-  padding: 10px 16px;
-  border-bottom: 2px solid transparent;
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
-}
-
-.library-subnav a:hover {
-  color: var(--color-text-primary);
-}
-
-.library-subnav a.is-active {
-  border-bottom-color: var(--color-accent);
-  color: var(--color-accent);
-  font-weight: 500;
-}
-
-.library-subnav a:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-.library-subnav-count {
-  color: var(--color-text-tertiary);
-  font-size: 0.7rem;
 }
 
 /* ── Desktop layout ── */
@@ -915,19 +752,6 @@ async function loadMoreGames() {
 .library-page.is-phone {
   /* Rows and pills run edge to edge, so undo the page's side padding. */
   margin: 0 calc(-1 * var(--library-phone-gutter, 1.5rem));
-}
-
-.is-phone .library-header,
-.is-phone .library-subnav {
-  padding: 0 16px;
-}
-
-.is-phone .library-subnav {
-  margin-top: 16px;
-}
-
-.is-phone .library-subnav a {
-  padding: 10px 12px;
 }
 
 .library-pills {
