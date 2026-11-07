@@ -62,6 +62,21 @@
           />
         </div>
 
+        <div class="form-group">
+          <label class="form-label" for="form-replay-count">Times replayed</label>
+          <input
+            id="form-replay-count"
+            v-model.number="formReplayCount"
+            type="number"
+            min="0"
+            step="1"
+            inputmode="numeric"
+            class="form-hours-input"
+            placeholder="0"
+            @change="normalizeReplayCount"
+          />
+        </div>
+
         <div class="form-dates">
           <div class="form-date-field">
             <div class="form-label-row">
@@ -248,6 +263,7 @@ const today = computed(() => new Date().toISOString().slice(0, 10));
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formHoursPlayed = ref<number | null>(null);
+const formReplayCount = ref<number | null>(null);
 const formComments = ref("");
 const isEditing = ref(false);
 const saving = ref(false);
@@ -285,6 +301,7 @@ function resetForm() {
   formStatus.value = null;
   formRating.value = null;
   formHoursPlayed.value = null;
+  formReplayCount.value = null;
   formStartDate.value = "";
   formCompletionDate.value = "";
   formPlatformIds.value = new Set();
@@ -321,6 +338,7 @@ async function openAsEdit() {
     formStatus.value = (gp.completionStatus as GamePurchaseCompletionStatus) ?? null;
     formRating.value = gp.rating ?? null;
     formHoursPlayed.value = gp.hoursPlayed ?? null;
+    formReplayCount.value = gp.replayCount;
     formStartDate.value = gp.startDate ?? "";
     formCompletionDate.value = gp.completionDate ?? "";
     formComments.value = gp.comments ?? "";
@@ -360,6 +378,15 @@ function clampRating() {
   if (formRating.value < 0) formRating.value = 0;
 }
 
+// Replays are whole numbers; the API rejects negatives.
+function normalizeReplayCount() {
+  if (typeof formReplayCount.value !== "number" || Number.isNaN(formReplayCount.value)) {
+    formReplayCount.value = null;
+    return;
+  }
+  formReplayCount.value = Math.max(0, Math.floor(formReplayCount.value));
+}
+
 function setRatingFromClick(event: MouseEvent) {
   const track = event.currentTarget as HTMLElement;
   const rect = track.getBoundingClientRect();
@@ -392,6 +419,12 @@ function buildFormVariables(): Record<string, unknown> {
   }
   if (formHoursPlayed.value != null && formHoursPlayed.value >= 0) {
     variables.hoursPlayed = formHoursPlayed.value;
+  }
+  // An emptied field means no replays, so an edit can clear an existing count.
+  if (typeof formReplayCount.value === "number" && formReplayCount.value >= 0) {
+    variables.replayCount = Math.floor(formReplayCount.value);
+  } else if (isEditing.value) {
+    variables.replayCount = 0;
   }
   if (formStartDate.value) {
     variables.startDate = formStartDate.value;
