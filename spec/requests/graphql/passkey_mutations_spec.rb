@@ -51,8 +51,12 @@ RSpec.describe "GraphQL passkey mutations", type: :request do
     { 'Authorization' => "Bearer #{JwtService.encode(for_user)}" }
   end
 
+  # Post JSON like the SPA does, so variables arrive as
+  # ActionController::Parameters rather than a parsed string.
   def graphql(query, variables: {}, headers: {})
-    post graphql_path, params: { query: query, variables: variables.to_json }, headers: headers
+    post graphql_path,
+      params: { query: query, variables: variables }.to_json,
+      headers: headers.merge('Content-Type' => 'application/json')
     JSON.parse(response.body)
   end
 

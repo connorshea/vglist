@@ -61,6 +61,9 @@ module PasskeyService
   # @return [Array(WebAuthn::PublicKeyCredential, String)] The credential and
   #   its base64url challenge.
   def parse(response)
+    # The SPA posts JSON, so GraphQL hands the JSON scalar over as
+    # ActionController::Parameters rather than a Hash.
+    response = response.to_unsafe_h if response.respond_to?(:to_unsafe_h)
     raise Error, MALFORMED_MESSAGE unless response.is_a?(Hash) && response['response'].is_a?(Hash)
 
     credential = yield response.to_h.deep_stringify_keys
