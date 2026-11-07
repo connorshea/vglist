@@ -91,6 +91,19 @@
 		}
 	}
 
+	# Password managers send users here to change their password. Redirect
+	# to the account settings page; signed-out users go through sign-in
+	# first because the route requires auth.
+	handle /.well-known/change-password {
+		redir /settings/account 302
+	}
+
+	# Every other /.well-known/ path (Chrome DevTools' appspecific JSON,
+	# crawler probes, etc.) gets a real 404 instead of the SPA's HTML 200.
+	handle /.well-known/* {
+		respond 404
+	}
+
 	handle {
 		root * /app/dist
 
