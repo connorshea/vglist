@@ -1,14 +1,83 @@
 <template>
   <div>
-    <div v-if="loading && !data" class="has-text-centered py-6">
-      <p>Loading game...</p>
+    <!-- Skeleton in the shape of the page while the game loads -->
+    <div v-if="showSkeleton" class="game-show game-skeleton" aria-busy="true">
+      <p class="is-sr-only" role="status">Loading game…</p>
+      <section class="game-hero" aria-hidden="true">
+        <div class="game-hero-inner">
+          <div class="game-hero-cover">
+            <div class="skel skel-cover"></div>
+            <div v-if="authStore.isAuthenticated" class="hero-actions">
+              <div class="skel skel-btn skel-btn-primary"></div>
+              <div class="skel skel-btn"></div>
+            </div>
+          </div>
+
+          <div class="hero-split">
+            <div class="game-hero-info">
+              <div class="skel skel-title"></div>
+              <div class="skel skel-meta"></div>
+              <div v-for="group in 2" :key="group" class="hero-tag-group">
+                <div class="skel skel-tag-label"></div>
+                <div class="hero-tags">
+                  <div v-for="tag in 3" :key="tag" class="skel skel-tag" :style="{ width: `${56 + tag * 14}px` }"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="skel-panel">
+              <div class="skel-panel-rating">
+                <div class="skel skel-ring"></div>
+                <div class="skel-panel-rating-text">
+                  <div class="skel skel-line" style="width: 70%"></div>
+                  <div class="skel skel-line skel-line-sm" style="width: 45%"></div>
+                </div>
+              </div>
+              <div class="skel-panel-rule"></div>
+              <div v-for="row in 2" :key="row" class="skel-panel-row">
+                <div class="skel skel-tag-label"></div>
+                <div class="skel-avatars">
+                  <div v-for="avatar in 5" :key="avatar" class="skel skel-avatar"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="game-body" aria-hidden="true">
+        <div class="game-body-main">
+          <div class="game-card">
+            <div class="skel skel-card-title"></div>
+            <div v-for="review in 3" :key="review" class="skel-review">
+              <div class="skel skel-review-avatar"></div>
+              <div>
+                <div class="skel skel-line" style="width: 40%"></div>
+                <div class="skel skel-line" style="width: 95%"></div>
+                <div class="skel skel-line" style="width: 70%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="game-body-side">
+          <div class="game-card skel-details">
+            <div class="skel skel-tag-label"></div>
+            <div class="skel-details-list">
+              <template v-for="row in 6" :key="row">
+                <div class="skel skel-line" style="width: 72px"></div>
+                <div class="skel skel-line" :style="{ width: `${50 + ((row * 17) % 40)}%` }"></div>
+              </template>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
 
     <div v-if="error" class="notification is-danger">
       <p>Failed to load game: {{ error.message }}</p>
     </div>
 
-    <div v-if="game" class="game-show">
+    <div v-if="game && !showSkeleton" class="game-show">
       <!-- Hero section with dynamic gradient background derived from cover art -->
       <section class="game-hero" :style="heroStyle">
         <div class="game-hero-inner">
@@ -389,6 +458,12 @@ const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
 });
 
 const game = computed(() => data.value?.game ?? null);
+
+// Show the skeleton on first load, and when moving to another game's page
+// (vue-router reuses this component, so the previous game is still in `data`).
+// Refetches of the same game keep the page in place.
+const showSkeleton = computed(() => loading.value && (!game.value || game.value.id !== gameId.value));
+
 usePageTitle(() => game.value?.name);
 
 // Redirect to 404 when the game is not found or the query fails.
@@ -1234,6 +1309,190 @@ function onGameMerged(kept: { id: string; name: string }) {
   margin-top: 1.5rem;
 }
 
+/* ── Loading skeleton ──
+   Reuses the page's layout classes so the bones sit where the content lands.
+   Bones on the hero are translucent white; on the cards they use the subtle
+   surface colour. A highlight sweeps across each bone unless reduced motion
+   is preferred. */
+.game-skeleton {
+  --skel-bg: color-mix(in srgb, var(--color-border) 45%, var(--color-surface));
+  --skel-shine: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+  .game-skeleton {
+    --skel-bg: rgba(255, 255, 255, 0.07);
+    --skel-shine: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.game-skeleton .game-hero {
+  --skel-bg: rgba(255, 255, 255, 0.14);
+  --skel-shine: rgba(255, 255, 255, 0.14);
+}
+
+.skel {
+  position: relative;
+  overflow: hidden;
+  background: var(--skel-bg);
+  border-radius: 6px;
+}
+
+.skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--skel-shine), transparent);
+  transform: translateX(-100%);
+  animation: skel-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes skel-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel::after {
+    display: none;
+  }
+}
+
+.skel-cover {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-lg);
+}
+
+.skel-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-button);
+  flex-shrink: 0;
+}
+
+.skel-btn-primary {
+  flex: 1;
+}
+
+.skel-title {
+  width: 60%;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.skel-meta {
+  width: 40%;
+  height: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.skel-tag-label {
+  width: 64px;
+  height: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+
+.skel-tag {
+  height: 28px;
+}
+
+/* Mirrors GameHeroPanel's glass box */
+.skel-panel {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-lg);
+}
+
+.skel-panel-rating {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.skel-panel-rating-text {
+  flex: 1;
+}
+
+.skel-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skel-panel-rule {
+  margin: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.skel-panel-row + .skel-panel-row {
+  margin-top: 14px;
+}
+
+.skel-avatars {
+  display: flex;
+  gap: 4px;
+}
+
+.skel-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.skel-line {
+  height: 0.875rem;
+}
+
+.skel-line + .skel-line {
+  margin-top: 8px;
+}
+
+.skel-line-sm {
+  height: 0.75rem;
+}
+
+.skel-card-title {
+  width: 96px;
+  height: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.skel-review {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.skel-card-title + .skel-review {
+  margin-top: 14px;
+  border-top: 0;
+}
+
+.skel-review:last-child {
+  padding-bottom: 4px;
+}
+
+.skel-review-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skel-details-list {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px 16px;
+}
+
+.skel-details-list .skel-line + .skel-line {
+  margin-top: 0;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1023px) {
   .hero-split {
@@ -1318,8 +1577,34 @@ function onGameMerged(kept: { id: string; name: string }) {
     display: contents;
   }
 
-  #game-details {
+  #game-details,
+  .skel-details {
     order: -1;
+  }
+
+  .skel-cover {
+    width: 150px;
+    margin: 0 auto;
+  }
+
+  .skel-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .skel-title {
+    width: 70%;
+    height: 1.875rem;
+  }
+
+  .skel-title,
+  .skel-meta,
+  .game-hero-info .skel-tag-label {
+    margin-inline: auto;
+  }
+
+  .skel-meta {
+    margin-bottom: 1rem;
   }
 }
 </style>
