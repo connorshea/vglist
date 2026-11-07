@@ -323,6 +323,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useImageColors } from "@/composables/useImageColors";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { gqlClient } from "@/graphql/client";
 import { GET_GAME, GET_GAME_ACTIVITY, GET_GAME_PURCHASE, GET_GAME_REVIEWS } from "@/graphql/queries/games";
 import { GET_STORES } from "@/graphql/queries/resources";
@@ -368,6 +369,7 @@ const { data, loading, error, refetch } = useQuery<GetGameQuery>(GET_GAME, {
 });
 
 const game = computed(() => data.value?.game ?? null);
+usePageTitle(() => game.value?.name);
 
 // Redirect to 404 when the game is not found or the query fails.
 watch([data, error, loading], () => {

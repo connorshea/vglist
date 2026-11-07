@@ -71,6 +71,7 @@ import { BriefcaseBusiness, CircleAlert } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useMutation } from "@/composables/useGraphQL";
 import { useResourceGames } from "@/composables/useResourceGames";
+import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_COMPANY } from "@/graphql/queries/resources";
 import { DELETE_COMPANY } from "@/graphql/mutations/resources";
@@ -94,6 +95,8 @@ const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore,
     variables: () => ({ id: route.params.id, developed: developed.value }),
     select: (result) => (developed.value ? result.company?.developedGames : result.company?.publishedGames)
   });
+
+usePageTitle(() => data.value?.company?.name);
 
 const tabs = computed(() => {
   const company = data.value?.company;
