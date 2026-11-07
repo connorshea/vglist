@@ -417,7 +417,7 @@ function onKeydown(e: KeyboardEvent) {
 .apply-btn {
   padding: 7px 18px;
   border: 1.5px solid var(--vglist-theme);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-button);
   background: var(--vglist-theme);
   color: #fff;
   font: inherit;

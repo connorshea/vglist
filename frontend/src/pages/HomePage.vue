@@ -662,7 +662,7 @@ onUnmounted(() => {
   align-items: center;
   min-height: 44px;
   padding: 0 22px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-button);
   background: var(--p-500);
   color: #fff;
   font-weight: 600;

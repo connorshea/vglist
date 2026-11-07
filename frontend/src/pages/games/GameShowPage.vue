@@ -899,7 +899,7 @@ function onGameMerged(kept: { id: string; name: string }) {
   gap: 8px;
   height: 40px;
   padding: 0 14px;
-  border-radius: 8px;
+  border-radius: var(--radius-button);
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.1);
   color: #fff;

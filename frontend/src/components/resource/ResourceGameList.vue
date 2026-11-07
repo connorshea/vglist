@@ -282,7 +282,7 @@ function initials(name: string): string {
   color: var(--color-text-secondary);
   background: transparent;
   border: 1px solid var(--color-border);
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   cursor: pointer;
 }
 

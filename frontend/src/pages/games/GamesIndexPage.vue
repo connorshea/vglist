@@ -674,7 +674,7 @@ onBeforeUnmount(() => {
 .load-more-btn {
   padding: 7px 18px;
   border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-button);
   background: transparent;
   color: var(--color-text-primary);
   font: inherit;
@@ -695,7 +695,7 @@ onBeforeUnmount(() => {
   padding: 0 20px;
   transform: translateX(-50%);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: var(--s-700);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
   color: var(--s-50);

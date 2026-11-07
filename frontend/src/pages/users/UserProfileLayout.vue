@@ -610,7 +610,7 @@ function changeRole() {
   height: 36px;
   padding: 0 18px;
   border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-button);
   background: transparent;
   color: var(--color-text-primary);
   font: inherit;

@@ -67,6 +67,9 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-pill: 20px;
+  /* Buttons (and button-styled links) are rounded rectangles, never pills.
+     Pills are kept for tags, badges and filter chips. */
+  --radius-button: var(--radius-md);
 
   /* Shared transitions */
   --transition-fast: 0.15s;

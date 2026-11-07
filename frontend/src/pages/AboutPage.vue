@@ -182,7 +182,7 @@ const tiles = Array.from({ length: 126 }, (_, k) => ({
   justify-content: center;
   min-height: 40px;
   padding: 0 10px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-button);
   background: var(--about-tint);
   color: var(--about-tint-fg);
   font-size: 14px;

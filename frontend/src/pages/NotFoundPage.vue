@@ -192,7 +192,7 @@ function search() {
   min-height: 36px;
   padding: 0 16px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-button);
   background: var(--p-500);
   color: #fff;
   font: inherit;
