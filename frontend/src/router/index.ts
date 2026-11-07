@@ -3,13 +3,6 @@ import { useAuthStore } from "@/stores/auth";
 import { installPageTitles } from "@/composables/usePageTitle";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 
-// Old ?tab= values on /admin, and the section route each one now lives at.
-const ADMIN_TAB_ROUTES: Record<string, "adminWikidataBlocklist" | "adminSteamBlocklist" | "adminUnmatchedGames"> = {
-  "wikidata-blocklist": "adminWikidataBlocklist",
-  "steam-blocklist": "adminSteamBlocklist",
-  "unmatched-games": "adminUnmatchedGames"
-};
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -361,15 +354,7 @@ const router = createRouter({
           path: "",
           name: "admin",
           component: () => import("@/pages/admin/AdminDashboardPage.vue"),
-          meta: { title: "Admin Dashboard" },
-          // The admin sections used to be tabs selected with ?tab=. Send those
-          // links to the section's own route, keeping any other query params.
-          beforeEnter: (to) => {
-            const { tab, ...query } = to.query;
-            const name = typeof tab === "string" ? ADMIN_TAB_ROUTES[tab] : undefined;
-            if (name) return { name, query, replace: true };
-            if (tab !== undefined) return { name: "admin", query, replace: true };
-          }
+          meta: { title: "Admin Dashboard" }
         },
         {
           path: "wikidata-blocklist",
