@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # Rejects documents that select more than one of the unauthenticated auth
-# mutations (signIn, signUp, requestPasswordReset).
+# mutations (signIn, signUp, requestPasswordReset, passkeyAuthenticationOptions,
+# signInWithPasskey).
 #
 # Without this, GraphQL aliasing lets a single HTTP request carry many
 # attempts, e.g.
@@ -12,7 +13,7 @@
 # which multiplies password guesses (and bcrypt CPU) or password-reset emails
 # per request and sidesteps per-request rate limiting.
 class Analyzers::AuthMutationLimitAnalyzer < GraphQL::Analysis::Analyzer
-  LIMITED_FIELDS = %w[signIn signUp requestPasswordReset].freeze
+  LIMITED_FIELDS = %w[signIn signUp requestPasswordReset passkeyAuthenticationOptions signInWithPasskey].freeze
   LIMIT = 1
 
   def initialize(query_or_multiplex)

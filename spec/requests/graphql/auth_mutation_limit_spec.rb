@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "GraphQL auth mutation limit", type: :request do
   let(:user) { create(:confirmed_user) }
-  let(:limit_message) { "Only one of signIn, signUp, requestPasswordReset may be used per request." }
+  let(:limit_message) { "Only one of signIn, signUp, requestPasswordReset, passkeyAuthenticationOptions, signInWithPasskey may be used per request." }
 
   it "rejects a document with more than one aliased signIn", :aggregate_failures do
     query = <<~GQL
