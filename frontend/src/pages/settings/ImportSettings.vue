@@ -8,7 +8,7 @@
 
       <div class="set-row">
         <span class="import-account">
-          <span class="import-account-logo" aria-hidden="true">S</span>
+          <span class="import-account-logo" aria-hidden="true"><span class="import-steam-logo"></span></span>
           <span>
             <span class="set-row-title">Steam</span>
             <span class="set-row-desc">
@@ -204,8 +204,15 @@ async function importLibrary() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+/* The Steam logo as a mask, so it takes the text colour in both themes. */
+.import-steam-logo {
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  mask: url("../../assets/images/steam-logo.svg") center / contain no-repeat;
 }
 
 .import-account .set-row-desc a {

@@ -19,6 +19,6 @@ When adding icons to the vglist frontend, follow these rules:
    <Search :size="20" />
    ```
 4. **Browse available icons** at https://lucide.dev/icons/ — search by concept (e.g. "delete", "settings", "user") to find the right icon name.
-5. **Allowed SVG exceptions**: The vglist logo files (`vglist-logo.svg`, `vglist-favicon.svg`, `safari-pinned-tab.svg`) are brand assets and should remain as SVGs. Custom data visualizations (like the rating circle in `GameDetailsSection.vue`) that use dynamic SVG with computed attributes are also fine.
+5. **Allowed SVG exceptions**: The vglist logo files (`vglist-logo.svg`, `vglist-favicon.svg`, `safari-pinned-tab.svg`) and third-party brand logos Lucide doesn't have (e.g. `steam-logo.svg`, from Simple Icons) are brand assets and should remain as SVG files under `frontend/src/assets/images/`, used via `<img>` or a CSS mask rather than as icon components. Custom data visualizations (like the rating circle in `GameDetailsSection.vue`) that use dynamic SVG with computed attributes are also fine.
 6. **Do not** use Font Awesome, Material Icons, Heroicons, or any other icon library.
 7. **Size and styling**: Pass `size` as a prop for pixel dimensions. Use CSS classes or Bulma utility classes for color/spacing.
