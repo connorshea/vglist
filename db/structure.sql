@@ -2376,6 +2376,13 @@ CREATE INDEX index_game_versions_on_item_type_and_item_id ON public.game_version
 
 
 --
+-- Name: index_games_on_created_at_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_created_at_and_id ON public.games USING btree (created_at, id);
+
+
+--
 -- Name: index_games_on_epic_games_store_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2401,6 +2408,13 @@ CREATE UNIQUE INDEX index_games_on_igdb_id ON public.games USING btree (igdb_id)
 --
 
 CREATE UNIQUE INDEX index_games_on_mobygames_id ON public.games USING btree (mobygames_id);
+
+
+--
+-- Name: index_games_on_release_date_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_release_date_and_id ON public.games USING btree (release_date, id);
 
 
 --
@@ -2833,6 +2847,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261107220000'),
 ('20261105020100'),
 ('20261105020000'),
 ('20260315184411'),
