@@ -66,7 +66,9 @@
 import { ref, watch, computed } from "vue";
 import { CircleAlert } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useCursorPages, withoutPage } from "@/composables/useCursorPages";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_STORES } from "@/graphql/queries/resources";
 import { DELETE_STORE } from "@/graphql/mutations/resources";
@@ -79,36 +81,36 @@ const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
 const PAGE_SIZE = 25;
-const currentPage = ref(1);
-const pageCursors = ref<(string | null)[]>([null]);
+const route = useRoute();
+const router = useRouter();
+// The page lives in the query string, so Back and Forward step through pages.
+const {
+  currentPage,
+  variables: pageVariables,
+  nextPage: goToNextPage,
+  prevPage: goToPrevPage
+} = useCursorPages(PAGE_SIZE);
 
 const { data, loading, error, refetch } = useQuery<GetStoresQuery>(GET_STORES, {
-  variables: () => ({
-    first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1]
-  })
+  variables: () => pageVariables.value
 });
 
 const hasNextPage = computed(() => data.value?.stores?.pageInfo.hasNextPage ?? false);
 
 watch(data, (val) => {
-  // Deleting the last store on a later page leaves that page empty, so step
-  // back to the one before it.
+  // Deleting the last store on a later page leaves that page empty, and an
+  // empty page has no cursor to step back from, so start over from the first.
   if (val?.stores?.nodes.length === 0 && currentPage.value > 1) {
-    currentPage.value--;
-    return;
-  }
-  if (val?.stores?.pageInfo.endCursor) {
-    pageCursors.value[currentPage.value] = val.stores.pageInfo.endCursor;
+    void router.replace({ query: withoutPage(route.query) });
   }
 });
 
 function nextPage() {
-  if (hasNextPage.value) currentPage.value++;
+  if (hasNextPage.value) goToNextPage(data.value?.stores?.pageInfo.endCursor);
 }
 
 function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
+  goToPrevPage(data.value?.stores?.pageInfo.startCursor);
 }
 
 type StoreNode = NonNullable<GetStoresQuery["stores"]>["nodes"][number];
