@@ -29,7 +29,7 @@ module Resolvers
           pcgamingwiki_ids: Game.where.not(pcgamingwiki_id: nil).count,
           wikidata_ids: Game.where.not(wikidata_id: nil).count,
           giantbomb_ids: Game.where.not(giantbomb_id: nil).count,
-          steam_app_ids: Game.joins(:steam_app_ids).count,
+          steam_app_ids: Game.joins(:steam_app_ids).distinct.count,
           epic_games_store_ids: Game.where.not(epic_games_store_id: nil).count,
           gog_ids: Game.where.not(gog_id: nil).count,
           igdb_ids: Game.where.not(igdb_id: nil).count,

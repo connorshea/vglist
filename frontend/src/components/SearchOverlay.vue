@@ -404,7 +404,12 @@ watch(isOpen, async (open) => {
   } else {
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onDocumentKeydown);
+    // Drop the pending search and ignore any still in flight, so they can't
+    // fill the overlay back in after it's been cleared.
+    performSearch.cancel();
+    latestSearch++;
     query.value = "";
+    resultsQuery = null;
     results.value = [];
     hasSearched.value = false;
     loading.value = false;
@@ -420,10 +425,23 @@ onMounted(() => {
   }
 });
 
+// Searches are numbered so only the newest one writes results. Without this,
+// a slow response for an earlier query (e.g. "hal") could land after the
+// one for "halo" and replace its results.
+let latestSearch = 0;
+// The query the shown results belong to, so Enter can tell when they're
+// out of date with what's typed.
+let resultsQuery: string | null = null;
+
 const performSearch = debounce(async () => {
-  if (query.value.length < 2) {
+  const searchId = ++latestSearch;
+  const searchQuery = query.value;
+
+  if (searchQuery.length < 2) {
     results.value = [];
+    resultsQuery = searchQuery;
     hasSearched.value = false;
+    loading.value = false;
     error.value = null;
     return;
   }
@@ -431,16 +449,20 @@ const performSearch = debounce(async () => {
   loading.value = true;
   error.value = null;
   try {
-    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: query.value });
+    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: searchQuery });
+    if (searchId !== latestSearch) return;
 
     results.value = data.globalSearch.nodes;
+    resultsQuery = searchQuery;
     hasSearched.value = true;
   } catch (e: unknown) {
+    if (searchId !== latestSearch) return;
     error.value = extractGqlError(e);
     results.value = [];
+    resultsQuery = searchQuery;
     hasSearched.value = true;
   } finally {
-    loading.value = false;
+    if (searchId === latestSearch) loading.value = false;
   }
 }, 250);
 
@@ -457,7 +479,19 @@ function move(step: number) {
   });
 }
 
-function chooseActive() {
+async function chooseActive() {
+  // Enter pressed right after typing would otherwise open a result for the
+  // previous query. Run the pending search now, wait for it, and open the
+  // new top hit (if the overlay is still open and nothing was typed since).
+  if (resultsQuery !== query.value) {
+    const typed = query.value;
+    await performSearch.flush();
+    if (!isOpen.value || query.value !== typed || resultsQuery !== typed) return;
+    const first = orderedResults.value[0];
+    if (first) goToResult(first);
+    return;
+  }
+
   const active = orderedResults.value[activeIndex.value];
   if (active) goToResult(active);
 }
