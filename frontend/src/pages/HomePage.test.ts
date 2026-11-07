@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount, flushPromises, RouterLinkStub } from "@vue/test-utils";
 import type { DocumentNode } from "graphql";
 import HomePage from "./HomePage.vue";
+import { resetSaveDataForTests } from "@/composables/useSaveData";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
@@ -84,6 +85,8 @@ describe("HomePage", () => {
     mockRequest.mockImplementation(respond);
     mockOpen.mockReset();
     auth.isAuthenticated = false;
+    Reflect.deleteProperty(navigator, "connection");
+    resetSaveDataForTests();
   });
 
   it("puts the game count in the search box", async () => {
@@ -172,5 +175,21 @@ describe("HomePage", () => {
   it("hides the background mosaic from assistive technology", async () => {
     const wrapper = await mountPage();
     expect(wrapper.find(".cover-scene").attributes("aria-hidden")).toBe("true");
+  });
+
+  it("fills the background mosaic with covers", async () => {
+    await mountPage();
+    expect(mockRequest.mock.calls.map(([document]) => operationName(document))).toContain("GetHeroCovers");
+  });
+
+  it("skips the cover images in the background mosaic when the browser asks to save data", async () => {
+    Object.defineProperty(navigator, "connection", {
+      value: Object.assign(new EventTarget(), { saveData: true }),
+      configurable: true
+    });
+    const wrapper = await mountPage();
+    expect(mockRequest.mock.calls.map(([document]) => operationName(document))).not.toContain("GetHeroCovers");
+    // The gradient tiles show right away instead of waiting on covers.
+    expect(wrapper.find(".cover-mosaic").classes()).toContain("covers-loaded");
   });
 });
