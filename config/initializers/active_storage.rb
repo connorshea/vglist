@@ -13,3 +13,11 @@ Rails.application.config.active_storage.web_image_content_types = ['image/png', 
 
 # TODO: The default is 5 minutes, but we want them to never expire, maybe?
 # Rails.application.config.active_storage.service_urls_expire_in = nil
+
+# Upload new variants before saving their records, so their public URLs never
+# point at a file that doesn't exist yet. See
+# lib/active_storage/upload_variant_before_record.rb.
+Rails.application.config.to_prepare do
+  require Rails.root.join('lib/active_storage/upload_variant_before_record').to_s
+  ActiveStorage::VariantWithRecord.prepend(ActiveStorage::UploadVariantBeforeRecord)
+end
