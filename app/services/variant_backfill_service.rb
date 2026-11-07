@@ -98,20 +98,21 @@ class VariantBackfillService
                   .reject { |variation| existing_digests.include?(variation.digest) }
   end
 
-  # Mirrors ActiveStorage::VariantWithRecord#create_or_find_record, plus the
-  # metadata that keeps the new blob from being analyzed again.
+  # Creates the variant record the same way VariantWithRecord does (file
+  # first, see ActiveStorage::UploadVariantBeforeRecord), plus the metadata
+  # that keeps the new blob from being analyzed again.
   def create_variant_record(variation, output)
-    metadata = image_metadata(output)
-
-    blob.variant_records.create_or_find_by!(variation_digest: variation.digest) do |record|
-      record.image.attach(
+    ActiveStorage::UploadVariantBeforeRecord.create_or_find_record(
+      blob,
+      variation.digest,
+      {
         io: output,
         filename: "#{blob.filename.base}.#{variation.format.downcase}",
         content_type: variation.content_type,
         service_name: blob.service.name,
-        metadata: metadata
-      )
-    end
+        metadata: image_metadata(output)
+      }
+    )
   end
 
   # The same fields ActiveStorage's image analyzer would record. Reading the
