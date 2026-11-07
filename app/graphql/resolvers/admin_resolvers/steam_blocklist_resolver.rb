@@ -7,7 +7,8 @@ module Resolvers::AdminResolvers
     description "List all steam blocklist entries. **Only available to admins.**"
 
     def resolve
-      SteamBlocklist.includes(:user)
+      # Newest first, with a stable order so cursor pages never overlap or skip rows.
+      SteamBlocklist.includes(:user).order(id: :desc)
     end
 
     def authorized?

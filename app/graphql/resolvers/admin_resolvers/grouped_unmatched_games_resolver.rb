@@ -7,7 +7,8 @@ module Resolvers::AdminResolvers
     description "List all unmatched game entries."
 
     def resolve
-      Views::GroupedUnmatchedGame.all
+      # The view sorts by count alone, so break ties to keep cursor pages stable.
+      Views::GroupedUnmatchedGame.order(count: :desc, external_service_name: :asc, external_service_id: :asc)
     end
 
     # Allow anyone to access this, there's not really any reason to limit who can see these.
