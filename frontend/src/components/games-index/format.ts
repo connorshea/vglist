@@ -140,10 +140,10 @@ export function filterVariables(filters: GameFilters) {
 
 /** How many of the filters behind "More filters" are set. A year range counts once. */
 export function moreFiltersCount(filters: GameFilters): number {
-  return (
-    (filters.genre ? 1 : 0) +
-    (filters.engine ? 1 : 0) +
-    (filters.fromYear || filters.toYear ? 1 : 0) +
-    (filters.hideLibrary ? 1 : 0)
-  );
+  return (filters.fromYear || filters.toYear ? 1 : 0) + (filters.hideLibrary ? 1 : 0);
+}
+
+/** How many filters are set in all, including platform, genre and engine. */
+export function activeFiltersCount(filters: GameFilters): number {
+  return (filters.platform ? 1 : 0) + (filters.genre ? 1 : 0) + (filters.engine ? 1 : 0) + moreFiltersCount(filters);
 }

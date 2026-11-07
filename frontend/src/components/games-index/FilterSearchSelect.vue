@@ -201,6 +201,10 @@ function onKeydown(e: KeyboardEvent) {
   color: var(--color-text-primary);
   font: inherit;
   font-size: 13px;
+  /* Inputs can't be trimmed with text-box, and Inter's tall ascent leaves the
+     text sitting high in its line box. Moving the padding to the top drops it
+     back to the middle of the control. */
+  padding-block: 3px 0;
 }
 
 .filter-select-input::placeholder {

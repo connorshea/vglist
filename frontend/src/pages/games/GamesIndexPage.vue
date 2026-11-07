@@ -26,28 +26,44 @@
     </nav>
 
     <div class="facets">
-      <span class="facets-label" id="platform-pills-label">Platform</span>
-      <div class="platform-pills scroll-fade-x" role="group" aria-labelledby="platform-pills-label">
-        <button
-          type="button"
-          class="filter-pill"
-          :class="{ on: !filters.platform }"
-          :aria-pressed="!filters.platform"
-          @click="setPlatform(null)"
-        >
-          All
-        </button>
-        <button
-          v-for="platform in platformPills"
-          :key="platform.id"
-          type="button"
-          class="filter-pill"
-          :class="{ on: filters.platform === platform.id }"
-          :aria-pressed="filters.platform === platform.id"
-          @click="setPlatform(platform)"
-        >
-          {{ platform.name }}
-        </button>
+      <div class="facet-select">
+        <label class="is-sr-only" for="games-facet-platform">Platform</label>
+        <FilterSearchSelect
+          :model-value="filters.platform"
+          :selected-name="nameFor(filters.platform, filtersData?.platform)"
+          label="Platform"
+          placeholder="Any platform"
+          input-id="games-facet-platform"
+          :query="SEARCH_PLATFORMS_FOR_FILTER"
+          :result-nodes="(d) => (d as SearchPlatformsForFilterQuery).platformSearch?.nodes ?? []"
+          @select="(o) => setFacet('platform', o)"
+        />
+      </div>
+      <div class="facet-select">
+        <label class="is-sr-only" for="games-facet-genre">Genre</label>
+        <FilterSearchSelect
+          :model-value="filters.genre"
+          :selected-name="nameFor(filters.genre, filtersData?.genre)"
+          label="Genre"
+          placeholder="Any genre"
+          input-id="games-facet-genre"
+          :query="SEARCH_GENRES_FOR_FILTER"
+          :result-nodes="(d) => (d as SearchGenresForFilterQuery).genreSearch?.nodes ?? []"
+          @select="(o) => setFacet('genre', o)"
+        />
+      </div>
+      <div class="facet-select">
+        <label class="is-sr-only" for="games-facet-engine">Engine</label>
+        <FilterSearchSelect
+          :model-value="filters.engine"
+          :selected-name="nameFor(filters.engine, filtersData?.engine)"
+          label="Engine"
+          placeholder="Any engine"
+          input-id="games-facet-engine"
+          :query="SEARCH_ENGINES_FOR_FILTER"
+          :result-nodes="(d) => (d as SearchEnginesForFilterQuery).engineSearch?.nodes ?? []"
+          @select="(o) => setFacet('engine', o)"
+        />
       </div>
       <span class="grow"></span>
       <div ref="moreRef" class="more-filters">
@@ -61,7 +77,7 @@
           @click="togglePanel"
         >
           <ListFilter :size="14" aria-hidden="true" />
-          More filters
+          <span class="more-btn-label">More filters</span>
           <span v-if="moreCount > 0" class="count-badge"> {{ moreCount }}<span class="is-sr-only"> active</span> </span>
         </button>
         <GamesFilterPanel
@@ -105,9 +121,7 @@
     </div>
     <div v-else-if="data && games.length === 0" class="empty-state">
       <p>No games match these filters.</p>
-      <button v-if="activeChips.length || filters.platform" type="button" class="clear-all" @click="clearAll">
-        Clear filters
-      </button>
+      <button v-if="activeCount > 0" type="button" class="clear-all" @click="clearAll">Clear filters</button>
     </div>
 
     <ul v-if="games.length" class="games-grid" :class="{ 'is-stale': refreshing }">
@@ -143,7 +157,7 @@
     >
       <ListFilter :size="16" aria-hidden="true" />
       Filters
-      <span v-if="phoneCount > 0" class="fab-count">{{ phoneCount }}<span class="is-sr-only"> active</span></span>
+      <span v-if="activeCount > 0" class="fab-count">{{ activeCount }}<span class="is-sr-only"> active</span></span>
     </button>
     <template v-if="panelOpen && isPhone">
       <div class="sheet-scrim" aria-hidden="true" @click="closePanel"></div>
@@ -166,15 +180,29 @@ import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch, t
 import { useRoute, useRouter } from "vue-router";
 import { CalendarDays, Clock, Flame, Heart, ListFilter, Plus, Star, X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_GAMES_INDEX, GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
+import {
+  GET_GAMES_INDEX,
+  GET_GAMES_INDEX_FILTERS,
+  SEARCH_ENGINES_FOR_FILTER,
+  SEARCH_GENRES_FOR_FILTER,
+  SEARCH_PLATFORMS_FOR_FILTER
+} from "@/graphql/queries/games-index";
 import { useAuthStore } from "@/stores/auth";
-import type { GetGamesIndexFiltersQuery, GetGamesIndexQuery } from "@/types/graphql";
+import type {
+  GetGamesIndexFiltersQuery,
+  GetGamesIndexQuery,
+  SearchEnginesForFilterQuery,
+  SearchGenresForFilterQuery,
+  SearchPlatformsForFilterQuery
+} from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
+import FilterSearchSelect from "@/components/games-index/FilterSearchSelect.vue";
 import GamesFilterPanel from "@/components/games-index/GamesFilterPanel.vue";
 import {
   DEFAULT_GAME_SORT,
   EMPTY_FILTERS,
   GAME_SORTS,
+  activeFiltersCount,
   countLabel,
   filterVariables,
   filtersFromQuery,
@@ -287,7 +315,7 @@ watch(sentinelRef, (el, oldEl) => {
   if (el) observer?.observe(el);
 });
 
-// ── Filter names, pills and the site-wide count ──
+// ── Filter names and the site-wide count ──
 const { data: filtersData } = useQuery<GetGamesIndexFiltersQuery>(GET_GAMES_INDEX_FILTERS, {
   variables: () => ({
     platformId: filters.value.platform || "0",
@@ -299,7 +327,7 @@ const { data: filtersData } = useQuery<GetGamesIndexFiltersQuery>(GET_GAMES_INDE
   })
 });
 
-// Names of records picked in this session, so a pill or chip has a label
+// Names of records picked in this session, so a dropdown has a label
 // before the filters query comes back with it.
 const pickedNames = reactive<Record<string, string>>({});
 
@@ -313,19 +341,10 @@ function nameFor(id: string, fetched: NamedRecord | null | undefined): string | 
   return pickedNames[id] ?? null;
 }
 
-const platformPills = computed(() => {
-  const top = filtersData.value?.platforms?.nodes ?? [];
-  const picked = filters.value.platform;
-  const pickedName = nameFor(picked, filtersData.value?.platform);
-  if (picked && pickedName && !top.some((p) => p.id === picked)) {
-    return [...top, { id: picked, name: pickedName }];
-  }
-  return top;
-});
-
-function setPlatform(platform: NamedRecord | null) {
-  if (platform) rememberName(platform);
-  updateFilters({ platform: platform?.id ?? "" });
+// The platform, genre and engine dropdowns apply as soon as one is picked.
+function setFacet(key: "platform" | "genre" | "engine", record: NamedRecord | null) {
+  if (record) rememberName(record);
+  updateFilters({ [key]: record?.id ?? "" });
 }
 
 // The count for the current sort and filters. Top rated and New releases leave
@@ -339,26 +358,17 @@ const headerCount = computed(() => {
 });
 
 const moreCount = computed(() => moreFiltersCount(filters.value));
-const phoneCount = computed(() => moreCount.value + (filters.value.platform ? 1 : 0));
+const activeCount = computed(() => activeFiltersCount(filters.value));
 
 const activeChips = computed(() => {
   const f = filters.value;
   const chips: { key: string; label: string; clear: Partial<GameFilters> }[] = [];
-  if (f.genre)
-    chips.push({ key: "genre", label: nameFor(f.genre, filtersData.value?.genre) ?? "Genre", clear: { genre: "" } });
   if (f.fromYear || f.toYear) {
     let label: string;
     if (f.fromYear && f.toYear) label = f.fromYear === f.toYear ? f.fromYear : `${f.fromYear}–${f.toYear}`;
     else if (f.fromYear) label = `${f.fromYear} or later`;
     else label = `${f.toYear} or earlier`;
     chips.push({ key: "year", label, clear: { fromYear: "", toYear: "" } });
-  }
-  if (f.engine) {
-    chips.push({
-      key: "engine",
-      label: nameFor(f.engine, filtersData.value?.engine) ?? "Engine",
-      clear: { engine: "" }
-    });
   }
   if (f.hideLibrary) chips.push({ key: "library", label: "Not in my library", clear: { hideLibrary: false } });
   return chips;
@@ -530,7 +540,7 @@ onBeforeUnmount(() => {
   font-weight: 500;
 }
 
-/* Platform pills and More filters */
+/* Platform, genre and engine dropdowns, and More filters */
 .facets {
   display: flex;
   align-items: center;
@@ -538,45 +548,13 @@ onBeforeUnmount(() => {
   margin: 16px 0 24px;
 }
 
-.facets-label {
-  margin-right: 4px;
-  font-size: 12px;
-  color: var(--color-text-tertiary);
-  white-space: nowrap;
-}
-
-.platform-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.facet-select {
+  width: 200px;
+  min-width: 0;
 }
 
 .grow {
   flex: 1;
-}
-
-.filter-pill {
-  padding: 4.8px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--color-text-secondary);
-  font: inherit;
-  font-size: 12px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.filter-pill:hover {
-  border-color: var(--color-text-tertiary);
-  color: var(--color-text-primary);
-}
-
-.filter-pill.on {
-  border-color: var(--p-100);
-  background: var(--p-100);
-  color: var(--p-700);
-  font-weight: 500;
 }
 
 .more-filters {
@@ -597,6 +575,12 @@ onBeforeUnmount(() => {
   font: inherit;
   font-size: 13px;
   cursor: pointer;
+}
+
+/* Trimmed to cap height and baseline so the letters, not the line box, are
+   centered next to the icon. */
+.more-btn-label {
+  text-box: trim-both cap alphabetic;
 }
 
 .more-btn.on {
@@ -766,7 +750,6 @@ onBeforeUnmount(() => {
 }
 
 .sort-tab:focus-visible,
-.filter-pill:focus-visible,
 .more-btn:focus-visible,
 .filter-chip-remove:focus-visible,
 .clear-all:focus-visible,
@@ -777,7 +760,6 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-color-scheme: dark) {
-  .filter-pill.on,
   .filter-chip {
     border-color: transparent;
     background: color-mix(in srgb, var(--p-300) 22%, transparent);
@@ -814,21 +796,13 @@ onBeforeUnmount(() => {
     display: none;
   }
 
+  .sort-tabs {
+    margin-bottom: 16px;
+  }
+
+  /* The filters sheet has platform, genre and engine on phones. */
   .facets {
-    margin: 12px 0 16px;
-  }
-
-  .facets-label,
-  .more-filters {
     display: none;
-  }
-
-  .platform-pills {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    margin: 0 -4px;
-    padding: 0 4px;
   }
 
   .games-grid {
