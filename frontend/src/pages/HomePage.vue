@@ -89,6 +89,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { LibraryBig, Search } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
+import { useSaveData } from "@/composables/useSaveData";
 import { useAuthStore } from "@/stores/auth";
 import { GET_BASIC_SITE_STATISTICS } from "@/graphql/queries/resources";
 import { GET_HERO_COVERS } from "@/graphql/queries/games";
@@ -265,10 +266,16 @@ interface HeroCoverNode {
   coverUrl: string | null;
 }
 
-const { data: heroData } = useQuery<{ games: { nodes: HeroCoverNode[] } }>(GET_HERO_COVERS);
+// With the browser's data saver on, the mosaic stays gradient-only: the
+// covers are purely decorative and would be dozens of image downloads.
+const saveData = useSaveData();
+
+const { data: heroData } = useQuery<{ games: { nodes: HeroCoverNode[] } }>(GET_HERO_COVERS, {
+  enabled: () => !saveData.value
+});
 
 const coverUrls = computed<string[]>(() => {
-  if (!heroData.value) return [];
+  if (saveData.value || !heroData.value) return [];
   return heroData.value.games.nodes.filter((g) => g.coverUrl).map((g) => g.coverUrl as string);
 });
 
@@ -352,6 +359,9 @@ function scheduleFlips() {
 }
 
 onMounted(() => {
+  // No covers to wait for, so show the gradients right away.
+  if (saveData.value) coversReady.value = true;
+
   // Fallback: show mosaic after 5s even if images haven't finished preloading
   setTimeout(() => {
     coversReady.value = true;
