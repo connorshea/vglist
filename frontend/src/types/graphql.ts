@@ -818,6 +818,16 @@ export interface GetSiteStatisticsQuery {
   } | null;
 }
 
+export type SearchGamesToMergeQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchGamesToMergeQuery {
+  gameSearch: {
+    nodes: Array<{ id: string; name: string; releaseDate: string | null; coverUrl: string | null; ownerCount: number }>;
+  } | null;
+}
+
 export type ComparisonUserFieldsFragment = { id: string; username: string; slug: string; avatarUrl: string | null };
 
 export type GetLibraryComparisonQueryVariables = Exact<{

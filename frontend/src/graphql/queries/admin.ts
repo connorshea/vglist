@@ -133,3 +133,19 @@ export const GET_SITE_STATISTICS = gql`
     }
   }
 `;
+
+// Candidates for the game to keep when merging a duplicate into it. Owner
+// counts and release dates help tell the canonical entry from the duplicate.
+export const SEARCH_GAMES_TO_MERGE = gql`
+  query SearchGamesToMerge($query: String!) {
+    gameSearch(query: $query, first: 8) {
+      nodes {
+        id
+        name
+        releaseDate
+        coverUrl(size: SMALL)
+        ownerCount
+      }
+    }
+  }
+`;
