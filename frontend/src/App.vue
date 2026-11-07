@@ -1,7 +1,11 @@
 <template>
   <div id="vglist-app">
-    <NavBar />
-    <main class="section">
+    <NavBar v-if="layout === 'default'" />
+    <!-- Bare routes (e.g. the auth pages) render full-bleed with no navbar. -->
+    <main v-if="layout === 'bare'" id="main-content">
+      <router-view />
+    </main>
+    <main v-else id="main-content" class="section">
       <div class="container">
         <router-view />
       </div>
@@ -12,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted } from "vue";
+import { computed, watch, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import NavBar from "@/components/navbar/NavBar.vue";
 import SearchOverlay from "@/components/SearchOverlay.vue";
@@ -21,6 +25,18 @@ import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { useSnackbar } from "@/composables/useSnackbar";
 
 const route = useRoute();
+
+// Which app shell to render, from the matched route's `meta.layout`.
+// "pending" covers the initial load before the first navigation resolves
+// (no route is matched yet): we hold the navbar back so it doesn't flash
+// above a bare page like /login before disappearing.
+const layout = computed<"pending" | "default" | "bare">(() => {
+  if (route.matched.length === 0) {
+    return "pending";
+  }
+  return route.meta.layout === "bare" ? "bare" : "default";
+});
+
 const { toggle: toggleSearch } = useSearchOverlay();
 const { show: showSnackbar } = useSnackbar();
 

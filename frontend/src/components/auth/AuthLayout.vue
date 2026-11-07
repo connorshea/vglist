@@ -49,19 +49,12 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
 </script>
 
 <style scoped>
-/* Break out of App's .section > .container wrapper to fill the viewport. */
+/* Auth routes use the bare app layout (meta.layout: "bare"), with no navbar
+   and no .section > .container wrapper, so this fills the viewport as is. */
 .auth {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  margin-top: -3rem;
-  margin-bottom: -3rem;
   display: flex;
   flex-wrap: wrap;
-  min-height: calc(100vh - 52px);
+  min-height: 100vh;
 }
 
 .auth-art {
@@ -256,10 +249,6 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
 }
 
 @media (max-width: 768px) {
-  .auth {
-    margin-top: -3rem;
-  }
-
   .auth-art {
     padding: 32px 24px;
     min-height: 220px;
