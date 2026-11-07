@@ -260,6 +260,7 @@ import { CREATE_GAME, UPDATE_GAME } from "@/graphql/mutations/games";
 import { extractGqlError } from "@/utils/graphql-errors";
 import SearchableMultiSelect from "@/components/SearchableMultiSelect.vue";
 import SearchableSelect from "@/components/SearchableSelect.vue";
+import { gamePrefillFromQuery } from "@/utils/game-prefill";
 
 interface IdName {
   id: string;
@@ -328,6 +329,14 @@ const form = reactive({
 
 const steamAppIdsInput = ref("");
 const submitError = ref("");
+
+// Links such as the Steam import results can prefill a new game's name and
+// Steam App ID, e.g. `/games/new?name=Portal&steamAppId=400`.
+if (!isEditing.value) {
+  const prefill = gamePrefillFromQuery(route.query);
+  form.name = prefill.name;
+  steamAppIdsInput.value = prefill.steamAppId !== null ? String(prefill.steamAppId) : "";
+}
 
 // Fetch the game data when editing
 const {
