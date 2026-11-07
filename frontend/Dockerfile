@@ -7,6 +7,7 @@
 #   docker build -f frontend/Dockerfile \
 #     --build-arg VITE_API_URL=https://api.vglist.co \
 #     --build-arg VITE_SENTRY_DSN=https://...@sentry.io/... \
+#     --build-arg VITE_TURNSTILE_SITE_KEY=0x4AAAAAAA... \
 #     -t vglist-frontend .
 #
 # Run (API_ORIGIN feeds the CSP connect-src in frontend/Caddyfile):
@@ -37,8 +38,10 @@ COPY frontend/ ./
 # an empty env var would otherwise override the .env.production value.
 ARG VITE_API_URL
 ARG VITE_SENTRY_DSN
+ARG VITE_TURNSTILE_SITE_KEY
 RUN [ -n "$VITE_API_URL" ] || unset VITE_API_URL; \
     [ -n "$VITE_SENTRY_DSN" ] || unset VITE_SENTRY_DSN; \
+    [ -n "$VITE_TURNSTILE_SITE_KEY" ] || unset VITE_TURNSTILE_SITE_KEY; \
     pnpm run build
 
 # ---------------------------------------------------------------------------

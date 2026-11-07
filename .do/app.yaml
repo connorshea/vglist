@@ -139,6 +139,11 @@ services:
         type: SECRET
       - key: R2_SECRET_ACCESS_KEY
         type: SECRET
+      # Cloudflare Turnstile secret key for sign-up bot checks (see
+      # TurnstileVerifier). Set it together with the frontend's
+      # VITE_TURNSTILE_SITE_KEY: with only this set, every sign-up fails.
+      - key: TURNSTILE_SECRET_KEY
+        type: SECRET
 
   - name: frontend
     github:
@@ -166,6 +171,12 @@ services:
         value: https://api.vglist.co
         scope: BUILD_TIME
       - key: VITE_SENTRY_DSN
+        scope: BUILD_TIME
+        type: SECRET
+      # Cloudflare Turnstile site key. Public (it ships in the bundle), but
+      # declared like the DSN so its value is set in the control panel.
+      # Unset, the sign-up form shows no challenge.
+      - key: VITE_TURNSTILE_SITE_KEY
         scope: BUILD_TIME
         type: SECRET
 
