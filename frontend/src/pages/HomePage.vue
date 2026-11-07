@@ -74,12 +74,11 @@
       <GameShelf :sort="NEW_RELEASES" />
       <GameShelf :sort="RECENTLY_ADDED" />
 
-      <p v-if="siteStats" class="home-credit">
+      <p v-if="siteStats" class="home-stats">
         <template v-for="(stat, i) in siteStats" :key="stat.path">
           <template v-if="i > 0"> · </template>
-          <router-link :to="stat.path">{{ stat.label }}</router-link> </template
-        >, with game data from
-        <a href="https://www.wikidata.org" target="_blank" rel="noopener noreferrer">Wikidata</a>.
+          <router-link :to="stat.path">{{ stat.label }}</router-link>
+        </template>
       </p>
     </div>
   </div>
@@ -680,7 +679,7 @@ onUnmounted(() => {
   outline-offset: 2px;
 }
 
-.home-credit {
+.home-stats {
   margin-bottom: 1rem;
   color: var(--color-text-secondary);
   font-size: 0.8125rem;
