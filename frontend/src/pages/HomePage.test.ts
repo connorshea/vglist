@@ -162,10 +162,10 @@ describe("HomePage", () => {
     expect(wrapper.find(".home-banner").exists()).toBeFalsy();
   });
 
-  it("sums up the site in one line and credits Wikidata", async () => {
+  it("sums up the site in one line", async () => {
     const wrapper = await mountPage();
-    expect(wrapper.find(".home-credit").text().replace(/\s+/g, " ")).toBe(
-      "7,685 games · 2,928 series · 69 platforms · 9,470 companies, with game data from Wikidata."
+    expect(wrapper.find(".home-stats").text().replace(/\s+/g, " ")).toBe(
+      "7,685 games · 2,928 series · 69 platforms · 9,470 companies"
     );
   });
 
