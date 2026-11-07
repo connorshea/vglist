@@ -227,7 +227,7 @@ nav.navbar {
     // Only top-level items get the hover underline. Items inside a dropdown
     // are left out, otherwise they get a white line under them on hover.
     .navbar-start > .navbar-item:not(:has(.navbar-search)),
-    .navbar-end > .navbar-item:not(:has(.navbar-search)) {
+    .navbar-end > .navbar-item:not(:has(.navbar-search)):not(.navbar-user) {
       border-bottom: 2px solid transparent;
       transition: border-bottom 200ms;
       --bulma-navbar-item-background-a: 0;
