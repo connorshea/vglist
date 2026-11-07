@@ -69,6 +69,14 @@ describe("App layout", () => {
     expect(wrapper.find("main#main-content > .page").exists()).toBeTruthy();
   });
 
+  it("renders a skip link as the first focusable element that focuses <main>", async () => {
+    wrapper = await mountAt("/");
+    const first = wrapper.element.querySelector("a, button, input, [tabindex]:not([tabindex='-1'])");
+    expect(first?.textContent).toBe("Skip to main content");
+    await wrapper.get("a.skip-link").trigger("click");
+    expect(document.activeElement?.id).toBe("main-content");
+  });
+
   it("keeps the global search overlay, snackbars and Cmd/Ctrl+K on bare routes", async () => {
     wrapper = await mountAt("/login");
     expect(wrapper.find(".search-overlay-stub").exists()).toBeTruthy();

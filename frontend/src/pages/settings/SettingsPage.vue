@@ -135,7 +135,7 @@ const sections = [
 }
 
 .settings-page .set-card-title.is-danger {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .settings-page .set-card-desc {
@@ -200,7 +200,7 @@ const sections = [
 
 .settings-page .set-error {
   font-size: 13px;
-  color: var(--r-500);
+  color: var(--color-danger-text);
   margin: 0 0 12px;
 }
 

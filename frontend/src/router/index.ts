@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { installPageTitles } from "@/composables/usePageTitle";
+import { installRouteFocus } from "@/composables/useRouteFocus";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 
 const router = createRouter({
@@ -417,5 +418,6 @@ router.beforeEach((to) => {
 });
 
 installPageTitles(router);
+installRouteFocus(router);
 
 export default router;

@@ -357,7 +357,7 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
 }
 
 .tile-menu-item.is-danger {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 /* Phone: list rows with a small stack of covers instead of tiles. */

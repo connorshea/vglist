@@ -617,7 +617,7 @@ async function confirmDeleteEvent() {
 }
 
 .a-delete-btn:hover {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .a-delete-btn:disabled {

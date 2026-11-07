@@ -182,7 +182,7 @@ const anyRated = computed(() => topRated.value.nodes.some((purchase) => purchase
 }
 
 .overview-heart {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .overview-count {

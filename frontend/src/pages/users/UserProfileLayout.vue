@@ -691,7 +691,7 @@ function changeRole() {
 }
 
 .profile-menu-list button.is-danger {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 /* Compare is a header button on desktop, and a menu item on a phone. */

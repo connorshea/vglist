@@ -46,11 +46,11 @@ const { messages, dismiss } = useSnackbar();
 }
 
 .snackbar-success {
-  background: #48c774;
+  background: #257942;
 }
 
 .snackbar-error {
-  background: #f14668;
+  background: #c0213f;
 }
 
 .snackbar-text {

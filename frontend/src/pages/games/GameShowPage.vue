@@ -1052,7 +1052,7 @@ function onGameMerged(kept: { id: string; name: string }) {
 }
 
 .hero-admin-item.danger {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 /* ── Hero info + community panel ── */

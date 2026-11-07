@@ -277,7 +277,7 @@ function initials(name: string): string {
 
 .res-load-error {
   margin-top: 1.5rem;
-  color: var(--r-500);
+  color: var(--color-danger-text);
   font-size: 0.875rem;
 }
 

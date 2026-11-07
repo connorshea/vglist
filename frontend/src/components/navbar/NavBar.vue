@@ -16,6 +16,7 @@
         type="button"
         class="navbar-mobile-avatar is-hidden-desktop"
         :aria-label="`Menu for ${username}`"
+        aria-controls="mobile-nav-sheet"
         :aria-expanded="isSheetOpen"
         @click="isSheetOpen = !isSheetOpen"
       >
@@ -23,12 +24,13 @@
       </button>
 
       <!-- Signed out: hamburger (mobile only, opens bottom sheet) -->
-      <a
+      <button
         v-else
-        role="button"
+        type="button"
         class="navbar-burger"
         :class="{ 'is-active': isSheetOpen }"
-        aria-label="menu"
+        aria-label="Menu"
+        aria-controls="mobile-nav-sheet"
         :aria-expanded="isSheetOpen"
         @click="isSheetOpen = !isSheetOpen"
       >
@@ -36,7 +38,7 @@
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
-      </a>
+      </button>
     </div>
 
     <!-- Desktop menu (never toggled by burger anymore) -->
@@ -427,5 +429,10 @@ function handleSignOut() {
    directly next to the search button (which has margin-left:auto). */
 .navbar-burger {
   margin-left: 0;
+}
+
+.navbar-burger:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
 }
 </style>

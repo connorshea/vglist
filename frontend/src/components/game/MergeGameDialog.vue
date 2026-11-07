@@ -468,7 +468,7 @@ onBeforeUnmount(() => clearTimeout(debounceTimer));
 
 .mg-error {
   margin: 12px 0 0;
-  color: var(--r-500);
+  color: var(--color-danger-text);
   font-size: 0.85rem;
 }
 
@@ -508,7 +508,7 @@ onBeforeUnmount(() => clearTimeout(debounceTimer));
 }
 
 .mg-pair-row.is-deleted .mg-pair-label {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .mg-pair-row.is-kept .mg-pair-label {
@@ -534,7 +534,7 @@ onBeforeUnmount(() => clearTimeout(debounceTimer));
 .mg-warning svg {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .mg-warning p {

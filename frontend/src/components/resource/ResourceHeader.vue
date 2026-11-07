@@ -165,7 +165,7 @@ const emit = defineEmits<{
 }
 
 .res-btn.is-danger {
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .res-btn:focus-visible,

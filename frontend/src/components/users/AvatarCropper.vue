@@ -393,7 +393,7 @@ onBeforeUnmount(() => {
 .ac-error {
   margin: 12px 0 0;
   font-size: 13px;
-  color: var(--r-500);
+  color: var(--color-danger-text);
 }
 
 .ac-actions {
