@@ -101,14 +101,15 @@
                 <div class="field">
                   <label class="label" for="game-wikidata-id">Wikidata ID</label>
                   <div class="control">
-                    <input
+                    <WikidataIdInput
                       id="game-wikidata-id"
                       v-model="form.wikidataId"
-                      class="input"
-                      type="text"
-                      placeholder="e.g. 12345"
+                      aria-describedby="game-wikidata-id-help"
                     />
                   </div>
+                  <p id="game-wikidata-id-help" class="help">
+                    Like "Q12345". You can also paste the item's Wikidata URL.
+                  </p>
                 </div>
               </div>
 
@@ -260,8 +261,10 @@ import { GET_GAME } from "@/graphql/queries/games";
 import { GET_PLATFORMS, GET_COMPANIES, GET_GENRES, GET_ENGINES, GET_SERIES_LIST } from "@/graphql/queries/resources";
 import { CREATE_GAME, UPDATE_GAME } from "@/graphql/mutations/games";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { isValidWikidataId, normalizeWikidataId } from "@/utils/wikidata";
 import SearchableMultiSelect from "@/components/SearchableMultiSelect.vue";
 import SearchableSelect from "@/components/SearchableSelect.vue";
+import WikidataIdInput from "@/components/WikidataIdInput.vue";
 import { gamePrefillFromQuery } from "@/utils/game-prefill";
 
 interface IdName {
@@ -430,6 +433,12 @@ async function handleSubmit() {
 
   if (!form.name.trim()) {
     submitError.value = "Name is required.";
+    return;
+  }
+
+  form.wikidataId = normalizeWikidataId(form.wikidataId);
+  if (form.wikidataId && !isValidWikidataId(form.wikidataId)) {
+    submitError.value = 'Wikidata ID must be a number, like "12345" or "Q12345".';
     return;
   }
 
