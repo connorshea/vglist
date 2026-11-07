@@ -618,6 +618,13 @@ nav.navbar {
   overflow: initial;
 }
 
+/* Default for inputs that don't use Bulma's .input/.textarea (e.g. the
+   searchable selects); otherwise they get the browser's faint grey. */
+::placeholder {
+  color: var(--color-placeholder);
+  opacity: 1;
+}
+
 .infobox {
   width: 100%;
   column-count: 3;
