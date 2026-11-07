@@ -84,7 +84,7 @@
           <span class="set-row-desc">Remove every game from your library, including ratings, statuses and notes.</span>
         </span>
         <button type="button" class="set-btn is-danger" :disabled="resettingLibrary" @click="showResetConfirm = true">
-          Reset library
+          <span>Reset library</span>
         </button>
       </div>
 
@@ -94,7 +94,7 @@
           <span class="set-row-desc">Permanently delete your account and all associated data.</span>
         </span>
         <button type="button" class="set-btn is-danger" :disabled="deletingAccount" @click="showDeleteConfirm = true">
-          Delete account
+          <span>Delete account</span>
         </button>
       </div>
     </section>
