@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
-  description "Add game to Steam blocklist and remove the Steam App ID from any existing games that have it. **Only available to admins.**"
+  description "Add game to Steam blocklist, remove the Steam App ID from any existing games that have it, and clear any Unmatched Games entries for it. **Only available to admins.**"
 
   argument :name, String, required: true, description: 'The name of the game being added to the blocklist.'
   argument :steam_app_id, Integer, required: true, description: 'ID of the Steam game.'
@@ -9,13 +9,18 @@ class Mutations::Admin::AddToSteamBlocklist < Mutations::BaseMutation
   field :steam_blocklist_entry, Types::SteamBlocklistEntryType, null: true, description: "The Steam Blocklist entry that was created."
 
   def resolve(name:, steam_app_id:)
-    # Find the existing SteamAppId record if it exists, and destroy it.
-    steam_app_id_record = SteamAppId.find_by(app_id: steam_app_id)
-    steam_app_id_record&.destroy
+    steam_blocklist_entry = SteamBlocklist.new(user_id: @context[:current_user]&.id, name: name, steam_app_id: steam_app_id)
 
-    steam_blocklist_entry = SteamBlocklist.create(user_id: @context[:current_user]&.id, name: name, steam_app_id: steam_app_id)
+    ActiveRecord::Base.transaction do
+      # Find the existing SteamAppId record if it exists, and destroy it.
+      SteamAppId.find_by(app_id: steam_app_id)&.destroy
 
-    raise GraphQL::ExecutionError, steam_blocklist_entry.errors.full_messages.join(", ") unless steam_blocklist_entry.save
+      raise GraphQL::ExecutionError, steam_blocklist_entry.errors.full_messages.join(", ") unless steam_blocklist_entry.save
+
+      # A blocklisted app will never be matched, so its Unmatched Games entries
+      # are just noise for admins triaging the list.
+      UnmatchedGame.where(external_service_name: 'Steam', external_service_id: steam_app_id.to_s).destroy_all
+    end
 
     {
       steam_blocklist_entry: steam_blocklist_entry
