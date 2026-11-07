@@ -20,7 +20,7 @@ RSpec.describe StorageCleanupService, type: :service do
 
     it 'leaves attachments of existing records alone' do
       create(:user, :avatar)
-      game.sized_cover(:small)
+      game.cover.variant(:small).processed
 
       expect(described_class.orphan_attachments).to be_empty
     end
@@ -71,7 +71,7 @@ RSpec.describe StorageCleanupService, type: :service do
   describe '.with_inline_jobs' do
     it "purges a deleted game's cover along with its variants' files" do
       game = create(:game, :cover)
-      variant_blob = game.sized_cover(:small).image.blob
+      variant_blob = game.cover.variant(:small).processed.image.blob
       service = variant_blob.service
       Game.where(id: game.id).delete_all
 

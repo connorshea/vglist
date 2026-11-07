@@ -200,12 +200,13 @@ class Game < ApplicationRecord
   global_searchable :name
   searchable :name, tsearch: { normalization: 2 }
 
-  # Generate a cover variant with a specific size, size must be a Symbol
-  # matching one of the keys in `Game::COVER_SIZES`.
-  # @param size [Symbol] One of :small, :medium, or :large.
-  # @return [ActiveStorage::Variant] The variant of the cover image.
+  # The cover at a specific size, or the original cover if that size hasn't
+  # been created yet (it's then created in the background, see ReadyVariant).
+  # @param size [Symbol] One of the keys in `Game::COVER_SIZES`.
+  # @return [ActiveStorage::VariantWithRecord, ActiveStorage::Attached::One, nil]
+  #   Something that responds to `url`, or nil if there's no cover.
   def sized_cover(size)
-    cover.variant(size)&.processed
+    ReadyVariant.for(cover, size)
   end
 
   protected
