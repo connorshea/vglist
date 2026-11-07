@@ -64,3 +64,16 @@ describe("GameLibrarySheet", () => {
     expect(document.activeElement?.classList.contains("lsheet-close")).toBeTruthy();
   });
 });
+
+describe("GameLibrarySheet as a drawer", () => {
+  it("slides in from the side without the drag handle", () => {
+    const wrapper = mount(GameLibrarySheet, {
+      props: { title: "Add to library", gameName: "Outer Wilds", coverUrl: null, variant: "drawer" },
+      attachTo: document.body
+    });
+    const el = document.body.querySelector<HTMLElement>(".lsheet");
+    expect(el?.classList.contains("is-drawer")).toBeTruthy();
+    expect(document.body.querySelector(".lsheet-handle")).toBeNull();
+    wrapper.unmount();
+  });
+});

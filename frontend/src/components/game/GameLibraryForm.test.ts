@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import GameLibraryForm from "./GameLibraryForm.vue";
 import { GET_GAME_PURCHASE } from "@/graphql/queries/games";
@@ -111,5 +111,270 @@ describe("GameLibraryForm replay count", () => {
     await input.setValue("-3");
     await input.trigger("change");
     expect(input.element.value).toBe("0");
+  });
+});
+
+describe("GameLibraryForm status and date defaults", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
+  function tile(wrapper: Awaited<ReturnType<typeof mountForm>>, label: string) {
+    const found = wrapper.findAll(".form-tile").find((t) => t.text() === label);
+    if (!found) throw new Error(`no ${label} tile`);
+    return found;
+  }
+
+  it("fills an empty start date with today when you pick Playing, and Undo takes it back", async () => {
+    const wrapper = await mountForm(null);
+    await tile(wrapper, "Playing").trigger("click");
+
+    expect(tile(wrapper, "Playing").attributes("aria-pressed")).toBe("true");
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe(today);
+    expect(wrapper.find(".form-hint").text()).toContain("Started set to today");
+
+    await wrapper.find(".form-hint-undo").trigger("click");
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("");
+    expect(wrapper.find(".form-hint").exists()).toBeFalsy();
+    expect(tile(wrapper, "Playing").attributes("aria-pressed")).toBe("true");
+  });
+
+  it("fills the finished date for Completed and reverts the start date when switching from Playing", async () => {
+    const wrapper = await mountForm(null);
+    await tile(wrapper, "Playing").trigger("click");
+    await tile(wrapper, "Completed").trigger("click");
+
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("");
+    expect(wrapper.find<HTMLInputElement>("#form-completion-date").element.value).toBe(today);
+    expect(wrapper.find(".form-hint").text()).toContain("Finished set to today");
+  });
+
+  it("leaves a date you already set alone", async () => {
+    const wrapper = await mountForm(null);
+    await wrapper.find("#form-start-date").setValue("2026-01-02");
+    await tile(wrapper, "Playing").trigger("click");
+
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("2026-01-02");
+    expect(wrapper.find(".form-hint").exists()).toBeFalsy();
+  });
+
+  it("clears the status on a second tap", async () => {
+    const wrapper = await mountForm(null);
+    await tile(wrapper, "Paused").trigger("click");
+    await tile(wrapper, "Paused").trigger("click");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+    expect(variablesFor(ADD_GAME_TO_LIBRARY)).not.toHaveProperty("completionStatus");
+  });
+});
+
+describe("GameLibraryForm sections", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  function toggle(wrapper: Awaited<ReturnType<typeof mountForm>>, controls: string) {
+    return wrapper.find(`.form-section-toggle[aria-controls="${controls}"]`);
+  }
+
+  it("opens Progress by default in the drawer and summarises closed sections", async () => {
+    const wrapper = await mountForm(null);
+    expect(toggle(wrapper, "form-section-progress").attributes("aria-expanded")).toBe("true");
+    expect(toggle(wrapper, "form-section-owned").attributes("aria-expanded")).toBe("false");
+    expect(toggle(wrapper, "form-section-owned").text()).toContain("Not set");
+    expect(toggle(wrapper, "form-section-review").text()).toContain("Optional");
+
+    await toggle(wrapper, "form-section-review").trigger("click");
+    expect(toggle(wrapper, "form-section-review").attributes("aria-expanded")).toBe("true");
+  });
+
+  it("starts with every section closed in the phone sheet", async () => {
+    const wrapper = mount(GameLibraryForm, {
+      props: {
+        gameId: "1",
+        gameName: "Outer Wilds",
+        gamePurchaseId: null,
+        gamePlatforms: [],
+        allStores: [],
+        storesLoading: false,
+        removingFromLibrary: false,
+        variant: "sheet"
+      }
+    });
+    await flushPromises();
+    expect(wrapper.findAll(".form-section-toggle[aria-expanded='true']")).toHaveLength(0);
+  });
+
+  it("shows hours and dates in the Progress summary once it's closed", async () => {
+    const wrapper = await mountForm(null);
+    await wrapper.find("#form-hours-played").setValue("12.5");
+    await wrapper.find("#form-start-date").setValue("2026-10-30");
+    await toggle(wrapper, "form-section-progress").trigger("click");
+    expect(toggle(wrapper, "form-section-progress").text()).toContain("12.5 h · started Oct 30, 2026");
+  });
+});
+
+describe("GameLibraryForm while an entry loads", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  it("keeps Save and the fields disabled until the entry has loaded", async () => {
+    let finishLoad: (value: unknown) => void = () => {};
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAME_PURCHASE ? new Promise((resolve) => (finishLoad = resolve)) : Promise.resolve({})
+    );
+    const wrapper = await mountForm("7");
+
+    const save = wrapper.find(".form-btn-save");
+    expect(save.attributes("disabled")).toBeDefined();
+    expect(save.text()).toBe("Loading…");
+    expect(wrapper.find("fieldset.form-fields").attributes("disabled")).toBeDefined();
+    await save.trigger("click");
+    await flushPromises();
+    expect(variablesFor(UPDATE_GAME_IN_LIBRARY)).toBeUndefined();
+
+    finishLoad(gamePurchase(2));
+    await flushPromises();
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeUndefined();
+    expect(wrapper.find(".form-btn-save").text()).toBe("Save changes");
+  });
+
+  it("stays disabled when the entry fails to load", async () => {
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAME_PURCHASE ? Promise.reject(new Error("boom")) : Promise.resolve({})
+    );
+    const wrapper = await mountForm("7");
+    expect(wrapper.emitted("error")).toHaveLength(1);
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeDefined();
+  });
+
+  it("stays disabled when the entry no longer exists", async () => {
+    mockRequest.mockImplementation((query) =>
+      Promise.resolve(query === GET_GAME_PURCHASE ? { gamePurchase: null } : {})
+    );
+    const wrapper = await mountForm("7");
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeDefined();
+  });
+
+  it("leaves Cancel usable while loading", async () => {
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAME_PURCHASE ? new Promise(() => {}) : Promise.resolve({})
+    );
+    const wrapper = await mountForm("7");
+    await wrapper.find(".form-btn-cancel").trigger("click");
+    expect(wrapper.emitted("cancel")).toHaveLength(1);
+  });
+});
+
+describe("GameLibraryForm clearing fields", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+  });
+
+  function fullPurchase() {
+    return {
+      gamePurchase: {
+        ...gamePurchase(1).gamePurchase,
+        completionStatus: "IN_PROGRESS",
+        rating: 80,
+        hoursPlayed: 12,
+        comments: "Pretty good",
+        startDate: "2026-01-02",
+        completionDate: "2026-02-03"
+      }
+    };
+  }
+
+  it("sends null for fields you cleared while editing", async () => {
+    mockRequest.mockImplementation((query) => Promise.resolve(query === GET_GAME_PURCHASE ? fullPurchase() : {}));
+    const wrapper = await mountForm("7");
+
+    const playing = wrapper.findAll(".form-tile").find((t) => t.text() === "Playing");
+    await playing?.trigger("click");
+    await wrapper.find("#form-rating").setValue("");
+    await wrapper.find("#form-hours-played").setValue("");
+    await wrapper.find("#form-start-date").setValue("");
+    await wrapper.find("#form-completion-date").setValue("");
+    await wrapper.find("#form-comments").setValue("   ");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+
+    expect(variablesFor(UPDATE_GAME_IN_LIBRARY)).toMatchObject({
+      gamePurchaseId: "7",
+      completionStatus: null,
+      rating: null,
+      hoursPlayed: null,
+      startDate: null,
+      completionDate: null,
+      comments: null
+    });
+  });
+
+  it("keeps the values you didn't touch while editing", async () => {
+    mockRequest.mockImplementation((query) => Promise.resolve(query === GET_GAME_PURCHASE ? fullPurchase() : {}));
+    const wrapper = await mountForm("7");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+
+    expect(variablesFor(UPDATE_GAME_IN_LIBRARY)).toMatchObject({
+      completionStatus: "IN_PROGRESS",
+      rating: 80,
+      hoursPlayed: 12,
+      startDate: "2026-01-02",
+      completionDate: "2026-02-03",
+      comments: "Pretty good"
+    });
+  });
+
+  it("leaves empty fields out when adding, including an emptied rating", async () => {
+    mockRequest.mockResolvedValue({});
+    const wrapper = await mountForm(null);
+    await wrapper.find("#form-rating").setValue("50");
+    await wrapper.find("#form-rating").setValue("");
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+
+    const variables = variablesFor(ADD_GAME_TO_LIBRARY);
+    for (const key of ["completionStatus", "rating", "hoursPlayed", "startDate", "completionDate", "comments"]) {
+      expect(variables).not.toHaveProperty(key);
+    }
+  });
+});
+
+describe("GameLibraryForm today", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+  });
+
+  it("uses the local date, not the UTC one, on an evening in the Americas", async () => {
+    vi.stubEnv("TZ", "America/Los_Angeles");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    // 7pm on Nov 7 in Los Angeles is already Nov 8 in UTC.
+    vi.setSystemTime(new Date("2026-11-08T03:00:00Z"));
+
+    const wrapper = await mountForm(null);
+    await wrapper
+      .findAll(".form-tile")
+      .find((t) => t.text() === "Playing")
+      ?.trigger("click");
+    expect(wrapper.find<HTMLInputElement>("#form-start-date").element.value).toBe("2026-11-07");
   });
 });

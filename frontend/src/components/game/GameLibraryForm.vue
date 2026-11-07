@@ -1,195 +1,257 @@
 <template>
-  <div class="form-card" :class="{ 'is-sheet': isSheet }">
-    <div class="form-grid">
-      <!-- Left column: Status, Rating, Dates -->
-      <div class="form-col form-col-left">
-        <div class="form-group">
-          <label class="form-label">Status</label>
-          <div class="form-pills">
-            <button
-              v-for="opt in statusOptions"
-              :key="opt.value"
-              type="button"
-              class="form-pill"
-              :class="formStatus === opt.value ? 'form-pill-on' : 'form-pill-off'"
-              :aria-pressed="formStatus === opt.value"
-              @click="formStatus = formStatus === opt.value ? null : opt.value"
-            >
-              <span v-if="isSheet" class="form-pill-dot" :style="{ background: opt.color }" aria-hidden="true"></span>
-              {{ opt.label }}
-            </button>
-          </div>
+  <div class="form-card" :class="isSheet ? 'is-sheet' : 'is-drawer'" :aria-busy="!entryLoaded">
+    <!-- Disabled until an existing entry has loaded, so nothing saves over it half-filled -->
+    <fieldset class="form-fields" :disabled="!entryLoaded">
+      <!-- Status: one tap picks it, a second tap clears it -->
+      <div class="form-group" role="group" aria-labelledby="form-status-label">
+        <div id="form-status-label" class="form-label">Status</div>
+        <div class="form-tiles">
+          <button
+            v-for="opt in statusOptions"
+            :key="opt.value"
+            type="button"
+            class="form-tile"
+            :aria-pressed="formStatus === opt.value"
+            @click="pickStatus(opt.value)"
+          >
+            <span class="form-tile-dot" :style="{ background: opt.color }" aria-hidden="true"></span>
+            {{ opt.label }}
+          </button>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" for="form-rating">Rating (out of 100)</label>
-          <div class="form-rating-row">
-            <input
-              id="form-rating"
-              v-model.number="formRating"
-              type="number"
-              min="0"
-              max="100"
-              class="form-rating-input"
-              @input="clampRating"
-            />
-            <input
-              v-if="isSheet"
-              :value="formRating ?? 0"
-              type="range"
-              min="0"
-              max="100"
-              class="form-rating-range"
-              aria-label="Rating slider"
-              @input="formRating = Number(($event.target as HTMLInputElement).value)"
-            />
-            <div v-else class="form-rating-track" @click="setRatingFromClick">
-              <div class="form-rating-fill" :style="{ width: (formRating ?? 0) + '%' }"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-pair">
-          <div class="form-group">
-            <label class="form-label" for="form-hours-played">Hours played</label>
-            <input
-              id="form-hours-played"
-              v-model.number="formHoursPlayed"
-              type="number"
-              min="0"
-              step="0.1"
-              class="form-number-input"
-              placeholder="0"
-            />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="form-replay-count">Times replayed</label>
-            <input
-              id="form-replay-count"
-              v-model.number="formReplayCount"
-              type="number"
-              min="0"
-              step="1"
-              inputmode="numeric"
-              class="form-number-input"
-              placeholder="0"
-              @change="normalizeReplayCount"
-            />
-          </div>
-        </div>
-
-        <div class="form-dates">
-          <div class="form-date-field">
-            <div class="form-label-row">
-              <label class="form-label" for="form-start-date">Started</label>
-              <button type="button" class="form-date-today" @click="formStartDate = today">Today</button>
-            </div>
-            <input id="form-start-date" v-model="formStartDate" type="date" class="form-date-input" :max="today" />
-          </div>
-          <div class="form-date-field">
-            <div class="form-label-row">
-              <label class="form-label" for="form-completion-date">Finished</label>
-              <button type="button" class="form-date-today" @click="formCompletionDate = today">Today</button>
-            </div>
-            <input
-              id="form-completion-date"
-              v-model="formCompletionDate"
-              type="date"
-              class="form-date-input"
-              :max="today"
-            />
-          </div>
-        </div>
-        <p v-if="dateValidationError" class="form-date-error">
-          {{ dateValidationError }}
+        <p v-if="dateHint" class="form-hint" role="status">
+          <Info :size="16" aria-hidden="true" />
+          <span>{{ dateHint.message }}</span>
+          <button type="button" class="form-hint-undo" @click="undoDateHint">Undo</button>
         </p>
       </div>
 
-      <!-- Right column: Platforms, Store, Notes, Actions -->
-      <div class="form-col form-col-right">
-        <div class="form-group">
-          <label class="form-label">Platforms played</label>
-          <div class="form-pills">
-            <button
-              v-for="plat in gamePlatforms"
-              :key="plat.id"
-              type="button"
-              class="form-pill"
-              :class="formPlatformIds.has(plat.id) ? 'form-pill-on' : 'form-pill-off'"
-              @click="toggleFormPlatform(plat.id)"
-            >
-              {{ plat.name }}
-            </button>
-            <span v-if="gamePlatforms.length === 0" class="form-empty-hint"> No platforms listed for this game. </span>
+      <div class="form-group">
+        <label class="form-label" for="form-rating">Rating <small>out of 100</small></label>
+        <div class="form-rating-row">
+          <input
+            id="form-rating"
+            v-model.number="formRating"
+            type="number"
+            min="0"
+            max="100"
+            inputmode="numeric"
+            class="form-input form-rating-input"
+            placeholder="–"
+            @input="clampRating"
+          />
+          <input
+            :value="formRating ?? 0"
+            type="range"
+            min="0"
+            max="100"
+            class="form-rating-range"
+            aria-label="Rating slider"
+            @input="formRating = Number(($event.target as HTMLInputElement).value)"
+          />
+        </div>
+      </div>
+
+      <!-- Progress: hours, replays and dates -->
+      <section class="form-section">
+        <h3 class="form-section-heading">
+          <button
+            type="button"
+            class="form-section-toggle"
+            :aria-expanded="isOpen('progress')"
+            aria-controls="form-section-progress"
+            @click="toggleSection('progress')"
+          >
+            <ChevronDown v-if="isOpen('progress')" :size="18" aria-hidden="true" />
+            <ChevronRight v-else :size="18" aria-hidden="true" />
+            Progress
+            <span v-if="!isOpen('progress')" class="form-section-summary">{{ progressSummary }}</span>
+          </button>
+        </h3>
+        <div v-show="isOpen('progress')" id="form-section-progress" class="form-section-body">
+          <div class="form-grid2">
+            <div>
+              <label class="form-label" for="form-hours-played">Hours played</label>
+              <input
+                id="form-hours-played"
+                v-model.number="formHoursPlayed"
+                type="number"
+                min="0"
+                step="0.1"
+                inputmode="decimal"
+                class="form-input"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label class="form-label" for="form-replay-count">Times replayed</label>
+              <input
+                id="form-replay-count"
+                v-model.number="formReplayCount"
+                type="number"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                class="form-input"
+                placeholder="0"
+                @change="normalizeReplayCount"
+              />
+            </div>
+            <div>
+              <div class="form-label-row">
+                <label class="form-label" for="form-start-date">Started</label>
+                <button type="button" class="form-date-today" @click="setDate('start', today)">Today</button>
+              </div>
+              <input
+                id="form-start-date"
+                :value="formStartDate"
+                type="date"
+                class="form-input"
+                :max="today"
+                @input="setDate('start', ($event.target as HTMLInputElement).value)"
+              />
+            </div>
+            <div>
+              <div class="form-label-row">
+                <label class="form-label" for="form-completion-date">Finished</label>
+                <button type="button" class="form-date-today" @click="setDate('completion', today)">Today</button>
+              </div>
+              <input
+                id="form-completion-date"
+                :value="formCompletionDate"
+                type="date"
+                class="form-input"
+                :max="today"
+                @input="setDate('completion', ($event.target as HTMLInputElement).value)"
+              />
+            </div>
+          </div>
+          <p v-if="dateValidationError" class="form-date-error">
+            {{ dateValidationError }}
+          </p>
+        </div>
+      </section>
+
+      <!-- Platforms and stores -->
+      <section class="form-section">
+        <h3 class="form-section-heading">
+          <button
+            type="button"
+            class="form-section-toggle"
+            :aria-expanded="isOpen('owned')"
+            aria-controls="form-section-owned"
+            @click="toggleSection('owned')"
+          >
+            <ChevronDown v-if="isOpen('owned')" :size="18" aria-hidden="true" />
+            <ChevronRight v-else :size="18" aria-hidden="true" />
+            Platforms &amp; store
+            <span v-if="!isOpen('owned')" class="form-section-summary">{{ ownedSummary }}</span>
+          </button>
+        </h3>
+        <div v-show="isOpen('owned')" id="form-section-owned" class="form-section-body">
+          <div class="form-group-inner" role="group" aria-labelledby="form-platforms-label">
+            <div id="form-platforms-label" class="form-label">Platforms played</div>
+            <div class="form-pills">
+              <button
+                v-for="plat in gamePlatforms"
+                :key="plat.id"
+                type="button"
+                class="form-pill"
+                :aria-pressed="formPlatformIds.has(plat.id)"
+                @click="toggleFormPlatform(plat.id)"
+              >
+                {{ plat.name }}
+              </button>
+              <span v-if="gamePlatforms.length === 0" class="form-empty-hint">No platforms listed for this game.</span>
+            </div>
+          </div>
+          <div class="form-group-inner" role="group" aria-labelledby="form-stores-label">
+            <div id="form-stores-label" class="form-label">Store</div>
+            <div class="form-pills">
+              <button
+                v-for="store in visibleStores"
+                :key="store.id"
+                type="button"
+                class="form-pill"
+                :aria-pressed="formStoreIds.has(store.id)"
+                @click="toggleFormStore(store.id)"
+              >
+                {{ store.name }}
+              </button>
+              <button
+                v-if="hiddenStoreCount > 0"
+                type="button"
+                class="form-pill form-pill-more"
+                @click="showAllStores = true"
+              >
+                + {{ hiddenStoreCount }} more
+              </button>
+              <span v-if="storesLoading" class="form-empty-hint">Loading stores…</span>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="form-group">
-          <label class="form-label">Store</label>
-          <div class="form-pills">
-            <button
-              v-for="store in visibleStores"
-              :key="store.id"
-              type="button"
-              class="form-pill"
-              :class="formStoreIds.has(store.id) ? 'form-pill-on' : 'form-pill-off'"
-              :aria-pressed="formStoreIds.has(store.id)"
-              @click="toggleFormStore(store.id)"
-            >
-              {{ store.name }}
-            </button>
-            <button
-              v-if="hiddenStoreCount > 0"
-              type="button"
-              class="form-pill form-pill-more"
-              @click="showAllStores = true"
-            >
-              + {{ hiddenStoreCount }} more
-            </button>
-            <span v-if="storesLoading" class="form-empty-hint"> Loading stores... </span>
-          </div>
-        </div>
-
-        <div class="form-group form-notes-group">
-          <label class="form-label" for="form-comments">Review / notes</label>
+      <!-- Review -->
+      <section class="form-section form-section-last">
+        <h3 class="form-section-heading">
+          <button
+            type="button"
+            class="form-section-toggle"
+            :aria-expanded="isOpen('review')"
+            aria-controls="form-section-review"
+            @click="toggleSection('review')"
+          >
+            <ChevronDown v-if="isOpen('review')" :size="18" aria-hidden="true" />
+            <ChevronRight v-else :size="18" aria-hidden="true" />
+            Review
+            <span v-if="!isOpen('review')" class="form-section-summary">{{ reviewSummary }}</span>
+          </button>
+        </h3>
+        <div v-show="isOpen('review')" id="form-section-review" class="form-section-body">
+          <label class="form-label" for="form-comments">Review / notes <small>shows on the game page</small></label>
           <textarea
             id="form-comments"
             v-model="formComments"
-            class="form-textarea"
+            class="form-input form-textarea"
             placeholder="What did you think?"
             maxlength="2000"
           ></textarea>
+          <div class="form-count">{{ formComments.length }} / 2000</div>
         </div>
+      </section>
+    </fieldset>
 
+    <button
+      v-if="isEditing && isSheet"
+      type="button"
+      class="form-btn-remove form-btn-remove-wide"
+      :disabled="removingFromLibrary"
+      @click="$emit('requestRemove')"
+    >
+      <Trash2 :size="18" :stroke-width="1.8" aria-hidden="true" />
+      {{ removingFromLibrary ? "Removing…" : "Remove from library" }}
+    </button>
+
+    <div class="form-actions">
+      <button
+        v-if="isEditing && !isSheet"
+        type="button"
+        class="form-btn-remove"
+        :disabled="removingFromLibrary"
+        @click="$emit('requestRemove')"
+      >
+        {{ removingFromLibrary ? "Removing…" : "Remove" }}
+      </button>
+      <div class="form-actions-right">
+        <button type="button" class="form-btn-cancel" @click="$emit('cancel')">Cancel</button>
         <button
-          v-if="isEditing && isSheet"
           type="button"
-          class="form-btn-remove form-btn-remove-wide"
-          :disabled="removingFromLibrary"
-          @click="$emit('requestRemove')"
+          class="form-btn-save"
+          :disabled="saving || !entryLoaded || !!dateValidationError"
+          @click="submit"
         >
-          <Trash2 :size="18" :stroke-width="1.8" aria-hidden="true" />
-          {{ removingFromLibrary ? "Removing…" : "Remove from library" }}
+          {{ saving ? "Saving…" : entryLoaded ? saveLabel : "Loading…" }}
         </button>
-
-        <div class="form-actions">
-          <button
-            v-if="isEditing && !isSheet"
-            type="button"
-            class="form-btn-remove"
-            :disabled="removingFromLibrary"
-            @click="$emit('requestRemove')"
-          >
-            {{ removingFromLibrary ? "Removing\u2026" : "Remove" }}
-          </button>
-          <div class="form-actions-right">
-            <button type="button" class="form-btn-cancel" @click="$emit('cancel')">Cancel</button>
-            <button type="button" class="form-btn-save" :disabled="saving || !!dateValidationError" @click="submit">
-              {{ saving ? "Saving\u2026" : saveLabel }}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -203,7 +265,7 @@ import { ADD_GAME_TO_LIBRARY, UPDATE_GAME_IN_LIBRARY } from "@/graphql/mutations
 import type { GetGamePurchaseQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
 import { REVIEW_DRAFT_KEY_PREFIX } from "@/stores/auth";
 import { extractGqlError } from "@/utils/graphql-errors";
-import { Trash2 } from "@lucide/vue";
+import { ChevronDown, ChevronRight, Info, Trash2 } from "@lucide/vue";
 
 const props = withDefaults(
   defineProps<{
@@ -214,10 +276,10 @@ const props = withDefaults(
     allStores: { id: string; name: string }[];
     storesLoading: boolean;
     removingFromLibrary: boolean;
-    /** "inline" sits in the game hero on wide screens; "sheet" fills the phone bottom sheet. */
-    variant?: "inline" | "sheet";
+    /** "drawer" fills the side drawer on wide screens; "sheet" fills the phone bottom sheet. */
+    variant?: "drawer" | "sheet";
   }>(),
-  { variant: "inline" }
+  { variant: "drawer" }
 );
 
 const emit = defineEmits<{
@@ -241,17 +303,16 @@ const statusOptions: { value: GamePurchaseCompletionStatus; label: string; color
 const isSheet = computed(() => props.variant === "sheet");
 
 const saveLabel = computed(() => {
-  if (!isSheet.value) return "Save";
   return isEditing.value ? "Save changes" : "Add to library";
 });
 
-// On a phone the full store list is several rows of chips, so the sheet shows
-// the first few plus any you've picked, and the rest behind "+ N more".
+// The full store list is several rows of chips, so the form shows the first
+// few plus any you've picked, and the rest behind "+ N more".
 const COLLAPSED_STORE_COUNT = 3;
 const showAllStores = ref(false);
 
 const visibleStores = computed(() => {
-  if (!isSheet.value || showAllStores.value) return props.allStores;
+  if (showAllStores.value) return props.allStores;
   return props.allStores.filter((store, i) => i < COLLAPSED_STORE_COUNT || formStoreIds.value.has(store.id));
 });
 
@@ -261,7 +322,14 @@ const formStatus = ref<GamePurchaseCompletionStatus | null>(null);
 const formRating = ref<number | null>(null);
 const formStartDate = ref("");
 const formCompletionDate = ref("");
-const today = computed(() => new Date().toISOString().slice(0, 10));
+// The local calendar date as YYYY-MM-DD. toISOString() would give the UTC date,
+// which is already tomorrow on an evening in the Americas.
+function localDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+const today = computed(() => localDate(new Date()));
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formHoursPlayed = ref<number | null>(null);
@@ -269,6 +337,10 @@ const formReplayCount = ref<number | null>(null);
 const formComments = ref("");
 const isEditing = ref(false);
 const saving = ref(false);
+// False while an existing entry is loading, and stays false if it fails to
+// load. Saving a half-filled form would wipe the entry: the API reads missing
+// platforms and stores as "none".
+const entryLoaded = ref(true);
 
 // ── localStorage draft persistence ──
 let suppressDraftSync = false;
@@ -310,6 +382,7 @@ function resetForm() {
   formStoreIds.value = new Set();
   formComments.value = "";
   isEditing.value = false;
+  dateHint.value = null;
 }
 
 function openAsAdd() {
@@ -317,6 +390,8 @@ function openAsAdd() {
   resetForm();
   suppressDraftSync = false;
   loadReviewDraft();
+  // An unsent review draft is the first thing you'd want to see again.
+  if (formComments.value !== "") openSections.value = new Set([...openSections.value, "review"]);
 }
 
 async function openAsEdit() {
@@ -326,6 +401,7 @@ async function openAsEdit() {
   suppressDraftSync = true;
   resetForm();
   isEditing.value = true;
+  entryLoaded.value = false;
 
   try {
     const result = await gqlClient.request<GetGamePurchaseQuery>(GET_GAME_PURCHASE, {
@@ -348,6 +424,7 @@ async function openAsEdit() {
     loadReviewDraft();
     formPlatformIds.value = new Set(gp.platforms.nodes.map((p) => p.id));
     formStoreIds.value = new Set(gp.stores.nodes.map((s) => s.id));
+    entryLoaded.value = true;
   } catch {
     suppressDraftSync = false;
     emit("error", "Failed to load game purchase details.");
@@ -389,12 +466,95 @@ function normalizeReplayCount() {
   formReplayCount.value = Math.max(0, Math.floor(formReplayCount.value));
 }
 
-function setRatingFromClick(event: MouseEvent) {
-  const track = event.currentTarget as HTMLElement;
-  const rect = track.getBoundingClientRect();
-  const pct = ((event.clientX - rect.left) / rect.width) * 100;
-  formRating.value = Math.round(Math.min(100, Math.max(0, pct)));
+// ── Status with date defaults ──
+// Picking Playing fills an empty Started date with today, and Completed or 100%
+// fills an empty Finished date. A hint says so and offers Undo.
+type DateField = "start" | "completion";
+const dateHint = ref<{ field: DateField; message: string } | null>(null);
+
+function setDate(field: DateField, value: string) {
+  if (field === "start") {
+    formStartDate.value = value;
+  } else {
+    formCompletionDate.value = value;
+  }
+  if (dateHint.value?.field === field) dateHint.value = null;
 }
+
+function undoDateHint() {
+  const hint = dateHint.value;
+  if (!hint) return;
+  setDate(hint.field, "");
+}
+
+function pickStatus(value: GamePurchaseCompletionStatus) {
+  // Changing your mind takes back the date the previous pick filled in.
+  undoDateHint();
+  const next = formStatus.value === value ? null : value;
+  formStatus.value = next;
+
+  if (next === "IN_PROGRESS" && !formStartDate.value) {
+    formStartDate.value = today.value;
+    dateHint.value = { field: "start", message: "Started set to today" };
+  } else if ((next === "COMPLETED" || next === "FULLY_COMPLETED") && !formCompletionDate.value) {
+    formCompletionDate.value = today.value;
+    dateHint.value = { field: "completion", message: "Finished set to today" };
+  }
+}
+
+// ── Collapsible sections ──
+type SectionKey = "progress" | "owned" | "review";
+// The drawer has room to start with Progress open; the phone sheet starts
+// with every section closed so Save is on screen straight away.
+const openSections = ref(new Set<SectionKey>(props.variant === "drawer" ? ["progress"] : []));
+
+function isOpen(key: SectionKey): boolean {
+  // A date problem has to be visible to be fixed.
+  if (key === "progress" && dateValidationError.value) return true;
+  return openSections.value.has(key);
+}
+
+function toggleSection(key: SectionKey) {
+  const next = new Set(openSections.value);
+  if (isOpen(key)) {
+    next.delete(key);
+  } else {
+    next.add(key);
+  }
+  openSections.value = next;
+}
+
+function formatDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+const progressSummary = computed(() => {
+  const parts: string[] = [];
+  if (typeof formHoursPlayed.value === "number" && formHoursPlayed.value > 0) parts.push(`${formHoursPlayed.value} h`);
+  if (typeof formReplayCount.value === "number" && formReplayCount.value > 0) {
+    parts.push(`replayed ${formReplayCount.value}×`);
+  }
+  if (formStartDate.value) parts.push(`started ${formatDate(formStartDate.value)}`);
+  if (formCompletionDate.value) parts.push(`finished ${formatDate(formCompletionDate.value)}`);
+  if (parts.length === 0) return "Not set";
+  const text = parts.join(" · ");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+});
+
+const ownedSummary = computed(() => {
+  const names = [
+    ...props.gamePlatforms.filter((p) => formPlatformIds.value.has(p.id)).map((p) => p.name),
+    ...props.allStores.filter((s) => formStoreIds.value.has(s.id)).map((s) => s.name)
+  ];
+  return names.length > 0 ? names.join(" · ") : "Not set";
+});
+
+const reviewSummary = computed(() => formComments.value.trim() || "Optional");
 
 const dateValidationError = computed(() => {
   const todayStr = today.value;
@@ -410,44 +570,51 @@ const dateValidationError = computed(() => {
   return "";
 });
 
+// v-model.number leaves "" behind when a number field is emptied.
+function numberOrNull(value: number | string | null): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
 function buildFormVariables(): Record<string, unknown> {
   const variables: Record<string, unknown> = {};
+  // When editing, a cleared field goes out as null so the server clears it
+  // too; leaving it out would keep the old value.
+  const put = (key: string, value: unknown) => {
+    if (value !== null) {
+      variables[key] = value;
+    } else if (isEditing.value) {
+      variables[key] = null;
+    }
+  };
 
-  if (formStatus.value) {
-    variables.completionStatus = formStatus.value;
-  }
-  if (formRating.value != null && formRating.value >= 0) {
-    variables.rating = Math.round(Math.min(100, Math.max(0, formRating.value)));
-  }
-  if (formHoursPlayed.value != null && formHoursPlayed.value >= 0) {
-    variables.hoursPlayed = formHoursPlayed.value;
-  }
+  const rating = numberOrNull(formRating.value);
+  const hours = numberOrNull(formHoursPlayed.value);
+  const replays = numberOrNull(formReplayCount.value);
+
+  put("completionStatus", formStatus.value);
+  put("rating", rating !== null && rating >= 0 ? Math.round(Math.min(100, rating)) : null);
+  put("hoursPlayed", hours !== null && hours >= 0 ? hours : null);
   // An emptied field means no replays, so an edit can clear an existing count.
-  if (typeof formReplayCount.value === "number" && formReplayCount.value >= 0) {
-    variables.replayCount = Math.floor(formReplayCount.value);
+  if (replays !== null && replays >= 0) {
+    variables.replayCount = Math.floor(replays);
   } else if (isEditing.value) {
     variables.replayCount = 0;
   }
-  if (formStartDate.value) {
-    variables.startDate = formStartDate.value;
-  }
-  if (formCompletionDate.value) {
-    variables.completionDate = formCompletionDate.value;
-  }
+  put("startDate", formStartDate.value || null);
+  put("completionDate", formCompletionDate.value || null);
   if (formPlatformIds.value.size > 0) {
     variables.platforms = [...formPlatformIds.value];
   }
   if (formStoreIds.value.size > 0) {
     variables.stores = [...formStoreIds.value];
   }
-  if (formComments.value.trim()) {
-    variables.comments = formComments.value.trim();
-  }
+  put("comments", formComments.value.trim() || null);
 
   return variables;
 }
 
 async function submit() {
+  if (!entryLoaded.value) return;
   if (dateValidationError.value) {
     emit("error", dateValidationError.value);
     return;
@@ -476,9 +643,7 @@ async function submit() {
   }
 }
 
-// Auto-initialize when mounted. This is needed because the parent uses
-// <Transition mode="out-in"> which delays mounting until the leave transition
-// completes, so the parent's nextTick-based ref calls would fire too early.
+// Load the entry (or a fresh form) as soon as the drawer or sheet mounts it.
 onMounted(() => {
   if (props.gamePurchaseId) {
     openAsEdit();
@@ -491,166 +656,180 @@ defineExpose({ openAsAdd, openAsEdit });
 </script>
 
 <style scoped>
-/* ── Inline form ── */
+/* The form fills the drawer (wide screens) or the bottom sheet (phones). The
+   drawer or sheet scrolls; the actions row sticks to the bottom of it. */
 .form-card {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+  --form-pad: 24px;
   color: var(--color-text-primary);
+  text-align: left;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-}
-
-.form-col {
-  padding: 1.25rem;
-}
-
-.form-col-left {
-  border-right: 1px solid var(--color-border);
-}
-
-.form-col-right {
-  display: flex;
-  flex-direction: column;
+.form-fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  padding: 18px var(--form-pad) 0;
 }
 
 .form-label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 0.4rem;
-}
-
-/* Form pills */
-.form-pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.form-pill {
-  font-size: 0.75rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: all 0.15s;
-  display: inline-block;
-  user-select: none;
-  border: none;
-  background: none;
-  font-family: inherit;
-}
-
-.form-pill-off {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-}
-
-.form-pill-off:hover {
-  border-color: var(--color-text-secondary);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--color-text-primary);
 }
 
-.form-pill-on {
-  background: var(--p-100);
-  color: var(--p-700);
-  font-weight: 500;
-  border: 1px solid var(--p-100);
+.form-label small {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--n-500);
 }
 
-.form-empty-hint {
-  font-size: 0.75rem;
-  color: var(--color-text-tertiary);
-  font-style: italic;
+/* ── Status tiles ── */
+.form-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
 }
 
-/* Rating input */
-.form-rating-row {
+.form-tile {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.form-rating-input {
-  width: 56px;
-  font-size: 0.8rem;
-  text-align: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 58px;
+  padding: 10px 10px 9px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0.35rem 0.5rem;
-  outline: none;
-  font-family: inherit;
-}
-
-.form-rating-input:focus {
-  border-color: var(--color-text-secondary);
-}
-
-.form-rating-track {
-  flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--p-100);
-  overflow: hidden;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: left;
   cursor: pointer;
 }
 
-.form-rating-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: var(--p-500);
-  transition: width 0.15s;
+.form-tile:hover {
+  border-color: var(--n-400);
 }
 
-/* Date inputs */
-.form-dates {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.625rem;
+.form-tile[aria-pressed="true"] {
+  border-color: var(--p-500);
+  background: var(--p-50);
+  box-shadow: inset 0 0 0 1px var(--p-500);
+  color: var(--p-700);
 }
 
-.form-date-input {
+.form-tile-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.form-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 6px 6px 6px 10px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-subtle);
+  font-size: 13px;
+  color: var(--n-500);
+}
+
+.form-hint svg {
+  flex-shrink: 0;
+  color: var(--p-500);
+}
+
+.form-hint-undo {
+  margin-left: auto;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--p-500);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Inputs ── */
+.form-input {
   width: 100%;
-  font-size: 0.75rem;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 10px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 0.35rem 0.5rem;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 14px;
   outline: none;
-  font-family: inherit;
 }
 
-.form-date-input:focus {
-  border-color: var(--color-text-secondary);
+.form-input:focus {
+  border-color: var(--p-500);
+}
+
+.form-input::placeholder {
+  color: var(--color-placeholder);
+}
+
+.form-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-rating-input {
+  width: 64px;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.form-rating-range {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  accent-color: var(--p-500);
+}
+
+.form-grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 12px;
 }
 
 .form-label-row {
   display: flex;
-  justify-content: space-between;
   align-items: baseline;
-}
-
-.form-label-row .form-label {
-  margin-bottom: 0;
+  justify-content: space-between;
 }
 
 .form-date-today {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--p-500);
-  background: none;
-  border: none;
+  margin-bottom: 8px;
   padding: 0;
+  border: none;
+  background: none;
+  color: var(--p-500);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
-  font-family: inherit;
-  margin-bottom: 0.4rem;
 }
 
 .form-date-today:hover {
@@ -659,99 +838,177 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 .form-date-error {
-  color: #cc0000;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-}
-
-/* Hours played and times replayed inputs */
-.form-pair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.625rem;
-}
-
-.form-number-input {
-  width: 80px;
-  font-size: 0.8rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0.35rem 0.5rem;
-  outline: none;
-  font-family: inherit;
-}
-
-.form-number-input:focus {
-  border-color: var(--color-text-secondary);
-}
-
-/* Notes textarea */
-.form-notes-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  margin: 10px 0 0;
+  color: var(--date-error, #cc0000);
+  font-size: 13px;
 }
 
 .form-textarea {
-  width: 100%;
-  font-size: 0.8rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0.5rem 0.625rem;
-  outline: none;
+  height: auto;
+  min-height: 120px;
+  padding: 10px 12px;
+  line-height: 1.45;
   resize: vertical;
-  min-height: 80px;
-  font-family: inherit;
 }
 
-.form-textarea:focus {
-  border-color: var(--color-text-secondary);
+.form-count {
+  margin-top: 6px;
+  text-align: right;
+  font-size: 12px;
+  color: var(--n-500);
 }
 
-/* Form action buttons */
-.form-actions {
+/* ── Collapsible sections ── */
+.form-section {
+  margin: 18px var(--form-pad) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.form-section + .form-section {
+  margin-top: 0;
+}
+
+.form-section-last {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.form-section-heading {
+  margin: 0;
+  font-size: inherit;
+}
+
+.form-section-toggle {
   display: flex;
-  gap: 0.5rem;
-  justify-content: space-between;
   align-items: center;
-  padding-top: 0.75rem;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.form-section-toggle svg {
+  flex-shrink: 0;
+  color: var(--n-500);
+}
+
+.form-section-summary {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--n-500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-section-body {
+  padding: 0 0 18px;
+}
+
+.form-group-inner + .form-group-inner {
+  margin-top: 16px;
+}
+
+/* ── Chips for platforms and stores ── */
+.form-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.form-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.form-pill:hover {
+  border-color: var(--n-400);
+}
+
+.form-pill[aria-pressed="true"] {
+  border-color: var(--p-500);
+  background: var(--p-100);
+  color: var(--p-700);
+  font-weight: 600;
+}
+
+.form-pill-more {
+  border-style: dashed;
+  color: var(--n-500);
+}
+
+.form-empty-hint {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--n-500);
+}
+
+/* ── Actions ── */
+.form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 14px var(--form-pad) calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
 .form-actions-right {
   display: flex;
-  gap: 0.5rem;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.form-btn-remove,
+.form-btn-cancel,
+.form-btn-save {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-button);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .form-btn-remove {
-  color: #c0392b;
-  font-size: 0.8rem;
+  border: none;
   background: none;
-  border: 1px solid #e8c4c0;
-  border-radius: var(--radius-button);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-family: inherit;
+  padding: 0 8px;
+  margin-left: -8px;
+  color: #b3261e;
 }
 
 .form-btn-remove:hover {
   background: #fdf0ef;
-  border-color: #c0392b;
-}
-
-.form-btn-remove:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .form-btn-cancel {
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
-  background: none;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-button);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-family: inherit;
+  background: transparent;
+  color: var(--color-text-primary);
 }
 
 .form-btn-cancel:hover {
@@ -759,147 +1016,93 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 .form-btn-save {
+  border: 1px solid var(--p-500);
   background: var(--p-500);
   color: #fff;
-  font-size: 0.8rem;
-  border: none;
-  border-radius: var(--radius-button);
-  padding: 0.5rem 1.25rem;
-  cursor: pointer;
-  font-family: inherit;
 }
 
 .form-btn-save:hover {
   background: var(--p-600);
 }
 
+.form-btn-remove:disabled,
 .form-btn-save:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* ── Sheet variant (phones) ──
-   The grid and columns drop out of the box tree so every group is a direct
-   child of the card. That lets the actions row stick to the bottom of the
-   sheet's scroll area for the whole scroll, not just the last column. */
-.form-card.is-sheet {
-  overflow: visible;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  text-align: left;
+.form-tile:focus-visible,
+.form-pill:focus-visible,
+.form-hint-undo:focus-visible,
+.form-section-toggle:focus-visible,
+.form-date-today:focus-visible,
+.form-btn-remove:focus-visible,
+.form-btn-cancel:focus-visible,
+.form-btn-save:focus-visible {
+  outline: 2px solid var(--p-500);
+  outline-offset: 2px;
 }
 
-.is-sheet .form-grid,
-.is-sheet .form-col {
-  display: contents;
+/* ── Sheet (phones): 44px targets, and 16px text so iOS doesn't zoom ── */
+.is-sheet {
+  --form-pad: 20px;
 }
 
 .is-sheet .form-group {
-  margin: 0;
-  padding: 16px 20px 0;
+  padding-top: 16px;
 }
 
 .is-sheet .form-label {
   margin-bottom: 10px;
   font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-primary);
 }
 
-.is-sheet .form-pills {
-  gap: 8px;
+.is-sheet .form-tiles {
+  gap: 6px;
 }
 
-.is-sheet .form-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.is-sheet .form-tile {
+  min-height: 64px;
+  padding: 10px 8px;
+  font-size: 13px;
+}
+
+.is-sheet .form-hint {
+  font-size: 14px;
+}
+
+.is-sheet .form-hint-undo {
   min-height: 44px;
-  padding: 0 16px;
-  border-radius: 22px;
-  font-size: 15px;
+  margin: -6px 0 -6px auto;
 }
 
-.is-sheet .form-pill-off {
-  color: var(--color-text-primary);
+.is-sheet .form-input {
+  height: 44px;
+  border-radius: 10px;
+  font-size: 16px;
 }
 
-.is-sheet .form-pill-on {
-  border-color: var(--p-500);
-  font-weight: 600;
-}
-
-.form-pill-dot {
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.is-sheet .form-pill-more {
-  border: 1px dashed var(--color-border);
-  background: transparent;
-  color: var(--n-500);
+.is-sheet .form-textarea {
+  height: auto;
+  padding: 12px;
+  resize: none;
 }
 
 .is-sheet .form-rating-row {
   gap: 14px;
 }
 
-/* 16px text stops iOS Safari zooming in when a field gets focus. */
-.is-sheet .form-rating-input,
-.is-sheet .form-number-input,
-.is-sheet .form-date-input,
-.is-sheet .form-textarea {
-  box-sizing: border-box;
-  border-radius: 10px;
-  font-size: 16px;
-}
-
-.is-sheet .form-rating-input,
-.is-sheet .form-number-input,
-.is-sheet .form-date-input {
-  height: 44px;
-}
-
 .is-sheet .form-rating-input {
   width: 72px;
-  font-weight: 600;
 }
 
-/* Fill the half-width column, matching the full-width date inputs below. */
-.is-sheet .form-number-input {
-  width: 100%;
-}
-
-.form-rating-range {
-  flex: 1;
+.is-sheet .form-rating-range {
   height: 44px;
-  margin: 0;
-  accent-color: var(--p-500);
 }
 
-.is-sheet .form-textarea {
-  min-height: 120px;
-  padding: 12px;
-  line-height: 1.45;
-  resize: none;
-}
-
-.is-sheet .form-pair {
-  gap: 12px;
-  padding: 16px 20px 0;
-}
-
-.is-sheet .form-pair .form-group {
-  padding: 0;
-}
-
-.is-sheet .form-dates {
+.is-sheet .form-grid2 {
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  padding: 16px 20px 0;
 }
 
 .is-sheet .form-label-row {
@@ -918,9 +1121,19 @@ defineExpose({ openAsAdd, openAsEdit });
   font-size: 14px;
 }
 
-.is-sheet .form-date-error {
-  margin: 8px 20px 0;
-  font-size: 14px;
+.is-sheet .form-section-toggle {
+  min-height: 56px;
+  font-size: 16px;
+}
+
+.is-sheet .form-pills {
+  gap: 8px;
+}
+
+.is-sheet .form-pill {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 15px;
 }
 
 .form-btn-remove-wide {
@@ -929,114 +1142,90 @@ defineExpose({ openAsAdd, openAsEdit });
   justify-content: center;
   gap: 8px;
   width: calc(100% - 40px);
+  height: auto;
   min-height: 48px;
   margin: 24px 20px 4px;
+  border: 1px solid #e8c4c0;
   border-radius: 12px;
   font-size: 15px;
-  font-weight: 600;
 }
 
 .is-sheet .form-actions {
-  position: sticky;
-  bottom: 0;
-  z-index: 1;
-  gap: 10px;
   margin-top: 20px;
-  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--color-border);
-  background: var(--color-surface);
+  padding-top: 12px;
 }
 
 .is-sheet .form-actions-right {
   flex: 1;
-  gap: 10px;
+  margin-left: 0;
 }
 
 .is-sheet .form-btn-cancel,
 .is-sheet .form-btn-save {
+  height: auto;
   min-height: 48px;
   border-radius: 12px;
   font-size: 16px;
-  font-weight: 600;
 }
 
 .is-sheet .form-btn-cancel {
   flex: 0 0 112px;
-  color: var(--color-text-primary);
 }
 
 .is-sheet .form-btn-save {
   flex: 1;
 }
 
-.is-sheet .form-pill:focus-visible,
-.is-sheet .form-date-today:focus-visible,
-.is-sheet .form-btn-cancel:focus-visible,
-.is-sheet .form-btn-save:focus-visible,
-.is-sheet .form-btn-remove:focus-visible {
-  outline: 2px solid var(--p-500);
-  outline-offset: 2px;
-}
-
-/* ── Responsive ── */
-@media (max-width: 768px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-col-left {
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
-  }
-}
-
 /* ── Dark mode ── */
 @media (prefers-color-scheme: dark) {
-  .form-card {
-    border: 1px solid var(--s-300);
+  .form-label small,
+  .form-hint,
+  .form-count,
+  .form-section-toggle svg,
+  .form-section-summary,
+  .form-pill-more,
+  .form-empty-hint {
+    color: var(--s-100);
   }
 
-  .form-pill-on {
-    background: rgba(206, 203, 246, 0.12);
+  .form-tile:hover,
+  .form-pill:hover {
+    border-color: var(--s-200);
+  }
+
+  .form-tile[aria-pressed="true"] {
+    border-color: var(--p-300);
+    background: rgba(206, 203, 246, 0.14);
+    box-shadow: inset 0 0 0 1px var(--p-300);
     color: var(--p-200);
   }
 
-  .form-rating-track {
-    background: rgba(157, 153, 224, 0.15);
+  .form-pill[aria-pressed="true"] {
+    border-color: var(--p-300);
+    background: rgba(206, 203, 246, 0.14);
+    color: var(--p-200);
   }
 
-  .form-rating-fill {
-    background: var(--p-400);
+  .form-hint {
+    background: var(--s-600);
   }
 
-  .form-rating-input,
-  .form-number-input,
-  .form-date-input,
-  .form-textarea {
+  .form-hint svg,
+  .form-hint-undo {
+    color: var(--p-300);
+  }
+
+  .form-input {
     background: var(--s-600);
     color: var(--s-50);
   }
 
-  .form-rating-input::placeholder,
-  .form-number-input::placeholder,
-  .form-date-input::placeholder,
-  .form-textarea::placeholder {
-    color: var(--color-placeholder);
+  .form-input:focus {
+    border-color: var(--p-300);
   }
 
-  .form-btn-remove {
-    background: rgba(226, 75, 74, 0.15);
-    color: var(--r-200);
-    border-color: transparent;
-  }
-
-  .form-btn-remove:hover {
-    background: rgba(226, 75, 74, 0.25);
-    border-color: transparent;
-  }
-
-  .form-date-error {
-    color: var(--r-200);
+  .form-rating-range {
+    accent-color: var(--p-300);
   }
 
   .form-date-today {
@@ -1047,22 +1236,32 @@ defineExpose({ openAsAdd, openAsEdit });
     color: var(--p-200);
   }
 
-  .is-sheet .form-pill-on {
-    border-color: var(--p-300);
+  .form-date-error,
+  .form-btn-remove {
+    color: var(--r-200);
   }
 
-  .is-sheet .form-pill-more {
-    color: var(--s-100);
+  .form-btn-remove:hover {
+    background: rgba(226, 75, 74, 0.15);
   }
 
-  .form-rating-range {
-    accent-color: var(--p-300);
+  .form-btn-remove-wide {
+    border-color: rgba(240, 149, 149, 0.4);
   }
-}
 
-/* Placeholders read as hints, not values. */
-.is-sheet .form-number-input::placeholder,
-.is-sheet .form-textarea::placeholder {
-  color: var(--color-placeholder);
+  .form-btn-cancel:hover {
+    background: var(--s-600);
+  }
+
+  .form-tile:focus-visible,
+  .form-pill:focus-visible,
+  .form-hint-undo:focus-visible,
+  .form-section-toggle:focus-visible,
+  .form-date-today:focus-visible,
+  .form-btn-remove:focus-visible,
+  .form-btn-cancel:focus-visible,
+  .form-btn-save:focus-visible {
+    outline-color: var(--p-300);
+  }
 }
 </style>

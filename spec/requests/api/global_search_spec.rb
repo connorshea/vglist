@@ -54,9 +54,9 @@ RSpec.describe "Global Search API", type: :request do
           }
         GRAPHQL
 
-        result = api_request(query_string, variables: { query: 'Super Mario Gala' }, token: access_token)
+        cover_variant = game2.cover.variant(:small).processed
 
-        cover_variant = game2.sized_cover(:small)
+        result = api_request(query_string, variables: { query: 'Super Mario Gala' }, token: access_token)
 
         expect(result.graphql_dig(:global_search, :nodes)).to eq(
           [
@@ -91,9 +91,9 @@ RSpec.describe "Global Search API", type: :request do
           }
         GRAPHQL
 
-        result = api_request(query_string, variables: { query: 'among' }, token: access_token)
+        avatar_variant = user.avatar.variant(:small).processed
 
-        avatar_variant = user.sized_avatar(:small)
+        result = api_request(query_string, variables: { query: 'among' }, token: access_token)
 
         expect(result.graphql_dig(:global_search, :nodes)).to eq(
           [

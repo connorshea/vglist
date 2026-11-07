@@ -4,13 +4,14 @@
     <div
       ref="sheetRef"
       class="lsheet"
+      :class="{ 'is-drawer': isDrawer }"
       role="dialog"
       aria-modal="true"
       aria-labelledby="lsheet-title"
       tabindex="-1"
       @keydown="onKeydown"
     >
-      <div class="lsheet-handle" aria-hidden="true"><span></span></div>
+      <div v-if="!isDrawer" class="lsheet-handle" aria-hidden="true"><span></span></div>
       <div class="lsheet-head">
         <img v-if="coverUrl" class="lsheet-cover" :src="coverUrl" alt="" />
         <div class="lsheet-titles">
@@ -29,14 +30,21 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { X } from "@lucide/vue";
 
-defineProps<{
-  title: string;
-  gameName: string;
-  coverUrl: string | null;
-}>();
+const props = withDefaults(
+  defineProps<{
+    title: string;
+    gameName: string;
+    coverUrl: string | null;
+    /** "sheet" rises from the bottom on phones; "drawer" slides in from the right on wider screens. */
+    variant?: "sheet" | "drawer";
+  }>(),
+  { variant: "sheet" }
+);
+
+const isDrawer = computed(() => props.variant === "drawer");
 
 const emit = defineEmits<{ close: [] }>();
 
@@ -185,6 +193,50 @@ onBeforeUnmount(() => {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+/* ── Drawer: full height on the right, over the page ── */
+.lsheet.is-drawer {
+  top: 0;
+  left: auto;
+  width: min(480px, 100vw);
+  max-height: none;
+  border-radius: 0;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.25);
+  animation-name: lsheet-slide;
+}
+
+.is-drawer .lsheet-head {
+  gap: 14px;
+  padding: 18px 12px 16px 24px;
+}
+
+.is-drawer .lsheet-cover {
+  width: 44px;
+}
+
+.is-drawer .lsheet-title {
+  font-size: 18px;
+}
+
+.is-drawer .lsheet-subtitle {
+  font-size: 13.5px;
+}
+
+.is-drawer .lsheet-close {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-button);
+}
+
+.is-drawer .lsheet-close:hover {
+  background: var(--color-bg-subtle);
+}
+
+@keyframes lsheet-slide {
+  from {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes lsheet-rise {
