@@ -3,7 +3,7 @@
     <div class="game-card-head">
       <h2 id="game-series-heading" class="game-card-label">More from this series</h2>
       <router-link v-if="totalCount > games.length" :to="seriesLink" class="series-shelf-more">
-        See all {{ totalCount + 1 }}<span class="is-sr-only">{{ ` ${series.name} games` }}</span>
+        See more<span class="is-sr-only">{{ ` ${series.name} games` }}</span>
       </router-link>
     </div>
     <p class="series-shelf-name">

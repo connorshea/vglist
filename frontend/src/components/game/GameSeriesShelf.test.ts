@@ -53,12 +53,11 @@ describe("GameSeriesShelf", () => {
     const wrapper = mountShelf({ games, totalCount: 5 });
 
     const seeAll = wrapper.find(".series-shelf-more");
-    // The five other games plus this one.
-    expect(seeAll.text()).toBe("See all 6 Half-Life games");
+    expect(seeAll.text()).toBe("See more Half-Life games");
     expect(linkTargets(wrapper)[0]).toBe("/series/7");
   });
 
-  it("leaves out the see-all link when every other game is shown", () => {
+  it("leaves out the see-more link when every other game is shown", () => {
     expect(mountShelf({ games, totalCount: 3 }).find(".series-shelf-more").exists()).toBeFalsy();
   });
 });
