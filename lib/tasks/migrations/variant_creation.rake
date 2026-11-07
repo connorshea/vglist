@@ -6,10 +6,13 @@
 # `preprocessed: true` variants on Game and User.
 #
 # Safe to stop and re-run: images that already have every variant are
-# skipped. Works on a few images at a time; set CONCURRENCY to change how
-# many (default 3, capped by the database pool size).
+# skipped. Most of the time goes to downloading and uploading images, so it
+# works on several at a time; set CONCURRENCY to change how many (default 6).
+# The task gives itself a database pool big enough for that many threads, so
+# it isn't capped by RAILS_MAX_THREADS (3 on App Platform). Each thread holds
+# a database connection, so keep it well under the database's limit.
 #
-#   CONCURRENCY=3 bundle exec rake active_storage:vglist:variants:create
+#   CONCURRENCY=6 bundle exec rake active_storage:vglist:variants:create
 namespace 'active_storage:vglist:variants' do
   require 'ruby-progressbar'
 
@@ -27,9 +30,20 @@ namespace 'active_storage:vglist:variants' do
          .preload("#{attachment_name}_attachment": { blob: :variant_records })
   end
 
+  # The pool defaults to RAILS_MAX_THREADS, which is sized for Puma rather than
+  # for this task. The worker threads and the main thread (which loads
+  # batches) each need a connection.
+  ensure_pool_size = lambda do |size|
+    config = ActiveRecord::Base.connection_db_config.configuration_hash
+    return if config.fetch(:pool, 5).to_i >= size
+
+    ActiveRecord::Base.establish_connection(config.merge(pool: size))
+  end
+
   backfill = lambda do |model, attachment_name, variant_names|
     records = variants_missing.call(model, attachment_name, variant_names.size)
-    concurrency = ENV.fetch('CONCURRENCY', 3).to_i
+    concurrency = ENV.fetch('CONCURRENCY', 6).to_i.clamp(1, 16)
+    ensure_pool_size.call(concurrency + 1)
 
     puts "Creating #{model.name.downcase} #{attachment_name} variants (#{concurrency} at a time)..."
     progress_bar = ProgressBar.create(
