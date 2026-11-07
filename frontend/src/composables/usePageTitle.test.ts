@@ -36,7 +36,8 @@ function buildRouter(): Router {
     routes: [
       { path: "/", component: StaticPage },
       { path: "/games", component: StaticPage, meta: { title: "Games" } },
-      { path: "/games/:id", component: GamePage }
+      { path: "/games/:id", component: GamePage },
+      { path: "/:pathMatch(.*)*", name: "notFound", component: StaticPage, meta: { title: "Page not found" } }
     ]
   });
   installPageTitles(router);
@@ -107,6 +108,15 @@ describe("page titles", () => {
     await router.push("/games");
     await flushPromises();
     expect(document.title).toBe("Games | vglist");
+  });
+
+  it("uses the 404 title when a page swaps itself for the 404 page at the same URL", async () => {
+    const router = await mountAt("/games/1");
+
+    await router.replace({ name: "notFound", params: { pathMatch: ["games", "1"] } });
+    await flushPromises();
+    expect(router.currentRoute.value.fullPath).toBe("/games/1");
+    expect(document.title).toBe("Page not found | vglist");
   });
 });
 

@@ -251,6 +251,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import { useAuthStore } from "@/stores/auth";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { usePageTitle } from "@/composables/usePageTitle";
@@ -382,7 +383,7 @@ watch(
 // Redirect to 404 when editing a non-existent game
 watch([gameData, gameError, gameLoading], () => {
   if (isEditing.value && !gameLoading.value && (gameError.value || (gameData.value && !gameData.value.game))) {
-    router.replace({ name: "notFound" });
+    router.replace(notFoundLocation(route));
   }
 });
 

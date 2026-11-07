@@ -9,7 +9,12 @@ const { mockRequest, mockReplace, mockPush, mockRoute } = vi.hoisted(() => ({
   mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>(),
   mockReplace: vi.fn<(to: unknown) => Promise<void>>(),
   mockPush: vi.fn<(to: unknown) => Promise<void>>(),
-  mockRoute: { params: { slug: "connorshea", otherSlug: "kestrel" }, query: {} as Record<string, string> }
+  mockRoute: {
+    path: "/users/connorshea/compare/kestrel",
+    hash: "",
+    params: { slug: "connorshea", otherSlug: "kestrel" },
+    query: {} as Record<string, string>
+  }
 }));
 
 vi.mock("@/graphql/client", () => ({
@@ -218,7 +223,12 @@ describe("UserComparePage", () => {
     respond({ libraryComparison: null });
     await mountPage();
 
-    expect(mockReplace).toHaveBeenCalledWith({ name: "notFound" });
+    expect(mockReplace).toHaveBeenCalledWith({
+      name: "notFound",
+      params: { pathMatch: ["users", "connorshea", "compare", "kestrel"] },
+      query: {},
+      hash: ""
+    });
   });
 
   it("explains why when a library can't be compared", async () => {

@@ -383,6 +383,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import { ArrowLeftRight, ChevronDown, Search, UserSearch } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { usePageTitle } from "@/composables/usePageTitle";
@@ -456,7 +457,7 @@ const { data, loading, error } = useQuery<GetLibraryComparisonQuery>(GET_LIBRARY
 
 watch([data, loading], () => {
   if (!loading.value && data.value && !data.value.libraryComparison) {
-    void router.replace({ name: "notFound" });
+    void router.replace(notFoundLocation(route));
   }
 });
 

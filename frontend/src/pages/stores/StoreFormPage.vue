@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
@@ -68,7 +69,7 @@ watch(isEditing, (editing) => {
 // Redirect to 404 when editing a store that doesn't exist.
 watch([data, error, loading], () => {
   if (isEditing.value && !loading.value && (error.value || (data.value && !data.value.store))) {
-    router.replace({ name: "notFound" });
+    router.replace(notFoundLocation(route));
   }
 });
 
