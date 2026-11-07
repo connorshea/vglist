@@ -29,6 +29,7 @@ class GraphqlController < ApplicationController
 
     context = {
       current_user: current_user,
+      client_ip: RackAttackConfig.client_ip(request),
       pundit: self
     }
 

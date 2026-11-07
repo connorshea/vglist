@@ -76,6 +76,48 @@ RSpec.describe "Api::Auth", type: :request do
   end
 
   describe "POST /api/auth/sign_up" do
+    context "when Turnstile is enabled" do
+      let(:siteverify_url) { 'https://challenges.cloudflare.com/turnstile/v0/siteverify' }
+      let(:params) do
+        {
+          username: "newuser",
+          email: "newuser@example.com",
+          password: "password123",
+          password_confirmation: "password123"
+        }
+      end
+
+      around(:each) do |example|
+        with_environment('TURNSTILE_SECRET_KEY' => '1x0000000000000000000000000000000AA') { example.run }
+      end
+
+      it "creates the user when the token is valid", :aggregate_failures do
+        stub_request(:post, siteverify_url).to_return(body: { success: true }.to_json)
+
+        post api_auth_sign_up_path, params: params.merge(turnstile_token: "XXXX.DUMMY.TOKEN.XXXX")
+
+        expect(response).to have_http_status(:created)
+        expect(User.find_by(email: "newuser@example.com")).to be_present
+      end
+
+      it "rejects the request without a token", :aggregate_failures do
+        post api_auth_sign_up_path, params: params
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body)['errors']).to eq([TurnstileVerifier::ERROR_MESSAGE])
+        expect(User.find_by(email: "newuser@example.com")).to be_nil
+      end
+
+      it "rejects the request when Cloudflare rejects the token", :aggregate_failures do
+        stub_request(:post, siteverify_url).to_return(body: { success: false, 'error-codes' => ['invalid-input-response'] }.to_json)
+
+        post api_auth_sign_up_path, params: params.merge(turnstile_token: "bad")
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(User.find_by(email: "newuser@example.com")).to be_nil
+      end
+    end
+
     it "creates a new user account" do
       post api_auth_sign_up_path, params: {
         username: "newuser",

@@ -32,6 +32,7 @@ Optional environment variables for miscellaneous functionality:
 - `MOBYGAMES_API_KEY`: If you want to use the MobyGames cover import Rake task, you'll need to get [a MobyGames API key](https://www.mobygames.com/info/api#toc-authorization).
 - `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`: If you want to use the IGDB cover import Rake task, you'll need to [create an OAuth app for the Twitch API](https://dev.twitch.tv/docs/authentication).
   - The "OAuth Redirect URL" for the OAuth app can just be set to `http://localhost`, the redirect URL isn't used.
+- `TURNSTILE_SECRET_KEY` (API) and `VITE_TURNSTILE_SITE_KEY` (frontend, in `frontend/.env.development.local`): Cloudflare Turnstile keys for the bot check on sign-up. Leave both unset to turn the check off. To try it locally, use Cloudflare's [dummy test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/), e.g. site key `1x00000000000000000000AA` with secret key `1x0000000000000000000000000000000AA`. Set both or neither: with only the secret key set, every sign-up fails.
 
 ## Libraries
 

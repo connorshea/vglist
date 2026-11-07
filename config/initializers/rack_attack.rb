@@ -10,11 +10,13 @@
 module RackAttackConfig
   AUTH_MUTATION_PATTERN = /\b(signIn|signUp|requestPasswordReset)\b/
   SIGN_IN_PATTERN = /\bsignIn\b/
+  SIGN_UP_PATTERN = /\bsignUp\b/
   EMAIL_DELIVERY_MUTATION_PATTERN = /\b(signUp|requestPasswordReset)\b/
 
   # Devise and /api/auth endpoints, grouped by what an attacker gains from
   # hammering them.
   SIGN_IN_PATHS = %w[/api/auth/sign_in].freeze
+  SIGN_UP_PATHS = %w[/api/auth/sign_up].freeze
   EMAIL_DELIVERY_PATHS = %w[/api/auth/sign_up /users/password /users/confirmation].freeze
   AUTH_PATHS = (SIGN_IN_PATHS + EMAIL_DELIVERY_PATHS).freeze
 
@@ -41,6 +43,12 @@ module RackAttackConfig
     return false unless req.post?
 
     SIGN_IN_PATHS.include?(path(req)) || graphql_query(req).match?(SIGN_IN_PATTERN)
+  end
+
+  def sign_up_request?(req)
+    return false unless req.post?
+
+    SIGN_UP_PATHS.include?(path(req)) || graphql_query(req).match?(SIGN_UP_PATTERN)
   end
 
   def email_delivery_request?(req)
@@ -168,6 +176,17 @@ end
 # spray guesses across many accounts or trigger unbounded email delivery.
 Rack::Attack.throttle('auth/ip', limit: 20, period: 1.minute) do |req|
   RackAttackConfig.client_ip(req) if RackAttackConfig.auth_request?(req)
+end
+
+# Per-IP cap on sign-up attempts, much tighter than auth/ip because each
+# successful one leaves a users row and sends a confirmation email. It counts
+# attempts, not accounts: failed tries (taken username, short password,
+# expired Turnstile token) count too, and so does everyone behind the same
+# NAT. Turnstile is the main defense, so this is a backstop with room for a
+# few fumbles. Like the others, the counter is per Puma worker (see the
+# graphql/ip comment above), but don't count on that to loosen it.
+Rack::Attack.throttle('sign_up/ip', limit: 10, period: 1.hour) do |req|
+  RackAttackConfig.client_ip(req) if RackAttackConfig.sign_up_request?(req)
 end
 
 # Per-account cap on password guesses, regardless of source IP.

@@ -54,6 +54,14 @@
         />
       </div>
 
+      <TurnstileWidget
+        v-if="turnstileSiteKey"
+        ref="turnstile"
+        v-model="turnstileToken"
+        :site-key="turnstileSiteKey"
+        action="signup"
+      />
+
       <button class="auth-submit" type="submit" :disabled="isLoading">
         {{ isLoading ? "Creating account..." : "Create account" }}
       </button>
@@ -62,9 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import AuthLayout from "@/components/auth/AuthLayout.vue";
+import TurnstileWidget from "@/components/auth/TurnstileWidget.vue";
 
 const { signUp } = useAuth();
 
@@ -76,16 +85,36 @@ const errors = ref<string[]>([]);
 const successMessage = ref("");
 const isLoading = ref(false);
 
+// Turnstile is on when a site key was baked into the build. The API rejects
+// sign-ups without a valid token whenever its secret key is set.
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+const turnstileToken = ref("");
+const turnstile = useTemplateRef<InstanceType<typeof TurnstileWidget>>("turnstile");
+
 async function handleSubmit() {
-  isLoading.value = true;
   errors.value = [];
 
-  const result = await signUp(username.value, email.value, password.value, passwordConfirmation.value);
+  if (turnstileSiteKey && !turnstileToken.value) {
+    errors.value = ["Please complete the human verification check above, then try again."];
+    return;
+  }
+
+  isLoading.value = true;
+
+  const result = await signUp(
+    username.value,
+    email.value,
+    password.value,
+    passwordConfirmation.value,
+    turnstileToken.value || undefined
+  );
 
   if (result.success) {
     successMessage.value = "Account created successfully! Please check your email to confirm your account.";
   } else {
     errors.value = result.errors;
+    // The server has spent the token, so get a fresh one for the next try.
+    turnstile.value?.reset();
   }
 
   isLoading.value = false;

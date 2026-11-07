@@ -235,6 +235,7 @@ export type SignUpMutationVariables = Exact<{
   email: string;
   password: string;
   passwordConfirmation: string;
+  turnstileToken?: string | null | undefined;
 }>;
 
 export interface SignUpMutation {

@@ -163,6 +163,66 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(data['message']).to be_nil
       expect(data['errors']).not_to be_empty
     end
+
+    context "when Turnstile is enabled" do
+      let(:siteverify_url) { 'https://challenges.cloudflare.com/turnstile/v0/siteverify' }
+      let(:turnstile_query) do
+        <<~GQL
+          mutation SignUp($username: String!, $email: String!, $password: String!, $passwordConfirmation: String!, $turnstileToken: String) {
+            signUp(username: $username, email: $email, password: $password, passwordConfirmation: $passwordConfirmation, turnstileToken: $turnstileToken) {
+              message
+              errors
+            }
+          }
+        GQL
+      end
+      let(:variables) do
+        {
+          username: "graphqluser",
+          email: "graphqluser@example.com",
+          password: "password123",
+          passwordConfirmation: "password123"
+        }
+      end
+
+      around(:each) do |example|
+        with_environment('TURNSTILE_SECRET_KEY' => '1x0000000000000000000000000000000AA') { example.run }
+      end
+
+      it "creates the user when the token is valid, and passes the client IP to Cloudflare", :aggregate_failures do
+        stub_request(:post, siteverify_url).to_return(body: { success: true }.to_json)
+
+        post graphql_path,
+          params: { query: turnstile_query, variables: variables.merge(turnstileToken: "XXXX.DUMMY.TOKEN.XXXX").to_json },
+          env: { 'REMOTE_ADDR' => '203.0.113.7' }
+
+        data = JSON.parse(response.body).dig('data', 'signUp')
+        expect(data['errors']).to be_empty
+        expect(User.find_by(email: "graphqluser@example.com")).to be_present
+        expect(
+          a_request(:post, siteverify_url).with(body: hash_including('response' => 'XXXX.DUMMY.TOKEN.XXXX', 'remoteip' => '203.0.113.7'))
+        ).to have_been_made.once
+      end
+
+      it "rejects the sign-up without a token", :aggregate_failures do
+        post graphql_path, params: { query: query, variables: variables.to_json }
+
+        data = JSON.parse(response.body).dig('data', 'signUp')
+        expect(data['message']).to be_nil
+        expect(data['errors']).to eq([TurnstileVerifier::ERROR_MESSAGE])
+        expect(User.find_by(email: "graphqluser@example.com")).to be_nil
+      end
+
+      it "rejects the sign-up when Cloudflare rejects the token", :aggregate_failures do
+        stub_request(:post, siteverify_url).to_return(body: { success: false, 'error-codes' => ['timeout-or-duplicate'] }.to_json)
+
+        post graphql_path, params: { query: turnstile_query, variables: variables.merge(turnstileToken: "used").to_json }
+
+        data = JSON.parse(response.body).dig('data', 'signUp')
+        expect(data['errors']).to eq([TurnstileVerifier::ERROR_MESSAGE])
+        expect(User.find_by(email: "graphqluser@example.com")).to be_nil
+      end
+    end
   end
 
   describe "requestPasswordReset mutation" do
