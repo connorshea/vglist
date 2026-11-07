@@ -442,7 +442,12 @@ onMounted(() => {
 onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
 
 // ── Summary ─────────────────────────────────────────────────────────────────
-const slugs = computed(() => ({ userASlug: route.params.slug, userBSlug: route.params.otherSlug }));
+// `route.params` is a new object on every navigation, including the `?tab=`
+// changes the tabs make, so read each slug into a string computed. Those only
+// notify their dependents when the slug itself changes.
+const userASlug = computed(() => route.params.slug);
+const userBSlug = computed(() => route.params.otherSlug);
+const slugs = computed(() => ({ userASlug: userASlug.value, userBSlug: userBSlug.value }));
 
 const { data, loading, error } = useQuery<GetLibraryComparisonQuery>(GET_LIBRARY_COMPARISON, {
   variables: () => ({ ...slugs.value, shelfCount: SHELF_SIZE })
@@ -737,7 +742,7 @@ async function loadMoreOnly() {
 }
 
 // Clear the searches when switching to another pair of users.
-watch(slugs, () => {
+watch([userASlug, userBSlug], () => {
   commonSearch.value = "";
   onlySearch.value = "";
 });
