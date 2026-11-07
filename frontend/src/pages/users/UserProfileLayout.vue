@@ -36,6 +36,10 @@
           </router-link>
         </div>
         <div v-else-if="canFollow || hasAdminActions" class="profile-actions">
+          <router-link v-if="compareLink" :to="compareLink" class="profile-button">
+            <GitCompareArrows :size="14" aria-hidden="true" />
+            Compare libraries
+          </router-link>
           <template v-if="canFollow">
             <button
               v-if="user.isFollowed"
@@ -221,7 +225,17 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from "vue";
 import { useRoute, useRouter, type RouteRecordName } from "vue-router";
-import { CircleAlert, Ellipsis, Pencil, Plus, ShieldCheck, UserCheck, UserMinus, UserPlus } from "@lucide/vue";
+import {
+  CircleAlert,
+  Ellipsis,
+  GitCompareArrows,
+  Pencil,
+  Plus,
+  ShieldCheck,
+  UserCheck,
+  UserMinus,
+  UserPlus
+} from "@lucide/vue";
 import { useMutation, useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { USER_PROFILE_KEY } from "@/composables/useUserProfile";
@@ -319,6 +333,18 @@ const tabs = computed<Tab[]>(() => {
 
 // ── Follow ──────────────────────────────────────────────────────────────────
 const canFollow = computed(() => authStore.isAuthenticated && user.value !== null && !isOwnProfile.value);
+
+// Compares the viewer's library (on the left) with this user's. Like
+// UserPolicy#compare?, only admins can compare a private or banned user's
+// library. (The policy also lets a private user's followees compare with them,
+// but the profile doesn't know who they follow, and shows them the private
+// account message anyway.)
+const canCompare = computed(() => authStore.isAdmin || (!isPrivate.value && !user.value?.banned));
+const compareLink = computed(() =>
+  canFollow.value && canCompare.value && user.value && authStore.user
+    ? { name: "userCompare" as const, params: { slug: authStore.user.slug, otherSlug: user.value.slug } }
+    : null
+);
 
 const { mutate: followUser, loading: followLoading } = useMutation(FOLLOW_USER);
 const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_USER);
