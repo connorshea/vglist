@@ -16,11 +16,11 @@
           <span class="compare-duo" aria-hidden="true">
             <span class="compare-avatar is-a">
               <img v-if="userA.avatarUrl" :src="userA.avatarUrl" alt="" />
-              <template v-else>{{ initial(userA.username) }}</template>
+              <span v-else class="compare-avatar-initial">{{ initial(userA.username) }}</span>
             </span>
             <span class="compare-avatar is-b">
               <img v-if="userB.avatarUrl" :src="userB.avatarUrl" alt="" />
-              <template v-else>{{ initial(userB.username) }}</template>
+              <span v-else class="compare-avatar-initial">{{ initial(userB.username) }}</span>
             </span>
           </span>
           <div class="compare-identity-text">
@@ -104,7 +104,8 @@
           :class="{ 'is-active': activeTab === tab.key }"
           :aria-current="activeTab === tab.key ? 'page' : undefined"
         >
-          {{ tab.label }} <span class="compare-pill-count">{{ tab.count.toLocaleString() }}</span>
+          <span class="compare-pill-label">{{ tab.label }}</span>
+          <span class="compare-pill-count">{{ tab.count.toLocaleString() }}</span>
         </router-link>
       </nav>
       <nav v-else class="compare-tabs" aria-label="Comparison sections">
@@ -839,6 +840,10 @@ function useDebounced(source: typeof commonSearch) {
   box-shadow: 0 0 0 3px var(--bulma-scheme-main);
 }
 
+.compare-avatar-initial {
+  text-box: trim-both cap alphabetic;
+}
+
 .compare-avatar img {
   width: 100%;
   height: 100%;
@@ -1047,6 +1052,14 @@ function useDebounced(source: typeof commonSearch) {
   border-color: var(--vglist-theme);
   background: var(--vglist-theme);
   color: #fff;
+}
+
+/* Trimmed to cap height and baseline so the letters, not the line box, are
+   centred in the pill. Otherwise the font's descender space leaves more room
+   below the text than above it. */
+.compare-pill-label,
+.compare-pill-count {
+  text-box: trim-both cap alphabetic;
 }
 
 .compare-pill-count {
@@ -1381,11 +1394,14 @@ function useDebounced(source: typeof commonSearch) {
 }
 
 /* The little user badges in the column headers and shelves. */
+/* Block containers trimmed to cap height and baseline, so the letter itself,
+   not its line box (which has room for descenders), sits in the middle. */
 .compare-mav {
-  display: inline-flex;
+  display: inline-block;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
+  align-content: center;
+  text-align: center;
+  text-box: trim-both cap alphabetic;
   width: 20px;
   height: 20px;
   border-radius: 6px;
