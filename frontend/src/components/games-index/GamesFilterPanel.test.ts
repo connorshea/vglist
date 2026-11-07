@@ -27,8 +27,8 @@ describe("GamesFilterPanel", () => {
     wrapper.unmount();
   });
 
-  it("picks a genre with a search field like the engine filter", async () => {
-    const wrapper = mountPanel();
+  it("picks a genre with a search field in the phone sheet", async () => {
+    const wrapper = mountPanel({}, "sheet");
     const input = wrapper.find("#games-filter-genre");
     expect(input.attributes("placeholder")).toBe("Any genre");
     expect(wrapper.find('label[for="games-filter-genre"]').text()).toBe("Genre");
@@ -64,13 +64,18 @@ describe("GamesFilterPanel", () => {
     wrapper.unmount();
   });
 
-  it("only offers the platform search in the phone sheet", () => {
+  it("only offers the platform, genre and engine searches in the phone sheet", () => {
     const popover = mountPanel();
-    expect(popover.find("#games-filter-platform").exists()).toBeFalsy();
+    for (const id of ["platform", "genre", "engine"]) {
+      expect(popover.find(`#games-filter-${id}`).exists()).toBeFalsy();
+    }
+    expect(popover.find("#games-filter-from").exists()).toBeTruthy();
     popover.unmount();
 
     const sheet = mountPanel({}, "sheet");
-    expect(sheet.find("#games-filter-platform").exists()).toBeTruthy();
+    for (const id of ["platform", "genre", "engine"]) {
+      expect(sheet.find(`#games-filter-${id}`).exists()).toBeTruthy();
+    }
     expect(sheet.find('[role="dialog"]').attributes("aria-modal")).toBe("true");
     sheet.unmount();
   });

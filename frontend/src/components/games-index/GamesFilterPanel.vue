@@ -32,7 +32,7 @@
         />
       </div>
 
-      <div class="filter-group">
+      <div v-if="variant === 'sheet'" class="filter-group">
         <label class="filter-heading" for="games-filter-genre">Genre</label>
         <FilterSearchSelect
           :model-value="modelValue.genre"
@@ -79,7 +79,7 @@
         </div>
       </fieldset>
 
-      <div class="filter-group">
+      <div v-if="variant === 'sheet'" class="filter-group">
         <label class="filter-heading" for="games-filter-engine">Engine</label>
         <FilterSearchSelect
           :model-value="modelValue.engine"
@@ -140,7 +140,11 @@ const props = defineProps<{
   /** Names for the platform, genre and engine IDs in `modelValue`. */
   names: { platform: string | null; genre: string | null; engine: string | null };
   signedIn: boolean;
-  /** A popover under its button on wide screens, a bottom sheet on phones. */
+  /**
+   * A popover under its button on wide screens, a bottom sheet on phones. Only
+   * the sheet has platform, genre and engine; wide screens show those on the
+   * page itself.
+   */
   variant: "popover" | "sheet";
 }>();
 

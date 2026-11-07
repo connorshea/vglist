@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   EMPTY_FILTERS,
+  activeFiltersCount,
   countLabel,
   filterVariables,
   filtersFromQuery,
@@ -112,9 +113,24 @@ describe("filterVariables", () => {
 describe("moreFiltersCount", () => {
   it("counts the popover's filters, with a year range as one", () => {
     expect(moreFiltersCount(EMPTY_FILTERS)).toBe(0);
-    expect(moreFiltersCount({ ...EMPTY_FILTERS, platform: "4" })).toBe(0);
+    expect(moreFiltersCount({ ...EMPTY_FILTERS, platform: "4", genre: "1", engine: "2" })).toBe(0);
+    expect(moreFiltersCount({ ...EMPTY_FILTERS, fromYear: "2015", toYear: "2020", hideLibrary: true })).toBe(2);
+  });
+});
+
+describe("activeFiltersCount", () => {
+  it("counts every filter, with a year range as one", () => {
+    expect(activeFiltersCount(EMPTY_FILTERS)).toBe(0);
     expect(
-      moreFiltersCount({ ...EMPTY_FILTERS, genre: "1", fromYear: "2015", toYear: "2020", hideLibrary: true })
-    ).toBe(3);
+      activeFiltersCount({
+        ...EMPTY_FILTERS,
+        platform: "4",
+        genre: "1",
+        engine: "2",
+        fromYear: "2015",
+        toYear: "2020",
+        hideLibrary: true
+      })
+    ).toBe(5);
   });
 });
