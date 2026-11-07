@@ -586,6 +586,15 @@ Rails/UnusedIgnoredColumns:
 Rails/WhereEquals:
   Enabled: true
 
+Lint/MisplacedMagicComment:
+  Enabled: true
+
+RSpecRails/FileFixture:
+  Enabled: true
+
+RSpecRails/ReceivePerformLater:
+  Enabled: true
+
 # I don't like this rule.
 Style/HashSyntax:
   Enabled: false
