@@ -15,12 +15,14 @@ export function formatPageTitle(title?: string | null): string {
  * `usePageTitle()` with its data.
  *
  * A navigation that only changes the query or hash keeps the current title, so
- * data-driven titles survive e.g. a sort change on the same page.
+ * data-driven titles survive e.g. a sort change on the same page. A page that
+ * swaps itself for the 404 page keeps its path but changes route, so that
+ * still gets a new title.
  */
 export function installPageTitles(router: Router): void {
   router.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized, failure) => {
     if (failure) return;
-    if (from.matched.length > 0 && to.path === from.path) return;
+    if (from.matched.length > 0 && to.path === from.path && to.name === from.name) return;
     document.title = formatPageTitle(to.meta.title);
   });
 }

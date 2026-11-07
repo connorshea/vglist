@@ -62,6 +62,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import { CircleAlert, Gamepad2 } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useMutation } from "@/composables/useGraphQL";
@@ -93,7 +94,7 @@ usePageTitle(() => data.value?.platform?.name);
 // loaded, an error from changing the sort is shown above the games instead.
 watch([data, error, loading], () => {
   if (!loading.value && ((error.value && !data.value) || (data.value && !data.value.platform))) {
-    router.replace({ name: "notFound" });
+    router.replace(notFoundLocation(route));
   }
 });
 

@@ -228,6 +228,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from "vue";
 import { useRoute, useRouter, type RouteRecordName } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import {
   CircleAlert,
   Ellipsis,
@@ -271,7 +272,7 @@ const { data, loading, error, refetch } = useQuery<GetUserProfileQuery>(GET_USER
 
 watch([data, error, loading], () => {
   if (!loading.value && (error.value || (data.value && !data.value.user))) {
-    void router.replace({ name: "notFound" });
+    void router.replace(notFoundLocation(route));
   }
 });
 

@@ -67,6 +67,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import { BriefcaseBusiness, CircleAlert } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useMutation } from "@/composables/useGraphQL";
@@ -120,7 +121,7 @@ const tabs = computed(() => {
 // loaded, an error from changing the sort or tab is shown above the games.
 watch([data, error, loading], () => {
   if (!loading.value && ((error.value && !data.value) || (data.value && !data.value.company))) {
-    router.replace({ name: "notFound" });
+    router.replace(notFoundLocation(route));
   }
 });
 

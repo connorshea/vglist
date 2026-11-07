@@ -336,6 +336,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { notFoundLocation } from "@/utils/not-found";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
 import { useImageColors } from "@/composables/useImageColors";
@@ -391,7 +392,7 @@ usePageTitle(() => game.value?.name);
 // Redirect to 404 when the game is not found or the query fails.
 watch([data, error, loading], () => {
   if (!loading.value && (error.value || (data.value && !game.value))) {
-    router.replace({ name: "notFound" });
+    router.replace(notFoundLocation(route));
   }
 });
 
