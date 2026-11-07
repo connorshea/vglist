@@ -19,6 +19,9 @@ Rails.application.routes.draw do
     delete 'auth/sign_out', to: 'auth#sign_out'
     get 'auth/me', to: 'auth#me'
 
+    # Avatar upload for the signed-in user (multipart, cropped client-side).
+    post 'users/me/avatar', to: 'avatars#create'
+
     # Admin-only download of every game's name, ID, Steam app IDs, and
     # Wikidata ID as JSON.
     namespace :admin do
