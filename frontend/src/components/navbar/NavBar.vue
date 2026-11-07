@@ -6,7 +6,7 @@
       </router-link>
 
       <!-- Mobile search button (to the left of hamburger) -->
-      <button class="navbar-mobile-search is-hidden-desktop" aria-label="Search" @click="openSearch">
+      <button class="navbar-mobile-search is-hidden-desktop" aria-label="Search" @click="openSearch()">
         <Search :size="18" :stroke-width="1.8" />
       </button>
 
