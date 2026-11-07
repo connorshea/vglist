@@ -72,6 +72,28 @@ export const GET_COMPANIES = gql`
   }
 `;
 
+export const GET_COMPANIES_INDEX = gql`
+  query GetCompaniesIndex($first: Int, $after: String, $sortBy: ResourceSort, $nameContains: String) {
+    companies(first: $first, after: $after, sortBy: $sortBy, nameContains: $nameContains) {
+      totalCount
+      nodes {
+        id
+        name
+        gamesCount
+        coverGames {
+          id
+          name
+          coverUrl
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
 export const GET_COMPANY = gql`
   ${RESOURCE_GAME_FIELDS}
 

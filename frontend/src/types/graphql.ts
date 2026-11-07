@@ -1429,6 +1429,26 @@ export interface GetCompaniesQuery {
   } | null;
 }
 
+export type GetCompaniesIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: ResourceSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetCompaniesIndexQuery {
+  companies: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
 export type GetCompanyQueryVariables = Exact<{
   id: string;
   sortBy?: ResourceGameSort | null | undefined;
