@@ -5,8 +5,9 @@ module Types
     description "Mutations are GraphQL requests that can be used to create, update, or delete records on vglist."
 
     # Skip the BaseObject auth check on MutationType itself so that
-    # unauthenticated auth mutations (signIn, signUp, requestPasswordReset)
-    # can execute. Individual mutations handle their own auth checks.
+    # unauthenticated auth mutations (signIn, signUp, requestPasswordReset,
+    # passkeyAuthenticationOptions, signInWithPasskey) can execute.
+    # Individual mutations handle their own auth checks.
     def self.authorized?(_object, _context)
       true
     end
@@ -15,6 +16,8 @@ module Types
     field :sign_in, mutation: Mutations::Auth::SignInMutation
     field :sign_up, mutation: Mutations::Auth::SignUpMutation
     field :request_password_reset, mutation: Mutations::Auth::RequestPasswordResetMutation
+    field :passkey_authentication_options, mutation: Mutations::Auth::PasskeyAuthenticationOptionsMutation
+    field :sign_in_with_passkey, mutation: Mutations::Auth::SignInWithPasskeyMutation
 
     # Game mutations
     field :create_game, mutation: Mutations::Games::CreateGame
@@ -40,6 +43,12 @@ module Types
     field :reset_user_library, mutation: Mutations::Users::ResetUserLibrary
     field :delete_user, mutation: Mutations::Users::DeleteUser
     field :export_library, mutation: Mutations::Users::ExportLibrary
+
+    # Passkey mutations
+    field :passkey_registration_options, mutation: Mutations::Passkeys::PasskeyRegistrationOptions
+    field :register_passkey, mutation: Mutations::Passkeys::RegisterPasskey
+    field :rename_passkey, mutation: Mutations::Passkeys::RenamePasskey
+    field :delete_passkey, mutation: Mutations::Passkeys::DeletePasskey
 
     # GamePurchase mutations
     field :add_game_to_library, mutation: Mutations::GamePurchases::AddGameToLibrary

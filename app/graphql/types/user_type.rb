@@ -40,6 +40,7 @@ module Types
     field :is_followed, Boolean, null: true, resolver_method: :followed?, description: "Whether the current user is following this user. `null` if there is no logged-in user or the current user is querying on themselves."
     field :hide_days_played, Boolean, null: false, description: "Whether to hide the 'Days Played' value on the this user's profile."
     field :steam_profile_url, String, null: true, description: "URL of the Steam profile connected to this user's account. Only visible to the user themselves, `null` for anyone else or when no Steam account is connected."
+    field :passkeys, [PasskeyType], null: true, description: "Passkeys this user can sign in with, newest first. Only visible to the user themselves, `null` for anyone else."
 
     def activity
       return [] unless user_visible?
@@ -145,6 +146,13 @@ module Types
       return nil unless @context[:current_user]&.id == @object.id
 
       @object.external_account&.steam_profile_url
+    end
+
+    # Only the user themselves can see (and manage) their passkeys.
+    def passkeys
+      return nil unless @context[:current_user]&.id == @object.id
+
+      @object.webauthn_credentials.order(created_at: :desc, id: :desc)
     end
 
     private
