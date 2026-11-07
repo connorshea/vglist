@@ -9,12 +9,8 @@
       <p class="auth-sub">
         Your passkey worked{{ passkeySignedIn.username ? `. Welcome back, ${passkeySignedIn.username}!` : "!" }}
       </p>
-      <div class="auth-success-bar" aria-hidden="true">
-        <span :style="{ animationDuration: `${PASSKEY_SUCCESS_DELAY_MS}ms` }"></span>
-      </div>
       <p class="auth-status">
         {{ redirectTarget === "/" ? "Taking you to vglist…" : "Taking you back to where you were…" }}
-        <button class="auth-link auth-link-button" type="button" @click="redirectAfterSignIn">Continue now</button>
       </p>
     </div>
 
@@ -225,3 +221,26 @@ onBeforeUnmount(() => {
   if (passkeysSupported) WebAuthnAbortService.cancelCeremony();
 });
 </script>
+
+<style scoped>
+/* The check draws itself once AuthLayout's circle has popped in. The path is
+   inside the Lucide component, so it needs :deep(). Its length is about 23. */
+.auth-success-icon :deep(path) {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: draw-check 0.4s 0.25s ease-out forwards;
+}
+
+@keyframes draw-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-success-icon :deep(path) {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+</style>

@@ -355,7 +355,7 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
 }
 
 .auth-card :slotted(.auth-success .auth-sub) {
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .auth-card :slotted(.auth-success-icon) {
@@ -371,46 +371,10 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
   animation: auth-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.auth-card :slotted(.auth-success-bar) {
-  height: 4px;
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: var(--color-border);
-}
-
-.auth-card :slotted(.auth-success-bar span) {
-  display: block;
-  height: 100%;
-  background: var(--p-500);
-  transform-origin: left;
-  animation: auth-fill linear forwards;
-}
-
-.auth-card :slotted(.auth-link-button) {
-  padding: 0;
-  margin-left: 4px;
-  border: 0;
-  background: none;
-  font: inherit;
-  cursor: pointer;
-}
-
-.auth-card :slotted(.auth-link-button:focus-visible) {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
 @keyframes auth-pop {
   from {
     transform: scale(0.4);
     opacity: 0;
-  }
-}
-
-@keyframes auth-fill {
-  from {
-    transform: scaleX(0);
   }
 }
 
@@ -421,11 +385,6 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
 
   .auth-card :slotted(.auth-success-icon) {
     animation: none;
-  }
-
-  /* A bar that fills up is motion too, so show the text alone. */
-  .auth-card :slotted(.auth-success-bar) {
-    display: none;
   }
 }
 

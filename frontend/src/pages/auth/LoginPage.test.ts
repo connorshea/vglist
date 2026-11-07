@@ -197,18 +197,6 @@ describe("LoginPage passkeys", () => {
       wrapper.unmount();
     });
 
-    it('redirects straight away from "Continue now"', async () => {
-      const wrapper = mount(LoginPage, mountOptions);
-
-      await wrapper.find(".auth-passkey").trigger("click");
-      await flushPromises();
-      await wrapper.find(".auth-link-button").trigger("click");
-
-      expect(mockPush).toHaveBeenCalledExactlyOnceWith("/");
-      vi.advanceTimersByTime(2000);
-      expect(mockPush).toHaveBeenCalledOnce();
-    });
-
     it("doesn't redirect after leaving the page", async () => {
       const wrapper = mount(LoginPage, mountOptions);
 
