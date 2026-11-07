@@ -1,7 +1,7 @@
 <template>
   <div class="resource-tile" :class="{ 'can-edit': canEdit, 'menu-open': menuOpen }">
     <router-link :to="to" class="tile-link" :aria-label="accessibleName">
-      <span v-if="coverGames.length === 0" class="tile-mosaic is-placeholder" aria-hidden="true">
+      <span v-if="coverGames.length === 0 || saveData" class="tile-mosaic is-placeholder" aria-hidden="true">
         <span class="tile-placeholder">{{ initials(name) }}</span>
       </span>
       <span v-else class="tile-mosaic" aria-hidden="true">
@@ -51,6 +51,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { ChevronRight, Ellipsis, Pencil, Trash2 } from "@lucide/vue";
 import type { RouteLocationRaw } from "vue-router";
+import { useSaveData } from "@/composables/useSaveData";
 
 interface CoverGame {
   id: string;
@@ -84,6 +85,10 @@ const SLOT_COUNT = 4;
 const slots = computed(() =>
   Array.from({ length: SLOT_COUNT }, (_, i): CoverGame | null => props.coverGames[i] ?? null)
 );
+
+// With the browser's data saver on, show the initials panel instead of four
+// cover images per tile; an index page would otherwise load ~100 covers.
+const saveData = useSaveData();
 
 const accessibleName = computed(() => `${props.name}, ${props.meta}`);
 
