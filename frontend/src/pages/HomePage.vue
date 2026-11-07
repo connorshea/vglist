@@ -36,7 +36,7 @@
       <!-- Hero content -->
       <div class="hero-content">
         <h1 class="home-heading"><img src="@/assets/images/vglist-logo.svg" alt="vglist" class="home-logo" /></h1>
-        <p class="home-lede">Find any game. Track every one you own.</p>
+        <p class="home-lede">Track your entire video game library across every store and platform.</p>
 
         <!-- Opens the search overlay, carrying over whatever is typed here. -->
         <button
@@ -519,7 +519,7 @@ onUnmounted(() => {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 720px;
+  max-width: 840px;
   margin: 0 auto;
   padding: 5rem 1.5rem 4rem;
   text-align: center;
@@ -593,7 +593,8 @@ onUnmounted(() => {
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  margin-top: 1.25rem;
+  max-width: 640px;
+  margin: 1.25rem auto 0;
 }
 
 .home-quick-link {
