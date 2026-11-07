@@ -299,7 +299,7 @@
             >Showing {{ commonRows.length }} of {{ commonTotal.toLocaleString() }}
             {{ bothRated ? "rated in common" : "in common" }}</span
           >
-          <router-link :to="tabLink('common')"
+          <router-link :to="tabLink('common')" @click="bothRated = false"
             >See all {{ comparison.inCommonCount.toLocaleString() }} shared games</router-link
           >
         </div>

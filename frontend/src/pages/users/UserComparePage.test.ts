@@ -166,6 +166,18 @@ describe("UserComparePage", () => {
     expect(allShared?.attributes("aria-pressed")).toBe("true");
   });
 
+  it("shows every shared game, not just the rated ones, after following See all", async () => {
+    respond();
+    const wrapper = await mountPage();
+
+    const seeAll = wrapper.findAllComponents(RouterLinkStub).find((link) => link.text().startsWith("See all"));
+    await seeAll?.trigger("click");
+    await flushPromises();
+
+    expect(seeAll?.props("to")).toMatchObject({ query: { tab: "common" } });
+    expect(callsFor(GET_COMPARISON_IN_COMMON).at(-1)).toMatchObject({ bothRated: false });
+  });
+
   it("shows the highest-rated games only each user has on the overview", async () => {
     respond();
     const wrapper = await mountPage();
