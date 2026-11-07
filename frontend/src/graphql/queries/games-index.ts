@@ -53,9 +53,9 @@ export const GET_GAMES_INDEX = gql`
   }
 `;
 
-// The platform and genre pills, the site-wide game count for the page header,
-// and the names of whichever filters are set in the URL (which only carries
-// IDs).
+// The platform pills and the home page's genre links, the site-wide game count
+// for the page header, and the names of whichever filters are set in the URL
+// (which only carries IDs).
 export const GET_GAMES_INDEX_FILTERS = gql`
   query GetGamesIndexFilters(
     $platformId: ID!

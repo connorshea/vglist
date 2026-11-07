@@ -64,7 +64,6 @@
           v-model="draft"
           variant="popover"
           :names="draftNames"
-          :genres="topGenres"
           :signed-in="authStore.isAuthenticated"
           @named="rememberName"
           @apply="applyDraft"
@@ -147,7 +146,6 @@
         v-model="draft"
         variant="sheet"
         :names="draftNames"
-        :genres="topGenres"
         :signed-in="authStore.isAuthenticated"
         @named="rememberName"
         @apply="applyDraft"
@@ -308,8 +306,6 @@ function nameFor(id: string, fetched: NamedRecord | null | undefined): string | 
   if (fetched?.id === id) return fetched.name;
   return pickedNames[id] ?? null;
 }
-
-const topGenres = computed(() => filtersData.value?.genres?.nodes ?? []);
 
 const platformPills = computed(() => {
   const top = filtersData.value?.platforms?.nodes ?? [];

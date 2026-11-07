@@ -32,44 +32,19 @@
         />
       </div>
 
-      <fieldset class="filter-group">
-        <legend class="filter-heading">Genre</legend>
-        <div class="pill-row">
-          <button
-            v-for="genre in genrePills"
-            :key="genre.id"
-            type="button"
-            class="filter-pill"
-            :class="{ on: modelValue.genre === genre.id }"
-            :aria-pressed="modelValue.genre === genre.id"
-            @click="pick('genre', modelValue.genre === genre.id ? null : genre)"
-          >
-            {{ genre.name }}
-          </button>
-          <button
-            type="button"
-            class="filter-pill"
-            :aria-expanded="showGenreSearch"
-            aria-controls="games-filter-genre-search"
-            @click="showGenreSearch = !showGenreSearch"
-          >
-            {{ showGenreSearch ? "Fewer genres" : "All genres…" }}
-          </button>
-        </div>
-        <div v-if="showGenreSearch" id="games-filter-genre-search" class="genre-search">
-          <label class="is-sr-only" for="games-filter-genre">Search all genres</label>
-          <FilterSearchSelect
-            :model-value="modelValue.genre"
-            :selected-name="names.genre"
-            label="Genre"
-            placeholder="Search genres"
-            input-id="games-filter-genre"
-            :query="SEARCH_GENRES_FOR_FILTER"
-            :result-nodes="(d) => (d as SearchGenresForFilterQuery).genreSearch?.nodes ?? []"
-            @select="(o) => pick('genre', o)"
-          />
-        </div>
-      </fieldset>
+      <div class="filter-group">
+        <label class="filter-heading" for="games-filter-genre">Genre</label>
+        <FilterSearchSelect
+          :model-value="modelValue.genre"
+          :selected-name="names.genre"
+          label="Genre"
+          placeholder="Any genre"
+          input-id="games-filter-genre"
+          :query="SEARCH_GENRES_FOR_FILTER"
+          :result-nodes="(d) => (d as SearchGenresForFilterQuery).genreSearch?.nodes ?? []"
+          @select="(o) => pick('genre', o)"
+        />
+      </div>
 
       <fieldset class="filter-group">
         <legend class="filter-heading">Release year</legend>
@@ -164,8 +139,6 @@ const props = defineProps<{
   modelValue: GameFilters;
   /** Names for the platform, genre and engine IDs in `modelValue`. */
   names: { platform: string | null; genre: string | null; engine: string | null };
-  /** The most common genres, offered as pills. */
-  genres: NamedRecord[];
   signedIn: boolean;
   /** A popover under its button on wide screens, a bottom sheet on phones. */
   variant: "popover" | "sheet";
@@ -180,21 +153,11 @@ const emit = defineEmits<{
 }>();
 
 const panelRef = ref<HTMLElement | null>(null);
-const showGenreSearch = ref(false);
 
 const years = computed(() => {
   const list: number[] = [];
   for (let y = new Date().getFullYear() + 1; y >= EARLIEST_YEAR; y--) list.push(y);
   return list;
-});
-
-// The most common genres, plus the picked genre if it isn't one of them.
-const genrePills = computed(() => {
-  const picked = props.modelValue.genre;
-  if (picked && !props.genres.some((g) => g.id === picked) && props.names.genre) {
-    return [...props.genres, { id: picked, name: props.names.genre }];
-  }
-  return props.genres;
 });
 
 function update(changes: Partial<GameFilters>) {
@@ -338,39 +301,6 @@ function onKeydown(e: KeyboardEvent) {
   color: var(--color-text-tertiary);
 }
 
-.pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.filter-pill {
-  padding: 4.8px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--color-text-secondary);
-  font: inherit;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.filter-pill:hover {
-  border-color: var(--color-text-tertiary);
-  color: var(--color-text-primary);
-}
-
-.filter-pill.on {
-  border-color: var(--p-100);
-  background: var(--p-100);
-  color: var(--p-700);
-  font-weight: 500;
-}
-
-.genre-search {
-  margin-top: 10px;
-}
-
 .year-range {
   display: flex;
   align-items: center;
@@ -501,7 +431,6 @@ function onKeydown(e: KeyboardEvent) {
   border-color: var(--p-600);
 }
 
-.filter-pill:focus-visible,
 .filter-panel-close:focus-visible,
 .clear-btn:focus-visible,
 .apply-btn:focus-visible,
@@ -516,12 +445,6 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 @media (prefers-color-scheme: dark) {
-  .filter-pill.on {
-    border-color: transparent;
-    background: color-mix(in srgb, var(--p-300) 22%, transparent);
-    color: var(--p-100);
-  }
-
   .filter-panel.is-popover {
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
   }

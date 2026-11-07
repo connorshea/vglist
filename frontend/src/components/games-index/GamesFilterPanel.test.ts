@@ -9,10 +9,6 @@ function mountPanel(modelValue: Partial<GameFilters> = {}, variant: "popover" | 
     props: {
       modelValue: { ...EMPTY_FILTERS, ...modelValue },
       names: { platform: null, genre: null, engine: null },
-      genres: [
-        { id: "1", name: "Metroidvania" },
-        { id: "2", name: "Roguelike" }
-      ],
       signedIn: true,
       variant
     }
@@ -31,13 +27,18 @@ describe("GamesFilterPanel", () => {
     wrapper.unmount();
   });
 
-  it("toggles a genre pill on and off", async () => {
+  it("picks a genre with a search field like the engine filter", async () => {
     const wrapper = mountPanel();
-    await wrapper.findAll(".filter-pill")[1].trigger("click");
-    expect(lastModelValue(wrapper).genre).toBe("2");
+    const input = wrapper.find("#games-filter-genre");
+    expect(input.attributes("placeholder")).toBe("Any genre");
+    expect(wrapper.find('label[for="games-filter-genre"]').text()).toBe("Genre");
 
-    await wrapper.setProps({ modelValue: { ...EMPTY_FILTERS, genre: "2" } });
-    await wrapper.findAll(".filter-pill")[1].trigger("click");
+    await wrapper.setProps({
+      modelValue: { ...EMPTY_FILTERS, genre: "2" },
+      names: { platform: null, genre: "Roguelike", engine: null }
+    });
+    expect(input.attributes("placeholder")).toBe("Roguelike");
+    await wrapper.find('[aria-label="Clear genre filter"]').trigger("click");
     expect(lastModelValue(wrapper).genre).toBe("");
     wrapper.unmount();
   });
