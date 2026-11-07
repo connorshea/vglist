@@ -1,7 +1,10 @@
 <template>
   <div class="resource-tile" :class="{ 'can-edit': canEdit, 'menu-open': menuOpen }">
     <router-link :to="to" class="tile-link" :aria-label="accessibleName">
-      <span class="tile-mosaic" aria-hidden="true">
+      <span v-if="coverGames.length === 0" class="tile-mosaic is-placeholder" aria-hidden="true">
+        <span class="tile-placeholder">{{ initials(name) }}</span>
+      </span>
+      <span v-else class="tile-mosaic" aria-hidden="true">
         <span v-for="(slot, i) in slots" :key="i" class="tile-slot" :class="{ 'is-empty': !slot }">
           <template v-if="slot">
             <img v-if="slot.coverUrl" :src="slot.coverUrl" alt="" loading="lazy" />
@@ -236,6 +239,26 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   user-select: none;
 }
 
+/* No covers at all (e.g. a platform whose games have no art yet): one
+   gradient panel with the resource's initials, like a game's missing cover. */
+.tile-mosaic.is-placeholder {
+  display: block;
+}
+
+.tile-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
 .tile-text {
   display: block;
   min-width: 0;
@@ -413,6 +436,14 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
 
   .tile-slot-placeholder {
     font-size: 12px;
+  }
+
+  /* Same width as the stacked covers so names line up across rows. */
+  .tile-placeholder {
+    width: 42px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+    font-size: 13px;
   }
 
   .tile-text {
