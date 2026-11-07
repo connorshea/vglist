@@ -313,7 +313,10 @@ const minRating = computed(() => parseRating(route.query.min));
 const maxRating = computed(() => parseRating(route.query.max));
 const searchQuery = computed(() => (typeof route.query.q === "string" ? route.query.q : ""));
 
-function updateQuery(patch: Record<string, LocationQueryValueRaw>) {
+// Refinements (search, sort, filters) replace the current history entry so
+// typing or dragging a slider doesn't flood Back. Switching between "All" and
+// a single status is a different view, so it pushes a new entry instead.
+function updateQuery(patch: Record<string, LocationQueryValueRaw>, { push = false } = {}) {
   const query: LocationQuery = { ...route.query };
   for (const [key, value] of Object.entries(patch)) {
     if (value === null || value === undefined || value === "") {
@@ -322,7 +325,7 @@ function updateQuery(patch: Record<string, LocationQueryValueRaw>) {
       query[key] = String(value);
     }
   }
-  void router.replace({ query });
+  void (push ? router.push({ query }) : router.replace({ query }));
 }
 
 // "No status" is only offered when some game has no status, or it's the
@@ -334,7 +337,8 @@ const statusFilters = computed<readonly LibraryStatus<LibraryStatusFilter>[]>(()
 );
 
 function setStatus(value: LibraryStatusFilter | null) {
-  updateQuery({ status: value });
+  if (value === status.value) return;
+  updateQuery({ status: value }, { push: true });
 }
 
 function setSort(value: string) {
