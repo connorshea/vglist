@@ -103,6 +103,25 @@ RSpec.describe "Live Statistics API", type: :request do
           }
         )
       end
+
+      it "counts a game with several Steam App IDs once" do
+        game = create(:game_with_steam_app_id)
+        create(:steam_app_id, game: game)
+        create(:game)
+
+        query_string = <<-GRAPHQL
+          query {
+            liveStatistics {
+              games
+              steamAppIds
+            }
+          }
+        GRAPHQL
+
+        result = api_request(query_string, token: access_token)
+
+        expect(result.graphql_dig(:live_statistics)).to eq({ games: 2, steamAppIds: 1 })
+      end
     end
 
     context 'when signed in as a normal user' do

@@ -84,7 +84,7 @@ namespace :import do
 
     progress_bar.finish unless progress_bar.finished?
 
-    games_with_steam_app_ids = Game.joins(:steam_app_ids)
+    games_with_steam_app_ids = Game.joins(:steam_app_ids).distinct
     puts
     puts "Done. #{games_with_steam_app_ids.count} games now have Steam App IDs."
     puts "#{steam_added_count} Steam App IDs added."
