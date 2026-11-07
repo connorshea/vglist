@@ -3,15 +3,23 @@
 require 'rails_helper'
 
 RSpec.describe "Rack::Attack throttling", type: :request do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:user) { create(:confirmed_user) }
 
   # Rails.cache is a null store in test, so swap in a real store for these
   # examples and start each one with empty counters.
+  #
+  # Rack::Attack counts requests in epoch-aligned windows (Time.now.to_i /
+  # period), so an example that straddles a window boundary sees its counter
+  # reset and the throttle never fires. Freeze time at the top of an hour,
+  # which is aligned to every throttle period (1, 5 and 15 minutes, 1 hour),
+  # so all requests in an example land in the same window.
   around(:each) do |example|
     original_store = Rack::Attack.cache.store
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
     Rack::Attack.reset!
-    example.run
+    travel_to(Time.current.beginning_of_hour) { example.run }
   ensure
     Rack::Attack.cache.store = original_store
   end
