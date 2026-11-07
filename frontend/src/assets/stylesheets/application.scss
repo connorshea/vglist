@@ -54,8 +54,12 @@
 
   /* Shared neutral palette */
   --color-text-primary: #2c2c2a;
-  --color-text-secondary: #888780;
-  --color-text-tertiary: #b4b2a9;
+  /* Text tokens: both >= 4.5:1 on --color-surface and --color-bg-subtle (WCAG 1.4.3).
+     Tertiary is slightly lighter than secondary but still body-text legible. */
+  --color-text-secondary: #66655f;
+  --color-text-tertiary: #6f6e68;
+  /* Danger-coloured text/icons: >= 4.5:1 on surface (--r-500 is only 3.9:1) */
+  --color-danger-text: var(--r-700);
   /* Input placeholders: >= 4.5:1 on white and on --color-bg-subtle */
   --color-placeholder: #686c76;
   --color-border: #d3d1c7;
@@ -148,8 +152,10 @@
 
     /* Shared neutral palette (dark — slate ramp) */
     --color-text-primary: var(--s-50);
-    --color-text-secondary: var(--s-200);
-    --color-text-tertiary: var(--s-200);
+    /* >= 4.5:1 on --color-surface (--s-400); --s-200 was only ~3.1:1 */
+    --color-text-secondary: var(--s-100);
+    --color-text-tertiary: var(--s-100);
+    --color-danger-text: var(--r-200);
     /* Input placeholders: >= 4.5:1 on dark inputs (--s-400 and darker) */
     --color-placeholder: var(--s-100);
     --color-border: var(--s-300);

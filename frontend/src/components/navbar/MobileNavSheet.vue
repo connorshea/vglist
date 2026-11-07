@@ -1,11 +1,24 @@
 <template>
   <Teleport to="body">
     <!-- Backdrop -->
-    <div class="mn-backdrop" :class="{ visible: isOpen }" @click="close" />
+    <div class="mn-backdrop" :class="{ visible: isOpen }" aria-hidden="true" @click="close" />
 
-    <!-- Bottom sheet -->
-    <div ref="sheetEl" class="mn-sheet" :class="{ open: isOpen, dragging: isDragging }" :style="dragStyle">
-      <div class="mn-handle-area" @pointerdown="onPointerDown">
+    <!-- Bottom sheet. Kept mounted (for the slide transition) but inert while
+         closed, so its links aren't reachable off-screen by Tab or AT. -->
+    <div
+      id="mobile-nav-sheet"
+      ref="sheetEl"
+      class="mn-sheet"
+      :class="{ open: isOpen, dragging: isDragging }"
+      :style="dragStyle"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
+      tabindex="-1"
+      :inert="!isOpen || undefined"
+      @keydown="onSheetKeydown"
+    >
+      <div class="mn-handle-area" aria-hidden="true" @pointerdown="onPointerDown">
         <div class="mn-handle" />
       </div>
 
@@ -44,7 +57,7 @@
         <div class="mn-divider mn-stagger" />
 
         <!-- Browse -->
-        <div class="mn-section mn-stagger">Browse</div>
+        <h2 class="mn-section mn-stagger">Browse</h2>
         <div class="mn-browse mn-stagger">
           <router-link class="mn-chip" to="/platforms" @click="close">Platforms</router-link>
           <router-link class="mn-chip" to="/genres" @click="close">Genres</router-link>
@@ -71,7 +84,7 @@
             <router-link class="mn-ubtn" to="/settings" aria-label="Settings" @click="close">
               <Settings :stroke-width="1.4" />
             </router-link>
-            <button class="mn-ubtn" aria-label="Sign out" @click="handleSignOut">
+            <button type="button" class="mn-ubtn" aria-label="Sign out" @click="handleSignOut">
               <LogOut :stroke-width="1.4" />
             </button>
           </div>
@@ -86,7 +99,7 @@
         <div class="mn-divider mn-stagger" />
 
         <!-- External links -->
-        <div class="mn-section mn-stagger">Links</div>
+        <h2 class="mn-section mn-stagger">Links</h2>
         <div class="mn-browse mn-stagger">
           <router-link class="mn-chip" to="/about" @click="close">About</router-link>
           <a
@@ -107,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onUnmounted } from "vue";
+import { ref, watch, computed, nextTick, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
@@ -150,11 +163,46 @@ function onKeydown(e: KeyboardEvent) {
 onMounted(() => document.addEventListener("keydown", onKeydown));
 onUnmounted(() => document.removeEventListener("keydown", onKeydown));
 
-// Lock body scroll when open
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// Keep Tab inside the sheet while it's open.
+function onSheetKeydown(e: KeyboardEvent) {
+  if (e.key !== "Tab" || !sheetEl.value) return;
+  const items = Array.from(sheetEl.value.querySelectorAll<HTMLElement>(FOCUSABLE));
+  if (items.length === 0) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (document.activeElement === sheetEl.value) {
+    e.preventDefault();
+    (e.shiftKey ? last : first).focus();
+  } else if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
+// Element that had focus before the sheet opened (the menu/avatar button),
+// so it can get focus back when the sheet closes.
+let previouslyFocused: HTMLElement | null = null;
+
+// Lock body scroll, and move focus into / back out of the sheet.
 watch(
   () => props.isOpen,
   (open) => {
     document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      void nextTick(() => sheetEl.value?.focus());
+    } else {
+      const sheetHadFocus =
+        !!sheetEl.value?.contains(document.activeElement) || document.activeElement === document.body;
+      if (sheetHadFocus && previouslyFocused?.isConnected) previouslyFocused.focus();
+      previouslyFocused = null;
+    }
   }
 );
 
@@ -549,6 +597,30 @@ function onPointerDown(e: PointerEvent) {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.mn-sheet:focus {
+  outline: none;
+}
+
+.mn-nav-item:focus-visible,
+.mn-chip:focus-visible,
+.mn-ubtn:focus-visible,
+.mn-auth-btn:focus-visible,
+.mn-user-info:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-sheet,
+  .mn-backdrop {
+    transition: none;
+  }
+
+  .mn-sheet.open .mn-stagger {
+    animation: none;
   }
 }
 

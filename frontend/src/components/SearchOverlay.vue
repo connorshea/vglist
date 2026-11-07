@@ -636,7 +636,7 @@ function releaseYear(date: string): string {
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  color: var(--s-200);
+  color: var(--s-100);
   transition: color 0.2s;
 }
 
@@ -667,7 +667,7 @@ function releaseYear(date: string): string {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: var(--s-200);
+  color: var(--s-100);
   font-size: 12px;
 }
 
@@ -682,7 +682,7 @@ function releaseYear(date: string): string {
   font-family: inherit;
   font-size: 11px;
   font-weight: 500;
-  color: var(--s-200);
+  color: var(--s-100);
   line-height: 1.4;
 }
 
@@ -694,7 +694,7 @@ function releaseYear(date: string): string {
   border-radius: 8px;
   border: 1px solid var(--s-300);
   background: rgba(85, 90, 110, 0.3);
-  color: var(--s-200);
+  color: var(--s-100);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -722,7 +722,7 @@ function releaseYear(date: string): string {
   justify-content: center;
   gap: 0.75rem;
   padding: 4rem 2rem;
-  color: var(--s-200);
+  color: var(--s-100);
   font-size: 15px;
   text-align: center;
 }
@@ -730,13 +730,13 @@ function releaseYear(date: string): string {
 .search-empty-icon {
   width: 56px;
   height: 56px;
-  color: var(--s-200);
+  color: var(--s-100);
   opacity: 0.7;
 }
 
 .search-empty-hint {
   font-size: 13px;
-  color: var(--s-200);
+  color: var(--s-100);
 }
 
 .search-query-highlight {
@@ -834,7 +834,7 @@ function releaseYear(date: string): string {
 .category-icon {
   width: 14px;
   height: 14px;
-  color: var(--s-200);
+  color: var(--s-100);
 }
 
 .category-title {
@@ -842,13 +842,13 @@ function releaseYear(date: string): string {
   font-weight: 600;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--s-200);
+  color: var(--s-100);
 }
 
 .category-count {
   margin-left: auto;
   font-size: 11px;
-  color: var(--s-200);
+  color: var(--s-100);
   font-weight: 400;
 }
 
@@ -979,12 +979,12 @@ function releaseYear(date: string): string {
 
 .result-year {
   font-size: 12px;
-  color: var(--s-200);
+  color: var(--s-100);
 }
 
 .result-developer {
   font-size: 12px;
-  color: var(--s-200);
+  color: var(--s-100);
 }
 
 .result-type-tag {

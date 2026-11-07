@@ -1,11 +1,14 @@
 <template>
   <div id="vglist-app">
+    <!-- First Tab stop: jump past the navbar. Handled in JS, because a plain
+         hash change would go through the router and scroll to the top. -->
+    <a class="skip-link" href="#main-content" @click.prevent="focusMainContent">Skip to main content</a>
     <NavBar v-if="layout === 'default'" />
     <!-- Bare routes (e.g. the auth pages) render full-bleed with no navbar. -->
-    <main v-if="layout === 'bare'" id="main-content">
+    <main v-if="layout === 'bare'" id="main-content" tabindex="-1">
       <router-view />
     </main>
-    <main v-else id="main-content" class="section">
+    <main v-else id="main-content" class="section" tabindex="-1">
       <div class="container">
         <router-view />
       </div>
@@ -23,6 +26,7 @@ import SearchOverlay from "@/components/SearchOverlay.vue";
 import SnackbarContainer from "@/components/SnackbarContainer.vue";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { useSnackbar } from "@/composables/useSnackbar";
+import { focusMainContent } from "@/composables/useRouteFocus";
 
 const route = useRoute();
 
@@ -85,3 +89,32 @@ watch(
   { immediate: true }
 );
 </script>
+
+<style scoped>
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10001;
+  padding: 10px 16px;
+  border-radius: var(--radius-button);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  box-shadow: var(--vglist-shadow);
+  /* Off-screen until it receives keyboard focus. */
+  transform: translateY(calc(-100% - 16px));
+}
+
+.skip-link:focus {
+  transform: none;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* <main> takes focus programmatically (skip link, route changes); it isn't
+   an interactive control, so don't draw a ring around the whole page. */
+#main-content:focus {
+  outline: none;
+}
+</style>

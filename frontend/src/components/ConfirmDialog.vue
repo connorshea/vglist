@@ -229,12 +229,13 @@ onBeforeUnmount(() => {
 }
 
 .cd-btn-danger {
-  background: var(--r-500);
+  /* --r-700: white text at 5.8:1 (--r-500 was only 3.9:1) */
+  background: var(--r-700);
   color: #fff;
 }
 
 .cd-btn-danger:active:not(:disabled) {
-  background: #c93c3b;
+  background: var(--r-800);
 }
 
 .cd-btn-primary {
@@ -323,7 +324,7 @@ onBeforeUnmount(() => {
 
   .cd-btn-cancel {
     background: var(--s-500);
-    color: var(--s-200);
+    color: var(--s-100);
   }
 
   .cd-btn-cancel:hover {
