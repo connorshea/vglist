@@ -95,7 +95,7 @@ async function handleSubmit() {
   errors.value = [];
 
   if (turnstileSiteKey && !turnstileToken.value) {
-    errors.value = ["Please wait for the human verification check to finish, then try again."];
+    errors.value = ["Please complete the human verification check above, then try again."];
     return;
   }
 
