@@ -200,7 +200,7 @@
           </ul>
         </template>
 
-        <!-- Desktop: a table with rating bars and a rating gap meter -->
+        <!-- Desktop: a table with rating bars and a rating difference meter -->
         <div v-else class="compare-table-box">
           <table class="compare-table">
             <caption class="is-sr-only">
@@ -479,7 +479,7 @@ function plural(count: number, noun: string): string {
   return `${count.toLocaleString()} ${noun}${count === 1 ? "" : "s"}`;
 }
 
-// "Comparing game libraries · 412 and 1,104 games · avg rating gap of 7 across
+// "Comparing game libraries · 412 and 1,104 games · avg rating difference of 7 across
 // 121 games you've both rated"
 const statsLine = computed(() => {
   const c = comparison.value;
@@ -487,13 +487,13 @@ const statsLine = computed(() => {
   if (isPhone.value) {
     return c.averageRatingGap === null
       ? "Comparing libraries"
-      : `Comparing libraries · avg gap ${Math.round(c.averageRatingGap)}`;
+      : `Comparing libraries · avg difference ${Math.round(c.averageRatingGap)}`;
   }
   const parts = ["Comparing game libraries", `${countA.value.toLocaleString()} and ${plural(countB.value, "game")}`];
   if (c.averageRatingGap !== null) {
     const who = viewerIsA.value ? "you've" : "they've";
     parts.push(
-      `avg rating gap of ${Math.round(c.averageRatingGap)} across ${plural(c.bothRatedCount, "game")} ${who} both rated`
+      `avg rating difference of ${Math.round(c.averageRatingGap)} across ${plural(c.bothRatedCount, "game")} ${who} both rated`
     );
   }
   return parts.join(" · ");
@@ -580,7 +580,7 @@ const columns = computed(() => [
   { sort: "GAME_NAME" as const, label: "Game", user: null },
   { sort: "USER_A_RATING" as const, label: userA.value.username, user: "a" },
   { sort: "USER_B_RATING" as const, label: userB.value.username, user: "b" },
-  { sort: "RATING_GAP" as const, label: "Rating gap", user: null }
+  { sort: "RATING_GAP" as const, label: "Rating difference", user: null }
 ]);
 
 function ariaSort(sort: LibraryComparisonSort): "ascending" | "descending" | undefined {

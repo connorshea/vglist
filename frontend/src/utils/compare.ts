@@ -49,14 +49,14 @@ export function overlapShares(onlyA: number, both: number, onlyB: number): Overl
   return { onlyA: a, both: b, onlyB: c };
 }
 
-// The bar in the rating gap column. It grows out from the middle towards
+// The bar in the rating difference column. It grows out from the middle towards
 // whoever rated the game higher, reaching the end at a gap of 25 or more.
 export function gapMeter(difference: number | null): { side: "a" | "b"; width: number } | null {
   if (difference === null || difference === 0) return null;
   return { side: difference > 0 ? "a" : "b", width: Math.min(Math.abs(difference), 25) * 2 };
 }
 
-// The rating gap column for screen readers, since the meter's direction is
+// The rating difference column for screen readers, since the meter's direction is
 // only shown by its position and colour.
 export function gapDescription(difference: number | null, userA: string, userB: string): string {
   if (difference === null) return "Not rated by both";
