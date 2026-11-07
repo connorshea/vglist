@@ -116,6 +116,24 @@ declare module "vue-router" {
 
       // Admin
       admin: RouteRecordInfo<"admin", "/admin", Record<never, never>, Record<never, never>>;
+      adminWikidataBlocklist: RouteRecordInfo<
+        "adminWikidataBlocklist",
+        "/admin/wikidata-blocklist",
+        Record<never, never>,
+        Record<never, never>
+      >;
+      adminSteamBlocklist: RouteRecordInfo<
+        "adminSteamBlocklist",
+        "/admin/steam-blocklist",
+        Record<never, never>,
+        Record<never, never>
+      >;
+      adminUnmatchedGames: RouteRecordInfo<
+        "adminUnmatchedGames",
+        "/admin/unmatched-games",
+        Record<never, never>,
+        Record<never, never>
+      >;
 
       // Catch-all
       notFound: RouteRecordInfo<"notFound", "/:pathMatch(.*)*", { pathMatch: string[] }, { pathMatch: string[] }>;
