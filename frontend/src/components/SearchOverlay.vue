@@ -658,7 +658,7 @@ function releaseYear(date: string): string {
 }
 
 .search-input::placeholder {
-  color: var(--s-200);
+  color: var(--s-100);
   font-weight: 400;
 }
 

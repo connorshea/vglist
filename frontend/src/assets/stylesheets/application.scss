@@ -56,6 +56,8 @@
   --color-text-primary: #2c2c2a;
   --color-text-secondary: #888780;
   --color-text-tertiary: #b4b2a9;
+  /* Input placeholders: >= 4.5:1 on white and on --color-bg-subtle */
+  --color-placeholder: #686c76;
   --color-border: #d3d1c7;
   --color-bg-subtle: #f4f3ef;
   --color-surface: #fff;
@@ -148,6 +150,8 @@
     --color-text-primary: var(--s-50);
     --color-text-secondary: var(--s-200);
     --color-text-tertiary: var(--s-200);
+    /* Input placeholders: >= 4.5:1 on dark inputs (--s-400 and darker) */
+    --color-placeholder: var(--s-100);
     --color-border: var(--s-300);
     --color-bg-subtle: var(--s-600);
     --color-surface: var(--s-400);
@@ -300,7 +304,7 @@ nav.navbar {
       border-color 200ms;
 
     &::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.75);
     }
 
     &:hover {
@@ -614,9 +618,11 @@ nav.navbar {
   overflow: initial;
 }
 
-.input::placeholder {
-  color: var(--bulma-input-placeholder-color);
-  opacity: 0.5;
+/* Default for inputs that don't use Bulma's .input/.textarea (e.g. the
+   searchable selects); otherwise they get the browser's faint grey. */
+::placeholder {
+  color: var(--color-placeholder);
+  opacity: 1;
 }
 
 .infobox {

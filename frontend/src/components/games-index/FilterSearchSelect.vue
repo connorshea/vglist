@@ -204,7 +204,7 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 .filter-select-input::placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--color-placeholder);
 }
 
 .filter-select-input.has-value::placeholder {

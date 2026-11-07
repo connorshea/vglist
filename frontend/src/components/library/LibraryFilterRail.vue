@@ -260,7 +260,7 @@ onBeforeUnmount(() => commitRating.cancel());
 }
 
 .library-rail-search input::placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--color-placeholder);
 }
 
 .library-rail-heading {
