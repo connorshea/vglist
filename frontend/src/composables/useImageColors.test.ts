@@ -110,3 +110,33 @@ describe("useImageColors", () => {
     expect(gradient.value).toBeNull();
   });
 });
+
+describe("useImageColors with a resetKey", () => {
+  it("drops the old gradient as soon as the key changes", async () => {
+    const url = ref("https://example.com/a.png");
+    const key = ref("1");
+    const { gradient } = useImageColors(url, { resetKey: key });
+    imageFor(url.value).fire("load");
+    expect(gradient.value).not.toBeNull();
+
+    // Another game's page: its cover hasn't been sampled yet.
+    url.value = "https://example.com/b.png";
+    key.value = "2";
+    await nextTick();
+    expect(gradient.value).toBeNull();
+
+    imageFor("https://example.com/b.png").fire("load");
+    expect(gradient.value).not.toBeNull();
+  });
+
+  it("keeps the gradient across new URLs while the key stays the same", async () => {
+    const url = ref("https://example.com/a.png?sig=1");
+    const { gradient } = useImageColors(url, { resetKey: () => "1" });
+    imageFor(url.value).fire("load");
+    const first = gradient.value;
+
+    url.value = "https://example.com/a.png?sig=2";
+    await nextTick();
+    expect(gradient.value).toBe(first);
+  });
+});

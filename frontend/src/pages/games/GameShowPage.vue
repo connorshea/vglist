@@ -1,8 +1,10 @@
 <template>
   <div>
+    <!-- Always mounted so screen readers announce the text when it changes -->
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading game…" : "" }}</p>
+
     <!-- Skeleton in the shape of the page while the game loads -->
     <div v-if="showSkeleton" class="game-show game-skeleton" aria-busy="true">
-      <p class="is-sr-only" role="status">Loading game…</p>
       <section class="game-hero" aria-hidden="true">
         <div class="game-hero-inner">
           <div class="game-hero-cover">
@@ -462,7 +464,10 @@ const game = computed(() => data.value?.game ?? null);
 // Show the skeleton on first load, and when moving to another game's page
 // (vue-router reuses this component, so the previous game is still in `data`).
 // Refetches of the same game keep the page in place.
-const showSkeleton = computed(() => loading.value && (!game.value || game.value.id !== gameId.value));
+// Compared as numbers: the server reads "/games/0123" or "/games/123-foo" as
+// game 123, and those must not count as a different game on every refetch.
+const isCurrentGame = (id: string) => Number.parseInt(id, 10) === Number.parseInt(gameId.value, 10);
+const showSkeleton = computed(() => loading.value && (!game.value || !isCurrentGame(game.value.id)));
 
 usePageTitle(() => game.value?.name);
 
@@ -475,7 +480,7 @@ watch([data, error, loading], () => {
 
 // Extract dominant colors from the cover image for the hero background gradient.
 const coverUrl = computed(() => game.value?.coverUrl ?? null);
-const { gradient: heroGradient } = useImageColors(coverUrl);
+const { gradient: heroGradient } = useImageColors(coverUrl, { resetKey: () => game.value?.id });
 const heroStyle = computed(() => (heroGradient.value ? { background: heroGradient.value } : undefined));
 
 // Fetch all stores for the form

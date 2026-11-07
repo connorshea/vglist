@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth";
 import { installPageTitles } from "@/composables/usePageTitle";
 import { installRouteFocus } from "@/composables/useRouteFocus";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
+import { waitForScrollableTo } from "@/utils/scroll-restore";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -390,7 +391,9 @@ const router = createRouter({
   ],
   scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
-      return savedPosition;
+      // Back/Forward: wait for the page to load enough to reach the old
+      // position, rather than clamping it against a short loading skeleton.
+      return waitForScrollableTo(savedPosition.top).then(() => savedPosition);
     }
     return { top: 0 };
   }
