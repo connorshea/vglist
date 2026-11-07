@@ -1,9 +1,6 @@
 <template>
   <div class="library-empty" role="status">
-    <template v-if="loading">
-      <p class="library-empty-title">Loading library…</p>
-    </template>
-    <template v-else-if="error">
+    <template v-if="error">
       <p class="library-empty-title">Couldn't load this library</p>
       <p>{{ error.message }}</p>
     </template>
@@ -19,7 +16,6 @@
 
 <script setup lang="ts">
 defineProps<{
-  loading: boolean;
   error: Error | null;
   // Whether the whole library is empty, rather than just the filtered view.
   libraryEmpty: boolean;

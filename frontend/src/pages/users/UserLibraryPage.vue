@@ -1,8 +1,10 @@
 <template>
-  <div class="library-page" :class="{ 'is-phone': isPhone }">
-    <div v-if="pageLoading && !pageData" class="library-message">
-      <p>Loading…</p>
-    </div>
+  <div class="library-page" :class="{ 'is-phone': isPhone }" :aria-busy="showSkeleton">
+    <!-- Always mounted so screen readers announce the text when it changes -->
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading library…" : "" }}</p>
+
+    <!-- The whole tab in outline until the filter counts arrive -->
+    <LibraryPageSkeleton v-if="pageLoading && !pageData" :phone="isPhone" :grouped="grouped" />
 
     <div v-else-if="pageError" class="notification is-danger">
       <p>{{ pageError.message }}</p>
@@ -71,10 +73,10 @@
             :purchase="purchase"
             :hide-hours="user.hideDaysPlayed"
           />
+          <LibrarySkeleton v-if="gamesSkeleton" variant="rows" />
         </div>
         <LibraryEmptyState
-          v-if="!games.length"
-          :loading="gamesLoading"
+          v-if="!games.length && !gamesLoading"
           :error="gamesError"
           :library-empty="gamesCount === 0"
         />
@@ -180,15 +182,16 @@
                 </div>
               </section>
             </template>
+            <LibrarySkeleton v-if="shelvesSkeleton" variant="shelves" />
             <LibraryEmptyState
-              v-if="!shelves.some((shelf) => shelf.totalCount > 0)"
-              :loading="shelvesLoading"
+              v-else-if="!shelvesLoading && !shelves.some((shelf) => shelf.totalCount > 0)"
               :error="shelvesError"
               :library-empty="gamesCount === 0"
             />
           </template>
 
           <!-- One status, or everything in one grid -->
+          <LibrarySkeleton v-else-if="gamesSkeleton" variant="grid" />
           <template v-else>
             <p class="library-result-count" aria-live="polite">
               {{ gamesTotal.toLocaleString() }} game{{ gamesTotal === 1 ? "" : "s" }}
@@ -202,8 +205,7 @@
               />
             </div>
             <LibraryEmptyState
-              v-if="!games.length"
-              :loading="gamesLoading"
+              v-if="!games.length && !gamesLoading"
               :error="gamesError"
               :library-empty="gamesCount === 0"
             />
@@ -243,7 +245,9 @@ import LibraryEmptyState from "@/components/library/LibraryEmptyState.vue";
 import LibraryFilterRail from "@/components/library/LibraryFilterRail.vue";
 import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
 import LibraryPhoneRow from "@/components/library/LibraryPhoneRow.vue";
+import LibraryPageSkeleton from "@/components/library/LibraryPageSkeleton.vue";
 import LibraryPlayingCard from "@/components/library/LibraryPlayingCard.vue";
+import LibrarySkeleton from "@/components/library/LibrarySkeleton.vue";
 import "@/assets/stylesheets/library.scss";
 
 const SHELF_SIZE = 12;
@@ -492,6 +496,15 @@ const games = computed(() => gamesConnection.value?.nodes ?? []);
 const gamesTotal = computed(() => gamesConnection.value?.totalCount ?? 0);
 const gamesHasNextPage = computed(() => gamesConnection.value?.pageInfo.hasNextPage ?? false);
 
+// ── Loading ─────────────────────────────────────────────────────────────────
+// Skeletons stand in only while there's nothing to show yet. A refetch for
+// new filters keeps the current games on screen until the new ones arrive.
+const shelvesSkeleton = computed(() => shelvesLoading.value && !shelvesData.value);
+const gamesSkeleton = computed(() => gamesLoading.value && !games.value.length);
+const showSkeleton = computed(
+  () => (pageLoading.value && !pageData.value) || (grouped.value ? shelvesSkeleton.value : gamesSkeleton.value)
+);
+
 async function loadMoreGames() {
   const cursor = gamesConnection.value?.pageInfo.endCursor;
   if (!gamesHasNextPage.value || gamesLoading.value || !cursor) return;
@@ -559,37 +572,7 @@ async function loadMoreGames() {
   outline-offset: 2px;
 }
 
-/* ── Desktop layout ── */
-.library-split {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  align-items: flex-start;
-  padding-top: 24px;
-}
-
-.library-split-rail {
-  flex: 1 1 220px;
-  max-width: 240px;
-}
-
-.library-split-main {
-  flex: 999 1 560px;
-  min-width: 0;
-}
-
-.library-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.library-toolbar-grow {
-  flex: 1;
-}
-
+/* ── Toolbar ── */
 .library-chips {
   display: flex;
   flex-wrap: wrap;
@@ -673,17 +656,6 @@ async function loadMoreGames() {
 }
 
 /* ── Shelves ── */
-.library-shelf {
-  margin-bottom: 32px;
-}
-
-.library-shelf-header {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
 .library-shelf-header h2 {
   margin: 0;
   color: var(--color-text-primary);
@@ -717,18 +689,6 @@ async function loadMoreGames() {
   border-radius: var(--radius-sm);
 }
 
-.library-playing {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
-
-.library-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 10px;
-}
-
 .library-result-count {
   margin: 0 0 12px;
   color: var(--color-text-secondary);
@@ -741,17 +701,6 @@ async function loadMoreGames() {
   margin-top: 24px;
 }
 
-.library-message {
-  padding: 48px 0;
-  color: var(--color-text-secondary);
-  text-align: center;
-}
-
-.library-message-title {
-  color: var(--color-text-primary);
-  font-weight: 600;
-}
-
 /* ── Phone layout ── */
 .library-page.is-phone {
   /* Rows and pills run edge to edge, so undo the page's side padding, then
@@ -759,14 +708,6 @@ async function loadMoreGames() {
      header and tabs above. */
   --library-inset: var(--library-phone-gutter, 1.5rem);
   margin: 0 calc(-1 * var(--library-inset));
-}
-
-.library-pills {
-  display: flex;
-  gap: 6px;
-  padding: 12px var(--library-inset);
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
 .library-pill {
@@ -801,12 +742,6 @@ async function loadMoreGames() {
 .library-pill-count {
   font-size: 0.65rem;
   opacity: 0.6;
-}
-
-.library-phone-controls {
-  display: flex;
-  gap: 8px;
-  padding: 0 var(--library-inset) 8px;
 }
 
 .library-search {
@@ -871,10 +806,6 @@ async function loadMoreGames() {
 
 .library-rows {
   border-top: 1px solid var(--color-border);
-}
-
-.is-phone .library-message {
-  padding: 32px var(--library-inset);
 }
 
 @media (prefers-color-scheme: dark) {
