@@ -178,11 +178,14 @@ Rack::Attack.throttle('auth/ip', limit: 20, period: 1.minute) do |req|
   RackAttackConfig.client_ip(req) if RackAttackConfig.auth_request?(req)
 end
 
-# Per-IP cap on new accounts. Nobody signs up more than a couple of times
-# in an hour, and each sign-up leaves a users row and sends a confirmation
-# email, so this is much tighter than auth/ip. Like the others, the counter
-# is per Puma worker (see the graphql/ip comment above).
-Rack::Attack.throttle('sign_up/ip', limit: 5, period: 1.hour) do |req|
+# Per-IP cap on sign-up attempts, much tighter than auth/ip because each
+# successful one leaves a users row and sends a confirmation email. It counts
+# attempts, not accounts: failed tries (taken username, short password,
+# expired Turnstile token) count too, and so does everyone behind the same
+# NAT. Turnstile is the main defense, so this is a backstop with room for a
+# few fumbles. Like the others, the counter is per Puma worker (see the
+# graphql/ip comment above), but don't count on that to loosen it.
+Rack::Attack.throttle('sign_up/ip', limit: 10, period: 1.hour) do |req|
   RackAttackConfig.client_ip(req) if RackAttackConfig.sign_up_request?(req)
 end
 

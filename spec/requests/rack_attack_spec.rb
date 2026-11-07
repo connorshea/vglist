@@ -128,8 +128,8 @@ RSpec.describe "Rack::Attack throttling", type: :request do
         headers: { 'Content-Type' => 'application/json', 'REMOTE_ADDR' => ip }
     end
 
-    it "allows 5 sign-ups an hour from one IP across GraphQL and REST", :aggregate_failures do
-      3.times do |i|
+    it "allows 10 sign-up attempts an hour from one IP across GraphQL and REST", :aggregate_failures do
+      8.times do |i|
         graphql_sign_up(i, ip: '10.9.0.1')
         expect(JSON.parse(response.body).dig('data', 'signUp', 'errors')).to be_empty
       end
@@ -146,6 +146,18 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       # A different client is unaffected.
       graphql_sign_up(101, ip: '10.9.0.2')
       expect(JSON.parse(response.body).dig('data', 'signUp', 'errors')).to be_empty
+    end
+
+    it "counts failed attempts too", :aggregate_failures do
+      10.times do |i|
+        post api_auth_sign_up_path,
+          params: { username: "", email: "fail#{i}@example.com", password: "short", password_confirmation: "mismatch" },
+          headers: { 'REMOTE_ADDR' => '10.9.2.1' }
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      graphql_sign_up(200, ip: '10.9.2.1')
+      expect(response).to have_http_status(:too_many_requests)
     end
 
     it "does not count sign-ins", :aggregate_failures do
