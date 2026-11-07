@@ -39,9 +39,20 @@ domains:
     type: PRIMARY
   - domain: api.vglist.co
     type: ALIAS
+  # Only exists to be redirected to the apex by the first ingress rule.
+  - domain: www.vglist.co
+    type: ALIAS
 
 ingress:
   rules:
+    - match:
+        authority:
+          exact: www.vglist.co
+        path:
+          prefix: /
+      redirect:
+        authority: vglist.co
+        redirect_code: 301
     - match:
         authority:
           exact: api.vglist.co
