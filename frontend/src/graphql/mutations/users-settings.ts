@@ -87,6 +87,20 @@ export const IMPORT_STEAM_LIBRARY = gql`
       addedGamesCount
       updatedGamesCount
       unmatchedCount
+      addedGames {
+        id
+        name
+        coverUrl(size: SMALL)
+      }
+      updatedGames {
+        id
+        name
+        coverUrl(size: SMALL)
+      }
+      unmatchedGames {
+        name
+        steamAppId
+      }
     }
   }
 `;

@@ -14,7 +14,7 @@
           <div class="profile-avatar-actions">
             <button type="button" class="set-btn" :disabled="uploadingAvatar" @click="avatarInput?.click()">
               <ImageUp :size="15" :stroke-width="2" aria-hidden="true" />
-              {{ avatarUrl ? "Change avatar" : "Upload avatar" }}
+              <span>{{ avatarUrl ? "Change avatar" : "Upload avatar" }}</span>
             </button>
             <button
               v-if="avatarUrl"
@@ -23,7 +23,7 @@
               :disabled="removingAvatar"
               @click="showRemoveAvatarConfirm = true"
             >
-              Remove avatar
+              <span>Remove avatar</span>
             </button>
           </div>
           <input
@@ -70,7 +70,7 @@
 
       <div class="set-actions">
         <button type="submit" class="set-btn is-primary" :disabled="saving">
-          {{ saving ? "Saving…" : "Save changes" }}
+          <span>{{ saving ? "Saving…" : "Save changes" }}</span>
         </button>
       </div>
     </form>

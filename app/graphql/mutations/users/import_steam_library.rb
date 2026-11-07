@@ -12,6 +12,7 @@ class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
   field :added_games_count, Integer, null: false, description: "The number of games that were added to the user's library."
   field :unmatched_count, Integer, null: false, description: "The number of games where a match couldn't be found in the database."
   field :updated_games_count, Integer, null: false, description: "The number of games in the user's library that were updated."
+  field :unmatched_games, [Types::SteamImportUnmatchedGameType], null: false, description: "The games from the Steam library that couldn't be matched to a game in the vglist database. Excludes blocklisted Steam App IDs."
 
   def resolve(user_id:, update_hours: false)
     user = User.find(user_id)
@@ -20,11 +21,12 @@ class Mutations::Users::ImportSteamLibrary < Mutations::BaseMutation
 
     {
       user: user,
-      added_games: result.added_games,
-      updated_games: result.updated_games,
+      added_games: result.added_games.with_attached_cover.order(:name),
+      updated_games: result.updated_games.with_attached_cover.order(:name),
       added_games_count: result.added_games.count,
       unmatched_count: result.unmatched.count,
-      updated_games_count: result.updated_games.count
+      updated_games_count: result.updated_games.count,
+      unmatched_games: result.unmatched.sort_by { |game| game.name.to_s.downcase }
     }
   rescue SteamImportService::NoGamesError
     # If no games are returned, return an error message.

@@ -630,7 +630,14 @@ export type ImportSteamLibraryMutationVariables = Exact<{
 }>;
 
 export interface ImportSteamLibraryMutation {
-  importSteamLibrary: { addedGamesCount: number; updatedGamesCount: number; unmatchedCount: number } | null;
+  importSteamLibrary: {
+    addedGamesCount: number;
+    updatedGamesCount: number;
+    unmatchedCount: number;
+    addedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    updatedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    unmatchedGames: Array<{ name: string; steamAppId: number }>;
+  } | null;
 }
 
 export type FollowUserMutationVariables = Exact<{

@@ -16,10 +16,10 @@
       <div class="set-actions">
         <a v-if="downloadUrl" class="set-btn" :href="downloadUrl" download="vglist-library.json">
           <Download :size="15" :stroke-width="2" aria-hidden="true" />
-          Download JSON
+          <span>Download JSON</span>
         </a>
         <button type="button" class="set-btn is-primary" :disabled="exporting" @click="exportLibrary">
-          {{ exporting ? "Exporting…" : exportData ? "Export again" : "Export library" }}
+          <span>{{ exporting ? "Exporting…" : exportData ? "Export again" : "Export library" }}</span>
         </button>
       </div>
     </section>
