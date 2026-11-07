@@ -36,6 +36,7 @@ module Types
     field :users, resolver: Resolvers::UserResolvers::ListResolver
     field :user_search, resolver: Resolvers::UserResolvers::SearchResolver
     field :current_user, resolver: Resolvers::UserResolvers::CurrentUserResolver
+    field :library_comparison, resolver: Resolvers::UserResolvers::LibraryComparisonResolver
 
     field :game_purchase, resolver: Resolvers::GamePurchaseResolver
 
