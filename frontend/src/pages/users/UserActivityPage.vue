@@ -140,9 +140,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useCursorPages } from "@/composables/useCursorPages";
 import { GET_USER_ACTIVITY } from "@/graphql/queries/users";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
 import type { GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
@@ -160,8 +161,13 @@ const { mutate: deleteEventMutate } = useMutation<DeleteEventMutation>(DELETE_EV
 const deletingEventId = ref<string | null>(null);
 
 const PAGE_SIZE = 25;
-const currentPage = ref(1);
-const pageCursors = ref<(string | null)[]>([null]);
+// The page lives in the query string, so Back and Forward step through pages.
+const {
+  currentPage,
+  variables: pageVariables,
+  nextPage: goToNextPage,
+  prevPage: goToPrevPage
+} = useCursorPages(PAGE_SIZE);
 
 interface ActivityEventGame {
   id: string;
@@ -203,6 +209,7 @@ interface GetUserActivityResult {
       nodes: ActivityNode[];
       pageInfo: {
         hasNextPage: boolean;
+        startCursor: string | null;
         endCursor: string | null;
       };
     };
@@ -212,8 +219,7 @@ interface GetUserActivityResult {
 const { data, loading, error } = useQuery<GetUserActivityResult>(GET_USER_ACTIVITY, {
   variables: () => ({
     slug: route.params.slug,
-    first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1]
+    ...pageVariables.value
   })
 });
 
@@ -221,24 +227,12 @@ const user = computed(() => data.value?.user ?? null);
 const events = computed(() => user.value?.activity?.nodes ?? []);
 const hasNextPage = computed(() => user.value?.activity?.pageInfo.hasNextPage ?? false);
 
-watch(data, (val) => {
-  if (val?.user?.activity?.pageInfo.endCursor) {
-    pageCursors.value[currentPage.value] = val.user.activity.pageInfo.endCursor;
-  }
-});
-
 function nextPage() {
-  if (hasNextPage.value) {
-    currentPage.value++;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  if (hasNextPage.value) goToNextPage(user.value?.activity?.pageInfo.endCursor);
 }
 
 function prevPage() {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  goToPrevPage(user.value?.activity?.pageInfo.startCursor);
 }
 
 // ── Event helpers (reused from ActivityPage) ──

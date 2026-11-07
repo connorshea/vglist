@@ -156,8 +156,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
+import { useCursorPages, withoutPage } from "@/composables/useCursorPages";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
 import type { GetActivityQuery, GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
@@ -174,54 +176,50 @@ const { mutate: deleteEventMutate } = useMutation<DeleteEventMutation>(DELETE_EV
 const deletingEventId = ref<string | null>(null);
 
 const PAGE_SIZE = 25;
-const feedType = ref<"GLOBAL" | "FOLLOWING">(authStore.isAuthenticated ? "FOLLOWING" : "GLOBAL");
-const currentPage = ref(1);
-const pageCursors = ref<(string | null)[]>([null]);
+type FeedType = "GLOBAL" | "FOLLOWING";
 
-// Redirect to global feed if the user is not authenticated.
-watch(
-  () => authStore.isAuthenticated,
-  (isAuthenticated) => {
-    if (!isAuthenticated && feedType.value === "FOLLOWING") {
-      switchFeed("GLOBAL");
-    }
-  }
-);
+const route = useRoute();
+const router = useRouter();
+
+// The feed and page live in the query string, so each is a history entry that
+// Back and Forward return to. The Following feed needs a login, so a signed-out
+// visitor always gets Global, whatever the URL says.
+const defaultFeed = computed<FeedType>(() => (authStore.isAuthenticated ? "FOLLOWING" : "GLOBAL"));
+const feedType = computed<FeedType>(() => {
+  if (!authStore.isAuthenticated) return "GLOBAL";
+  if (route.query.feed === "global") return "GLOBAL";
+  if (route.query.feed === "following") return "FOLLOWING";
+  return defaultFeed.value;
+});
+const {
+  currentPage,
+  variables: pageVariables,
+  nextPage: goToNextPage,
+  prevPage: goToPrevPage
+} = useCursorPages(PAGE_SIZE);
 
 const { data, loading, error } = useQuery<GetActivityQuery>(GET_ACTIVITY, {
   variables: () => ({
     feedType: feedType.value,
-    first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1]
+    ...pageVariables.value
   })
 });
 
 const hasNextPage = computed(() => data.value?.activity?.pageInfo.hasNextPage ?? false);
 
-watch(data, (val) => {
-  if (val?.activity?.pageInfo.endCursor) {
-    pageCursors.value[currentPage.value] = val.activity.pageInfo.endCursor;
-  }
-});
-
-function switchFeed(type: "GLOBAL" | "FOLLOWING") {
-  feedType.value = type;
-  currentPage.value = 1;
-  pageCursors.value = [null];
+function switchFeed(type: FeedType) {
+  if (type === feedType.value) return;
+  void router.push({
+    query: { ...withoutPage(route.query), feed: type === defaultFeed.value ? undefined : type.toLowerCase() }
+  });
 }
 
 function nextPage() {
-  if (hasNextPage.value) {
-    currentPage.value++;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  if (hasNextPage.value) goToNextPage(data.value?.activity?.pageInfo.endCursor);
 }
 
 function prevPage() {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  goToPrevPage(data.value?.activity?.pageInfo.startCursor);
 }
 
 type ActivityEvent = GetActivityQuery["activity"] extends { nodes: Array<infer N> } | null | undefined ? N : never;

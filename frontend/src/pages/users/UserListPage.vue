@@ -52,28 +52,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@/composables/useGraphQL";
+import { useCursorPages, withoutPage } from "@/composables/useCursorPages";
 import { GET_USERS } from "@/graphql/queries/users";
 import type { GetUsersQuery, UserSort } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
 import UserCard from "@/components/UserCard.vue";
 
-const sortOptions: { label: string; value: UserSort | null }[] = [
-  { label: "A\u2013Z", value: null },
-  { label: "Most games", value: "MOST_GAMES" },
-  { label: "Most followers", value: "MOST_FOLLOWERS" }
+const sortOptions: { label: string; value: UserSort | null; slug: string | null }[] = [
+  { label: "A–Z", value: null, slug: null },
+  { label: "Most games", value: "MOST_GAMES", slug: "most-games" },
+  { label: "Most followers", value: "MOST_FOLLOWERS", slug: "most-followers" }
 ];
 
 const PAGE_SIZE = 20;
-const currentPage = ref(1);
-const currentSort = ref<UserSort | null>(null);
-const pageCursors = ref<(string | null)[]>([null]);
+const route = useRoute();
+const router = useRouter();
+
+// The sort and page live in the query string, so Back and Forward return to
+// them and a sorted list can be linked to.
+const currentSort = computed(
+  () => sortOptions.find((o) => o.slug !== null && o.slug === route.query.sort)?.value ?? null
+);
+const {
+  currentPage,
+  variables: pageVariables,
+  nextPage: goToNextPage,
+  prevPage: goToPrevPage
+} = useCursorPages(PAGE_SIZE);
 
 const { data, loading, error } = useQuery<GetUsersQuery>(GET_USERS, {
   variables: () => ({
-    first: PAGE_SIZE,
-    after: pageCursors.value[currentPage.value - 1],
+    ...pageVariables.value,
     sortBy: currentSort.value
   })
 });
@@ -82,24 +94,18 @@ const users = computed(() => data.value?.users?.nodes ?? []);
 const hasNextPage = computed(() => data.value?.users?.pageInfo?.hasNextPage ?? false);
 const totalCount = computed(() => data.value?.users?.totalCount ?? 0);
 
-watch(data, (val) => {
-  if (val?.users?.pageInfo?.endCursor) {
-    pageCursors.value[currentPage.value] = val.users.pageInfo.endCursor;
-  }
-});
-
 function setSort(sort: UserSort | null) {
-  currentSort.value = sort;
-  currentPage.value = 1;
-  pageCursors.value = [null];
+  if (sort === currentSort.value) return;
+  const slug = sortOptions.find((o) => o.value === sort)?.slug ?? undefined;
+  void router.push({ query: { ...withoutPage(route.query), sort: slug } });
 }
 
 function nextPage() {
-  if (hasNextPage.value) currentPage.value++;
+  if (hasNextPage.value) goToNextPage(data.value?.users?.pageInfo?.endCursor);
 }
 
 function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
+  goToPrevPage(data.value?.users?.pageInfo?.startCursor);
 }
 </script>
 

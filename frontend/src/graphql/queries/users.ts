@@ -87,8 +87,8 @@ export const GET_USER_FAVORITES = gql`
 `;
 
 export const GET_USERS = gql`
-  query GetUsers($first: Int, $after: String, $sortBy: UserSort) {
-    users(first: $first, after: $after, sortBy: $sortBy) {
+  query GetUsers($first: Int, $after: String, $last: Int, $before: String, $sortBy: UserSort) {
+    users(first: $first, after: $after, last: $last, before: $before, sortBy: $sortBy) {
       nodes {
         id
         username
@@ -105,6 +105,7 @@ export const GET_USERS = gql`
       totalCount
       pageInfo {
         hasNextPage
+        startCursor
         endCursor
       }
     }
@@ -156,12 +157,12 @@ export const GET_USER_FOLLOWING = gql`
 `;
 
 export const GET_USER_ACTIVITY = gql`
-  query GetUserActivity($slug: String!, $first: Int, $after: String) {
+  query GetUserActivity($slug: String!, $first: Int, $after: String, $last: Int, $before: String) {
     user(slug: $slug) {
       id
       username
       slug
-      activity(first: $first, after: $after) {
+      activity(first: $first, after: $after, last: $last, before: $before) {
         nodes {
           id
           eventCategory
@@ -211,6 +212,7 @@ export const GET_USER_ACTIVITY = gql`
         }
         pageInfo {
           hasNextPage
+          startCursor
           endCursor
         }
       }
