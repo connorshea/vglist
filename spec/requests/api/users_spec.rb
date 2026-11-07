@@ -120,9 +120,9 @@ RSpec.describe "Users API", type: :request do
         }
       GRAPHQL
 
-      result = api_request(query_string, variables: { id: user_with_avatar.id }, token: access_token_for_user_with_avatar)
+      avatar_variant = user_with_avatar.avatar.variant(:small).processed
 
-      avatar_variant = user_with_avatar.sized_avatar(:small)
+      result = api_request(query_string, variables: { id: user_with_avatar.id }, token: access_token_for_user_with_avatar)
 
       expect(result.graphql_dig(:user)).to eq(
         {

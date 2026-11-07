@@ -77,9 +77,9 @@ RSpec.describe "Game query API", type: :request do
         }
       GRAPHQL
 
-      result = api_request(query_string, variables: { id: game_with_cover.id }, token: access_token)
+      cover_variant = game_with_cover.cover.variant(:small).processed
 
-      cover_variant = game_with_cover.sized_cover(:small)
+      result = api_request(query_string, variables: { id: game_with_cover.id }, token: access_token)
 
       expect(result.graphql_dig(:game)).to eq(
         {

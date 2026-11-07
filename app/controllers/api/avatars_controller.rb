@@ -27,7 +27,9 @@ module Api
       current_user.avatar = file
 
       if current_user.save
-        render json: { avatar_url: current_user.sized_avatar(:large)&.url }, status: :created
+        # Resized right away rather than in the background (see
+        # ReadyVariant), so the response has the new avatar at its proper size.
+        render json: { avatar_url: current_user.avatar.variant(:large).processed.url }, status: :created
       else
         errors = current_user.errors.full_messages_for(:avatar).presence || current_user.errors.full_messages
         render json: { errors: errors }, status: :unprocessable_content
