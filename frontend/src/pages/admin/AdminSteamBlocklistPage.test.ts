@@ -1,22 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import { createMemoryHistory, createRouter } from "vue-router";
-import { ref } from "vue";
 import AdminSteamBlocklistPage from "./AdminSteamBlocklistPage.vue";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
 const { mockRequest } = vi.hoisted(() => ({
   mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>()
-}));
-
-vi.mock("@/composables/useGraphQL", () => ({
-  useQuery: () => ({
-    data: ref(null),
-    loading: ref(false),
-    error: ref(null),
-    refetch: vi.fn<() => Promise<void>>()
-  })
 }));
 
 vi.mock("@/graphql/client", () => ({
@@ -50,6 +40,7 @@ function inputs(wrapper: Awaited<ReturnType<typeof mountAt>>["wrapper"]) {
 
 beforeEach(() => {
   mockRequest.mockReset();
+  mockRequest.mockResolvedValue({ steamBlocklist: { nodes: [], pageInfo: { hasNextPage: false, endCursor: null } } });
 });
 
 // ── Tests ─────────────────────────────────────────────────────────

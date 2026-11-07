@@ -21,10 +21,10 @@
       </form>
     </div>
 
-    <div v-if="sbLoading" class="has-text-centered py-6">Loading...</div>
-    <div v-if="sbError" class="notification is-danger">{{ sbError.message }}</div>
+    <div v-if="!sbLoaded && sbLoading" class="has-text-centered py-6">Loading...</div>
+    <div v-if="sbError" class="notification is-danger">{{ sbError }}</div>
 
-    <template v-if="sbData">
+    <template v-if="sbLoaded">
       <div class="table-container">
         <table class="table is-fullwidth is-striped">
           <thead>
@@ -36,7 +36,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="entry in sbData.steamBlocklist?.nodes" :key="entry.id">
+            <tr v-for="entry in sbEntries" :key="entry.id">
               <td>
                 <a
                   :href="`https://store.steampowered.com/app/${entry.steamAppId}`"
@@ -61,7 +61,14 @@
           </tbody>
         </table>
       </div>
-      <p v-if="sbData.steamBlocklist?.nodes.length === 0" class="has-text-centered has-text-grey py-4">
+      <AdminLoadMore
+        :has-next-page="sbHasNextPage"
+        :loading="sbLoadingMore"
+        :error="sbLoadMoreError"
+        noun="entries"
+        @load-more="sbLoadMore"
+      />
+      <p v-if="sbEntries.length === 0" class="has-text-centered has-text-grey py-4">
         No entries in the Steam blocklist.
       </p>
     </template>
@@ -71,7 +78,8 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useQuery } from "@/composables/useGraphQL";
+import AdminLoadMore from "@/components/admin/AdminLoadMore.vue";
+import { useConnectionList } from "@/composables/useConnectionList";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import { GET_STEAM_BLOCKLIST } from "@/graphql/queries/admin";
@@ -84,11 +92,18 @@ const route = useRoute();
 const router = useRouter();
 
 const {
-  data: sbData,
+  nodes: sbEntries,
+  loaded: sbLoaded,
   loading: sbLoading,
   error: sbError,
-  refetch: sbRefetch
-} = useQuery<GetSteamBlocklistQuery>(GET_STEAM_BLOCKLIST, { variables: { first: 50 } });
+  hasNextPage: sbHasNextPage,
+  loadMore: sbLoadMore,
+  loadingMore: sbLoadingMore,
+  loadMoreError: sbLoadMoreError,
+  reload: sbRefetch
+} = useConnectionList(GET_STEAM_BLOCKLIST, {
+  select: (data: GetSteamBlocklistQuery) => data.steamBlocklist
+});
 
 const newSteamName = ref("");
 const newSteamAppId = ref<number | undefined>(undefined);
