@@ -65,7 +65,7 @@
         <PaginationNav
           v-if="currentPage > 1 || hasNextPage"
           :current-page="currentPage"
-          :has-next-page="hasNextPage"
+          :has-next-page="canGoNext"
           :loading="loading"
           @prev="prevPage"
           @next="nextPage"
@@ -184,8 +184,14 @@ watch(data, (val) => {
   if (endCursor) pageCursors.value[currentPage.value] = endCursor;
 });
 
+// Only move forward once the current page has loaded and recorded its end
+// cursor. If a page fails, `data` still holds the previous page, so
+// `hasNextPage` alone would let Next fetch with an undefined cursor (page 1
+// again) and mislabel every page after it.
+const canGoNext = computed(() => hasNextPage.value && Boolean(pageCursors.value[currentPage.value]));
+
 function nextPage() {
-  if (hasNextPage.value) currentPage.value++;
+  if (canGoNext.value) currentPage.value++;
 }
 
 function prevPage() {

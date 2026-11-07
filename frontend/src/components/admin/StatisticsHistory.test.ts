@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import StatisticsHistory from "./StatisticsHistory.vue";
 import type { GetSiteStatisticsQuery } from "@/types/graphql";
 
@@ -11,14 +11,17 @@ type StatisticRow = NonNullable<GetSiteStatisticsQuery["siteStatistics"]>["nodes
 const { queryState } = vi.hoisted(() => ({
   queryState: {
     data: null as unknown,
-    variables: null as null | (() => Record<string, unknown>)
+    dataRef: null as null | { value: unknown },
+    variables: null as null | (() => Record<string, unknown>) | (() => Record<string, unknown>)
   }
 }));
 
 vi.mock("@/composables/useGraphQL", () => ({
   useQuery: (_query: unknown, options: { variables: () => Record<string, unknown> }) => {
     queryState.variables = options.variables;
-    return { data: ref(queryState.data), loading: ref(false), error: ref(null) };
+    const data = ref(queryState.data);
+    queryState.dataRef = data;
+    return { data, loading: ref(false), error: ref(null) };
   }
 }));
 
@@ -141,5 +144,24 @@ describe("StatisticsHistory", () => {
 
     setRows([statistic()], true);
     expect(mountHistory().find(".pagination-nav").exists()).toBeTruthy();
+  });
+
+  it("only enables Next once the current page has recorded its end cursor", async () => {
+    // The mocked query starts with page 1 already loaded, so the component's
+    // watcher hasn't seen it yet: this is the same state as a page that
+    // failed to load, where `data` still holds the previous page.
+    setRows([statistic()], true);
+    const wrapper = mountHistory();
+    const next = wrapper.find<HTMLButtonElement>("button[aria-label='Next page']");
+    expect(next.element.disabled).toBeTruthy();
+
+    queryState.dataRef!.value = {
+      siteStatistics: { nodes: [statistic()], pageInfo: { hasNextPage: true, endCursor: "cursor-1" } }
+    };
+    await nextTick();
+    expect(next.element.disabled).toBeFalsy();
+
+    await next.trigger("click");
+    expect(queryState.variables?.()).toEqual({ first: 30, after: "cursor-1" });
   });
 });
