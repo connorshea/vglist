@@ -17,7 +17,7 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
       return items.select_values.many? ? items.count(:all) : items.count
     end
 
-    # Grouped relations (e.g. the most_games and most_owners scopes) return a
+    # Grouped relations (e.g. the most_games and most_favorites scopes) return a
     # Hash with one entry per group from `.count`, which would load every
     # group into Ruby. Count the groups in Postgres instead. The order doesn't
     # change the count, so drop it.

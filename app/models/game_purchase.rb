@@ -5,7 +5,8 @@ class GamePurchase < ApplicationRecord
   after_update :game_purchase_update
   after_destroy :game_purchase_destroy
 
-  belongs_to :game
+  # Keeps games.game_purchases_count up to date for Game.most_owners.
+  belongs_to :game, counter_cache: true
   belongs_to :user
 
   has_many :game_purchase_platforms

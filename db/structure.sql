@@ -776,7 +776,8 @@ CREATE TABLE public.games (
     gog_id text,
     avg_rating double precision,
     igdb_id text,
-    mobygames_id bigint
+    mobygames_id bigint,
+    game_purchases_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2390,6 +2391,13 @@ CREATE UNIQUE INDEX index_games_on_epic_games_store_id ON public.games USING btr
 
 
 --
+-- Name: index_games_on_game_purchases_count_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_game_purchases_count_and_id ON public.games USING btree (game_purchases_count, id);
+
+
+--
 -- Name: index_games_on_giantbomb_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2847,6 +2855,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261107220100'),
 ('20261107220000'),
 ('20261105020100'),
 ('20261105020000'),
