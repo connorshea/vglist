@@ -5,9 +5,11 @@ import SearchOverlay from "./SearchOverlay.vue";
 
 // ── Hoisted mocks (available to vi.mock factories) ─────────────────
 
-const { pushMock, mockIsOpen, mockClose, mockRequest } = vi.hoisted(() => {
+const { pushMock, mockIsOpen, mockClose, mockRequest, mockInitialQuery } = vi.hoisted(() => {
   const _isOpen = { value: false };
   return {
+    // What takeInitialQuery() hands the overlay the next time it opens.
+    mockInitialQuery: { value: "" },
     pushMock: vi.fn<() => void>(),
     mockIsOpen: _isOpen,
     // close() is a simple spy; it does NOT toggle isOpen to avoid
@@ -34,7 +36,12 @@ vi.mock("@/composables/useSearchOverlay", async () => {
   return {
     useSearchOverlay: () => ({
       isOpen: realRef,
-      close: mockClose
+      close: mockClose,
+      takeInitialQuery: () => {
+        const query = mockInitialQuery.value;
+        mockInitialQuery.value = "";
+        return query;
+      }
     })
   };
 });
@@ -97,6 +104,7 @@ describe("SearchOverlay", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     mockIsOpen.value = false;
+    mockInitialQuery.value = "";
     mockClose.mockClear();
     pushMock.mockClear();
     mockRequest.mockReset();
@@ -162,6 +170,20 @@ describe("SearchOverlay", () => {
       expect(document.activeElement).toBe(input);
 
       document.body.removeChild(container);
+    });
+
+    it("starts searching for the query it was opened with", async () => {
+      mockRequest.mockResolvedValueOnce({ globalSearch: { nodes: [] } });
+      const wrapper = mountOverlay();
+
+      mockInitialQuery.value = "hollow";
+      mockIsOpen.value = true;
+      await nextTick();
+      await nextTick();
+
+      expect((wrapper.find(".search-input").element as HTMLInputElement).value).toBe("hollow");
+      await vi.advanceTimersByTimeAsync(300);
+      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "hollow" });
     });
   });
 

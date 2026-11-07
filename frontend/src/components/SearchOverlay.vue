@@ -236,7 +236,7 @@ import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const router = useRouter();
-const { isOpen, close } = useSearchOverlay();
+const { isOpen, close, takeInitialQuery } = useSearchOverlay();
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const overlayRef = ref<HTMLElement | null>(null);
 
@@ -309,6 +309,11 @@ const gridColumnsClass = computed(() => {
 // Focus input when overlay opens, and listen for Escape globally
 watch(isOpen, async (open) => {
   if (open) {
+    const initial = takeInitialQuery();
+    if (initial) {
+      query.value = initial;
+      performSearch();
+    }
     await nextTick();
     searchInputRef.value?.focus();
     document.body.style.overflow = "hidden";

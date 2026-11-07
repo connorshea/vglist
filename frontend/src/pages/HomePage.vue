@@ -2,7 +2,7 @@
   <div>
     <section class="home-section hero">
       <!-- 3D cover mosaic background -->
-      <div class="cover-scene">
+      <div class="cover-scene" aria-hidden="true">
         <div class="cover-mosaic" :class="{ 'covers-loaded': coversReady }">
           <div
             v-for="row in mosaicRows"
@@ -34,123 +34,137 @@
       <div class="hero-fade-bottom"></div>
 
       <!-- Hero content -->
-      <div class="hero-body has-text-centered hero-content">
-        <img src="@/assets/images/vglist-logo.svg" alt="vglist" class="home-logo" />
-        <p class="subtitle is-4">Track your entire video game library across every store and platform.</p>
+      <div class="hero-content">
+        <h1 class="home-heading"><img src="@/assets/images/vglist-logo.svg" alt="vglist" class="home-logo" /></h1>
+        <p class="home-lede">Track your entire video game library across every store and platform.</p>
 
-        <div v-if="statsData" class="home-stats-bar">
-          <div class="home-stats-container">
-            <router-link class="home-stat" v-for="stat in stats" :key="stat.label" :to="stat.path">
-              <p class="home-stat-value">{{ stat.value.toLocaleString() }}</p>
-              <p class="home-stat-label">{{ stat.label }}</p>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </section>
+        <!-- Opens the search overlay, carrying over whatever is typed here. -->
+        <button
+          type="button"
+          class="home-search"
+          aria-haspopup="dialog"
+          @click="openSearch()"
+          @keydown="onSearchKeydown"
+        >
+          <Search :size="20" aria-hidden="true" />
+          <span class="home-search-text">{{ searchPlaceholder }}</span>
+          <kbd class="home-search-kbd" aria-hidden="true">{{ isMac ? "⌘" : "Ctrl+" }}K</kbd>
+        </button>
 
-    <section class="section" v-if="recentGamesData">
-      <h2 class="title is-4">Recently Added Games</h2>
-
-      <div class="columns is-multiline">
-        <div v-for="game in recentGames" :key="game.id" class="column is-4">
-          <router-link :to="`/games/${game.id}`" class="home-game-card">
-            <div class="media">
-              <div class="media-left">
-                <figure class="image" style="width: 100px">
-                  <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.name" />
-                  <div v-else class="home-cover-placeholder">
-                    <span>{{ gameInitials(game.name) }}</span>
-                  </div>
-                </figure>
-              </div>
-              <div class="media-content">
-                <p class="title is-5">{{ game.name }}</p>
-                <p class="subtitle is-6 has-text-grey" v-if="platformNames(game)">
-                  {{ platformNames(game) }}
-                </p>
-                <p class="is-size-7 has-text-grey" v-if="developerNames(game)">
-                  {{ developerNames(game) }}
-                </p>
-              </div>
-            </div>
+        <nav v-if="quickLinks.length" class="home-quick" aria-label="Browse games by platform or genre">
+          <router-link v-for="link in quickLinks" :key="link.key" :to="link.to" class="home-quick-link">
+            {{ link.name }}
           </router-link>
-        </div>
+        </nav>
       </div>
     </section>
 
-    <section v-if="!authStore.isAuthenticated" class="home-cta">
-      <div class="home-cta-inner">
-        <div class="home-cta-blob home-cta-blob-1"></div>
-        <div class="home-cta-blob home-cta-blob-2"></div>
-        <h2 class="home-cta-title">Start tracking your games today</h2>
-        <p class="home-cta-subtitle">Lorem ipsum dolor sit amet foobar baz qux.</p>
-        <router-link to="/signup" class="home-cta-btn">Create an account</router-link>
-      </div>
-    </section>
+    <div class="home-body">
+      <GameShelf :sort="POPULAR" />
+
+      <aside v-if="!authStore.isAuthenticated" class="home-banner" aria-label="Create an account">
+        <span class="home-banner-icon" aria-hidden="true"><LibraryBig :size="20" /></span>
+        <p class="home-banner-text">
+          <strong>Keep track of your own library.</strong>
+          Import from Steam, mark what you’ve finished, and rate what you’ve played.
+        </p>
+        <router-link to="/signup" class="home-banner-btn">Create an account</router-link>
+      </aside>
+
+      <GameShelf :sort="NEW_RELEASES" />
+      <GameShelf :sort="RECENTLY_ADDED" />
+
+      <p v-if="siteStats" class="home-credit">
+        <template v-for="(stat, i) in siteStats" :key="stat.path">
+          <template v-if="i > 0"> · </template>
+          <router-link :to="stat.path">{{ stat.label }}</router-link> </template
+        >, with game data from
+        <a href="https://www.wikidata.org" target="_blank" rel="noopener noreferrer">Wikidata</a>.
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { LibraryBig, Search } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
+import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { useAuthStore } from "@/stores/auth";
 import { GET_BASIC_SITE_STATISTICS } from "@/graphql/queries/resources";
-import { GET_RECENT_GAMES, GET_HERO_COVERS } from "@/graphql/queries/games";
+import { GET_HERO_COVERS } from "@/graphql/queries/games";
+import { GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
+import type { GetBasicSiteStatisticsQuery, GetGamesIndexFiltersQuery } from "@/types/graphql";
+import GameShelf from "@/components/home/GameShelf.vue";
+import { countLabel, gameSortFromSlug } from "@/components/games-index/format";
 
 const authStore = useAuthStore();
+const { open: openSearch } = useSearchOverlay();
 
-// ── Existing queries (unchanged) ──
+const isMac = navigator.platform.toUpperCase().includes("MAC");
 
-const { data: statsData } = useQuery(GET_BASIC_SITE_STATISTICS);
-const { data: recentGamesData } = useQuery(GET_RECENT_GAMES, {
-  variables: { first: 6 }
-});
+const POPULAR = gameSortFromSlug("popular");
+const NEW_RELEASES = gameSortFromSlug("new");
+const RECENTLY_ADDED = gameSortFromSlug("added");
 
-interface GameNode {
-  id: string;
-  name: string;
-  coverUrl: string | null;
-  platforms: { nodes: { id: string; name: string }[] };
-  developers: { nodes: { id: string; name: string }[] };
+// ── Search ──
+
+function onSearchKeydown(e: KeyboardEvent) {
+  // Typing straight into the box starts a search with what was typed.
+  if (e.key.length === 1 && e.key !== " " && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    openSearch(e.key);
+  }
 }
 
-const stats = computed(() => {
-  if (!statsData.value) return [];
-  const s = (statsData.value as { basicSiteStatistics: Record<string, number> }).basicSiteStatistics;
+const { data: statsData } = useQuery<GetBasicSiteStatisticsQuery>(GET_BASIC_SITE_STATISTICS);
+
+const searchPlaceholder = computed(() => {
+  const games = statsData.value?.basicSiteStatistics.games;
+  return games ? `Search ${countLabel(games, "game")} and more` : "Search games and more";
+});
+
+// ── Quick links: the most common platforms and genres ──
+
+// The games index's own query for its pills, so the home page sends nothing
+// new. Its record lookups are switched off.
+const { data: filtersData } = useQuery<GetGamesIndexFiltersQuery>(GET_GAMES_INDEX_FILTERS, {
+  variables: {
+    platformId: "0",
+    hasPlatform: false,
+    genreId: "0",
+    hasGenre: false,
+    engineId: "0",
+    hasEngine: false
+  }
+});
+
+const quickLinks = computed(() => {
+  const platforms = (filtersData.value?.platforms?.nodes ?? []).slice(0, 4).map((p) => ({
+    key: `platform-${p.id}`,
+    name: p.name,
+    to: { path: "/games", query: { platform: p.id } }
+  }));
+  const genres = (filtersData.value?.genres?.nodes ?? []).slice(0, 3).map((g) => ({
+    key: `genre-${g.id}`,
+    name: g.name,
+    to: { path: "/games", query: { genre: g.id } }
+  }));
+  return [...platforms, ...genres];
+});
+
+// ── Site stats, in one line at the bottom ──
+
+const siteStats = computed(() => {
+  const s = statsData.value?.basicSiteStatistics;
+  if (!s) return null;
   return [
-    { label: "GAMES", value: s.games, path: "/games" },
-    { label: "SERIES", value: s.series, path: "/series" },
-    { label: "PLATFORMS", value: s.platforms, path: "/platforms" },
-    { label: "COMPANIES", value: s.companies, path: "/companies" },
-    { label: "ENGINES", value: s.engines, path: "/engines" },
-    { label: "GENRES", value: s.genres, path: "/genres" }
+    { label: countLabel(s.games, "game"), path: "/games" },
+    { label: countLabel(s.series, "series", "series"), path: "/series" },
+    { label: countLabel(s.platforms, "platform"), path: "/platforms" },
+    { label: countLabel(s.companies, "company", "companies"), path: "/companies" }
   ];
 });
-
-const recentGames = computed(() => {
-  if (!recentGamesData.value) return [];
-  return (recentGamesData.value as { games: { nodes: GameNode[] } }).games.nodes;
-});
-
-function gameInitials(name: string): string {
-  return name
-    .split(/[\s:]+/)
-    .filter((w) => w.length > 0)
-    .slice(0, 3)
-    .map((w) => w[0].toUpperCase())
-    .join("");
-}
-
-function platformNames(game: GameNode): string {
-  const names = game.platforms.nodes.map((p) => p.name);
-  if (names.length <= 3) return names.join(", ");
-  return `${names.slice(0, 2).join(", ")}, and ${names.length - 2} more`;
-}
-
-function developerNames(game: GameNode): string {
-  return game.developers.nodes.map((d) => d.name).join(", ");
-}
 
 // ── 3D Cover Mosaic ──
 
@@ -361,6 +375,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+<style scoped>
 /* ── Hero section ── */
 .home-section.hero {
   overflow: hidden;
@@ -503,170 +518,184 @@ onUnmounted(() => {
 .hero-content {
   position: relative;
   z-index: 2;
-  padding-top: 5rem;
-  padding-bottom: 3rem;
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 4rem;
+  text-align: center;
+  color: #fff;
+}
+
+.home-heading {
+  margin: 0;
+  line-height: 0;
 }
 
 .home-logo {
   filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
 }
 
-/* ── Stats bar ── */
-.home-stats-bar {
-  margin-top: 2rem;
-}
-
-.home-stats-container {
-  display: inline-flex;
-  gap: 0;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  padding: 0.15rem;
-}
-
-.home-stat {
-  display: block;
-  padding: 0.85rem 1.5rem;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: background 0.15s;
-}
-
-.home-stat:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.home-stat-value {
-  font-size: 1.6rem;
-  font-weight: 700;
+.home-lede {
+  margin-top: 1.25rem;
+  font-size: 1.375rem;
+  line-height: 1.4;
   color: #fff;
-  line-height: 1.2;
+  text-wrap: balance;
 }
 
-.home-stat-label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.45);
-  margin-top: 0.15rem;
-}
-
-/* ── Game cards ── */
-.home-game-card {
-  display: block;
-  padding: 1rem;
-  border: 1px solid hsl(0, 0%, 90%);
-  border-radius: 6px;
-  color: inherit;
-  transition: box-shadow 0.15s;
-  height: 100%;
-}
-
-.home-game-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.home-game-card .title {
-  margin-bottom: 0.25rem;
-}
-
-.home-game-card .subtitle {
-  margin-bottom: 0.25rem;
-}
-
-.home-cover-placeholder {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
-  border-radius: 4px;
+/* Looks like a search field; it's a button because typing happens in the overlay. */
+.home-search {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 640px;
+  height: 56px;
+  margin: 2rem auto 0;
+  padding: 0 12px 0 18px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  color: var(--n-700);
+  font: inherit;
+  text-align: left;
+  cursor: text;
 }
 
-.home-cover-placeholder span {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.05em;
+.home-search:focus-visible {
+  outline: 3px solid var(--p-300);
+  outline-offset: 3px;
 }
 
-/* ── CTA banner ── */
-.home-cta {
-  padding: 2rem 1.5rem 3rem;
-}
-
-.home-cta-inner {
-  position: relative;
+.home-search-text {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 3.5rem 2rem;
-  border-radius: 20px;
-  background: linear-gradient(135deg, var(--p-500) 0%, var(--p-600) 50%, var(--p-700) 100%);
+  color: var(--n-500);
+  font-size: 1.0625rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-search-kbd {
+  padding: 2px 6px;
+  border: 1px solid var(--n-200);
+  border-radius: 5px;
+  background: none;
+  color: var(--n-500);
+  font-family: inherit;
+  font-size: 0.75rem;
+}
+
+.home-quick {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 640px;
+  margin: 1.25rem auto 0;
+}
+
+.home-quick-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.875rem;
+  transition: background var(--transition-fast);
+}
+
+.home-quick-link:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.home-quick-link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ── Below the hero ── */
+.home-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-top: 3rem;
+}
+
+.home-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  border-radius: var(--radius-lg);
+  background: var(--p-50);
+  color: var(--color-text-primary);
+}
+
+.home-banner-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--p-100);
+  color: var(--p-600);
+}
+
+.home-banner-text {
+  flex: 1;
+  min-width: 240px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.home-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: var(--radius-md);
+  background: var(--p-500);
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.home-banner-btn:hover {
+  background: var(--p-600);
+  color: #fff;
+}
+
+.home-banner-btn:focus-visible {
+  outline: 2px solid var(--p-500);
+  outline-offset: 2px;
+}
+
+.home-credit {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
   text-align: center;
 }
 
-.home-cta-blob {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
-  pointer-events: none;
-}
+@media (prefers-color-scheme: dark) {
+  .home-banner {
+    background: var(--p-800);
+  }
 
-.home-cta-blob-1 {
-  width: 260px;
-  height: 260px;
-  background: rgba(255, 255, 255, 0.4);
-  top: -60px;
-  right: -40px;
-}
-
-.home-cta-blob-2 {
-  width: 200px;
-  height: 200px;
-  background: rgba(255, 255, 255, 0.3);
-  bottom: -50px;
-  left: -30px;
-}
-
-.home-cta-title {
-  position: relative;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.home-cta-subtitle {
-  position: relative;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 1.75rem;
-}
-
-.home-cta-btn {
-  position: relative;
-  display: inline-block;
-  padding: 0.85rem 2.5rem;
-  background: #fff;
-  color: var(--p-700);
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: var(--radius-pill);
-  text-decoration: none;
-  transition:
-    transform 0.15s,
-    box-shadow 0.15s;
-}
-
-.home-cta-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  .home-banner-icon {
+    background: var(--p-700);
+    color: var(--p-200);
+  }
 }
 
 /* ── Responsive ── */
@@ -674,25 +703,32 @@ onUnmounted(() => {
   .home-section.hero {
     min-height: 420px;
   }
-  .home-stat {
-    padding: 0.7rem 1rem;
-  }
-  .home-stat-value {
-    font-size: 1.3rem;
-  }
 }
 
 @media (max-width: 600px) {
-  .home-section.hero {
-    min-height: 380px;
+  .hero-content {
+    padding: 3rem 1rem 2.5rem;
   }
-  .home-stats-container {
-    flex-wrap: wrap;
-    border-radius: 12px;
+
+  .home-lede {
+    font-size: 1.125rem;
   }
-  .home-stat {
-    flex: 1 1 33%;
-    min-width: 80px;
+
+  .home-search {
+    height: 52px;
+  }
+
+  .home-search-kbd {
+    display: none;
+  }
+
+  .home-banner {
+    padding: 16px;
+  }
+
+  .home-banner-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

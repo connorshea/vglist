@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-search" :style="{ viewTransitionName: isOpen ? 'none' : 'search-bar' }" @click="open">
+  <div class="navbar-search" :style="{ viewTransitionName: isOpen ? 'none' : 'search-bar' }" @click="open()">
     <div class="control">
       <input class="input is-small" type="search" placeholder="Search..." readonly @keydown="handleKeydown" />
       <kbd class="search-shortcut">{{ isMac ? "⌘" : "Ctrl+" }}K</kbd>
@@ -15,9 +15,13 @@ const { open, isOpen } = useSearchOverlay();
 const isMac = navigator.platform.toUpperCase().includes("MAC");
 
 function handleKeydown(e: KeyboardEvent) {
-  if (e.key === "Enter" || (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey)) {
+  if (e.key === "Enter") {
     e.preventDefault();
     open();
+  } else if (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    // Carry the typed character over so it isn't lost.
+    e.preventDefault();
+    open(e.key);
   }
 }
 </script>

@@ -904,22 +904,6 @@ export interface GetGameQuery {
   } | null;
 }
 
-export type GetRecentGamesQueryVariables = Exact<{
-  first?: number | null | undefined;
-}>;
-
-export interface GetRecentGamesQuery {
-  games: {
-    nodes: Array<{
-      id: string;
-      name: string;
-      coverUrl: string | null;
-      platforms: { nodes: Array<{ id: string; name: string }> };
-      developers: { nodes: Array<{ id: string; name: string }> };
-    }>;
-  } | null;
-}
-
 export type GetHeroCoversQueryVariables = Exact<{ [key: string]: never }>;
 
 export interface GetHeroCoversQuery {
