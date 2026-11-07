@@ -41,7 +41,7 @@
     "jsdom": "^30.0.1",
     "oxfmt": "^0.76.0",
     "oxlint": "^1.91.0",
-    "oxlint-tsgolint": "^0.23.0",
+    "oxlint-tsgolint": "^7.0.2006",
     "typescript": "~6.0.3",
     "vite": "^8.2.4",
     "vitest": "^5.0.0",

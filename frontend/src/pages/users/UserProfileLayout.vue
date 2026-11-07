@@ -16,11 +16,11 @@
             <span v-else aria-hidden="true">{{ user.username.charAt(0).toUpperCase() }}</span>
           </span>
           <div class="profile-identity-text">
-            <h1 class="profile-name">
-              {{ user.username }}
+            <div class="profile-name-row">
+              <h1 class="profile-name">{{ user.username }}</h1>
               <span v-if="user.role === 'ADMIN'" class="profile-role is-admin">Admin</span>
               <span v-else-if="user.role === 'MODERATOR'" class="profile-role is-mod">Mod</span>
-            </h1>
+            </div>
             <p v-if="!isPrivate" class="profile-stats">{{ statsLine }}</p>
           </div>
         </div>
@@ -36,7 +36,7 @@
           </router-link>
         </div>
         <div v-else-if="canFollow || hasAdminActions" class="profile-actions">
-          <router-link v-if="compareLink" :to="compareLink" class="profile-button">
+          <router-link v-if="compareLink" :to="compareLink" class="profile-button profile-compare">
             <GitCompareArrows :size="14" aria-hidden="true" />
             Compare libraries
           </router-link>
@@ -57,12 +57,18 @@
             </button>
           </template>
 
-          <div v-if="hasAdminActions" ref="actionsMenu" class="profile-menu" @keydown.esc="closeActions">
+          <div
+            v-if="hasAdminActions || compareLink"
+            ref="actionsMenu"
+            class="profile-menu"
+            :class="{ 'is-phone-only': !hasAdminActions }"
+            @keydown.esc="closeActions"
+          >
             <button
               ref="actionsToggle"
               type="button"
               class="profile-button is-icon"
-              aria-label="Moderation actions"
+              aria-label="More actions"
               aria-haspopup="menu"
               :aria-expanded="actionsOpen"
               @click="actionsOpen = !actionsOpen"
@@ -70,6 +76,16 @@
               <Ellipsis :size="16" aria-hidden="true" />
             </button>
             <div v-if="actionsOpen" class="profile-menu-list" role="menu">
+              <!-- On a phone, Compare moves in here from the header. -->
+              <router-link
+                v-if="compareLink"
+                :to="compareLink"
+                role="menuitem"
+                class="profile-menu-compare"
+                @click="actionsOpen = false"
+              >
+                Compare libraries
+              </router-link>
               <template v-if="canUpdateRole">
                 <button
                   v-for="change in roleChangeOptions"
@@ -539,11 +555,15 @@ function changeRole() {
   object-fit: cover;
 }
 
-.profile-name {
+.profile-name-row {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 8px;
   align-items: center;
+}
+
+.profile-name {
+  min-width: 0;
   margin: 0;
   color: var(--color-text-primary);
   font-size: 1.25rem;
@@ -648,7 +668,8 @@ function changeRole() {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-.profile-menu-list button {
+.profile-menu-list button,
+.profile-menu-list a {
   display: block;
   width: 100%;
   padding: 8px 16px;
@@ -662,13 +683,21 @@ function changeRole() {
 }
 
 .profile-menu-list button:hover,
-.profile-menu-list button:focus-visible {
+.profile-menu-list button:focus-visible,
+.profile-menu-list a:hover,
+.profile-menu-list a:focus-visible {
   outline: 0;
   background: var(--color-bg-subtle);
 }
 
 .profile-menu-list button.is-danger {
   color: var(--r-500);
+}
+
+/* Compare is a header button on desktop, and a menu item on a phone. */
+.profile-menu.is-phone-only,
+.profile-menu-list .profile-menu-compare {
+  display: none;
 }
 
 /* ── Tabs ── */
@@ -739,6 +768,30 @@ function changeRole() {
      game's page. */
   .profile-actions.is-own {
     display: none;
+  }
+
+  .profile-compare {
+    display: none;
+  }
+
+  .profile-menu.is-phone-only,
+  .profile-menu-list .profile-menu-compare {
+    display: block;
+  }
+
+  /* The actions sit at the left of a phone screen, so open the menu from
+     the row's left edge, not the toggle's right one, to keep it on screen. */
+  .profile-actions {
+    position: relative;
+  }
+
+  .profile-menu {
+    position: static;
+  }
+
+  .profile-menu-list {
+    right: auto;
+    left: 0;
   }
 
   .profile-tabs {

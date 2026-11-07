@@ -8,13 +8,14 @@ type StatisticRow = NonNullable<GetSiteStatisticsQuery["siteStatistics"]>["nodes
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
-const { queryState } = vi.hoisted(() => ({
-  queryState: {
-    data: null as unknown,
-    dataRef: null as null | { value: unknown },
-    variables: null as null | (() => Record<string, unknown>) | (() => Record<string, unknown>)
-  }
-}));
+const { queryState } = vi.hoisted(() => {
+  const queryState: {
+    data: unknown;
+    dataRef: null | { value: unknown };
+    variables: null | (() => Record<string, unknown>);
+  } = { data: null, dataRef: null, variables: null };
+  return { queryState };
+});
 
 vi.mock("@/composables/useGraphQL", () => ({
   useQuery: (_query: unknown, options: { variables: () => Record<string, unknown> }) => {

@@ -225,6 +225,7 @@ export interface SignInMutation {
     username: string | null;
     slug: string | null;
     role: string | null;
+    avatarUrl: string | null;
     errors: Array<string>;
   } | null;
 }

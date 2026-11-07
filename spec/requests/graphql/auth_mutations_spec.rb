@@ -14,6 +14,7 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
             username
             slug
             role
+            avatarUrl
             errors
           }
         }
@@ -34,10 +35,22 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(data['userId']).to eq(user.id.to_s)
       expect(data['username']).to eq(user.username)
       expect(data['slug']).to eq(user.slug)
+      expect(data['avatarUrl']).to be_nil
 
       # Verify the token decodes to the correct user
       decoded = JwtService.decode(data['token'])
       expect(decoded.first['user_id']).to eq(user.id)
+    end
+
+    it "returns the small avatar URL for a user with an avatar" do
+      user_with_avatar = create(:confirmed_user_with_avatar)
+      post graphql_path, params: {
+        query: query,
+        variables: { email: user_with_avatar.email, password: "password" }.to_json
+      }
+
+      avatar_url = JSON.parse(response.body).dig('data', 'signIn', 'avatarUrl')
+      expect(avatar_url).to be_present
     end
 
     it "returns a token that includes jwt_version and passes verification" do

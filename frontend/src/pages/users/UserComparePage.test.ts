@@ -13,7 +13,7 @@ const { mockRequest, mockReplace, mockPush, mockRoute } = vi.hoisted(() => ({
     path: "/users/connorshea/compare/kestrel",
     hash: "",
     params: { slug: "connorshea", otherSlug: "kestrel" },
-    query: {} as Record<string, string>
+    query: {}
   }
 }));
 

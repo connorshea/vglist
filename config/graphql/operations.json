@@ -92,7 +92,7 @@
   "SearchGenresForFilter": "query SearchGenresForFilter($query: String!) {\n  genreSearch(query: $query, first: 10) {\n    nodes {\n      id\n      name\n    }\n  }\n}",
   "SearchPlatformsForFilter": "query SearchPlatformsForFilter($query: String!) {\n  platformSearch(query: $query, first: 10) {\n    nodes {\n      id\n      name\n    }\n  }\n}",
   "SearchUsersToCompare": "query SearchUsersToCompare($query: String!) {\n  userSearch(query: $query, first: 8) {\n    nodes {\n      ...ComparisonUserFields\n      privacy\n      banned\n    }\n  }\n}\n\nfragment ComparisonUserFields on User {\n  id\n  username\n  slug\n  avatarUrl(size: SMALL)\n}",
-  "SignIn": "mutation SignIn($email: String!, $password: String!) {\n  signIn(email: $email, password: $password) {\n    token\n    userId\n    username\n    slug\n    role\n    errors\n  }\n}",
+  "SignIn": "mutation SignIn($email: String!, $password: String!) {\n  signIn(email: $email, password: $password) {\n    token\n    userId\n    username\n    slug\n    role\n    avatarUrl\n    errors\n  }\n}",
   "SignUp": "mutation SignUp($username: String!, $email: String!, $password: String!, $passwordConfirmation: String!) {\n  signUp(\n    username: $username\n    email: $email\n    password: $password\n    passwordConfirmation: $passwordConfirmation\n  ) {\n    message\n    errors\n  }\n}",
   "UnbanUser": "mutation UnbanUser($userId: ID!) {\n  unbanUser(userId: $userId) {\n    user {\n      id\n      banned\n    }\n  }\n}",
   "UnfavoriteGame": "mutation UnfavoriteGame($gameId: ID!) {\n  unfavoriteGame(gameId: $gameId) {\n    game {\n      id\n      name\n    }\n  }\n}",

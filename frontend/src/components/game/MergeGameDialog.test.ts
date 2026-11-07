@@ -154,4 +154,28 @@ describe("MergeGameDialog", () => {
     expect(document.body.querySelector('input[type="search"]')).toBe(document.activeElement);
     wrapper.unmount();
   });
+
+  it("clears a non-empty search on Escape and stays open", async () => {
+    const wrapper = await openAndSearch("half");
+    const input = document.body.querySelector<HTMLInputElement>('input[type="search"]');
+
+    input?.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await flushPromises();
+
+    expect(input?.value).toBe("");
+    expect(options()).toHaveLength(0);
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it("closes on Escape when the search is empty", async () => {
+    const wrapper = await openAndSearch("");
+    const input = document.body.querySelector<HTMLInputElement>('input[type="search"]');
+
+    input?.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await flushPromises();
+
+    expect(wrapper.emitted("update:modelValue")).toEqual([[false]]);
+    wrapper.unmount();
+  });
 });
