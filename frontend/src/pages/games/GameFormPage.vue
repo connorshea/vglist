@@ -266,11 +266,7 @@ import SearchableMultiSelect from "@/components/SearchableMultiSelect.vue";
 import SearchableSelect from "@/components/SearchableSelect.vue";
 import WikidataIdInput from "@/components/WikidataIdInput.vue";
 import { gamePrefillFromQuery } from "@/utils/game-prefill";
-
-interface IdName {
-  id: string;
-  name: string;
-}
+import { withSelectedOptions, type IdName } from "@/utils/resource-options";
 
 interface ResourceListResult {
   nodes: IdName[];
@@ -409,11 +405,32 @@ const { data: seriesData } = useQuery<{ seriesList: ResourceListResult }>(GET_SE
   variables: { first: RESOURCE_PAGE_SIZE }
 });
 
-const allPlatforms = computed(() => platformsData.value?.platforms?.nodes ?? []);
-const allCompanies = computed(() => companiesData.value?.companies?.nodes ?? []);
-const allGenres = computed(() => genresData.value?.genres?.nodes ?? []);
-const allEngines = computed(() => enginesData.value?.engines?.nodes ?? []);
-const allSeries = computed(() => seriesData.value?.seriesList?.nodes ?? []);
+// The API caps each page at 100 records, so the game's own selections can be
+// missing from these lists. Seed them from the game (not the form, so a
+// removed selection can still be picked again) so they always display.
+const editedGame = computed(() => (isEditing.value ? gameData.value?.game : null));
+const allPlatforms = computed(() =>
+  withSelectedOptions(platformsData.value?.platforms?.nodes ?? [], editedGame.value?.platforms.nodes ?? [])
+);
+const allCompanies = computed(() =>
+  withSelectedOptions(
+    companiesData.value?.companies?.nodes ?? [],
+    editedGame.value?.developers.nodes ?? [],
+    editedGame.value?.publishers.nodes ?? []
+  )
+);
+const allGenres = computed(() =>
+  withSelectedOptions(genresData.value?.genres?.nodes ?? [], editedGame.value?.genres.nodes ?? [])
+);
+const allEngines = computed(() =>
+  withSelectedOptions(enginesData.value?.engines?.nodes ?? [], editedGame.value?.engines.nodes ?? [])
+);
+const allSeries = computed(() =>
+  withSelectedOptions(
+    seriesData.value?.seriesList?.nodes ?? [],
+    editedGame.value?.series ? [editedGame.value.series] : []
+  )
+);
 
 // Mutations
 const { mutate: createGame, loading: creating } = useMutation<CreateGameResult>(CREATE_GAME);
