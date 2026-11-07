@@ -334,10 +334,14 @@ const tabs = computed<Tab[]>(() => {
 // ── Follow ──────────────────────────────────────────────────────────────────
 const canFollow = computed(() => authStore.isAuthenticated && user.value !== null && !isOwnProfile.value);
 
-// Compares the viewer's library (on the left) with this user's. A private
-// library can't be compared, so there's no button for one.
+// Compares the viewer's library (on the left) with this user's. Like
+// UserPolicy#compare?, only admins can compare a private or banned user's
+// library. (The policy also lets a private user's followees compare with them,
+// but the profile doesn't know who they follow, and shows them the private
+// account message anyway.)
+const canCompare = computed(() => authStore.isAdmin || (!isPrivate.value && !user.value?.banned));
 const compareLink = computed(() =>
-  canFollow.value && !isPrivate.value && user.value && authStore.user
+  canFollow.value && canCompare.value && user.value && authStore.user
     ? { name: "userCompare" as const, params: { slug: authStore.user.slug, otherSlug: user.value.slug } }
     : null
 );
