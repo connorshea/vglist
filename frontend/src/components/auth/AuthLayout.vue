@@ -5,6 +5,10 @@
         <div v-for="tile in tiles" :key="tile.id" class="mosaic-tile" :style="{ background: tile.color }"></div>
       </div>
       <div class="auth-vignette" aria-hidden="true"></div>
+      <router-link to="/" class="auth-back">
+        <ArrowLeft :size="16" aria-hidden="true" />
+        Back to home
+      </router-link>
       <div class="auth-brand">
         <router-link to="/" class="auth-logo-link">
           <img src="@/assets/images/vglist-logo.svg" alt="vglist home" class="auth-logo" />
@@ -21,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowLeft } from "@lucide/vue";
+
 const PALETTE = [
   "#2f4858",
   "#86bbd8",
@@ -97,6 +103,37 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
     rgba(45, 28, 110, 0.7) 45%,
     rgba(17, 11, 36, 0.97) 100%
   );
+}
+
+.auth-back {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px 7px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-button);
+  backdrop-filter: blur(6px);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.auth-back:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.auth-back:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .auth-brand {
@@ -404,6 +441,11 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
   .auth-art {
     padding: 32px 24px;
     min-height: 220px;
+  }
+
+  .auth-back {
+    top: 16px;
+    left: 16px;
   }
 
   .auth-logo {
