@@ -32,12 +32,12 @@ RSpec.describe "Steam Blocklist API", type: :request do
         expect(result.graphql_dig(:steam_blocklist, :nodes).length).to eq(2)
         expect(result.graphql_dig(:steam_blocklist, :nodes).first).to eq(
           {
-            id: steam_blocklist_entries.first.id.to_s,
-            name: steam_blocklist_entries.first.name,
-            steamAppId: steam_blocklist_entries.first.steam_app_id,
+            id: steam_blocklist_entries.last.id.to_s,
+            name: steam_blocklist_entries.last.name,
+            steamAppId: steam_blocklist_entries.last.steam_app_id,
             user: {
-              id: steam_blocklist_entries.first.user.id.to_s,
-              username: steam_blocklist_entries.first.user.username
+              id: steam_blocklist_entries.last.user.id.to_s,
+              username: steam_blocklist_entries.last.user.username
             }
           }
         )

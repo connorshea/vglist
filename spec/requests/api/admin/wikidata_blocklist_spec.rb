@@ -32,12 +32,12 @@ RSpec.describe "Wikidata Blocklist API", type: :request do
         expect(result.graphql_dig(:wikidata_blocklist, :nodes).length).to eq(2)
         expect(result.graphql_dig(:wikidata_blocklist, :nodes).first).to eq(
           {
-            id: wikidata_blocklist_entries.first.id.to_s,
-            name: wikidata_blocklist_entries.first.name,
-            wikidataId: wikidata_blocklist_entries.first.wikidata_id,
+            id: wikidata_blocklist_entries.last.id.to_s,
+            name: wikidata_blocklist_entries.last.name,
+            wikidataId: wikidata_blocklist_entries.last.wikidata_id,
             user: {
-              id: wikidata_blocklist_entries.first.user.id.to_s,
-              username: wikidata_blocklist_entries.first.user.username
+              id: wikidata_blocklist_entries.last.user.id.to_s,
+              username: wikidata_blocklist_entries.last.user.username
             }
           }
         )

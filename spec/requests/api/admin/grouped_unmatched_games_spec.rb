@@ -46,6 +46,25 @@ RSpec.describe "Grouped Unmatched Games API", type: :request do
           }
         )
       end
+
+      it "pages through games with the same count without repeating or skipping any" do
+        create(:unmatched_game, name: 'C', external_service_id: '3')
+        create(:unmatched_game, name: 'A', external_service_id: '1')
+        create(:unmatched_game, name: 'B', external_service_id: '2')
+        page_query = <<-GRAPHQL
+          query($after: String) {
+            groupedUnmatchedGames(first: 2, after: $after) {
+              nodes { externalServiceId }
+              pageInfo { hasNextPage endCursor }
+            }
+          }
+        GRAPHQL
+
+        first_page = api_request(page_query, token: access_token).graphql_dig(:grouped_unmatched_games)
+        second_page = api_request(page_query, token: access_token, variables: { after: first_page.dig(:pageInfo, :endCursor) }).graphql_dig(:grouped_unmatched_games)
+
+        expect((first_page[:nodes] + second_page[:nodes]).pluck(:externalServiceId)).to eq(['1', '2', '3'])
+      end
     end
   end
 end

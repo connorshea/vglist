@@ -7,7 +7,8 @@ module Resolvers::AdminResolvers
     description "List all Wikidata blocklist entries. **Only available to admins.**"
 
     def resolve
-      WikidataBlocklist.includes(:user)
+      # Newest first, with a stable order so cursor pages never overlap or skip rows.
+      WikidataBlocklist.includes(:user).order(id: :desc)
     end
 
     def authorized?
