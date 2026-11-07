@@ -157,7 +157,8 @@ async function exportLibrary() {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 8px;
+  min-height: 28px;
+  padding: 0 8px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
@@ -166,6 +167,11 @@ async function exportLibrary() {
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
+}
+
+/* Same cap-height trim as the shared .set-btn labels, so the text centres. */
+.export-copy > span {
+  text-box: trim-both cap alphabetic;
 }
 
 .export-copy:hover {
