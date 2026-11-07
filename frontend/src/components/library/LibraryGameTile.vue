@@ -111,6 +111,14 @@ const ariaLabel = computed(() => {
   font-size: 0.7rem;
   font-weight: 500;
   line-height: 1.3;
+  transition: opacity var(--transition-fast);
+}
+
+/* The hover panel repeats the name, so hide this one underneath it or it
+   shows through the panel's translucent background as a second copy. */
+.library-tile:hover .library-tile-name,
+.library-tile:focus-visible .library-tile-name {
+  opacity: 0;
 }
 
 .library-tile-hover {
@@ -165,6 +173,7 @@ const ariaLabel = computed(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .library-tile,
+  .library-tile-name,
   .library-tile-hover {
     transition: none;
   }
