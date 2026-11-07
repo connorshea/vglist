@@ -88,7 +88,7 @@ describe("HomePage", () => {
 
   it("puts the game count in the search box", async () => {
     const wrapper = await mountPage();
-    expect(wrapper.find(".home-search").text()).toContain("Search 7,685 games, companies and more");
+    expect(wrapper.find(".home-search").text()).toContain("Search 7,685 games and more");
   });
 
   it("opens the search overlay when the search box is clicked", async () => {

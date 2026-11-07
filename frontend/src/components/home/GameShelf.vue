@@ -144,6 +144,7 @@ const loaded = computed(() => data.value !== null || error.value !== null);
   .game-shelf-grid > li:nth-child(n + 5) {
     display: block;
     flex: 0 0 112px;
+    min-width: 0;
     scroll-snap-align: start;
   }
 }

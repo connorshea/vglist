@@ -121,7 +121,7 @@ const { data: statsData } = useQuery<GetBasicSiteStatisticsQuery>(GET_BASIC_SITE
 
 const searchPlaceholder = computed(() => {
   const games = statsData.value?.basicSiteStatistics.games;
-  return games ? `Search ${countLabel(games, "game")}, companies and more` : "Search games, companies and more";
+  return games ? `Search ${countLabel(games, "game")} and more` : "Search games and more";
 });
 
 // ── Quick links: the most common platforms and genres ──
@@ -520,6 +520,7 @@ onUnmounted(() => {
   z-index: 2;
   width: 100%;
   max-width: 720px;
+  margin: 0 auto;
   padding: 5rem 1.5rem 4rem;
   text-align: center;
   color: #fff;
