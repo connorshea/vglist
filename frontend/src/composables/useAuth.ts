@@ -41,11 +41,17 @@ export function useAuth() {
     }
   }
 
-  async function signUp(username: string, email: string, password: string, passwordConfirmation: string) {
+  async function signUp(
+    username: string,
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+    turnstileToken?: string
+  ) {
     try {
       const data = await gqlClient.request<{
         signUp: { message: string | null; errors: string[] };
-      }>(SIGN_UP, { username, email, password, passwordConfirmation });
+      }>(SIGN_UP, { username, email, password, passwordConfirmation, turnstileToken: turnstileToken || null });
 
       const result = data.signUp;
       if (result.errors.length > 0) {
