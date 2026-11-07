@@ -48,13 +48,13 @@
 
         <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
           <a class="navbar-link" tabindex="0">More</a>
-          <div v-show="!dropdownsClosed" class="navbar-dropdown">
-            <router-link class="navbar-item" to="/platforms">Platforms</router-link>
-            <router-link class="navbar-item" to="/genres">Genres</router-link>
-            <router-link class="navbar-item" to="/companies">Companies</router-link>
-            <router-link class="navbar-item" to="/engines">Engines</router-link>
-            <router-link class="navbar-item" to="/series">Series</router-link>
-            <router-link class="navbar-item" to="/stores">Stores</router-link>
+          <div v-show="!dropdownsClosed" class="navbar-dropdown nav-menu">
+            <router-link class="nav-menu-item" to="/platforms">Platforms</router-link>
+            <router-link class="nav-menu-item" to="/genres">Genres</router-link>
+            <router-link class="nav-menu-item" to="/companies">Companies</router-link>
+            <router-link class="nav-menu-item" to="/engines">Engines</router-link>
+            <router-link class="nav-menu-item" to="/series">Series</router-link>
+            <router-link class="nav-menu-item" to="/stores">Stores</router-link>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
                 <ChevronDown class="navbar-user-chevron" :size="14" :stroke-width="2" />
               </span>
             </a>
-            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right user-menu">
+            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right nav-menu user-menu">
               <router-link class="user-menu-header" :to="profilePath">
                 <NavAvatar :username="username" :avatar-url="authStore.user?.avatarUrl" />
                 <span class="user-menu-identity">
@@ -80,25 +80,25 @@
                   <span class="user-menu-sub">View profile</span>
                 </span>
               </router-link>
-              <router-link class="user-menu-item" :to="profilePath">
+              <router-link class="nav-menu-item" :to="profilePath">
                 <User :size="16" :stroke-width="1.8" />
                 Profile
               </router-link>
-              <router-link v-if="authStore.isAdmin" class="user-menu-item" to="/admin">
+              <router-link v-if="authStore.isAdmin" class="nav-menu-item" to="/admin">
                 <Shield :size="16" :stroke-width="1.8" />
                 Admin
               </router-link>
-              <router-link class="user-menu-item" to="/settings">
+              <router-link class="nav-menu-item" to="/settings">
                 <Settings :size="16" :stroke-width="1.8" />
                 Settings
               </router-link>
-              <hr class="user-menu-divider" />
-              <button type="button" class="user-menu-item" @click="handleSignOut">
+              <hr class="nav-menu-divider" />
+              <button type="button" class="nav-menu-item" @click="handleSignOut">
                 <LogOut :size="16" :stroke-width="1.8" />
                 Sign out
               </button>
-              <hr class="user-menu-divider" />
-              <div class="user-menu-links">
+              <hr class="nav-menu-divider" />
+              <div class="nav-menu-links">
                 <router-link to="/about">About</router-link>
                 <a
                   href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
@@ -117,23 +117,23 @@
           <router-link class="navbar-item" to="/login">Sign in</router-link>
           <div class="navbar-item has-dropdown is-hoverable" @mouseenter="dropdownsClosed = false">
             <a class="navbar-link" tabindex="0">More</a>
-            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right">
-              <router-link class="navbar-item" to="/about">About</router-link>
+            <div v-show="!dropdownsClosed" class="navbar-dropdown is-right nav-menu">
+              <router-link class="nav-menu-item" to="/about">About</router-link>
               <a
-                class="navbar-item"
+                class="nav-menu-item"
                 href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
                 target="_blank"
                 rel="noopener noreferrer"
                 >Changelog</a
               >
               <a
-                class="navbar-item"
+                class="nav-menu-item"
                 href="https://github.com/connorshea/vglist"
                 target="_blank"
                 rel="noopener noreferrer"
                 >GitHub</a
               >
-              <a class="navbar-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
+              <a class="nav-menu-item" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer"
                 >Discord</a
               >
             </div>
@@ -315,11 +315,11 @@ function handleSignOut() {
   outline-offset: 0;
 }
 
-/* The signed-in user's dropdown: a card with an avatar header, icon items,
-   and the site links in a compact footer row. */
-.navbar-dropdown.user-menu {
-  --user-menu-muted: var(--n-500);
-  width: 264px;
+/* Navbar dropdowns (More and the user menu) are cards that follow the page
+   theme, with rounded items. */
+.navbar-dropdown.nav-menu {
+  --nav-menu-muted: var(--n-500);
+  min-width: 200px;
   padding: 6px;
   border: 1px solid var(--color-border);
   border-radius: 12px;
@@ -332,12 +332,17 @@ function handleSignOut() {
 }
 
 @media (prefers-color-scheme: dark) {
-  .navbar-dropdown.user-menu {
-    --user-menu-muted: var(--s-100);
+  .navbar-dropdown.nav-menu {
+    --nav-menu-muted: var(--s-100);
     box-shadow:
       0 16px 48px rgba(0, 0, 0, 0.4),
       0 2px 8px rgba(0, 0, 0, 0.25);
   }
+}
+
+/* The signed-in user's menu adds an avatar header and a footer row of links. */
+.navbar-dropdown.user-menu {
+  width: 264px;
 }
 
 .user-menu-header {
@@ -379,7 +384,7 @@ function handleSignOut() {
 
 .user-menu-sub {
   font-size: 12.5px;
-  color: var(--user-menu-muted);
+  color: var(--nav-menu-muted);
 }
 
 .user-menu-header:hover .user-menu-sub,
@@ -387,7 +392,7 @@ function handleSignOut() {
   text-decoration: underline;
 }
 
-.user-menu-item {
+.nav-menu-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -405,33 +410,33 @@ function handleSignOut() {
   transition: background-color 150ms;
 }
 
-.user-menu-item svg {
-  color: var(--user-menu-muted);
+.nav-menu-item svg {
+  color: var(--nav-menu-muted);
   flex-shrink: 0;
 }
 
-.user-menu-item:hover,
-.user-menu-item:focus-visible {
+.nav-menu-item:hover,
+.nav-menu-item:focus-visible {
   background-color: var(--color-bg-subtle);
   color: var(--color-text-primary);
 }
 
 .user-menu-header:focus-visible,
-.user-menu-item:focus-visible,
-.user-menu-links a:focus-visible {
+.nav-menu-item:focus-visible,
+.nav-menu-links a:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: -2px;
   border-radius: 8px;
 }
 
-.user-menu-divider {
+.nav-menu-divider {
   height: 1px;
   margin: 6px 4px;
   border: 0;
   background-color: var(--color-border);
 }
 
-.user-menu-links {
+.nav-menu-links {
   display: flex;
   flex-wrap: wrap;
   gap: 2px 14px;
@@ -439,11 +444,11 @@ function handleSignOut() {
   font-size: 12.5px;
 }
 
-.user-menu-links a {
-  color: var(--user-menu-muted);
+.nav-menu-links a {
+  color: var(--nav-menu-muted);
 }
 
-.user-menu-links a:hover {
+.nav-menu-links a:hover {
   color: var(--color-text-primary);
   text-decoration: underline;
 }
