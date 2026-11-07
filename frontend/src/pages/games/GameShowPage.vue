@@ -228,12 +228,7 @@
         </div>
         <aside class="game-body-side">
           <GameDetailsCard id="game-details" :game="game" />
-          <GameSeriesShelf
-            v-if="game.series"
-            :series="game.series"
-            :games="game.moreFromSeries.nodes"
-            :total-count="game.moreFromSeries.totalCount"
-          />
+          <GameSeriesShelf v-if="game.series" :series="game.series" :games="game.moreFromSeries.nodes" />
         </aside>
       </div>
 

@@ -10,9 +10,9 @@ const games = [
   { id: "4", name: "Half-Life 3", releaseDate: null, coverUrl: null }
 ];
 
-function mountShelf(props: { games: typeof games; totalCount: number }) {
+function mountShelf(shelfGames: typeof games) {
   return mount(GameSeriesShelf, {
-    props: { series, ...props },
+    props: { series, games: shelfGames },
     global: { stubs: { RouterLink: RouterLinkStub } }
   });
 }
@@ -23,13 +23,13 @@ function linkTargets(wrapper: ReturnType<typeof mountShelf>) {
 
 describe("GameSeriesShelf", () => {
   it("renders nothing when there are no other games in the series", () => {
-    const wrapper = mountShelf({ games: [], totalCount: 0 });
+    const wrapper = mountShelf([]);
 
     expect(wrapper.find("section").exists()).toBeFalsy();
   });
 
   it("shows the other games with their release years, linking the series", () => {
-    const wrapper = mountShelf({ games, totalCount: 3 });
+    const wrapper = mountShelf(games);
 
     expect(wrapper.find("h2").text()).toBe("More from this series");
     expect(wrapper.findAll("li")).toHaveLength(3);
@@ -43,21 +43,21 @@ describe("GameSeriesShelf", () => {
   });
 
   it("falls back to the initials placeholder for games without a cover", () => {
-    const wrapper = mountShelf({ games, totalCount: 3 });
+    const wrapper = mountShelf(games);
 
     expect(wrapper.findAll("img")).toHaveLength(1);
     expect(wrapper.findAll(".game-tile-placeholder").map((p) => p.text())).toEqual(["HA", "H3"]);
   });
 
-  it("links to the whole series when it has more games than the shelf shows", () => {
-    const wrapper = mountShelf({ games, totalCount: 5 });
+  it("shows three games and links to the whole series when there is a fourth", () => {
+    const wrapper = mountShelf([...games, { id: "5", name: "Half-Life 4", releaseDate: null, coverUrl: null }]);
 
-    const seeAll = wrapper.find(".series-shelf-more");
-    expect(seeAll.text()).toBe("See more Half-Life games");
+    expect(wrapper.findAll("li")).toHaveLength(3);
+    expect(wrapper.find(".series-shelf-more").text()).toBe("See more Half-Life games");
     expect(linkTargets(wrapper)[0]).toBe("/series/7");
   });
 
   it("leaves out the see-more link when every other game is shown", () => {
-    expect(mountShelf({ games, totalCount: 3 }).find(".series-shelf-more").exists()).toBeFalsy();
+    expect(mountShelf(games).find(".series-shelf-more").exists()).toBeFalsy();
   });
 });

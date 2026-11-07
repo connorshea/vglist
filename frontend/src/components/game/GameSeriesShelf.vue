@@ -2,7 +2,7 @@
   <section v-if="games.length > 0" class="game-card series-shelf" aria-labelledby="game-series-heading">
     <div class="game-card-head">
       <h2 id="game-series-heading" class="game-card-label">More from this series</h2>
-      <router-link v-if="totalCount > games.length" :to="seriesLink" class="series-shelf-more">
+      <router-link v-if="hasMore" :to="seriesLink" class="series-shelf-more">
         See more<span class="is-sr-only">{{ ` ${series.name} games` }}</span>
       </router-link>
     </div>
@@ -10,7 +10,7 @@
       <router-link :to="seriesLink">{{ series.name }}</router-link>
     </p>
     <ul class="series-shelf-grid">
-      <li v-for="game in games" :key="game.id">
+      <li v-for="game in shown" :key="game.id">
         <GameTile :id="game.id" :name="game.name" :cover-url="game.coverUrl" :meta="releaseYear(game.releaseDate)" />
       </li>
     </ul>
@@ -27,10 +27,16 @@ type Game = NonNullable<GetGameQuery["game"]>;
 
 const props = defineProps<{
   series: NonNullable<Game["series"]>;
+  // Up to one more than the shelf shows, so it knows whether to link to the
+  // rest without counting the whole series.
   games: Game["moreFromSeries"]["nodes"];
-  // How many other games are in the series, of which `games` is the first few.
-  totalCount: number;
 }>();
+
+// Keep in step with `moreFromSeries(first: 4)` in GET_GAME.
+const SHELF_SIZE = 3;
+
+const shown = computed(() => props.games.slice(0, SHELF_SIZE));
+const hasMore = computed(() => props.games.length > SHELF_SIZE);
 
 const seriesLink = computed(() => `/series/${props.series.id}`);
 </script>

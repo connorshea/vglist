@@ -1090,10 +1090,7 @@ export interface GetGameQuery {
       totalCount: number;
       nodes: Array<{ id: string; slug: string; username: string; avatarUrl: string | null }>;
     };
-    moreFromSeries: {
-      totalCount: number;
-      nodes: Array<{ id: string; name: string; releaseDate: string | null; coverUrl: string | null }>;
-    };
+    moreFromSeries: { nodes: Array<{ id: string; name: string; releaseDate: string | null; coverUrl: string | null }> };
     developers: { nodes: Array<{ id: string; name: string }> };
     publishers: { nodes: Array<{ id: string; name: string }> };
     platforms: { nodes: Array<{ id: string; name: string }> };
