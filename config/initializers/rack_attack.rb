@@ -8,7 +8,7 @@
 # development with caching disabled) that is a null store, so throttling is a
 # no-op there unless a spec swaps in a real store.
 module RackAttackConfig
-  AUTH_MUTATION_PATTERN = /\b(signIn|signUp|requestPasswordReset)\b/
+  AUTH_MUTATION_PATTERN = /\b(signIn|signUp|requestPasswordReset|passkeyAuthenticationOptions|signInWithPasskey)\b/
   SIGN_IN_PATTERN = /\bsignIn\b/
   SIGN_UP_PATTERN = /\bsignUp\b/
   EMAIL_DELIVERY_MUTATION_PATTERN = /\b(signUp|requestPasswordReset)\b/

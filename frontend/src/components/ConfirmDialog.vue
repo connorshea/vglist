@@ -48,6 +48,9 @@ const props = withDefaults(
     cancelLabel?: string;
     loading?: boolean;
     variant?: "danger" | "primary";
+    // A selector for the element inside the dialog to focus when it opens,
+    // e.g. a text field in the slot. Defaults to the dialog itself.
+    initialFocus?: string;
   }>(),
   {
     confirmLabel: "Remove from library",
@@ -114,7 +117,8 @@ watch(
     if (isOpen) {
       previouslyFocusedElement = document.activeElement as HTMLElement | null;
       nextTick(() => {
-        dialogRef.value?.focus();
+        const target = props.initialFocus ? dialogRef.value?.querySelector<HTMLElement>(props.initialFocus) : null;
+        (target ?? dialogRef.value)?.focus();
       });
     } else {
       previouslyFocusedElement?.focus();

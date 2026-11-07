@@ -248,6 +248,158 @@ const tiles = Array.from({ length: 108 }, (_, k) => ({
   font-size: 14px;
 }
 
+/* ── Passkey sign-in (LoginPage) ── */
+
+.auth-card :slotted(.auth-or) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.auth-card :slotted(.auth-or)::before,
+.auth-card :slotted(.auth-or)::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.auth-card :slotted(.auth-passkey) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 20px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.auth-card :slotted(.auth-passkey:hover:not(:disabled)) {
+  background: var(--color-bg-subtle);
+}
+
+.auth-card :slotted(.auth-passkey:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.auth-card :slotted(.auth-passkey:disabled) {
+  cursor: default;
+  color: var(--color-text-secondary);
+}
+
+.auth-card :slotted(.auth-status) {
+  margin: 10px 0 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.auth-card :slotted(.auth-status:empty) {
+  margin: 0;
+}
+
+.auth-card :slotted(.auth-alert) {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  margin: 0 0 20px;
+  border-radius: var(--radius-sm);
+  background: var(--r-50);
+  border: 1px solid color-mix(in srgb, var(--r-500) 30%, transparent);
+  color: var(--color-danger-text);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.auth-card :slotted(.auth-alert svg) {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.auth-card :slotted(.auth-alert b) {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.auth-card :slotted(.auth-spin) {
+  animation: auth-spin 1s linear infinite;
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Passkey sign-in confirmation (LoginPage) */
+
+.auth-card :slotted(.auth-success) {
+  text-align: center;
+}
+
+.auth-card :slotted(.auth-success h1:focus) {
+  outline: none;
+}
+
+.auth-card :slotted(.auth-success .auth-sub) {
+  margin-bottom: 0;
+}
+
+.auth-card :slotted(.auth-success-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #eaf3de;
+  color: #3b6d11;
+  animation: auth-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes auth-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-card :slotted(.auth-spin) {
+    animation: none;
+  }
+
+  .auth-card :slotted(.auth-success-icon) {
+    animation: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .auth-card :slotted(.auth-alert) {
+    background: color-mix(in srgb, var(--r-500) 14%, transparent);
+    border-color: color-mix(in srgb, var(--r-500) 45%, transparent);
+  }
+
+  .auth-card :slotted(.auth-success-icon) {
+    background: rgba(99, 153, 34, 0.2);
+    color: #c0dd97;
+  }
+}
+
 @media (max-width: 768px) {
   .auth-art {
     padding: 32px 24px;

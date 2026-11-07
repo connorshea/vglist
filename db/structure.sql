@@ -1390,7 +1390,8 @@ CREATE TABLE public.users (
     privacy integer DEFAULT 0 NOT NULL,
     banned boolean DEFAULT false NOT NULL,
     hide_days_played boolean DEFAULT false,
-    jwt_version integer DEFAULT 0 NOT NULL
+    jwt_version integer DEFAULT 0 NOT NULL,
+    webauthn_id character varying
 );
 
 
@@ -1411,6 +1412,76 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: webauthn_challenges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.webauthn_challenges (
+    id bigint NOT NULL,
+    challenge character varying NOT NULL,
+    purpose integer NOT NULL,
+    user_id bigint,
+    expires_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: webauthn_challenges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.webauthn_challenges_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: webauthn_challenges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.webauthn_challenges_id_seq OWNED BY public.webauthn_challenges.id;
+
+
+--
+-- Name: webauthn_credentials; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.webauthn_credentials (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    external_id character varying NOT NULL,
+    public_key text NOT NULL,
+    sign_count bigint DEFAULT 0 NOT NULL,
+    nickname character varying NOT NULL,
+    backed_up boolean DEFAULT false NOT NULL,
+    last_used_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: webauthn_credentials_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.webauthn_credentials_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: webauthn_credentials_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.webauthn_credentials_id_seq OWNED BY public.webauthn_credentials.id;
 
 
 --
@@ -1682,6 +1753,20 @@ ALTER TABLE ONLY public.unmatched_games ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: webauthn_challenges id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webauthn_challenges ALTER COLUMN id SET DEFAULT nextval('public.webauthn_challenges_id_seq'::regclass);
+
+
+--
+-- Name: webauthn_credentials id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webauthn_credentials ALTER COLUMN id SET DEFAULT nextval('public.webauthn_credentials_id_seq'::regclass);
 
 
 --
@@ -2009,6 +2094,22 @@ ALTER TABLE ONLY public.unmatched_games
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: webauthn_challenges webauthn_challenges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webauthn_challenges
+    ADD CONSTRAINT webauthn_challenges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: webauthn_credentials webauthn_credentials_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webauthn_credentials
+    ADD CONSTRAINT webauthn_credentials_pkey PRIMARY KEY (id);
 
 
 --
@@ -2587,6 +2688,48 @@ CREATE UNIQUE INDEX index_users_on_slug ON public.users USING btree (slug);
 
 
 --
+-- Name: index_users_on_webauthn_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_webauthn_id ON public.users USING btree (webauthn_id);
+
+
+--
+-- Name: index_webauthn_challenges_on_challenge; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_webauthn_challenges_on_challenge ON public.webauthn_challenges USING btree (challenge);
+
+
+--
+-- Name: index_webauthn_challenges_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webauthn_challenges_on_expires_at ON public.webauthn_challenges USING btree (expires_at);
+
+
+--
+-- Name: index_webauthn_challenges_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webauthn_challenges_on_user_id ON public.webauthn_challenges USING btree (user_id);
+
+
+--
+-- Name: index_webauthn_credentials_on_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_webauthn_credentials_on_external_id ON public.webauthn_credentials USING btree (external_id);
+
+
+--
+-- Name: index_webauthn_credentials_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webauthn_credentials_on_user_id ON public.webauthn_credentials USING btree (user_id);
+
+
+--
 -- Name: index_wikidata_blocklist_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2670,6 +2813,14 @@ ALTER TABLE ONLY public.events_favorite_game_events
 
 ALTER TABLE ONLY public.favorite_games
     ADD CONSTRAINT fk_rails_3e7dcfb748 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: webauthn_challenges fk_rails_457c085c98; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webauthn_challenges
+    ADD CONSTRAINT fk_rails_457c085c98 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -2777,6 +2928,14 @@ ALTER TABLE ONLY public.relationships
 
 
 --
+-- Name: webauthn_credentials fk_rails_a4355aef77; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webauthn_credentials
+    ADD CONSTRAINT fk_rails_a4355aef77 FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: favorite_games fk_rails_ac647def17; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2855,6 +3014,9 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261107230200'),
+('20261107230100'),
+('20261107230000'),
 ('20261107220200'),
 ('20261107220100'),
 ('20261107220000'),

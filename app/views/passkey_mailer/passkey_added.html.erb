@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <p>Hi <%= @user.username %>,</p>
+
+    <p>
+      A passkey named <strong><%= @passkey.nickname %></strong> was added to your vglist account on
+      <%= @passkey.created_at.utc.strftime('%B %-d, %Y at %H:%M UTC') %>. It can be used to sign in instead of your password.
+    </p>
+
+    <p>If this was you, there's nothing else to do.</p>
+
+    <p>
+      If it wasn't, change your password and remove the passkey in your
+      <%= link_to 'account settings', @settings_url %>.
+    </p>
+  </body>
+</html>

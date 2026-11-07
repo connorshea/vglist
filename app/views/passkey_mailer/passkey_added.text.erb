@@ -1,0 +1,8 @@
+Hi <%= @user.username %>,
+
+A passkey named "<%= @passkey.nickname %>" was added to your vglist account on <%= @passkey.created_at.utc.strftime('%B %-d, %Y at %H:%M UTC') %>. It can be used to sign in instead of your password.
+
+If this was you, there's nothing else to do.
+
+If it wasn't, change your password and remove the passkey in your account settings:
+<%= @settings_url %>

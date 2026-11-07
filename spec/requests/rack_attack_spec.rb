@@ -191,6 +191,23 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
+    it "counts passkey sign-in mutations", :aggregate_failures do
+      options_query = 'mutation PasskeyAuthenticationOptions { passkeyAuthenticationOptions { options } }'
+      sign_in_query = 'mutation SignInWithPasskey($response: JSON!) { signInWithPasskey(response: $response) { token errors } }'
+
+      10.times do
+        post graphql_path, params: { query: options_query }, headers: { 'REMOTE_ADDR' => '10.7.0.1' }
+        expect(response).to have_http_status(:success)
+        post graphql_path,
+          params: { query: sign_in_query, variables: { response: { id: 'x' } }.to_json },
+          headers: { 'REMOTE_ADDR' => '10.7.0.1' }
+        expect(response).to have_http_status(:success)
+      end
+
+      post graphql_path, params: { query: options_query }, headers: { 'REMOTE_ADDR' => '10.7.0.1' }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
     it "does not count ordinary GraphQL queries", :aggregate_failures do
       25.times do
         post graphql_path, params: { query: '{ games(first: 1) { nodes { id } } }' }, headers: { 'REMOTE_ADDR' => '10.6.0.1' }
