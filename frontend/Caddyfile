@@ -25,7 +25,9 @@
 		format json
 	}
 
-	respond /health 200
+	handle /health {
+		respond 200
+	}
 
 	header {
 		# Baseline hardening.
@@ -59,19 +61,46 @@
 		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
 	}
 
-	root * /app/dist
-
-	file_server {
-		hide .git
-		hide .env*
-	}
-
 	encode {
 		gzip
 		zstd
 	}
 
-	# SPA fallback — unknown paths serve index.html so Vue Router can handle
-	# client-side routing.
-	try_files {path} {path}.html {path}/index.html /index.html
+	# Link-preview crawlers don't run JavaScript, so the SPA's index.html
+	# gives them nothing to unfurl. Send their game page requests to the
+	# API, which renders Open Graph tags and a Discord component embed (see
+	# EmbedsController). Only bare /games/<id> paths match, not /games/new or
+	# /games/<id>/edit. Crawlers not listed here just get the SPA.
+	#
+	# iMessage identifies as "facebookexternalhit ... Twitterbot", Mastodon
+	# as "http.rb/... (Mastodon/...)", and Bluesky as "Bluesky Cardyb/...".
+	@link_preview_bot {
+		path_regexp game_page ^/games/(\d+)/?$
+		header_regexp User-Agent (?i)(discordbot|twitterbot|facebookexternalhit|facebot|slackbot|bluesky|cardyb|telegrambot|whatsapp|linkedinbot|mastodon|redditbot|skypeuripreview|embedly|iframely|vkshare|pinterest|tumblr|googlechat)
+	}
+
+	# `handle` blocks are mutually exclusive (the matcher-less one below is
+	# the fallback), so this must stay in its own block. Otherwise
+	# `try_files` below, which Caddy runs before `reverse_proxy`, would
+	# rewrite the request to /index.html first.
+	handle @link_preview_bot {
+		rewrite * /embeds/games/{re.game_page.1}
+		reverse_proxy {$API_ORIGIN:https://api.vglist.co} {
+			# App Platform routes by hostname, so send the API's, not vglist.co.
+			header_up Host {upstream_hostport}
+		}
+	}
+
+	handle {
+		root * /app/dist
+
+		file_server {
+			hide .git
+			hide .env*
+		}
+
+		# SPA fallback — unknown paths serve index.html so Vue Router can
+		# handle client-side routing.
+		try_files {path} {path}.html {path}/index.html /index.html
+	}
 }

@@ -29,6 +29,10 @@ Rails.application.routes.draw do
   # Execute GraphQL queries posted to '/graphql'.
   post "/graphql", to: "graphql#execute"
 
+  # Link-preview HTML (Open Graph tags + Discord component embed) for game
+  # pages. frontend/Caddyfile proxies link-preview crawlers here.
+  get '/embeds/games/:id', to: 'embeds#game', constraints: { id: /\d+/ }, format: false
+
   # For exposing the OpenSearch XML definition
   get '/opensearch', to: 'static_pages#opensearch', defaults: { format: :xml }
 
