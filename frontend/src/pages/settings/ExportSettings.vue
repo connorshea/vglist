@@ -51,6 +51,16 @@ onBeforeUnmount(() => {
   if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value);
 });
 
+// The API returns compact JSON on one line; indent it so the preview is
+// readable and the copied or downloaded file is easy to diff.
+function prettyPrint(json: string): string {
+  try {
+    return JSON.stringify(JSON.parse(json), null, 2);
+  } catch {
+    return json;
+  }
+}
+
 async function exportLibrary() {
   exportError.value = "";
   exportData.value = "";
@@ -62,7 +72,7 @@ async function exportLibrary() {
     if (result?.errors && result.errors.length > 0) {
       exportError.value = result.errors.join(", ");
     } else if (result?.libraryJson) {
-      exportData.value = result.libraryJson;
+      exportData.value = prettyPrint(result.libraryJson);
     }
   } catch (e) {
     exportError.value = extractGqlError(e);
@@ -82,6 +92,8 @@ async function exportLibrary() {
   color: var(--color-text-primary);
   font-family: var(--font-mono, monospace);
   font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
 }
 
 .export-json:focus-visible {
