@@ -2,6 +2,13 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { installPageTitles } from "@/composables/usePageTitle";
 
+// Old ?tab= values on /admin, and the section route each one now lives at.
+const ADMIN_TAB_ROUTES: Record<string, "adminWikidataBlocklist" | "adminSteamBlocklist" | "adminUnmatchedGames"> = {
+  "wikidata-blocklist": "adminWikidataBlocklist",
+  "steam-blocklist": "adminSteamBlocklist",
+  "unmatched-games": "adminUnmatchedGames"
+};
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -334,9 +341,42 @@ const router = createRouter({
     // Admin
     {
       path: "/admin",
-      name: "admin",
-      component: () => import("@/pages/admin/AdminDashboardPage.vue"),
-      meta: { title: "Admin Dashboard", requiresAuth: true, requiresAdmin: true }
+      component: () => import("@/pages/admin/AdminPage.vue"),
+      meta: { requiresAuth: true, requiresAdmin: true },
+      children: [
+        {
+          path: "",
+          name: "admin",
+          component: () => import("@/pages/admin/AdminDashboardPage.vue"),
+          meta: { title: "Admin Dashboard" },
+          // The admin sections used to be tabs selected with ?tab=. Send those
+          // links to the section's own route, keeping any other query params.
+          beforeEnter: (to) => {
+            const { tab, ...query } = to.query;
+            const name = typeof tab === "string" ? ADMIN_TAB_ROUTES[tab] : undefined;
+            if (name) return { name, query, replace: true };
+            if (tab !== undefined) return { name: "admin", query, replace: true };
+          }
+        },
+        {
+          path: "wikidata-blocklist",
+          name: "adminWikidataBlocklist",
+          component: () => import("@/pages/admin/AdminWikidataBlocklistPage.vue"),
+          meta: { title: "Wikidata Blocklist" }
+        },
+        {
+          path: "steam-blocklist",
+          name: "adminSteamBlocklist",
+          component: () => import("@/pages/admin/AdminSteamBlocklistPage.vue"),
+          meta: { title: "Steam Blocklist" }
+        },
+        {
+          path: "unmatched-games",
+          name: "adminUnmatchedGames",
+          component: () => import("@/pages/admin/AdminUnmatchedGamesPage.vue"),
+          meta: { title: "Unmatched Games" }
+        }
+      ]
     },
 
     // Catch-all 404

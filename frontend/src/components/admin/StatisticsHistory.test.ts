@@ -139,6 +139,30 @@ describe("StatisticsHistory", () => {
     expect(wrapper.find("table").exists()).toBeFalsy();
   });
 
+  it("shows each day's change from the snapshot below it", () => {
+    setRows([
+      statistic({ id: "2", timestamp: "2026-11-07T00:00:00Z", users: 1240, games: 56789, bannedUsers: 14 }),
+      statistic({ id: "1", timestamp: "2026-11-06T00:00:00Z", users: 1234, games: 56790, bannedUsers: 12 })
+    ]);
+    const wrapper = mountHistory();
+    const [newest, oldest] = wrapper.findAll("tbody tr");
+    const changes = newest.findAll(".history-change");
+
+    // Users, Games, ... in column order.
+    expect(changes[0].text()).toBe("+6");
+    expect(changes[0].classes()).toContain("is-up");
+    expect(changes[1].text()).toBe("−1");
+    // Unchanged counts get a quiet dot.
+    expect(changes[2].text()).toBe("·");
+    // More banned users isn't highlighted as growth.
+    const banned = newest.findAll("td")[13];
+    expect(banned.find(".history-change").text()).toBe("+2");
+    expect(banned.find(".history-change").classes()).not.toContain("is-up");
+
+    // The last row on the page has nothing to compare against.
+    expect(oldest.find(".history-change").exists()).toBeFalsy();
+  });
+
   it("shows pagination only when there is another page", () => {
     expect(mountHistory().find(".pagination-nav").exists()).toBeFalsy();
 
