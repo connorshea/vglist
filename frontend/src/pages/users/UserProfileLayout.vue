@@ -70,30 +70,17 @@
               <Ellipsis :size="16" aria-hidden="true" />
             </button>
             <div v-if="actionsOpen" class="profile-menu-list" role="menu">
-              <button
-                v-if="canUpdateRole && user.role !== 'MODERATOR'"
-                type="button"
-                role="menuitem"
-                @click="promptRoleChange('MODERATOR')"
-              >
-                Make moderator
-              </button>
-              <button
-                v-if="canUpdateRole && user.role === 'MODERATOR'"
-                type="button"
-                role="menuitem"
-                @click="promptRoleChange('MEMBER')"
-              >
-                Demote to member
-              </button>
-              <button
-                v-if="canUpdateRole && user.role !== 'ADMIN'"
-                type="button"
-                role="menuitem"
-                @click="promptRoleChange('ADMIN')"
-              >
-                Make admin
-              </button>
+              <template v-if="canUpdateRole">
+                <button
+                  v-for="change in roleChangeOptions"
+                  :key="change.role"
+                  type="button"
+                  role="menuitem"
+                  @click="promptRoleChange(change)"
+                >
+                  {{ change.label }}
+                </button>
+              </template>
               <button
                 v-if="canModerate && user.avatarUrl"
                 type="button"
@@ -252,6 +239,7 @@ import {
 } from "@/graphql/mutations/users";
 import type { GetUserProfileQuery } from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { roleChanges, type RoleChange } from "@/utils/user-roles";
 import "@/assets/stylesheets/library.scss";
 
 const route = useRoute();
@@ -480,47 +468,25 @@ function removeAvatar() {
   );
 }
 
-type Role = "ADMIN" | "MODERATOR" | "MEMBER";
-const pendingRole = ref<Role | null>(null);
+// Every role other than the user's current one, so admins can be demoted too.
+const roleChangeOptions = computed(() => (user.value ? roleChanges(user.value.role) : []));
+const pendingRole = ref<RoleChange | null>(null);
 
-const ROLE_CONFIRM: Record<Role, { title: string; label: string; description: string; noun: string }> = {
-  ADMIN: {
-    title: "Make admin?",
-    label: "Make admin",
-    description: "will be granted full admin privileges.",
-    noun: "an admin"
-  },
-  MODERATOR: {
-    title: "Make moderator?",
-    label: "Make moderator",
-    description: "will be granted moderator privileges.",
-    noun: "a moderator"
-  },
-  MEMBER: {
-    title: "Demote to member?",
-    label: "Demote to member",
-    description: "will be demoted to a regular member.",
-    noun: "a member"
-  }
-};
+const roleConfirm = computed(() => pendingRole.value ?? { title: "", label: "", description: "", noun: "" });
 
-const roleConfirm = computed(() =>
-  pendingRole.value ? ROLE_CONFIRM[pendingRole.value] : { title: "", label: "", description: "", noun: "" }
-);
-
-function promptRoleChange(role: Role) {
-  pendingRole.value = role;
+function promptRoleChange(change: RoleChange) {
+  pendingRole.value = change;
   openDialog(showRoleConfirm);
 }
 
 function changeRole() {
   if (!user.value || !pendingRole.value) return;
   const { id, username } = user.value;
-  const role = pendingRole.value;
+  const { role, noun } = pendingRole.value;
   void moderate(
     showRoleConfirm,
     () => updateUserRole({ userId: id, role }),
-    `${username} is now ${ROLE_CONFIRM[role].noun}.`,
+    `${username} is now ${noun}.`,
     "Failed to update user role."
   );
 }
