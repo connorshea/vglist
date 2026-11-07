@@ -10,6 +10,9 @@ interface AuthUser {
   email: string;
   role: UserRole;
   slug: string;
+  // The small (80px) avatar for the navbar, or null when the user has none.
+  // Loaded after sign-in by refreshCurrentUserAvatar(), so it can be missing.
+  avatarUrl?: string | null;
 }
 
 function loadStoredUser(): AuthUser | null {

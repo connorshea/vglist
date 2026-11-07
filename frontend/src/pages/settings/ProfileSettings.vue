@@ -115,6 +115,7 @@ import type {
   UserPrivacy
 } from "@/types/graphql";
 import { uploadAvatar } from "@/utils/avatar-upload";
+import { refreshCurrentUserAvatar } from "@/utils/current-user-avatar";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const bio = ref("");
@@ -191,6 +192,8 @@ async function saveAvatar(blob: Blob) {
   avatarUploadError.value = "";
   try {
     avatarUrl.value = await uploadAvatar(blob, authStore.token);
+    // The upload returns the large variant; the navbar wants the small one.
+    void refreshCurrentUserAvatar();
     avatarFile.value = null;
     showSnackbar("Your avatar has been updated.");
   } catch (e) {
@@ -211,6 +214,7 @@ async function removeAvatar() {
   try {
     await removeAvatarMutate({ userId });
     avatarUrl.value = null;
+    authStore.updateUser({ avatarUrl: null });
     showRemoveAvatarConfirm.value = false;
     showSnackbar("Your avatar has been removed.");
   } catch (e) {
