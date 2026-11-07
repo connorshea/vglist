@@ -18,6 +18,12 @@ Rails.application.routes.draw do
     post 'auth/sign_up', to: 'auth#sign_up'
     delete 'auth/sign_out', to: 'auth#sign_out'
     get 'auth/me', to: 'auth#me'
+
+    # Admin-only download of every game's name, ID, Steam app IDs, and
+    # Wikidata ID as JSON.
+    namespace :admin do
+      get 'games_export', to: 'games_exports#show'
+    end
   end
 
   # Devise routes (for email confirmation, password reset via email links)
