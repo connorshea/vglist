@@ -45,6 +45,23 @@
           </div>
         </div>
       </template>
+
+      <div class="box mt-5">
+        <h3 class="has-text-centered has-text-weight-bold mb-4">Exports</h3>
+        <p class="mb-4">
+          Download every game's name, vglist ID, Steam app IDs, and Wikidata ID as JSON, for checking against Wikidata.
+        </p>
+        <button
+          type="button"
+          class="button is-primary"
+          :class="{ 'is-loading': exportingGames }"
+          :disabled="exportingGames"
+          @click="downloadGamesExport"
+        >
+          <span class="icon"><Download :size="16" aria-hidden="true" /></span>
+          <span>Download games JSON</span>
+        </button>
+      </div>
     </div>
 
     <!-- Wikidata Blocklist tab -->
@@ -237,7 +254,9 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { Download } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
+import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import {
@@ -304,6 +323,36 @@ const externalIdStats = computed(() => {
     { label: "IGDB", value: stats.value.igdbIds ?? 0 }
   ];
 });
+
+// Games export. This is a REST endpoint rather than GraphQL, so fetch it with
+// the JWT directly and hand the response to the browser as a file download.
+const authStore = useAuthStore();
+const exportingGames = ref(false);
+
+async function downloadGamesExport() {
+  exportingGames.value = true;
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/games_export`, {
+      headers: { Accept: "application/json", Authorization: `Bearer ${authStore.token}` }
+    });
+    if (!response.ok) {
+      throw new Error(`Export failed (HTTP ${response.status}).`);
+    }
+
+    const url = URL.createObjectURL(await response.blob());
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `vglist-games-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    // Revoke on the next tick: Safari can cancel the download if the URL is
+    // revoked synchronously after the click.
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  } catch (err) {
+    showSnackbar(err instanceof Error ? err.message : "Export failed.", "error");
+  } finally {
+    exportingGames.value = false;
+  }
+}
 
 // Wikidata Blocklist
 const {
