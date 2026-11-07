@@ -27,6 +27,7 @@ class Mutations::Passkeys::RegisterPasskey < Mutations::BaseMutation
     )
 
     if passkey.save
+      PasskeyMailer.with(passkey: passkey).passkey_added.deliver_later
       { passkey: passkey, errors: [] }
     else
       failure(*passkey.errors.full_messages)

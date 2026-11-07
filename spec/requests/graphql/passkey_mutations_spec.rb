@@ -142,6 +142,15 @@ RSpec.describe "GraphQL passkey mutations", type: :request do
       expect(passkey.backed_up).to be(true)
     end
 
+    it "emails the user about the new passkey" do
+      expect { register }.to have_enqueued_mail(PasskeyMailer, :passkey_added)
+    end
+
+    it "doesn't email the user when the passkey is rejected" do
+      evil_client = WebAuthn::FakeClient.new('https://evil.example')
+      expect { register(with_client: evil_client) }.not_to have_enqueued_mail(PasskeyMailer, :passkey_added)
+    end
+
     it "defaults the nickname" do
       expect(register(nickname: nil).dig('passkey', 'nickname')).to eq('Unnamed passkey')
     end
