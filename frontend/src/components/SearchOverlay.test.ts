@@ -420,6 +420,38 @@ describe("SearchOverlay", () => {
       await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
       expect(pushMock).not.toHaveBeenCalled();
     });
+
+    it("exposes the results as a listbox the input points into", async () => {
+      const wrapper = await mountWithSearchResults(results, "valve");
+      const input = wrapper.find(".search-input");
+
+      expect(input.attributes("role")).toBe("combobox");
+      expect(input.attributes("aria-expanded")).toBe("true");
+      const listbox = wrapper.find('[role="listbox"]');
+      expect(input.attributes("aria-controls")).toBe(listbox.attributes("id"));
+      expect(wrapper.findAll('[role="group"]').map((group) => group.attributes("aria-label"))).toEqual([
+        "Games",
+        "Companies",
+        "Users"
+      ]);
+
+      const options = wrapper.findAll('[role="option"]');
+      expect(options).toHaveLength(3);
+      expect(input.attributes("aria-activedescendant")).toBe(options[0].attributes("id"));
+      expect(options.map((option) => option.attributes("aria-selected"))).toEqual(["true", "false", "false"]);
+
+      await input.trigger("keydown", { key: "ArrowDown" });
+      expect(input.attributes("aria-activedescendant")).toBe(options[1].attributes("id"));
+      expect(options[1].attributes("aria-selected")).toBe("true");
+      expect(options[0].attributes("aria-selected")).toBe("false");
+    });
+
+    it("has no active descendant and isn't expanded without results", async () => {
+      const wrapper = await mountWithSearchResults([], "nothing");
+      const input = wrapper.find(".search-input");
+      expect(input.attributes("aria-expanded")).toBe("false");
+      expect(input.attributes("aria-activedescendant")).toBeUndefined();
+    });
   });
 
   // ── 6. Debounce behavior ──
