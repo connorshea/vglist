@@ -546,8 +546,12 @@ function releaseYear(date: string): string {
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
+  /*
+   * Don't add -webkit-backdrop-filter by hand: Lightning CSS adds the prefix
+   * itself, and when both are written it keeps only the prefixed one in the
+   * production build, which drops the blur in Firefox.
+   */
   backdrop-filter: blur(28px) saturate(1.2);
-  -webkit-backdrop-filter: blur(28px) saturate(1.2);
   background: rgba(30, 33, 48, 0.72);
 }
 
@@ -582,7 +586,6 @@ function releaseYear(date: string): string {
 @keyframes search-overlay-frost {
   from {
     backdrop-filter: blur(0) saturate(1);
-    -webkit-backdrop-filter: blur(0) saturate(1);
     background: rgba(30, 33, 48, 0);
   }
 }
