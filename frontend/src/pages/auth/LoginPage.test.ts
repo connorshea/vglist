@@ -192,7 +192,7 @@ describe("LoginPage passkeys", () => {
       expect(wrapper.find("form").exists()).toBeFalsy();
       expect(mockPush).not.toHaveBeenCalled();
 
-      vi.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(4000);
       expect(mockPush).toHaveBeenCalledWith("/settings");
       wrapper.unmount();
     });
@@ -203,7 +203,7 @@ describe("LoginPage passkeys", () => {
       await wrapper.find(".auth-passkey").trigger("click");
       await flushPromises();
       wrapper.unmount();
-      vi.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(4000);
 
       expect(mockPush).not.toHaveBeenCalled();
     });
@@ -266,7 +266,7 @@ describe("LoginPage passkeys", () => {
     mockSignInWithPasskey.mockResolvedValue({ status: "success", username: "connor" });
     mount(LoginPage, mountOptions);
     await flushPromises();
-    vi.advanceTimersByTime(2000);
+    vi.advanceTimersByTime(4000);
     vi.useRealTimers();
 
     expect(mockPush).toHaveBeenCalledWith("/");

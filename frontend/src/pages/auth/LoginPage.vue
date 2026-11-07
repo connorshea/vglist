@@ -109,7 +109,7 @@ const AUTOFILL_REFRESH_MS = 4 * 60 * 1000;
 
 // How long the "You're signed in" confirmation shows after a passkey sign-in
 // before moving on, so the jump to the next page isn't abrupt.
-const PASSKEY_SUCCESS_DELAY_MS = 2000;
+const PASSKEY_SUCCESS_DELAY_MS = 4000;
 
 const router = useRouter();
 const route = useRoute();
