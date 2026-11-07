@@ -21,11 +21,23 @@ interface ImageColorsResult {
 export function useImageColors(imageUrl: Ref<string | null | undefined>): ImageColorsResult {
   const gradient = ref<string | null>(null);
 
+  // Only the newest image may write the gradient, so a slow load for a URL
+  // that has since been replaced can't overwrite the current one.
+  let latestUrl: string | null = null;
+
   watch(
     imageUrl,
     (url) => {
-      gradient.value = null;
-      if (!url) return;
+      latestUrl = url ?? null;
+      if (!url) {
+        gradient.value = null;
+        return;
+      }
+      // Keep the current gradient while the new image loads. The URL can
+      // change without the image changing (signed URLs are regenerated on
+      // every refetch, e.g. after favoriting the game), and clearing it here
+      // flashes the hero back to its default background until the new image
+      // has loaded and been sampled.
       extractColors(url);
     },
     { immediate: true }
@@ -39,19 +51,20 @@ export function useImageColors(imageUrl: Ref<string | null | undefined>): ImageC
     img.crossOrigin = "anonymous";
 
     img.addEventListener("load", () => {
+      if (url !== latestUrl) return;
       try {
         const colors = sampleDominantColors(img);
-        if (colors.length >= 2) {
-          gradient.value = buildGradient(colors);
-        }
+        gradient.value = colors.length >= 2 ? buildGradient(colors) : null;
       } catch {
-        // Canvas tainted by CORS or other error -- keep gradient as null
-        // so the component falls back to its default background.
+        // Canvas tainted by CORS or other error -- fall back to null so the
+        // component uses its default background.
+        gradient.value = null;
       }
     });
 
-    // Network error or broken URL -- stay null.
+    // Network error or broken URL -- fall back to null.
     img.addEventListener("error", () => {
+      if (url !== latestUrl) return;
       gradient.value = null;
     });
 
