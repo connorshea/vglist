@@ -1003,20 +1003,6 @@ export interface GetGamesIndexQuery {
   } | null;
 }
 
-export type GetGamesIndexCountQueryVariables = Exact<{
-  sortBy?: GameSort | null | undefined;
-  onPlatform?: string | null | undefined;
-  byGenre?: string | null | undefined;
-  byEngine?: string | null | undefined;
-  fromYear?: number | null | undefined;
-  toYear?: number | null | undefined;
-  excludeLibrary?: boolean | null | undefined;
-}>;
-
-export interface GetGamesIndexCountQuery {
-  games: { totalCount: number } | null;
-}
-
 export type GetGamesIndexFiltersQueryVariables = Exact<{
   platformId: string;
   hasPlatform: boolean;
@@ -1433,6 +1419,26 @@ export interface GetCompaniesQuery {
   } | null;
 }
 
+export type GetCompaniesIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: ResourceSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetCompaniesIndexQuery {
+  companies: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
 export type GetCompanyQueryVariables = Exact<{
   id: string;
   sortBy?: ResourceGameSort | null | undefined;
@@ -1533,6 +1539,26 @@ export type GetEnginesQueryVariables = Exact<{
 export interface GetEnginesQuery {
   engines: {
     nodes: Array<{ id: string; name: string }>;
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
+export type GetEnginesIndexQueryVariables = Exact<{
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+  sortBy?: ResourceSort | null | undefined;
+  nameContains?: string | null | undefined;
+}>;
+
+export interface GetEnginesIndexQuery {
+  engines: {
+    totalCount: number;
+    nodes: Array<{
+      id: string;
+      name: string;
+      gamesCount: number;
+      coverGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
 }
@@ -2037,4 +2063,10 @@ export type GetCurrentUserSteamAccountQueryVariables = Exact<{ [key: string]: ne
 
 export interface GetCurrentUserSteamAccountQuery {
   currentUser: { id: string; steamProfileUrl: string | null } | null;
+}
+
+export type GetCurrentUserAvatarQueryVariables = Exact<{ [key: string]: never }>;
+
+export interface GetCurrentUserAvatarQuery {
+  currentUser: { id: string; avatarUrl: string | null } | null;
 }

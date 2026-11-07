@@ -3,9 +3,12 @@
 class Engine < ApplicationRecord
   include GlobalSearchable
   include Searchable
+  include GameCountScopes
 
   has_many :game_engines, dependent: :destroy
   has_many :games, through: :game_engines, source: :game
+
+  game_count_scopes '(SELECT COUNT(*) FROM game_engines WHERE game_engines.engine_id = engines.id)'
 
   has_paper_trail ignore: [:updated_at, :created_at],
                   versions: {

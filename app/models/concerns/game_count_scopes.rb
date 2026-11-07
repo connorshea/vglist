@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Scopes for the index pages of resources that group games (series, genres,
-# platforms): a game count loaded alongside each record, the three sort orders
-# those pages offer, and a name filter.
+# platforms, companies, engines): a game count loaded alongside each record,
+# the three sort orders those pages offer, and a name filter.
 #
 # The count is a correlated subquery rather than a join + GROUP BY, so the
 # relation stays ungrouped: it can still be filtered, `totalCount` is a plain

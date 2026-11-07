@@ -7,8 +7,17 @@ module Resolvers
 
       description "List all companies."
 
-      def resolve
-        Company.all
+      argument :sort_by, Types::Enums::ResourceSortType, required: false, description: "The order to sort the companies in. Without one, companies are ordered by ID."
+      argument :name_contains, String, required: false, description: "Only return companies whose name contains this text, ignoring case."
+
+      extras [:lookahead]
+
+      def resolve(lookahead:, sort_by: nil, name_contains: nil)
+        companies = Company.all
+        companies = companies.with_games_count if ResourceIndex.selects_any?(lookahead, [:games_count])
+        companies = companies.name_contains(name_contains) if name_contains.present?
+
+        ResourceIndex.sort(companies, sort_by)
       end
     end
   end

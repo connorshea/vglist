@@ -239,3 +239,13 @@ export const GET_CURRENT_USER_STEAM_ACCOUNT = gql`
     }
   }
 `;
+
+// Just the avatar for the navbar's user menu. SMALL is the 80px variant.
+export const GET_CURRENT_USER_AVATAR = gql`
+  query GetCurrentUserAvatar {
+    currentUser {
+      id
+      avatarUrl(size: SMALL)
+    }
+  }
+`;

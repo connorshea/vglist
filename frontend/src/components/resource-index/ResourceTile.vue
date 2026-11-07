@@ -68,7 +68,7 @@ const props = withDefaults(
     coverGames: CoverGame[];
     to: RouteLocationRaw;
     editTo: RouteLocationRaw;
-    /** "series", "genre" or "platform", for the menu. */
+    /** "series", "genre", "platform", "company" or "engine", for the menu. */
     kind: string;
     canEdit?: boolean;
   }>(),

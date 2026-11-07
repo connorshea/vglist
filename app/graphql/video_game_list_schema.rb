@@ -43,7 +43,7 @@ class VideoGameListSchema < GraphQL::Schema
 
   # Batches `Game.ownerCount` into one query per response.
   lazy_resolve(LazyOwnerCount, :value)
-  # Batches the `coverGames` of series, genres and platforms.
+  # Batches the `coverGames` of series, genres, platforms, companies and engines.
   lazy_resolve(LazyCoverGames, :value)
   # Batches the second user's purchases in a library comparison.
   lazy_resolve(LazyGamePurchase, :value)

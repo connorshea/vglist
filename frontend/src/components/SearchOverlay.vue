@@ -1,226 +1,228 @@
 <template>
   <Teleport to="body">
-    <div
-      v-if="isOpen"
-      ref="overlayRef"
-      class="search-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Search"
-      @click.self="close"
-    >
-      <div class="search-header">
-        <div class="search-bar-wrap">
-          <Search class="search-icon" :stroke-width="2" />
-          <input
-            ref="searchInputRef"
-            v-model="query"
-            class="search-input"
-            type="text"
-            placeholder="Search games, companies, users…"
-            @input="onSearch"
-            @keydown.enter="goToFirstResult"
-          />
-          <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
-          <button class="search-close" aria-label="Close search" @click="close">
-            <X :size="16" :stroke-width="2" />
-          </button>
+    <Transition name="search-overlay">
+      <div
+        v-if="isOpen"
+        ref="overlayRef"
+        class="search-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search"
+        @click.self="close"
+      >
+        <div class="search-header">
+          <div class="search-bar-wrap">
+            <Search class="search-icon" :stroke-width="2" />
+            <input
+              ref="searchInputRef"
+              v-model="query"
+              class="search-input"
+              type="text"
+              placeholder="Search games, companies, users…"
+              @input="onSearch"
+              @keydown.enter="goToFirstResult"
+            />
+            <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
+            <button class="search-close" aria-label="Close search" @click="close">
+              <X :size="16" :stroke-width="2" />
+            </button>
+          </div>
+        </div>
+
+        <div class="search-results">
+          <!-- Empty state -->
+          <div v-if="!query || query.length < 2" class="search-empty">
+            <Search class="search-empty-icon" :stroke-width="1.5" />
+            <p>Start typing to search games, companies, users, and more.</p>
+          </div>
+
+          <!-- Loading state -->
+          <div v-else-if="loading" class="search-empty">
+            <div class="search-spinner"></div>
+            <p>Searching…</p>
+          </div>
+
+          <!-- Error state -->
+          <div v-else-if="error" class="search-empty">
+            <p class="search-error-text">Search failed: {{ error }}</p>
+            <p class="search-empty-hint">Try again or check your connection</p>
+          </div>
+
+          <!-- No results -->
+          <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
+            <p>
+              No results found for "<span class="search-query-highlight">{{ query }}</span
+              >"
+            </p>
+            <p class="search-empty-hint">Try a different search term</p>
+          </div>
+
+          <!-- Results grid -->
+          <div v-else-if="totalResults > 0" class="results-grid" :class="gridColumnsClass">
+            <!-- Games column -->
+            <div v-if="gameResults.length" class="category">
+              <div class="category-header">
+                <Gamepad2 class="category-icon" />
+                <span class="category-title">Games</span>
+                <span class="category-count"
+                  >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
+                >
+              </div>
+
+              <a
+                v-for="(game, idx) in gameResults"
+                :key="game.searchableId"
+                :href="resultHref(game)"
+                class="result-item"
+                :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
+                @click.prevent="goToResult(game)"
+              >
+                <div class="result-thumb">
+                  <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.content" />
+                  <div v-else class="result-thumb-placeholder">
+                    {{ gameInitials(game.content) }}
+                  </div>
+                </div>
+                <div class="result-info">
+                  <div class="result-title">{{ game.content }}</div>
+                  <div class="result-meta">
+                    <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
+                    <span v-if="game.developerName" class="result-developer">{{ game.developerName }}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Companies column -->
+            <div v-if="companyResults.length" class="category">
+              <div class="category-header">
+                <Briefcase class="category-icon" />
+                <span class="category-title">Companies</span>
+                <span class="category-count"
+                  >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
+                >
+              </div>
+
+              <a
+                v-for="(company, idx) in companyResults"
+                :key="company.searchableId"
+                :href="resultHref(company)"
+                class="result-item result-item--compact"
+                :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
+                @click.prevent="goToResult(company)"
+              >
+                <div class="result-thumb">
+                  <div class="result-thumb-placeholder">
+                    {{ company.content.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <div class="result-info">
+                  <div class="result-title">{{ company.content }}</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Platforms column -->
+            <div v-if="platformResults.length" class="category">
+              <div class="category-header">
+                <Monitor class="category-icon" />
+                <span class="category-title">Platforms</span>
+                <span class="category-count"
+                  >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
+                >
+              </div>
+
+              <a
+                v-for="(platform, idx) in platformResults"
+                :key="platform.searchableId"
+                :href="resultHref(platform)"
+                class="result-item result-item--compact"
+                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                @click.prevent="goToResult(platform)"
+              >
+                <div class="result-thumb">
+                  <div class="result-thumb-placeholder">
+                    {{ platform.content.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <div class="result-info">
+                  <div class="result-title">{{ platform.content }}</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Other resources column -->
+            <div v-if="otherResults.length" class="category">
+              <div class="category-header">
+                <Briefcase class="category-icon" />
+                <span class="category-title">Other</span>
+                <span class="category-count"
+                  >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
+                >
+              </div>
+
+              <a
+                v-for="(item, idx) in otherResults"
+                :key="item.searchableId"
+                :href="resultHref(item)"
+                class="result-item result-item--compact"
+                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                @click.prevent="goToResult(item)"
+              >
+                <div class="result-thumb">
+                  <div class="result-thumb-placeholder">
+                    {{ item.content.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <div class="result-info">
+                  <div class="result-title">{{ item.content }}</div>
+                  <div class="result-meta">
+                    <span class="result-type-tag">{{
+                      item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
+                    }}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Users column -->
+            <div v-if="userResults.length" class="category">
+              <div class="category-header">
+                <Users class="category-icon" />
+                <span class="category-title">Users</span>
+                <span class="category-count"
+                  >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+                >
+              </div>
+
+              <a
+                v-for="(user, idx) in userResults"
+                :key="user.searchableId"
+                :href="resultHref(user)"
+                class="result-item result-item--compact"
+                :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
+                @click.prevent="goToResult(user)"
+              >
+                <div class="result-thumb">
+                  <img v-if="user.avatarUrl" :src="user.avatarUrl" :alt="user.content" />
+                  <div v-else class="result-thumb-placeholder">
+                    {{ user.content.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <div class="result-info">
+                  <div class="result-title">{{ user.content }}</div>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="search-results">
-        <!-- Empty state -->
-        <div v-if="!query || query.length < 2" class="search-empty">
-          <Search class="search-empty-icon" :stroke-width="1.5" />
-          <p>Start typing to search games, companies, users, and more.</p>
-        </div>
-
-        <!-- Loading state -->
-        <div v-else-if="loading" class="search-empty">
-          <div class="search-spinner"></div>
-          <p>Searching…</p>
-        </div>
-
-        <!-- Error state -->
-        <div v-else-if="error" class="search-empty">
-          <p class="search-error-text">Search failed: {{ error }}</p>
-          <p class="search-empty-hint">Try again or check your connection</p>
-        </div>
-
-        <!-- No results -->
-        <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
-          <p>
-            No results found for "<span class="search-query-highlight">{{ query }}</span
-            >"
-          </p>
-          <p class="search-empty-hint">Try a different search term</p>
-        </div>
-
-        <!-- Results grid -->
-        <div v-else-if="totalResults > 0" class="results-grid" :class="gridColumnsClass">
-          <!-- Games column -->
-          <div v-if="gameResults.length" class="category">
-            <div class="category-header">
-              <Gamepad2 class="category-icon" />
-              <span class="category-title">Games</span>
-              <span class="category-count"
-                >{{ gameResults.length }} result{{ gameResults.length === 1 ? "" : "s" }}</span
-              >
-            </div>
-
-            <a
-              v-for="(game, idx) in gameResults"
-              :key="game.searchableId"
-              :href="resultHref(game)"
-              class="result-item"
-              :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
-              @click.prevent="goToResult(game)"
-            >
-              <div class="result-thumb">
-                <img v-if="game.coverUrl" :src="game.coverUrl" :alt="game.content" />
-                <div v-else class="result-thumb-placeholder">
-                  {{ gameInitials(game.content) }}
-                </div>
-              </div>
-              <div class="result-info">
-                <div class="result-title">{{ game.content }}</div>
-                <div class="result-meta">
-                  <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
-                  <span v-if="game.developerName" class="result-developer">{{ game.developerName }}</span>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Companies column -->
-          <div v-if="companyResults.length" class="category">
-            <div class="category-header">
-              <Briefcase class="category-icon" />
-              <span class="category-title">Companies</span>
-              <span class="category-count"
-                >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
-              >
-            </div>
-
-            <a
-              v-for="(company, idx) in companyResults"
-              :key="company.searchableId"
-              :href="resultHref(company)"
-              class="result-item result-item--compact"
-              :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
-              @click.prevent="goToResult(company)"
-            >
-              <div class="result-thumb">
-                <div class="result-thumb-placeholder">
-                  {{ company.content.charAt(0).toUpperCase() }}
-                </div>
-              </div>
-              <div class="result-info">
-                <div class="result-title">{{ company.content }}</div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Platforms column -->
-          <div v-if="platformResults.length" class="category">
-            <div class="category-header">
-              <Monitor class="category-icon" />
-              <span class="category-title">Platforms</span>
-              <span class="category-count"
-                >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
-              >
-            </div>
-
-            <a
-              v-for="(platform, idx) in platformResults"
-              :key="platform.searchableId"
-              :href="resultHref(platform)"
-              class="result-item result-item--compact"
-              :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-              @click.prevent="goToResult(platform)"
-            >
-              <div class="result-thumb">
-                <div class="result-thumb-placeholder">
-                  {{ platform.content.charAt(0).toUpperCase() }}
-                </div>
-              </div>
-              <div class="result-info">
-                <div class="result-title">{{ platform.content }}</div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Other resources column -->
-          <div v-if="otherResults.length" class="category">
-            <div class="category-header">
-              <Briefcase class="category-icon" />
-              <span class="category-title">Other</span>
-              <span class="category-count"
-                >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
-              >
-            </div>
-
-            <a
-              v-for="(item, idx) in otherResults"
-              :key="item.searchableId"
-              :href="resultHref(item)"
-              class="result-item result-item--compact"
-              :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-              @click.prevent="goToResult(item)"
-            >
-              <div class="result-thumb">
-                <div class="result-thumb-placeholder">
-                  {{ item.content.charAt(0).toUpperCase() }}
-                </div>
-              </div>
-              <div class="result-info">
-                <div class="result-title">{{ item.content }}</div>
-                <div class="result-meta">
-                  <span class="result-type-tag">{{
-                    item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
-                  }}</span>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Users column -->
-          <div v-if="userResults.length" class="category">
-            <div class="category-header">
-              <Users class="category-icon" />
-              <span class="category-title">Users</span>
-              <span class="category-count"
-                >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
-              >
-            </div>
-
-            <a
-              v-for="(user, idx) in userResults"
-              :key="user.searchableId"
-              :href="resultHref(user)"
-              class="result-item result-item--compact"
-              :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
-              @click.prevent="goToResult(user)"
-            >
-              <div class="result-thumb">
-                <img v-if="user.avatarUrl" :src="user.avatarUrl" :alt="user.content" />
-                <div v-else class="result-thumb-placeholder">
-                  {{ user.content.charAt(0).toUpperCase() }}
-                </div>
-              </div>
-              <div class="result-info">
-                <div class="result-title">{{ user.content }}</div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    </Transition>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onBeforeUnmount } from "vue";
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
@@ -306,18 +308,23 @@ const gridColumnsClass = computed(() => {
   return `grid-cols-${Math.min(cols, 4)}`;
 });
 
-// Focus input when overlay opens, and listen for Escape globally
+// Start with the query the overlay was opened with, focus the input, and
+// listen for Escape globally.
+async function onOpened() {
+  const initial = takeInitialQuery();
+  if (initial) {
+    query.value = initial;
+    performSearch();
+  }
+  await nextTick();
+  searchInputRef.value?.focus();
+  document.body.style.overflow = "hidden";
+  document.addEventListener("keydown", onDocumentKeydown);
+}
+
 watch(isOpen, async (open) => {
   if (open) {
-    const initial = takeInitialQuery();
-    if (initial) {
-      query.value = initial;
-      performSearch();
-    }
-    await nextTick();
-    searchInputRef.value?.focus();
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", onDocumentKeydown);
+    await onOpened();
   } else {
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onDocumentKeydown);
@@ -326,6 +333,14 @@ watch(isOpen, async (open) => {
     hasSearched.value = false;
     loading.value = false;
     error.value = null;
+  }
+});
+
+// /search (the OpenSearch target) can open the overlay before this component
+// mounts on a fresh page load, so the watch above never sees it change.
+onMounted(() => {
+  if (isOpen.value) {
+    void onOpened();
   }
 });
 
@@ -421,6 +436,51 @@ function releaseYear(date: string): string {
 @media (prefers-color-scheme: light) {
   .search-overlay {
     background: rgba(30, 33, 48, 0.88);
+  }
+}
+
+/*
+ * Ease the frosted glass in and out by animating the blur radius and tint
+ * rather than the overlay's opacity: fading opacity would crossfade a sharp
+ * page into a blurred one instead of gradually blurring it. The keyframes
+ * only give the start state, so they end at whichever tint applies.
+ */
+.search-overlay-enter-active {
+  animation: search-overlay-frost 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.search-overlay-leave-active {
+  animation: search-overlay-frost 0.2s cubic-bezier(0.4, 0, 1, 1) reverse both;
+}
+
+.search-overlay-enter-active .search-results {
+  animation: search-overlay-fade 0.3s ease-out both;
+}
+
+.search-overlay-leave-active .search-results {
+  animation: search-overlay-fade 0.2s ease-in reverse both;
+}
+
+@keyframes search-overlay-frost {
+  from {
+    backdrop-filter: blur(0) saturate(1);
+    -webkit-backdrop-filter: blur(0) saturate(1);
+    background: rgba(30, 33, 48, 0);
+  }
+}
+
+@keyframes search-overlay-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-overlay-enter-active,
+  .search-overlay-leave-active,
+  .search-overlay-enter-active .search-results,
+  .search-overlay-leave-active .search-results {
+    animation: none;
   }
 }
 

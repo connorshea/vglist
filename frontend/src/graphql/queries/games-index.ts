@@ -53,35 +53,9 @@ export const GET_GAMES_INDEX = gql`
   }
 `;
 
-// How many games the filters being edited in the popover would show under the
-// current sort, for its "Show N games" button.
-export const GET_GAMES_INDEX_COUNT = gql`
-  query GetGamesIndexCount(
-    $sortBy: GameSort
-    $onPlatform: ID
-    $byGenre: ID
-    $byEngine: ID
-    $fromYear: Int
-    $toYear: Int
-    $excludeLibrary: Boolean
-  ) {
-    games(
-      sortBy: $sortBy
-      onPlatform: $onPlatform
-      byGenre: $byGenre
-      byEngine: $byEngine
-      fromYear: $fromYear
-      toYear: $toYear
-      excludeLibrary: $excludeLibrary
-    ) {
-      totalCount
-    }
-  }
-`;
-
-// The platform and genre pills, the site-wide game count for the page header,
-// and the names of whichever filters are set in the URL (which only carries
-// IDs).
+// The platform pills and the home page's genre links, the site-wide game count
+// for the page header, and the names of whichever filters are set in the URL
+// (which only carries IDs).
 export const GET_GAMES_INDEX_FILTERS = gql`
   query GetGamesIndexFilters(
     $platformId: ID!
