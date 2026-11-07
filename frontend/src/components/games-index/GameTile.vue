@@ -179,10 +179,13 @@ const accessibleName = computed(() => {
 
 @media (max-width: 768px) {
   /* Two lines, not one: at three tiles per row a single line cuts most titles
-     down to a word or two ("Command & Co…"). */
+     down to a word or two ("Command & Co…"). Both lines are always reserved,
+     so the meta lines in a row line up and a tile is the same height whatever
+     its title (GameTileSkeleton relies on this). */
   .game-tile-name {
     display: -webkit-box;
     overflow: hidden;
+    min-height: calc(2 * 1.3em);
     font-size: 12px;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
