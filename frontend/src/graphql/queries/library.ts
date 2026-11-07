@@ -60,6 +60,28 @@ export const LIBRARY_GAME_PURCHASE_FIELDS = gql`
   }
 `;
 
+// What a Playing card shows: a game tile's fields, plus where and when the
+// game was started.
+export const LIBRARY_PLAYING_PURCHASE_FIELDS = gql`
+  fragment LibraryPlayingPurchaseFields on GamePurchase {
+    ...LibraryGamePurchaseFields
+    startDate
+    platforms(first: 3) {
+      nodes {
+        id
+        name
+      }
+    }
+    stores(first: 3) {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+  ${LIBRARY_GAME_PURCHASE_FIELDS}
+`;
+
 // One page of the library, for a single status or for the ungrouped grid.
 export const GET_LIBRARY_GAMES = gql`
   query GetLibraryGames(
@@ -131,21 +153,7 @@ export const GET_LIBRARY_SHELVES = gql`
       ) {
         totalCount
         nodes {
-          ...LibraryGamePurchaseFields
-          # The Playing shelf's cards also say where and when the game was started.
-          startDate
-          platforms(first: 3) {
-            nodes {
-              id
-              name
-            }
-          }
-          stores(first: 3) {
-            nodes {
-              id
-              name
-            }
-          }
+          ...LibraryPlayingPurchaseFields
         }
       }
       paused: gamePurchases(
@@ -240,5 +248,5 @@ export const GET_LIBRARY_SHELVES = gql`
       ...LibraryGamePurchaseFields
     }
   }
-  ${LIBRARY_GAME_PURCHASE_FIELDS}
+  ${LIBRARY_PLAYING_PURCHASE_FIELDS}
 `;

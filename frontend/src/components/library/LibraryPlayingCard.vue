@@ -18,13 +18,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Clock } from "@lucide/vue";
-import type { GetLibraryShelvesQuery } from "@/types/graphql";
+import type { LibraryPlayingPurchaseFieldsFragment } from "@/types/graphql";
 import { formatHours, formatStartDate, gameInitials } from "@/utils/library";
 
-type PlayingPurchase = NonNullable<GetLibraryShelvesQuery["user"]>["inProgress"]["nodes"][number];
-
 const props = defineProps<{
-  purchase: PlayingPurchase;
+  purchase: LibraryPlayingPurchaseFieldsFragment;
   hideHours?: boolean;
 }>();
 
