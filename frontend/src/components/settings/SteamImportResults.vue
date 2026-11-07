@@ -49,17 +49,20 @@
       />
     </section>
 
-    <section v-if="unmatchedGames.length > 0" class="import-group" aria-labelledby="steam-results-unmatched">
+    <section v-if="result.unmatchedGames.length > 0" class="import-group" aria-labelledby="steam-results-unmatched">
       <h3 id="steam-results-unmatched" class="import-group-title">
-        Couldn't be matched <span class="import-count">{{ unmatchedGames.length }}</span>
+        Couldn't be matched <span class="import-count">{{ result.unmatchedGames.length }}</span>
       </h3>
       <p class="import-note">
-        These games from your Steam library don't match a game on vglist yet. Many are alternate editions, like a "Game
-        of the Year" release, whose Steam App ID belongs on the existing game rather than a new one. DLC, soundtracks,
-        and tools shouldn't be added as games.
+        These games from your Steam library don't match a game on vglist yet. Many are DLC, soundtracks, or alternate
+        editions, like a "Game of the Year" release, of games that are already on vglist.
       </p>
       <ul class="import-unmatched">
-        <li v-for="game in visible(unmatchedGames, 'unmatched')" :key="game.steamAppId" class="import-unmatched-row">
+        <li
+          v-for="game in visible(result.unmatchedGames, 'unmatched')"
+          :key="game.steamAppId"
+          class="import-unmatched-row"
+        >
           <span class="import-unmatched-body">
             <span class="import-game-name">{{ game.name }}</span>
             <a
@@ -73,32 +76,12 @@
               <span class="is-sr-only">(opens in a new tab)</span>
             </a>
           </span>
-          <span v-if="authStore.isModerator" class="import-unmatched-actions">
-            <router-link
-              :to="newGameLocation(game.name, game.steamAppId)"
-              class="set-btn"
-              :aria-label="`Create ${game.name} on vglist`"
-            >
-              <Plus :size="14" aria-hidden="true" />
-              Create
-            </router-link>
-            <button
-              v-if="authStore.isAdmin"
-              type="button"
-              class="set-btn is-muted"
-              :aria-label="`Add ${game.name} to the Steam blocklist`"
-              @click="pendingBlocklist = game"
-            >
-              <Ban :size="14" aria-hidden="true" />
-              Blocklist
-            </button>
-          </span>
         </li>
       </ul>
       <ShowAllButton
-        v-if="unmatchedGames.length > PREVIEW_LIMIT"
+        v-if="result.unmatchedGames.length > PREVIEW_LIMIT"
         :expanded="expanded.unmatched"
-        :total="unmatchedGames.length"
+        :total="result.unmatchedGames.length"
         @toggle="expanded.unmatched = !expanded.unmatched"
       />
     </section>
@@ -106,40 +89,17 @@
     <p v-if="nothingChanged" class="import-note">
       Everything vglist recognizes from your Steam library is already in your library.
     </p>
-
-    <ConfirmDialog
-      :model-value="pendingBlocklist !== null"
-      title="Add to the Steam blocklist?"
-      confirm-label="Add to blocklist"
-      loading-label="Adding…"
-      :loading="blocklisting"
-      @update:model-value="(open) => !open && (pendingBlocklist = null)"
-      @confirm="addToBlocklist"
-    >
-      <template v-if="pendingBlocklist">
-        Steam App {{ pendingBlocklist.steamAppId }} ("{{ pendingBlocklist.name }}") will be skipped by future imports,
-        and removed from any game that has it.
-      </template>
-    </ConfirmDialog>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from "vue";
-import { Ban, ExternalLink, Plus } from "@lucide/vue";
-import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { computed, reactive } from "vue";
+import { ExternalLink } from "@lucide/vue";
 import ShowAllButton from "@/components/settings/ShowAllButton.vue";
-import { useMutation } from "@/composables/useGraphQL";
-import { useSnackbar } from "@/composables/useSnackbar";
-import { ADD_TO_STEAM_BLOCKLIST } from "@/graphql/mutations/admin";
-import { useAuthStore } from "@/stores/auth";
-import type { AddToSteamBlocklistMutation, ImportSteamLibraryMutation } from "@/types/graphql";
-import { newGameLocation } from "@/utils/game-prefill";
-import { extractGqlError } from "@/utils/graphql-errors";
+import type { ImportSteamLibraryMutation } from "@/types/graphql";
 import { gameInitials } from "@/utils/library";
 
 type ImportResult = NonNullable<ImportSteamLibraryMutation["importSteamLibrary"]>;
-type UnmatchedGame = ImportResult["unmatchedGames"][number];
 type Group = "added" | "updated" | "unmatched";
 
 // Long lists start collapsed so a big first import doesn't bury the page.
@@ -149,43 +109,18 @@ const props = defineProps<{
   result: ImportResult;
 }>();
 
-const authStore = useAuthStore();
-const { show: showSnackbar } = useSnackbar();
-
 const expanded = reactive<Record<Group, boolean>>({ added: false, updated: false, unmatched: false });
 
 function visible<T>(items: T[], group: Group): T[] {
   return expanded[group] ? items : items.slice(0, PREVIEW_LIMIT);
 }
 
-// Steam App IDs blocklisted from these results, hidden from the list.
-const blocklisted = ref(new Set<number>());
-const unmatchedGames = computed(() =>
-  props.result.unmatchedGames.filter((game) => !blocklisted.value.has(game.steamAppId))
-);
-
 const nothingChanged = computed(
   () =>
-    props.result.addedGames.length === 0 && props.result.updatedGames.length === 0 && unmatchedGames.value.length === 0
+    props.result.addedGames.length === 0 &&
+    props.result.updatedGames.length === 0 &&
+    props.result.unmatchedGames.length === 0
 );
-
-const pendingBlocklist = ref<UnmatchedGame | null>(null);
-const { mutate: blocklistMutate, loading: blocklisting } =
-  useMutation<AddToSteamBlocklistMutation>(ADD_TO_STEAM_BLOCKLIST);
-
-async function addToBlocklist() {
-  const game = pendingBlocklist.value;
-  if (!game) return;
-
-  try {
-    await blocklistMutate({ name: game.name, steamAppId: game.steamAppId });
-    blocklisted.value = new Set([...blocklisted.value, game.steamAppId]);
-    pendingBlocklist.value = null;
-    showSnackbar(`Added "${game.name}" to the Steam blocklist.`);
-  } catch (e) {
-    showSnackbar(`Failed to add to the blocklist: ${extractGqlError(e)}`, "error");
-  }
-}
 </script>
 
 <style scoped>
@@ -331,10 +266,5 @@ async function addToBlocklist() {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 2px;
-}
-
-.import-unmatched-actions {
-  display: flex;
-  gap: 8px;
 }
 </style>

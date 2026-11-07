@@ -1,19 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount, flushPromises, RouterLinkStub } from "@vue/test-utils";
+import { describe, it, expect, beforeEach } from "vitest";
+import { mount, RouterLinkStub } from "@vue/test-utils";
 import SteamImportResults from "./SteamImportResults.vue";
-
-const { mockRequest, mockAuth } = vi.hoisted(() => ({
-  mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>(),
-  mockAuth: { isAdmin: false, isModerator: false }
-}));
-
-vi.mock("@/graphql/client", () => ({
-  gqlClient: { request: mockRequest }
-}));
-
-vi.mock("@/stores/auth", () => ({
-  useAuthStore: () => mockAuth
-}));
 
 function game(id: number) {
   return { id: String(id), name: `Game ${String(id).padStart(2, "0")}`, coverUrl: null };
@@ -55,9 +42,6 @@ const unmatched = [
 
 describe("SteamImportResults", () => {
   beforeEach(() => {
-    mockAuth.isAdmin = false;
-    mockAuth.isModerator = false;
-    mockRequest.mockReset();
     document.body.innerHTML = "";
   });
 
@@ -83,47 +67,12 @@ describe("SteamImportResults", () => {
     expect(toggle.attributes("aria-expanded")).toBe("true");
   });
 
-  it("shows unmatched games without actions to regular members", () => {
+  it("lists unmatched games with a link to their Steam store page", () => {
     const wrapper = mountResults(result({ unmatchedGames: unmatched }));
 
     expect(wrapper.findAll(".import-unmatched-row")).toHaveLength(2);
     expect(wrapper.get(".import-steam-link").attributes("href")).toBe("https://store.steampowered.com/app/340");
-    expect(wrapper.findAllComponents(RouterLinkStub)).toHaveLength(0);
-    expect(wrapper.text()).not.toContain("Blocklist");
-  });
-
-  it("gives moderators a prefilled Create link but no blocklist action", () => {
-    mockAuth.isModerator = true;
-    const wrapper = mountResults(result({ unmatchedGames: unmatched }));
-    const create = wrapper.findAllComponents(RouterLinkStub)[0];
-
-    expect(create.props("to")).toEqual({
-      name: "gameNew",
-      query: { name: "Half-Life 2: Lost Coast", steamAppId: "340" }
-    });
-    expect(wrapper.text()).not.toContain("Blocklist");
-  });
-
-  it("lets admins blocklist an unmatched game after confirming, then hides it", async () => {
-    mockAuth.isModerator = true;
-    mockAuth.isAdmin = true;
-    mockRequest.mockResolvedValue({
-      addToSteamBlocklist: { steamBlocklistEntry: { id: "1", name: "Portal Soundtrack", steamAppId: 323170 } }
-    });
-    const wrapper = mountResults(result({ unmatchedGames: unmatched }));
-
-    await wrapper.get('button[aria-label="Add Portal Soundtrack to the Steam blocklist"]').trigger("click");
-    const confirm = Array.from(document.body.querySelectorAll<HTMLButtonElement>(".cd-btn")).find(
-      (button) => button.textContent?.trim() === "Add to blocklist"
-    );
-    if (!confirm) throw new Error("no confirm button");
-    confirm.click();
-    await flushPromises();
-
-    expect(mockRequest).toHaveBeenCalledWith(expect.anything(), { name: "Portal Soundtrack", steamAppId: 323170 });
-    expect(wrapper.findAll(".import-unmatched-row").map((row) => row.find(".import-game-name").text())).toEqual([
-      "Half-Life 2: Lost Coast"
-    ]);
+    expect(wrapper.find("button").exists()).toBeFalsy();
   });
 
   it("says so when nothing changed", () => {

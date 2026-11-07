@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gamePrefillFromQuery, newGameLocation } from "./game-prefill";
+import { gamePrefillFromQuery } from "./game-prefill";
 
 describe("gamePrefillFromQuery", () => {
   it("reads the name and Steam App ID", () => {
@@ -28,14 +28,5 @@ describe("gamePrefillFromQuery", () => {
 
   it("caps the name at the form's max length", () => {
     expect(gamePrefillFromQuery({ name: "x".repeat(200) }).name).toHaveLength(120);
-  });
-});
-
-describe("newGameLocation", () => {
-  it("links to the new game form with both values", () => {
-    expect(newGameLocation("Portal", 400)).toEqual({
-      name: "gameNew",
-      query: { name: "Portal", steamAppId: "400" }
-    });
   });
 });

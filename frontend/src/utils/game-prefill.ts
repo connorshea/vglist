@@ -1,4 +1,4 @@
-import type { LocationQuery, RouteLocationRaw } from "vue-router";
+import type { LocationQuery } from "vue-router";
 
 export interface GamePrefill {
   name: string;
@@ -12,7 +12,7 @@ function firstString(value: LocationQuery[string] | undefined): string {
 
 /**
  * Reads the values a link can prefill on the new game form, e.g.
- * `/games/new?name=Half-Life%202&steamAppId=220` from the Steam import results.
+ * `/games/new?name=Half-Life%202&steamAppId=220`.
  * Anything malformed is ignored rather than put in the form.
  */
 export function gamePrefillFromQuery(query: LocationQuery): GamePrefill {
@@ -21,9 +21,4 @@ export function gamePrefillFromQuery(query: LocationQuery): GamePrefill {
   const steamAppId = /^\d+$/.test(rawSteamAppId) ? Number(rawSteamAppId) : null;
 
   return { name, steamAppId: steamAppId !== null && steamAppId > 0 ? steamAppId : null };
-}
-
-/** A link to the new game form, prefilled with a name and Steam App ID. */
-export function newGameLocation(name: string, steamAppId: number): RouteLocationRaw {
-  return { name: "gameNew", query: { name, steamAppId: String(steamAppId) } };
 }
