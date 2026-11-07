@@ -76,6 +76,17 @@ export type GameSort =
   /** Sorted with most recently updated game records first. */
   | "RECENTLY_UPDATED";
 
+/** Options for sorting the games two users have in common. */
+export type LibraryComparisonSort =
+  /** Sorted alphabetically by the name of the game. */
+  | "GAME_NAME"
+  /** Sorted with the games the two users disagree on most first. Games that either user hasn't rated are last. */
+  | "RATING_GAP"
+  /** Sorted with the first user's highest-rated games first. Games they haven't rated are last. */
+  | "USER_A_RATING"
+  /** Sorted with the second user's highest-rated games first. Games they haven't rated are last. */
+  | "USER_B_RATING";
+
 /** Options for sorting the games on a company, platform, engine, genre or series. */
 export type ResourceGameSort =
   /** Sorted by the games with the highest average rating. Games without a rating come last. */
@@ -751,6 +762,131 @@ export interface GetUnmatchedGamesQuery {
     }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
   } | null;
+}
+
+export type ComparisonUserFieldsFragment = { id: string; username: string; slug: string; avatarUrl: string | null };
+
+export type GetLibraryComparisonQueryVariables = Exact<{
+  userASlug: string;
+  userBSlug: string;
+  shelfCount: number;
+}>;
+
+export interface GetLibraryComparisonQuery {
+  libraryComparison: {
+    inCommonCount: number;
+    onlyACount: number;
+    onlyBCount: number;
+    bothRatedCount: number;
+    averageRatingGap: number | null;
+    userA: { id: string; username: string; slug: string; avatarUrl: string | null };
+    userB: { id: string; username: string; slug: string; avatarUrl: string | null };
+    onlyA: {
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    onlyB: {
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+  } | null;
+}
+
+export type GetComparisonInCommonQueryVariables = Exact<{
+  userASlug: string;
+  userBSlug: string;
+  first: number;
+  after?: string | null | undefined;
+  sortBy?: LibraryComparisonSort | null | undefined;
+  search?: string | null | undefined;
+  bothRated?: boolean | null | undefined;
+}>;
+
+export interface GetComparisonInCommonQuery {
+  libraryComparison: {
+    inCommon: {
+      totalCount: number;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+      nodes: Array<{
+        ratingDifference: number | null;
+        game: {
+          id: string;
+          name: string;
+          coverUrl: string | null;
+          developers: { nodes: Array<{ id: string; name: string }> };
+        };
+        purchaseA: { id: string; rating: number | null; completionStatus: GamePurchaseCompletionStatus | null };
+        purchaseB: { id: string; rating: number | null; completionStatus: GamePurchaseCompletionStatus | null };
+      }>;
+    };
+  } | null;
+}
+
+export type GetComparisonOnlyQueryVariables = Exact<{
+  userASlug: string;
+  userBSlug: string;
+  sideA: boolean;
+  first: number;
+  after?: string | null | undefined;
+  sortBy?: GamePurchaseSort | null | undefined;
+  search?: string | null | undefined;
+}>;
+
+export interface GetComparisonOnlyQuery {
+  libraryComparison: {
+    onlyA?: {
+      totalCount: number;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    onlyB?: {
+      totalCount: number;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+      nodes: Array<{
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+  } | null;
+}
+
+export type ComparisonOnlyFieldsFragment = {
+  totalCount: number;
+  pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  nodes: Array<{
+    id: string;
+    hoursPlayed: number | null;
+    completionStatus: GamePurchaseCompletionStatus | null;
+    rating: number | null;
+    game: { id: string; name: string; coverUrl: string | null };
+  }>;
+};
+
+export type SearchUsersToCompareQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchUsersToCompareQuery {
+  userSearch: { nodes: Array<{ id: string; username: string; slug: string; avatarUrl: string | null }> } | null;
 }
 
 export type GameTileFieldsFragment = {
