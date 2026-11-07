@@ -1,7 +1,10 @@
 <template>
-  <section class="box mt-5" aria-labelledby="statistics-history-heading">
-    <div class="history-header">
-      <h3 id="statistics-history-heading" class="has-text-weight-bold">Statistics Over Time</h3>
+  <section class="admin-section" aria-labelledby="statistics-history-heading">
+    <div class="admin-section-header">
+      <h2 id="statistics-history-heading" class="admin-section-title">
+        Daily snapshots
+        <span class="admin-section-note">change since the day before</span>
+      </h2>
       <div class="group-switcher" role="tablist" aria-label="Statistic group">
         <button
           v-for="(group, index) in GROUPS"
@@ -31,7 +34,7 @@
         <p v-if="rows.length === 0" class="has-text-centered has-text-grey py-4">
           No statistics have been recorded yet.
         </p>
-        <div v-else class="table-container">
+        <div v-else class="history-table-box">
           <table class="table is-fullwidth is-narrow history-table">
             <caption class="is-sr-only">
               {{
@@ -48,14 +51,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="row in rows" :key="row.id">
+              <tr v-for="(row, rowIndex) in rows" :key="row.id">
                 <th scope="row" class="date-col">
                   <time :datetime="row.timestamp" :title="formatTimestamp(row.timestamp)">{{
                     formatDate(row.timestamp)
                   }}</time>
                 </th>
                 <td v-for="column in currentGroup.columns" :key="column.field" class="has-text-right">
-                  {{ formatCount(row[column.field]) }}
+                  <span class="history-value">{{ formatCount(row[column.field]) }}</span>
+                  <small
+                    v-if="changeFor(rowIndex, column.field) !== null"
+                    class="history-change"
+                    :class="{
+                      'is-up': !NEUTRAL_FIELDS.has(column.field) && (changeFor(rowIndex, column.field) ?? 0) > 0
+                    }"
+                  >
+                    {{ formatChange(changeFor(rowIndex, column.field)) }}
+                  </small>
                 </td>
               </tr>
             </tbody>
@@ -216,6 +228,24 @@ function formatTimestamp(timestamp: string): string {
   return `${timestampFormat.format(new Date(timestamp))} UTC`;
 }
 
+// Growth in these isn't good news, so their increases aren't highlighted.
+const NEUTRAL_FIELDS = new Set<CountField>(["bannedUsers", "unmatchedGames"]);
+
+// Change from the previous day's snapshot, which is the next row down since
+// rows are newest first. Null for the last row on a page, or when either
+// value is missing.
+function changeFor(rowIndex: number, field: CountField): number | null {
+  const current = rows.value[rowIndex]?.[field];
+  const previous = rows.value[rowIndex + 1]?.[field];
+  if (current == null || previous == null) return null;
+  return current - previous;
+}
+
+function formatChange(change: number | null): string {
+  if (!change) return "·";
+  return change > 0 ? `+${change.toLocaleString()}` : `−${Math.abs(change).toLocaleString()}`;
+}
+
 // Older records predate some columns (e.g. IGDB IDs, version counts), so
 // those come back null.
 function formatCount(value: number | null): string {
@@ -224,15 +254,6 @@ function formatCount(value: number | null): string {
 </script>
 
 <style scoped>
-.history-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
 .group-switcher {
   display: inline-flex;
   padding: 3px;
@@ -272,15 +293,56 @@ function formatCount(value: number | null): string {
   outline-offset: 1px;
 }
 
+.history-table-box {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
 .history-table {
+  width: 100%;
   font-variant-numeric: tabular-nums;
-  font-size: 0.875rem;
-  /* Sit on the box rather than Bulma's darker table background in dark mode. */
+  font-size: 0.8125rem;
   background: transparent;
 }
 
-.history-table th {
+.history-table th,
+.history-table td {
   white-space: nowrap;
+  border-color: var(--color-border);
+  padding: 8px 14px;
+  vertical-align: top;
+}
+
+.history-table thead th {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-subtle);
+  padding-block: 10px;
+}
+
+.history-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.history-value {
+  display: block;
+  color: var(--color-text-primary);
+}
+
+.history-change {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary);
+}
+
+.history-change.is-up {
+  color: var(--admin-up, inherit);
+  font-weight: 600;
 }
 
 /* Keep the date visible while the wide table scrolls sideways. */
@@ -288,13 +350,17 @@ function formatCount(value: number | null): string {
   position: sticky;
   left: 0;
   z-index: 1;
-  background: var(--bulma-box-background-color, var(--color-surface));
+  background: var(--color-surface);
   font-weight: 500;
   min-width: 8rem;
 }
 
+.history-table thead .date-col {
+  background: var(--color-bg-subtle);
+}
+
 @media (max-width: 768px) {
-  .history-header {
+  .admin-section-header {
     flex-direction: column;
     align-items: stretch;
   }
