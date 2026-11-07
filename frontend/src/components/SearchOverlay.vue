@@ -20,7 +20,9 @@
               type="text"
               placeholder="Search games, companies, users…"
               @input="onSearch"
-              @keydown.enter="goToFirstResult"
+              @keydown.down.prevent="move(1)"
+              @keydown.up.prevent="move(-1)"
+              @keydown.enter.prevent="chooseActive"
             />
             <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
             <button class="search-close" aria-label="Close search" @click="close">
@@ -75,6 +77,8 @@
                 :href="resultHref(game)"
                 class="result-item"
                 :style="{ animationDelay: `${0.04 + idx * 0.03}s` }"
+                :class="{ 'is-active': isActive(game) }"
+                @mousemove="setActive(game)"
                 @click.prevent="goToResult(game)"
               >
                 <div class="result-thumb">
@@ -109,6 +113,8 @@
                 :href="resultHref(company)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
+                :class="{ 'is-active': isActive(company) }"
+                @mousemove="setActive(company)"
                 @click.prevent="goToResult(company)"
               >
                 <div class="result-thumb">
@@ -138,6 +144,8 @@
                 :href="resultHref(platform)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                :class="{ 'is-active': isActive(platform) }"
+                @mousemove="setActive(platform)"
                 @click.prevent="goToResult(platform)"
               >
                 <div class="result-thumb">
@@ -167,6 +175,8 @@
                 :href="resultHref(item)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                :class="{ 'is-active': isActive(item) }"
+                @mousemove="setActive(item)"
                 @click.prevent="goToResult(item)"
               >
                 <div class="result-thumb">
@@ -201,6 +211,8 @@
                 :href="resultHref(user)"
                 class="result-item result-item--compact"
                 :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
+                :class="{ 'is-active': isActive(user) }"
+                @mousemove="setActive(user)"
                 @click.prevent="goToResult(user)"
               >
                 <div class="result-thumb">
@@ -296,6 +308,37 @@ const otherResults = computed(() => results.value.filter((r) => !dedicatedTypes.
 
 const totalResults = computed(() => results.value.length);
 
+// Every result in the order it's shown (column by column), so Up and Down
+// step through them the way they read.
+const orderedResults = computed(() => [
+  ...gameResults.value,
+  ...companyResults.value,
+  ...platformResults.value,
+  ...otherResults.value,
+  ...userResults.value
+]);
+const resultIndexes = computed(() => new Map(orderedResults.value.map((result, index) => [result, index])));
+
+// The highlighted result, which Enter opens. The first result is highlighted
+// whenever new results arrive, so Enter keeps opening the top hit by default.
+const activeIndex = ref(-1);
+
+watch(orderedResults, (ordered) => {
+  activeIndex.value = ordered.length > 0 ? 0 : -1;
+});
+
+function resultIndex(result: SearchResultFieldsFragment): number {
+  return resultIndexes.value.get(result) ?? -1;
+}
+
+function isActive(result: SearchResultFieldsFragment): boolean {
+  return activeIndex.value >= 0 && resultIndex(result) === activeIndex.value;
+}
+
+function setActive(result: SearchResultFieldsFragment) {
+  activeIndex.value = resultIndex(result);
+}
+
 // Dynamically set grid columns based on which categories have results
 const gridColumnsClass = computed(() => {
   const cols = [
@@ -372,10 +415,18 @@ function onSearch() {
   performSearch();
 }
 
-function goToFirstResult() {
-  if (results.value.length > 0) {
-    goToResult(results.value[0]);
-  }
+function move(step: number) {
+  const count = orderedResults.value.length;
+  if (count === 0) return;
+  activeIndex.value = (activeIndex.value + step + count) % count;
+  void nextTick(() => {
+    overlayRef.value?.querySelector(".result-item.is-active")?.scrollIntoView?.({ block: "nearest" });
+  });
+}
+
+function chooseActive() {
+  const active = orderedResults.value[activeIndex.value];
+  if (active) goToResult(active);
 }
 
 const typeRouteMap: Record<string, string> = {
@@ -759,7 +810,8 @@ function releaseYear(date: string): string {
   background: rgba(206, 203, 246, 0.1);
 }
 
-.result-item:focus-visible {
+.result-item:focus-visible,
+.result-item.is-active {
   background: var(--s-400);
   outline: 1px solid var(--s-300);
 }

@@ -351,6 +351,77 @@ describe("SearchOverlay", () => {
     });
   });
 
+  // ── 5b. Keyboard navigation through results ──
+
+  describe("keyboard navigation", () => {
+    // Shown as Games, then Companies, then Users, regardless of API order.
+    const results = [
+      { searchableId: "7", searchableType: "USER", content: "valvefan", slug: "valvefan", avatarUrl: null },
+      {
+        searchableId: "1",
+        searchableType: "GAME",
+        content: "Half-Life",
+        coverUrl: null,
+        developerName: null,
+        releaseDate: null
+      },
+      { searchableId: "3", searchableType: "COMPANY", content: "Valve" }
+    ];
+
+    function activeTitle(wrapper: VueWrapper): string {
+      return wrapper.find(".result-item.is-active .result-title").text();
+    }
+
+    it("highlights the first result when results arrive", async () => {
+      const wrapper = await mountWithSearchResults(results, "valve");
+      expect(wrapper.findAll(".result-item.is-active")).toHaveLength(1);
+      expect(activeTitle(wrapper)).toBe("Half-Life");
+    });
+
+    it("moves the highlight with Down and Up in display order, wrapping at the ends", async () => {
+      const wrapper = await mountWithSearchResults(results, "valve");
+      const input = wrapper.find(".search-input");
+
+      await input.trigger("keydown", { key: "ArrowDown" });
+      expect(activeTitle(wrapper)).toBe("Valve");
+      await input.trigger("keydown", { key: "ArrowDown" });
+      expect(activeTitle(wrapper)).toBe("valvefan");
+      await input.trigger("keydown", { key: "ArrowDown" });
+      expect(activeTitle(wrapper)).toBe("Half-Life");
+      await input.trigger("keydown", { key: "ArrowUp" });
+      expect(activeTitle(wrapper)).toBe("valvefan");
+    });
+
+    it("opens the highlighted result on Enter", async () => {
+      const wrapper = await mountWithSearchResults(results, "valve");
+      const input = wrapper.find(".search-input");
+
+      await input.trigger("keydown", { key: "ArrowDown" });
+      await input.trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).toHaveBeenCalledWith("/companies/3");
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    it("opens the first result on Enter without moving", async () => {
+      const wrapper = await mountWithSearchResults(results, "valve");
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+      expect(pushMock).toHaveBeenCalledWith("/games/1");
+    });
+
+    it("follows the mouse", async () => {
+      const wrapper = await mountWithSearchResults(results, "valve");
+      await wrapper.findAll(".result-item")[2].trigger("mousemove");
+      expect(activeTitle(wrapper)).toBe("valvefan");
+    });
+
+    it("does nothing on Enter when there are no results", async () => {
+      const wrapper = await mountWithSearchResults([], "nothing");
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+      expect(pushMock).not.toHaveBeenCalled();
+    });
+  });
+
   // ── 6. Debounce behavior ──
 
   describe("debounce behavior", () => {
