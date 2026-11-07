@@ -7,10 +7,10 @@ import { useResourceGames, type ResourceGameConnection } from "./useResourceGame
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
-const { mockRequest, route } = vi.hoisted(() => ({
-  mockRequest: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
-  route: { query: {} as Record<string, string> }
-}));
+const { mockRequest, route } = vi.hoisted(() => {
+  const route: { query: Record<string, string> } = { query: {} };
+  return { mockRequest: vi.fn<(...args: unknown[]) => Promise<unknown>>(), route };
+});
 
 vi.mock("@/graphql/client", () => ({
   gqlClient: { request: mockRequest }

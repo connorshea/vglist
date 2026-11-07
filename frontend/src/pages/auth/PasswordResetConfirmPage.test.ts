@@ -4,11 +4,14 @@ import PasswordResetConfirmPage from "./PasswordResetConfirmPage.vue";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
-const { mockRoute, mockResetPassword } = vi.hoisted(() => ({
-  mockRoute: { query: { reset_password_token: "valid-token-123" } as Record<string, string> },
-  mockResetPassword:
-    vi.fn<(token: string, pw: string, pwc: string) => Promise<{ success: boolean; errors: string[] }>>()
-}));
+const { mockRoute, mockResetPassword } = vi.hoisted(() => {
+  const mockRoute: { query: Record<string, string> } = { query: { reset_password_token: "valid-token-123" } };
+  return {
+    mockRoute,
+    mockResetPassword:
+      vi.fn<(token: string, pw: string, pwc: string) => Promise<{ success: boolean; errors: string[] }>>()
+  };
+});
 
 vi.mock("vue-router", () => ({
   useRoute: () => mockRoute
