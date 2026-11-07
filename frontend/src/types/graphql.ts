@@ -264,6 +264,7 @@ export type AddGameToLibraryMutationVariables = Exact<{
   comments?: string | null | undefined;
   startDate?: string | null | undefined;
   completionDate?: string | null | undefined;
+  replayCount?: number | null | undefined;
   platforms?: Array<string | null | undefined> | string | null | undefined;
   stores?: Array<string | null | undefined> | string | null | undefined;
 }>;
@@ -275,6 +276,7 @@ export interface AddGameToLibraryMutation {
       completionStatus: GamePurchaseCompletionStatus | null;
       rating: number | null;
       hoursPlayed: number | null;
+      replayCount: number;
       comments: string | null;
       game: { id: string; name: string };
     } | null;
@@ -301,6 +303,7 @@ export interface UpdateGameInLibraryMutation {
       completionStatus: GamePurchaseCompletionStatus | null;
       rating: number | null;
       hoursPlayed: number | null;
+      replayCount: number;
       comments: string | null;
     } | null;
   } | null;
@@ -630,7 +633,14 @@ export type ImportSteamLibraryMutationVariables = Exact<{
 }>;
 
 export interface ImportSteamLibraryMutation {
-  importSteamLibrary: { addedGamesCount: number; updatedGamesCount: number; unmatchedCount: number } | null;
+  importSteamLibrary: {
+    addedGamesCount: number;
+    updatedGamesCount: number;
+    unmatchedCount: number;
+    addedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    updatedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+    unmatchedGames: Array<{ name: string; steamAppId: number }>;
+  } | null;
 }
 
 export type FollowUserMutationVariables = Exact<{
@@ -805,6 +815,16 @@ export interface GetSiteStatisticsQuery {
       seriesVersions: number | null;
     }>;
     pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  } | null;
+}
+
+export type SearchGamesToMergeQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchGamesToMergeQuery {
+  gameSearch: {
+    nodes: Array<{ id: string; name: string; releaseDate: string | null; coverUrl: string | null; ownerCount: number }>;
   } | null;
 }
 
@@ -1109,6 +1129,7 @@ export interface GetGamePurchaseQuery {
     completionStatus: GamePurchaseCompletionStatus | null;
     rating: number | null;
     hoursPlayed: number | null;
+    replayCount: number;
     comments: string | null;
     startDate: string | null;
     completionDate: string | null;

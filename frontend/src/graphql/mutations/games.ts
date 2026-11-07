@@ -9,6 +9,7 @@ export const ADD_GAME_TO_LIBRARY = gql`
     $comments: String
     $startDate: ISO8601Date
     $completionDate: ISO8601Date
+    $replayCount: Int
     $platforms: [ID]
     $stores: [ID]
   ) {
@@ -20,6 +21,7 @@ export const ADD_GAME_TO_LIBRARY = gql`
       comments: $comments
       startDate: $startDate
       completionDate: $completionDate
+      replayCount: $replayCount
       platforms: $platforms
       stores: $stores
     ) {
@@ -28,6 +30,7 @@ export const ADD_GAME_TO_LIBRARY = gql`
         completionStatus
         rating
         hoursPlayed
+        replayCount
         comments
         game {
           id
@@ -68,6 +71,7 @@ export const UPDATE_GAME_IN_LIBRARY = gql`
         completionStatus
         rating
         hoursPlayed
+        replayCount
         comments
       }
     }

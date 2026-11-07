@@ -92,6 +92,14 @@
                   >
                     Add to Wikidata Blocklist
                   </button>
+                  <button
+                    v-if="authStore.isAdmin"
+                    class="hero-admin-item danger"
+                    role="menuitem"
+                    @click="openAdminDialog('mergeGame')"
+                  >
+                    Merge into another game…
+                  </button>
                   <button class="hero-admin-item danger" role="menuitem" @click="openAdminDialog('deleteGame')">
                     Delete game
                   </button>
@@ -313,6 +321,14 @@
         <strong>{{ game.name }}</strong> will be permanently deleted, including all library entries and favorites. This
         cannot be undone.
       </ConfirmDialog>
+
+      <!-- Merge game (admins only) -->
+      <MergeGameDialog
+        v-if="authStore.isAdmin"
+        v-model="showMergeGameDialog"
+        :game="{ id: game.id, name: game.name, coverUrl: game.coverUrl ?? null }"
+        @merged="onGameMerged"
+      />
     </div>
   </div>
 </template>
@@ -347,6 +363,7 @@ import { Check, CircleAlert, Ellipsis, Heart, Plus } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import MergeGameDialog from "@/components/game/MergeGameDialog.vue";
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameLibrarySheet from "@/components/game/GameLibrarySheet.vue";
 import GameActivityCard from "@/components/game/GameActivityCard.vue";
@@ -710,6 +727,7 @@ const showWikidataBlocklistConfirm = ref(false);
 const addingToBlocklist = ref(false);
 const showDeleteGameConfirm = ref(false);
 const deletingGame = ref(false);
+const showMergeGameDialog = ref(false);
 
 const adminMenuOpen = ref(false);
 const adminMenuRef = ref<HTMLElement | null>(null);
@@ -741,10 +759,11 @@ function closeAdminMenu(restoreFocus: boolean) {
 
 onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPointerDown));
 
-function openAdminDialog(dialog: "removeCover" | "wikidataBlocklist" | "deleteGame") {
+function openAdminDialog(dialog: "removeCover" | "wikidataBlocklist" | "mergeGame" | "deleteGame") {
   closeAdminMenu(false);
   if (dialog === "removeCover") showRemoveCoverConfirm.value = true;
   else if (dialog === "wikidataBlocklist") showWikidataBlocklistConfirm.value = true;
+  else if (dialog === "mergeGame") showMergeGameDialog.value = true;
   else showDeleteGameConfirm.value = true;
 }
 
@@ -791,6 +810,11 @@ async function confirmDeleteGame() {
     showSnackbar(`Failed to delete game: ${extractGqlError(err)}`, "error");
     deletingGame.value = false;
   }
+}
+
+function onGameMerged(kept: { id: string; name: string }) {
+  showSnackbar(`${game.value?.name ?? "Game"} has been merged into ${kept.name}.`);
+  router.replace({ name: "game", params: { id: kept.id } });
 }
 </script>
 

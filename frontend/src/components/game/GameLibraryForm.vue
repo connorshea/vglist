@@ -49,17 +49,34 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="form-hours-played">Hours played</label>
-          <input
-            id="form-hours-played"
-            v-model.number="formHoursPlayed"
-            type="number"
-            min="0"
-            step="0.1"
-            class="form-hours-input"
-            placeholder="0"
-          />
+        <div class="form-pair">
+          <div class="form-group">
+            <label class="form-label" for="form-hours-played">Hours played</label>
+            <input
+              id="form-hours-played"
+              v-model.number="formHoursPlayed"
+              type="number"
+              min="0"
+              step="0.1"
+              class="form-number-input"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-replay-count">Times replayed</label>
+            <input
+              id="form-replay-count"
+              v-model.number="formReplayCount"
+              type="number"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              class="form-number-input"
+              placeholder="0"
+              @change="normalizeReplayCount"
+            />
+          </div>
         </div>
 
         <div class="form-dates">
@@ -248,6 +265,7 @@ const today = computed(() => new Date().toISOString().slice(0, 10));
 const formPlatformIds = ref(new Set<string>());
 const formStoreIds = ref(new Set<string>());
 const formHoursPlayed = ref<number | null>(null);
+const formReplayCount = ref<number | null>(null);
 const formComments = ref("");
 const isEditing = ref(false);
 const saving = ref(false);
@@ -285,6 +303,7 @@ function resetForm() {
   formStatus.value = null;
   formRating.value = null;
   formHoursPlayed.value = null;
+  formReplayCount.value = null;
   formStartDate.value = "";
   formCompletionDate.value = "";
   formPlatformIds.value = new Set();
@@ -321,6 +340,7 @@ async function openAsEdit() {
     formStatus.value = (gp.completionStatus as GamePurchaseCompletionStatus) ?? null;
     formRating.value = gp.rating ?? null;
     formHoursPlayed.value = gp.hoursPlayed ?? null;
+    formReplayCount.value = gp.replayCount;
     formStartDate.value = gp.startDate ?? "";
     formCompletionDate.value = gp.completionDate ?? "";
     formComments.value = gp.comments ?? "";
@@ -360,6 +380,15 @@ function clampRating() {
   if (formRating.value < 0) formRating.value = 0;
 }
 
+// Replays are whole numbers; the API rejects negatives.
+function normalizeReplayCount() {
+  if (typeof formReplayCount.value !== "number" || Number.isNaN(formReplayCount.value)) {
+    formReplayCount.value = null;
+    return;
+  }
+  formReplayCount.value = Math.max(0, Math.floor(formReplayCount.value));
+}
+
 function setRatingFromClick(event: MouseEvent) {
   const track = event.currentTarget as HTMLElement;
   const rect = track.getBoundingClientRect();
@@ -392,6 +421,12 @@ function buildFormVariables(): Record<string, unknown> {
   }
   if (formHoursPlayed.value != null && formHoursPlayed.value >= 0) {
     variables.hoursPlayed = formHoursPlayed.value;
+  }
+  // An emptied field means no replays, so an edit can clear an existing count.
+  if (typeof formReplayCount.value === "number" && formReplayCount.value >= 0) {
+    variables.replayCount = Math.floor(formReplayCount.value);
+  } else if (isEditing.value) {
+    variables.replayCount = 0;
   }
   if (formStartDate.value) {
     variables.startDate = formStartDate.value;
@@ -629,8 +664,14 @@ defineExpose({ openAsAdd, openAsEdit });
   margin-top: 0.25rem;
 }
 
-/* Hours played input */
-.form-hours-input {
+/* Hours played and times replayed inputs */
+.form-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+}
+
+.form-number-input {
   width: 80px;
   font-size: 0.8rem;
   border: 1px solid var(--color-border);
@@ -640,7 +681,7 @@ defineExpose({ openAsAdd, openAsEdit });
   font-family: inherit;
 }
 
-.form-hours-input:focus {
+.form-number-input:focus {
   border-color: var(--color-text-secondary);
 }
 
@@ -808,7 +849,7 @@ defineExpose({ openAsAdd, openAsEdit });
 
 /* 16px text stops iOS Safari zooming in when a field gets focus. */
 .is-sheet .form-rating-input,
-.is-sheet .form-hours-input,
+.is-sheet .form-number-input,
 .is-sheet .form-date-input,
 .is-sheet .form-textarea {
   box-sizing: border-box;
@@ -817,7 +858,7 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 .is-sheet .form-rating-input,
-.is-sheet .form-hours-input,
+.is-sheet .form-number-input,
 .is-sheet .form-date-input {
   height: 44px;
 }
@@ -827,7 +868,7 @@ defineExpose({ openAsAdd, openAsEdit });
   font-weight: 600;
 }
 
-.is-sheet .form-hours-input {
+.is-sheet .form-number-input {
   width: 96px;
 }
 
@@ -843,6 +884,15 @@ defineExpose({ openAsAdd, openAsEdit });
   padding: 12px;
   line-height: 1.45;
   resize: none;
+}
+
+.is-sheet .form-pair {
+  gap: 12px;
+  padding: 16px 20px 0;
+}
+
+.is-sheet .form-pair .form-group {
+  padding: 0;
 }
 
 .is-sheet .form-dates {
@@ -959,7 +1009,7 @@ defineExpose({ openAsAdd, openAsEdit });
   }
 
   .form-rating-input,
-  .form-hours-input,
+  .form-number-input,
   .form-date-input,
   .form-textarea {
     background: var(--s-600);
@@ -967,7 +1017,7 @@ defineExpose({ openAsAdd, openAsEdit });
   }
 
   .form-rating-input::placeholder,
-  .form-hours-input::placeholder,
+  .form-number-input::placeholder,
   .form-date-input::placeholder,
   .form-textarea::placeholder {
     color: var(--s-300);
@@ -1010,7 +1060,7 @@ defineExpose({ openAsAdd, openAsEdit });
 }
 
 /* Placeholders read as hints, not values. */
-.is-sheet .form-hours-input::placeholder,
+.is-sheet .form-number-input::placeholder,
 .is-sheet .form-textarea::placeholder {
   color: var(--color-text-tertiary);
 }

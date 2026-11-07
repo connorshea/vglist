@@ -8,7 +8,7 @@
 
       <div class="set-row">
         <span class="import-account">
-          <span class="import-account-logo" aria-hidden="true">S</span>
+          <span class="import-account-logo" aria-hidden="true"><span class="import-steam-logo"></span></span>
           <span>
             <span class="set-row-title">Steam</span>
             <span class="set-row-desc">
@@ -27,7 +27,7 @@
           :disabled="disconnecting"
           @click="showDisconnectConfirm = true"
         >
-          Disconnect
+          <span>Disconnect</span>
         </button>
       </div>
 
@@ -49,7 +49,7 @@
           </span>
         </div>
         <button type="submit" class="set-btn" :disabled="connecting || steamUsername.trim() === ''">
-          {{ connecting ? "Connecting…" : "Connect" }}
+          <span>{{ connecting ? "Connecting…" : "Connect" }}</span>
         </button>
       </form>
     </section>
@@ -78,16 +78,18 @@
         </p>
         <p v-if="importResult.unmatchedCount > 0" class="set-help">
           {{ importResult.unmatchedCount }} {{ pluralize(importResult.unmatchedCount) }} couldn't be matched to a game
-          on vglist.
+          on vglist. They're listed under Import results below.
         </p>
       </div>
 
       <div class="set-actions">
         <button type="submit" class="set-btn is-primary" :disabled="importing">
-          {{ importing ? "Importing…" : "Import library" }}
+          <span>{{ importing ? "Importing…" : "Import library" }}</span>
         </button>
       </div>
     </form>
+
+    <SteamImportResults v-if="importResult" :result="importResult" />
 
     <ConfirmDialog
       v-model="showDisconnectConfirm"
@@ -105,6 +107,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import SteamImportResults from "@/components/settings/SteamImportResults.vue";
 import { useMutation, useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { CONNECT_STEAM, DISCONNECT_STEAM, IMPORT_STEAM_LIBRARY } from "@/graphql/mutations/users-settings";
@@ -201,8 +204,15 @@ async function importLibrary() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+/* The Steam logo as a mask, so it takes the text colour in both themes. */
+.import-steam-logo {
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  mask: url("../../assets/images/steam-logo.svg") center / contain no-repeat;
 }
 
 .import-account .set-row-desc a {
