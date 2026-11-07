@@ -499,6 +499,12 @@ async function handleRemove() {
 }
 
 @media (prefers-color-scheme: dark) {
+  /* --color-bg-subtle is too close to the page background in dark mode. */
+  .pk-tile,
+  .pk-badge.is-neutral {
+    background: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  }
+
   .pk-badge {
     background: color-mix(in srgb, var(--p-300) 18%, transparent);
     color: var(--p-200);
