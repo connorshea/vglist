@@ -1,21 +1,14 @@
 import gql from "graphql-tag";
 
-// The header, navigation and filter rail of a user's library page. The
-// statistics are for the whole library, so they don't change with the filters.
+// The counts in a user's library's filter rail. They're for the whole library,
+// so they don't change with the filters.
 export const GET_LIBRARY_PAGE = gql`
   query GetLibraryPage($slug: String!) {
     user(slug: $slug) {
       id
-      username
-      slug
-      privacy
-      avatarUrl(size: SMALL)
       hideDaysPlayed
       libraryStatistics {
         gamesCount
-        totalHoursPlayed
-        completionPercentage
-        averageRating
         statusCounts {
           status
           count
@@ -35,12 +28,6 @@ export const GET_LIBRARY_PAGE = gql`
           count
         }
       }
-      favoritedGames {
-        totalCount
-      }
-      followers {
-        totalCount
-      }
     }
   }
 `;
@@ -58,6 +45,28 @@ export const LIBRARY_GAME_PURCHASE_FIELDS = gql`
     completionStatus
     rating
   }
+`;
+
+// What a Playing card shows: a game tile's fields, plus where and when the
+// game was started.
+export const LIBRARY_PLAYING_PURCHASE_FIELDS = gql`
+  fragment LibraryPlayingPurchaseFields on GamePurchase {
+    ...LibraryGamePurchaseFields
+    startDate
+    platforms(first: 3) {
+      nodes {
+        id
+        name
+      }
+    }
+    stores(first: 3) {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+  ${LIBRARY_GAME_PURCHASE_FIELDS}
 `;
 
 // One page of the library, for a single status or for the ungrouped grid.
@@ -131,21 +140,7 @@ export const GET_LIBRARY_SHELVES = gql`
       ) {
         totalCount
         nodes {
-          ...LibraryGamePurchaseFields
-          # The Playing shelf's cards also say where and when the game was started.
-          startDate
-          platforms(first: 3) {
-            nodes {
-              id
-              name
-            }
-          }
-          stores(first: 3) {
-            nodes {
-              id
-              name
-            }
-          }
+          ...LibraryPlayingPurchaseFields
         }
       }
       paused: gamePurchases(
@@ -240,5 +235,5 @@ export const GET_LIBRARY_SHELVES = gql`
       ...LibraryGamePurchaseFields
     }
   }
-  ${LIBRARY_GAME_PURCHASE_FIELDS}
+  ${LIBRARY_PLAYING_PURCHASE_FIELDS}
 `;

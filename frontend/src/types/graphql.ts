@@ -998,22 +998,13 @@ export type GetLibraryPageQueryVariables = Exact<{
 export interface GetLibraryPageQuery {
   user: {
     id: string;
-    username: string;
-    slug: string;
-    privacy: UserPrivacy;
-    avatarUrl: string | null;
     hideDaysPlayed: boolean;
     libraryStatistics: {
       gamesCount: number;
-      totalHoursPlayed: number;
-      completionPercentage: number;
-      averageRating: number | null;
       statusCounts: Array<{ status: GamePurchaseCompletionStatus; count: number }>;
       platformCounts: Array<{ count: number; platform: { id: string; name: string } }>;
       storeCounts: Array<{ count: number; store: { id: string; name: string } }>;
     };
-    favoritedGames: { totalCount: number };
-    followers: { totalCount: number };
   } | null;
 }
 
@@ -1022,6 +1013,17 @@ export type LibraryGamePurchaseFieldsFragment = {
   hoursPlayed: number | null;
   completionStatus: GamePurchaseCompletionStatus | null;
   rating: number | null;
+  game: { id: string; name: string; coverUrl: string | null };
+};
+
+export type LibraryPlayingPurchaseFieldsFragment = {
+  startDate: string | null;
+  id: string;
+  hoursPlayed: number | null;
+  completionStatus: GamePurchaseCompletionStatus | null;
+  rating: number | null;
+  platforms: { nodes: Array<{ id: string; name: string }> };
+  stores: { nodes: Array<{ id: string; name: string }> };
   game: { id: string; name: string; coverUrl: string | null };
 };
 
@@ -1642,19 +1644,17 @@ export interface GetPlatformsIndexQuery {
   } | null;
 }
 
-export type GetUserQueryVariables = Exact<{
+export type GetUserProfileQueryVariables = Exact<{
   slug: string;
 }>;
 
-export interface GetUserQuery {
+export interface GetUserProfileQuery {
   user: {
     id: string;
     username: string;
-    bio: string | null;
     slug: string;
     role: UserRole;
     privacy: UserPrivacy;
-    createdAt: string;
     banned: boolean;
     avatarUrl: string | null;
     isFollowed: boolean | null;
@@ -1664,27 +1664,39 @@ export interface GetUserQuery {
       totalHoursPlayed: number;
       completionPercentage: number;
       averageRating: number | null;
-      statusCounts: Array<{ status: GamePurchaseCompletionStatus; count: number }>;
     };
+    favoritedGames: { totalCount: number };
     followers: { totalCount: number };
     following: { totalCount: number };
-    favoritedGames: { nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
   } | null;
 }
 
-export type GetUserLibraryQueryVariables = Exact<{
+export type GetUserOverviewQueryVariables = Exact<{
   slug: string;
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-  completionStatus?: GamePurchaseCompletionStatus | null | undefined;
-  search?: string | null | undefined;
-  sortBy?: GamePurchaseSort | null | undefined;
+  favoritesCount: number;
+  playingCount: number;
+  topRatedCount: number;
 }>;
 
-export interface GetUserLibraryQuery {
+export interface GetUserOverviewQuery {
   user: {
     id: string;
-    gamePurchases: {
+    bio: string | null;
+    favoritedGames: { totalCount: number; nodes: Array<{ id: string; name: string; coverUrl: string | null }> };
+    playing: {
+      totalCount: number;
+      nodes: Array<{
+        startDate: string | null;
+        id: string;
+        hoursPlayed: number | null;
+        completionStatus: GamePurchaseCompletionStatus | null;
+        rating: number | null;
+        platforms: { nodes: Array<{ id: string; name: string }> };
+        stores: { nodes: Array<{ id: string; name: string }> };
+        game: { id: string; name: string; coverUrl: string | null };
+      }>;
+    };
+    topRated: {
       totalCount: number;
       nodes: Array<{
         id: string;
@@ -1693,6 +1705,22 @@ export interface GetUserLibraryQuery {
         rating: number | null;
         game: { id: string; name: string; coverUrl: string | null };
       }>;
+    };
+  } | null;
+}
+
+export type GetUserFavoritesQueryVariables = Exact<{
+  slug: string;
+  first?: number | null | undefined;
+  after?: string | null | undefined;
+}>;
+
+export interface GetUserFavoritesQuery {
+  user: {
+    id: string;
+    favoritedGames: {
+      totalCount: number;
+      nodes: Array<{ id: string; name: string; coverUrl: string | null }>;
       pageInfo: { hasNextPage: boolean; endCursor: string | null };
     };
   } | null;

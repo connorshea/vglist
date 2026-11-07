@@ -1,5 +1,5 @@
 <template>
-  <section class="section activity-section">
+  <div class="activity-tab">
     <div v-if="loading && !data" class="has-text-centered">
       <p>Loading...</p>
     </div>
@@ -9,11 +9,6 @@
     </div>
 
     <div v-if="user">
-      <h1 class="title">
-        <router-link :to="`/users/${route.params.slug}`">{{ user.username }}</router-link>
-        &rsaquo; Activity
-      </h1>
-
       <div v-if="events.length === 0 && !loading" class="has-text-centered has-text-grey py-6">
         <p>No activity yet.</p>
       </div>
@@ -141,12 +136,12 @@
       </template>
       This event will be permanently removed from the activity feed.
     </ConfirmDialog>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { GET_USER_ACTIVITY } from "@/graphql/queries/users";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
@@ -159,7 +154,6 @@ import { useSnackbar } from "@/composables/useSnackbar";
 import { timeAgo } from "@/utils/time";
 
 const route = useRoute("userActivity");
-const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 const { mutate: deleteEventMutate } = useMutation<DeleteEventMutation>(DELETE_EVENT);
@@ -221,12 +215,6 @@ const { data, loading, error } = useQuery<GetUserActivityResult>(GET_USER_ACTIVI
     first: PAGE_SIZE,
     after: pageCursors.value[currentPage.value - 1]
   })
-});
-
-watch([data, error, loading], () => {
-  if (!loading.value && (error.value || (data.value && !data.value.user))) {
-    router.replace({ name: "notFound" });
-  }
 });
 
 const user = computed(() => data.value?.user ?? null);
@@ -392,17 +380,14 @@ async function confirmDeleteEvent() {
 </script>
 
 <style scoped>
-/* Full-width background */
-.activity-section {
-  background: var(--color-bg-subtle);
-  margin: -3rem calc(-50vw + 50%);
-  padding: 3rem max(1.5rem, calc(50vw - 50%));
-  min-height: calc(100vh - 52px);
+.activity-tab {
+  padding-top: 24px;
 }
 
 /* Card */
 .a-card {
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 14px 16px;
   display: flex;
