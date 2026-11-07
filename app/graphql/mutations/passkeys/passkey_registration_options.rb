@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 class Mutations::Passkeys::PasskeyRegistrationOptions < Mutations::BaseMutation
-  description "Start adding a passkey to the current user's account. Returns the options to pass to `navigator.credentials.create` (PublicKeyCredentialCreationOptionsJSON). Requires a confirmed email address."
+  description "Start adding a passkey to the current user's account. Returns the options to pass to `navigator.credentials.create` (PublicKeyCredentialCreationOptionsJSON). Requires the current password and a confirmed email address."
 
-  # To ask for the current password before adding a passkey (like updateEmail
-  # does), add a `current_password` argument here and check it with
-  # `user.valid_password?` before issuing the challenge. registerPasskey can
-  # only use a challenge issued here, so this is the only place it's needed.
+  # Asking for the password means a stolen session token alone can't add a
+  # passkey (which would outlive a password reset). registerPasskey can only
+  # use a challenge issued here, so this is the only place it's checked.
+  argument :current_password, String, required: true, description: "The user's current password for verification."
 
   field :options, GraphQL::Types::JSON, null: true, description: "PublicKeyCredentialCreationOptionsJSON for the browser's WebAuthn API. `null` if there are errors."
   field :errors, [String], null: false, description: "Error messages if a passkey can't be added."
 
-  def resolve
+  def resolve(current_password:)
     user = context[:current_user]
     raise GraphQL::ExecutionError, "You must be logged in to add a passkey." if user.nil?
+
+    return { options: nil, errors: ["Current password is incorrect."] } unless user.valid_password?(current_password)
 
     return { options: nil, errors: ["Confirm your email address before adding a passkey."] } unless user.confirmed?
 

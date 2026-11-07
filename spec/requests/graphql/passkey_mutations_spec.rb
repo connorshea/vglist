@@ -12,8 +12,8 @@ RSpec.describe "GraphQL passkey mutations", type: :request do
 
   let(:registration_options_query) do
     <<~GQL
-      mutation PasskeyRegistrationOptions {
-        passkeyRegistrationOptions { options errors }
+      mutation PasskeyRegistrationOptions($currentPassword: String!) {
+        passkeyRegistrationOptions(currentPassword: $currentPassword) { options errors }
       }
     GQL
   end
@@ -60,8 +60,8 @@ RSpec.describe "GraphQL passkey mutations", type: :request do
     JSON.parse(response.body)
   end
 
-  def registration_options(for_user = user)
-    graphql(registration_options_query, headers: auth_headers(for_user)).dig('data', 'passkeyRegistrationOptions')
+  def registration_options(for_user = user, password: 'password')
+    graphql(registration_options_query, variables: { currentPassword: password }, headers: auth_headers(for_user)).dig('data', 'passkeyRegistrationOptions')
   end
 
   def register(for_user = user, with_client: client, nickname: 'MacBook Pro', **create_options)
@@ -113,6 +113,13 @@ RSpec.describe "GraphQL passkey mutations", type: :request do
       expect(excluded).to eq(user.webauthn_credentials.pluck(:external_id))
     end
 
+    it "requires the current password", :aggregate_failures do
+      result = registration_options(password: 'wrong password')
+      expect(result['options']).to be_nil
+      expect(result['errors']).to eq(["Current password is incorrect."])
+      expect(WebauthnChallenge.count).to eq(0)
+    end
+
     it "requires a confirmed email", :aggregate_failures do
       unconfirmed = create(:user)
       result = registration_options(unconfirmed)
@@ -126,7 +133,7 @@ RSpec.describe "GraphQL passkey mutations", type: :request do
     end
 
     it "requires a signed-in user" do
-      json = graphql(registration_options_query)
+      json = graphql(registration_options_query, variables: { currentPassword: 'password' })
       expect(json['errors'].first['message']).to include("logged in")
     end
   end
