@@ -1,6 +1,27 @@
 <template>
   <section class="section">
-    <h1 class="title">Admin</h1>
+    <div class="admin-header">
+      <h1 class="title mb-0">Admin</h1>
+      <button type="button" class="button is-primary" @click="showExportConfirm = true">
+        <span class="icon"><Download :size="16" aria-hidden="true" /></span>
+        <span>Export</span>
+      </button>
+    </div>
+
+    <ConfirmDialog
+      v-model="showExportConfirm"
+      title="Export the games database?"
+      confirm-label="Export"
+      loading-label="Exporting…"
+      variant="primary"
+      :loading="exportingGames"
+      @confirm="downloadGamesExport"
+    >
+      <template #icon>
+        <Download :size="20" :stroke-width="2" aria-hidden="true" />
+      </template>
+      This downloads every game's name, vglist ID, Steam app IDs, and Wikidata ID as a JSON file.
+    </ConfirmDialog>
 
     <div class="tabs">
       <ul>
@@ -45,23 +66,6 @@
           </div>
         </div>
       </template>
-
-      <div class="box mt-5">
-        <h3 class="has-text-centered has-text-weight-bold mb-4">Exports</h3>
-        <p class="mb-4">
-          Download every game's name, vglist ID, Steam app IDs, and Wikidata ID as JSON, for checking against Wikidata.
-        </p>
-        <button
-          type="button"
-          class="button is-primary"
-          :class="{ 'is-loading': exportingGames }"
-          :disabled="exportingGames"
-          @click="downloadGamesExport"
-        >
-          <span class="icon"><Download :size="16" aria-hidden="true" /></span>
-          <span>Download games JSON</span>
-        </button>
-      </div>
     </div>
 
     <!-- Wikidata Blocklist tab -->
@@ -257,6 +261,7 @@ import { computed, ref } from "vue";
 import { Download } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { useAuthStore } from "@/stores/auth";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { gqlClient } from "@/graphql/client";
 import {
@@ -327,6 +332,7 @@ const externalIdStats = computed(() => {
 // Games export. This is a REST endpoint rather than GraphQL, so fetch it with
 // the JWT directly and hand the response to the browser as a file download.
 const authStore = useAuthStore();
+const showExportConfirm = ref(false);
 const exportingGames = ref(false);
 
 async function downloadGamesExport() {
@@ -347,6 +353,7 @@ async function downloadGamesExport() {
     // Revoke on the next tick: Safari can cancel the download if the URL is
     // revoked synchronously after the click.
     setTimeout(() => URL.revokeObjectURL(url), 0);
+    showExportConfirm.value = false;
   } catch (err) {
     showSnackbar(err instanceof Error ? err.message : "Export failed.", "error");
   } finally {
@@ -427,3 +434,13 @@ async function removeUnmatchedGame(externalServiceId: string, externalServiceNam
   }
 }
 </script>
+
+<style scoped>
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+</style>
