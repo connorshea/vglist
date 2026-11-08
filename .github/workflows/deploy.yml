@@ -37,6 +37,7 @@ concurrency:
 env:
   API_IMAGE: ghcr.io/connorshea/vglist-api
   FRONTEND_IMAGE: ghcr.io/connorshea/vglist-frontend
+  APP_NAME: vglist
 
 jobs:
   deploy:
@@ -112,6 +113,37 @@ jobs:
             echo "- $image@$digest" >> "$GITHUB_STEP_SUMMARY"
           done
 
+      # app_action only swaps digests on components that are already image
+      # sources; a GitHub-sourced one would be rebuilt from its branch instead.
+      # And a GIT_COMMIT_SHA env in the spec (the old ${_self.COMMIT_HASH},
+      # empty for images) overrides the SHA baked into the API image.
+      - name: Check the live app spec
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          problems="$(curl -fsS -H "Authorization: Bearer $DIGITALOCEAN_ACCESS_TOKEN" \
+            "https://api.digitalocean.com/v2/apps?per_page=200" \
+            | jq -r --arg name "$APP_NAME" '
+              [.apps[]? | select(.spec.name == $name)] as $apps
+              | if ($apps | length) != 1 then
+                  "Expected one app named \($name), found \($apps | length)."
+                else
+                  $apps[0].spec as $spec
+                  | [($spec.services // [])[], ($spec.jobs // [])[], ($spec.workers // [])[]] as $components
+                  | ($components[] | select(.image == null)
+                      | "\(.name) is not an image source. Apply .do/app.yaml with doctl apps update first."),
+                    (($spec.envs // [])[] | select(.key == "GIT_COMMIT_SHA")
+                      | "The app-level GIT_COMMIT_SHA env would override the one baked into the image. Remove it from the spec."),
+                    ($components[] | .name as $c | (.envs // [])[] | select(.key == "GIT_COMMIT_SHA")
+                      | "The GIT_COMMIT_SHA env on \($c) would override the one baked into the image. Remove it from the spec.")
+                end')"
+          if [ -n "$problems" ]; then
+            while IFS= read -r line; do echo "::error::$line"; done <<<"$problems"
+            exit 1
+          fi
+          echo "Live spec OK"
+
       - name: Deploy to App Platform
         uses: digitalocean/app_action/deploy@cc55bc9b848d25f9c1c9f831cf843fbab3fbfb15 # v2.0.11
         env:
@@ -121,4 +153,4 @@ jobs:
           IMAGE_DIGEST_FRONTEND: ${{ steps.digests.outputs.frontend }}
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-          app_name: vglist
+          app_name: ${{ env.APP_NAME }}
