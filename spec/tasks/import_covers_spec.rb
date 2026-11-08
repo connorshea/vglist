@@ -118,6 +118,20 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
     expect(game.cover.byte_size).to eq(png.bytesize)
   end
 
+  # Left to the TransformJobs `preprocessed: true` queues, they'd be dropped
+  # when the task exits and then created on the web server instead.
+  it 'creates every size of the cover from the download' do
+    allow(Addrinfo).to receive(:getaddrinfo).and_return([Addrinfo.ip('93.184.216.34')])
+    game = create(:game, pcgamingwiki_id: 'Some_Game')
+    stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
+    stub_request(:get, 'https://images.pcgamingwiki.com/covers/half-life.png')
+      .to_return(status: 200, body: png, headers: { 'Content-Type' => 'image/png' })
+
+    run_task
+
+    expect(game.reload.cover.blob.variant_records.count).to eq(Game::COVER_SIZES.size)
+  end
+
   # An import runs through thousands of games in a single process, so a cover
   # that stays open after it's been attached is a file descriptor and a copy of
   # the image that the task holds onto until it exits.

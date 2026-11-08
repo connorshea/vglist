@@ -9,6 +9,10 @@
 #    was lost when Puma restarted (the async adapter keeps jobs in memory).
 # 3. Files in the storage bucket with no blob, e.g. pre-Rails 6.1
 #    `variants/<key>/...` files that tracked variants no longer use.
+#
+# It also finds variant records that the current size definitions never
+# look up: covers and avatars resized under older definitions still have
+# those variants, and nothing displays them.
 class StorageCleanupService
   # Anything newer is left alone, so an upload that has created its blob and
   # file but hasn't been attached yet isn't mistaken for an orphan.
@@ -60,6 +64,38 @@ class StorageCleanupService
       orphans = candidates.reject { |object| known_keys.include?(object.key) }
 
       yield orphans if orphans.any?
+    end
+  end
+
+  # Yields each variant record of a `model`'s `attachment_name` that isn't
+  # one of its current `variant_names`, e.g. a cover size from before the
+  # sizes were redefined. The app only ever looks variants up by name (see
+  # ReadyVariant), so these are never shown.
+  #
+  # A variant's digest covers its transformations and output format, and the
+  # format depends on each blob's filename, so the current digests are worked
+  # out per image rather than once.
+  #
+  # @param model [Class<ActiveRecord::Base>] e.g. `Game`.
+  # @param attachment_name [Symbol] e.g. `:cover`.
+  # @param variant_names [Array<Symbol>] The named variants that are in use.
+  # @yieldparam variant_record [ActiveStorage::VariantRecord]
+  # @return [Enumerator] When no block is given.
+  def self.each_stale_variant_record(model, attachment_name, variant_names)
+    return enum_for(__method__, model, attachment_name, variant_names) unless block_given?
+
+    records = model.joins(:"#{attachment_name}_attachment")
+                   .preload("#{attachment_name}_attachment": { blob: { variant_records: { image_attachment: :blob } } })
+
+    records.find_each do |record|
+      attached = record.public_send(attachment_name)
+      # Images that can't be resized (e.g. a GIF) are only ever shown as
+      # the original, so any variants they have are unused.
+      current = attached.variable? ? variant_names.to_set { |name| attached.variant(name).variation.digest } : Set.new
+
+      attached.blob.variant_records.each do |variant_record|
+        yield variant_record unless current.include?(variant_record.variation_digest)
+      end
     end
   end
 

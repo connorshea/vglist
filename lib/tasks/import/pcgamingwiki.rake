@@ -142,33 +142,44 @@ namespace :import do
         next
       end
 
-      # Copy the image data to a file with ActiveStorage, then throw the
-      # downloaded tempfile away so an import doesn't accumulate one open file
-      # per game it processes.
+      # Copy the image data to a file with ActiveStorage, create its sizes from
+      # the same download, then throw the downloaded tempfile away so an
+      # import doesn't accumulate one open file per game it processes.
       begin
         game.cover.attach(io: cover.io, filename: cover.filename)
+
+        # If the cover has any errors, they'll show up on the `Game` record.
+        # Check for any errors and print them if they exist.
+        if game.errors.any?
+          game.errors.full_messages.each do |msg|
+            progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added: #{msg}"
+          end
+          progress_bar.increment
+          cover_not_found_or_errored_count += 1
+          next
+        end
+
+        # If the cover is invalid but somehow wasn't caught in the last step,
+        # do the same thing but with a generic message.
+        if game.reload.cover.blank?
+          progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
+          progress_bar.increment
+          cover_not_found_or_errored_count += 1
+          next
+        end
+
+        # Create each size of the cover now, from the file we already have.
+        # Otherwise the TransformJobs `preprocessed: true` queues run on the
+        # async adapter in this process and are dropped when the task exits,
+        # and the sizes end up being created on the web server the first time
+        # a page shows the cover (see ReadyVariant).
+        begin
+          VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io)
+        rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+          progress_bar.log "#{game[:name].ljust(40)} | Cover added, but its sizes could not be created: #{e.message}"
+        end
       ensure
         cover.close
-      end
-
-      # If the cover has any errors, they'll show up on the `Game` record.
-      # Check for any errors and print them if they exist.
-      if game.errors.any?
-        game.errors.full_messages.each do |msg|
-          progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added: #{msg}"
-        end
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
-      end
-
-      # If the cover is invalid but somehow wasn't caught in the last step, do
-      # the same thing but with a generic message.
-      if game.reload.cover.blank?
-        progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
       end
 
       cover_added_count += 1
