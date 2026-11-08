@@ -8,11 +8,18 @@ namespace :vglist do
       puts "Corrected counters on #{fixed} games."
     end
 
+    desc "Recalculate the game counts on genres, platforms, engines and series, fixing any that have drifted"
+    task resource_game_counts: :environment do
+      fixed = ResourceGameCountsSync.call
+      puts "Corrected game counts on #{fixed} genres, platforms, engines and series."
+    end
+
     desc "Create an entry in the statistics table for the current data in the database"
     task stats: :environment do
-      # A cheap daily safety net for the columns behind the Popular and Top
-      # rated sorts.
+      # A cheap daily safety net for the columns behind the Popular, Top rated
+      # and Most games sorts.
       Rake::Task["vglist:update:game_counters"].invoke
+      Rake::Task["vglist:update:resource_game_counts"].invoke
 
       Statistic.create!(
         users: User.count,
