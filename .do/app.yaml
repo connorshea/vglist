@@ -92,12 +92,17 @@ services:
     instance_size_slug: apps-s-1vcpu-2gb
     # See the single-instance caveat at the top of this file.
     instance_count: 1
+    # Puma answers /health within ~2s of starting in the Docker CI job, so
+    # probe early and often instead of idling 20s first. App Platform holds
+    # the old container until this passes, so every second here is deploy
+    # time. Budget before failing is unchanged: 5 + 15 x 5 = 80s, same as
+    # the old 20 + 6 x 10.
     health_check:
       http_path: /health
-      initial_delay_seconds: 20
-      period_seconds: 10
+      initial_delay_seconds: 5
+      period_seconds: 5
       timeout_seconds: 5
-      failure_threshold: 6
+      failure_threshold: 15
     envs:
       - key: PORT
         value: "3000"
@@ -167,8 +172,10 @@ services:
     http_port: 8080
     instance_size_slug: apps-s-1vcpu-0.5gb
     instance_count: 1
+    # Caddy is up almost instantly; probe every 5s rather than the default 10s.
     health_check:
       http_path: /health
+      period_seconds: 5
     envs:
       - key: PORT
         value: "8080"
