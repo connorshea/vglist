@@ -4,20 +4,24 @@
 # platforms, companies, engines): a game count loaded alongside each record,
 # the three sort orders those pages offer, and a name filter.
 #
-# The count is a correlated subquery rather than a join + GROUP BY, so the
-# relation stays ungrouped: it can still be filtered, `totalCount` is a plain
-# count, and each row carries its own number.
+# The count is a `games_count` counter cache column where the model has one
+# (genres, platforms, engines, series). Companies use a correlated subquery,
+# since their games come from two join tables. Either way the relation stays
+# ungrouped: it can still be filtered, `totalCount` is a plain count, and each
+# row carries its own number.
 module GameCountScopes
   extend ActiveSupport::Concern
 
   class_methods do
-    # @param games_count_sql [String] A correlated subquery that counts one
-    #   record's games, e.g. `(SELECT COUNT(*) FROM games WHERE games.series_id = series.id)`.
+    # @param games_count_sql [String] SQL for one record's game count: its
+    #   counter cache column (e.g. `genres.games_count`), or a correlated
+    #   subquery that counts them.
     def game_count_scopes(games_count_sql)
       table = table_name
 
       # Loads each record's game count as `index_games_count`, for lists that
-      # show it on every row.
+      # show it on every row. Only needed when the count is a subquery; models
+      # with a games_count column can read that directly.
       scope :with_games_count, -> { select("#{table}.*", "#{games_count_sql} AS index_games_count") }
 
       # Each order ends on the ID so that pagination is stable across ties.

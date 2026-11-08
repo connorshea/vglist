@@ -17,11 +17,11 @@ module Types
     # since the profile page doesn't need them. `object[:game_purchases]` is the
     # relation for the library being counted.
     def platform_counts
-      counts_for(Platform, :game_purchase_platforms).map { |platform| { platform: platform, count: platform.games_count } }
+      counts_for(Platform, :game_purchase_platforms).map { |platform| { platform: platform, count: platform[:library_games_count] } }
     end
 
     def store_counts
-      counts_for(Store, :game_purchase_stores).map { |store| { store: store, count: store.games_count } }
+      counts_for(Store, :game_purchase_stores).map { |store| { store: store, count: store[:library_games_count] } }
     end
 
     private
@@ -32,8 +32,9 @@ module Types
       model.joins(join_association)
            .where(join_table => { game_purchase_id: object[:game_purchases].select(:id) })
            .group(:id)
-           .select("#{model.table_name}.*", "COUNT(DISTINCT #{join_table}.game_purchase_id) AS games_count")
-           .order(Arel.sql('games_count DESC'), :name)
+           # Not `games_count`, which is also a column on platforms.
+           .select("#{model.table_name}.*", "COUNT(DISTINCT #{join_table}.game_purchase_id) AS library_games_count")
+           .order(Arel.sql('library_games_count DESC'), :name)
     end
   end
 end

@@ -1472,8 +1472,8 @@ export interface GetPlatformQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
@@ -1572,8 +1572,8 @@ export interface GetGenreQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
@@ -1626,8 +1626,8 @@ export interface GetEngineQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
@@ -1682,8 +1682,8 @@ export interface GetSeriesQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
