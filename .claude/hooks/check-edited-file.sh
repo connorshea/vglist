@@ -4,7 +4,8 @@
 # Only real findings block (exit 2, output goes back to Claude). A missing or
 # broken toolchain, or a timeout, is skipped silently, so a bad environment
 # can never wedge a session.
-file=$(jq -r '.tool_input.file_path // empty')
+input=$(cat)
+file=$(jq -r '.tool_input.file_path // empty' <<< "$input")
 [ -n "$file" ] && [ -f "$file" ] || exit 0
 root=${CLAUDE_PROJECT_DIR:-$(pwd)}
 
@@ -25,16 +26,17 @@ case "$file" in
     check bundle exec rubocop --force-exclusion "$file"
     ;;
   */frontend/src/*.ts | */frontend/src/*.vue)
+    # Tell the Stop hook (stop-typecheck.sh) this turn touched the frontend.
+    session=$(jq -r '.session_id // empty' <<< "$input")
+    if [ -n "$session" ]; then
+      mkdir -p "${TMPDIR:-/tmp}/vglist-claude-hooks" 2> /dev/null &&
+        touch "${TMPDIR:-/tmp}/vglist-claude-hooks/frontend-edited-$session" 2> /dev/null
+    fi
     bin="$root/frontend/node_modules/.bin"
     [ -x "$bin/oxlint" ] && [ -x "$bin/oxfmt" ] || exit 0
     cd "$root/frontend" || exit 0
     check "$bin/oxlint" "$file"
     check "$bin/oxfmt" --check "$file"
-    # vue-tsc can't be scoped to one file, so this checks the whole project.
-    # Mirrors `pnpm run typecheck`, but calls the local binary so pnpm startup
-    # (and any package-manager self-install) can't eat the timeout.
-    [ -x "$bin/vue-tsc" ] || exit 0
-    CHECK_TIMEOUT=60 check "$bin/vue-tsc" --noEmit
     ;;
 esac
 exit 0
