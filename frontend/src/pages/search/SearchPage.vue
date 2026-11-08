@@ -165,23 +165,31 @@ const {
 const list = computed(() => {
   const type = listType.value;
   const data = tabData.value;
-  if (!type || !data) return null;
+  if (!type || !data) {
+    return null;
+  }
   const section = searchSection(data, type);
   const pageInfo = data[type]?.pageInfo;
-  if (!section || !pageInfo) return null;
+  if (!section || !pageInfo) {
+    return null;
+  }
   return { section, hasNextPage: pageInfo.hasNextPage, endCursor: pageInfo.endCursor };
 });
 
 function nextPage() {
   const current = list.value;
-  if (!current?.hasNextPage) return;
+  if (!current?.hasNextPage) {
+    return;
+  }
   const cursors = pagination.value.key === listKey.value ? [...pagination.value.cursors] : [null];
   cursors[page.value] = current.endCursor;
   pagination.value = { key: listKey.value, page: page.value + 1, cursors };
 }
 
 function prevPage() {
-  if (page.value <= 1) return;
+  if (page.value <= 1) {
+    return;
+  }
   pagination.value = { ...pagination.value, page: page.value - 1 };
 }
 
@@ -191,7 +199,9 @@ const activeError = computed(() => (activeTab.value === "all" ? overviewError.va
 const waitingForFirstResults = computed(() => (activeTab.value === "all" ? !overview.value : !list.value));
 
 function countFor(key: SearchTabKey): number | null {
-  if (key === "all" || !overview.value) return null;
+  if (key === "all" || !overview.value) {
+    return null;
+  }
   return overview.value[key]?.totalCount ?? 0;
 }
 
@@ -204,7 +214,9 @@ const activeTotal = computed(() => {
 
 const overviewSections = computed(() => {
   const data = overview.value;
-  if (!data) return [];
+  if (!data) {
+    return [];
+  }
   return SEARCH_TABS.flatMap((tab) => (tab.key === "all" ? [] : [searchSection(data, tab.key)])).filter(
     (section): section is SearchSection => section !== null && section.totalCount > 0
   );
@@ -215,16 +227,24 @@ function labelFor(key: SearchTabKey): string {
 }
 
 const liveMessage = computed(() => {
-  if (!hasQuery.value) return "";
-  if (activeTab.value === "all" ? overviewLoading.value : tabLoading.value) return "Searching…";
-  if (activeTotal.value === null) return "";
+  if (!hasQuery.value) {
+    return "";
+  }
+  if (activeTab.value === "all" ? overviewLoading.value : tabLoading.value) {
+    return "Searching…";
+  }
+  if (activeTotal.value === null) {
+    return "";
+  }
   const noun = activeTab.value === "all" ? "results" : labelFor(activeTab.value).toLowerCase();
   return `${activeTotal.value} ${noun} for "${searchQuery.value}"`;
 });
 
 function tabLocation(key: SearchTabKey): RouteLocationRaw {
   const query: Record<string, string> = { query: searchQuery.value };
-  if (key !== "all") query.type = key;
+  if (key !== "all") {
+    query.type = key;
+  }
   return { name: "search", query };
 }
 
@@ -251,12 +271,16 @@ watch(activeTab, (key) => {
 const tabRefs = new Map<SearchTabKey, HTMLElement>();
 
 function setTabRef(key: SearchTabKey, el: Element | ComponentPublicInstance | null) {
-  if (el instanceof HTMLElement) tabRefs.set(key, el);
+  if (el instanceof HTMLElement) {
+    tabRefs.set(key, el);
+  }
 }
 
 function onTabKeydown(event: KeyboardEvent) {
   // Leave modified keys alone, e.g. Alt+Left is the browser's Back.
-  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+    return;
+  }
 
   const current = SEARCH_TABS.findIndex((t) => t.key === focusedTab.value);
   const last = SEARCH_TABS.length - 1;
@@ -266,7 +290,9 @@ function onTabKeydown(event: KeyboardEvent) {
     Home: 0,
     End: last
   };
-  if (!(event.key in nextIndex)) return;
+  if (!(event.key in nextIndex)) {
+    return;
+  }
 
   event.preventDefault();
   const next = SEARCH_TABS[nextIndex[event.key]].key;

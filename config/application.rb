@@ -22,8 +22,8 @@ Bundler.require(*Rails.groups)
 
 module VideoGameList
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 7.2.
-    config.load_defaults 7.2
+    # Initialize configuration defaults for Rails 8.0.
+    config.load_defaults 8.0
 
     # API-only mode: views/flash disabled; cookies/sessions enabled below for Devise.
     config.api_only = true
@@ -43,9 +43,6 @@ module VideoGameList
 
     # TODO: We can remove this after fully upgrading from SHA1 to SHA256 and rotating all encrypted values.
     config.active_record.encryption.support_sha1_for_non_deterministic_encryption = true
-
-    # Disable yjit because our production server is memory constrained.
-    config.yjit = false
 
     # Use structure.sql because we have SQL views, and the schema.rb doesn't support those.
     config.active_record.schema_format = :sql

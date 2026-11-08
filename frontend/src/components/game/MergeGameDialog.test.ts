@@ -36,7 +36,9 @@ async function openAndSearch(term: string) {
   });
   await wrapper.setProps({ modelValue: true });
   const input = document.body.querySelector<HTMLInputElement>('input[type="search"]');
-  if (!input) throw new Error("no search input");
+  if (!input) {
+    throw new Error("no search input");
+  }
   input.value = term;
   input.dispatchEvent(new Event("input"));
   await vi.advanceTimersByTimeAsync(300);
@@ -52,7 +54,9 @@ function button(label: string) {
   const match = Array.from(document.body.querySelectorAll<HTMLButtonElement>("button")).find(
     (b) => b.textContent?.trim() === label
   );
-  if (!match) throw new Error(`no ${label} button`);
+  if (!match) {
+    throw new Error(`no ${label} button`);
+  }
   return match;
 }
 

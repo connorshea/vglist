@@ -6,8 +6,12 @@ import { extractGqlError } from "@/utils/graphql-errors";
 type MaybeRefOrGetter<T> = T | Ref<T> | (() => T);
 
 function resolveValue<T>(source: MaybeRefOrGetter<T>): T {
-  if (isRef(source)) return source.value;
-  if (typeof source === "function") return (source as () => T)();
+  if (isRef(source)) {
+    return source.value;
+  }
+  if (typeof source === "function") {
+    return (source as () => T)();
+  }
   return source;
 }
 
@@ -55,7 +59,9 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
   }
 
   async function execute() {
-    if (!isEnabled()) return;
+    if (!isEnabled()) {
+      return;
+    }
 
     const requestId = ++latestRequestId;
     loading.value = true;
@@ -64,15 +70,21 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     try {
       const variables = options?.variables ? resolveValue(options.variables) : undefined;
       const result = await gqlClient.request<TData>(query, variables as Record<string, unknown>);
-      if (requestId !== latestRequestId || !isEnabled()) return;
+      if (requestId !== latestRequestId || !isEnabled()) {
+        return;
+      }
       data.value = result;
     } catch (e) {
-      if (requestId !== latestRequestId || !isEnabled()) return;
+      if (requestId !== latestRequestId || !isEnabled()) {
+        return;
+      }
       error.value = toDisplayError(e);
     } finally {
       // Only the newest request owns the loading flag, so a superseded
       // response can't clear it while its replacement is still in flight.
-      if (requestId === latestRequestId) loading.value = false;
+      if (requestId === latestRequestId) {
+        loading.value = false;
+      }
     }
   }
 
@@ -83,17 +95,23 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     loading.value = true;
     try {
       const nextData = await gqlClient.request<TData>(query, variables);
-      if (requestId !== latestRequestId || !isEnabled()) return;
+      if (requestId !== latestRequestId || !isEnabled()) {
+        return;
+      }
       if (data.value) {
         data.value = merge(data.value, nextData);
       } else {
         data.value = nextData;
       }
     } catch (e) {
-      if (requestId !== latestRequestId || !isEnabled()) return;
+      if (requestId !== latestRequestId || !isEnabled()) {
+        return;
+      }
       error.value = toDisplayError(e);
     } finally {
-      if (requestId === latestRequestId) loading.value = false;
+      if (requestId === latestRequestId) {
+        loading.value = false;
+      }
     }
   }
 

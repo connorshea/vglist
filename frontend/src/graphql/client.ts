@@ -6,7 +6,9 @@ export const gqlClient = new GraphQLClient(`${import.meta.env.VITE_API_URL}/grap
     const authStore = useAuthStore();
     const token = authStore.token;
     const headers: Record<string, string> = {};
-    if (token) headers["authorization"] = `Bearer ${token}`;
+    if (token) {
+      headers["authorization"] = `Bearer ${token}`;
+    }
     return headers;
   }
 });

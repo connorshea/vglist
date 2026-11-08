@@ -33,8 +33,12 @@ declare global {
 let loading: Promise<TurnstileApi> | null = null;
 
 export function loadTurnstile(): Promise<TurnstileApi> {
-  if (window.turnstile) return Promise.resolve(window.turnstile);
-  if (loading) return loading;
+  if (window.turnstile) {
+    return Promise.resolve(window.turnstile);
+  }
+  if (loading) {
+    return loading;
+  }
 
   loading = new Promise<TurnstileApi>((resolve, reject) => {
     const script = document.createElement("script");

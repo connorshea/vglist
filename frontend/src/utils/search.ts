@@ -88,8 +88,12 @@ export type SearchConnections = {
 // One type's results out of a search response, tagged with its type so rows
 // can be rendered without checking `__typename`.
 export function searchSection(data: SearchConnections, type: SearchTypeKey): SearchSection | null {
-  if (type === "games") return data.games ? { type, totalCount: data.games.totalCount, nodes: data.games.nodes } : null;
-  if (type === "users") return data.users ? { type, totalCount: data.users.totalCount, nodes: data.users.nodes } : null;
+  if (type === "games") {
+    return data.games ? { type, totalCount: data.games.totalCount, nodes: data.games.nodes } : null;
+  }
+  if (type === "users") {
+    return data.users ? { type, totalCount: data.users.totalCount, nodes: data.users.nodes } : null;
+  }
   const connection = data[type];
   return connection ? { type, totalCount: connection.totalCount, nodes: connection.nodes } : null;
 }

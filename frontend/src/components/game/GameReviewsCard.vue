@@ -110,14 +110,19 @@ function isExpanded(review: GameReview): boolean {
 
 function toggleExpanded(id: string) {
   const next = new Set(expanded.value);
-  if (next.has(id)) next.delete(id);
-  else next.add(id);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
   expanded.value = next;
 }
 
 function truncate(text: string | null): string {
   const value = text ?? "";
-  if (value.length <= TRUNCATE_AT) return value;
+  if (value.length <= TRUNCATE_AT) {
+    return value;
+  }
   const cut = value.slice(0, TRUNCATE_AT);
   const lastSpace = cut.lastIndexOf(" ");
   return `${(lastSpace > TRUNCATE_AT * 0.8 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
@@ -131,10 +136,17 @@ function statusFor(review: GameReview) {
 function metaFor(review: GameReview): string {
   const parts: string[] = [];
   const hours = formatHours(review.hoursPlayed);
-  if (hours) parts.push(`${hours} played`);
-  if (review.platforms.nodes.length) parts.push(review.platforms.nodes.map((p) => p.name).join(", "));
-  if (review.replayCount === 1) parts.push("Played twice");
-  else if (review.replayCount > 1) parts.push(`Played ${review.replayCount + 1} times`);
+  if (hours) {
+    parts.push(`${hours} played`);
+  }
+  if (review.platforms.nodes.length) {
+    parts.push(review.platforms.nodes.map((p) => p.name).join(", "));
+  }
+  if (review.replayCount === 1) {
+    parts.push("Played twice");
+  } else if (review.replayCount > 1) {
+    parts.push(`Played ${review.replayCount + 1} times`);
+  }
   return parts.join(" · ");
 }
 </script>

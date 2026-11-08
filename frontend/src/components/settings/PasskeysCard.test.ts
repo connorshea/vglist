@@ -68,7 +68,9 @@ function bodyButton(label: string): HTMLButtonElement {
   const button = Array.from(document.body.querySelectorAll<HTMLButtonElement>("button")).find(
     (b) => b.textContent?.trim() === label
   );
-  if (!button) throw new Error(`no "${label}" button`);
+  if (!button) {
+    throw new Error(`no "${label}" button`);
+  }
   return button;
 }
 
@@ -76,7 +78,9 @@ function bodyButton(label: string): HTMLButtonElement {
 async function startAdding(wrapper: ReturnType<typeof mountCard>, password = "hunter2") {
   await wrapper.get("button.is-primary").trigger("click");
   const input = document.body.querySelector<HTMLInputElement>("#passkey-password");
-  if (!input) throw new Error("no password input");
+  if (!input) {
+    throw new Error("no password input");
+  }
   input.value = password;
   input.dispatchEvent(new Event("input"));
   bodyButton("Continue").click();
@@ -158,7 +162,9 @@ describe("PasskeysCard", () => {
 
     const input = document.body.querySelector<HTMLInputElement>("#passkey-name");
     expect(document.activeElement).toBe(input);
-    if (!input) throw new Error("no name input");
+    if (!input) {
+      throw new Error("no name input");
+    }
     input.value = "Work laptop";
     input.dispatchEvent(new Event("input"));
     bodyButton("Save name").click();

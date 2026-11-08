@@ -85,7 +85,9 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
 
   // Back/forward to a different search puts its text back in the input.
   watch(nameFilter, (q) => {
-    if (q !== searchText.value.trim()) searchText.value = q;
+    if (q !== searchText.value.trim()) {
+      searchText.value = q;
+    }
   });
 
   onBeforeUnmount(() => clearTimeout(searchTimer));
@@ -112,13 +114,17 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
 
   async function loadMore() {
     const cursor = list.value?.pageInfo.endCursor;
-    if (!cursor || loadingMore.value || refreshing.value) return;
+    if (!cursor || loadingMore.value || refreshing.value) {
+      return;
+    }
     loadingMore.value = true;
     try {
       await fetchMore({ ...variables.value, after: cursor }, (prev, next) => {
         const prevList = options.connection(prev);
         const nextList = options.connection(next);
-        if (!prevList || !nextList) return next;
+        if (!prevList || !nextList) {
+          return next;
+        }
         return options.withConnection(next, { ...nextList, nodes: [...prevList.nodes, ...nextList.nodes] });
       });
     } finally {
@@ -134,7 +140,9 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
    * isn't enough: cursors are offsets, so the next page would skip one.)
    */
   async function removeNode(id: string) {
-    if (!data.value || !list.value) return;
+    if (!data.value || !list.value) {
+      return;
+    }
     const loadedCount = list.value.nodes.filter((node) => node.id !== id).length;
     await fetchMore(
       { ...variables.value, first: Math.min(Math.max(loadedCount, 1), MAX_PAGE_SIZE) },

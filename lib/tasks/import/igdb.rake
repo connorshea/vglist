@@ -109,14 +109,43 @@ namespace :import do
     cover_not_found_or_errored_count = games_found_count - games.count
     cover_added_count = 0
 
-    puts "#{games.count} of #{games_found_count} games have a cover on IGDB; downloading those."
+    # Downloads, uploads and resizing are nearly all waiting on the network, so
+    # several games are worked on at once. Set CONCURRENCY to change how many.
+    # Each worker holds a database connection, and the pool defaults to
+    # RAILS_MAX_THREADS (sized for Puma), so make sure it's big enough.
+    # Capped at 8, IGDB's limit on open requests.
+    concurrency = ENV.fetch('CONCURRENCY', 4).to_i.clamp(1, 8)
+    db_config = ActiveRecord::Base.connection_db_config.configuration_hash
+    pool_size = concurrency + 1
+    ActiveRecord::Base.establish_connection(db_config.merge(pool: pool_size)) if db_config.fetch(:pool, 5).to_i < pool_size
+
+    puts "#{games.count} of #{games_found_count} games have a cover on IGDB; downloading those (#{concurrency} at a time)."
 
     progress_bar = ProgressBar.create(
       total: games.count,
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    games.each do |game|
+    # Stay within IGDB's rate limit of 4 requests a second across every worker:
+    # each download waits for its turn, and turns are 0.25s apart.
+    throttle_lock = Mutex.new
+    next_request_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    wait_for_turn = lambda do
+      delay = throttle_lock.synchronize do
+        now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        turn = [next_request_at, now].max
+        next_request_at = turn + 0.25
+        turn - now
+      end
+      sleep delay if delay.positive?
+    end
+
+    # Attach one game's cover and create its variants.
+    #
+    # Returns [added, messages]: whether the cover was added, and the lines to
+    # log for it.
+    attach_cover = lambda do |game|
+      label = game[:name].ljust(40)
       # Every remaining game has an IGDB cover (filtered above).
       igdb_game = igdb_games_by_slug[game[:igdb_id]]
 
@@ -124,57 +153,79 @@ namespace :import do
       # through RemoteImageFetcher, which refuses non-public addresses. This
       # also catches the case where the cover image doesn't actually exist.
       begin
-        # Sleep between each attempt at pulling down the game cover, to avoid
-        # hitting the IGDB website with a lot of load.
-        sleep 0.25
+        wait_for_turn.call
         cover = RemoteImageFetcher.fetch(igdb_game.dig('cover', 'url'))
       rescue RemoteImageFetcher::Error => e
-        progress_bar.log "#{game[:name].ljust(40)} | Error: #{e}"
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
+        next [false, ["#{label} | Error: #{e}"]]
       end
 
-      # Copy the image data to a file with ActiveStorage, then throw the
-      # downloaded tempfile away so an import doesn't accumulate one open file
-      # per game it processes.
-      # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
+      # Throw the downloaded tempfile away once we're done with it, so an import
+      # doesn't accumulate one open file per game it processes.
       begin
-        game.cover.attach(io: cover.io, filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}")
+        # Record the dimensions now, from the local file, so ActiveStorage
+        # doesn't queue an AnalyzeJob that downloads the cover again to find
+        # them. If libvips can't read it, leave it to the validations below.
+        metadata = begin
+          image = Vips::Image.new_from_file(cover.io.path)
+          { analyzed: true, width: image.width, height: image.height }
+        rescue Vips::Error
+          {}
+        end
+
+        # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
+        game.cover.attach(
+          io: cover.io,
+          filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
+          metadata: metadata
+        )
+
+        # If the cover has any errors, they'll show up on the `Game` record.
+        errors = game.errors.full_messages.map { |msg| "#{label} | Cover could not be added: #{msg}" }
+        next [false, errors] if errors.any?
+
+        # If the cover is invalid but somehow wasn't caught in the last step,
+        # report it with a generic message.
+        next [false, ["#{label} | Cover could not be added."]] if game.reload.cover.blank?
+
+        # Create each size of the cover now, from the file we already have,
+        # rather than leaving it to the TransformJobs `preprocessed: true`
+        # queues: those run on the async adapter in this process and are
+        # dropped if the task exits first. When they do run, they find the
+        # variants already exist and do nothing.
+        VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io)
       ensure
         cover.close
       end
 
-      # If the cover has any errors, they'll show up on the `Game` record.
-      # Check for any errors and print them if they exist.
-      if game.errors.any?
-        game.errors.full_messages.each do |msg|
-          progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added: #{msg}"
-        end
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
-      end
-
-      # If the cover is invalid but somehow wasn't caught in the last step, do
-      # the same thing but with a generic message.
-      if game.reload.cover.blank?
-        progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
-      end
-
-      # For each cover uploaded, process the variants of that cover so we store them in the database immediately,
-      # otherwise they'll be generated when the user hits them for the first time.
-      Game::COVER_SIZES.each_key do |size|
-        game.sized_cover(size)&.processed
-      end
-
-      cover_added_count += 1
-      progress_bar.log "#{game[:name].ljust(40)} | Cover added successfully."
-      progress_bar.increment
+      [true, ["#{label} | Cover added successfully."]]
     end
+
+    queue = Queue.new
+    games.each { |game| queue << game }
+    queue.close
+    lock = Mutex.new
+
+    workers = Array.new(concurrency) do
+      Thread.new do
+        # PaperTrail's whodunnit is per thread.
+        PaperTrail.request.whodunnit = 'system'
+
+        while (game = queue.pop)
+          added, messages = Rails.application.executor.wrap { attach_cover.call(game) }
+
+          lock.synchronize do
+            messages.each { |msg| progress_bar.log msg }
+            if added
+              cover_added_count += 1
+            else
+              cover_not_found_or_errored_count += 1
+            end
+            progress_bar.increment
+          end
+        end
+      end
+    end
+    workers.each(&:join)
 
     progress_bar.finish unless progress_bar.finished?
 

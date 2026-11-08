@@ -113,7 +113,9 @@ const newSteamAppId = ref<number | undefined>(undefined);
 watch(
   () => [route.query.name, route.query.steamAppId] as const,
   ([name, steamAppId]) => {
-    if (typeof name === "string" && name !== "") newSteamName.value = name;
+    if (typeof name === "string" && name !== "") {
+      newSteamName.value = name;
+    }
     if (typeof steamAppId === "string" && /^[1-9]\d*$/.test(steamAppId)) {
       newSteamAppId.value = Number(steamAppId);
     }
@@ -122,7 +124,9 @@ watch(
 );
 
 async function addSteamBlocklistEntry() {
-  if (!newSteamName.value || !newSteamAppId.value) return;
+  if (!newSteamName.value || !newSteamAppId.value) {
+    return;
+  }
   try {
     await gqlClient.request(ADD_TO_STEAM_BLOCKLIST, {
       name: newSteamName.value,

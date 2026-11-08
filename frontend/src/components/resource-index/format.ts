@@ -11,7 +11,9 @@ export function seriesMeta(
   firstReleaseYear: number | null | undefined,
   lastReleaseYear: number | null | undefined
 ): string {
-  if (gamesCount === 0 || !firstReleaseYear || !lastReleaseYear) return gamesMeta(gamesCount);
+  if (gamesCount === 0 || !firstReleaseYear || !lastReleaseYear) {
+    return gamesMeta(gamesCount);
+  }
   const years = firstReleaseYear === lastReleaseYear ? `${firstReleaseYear}` : `${firstReleaseYear}–${lastReleaseYear}`;
   return `${gamesMeta(gamesCount)} · ${years}`;
 }

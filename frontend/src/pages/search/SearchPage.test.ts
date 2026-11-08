@@ -92,7 +92,9 @@ function requestsFor(document: string) {
 
 function tab(wrapper: VueWrapper, label: string) {
   const found = wrapper.findAll('[role="tab"]').find((t) => t.text().startsWith(label));
-  if (!found) throw new Error(`No tab labelled ${label}`);
+  if (!found) {
+    throw new Error(`No tab labelled ${label}`);
+  }
   return found;
 }
 
@@ -105,7 +107,9 @@ describe("SearchPage", () => {
   });
 
   afterEach(() => {
-    for (const wrapper of mounted) wrapper.unmount();
+    for (const wrapper of mounted) {
+      wrapper.unmount();
+    }
     mounted = [];
   });
 

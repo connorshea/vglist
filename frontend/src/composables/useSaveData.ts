@@ -11,12 +11,16 @@ interface NetworkInformation extends EventTarget {
 const REDUCED_DATA_QUERY = "(prefers-reduced-data: reduce)";
 
 function connection(): NetworkInformation | undefined {
-  if (typeof navigator === "undefined") return undefined;
+  if (typeof navigator === "undefined") {
+    return undefined;
+  }
   return (navigator as Navigator & { connection?: NetworkInformation }).connection;
 }
 
 function reducedDataQuery(): MediaQueryList | undefined {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return undefined;
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return undefined;
+  }
   return window.matchMedia(REDUCED_DATA_QUERY);
 }
 

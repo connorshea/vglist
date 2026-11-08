@@ -62,12 +62,16 @@ const platforms = computed(() => {
 
 const metaParts = computed(() => {
   const parts: string[] = [];
-  if (props.game.releaseDate) parts.push(props.game.releaseDate.split("-")[0]);
+  if (props.game.releaseDate) {
+    parts.push(props.game.releaseDate.split("-")[0]);
+  }
 
   const companies = [...props.game.developers.nodes, ...props.game.publishers.nodes]
     .map((c) => c.name)
     .filter((name, i, all) => all.indexOf(name) === i);
-  if (companies.length) parts.push(companies.join(" / "));
+  if (companies.length) {
+    parts.push(companies.join(" / "));
+  }
 
   return parts;
 });

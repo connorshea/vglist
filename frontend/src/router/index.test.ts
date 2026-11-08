@@ -1,5 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type * as ChunkReload from "@/utils/chunk-reload";
 import { createPinia, setActivePinia } from "pinia";
+
+const { reloadForStaleChunk } = vi.hoisted(() => ({
+  reloadForStaleChunk: vi.fn<(path: string) => boolean>(() => true)
+}));
+
+vi.mock("@/utils/chunk-reload", async (importOriginal) => ({
+  ...(await importOriginal<typeof ChunkReload>()),
+  reloadForStaleChunk
+}));
 
 import router from "./index";
 
@@ -35,6 +45,22 @@ describe("router", () => {
       expect(router.currentRoute.value.fullPath).toBe("/stores");
       expect(warn).not.toHaveBeenCalledWith(expect.stringContaining("Discarded invalid param"));
       warn.mockRestore();
+    });
+  });
+
+  describe("stale chunk after a deploy", () => {
+    it("does a full page load of the destination instead of silently aborting", async () => {
+      router.addRoute({
+        path: "/stale-chunk-test",
+        name: "staleChunkTest",
+        component: () =>
+          Promise.reject(new TypeError("Failed to fetch dynamically imported module: /assets/Gone-abc123.js"))
+      });
+
+      await router.push("/stale-chunk-test?tab=1").catch(() => {});
+
+      expect(reloadForStaleChunk).toHaveBeenCalledWith("/stale-chunk-test?tab=1");
+      router.removeRoute("staleChunkTest");
     });
   });
 });

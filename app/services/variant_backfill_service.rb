@@ -68,24 +68,33 @@ class VariantBackfillService
 
   # Create the missing variants of this one attachment.
   #
+  # @param original [File, Tempfile, nil] A local copy of the attached file,
+  #   e.g. the download that was just attached. Saves fetching it back from
+  #   storage. When nil, the original is downloaded.
   # @return [Integer] How many variants were created.
-  def call
+  def call(original: nil)
     return 0 unless @attached.attached? && @attached.variable?
 
     missing = missing_variations
     return 0 if missing.empty?
 
-    blob.open do |original|
-      missing.each do |variation|
-        original.rewind
-        variation.transform(original) { |output| create_variant_record(variation, output) }
-      end
+    if original
+      transform(missing, original)
+    else
+      blob.open { |file| transform(missing, file) }
     end
 
     missing.size
   end
 
   private
+
+  def transform(variations, original)
+    variations.each do |variation|
+      original.rewind
+      variation.transform(original) { |output| create_variant_record(variation, output) }
+    end
+  end
 
   def blob
     @attached.blob

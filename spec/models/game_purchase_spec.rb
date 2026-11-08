@@ -30,6 +30,21 @@ RSpec.describe GamePurchase, type: :model do
       expect(game_purchase).to validate_numericality_of(:hours_played)
         .allow_nil
         .is_greater_than_or_equal_to(0)
+        .is_less_than_or_equal_to(GamePurchase::MAX_HOURS_PLAYED)
+    end
+
+    it 'rejects hours_played that would round past the column limit' do
+      game_purchase.hours_played = 999_999_999.96
+      expect(game_purchase).not_to be_valid
+      expect(game_purchase.errors[:hours_played]).to include("must be less than or equal to 999999999.9")
+    end
+
+    it 'stores a nil replay_count and comments as their empty values' do
+      game_purchase.replay_count = nil
+      game_purchase.comments = nil
+      expect(game_purchase).to be_valid
+      expect(game_purchase.replay_count).to eq(0)
+      expect(game_purchase.comments).to eq('')
     end
 
     it 'validates the replay_count' do

@@ -231,7 +231,9 @@ const showSkeleton = computed(() => loading.value && !data.value);
 const hasNextPage = computed(() => user.value?.activity?.pageInfo.hasNextPage ?? false);
 
 function nextPage() {
-  if (hasNextPage.value) goToNextPage(user.value?.activity?.pageInfo.endCursor);
+  if (hasNextPage.value) {
+    goToNextPage(user.value?.activity?.pageInfo.endCursor);
+  }
 }
 
 function prevPage() {
@@ -330,9 +332,13 @@ function eventBadge(event: ActivityNode): BadgeInfo | null {
 }
 
 function canDeleteEvent(event: ActivityNode): boolean {
-  if (!authStore.user) return false;
+  if (!authStore.user) {
+    return false;
+  }
   const role = authStore.user.role;
-  if (role === "MODERATOR" || role === "ADMIN") return true;
+  if (role === "MODERATOR" || role === "ADMIN") {
+    return true;
+  }
   return event.user.id === authStore.user.id;
 }
 
@@ -348,7 +354,9 @@ function promptDeleteEvent(eventId: string) {
 
 async function confirmDeleteEvent() {
   const eventId = pendingDeleteEventId.value;
-  if (!eventId) return;
+  if (!eventId) {
+    return;
+  }
 
   deletingEventId.value = eventId;
   try {

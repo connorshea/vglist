@@ -187,7 +187,9 @@ const fittingQuickLinks = ref(Number.POSITIVE_INFINITY);
 
 function fitQuickLinks() {
   const pills = Array.from(quickNav.value?.children ?? []) as HTMLElement[];
-  if (pills.length === 0) return;
+  if (pills.length === 0) {
+    return;
+  }
   const firstRowTop = pills[0].offsetTop;
   const overflowing = pills.findIndex((pill) => pill.offsetTop > firstRowTop);
   fittingQuickLinks.value = overflowing === -1 ? pills.length : overflowing;
@@ -202,12 +204,18 @@ watch(
   (nav) => {
     quickResizeObserver?.disconnect();
     quickResizeObserver = null;
-    if (!nav) return;
+    if (!nav) {
+      return;
+    }
     fitQuickLinks();
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
     quickResizeObserver = new ResizeObserver(fitQuickLinks);
     quickResizeObserver.observe(nav);
-    for (const pill of Array.from(nav.children)) quickResizeObserver.observe(pill);
+    for (const pill of Array.from(nav.children)) {
+      quickResizeObserver.observe(pill);
+    }
   },
   { flush: "post" }
 );
@@ -216,7 +224,9 @@ watch(
 
 const siteStats = computed(() => {
   const s = statsData.value?.basicSiteStatistics;
-  if (!s) return null;
+  if (!s) {
+    return null;
+  }
   return [
     { label: countLabel(s.games, "game"), path: "/games" },
     { label: countLabel(s.series, "series", "series"), path: "/series" },
@@ -338,7 +348,9 @@ const { data: heroData } = useQuery<{ games: { nodes: HeroCoverNode[] } }>(GET_H
 });
 
 const coverUrls = computed<string[]>(() => {
-  if (saveData.value || !heroData.value) return [];
+  if (saveData.value || !heroData.value) {
+    return [];
+  }
   return heroData.value.games.nodes.filter((g) => g.coverUrl).map((g) => g.coverUrl as string);
 });
 
@@ -356,7 +368,9 @@ watch(
   (urls) => {
     const run = ++coverPreloadRun;
     loadedCoverUrls.value = [];
-    if (urls.length === 0) return;
+    if (urls.length === 0) {
+      return;
+    }
     const shuffled = [...urls];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -385,12 +399,16 @@ watch(
       const img = new Image();
       img.fetchPriority = "low";
       const onDone = (ok: boolean) => {
-        if (run !== coverPreloadRun) return;
+        if (run !== coverPreloadRun) {
+          return;
+        }
         if (ok) {
           loadedCoverUrls.value.push(url);
           for (const i of tilesByUrl.get(url) ?? []) {
             const tile = mosaicTiles.value[i];
-            if (!tile.flipped) tile.style = coverStyle(url);
+            if (!tile.flipped) {
+              tile.style = coverStyle(url);
+            }
           }
         }
         loaded++;
@@ -409,12 +427,17 @@ watch(
 // ── Flip animation system ──
 
 let flipTimer: ReturnType<typeof setInterval> | null = null;
+// The reveal fallback and the delayed flip start, cleared on unmount so a
+// page that's gone can't start flipping.
+const startTimers: ReturnType<typeof setTimeout>[] = [];
 
 function flipTile() {
   const tiles = mosaicTiles.value;
   const idx = Math.floor(Math.random() * tiles.length);
   const tile = tiles[idx];
-  if (tile.flipping) return;
+  if (tile.flipping) {
+    return;
+  }
 
   tile.flipping = true;
   tile.flipped = true;
@@ -449,26 +472,37 @@ function scheduleFlips() {
 
 onMounted(() => {
   // No covers to wait for, so show the gradients right away.
-  if (saveData.value) coversReady.value = true;
+  if (saveData.value) {
+    coversReady.value = true;
+  }
 
   // Fallback: show mosaic after 5s even if images haven't finished preloading
-  setTimeout(() => {
-    coversReady.value = true;
-  }, 5000);
+  startTimers.push(
+    setTimeout(() => {
+      coversReady.value = true;
+    }, 5000)
+  );
 });
 
 // Start flipping once covers are visible
 watch(coversReady, (ready) => {
   if (ready && !flipTimer) {
-    setTimeout(() => {
-      scheduleFlips();
-      flipTimer = setInterval(scheduleFlips, 2000);
-    }, 300);
+    startTimers.push(
+      setTimeout(() => {
+        scheduleFlips();
+        flipTimer = setInterval(scheduleFlips, 2000);
+      }, 300)
+    );
   }
 });
 
 onUnmounted(() => {
-  if (flipTimer) clearInterval(flipTimer);
+  for (const timer of startTimers) {
+    clearTimeout(timer);
+  }
+  if (flipTimer) {
+    clearInterval(flipTimer);
+  }
   quickResizeObserver?.disconnect();
 });
 </script>

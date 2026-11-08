@@ -118,14 +118,21 @@ function openMenu() {
 }
 
 function closeMenu(returnFocus = true) {
-  if (!menuOpen.value) return;
+  if (!menuOpen.value) {
+    return;
+  }
   menuOpen.value = false;
-  if (returnFocus) menuButtonRef.value?.focus();
+  if (returnFocus) {
+    menuButtonRef.value?.focus();
+  }
 }
 
 function toggleMenu() {
-  if (menuOpen.value) closeMenu();
-  else openMenu();
+  if (menuOpen.value) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
 }
 
 function onMenuKeydown(e: KeyboardEvent) {
@@ -164,12 +171,17 @@ function requestDelete() {
 }
 
 function onDocumentPointerDown(e: PointerEvent) {
-  if (menuWrapRef.value && !menuWrapRef.value.contains(e.target as Node)) closeMenu(false);
+  if (menuWrapRef.value && !menuWrapRef.value.contains(e.target as Node)) {
+    closeMenu(false);
+  }
 }
 
 watch(menuOpen, (open) => {
-  if (open) document.addEventListener("pointerdown", onDocumentPointerDown);
-  else document.removeEventListener("pointerdown", onDocumentPointerDown);
+  if (open) {
+    document.addEventListener("pointerdown", onDocumentPointerDown);
+  } else {
+    document.removeEventListener("pointerdown", onDocumentPointerDown);
+  }
 });
 
 onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPointerDown));

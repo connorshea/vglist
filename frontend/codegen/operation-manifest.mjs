@@ -16,7 +16,9 @@ export const plugin = (_schema, documents) => {
   const operations = new Map();
 
   for (const file of documents) {
-    if (!file.document) continue;
+    if (!file.document) {
+      continue;
+    }
 
     for (const definition of file.document.definitions) {
       if (definition.kind === Kind.FRAGMENT_DEFINITION) {
@@ -39,10 +41,14 @@ export const plugin = (_schema, documents) => {
     visit(node, {
       FragmentSpread(spread) {
         const name = spread.name.value;
-        if (seen.has(name)) return;
+        if (seen.has(name)) {
+          return;
+        }
 
         const fragment = fragments.get(name);
-        if (!fragment) throw new Error(`Unknown fragment "${name}".`);
+        if (!fragment) {
+          throw new Error(`Unknown fragment "${name}".`);
+        }
 
         seen.add(name);
         fragmentsUsedBy(fragment, seen);

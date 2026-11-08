@@ -112,7 +112,9 @@ async function loadImage(file: File) {
   loadError.value = "";
 
   try {
-    if (!file.type.startsWith("image/")) throw new Error("not an image");
+    if (!file.type.startsWith("image/")) {
+      throw new Error("not an image");
+    }
     // Browsers apply EXIF orientation by default, so phone photos aren't
     // sideways.
     const bitmap = await createImageBitmap(file);
@@ -127,10 +129,14 @@ function draw() {
   const canvas = canvasRef.value;
   const bitmap = image.value;
   const crop = state.value;
-  if (!canvas || !bitmap || !crop) return;
+  if (!canvas || !bitmap || !crop) {
+    return;
+  }
 
   const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+  if (!ctx) {
+    return;
+  }
 
   const scale = cropScale(crop) * CANVAS_SIZE;
   ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
@@ -148,20 +154,26 @@ function toViewportUnits(pixels: number): number {
 }
 
 function pinchDistance(): number | null {
-  if (pointers.value.size !== 2) return null;
+  if (pointers.value.size !== 2) {
+    return null;
+  }
   const [a, b] = Array.from(pointers.value.values());
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
 function onPointerDown(e: PointerEvent) {
-  if (!state.value) return;
+  if (!state.value) {
+    return;
+  }
   canvasRef.value?.setPointerCapture?.(e.pointerId);
   pointers.value.set(e.pointerId, { x: e.clientX, y: e.clientY });
 }
 
 function onPointerMove(e: PointerEvent) {
   const previous = pointers.value.get(e.pointerId);
-  if (!previous || !state.value) return;
+  if (!previous || !state.value) {
+    return;
+  }
 
   const distanceBefore = pinchDistance();
   pointers.value.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -182,18 +194,24 @@ function onPointerUp(e: PointerEvent) {
 }
 
 function onWheel(e: WheelEvent) {
-  if (!state.value) return;
+  if (!state.value) {
+    return;
+  }
   state.value = zoomTo(state.value, state.value.zoom * Math.exp(-e.deltaY * 0.002));
 }
 
 function onZoomInput(e: Event) {
-  if (!state.value) return;
+  if (!state.value) {
+    return;
+  }
   state.value = zoomTo(state.value, Number((e.target as HTMLInputElement).value));
 }
 
 function onCanvasKeydown(e: KeyboardEvent) {
   const crop = state.value;
-  if (!crop) return;
+  if (!crop) {
+    return;
+  }
 
   const step = e.shiftKey ? KEY_PAN_STEP_LARGE : KEY_PAN_STEP;
   const moves: Record<string, [number, number]> = {
@@ -225,7 +243,9 @@ function cropToBlob(bitmap: ImageBitmap, crop: CropState): Promise<Blob> {
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d");
-  if (!ctx) return Promise.reject(new Error("Your browser couldn't crop this image."));
+  if (!ctx) {
+    return Promise.reject(new Error("Your browser couldn't crop this image."));
+  }
 
   // JPEG has no transparency, so give transparent images a white background
   // instead of black.
@@ -248,7 +268,9 @@ function cropToBlob(bitmap: ImageBitmap, crop: CropState): Promise<Blob> {
 const cropError = ref("");
 
 async function save() {
-  if (!image.value || !state.value || props.saving) return;
+  if (!image.value || !state.value || props.saving) {
+    return;
+  }
   cropError.value = "";
   try {
     emit("save", await cropToBlob(image.value, state.value));
@@ -262,7 +284,9 @@ function cancel() {
 }
 
 function getFocusableElements(): HTMLElement[] {
-  if (!dialogRef.value) return [];
+  if (!dialogRef.value) {
+    return [];
+  }
   return Array.from(
     dialogRef.value.querySelectorAll<HTMLElement>(
       'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -278,7 +302,9 @@ function onDialogKeydown(e: KeyboardEvent) {
 
   if (e.key === "Tab") {
     const focusable = getFocusableElements();
-    if (focusable.length === 0) return;
+    if (focusable.length === 0) {
+      return;
+    }
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];

@@ -56,8 +56,12 @@ const STATUS_PHRASES: Record<GamePurchaseCompletionStatus, Phrase> = {
 // The status the event changed the game to. Older events have no recorded
 // change, so fall back to the entry's current status for those.
 function eventStatus(event: GameActivityEvent): GamePurchaseCompletionStatus | null {
-  if (event.completionStatusChange?.after) return event.completionStatusChange.after;
-  if ("completionStatus" in event.eventable) return event.eventable.completionStatus;
+  if (event.completionStatusChange?.after) {
+    return event.completionStatusChange.after;
+  }
+  if ("completionStatus" in event.eventable) {
+    return event.eventable.completionStatus;
+  }
   return null;
 }
 

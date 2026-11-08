@@ -224,7 +224,9 @@ function openAdd() {
 }
 
 async function handleAdd() {
-  if (adding.value) return;
+  if (adding.value) {
+    return;
+  }
   if (passwordInput.value === "") {
     passwordError.value = "Enter your current password.";
     return;
@@ -252,7 +254,9 @@ async function handleAdd() {
         optionsJSON: optionsResult.options as PublicKeyCredentialCreationOptionsJSON
       });
     } catch (e) {
-      if (!isPasskeyCancellation(e)) addError.value = passkeyRegistrationErrorMessage(e);
+      if (!isPasskeyCancellation(e)) {
+        addError.value = passkeyRegistrationErrorMessage(e);
+      }
       return;
     }
 
@@ -269,8 +273,11 @@ async function handleAdd() {
     openName({ ...result.passkey, isNew: true });
   } catch (e) {
     const message = `Couldn't add the passkey: ${extractGqlError(e)}`;
-    if (showPasswordDialog.value) passwordError.value = message;
-    else addError.value = message;
+    if (showPasswordDialog.value) {
+      passwordError.value = message;
+    } else {
+      addError.value = message;
+    }
   } finally {
     adding.value = false;
   }
@@ -295,7 +302,9 @@ function openRename(passkey: Passkey) {
 
 async function handleSaveName() {
   const target = naming.value;
-  if (!target || savingName.value) return;
+  if (!target || savingName.value) {
+    return;
+  }
 
   const nickname = nameInput.value.trim();
   if (nickname === "" || nickname === target.nickname) {
@@ -333,13 +342,17 @@ function openRemove(passkey: Passkey) {
 
 async function handleRemove() {
   const target = removingPasskey.value;
-  if (!target) return;
+  if (!target) {
+    return;
+  }
 
   removing.value = true;
   try {
     await gqlClient.request<DeletePasskeyMutation>(DELETE_PASSKEY, { id: target.id });
     showRemoveDialog.value = false;
-    if (newPasskeyId.value === target.id) newPasskeyId.value = null;
+    if (newPasskeyId.value === target.id) {
+      newPasskeyId.value = null;
+    }
     showSnackbar("Passkey removed.");
     await refetch();
   } catch (e) {

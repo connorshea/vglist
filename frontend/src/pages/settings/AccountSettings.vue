@@ -223,7 +223,9 @@ const showResetConfirm = ref(false);
 const resettingLibrary = ref(false);
 
 async function handleResetLibrary() {
-  if (!authStore.user) return;
+  if (!authStore.user) {
+    return;
+  }
   resettingLibrary.value = true;
 
   try {
@@ -242,7 +244,9 @@ const showDeleteConfirm = ref(false);
 const deletingAccount = ref(false);
 
 async function handleDeleteAccount() {
-  if (!authStore.user) return;
+  if (!authStore.user) {
+    return;
+  }
   deletingAccount.value = true;
 
   try {

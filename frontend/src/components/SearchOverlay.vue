@@ -308,13 +308,19 @@ const overlayRef = ref<HTMLElement | null>(null);
 // for a frame or more first. Phones hide the navbar box, so there the bar
 // just fades in with the rest of the dialog.
 function morphSearchBar(overlay: Element, direction: "in" | "out") {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
   const bar = overlay.querySelector<HTMLElement>(".search-bar-wrap");
   const navbarBox = document.querySelector<HTMLElement>(".navbar-search .input");
-  if (!bar || !navbarBox) return;
+  if (!bar || !navbarBox) {
+    return;
+  }
   const from = navbarBox.getBoundingClientRect();
   const to = bar.getBoundingClientRect();
-  if (from.width === 0 || to.width === 0) return;
+  if (from.width === 0 || to.width === 0) {
+    return;
+  }
   const atNavbar = `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`;
   bar.animate(
     [
@@ -339,7 +345,9 @@ function onDocumentKeydown(e: KeyboardEvent) {
     const focusable = overlayRef.value.querySelectorAll<HTMLElement>(
       'input, button, a[href], [tabindex]:not([tabindex="-1"])'
     );
-    if (focusable.length === 0) return;
+    if (focusable.length === 0) {
+      return;
+    }
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -500,19 +508,25 @@ const performSearch = debounce(async () => {
   error.value = null;
   try {
     const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: searchQuery });
-    if (searchId !== latestSearch) return;
+    if (searchId !== latestSearch) {
+      return;
+    }
 
     results.value = data.globalSearch.nodes;
     resultsQuery = searchQuery;
     hasSearched.value = true;
   } catch (e: unknown) {
-    if (searchId !== latestSearch) return;
+    if (searchId !== latestSearch) {
+      return;
+    }
     error.value = extractGqlError(e);
     results.value = [];
     resultsQuery = searchQuery;
     hasSearched.value = true;
   } finally {
-    if (searchId === latestSearch) loading.value = false;
+    if (searchId === latestSearch) {
+      loading.value = false;
+    }
   }
 }, 250);
 
@@ -522,7 +536,9 @@ function onSearch() {
 
 function move(step: number) {
   const count = orderedResults.value.length;
-  if (count === 0) return;
+  if (count === 0) {
+    return;
+  }
   activeIndex.value = (activeIndex.value + step + count) % count;
   void nextTick(() => {
     overlayRef.value?.querySelector(".result-item.is-active")?.scrollIntoView?.({ block: "nearest" });
@@ -536,21 +552,29 @@ async function chooseActive() {
   if (resultsQuery !== trimmedQuery.value) {
     const typed = trimmedQuery.value;
     await performSearch.flush();
-    if (!isOpen.value || trimmedQuery.value !== typed || resultsQuery !== typed) return;
+    if (!isOpen.value || trimmedQuery.value !== typed || resultsQuery !== typed) {
+      return;
+    }
     const first = orderedResults.value[0];
-    if (first) goToResult(first);
+    if (first) {
+      goToResult(first);
+    }
     return;
   }
 
   const active = orderedResults.value[activeIndex.value];
-  if (active) goToResult(active);
+  if (active) {
+    goToResult(active);
+  }
 }
 
 // Enter also confirms an input method's composition (e.g. Japanese kana to
 // kanji); that's not a request to open anything yet, and the browser needs
 // the default action to finish the composition.
 function onEnter(event: KeyboardEvent) {
-  if (event.isComposing || event.keyCode === 229) return;
+  if (event.isComposing || event.keyCode === 229) {
+    return;
+  }
   event.preventDefault();
   void chooseActive();
 }

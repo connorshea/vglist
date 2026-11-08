@@ -67,7 +67,9 @@ type Wrapper = ReturnType<typeof mountPage>;
 
 function field(wrapper: Wrapper, label: string) {
   const found = wrapper.findAll(".searchable-select").find((f) => f.find("label").text() === label);
-  if (!found) throw new Error(`No ${label} field`);
+  if (!found) {
+    throw new Error(`No ${label} field`);
+  }
   return found;
 }
 
@@ -101,7 +103,9 @@ describe("GameFormPage", () => {
     mockRoute.params.id = "1";
     mockRequest.mockReset();
     mockRequest.mockImplementation((query, variables) => {
-      if (query === GET_GAME) return Promise.resolve(gameFixture());
+      if (query === GET_GAME) {
+        return Promise.resolve(gameFixture());
+      }
       // Like the real search, only records matching the query come back,
       // however far down an alphabetical list they'd be.
       if (query === SEARCH_ENGINES_FOR_GAME_FORM) {
@@ -116,8 +120,12 @@ describe("GameFormPage", () => {
       if (query === SEARCH_COMPANIES_FOR_GAME_FORM) {
         return Promise.resolve({ companySearch: { nodes: [{ id: "603", name: "Gearbox Software" }] } });
       }
-      if (query === UPDATE_GAME) return Promise.resolve({ updateGame: { game: { id: "1", name: "Half-Life" } } });
-      if (query === CREATE_GAME) return Promise.resolve({ createGame: { game: { id: "2", name: "New" } } });
+      if (query === UPDATE_GAME) {
+        return Promise.resolve({ updateGame: { game: { id: "1", name: "Half-Life" } } });
+      }
+      if (query === CREATE_GAME) {
+        return Promise.resolve({ createGame: { game: { id: "2", name: "New" } } });
+      }
       return Promise.reject(new Error("Unexpected query"));
     });
   });

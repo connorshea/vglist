@@ -76,7 +76,9 @@ function cancel() {
 }
 
 function getFocusableElements(): HTMLElement[] {
-  if (!dialogRef.value) return [];
+  if (!dialogRef.value) {
+    return [];
+  }
   return Array.from(
     dialogRef.value.querySelectorAll<HTMLElement>(
       'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -92,7 +94,9 @@ function onKeydown(e: KeyboardEvent) {
 
   if (e.key === "Tab") {
     const focusable = getFocusableElements();
-    if (focusable.length === 0) return;
+    if (focusable.length === 0) {
+      return;
+    }
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
