@@ -3,7 +3,17 @@ name: Docker
 # Builds the production images (root Dockerfile for the API,
 # frontend/Dockerfile for the SPA) and smoke-tests that each one boots and
 # answers /health.
-
+#
+# On pushes to main it also pushes the tested images to GHCR, tagged with the
+# commit SHA (plus `main`). Deploying them is a separate, manual step: see
+# .github/workflows/deploy.yml.
+#
+# Setup (once):
+#   - Repo secrets VITE_SENTRY_DSN and VITE_TURNSTILE_SITE_KEY. Neither is
+#     really secret (both ship in the JS bundle), but secrets keep them out
+#     of the build logs.
+#   - After the first push, make the vglist-api and vglist-frontend GHCR
+#     packages public so App Platform can pull them without credentials.
 on:
   push:
     branches: [main]
@@ -11,11 +21,23 @@ on:
 
 permissions: {}
 
+# A new push to a PR cancels its older run. Every push to main runs to the end,
+# so each merged commit gets its own images.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  API_IMAGE: ghcr.io/connorshea/vglist-api
+  FRONTEND_IMAGE: ghcr.io/connorshea/vglist-frontend
+  PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
 jobs:
   api:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
     services:
       postgres:
         image: postgres:18
@@ -48,6 +70,7 @@ jobs:
         with:
           context: .
           tags: vglist-api
+          build-args: GIT_COMMIT_SHA=${{ github.sha }}
           load: true
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
@@ -113,10 +136,60 @@ jobs:
         run: |
           docker run --rm vglist-api file --version
 
+      - name: Log in to GHCR
+        if: env.PUSH == 'true'
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Same inputs as the tested build, so every layer comes from the cache.
+      # One image serves the api service and the migrate and update-stats jobs.
+      # Deploys use the SHA tag; see "Move the main tag" for `main`.
+      - name: Push image
+        if: env.PUSH == 'true'
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          tags: |
+            ${{ env.API_IMAGE }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          build-args: GIT_COMMIT_SHA=${{ github.sha }}
+          push: true
+          # A plain image manifest, not an index with an attestation entry, so
+          # the digest is exactly what App Platform pulls.
+          provenance: false
+          cache-from: type=gha,scope=api
+
+      # `main` is only what an update from .do/app.yaml points at. Runs for
+      # different commits finish in any order, so move it only if this commit
+      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Move the main tag
+        if: env.PUSH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$API_IMAGE:main" "$API_IMAGE:$GITHUB_SHA"
+
   frontend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
+    # Baked into the bundle (see frontend/Dockerfile). VITE_API_URL comes from
+    # frontend/.env.production. Empty on fork PRs, which the Dockerfile treats
+    # as unset.
+    env:
+      BUILD_ARGS: |
+        VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+        VITE_TURNSTILE_SITE_KEY=${{ secrets.VITE_TURNSTILE_SITE_KEY }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -131,6 +204,7 @@ jobs:
           context: .
           file: frontend/Dockerfile
           tags: vglist-frontend
+          build-args: ${{ env.BUILD_ARGS }}
           load: true
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,mode=max,scope=frontend
@@ -212,3 +286,44 @@ jobs:
             echo "::error::/csp-report: expected status 204, got $status"
             exit 1
           fi
+
+      - name: Log in to GHCR
+        if: env.PUSH == 'true'
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Same inputs as the tested build, so every layer comes from the cache.
+      - name: Push image
+        if: env.PUSH == 'true'
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: frontend/Dockerfile
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          build-args: ${{ env.BUILD_ARGS }}
+          push: true
+          # A plain image manifest, not an index with an attestation entry, so
+          # the digest is exactly what App Platform pulls.
+          provenance: false
+          cache-from: type=gha,scope=frontend
+
+      # `main` is only what an update from .do/app.yaml points at. Runs for
+      # different commits finish in any order, so move it only if this commit
+      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Move the main tag
+        if: env.PUSH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$FRONTEND_IMAGE:main" "$FRONTEND_IMAGE:$GITHUB_SHA"

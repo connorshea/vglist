@@ -8,10 +8,27 @@
 #                   from the VPS crontab, 00:00 UTC)
 #   - db         Existing managed PostgreSQL cluster, attached to the app
 #
-# Usage:
+# Deploys: App Platform doesn't build anything. .github/workflows/docker.yml
+# builds and tests both images, pushes them to GHCR (ghcr.io/connorshea/
+# vglist-api and vglist-frontend, both public packages) on every push to
+# main, and .github/workflows/deploy.yml deploys a commit's digests when run
+# by hand. The `tag: main` below is only what an update from this file
+# points at until the next deploy. The
+# frontend's build-time vars (VITE_SENTRY_DSN, VITE_TURNSTILE_SITE_KEY) are
+# repo secrets for the Docker workflow, and the commit SHA is baked into the API
+# image.
+#
+# This file isn't read on deploy. Changes to it are applied by hand:
 #   doctl apps spec validate .do/app.yaml
 #   doctl apps create --spec .do/app.yaml          # first time
 #   doctl apps update <app-id> --spec .do/app.yaml # later changes
+#
+# Applying this file redeploys: every component goes back to `tag: main`,
+# the newest commit on main whose images were pushed, and the migrate job
+# runs. That commit may not be the one that's live, and this path skips the
+# Deploy workflow's CI check. So deploy main with the Deploy workflow first,
+# or swap each `tag: main` for the live `digest:` values from
+# `doctl apps spec get` before updating.
 #
 # Secrets: every `type: SECRET` env below is declared without a value so no
 # credentials live in git. Set the values once in the control panel (App →
@@ -82,12 +99,12 @@ databases:
 
 services:
   - name: api
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    source_dir: /
-    dockerfile_path: Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-api
+      tag: main
     http_port: 3000
     instance_size_slug: apps-s-1vcpu-2gb
     # See the single-instance caveat at the top of this file.
@@ -124,9 +141,6 @@ services:
       # CLIENT_IP_HEADER should be CF-Connecting-IP instead.
       - key: CLIENT_IP_HEADER
         value: DO-Connecting-IP
-      # Release tag for Sentry and the home-page stats cache key.
-      - key: GIT_COMMIT_SHA
-        value: ${_self.COMMIT_HASH}
       - key: DATABASE_URL
         value: ${db.DATABASE_URL}
       - key: RAILS_MASTER_KEY
@@ -162,13 +176,12 @@ services:
         type: SECRET
 
   - name: frontend
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    # Build context is the repo root because vite.config.ts uses ../public.
-    source_dir: /
-    dockerfile_path: frontend/Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-frontend
+      tag: main
     http_port: 8080
     instance_size_slug: apps-s-1vcpu-0.5gb
     instance_count: 1
@@ -195,29 +208,16 @@ services:
       - key: CSP_REPORT_URI
         scope: RUN_TIME
         type: SECRET
-      # Baked into the Vite bundle at build time.
-      - key: VITE_API_URL
-        value: https://api.vglist.co
-        scope: BUILD_TIME
-      - key: VITE_SENTRY_DSN
-        scope: BUILD_TIME
-        type: SECRET
-      # Cloudflare Turnstile site key. Public (it ships in the bundle), but
-      # declared like the DSN so its value is set in the control panel.
-      # Unset, the sign-up form shows no challenge.
-      - key: VITE_TURNSTILE_SITE_KEY
-        scope: BUILD_TIME
-        type: SECRET
 
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    source_dir: /
-    dockerfile_path: Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-api
+      tag: main
     instance_size_slug: apps-s-1vcpu-1gb
     instance_count: 1
     # db:migrate, not db:prepare: on an empty database db:prepare would also
@@ -240,12 +240,12 @@ jobs:
     schedule:
       cron: "0 0 * * *"
       time_zone: UTC
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    source_dir: /
-    dockerfile_path: Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-api
+      tag: main
     instance_size_slug: apps-s-1vcpu-1gb
     instance_count: 1
     run_command: bundle exec rake vglist:update:stats

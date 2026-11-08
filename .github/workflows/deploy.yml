@@ -1,0 +1,157 @@
+name: Deploy
+
+# Deploys a commit's prebuilt images (pushed to GHCR by the Docker workflow)
+# to DigitalOcean App Platform. Manual only: Actions > Deploy > Run workflow,
+# or `gh workflow run deploy.yml` (add `-f ref=<sha>` to pick a commit, which
+# also works as a rollback).
+#
+# It points api, migrate, update-stats and frontend at that commit's image
+# digests and waits for the rollout; the migrate PRE_DEPLOY job runs first, as
+# before. It starts from the live app spec, so the encrypted secret values
+# there are kept and only the image digests change. Changes to .do/app.yaml
+# itself still need `doctl apps update`, which redeploys `:main` (see the
+# note at the top of that file).
+#
+# Setup (once): a `production` environment (Settings > Environments) limited
+# to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
+# App Platform read + update access.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit SHA or branch to deploy. Its images must already be built by the Docker workflow.
+        required: true
+        default: main
+      skip_ci_check:
+        description: Deploy even if the commit's CI or Docker workflow runs haven't passed. Emergencies only.
+        type: boolean
+        default: false
+
+permissions: {}
+
+# One deploy at a time. A deploy that's already running finishes first.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  API_IMAGE: ghcr.io/connorshea/vglist-api
+  FRONTEND_IMAGE: ghcr.io/connorshea/vglist-frontend
+  APP_NAME: vglist
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # app_action polls until the rollout ends and the app has a live URL, with
+    # no limit of its own. Without this a stuck rollout holds the
+    # deploy-production lock for GitHub's 6-hour default.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+      actions: read
+    environment:
+      name: production
+      url: https://vglist.co
+    steps:
+      - name: Resolve commit
+        id: commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          sha="$(gh api "repos/$GITHUB_REPOSITORY/commits/$REF" --jq .sha)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "Deploying $sha" >> "$GITHUB_STEP_SUMMARY"
+
+      # The Docker workflow pushes images once its own smoke tests pass, even
+      # if RSpec or lint failed in CI, so check both before deploying. A
+      # rerun counts: a run's conclusion is its latest attempt's.
+      - name: Check CI and Docker passed
+        if: ${{ !inputs.skip_ci_check }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA&event=push&per_page=100")"
+          failed=0
+          for workflow in CI Docker; do
+            # Newest run of that workflow for this commit.
+            result="$(jq -r --arg w "$workflow" \
+              '[.workflow_runs[] | select(.name == $w)] | sort_by(.created_at) | last
+               | if . == null then "missing" else "\(.status)/\(.conclusion // "none")" end' <<<"$runs")"
+            echo "$workflow: $result"
+            if [ "$result" != "completed/success" ]; then
+              echo "::error::The $workflow workflow hasn't passed for $SHA ($result). Wait for it, fix it, or rerun with skip_ci_check for an emergency deploy."
+              failed=1
+            fi
+          done
+          exit "$failed"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Look up image digests
+        id: digests
+        env:
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          for name in api frontend; do
+            if [ "$name" = api ]; then image="$API_IMAGE"; else image="$FRONTEND_IMAGE"; fi
+            if ! digest="$(docker buildx imagetools inspect "$image:$SHA" --format '{{json .Manifest}}' | jq -er .digest)"; then
+              echo "::error::No $image:$SHA image. Images are only pushed for commits on main; if this one just merged, wait for its Docker workflow run to finish."
+              exit 1
+            fi
+            echo "$name=$digest" >> "$GITHUB_OUTPUT"
+            echo "- $image@$digest" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      # app_action only swaps digests on components that are already image
+      # sources; a GitHub-sourced one would be rebuilt from its branch instead.
+      # And a GIT_COMMIT_SHA env in the spec (the old ${_self.COMMIT_HASH},
+      # empty for images) overrides the SHA baked into the API image.
+      - name: Check the live app spec
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          problems="$(curl -fsS -H "Authorization: Bearer $DIGITALOCEAN_ACCESS_TOKEN" \
+            "https://api.digitalocean.com/v2/apps?per_page=200" \
+            | jq -r --arg name "$APP_NAME" '
+              [.apps[]? | select(.spec.name == $name)] as $apps
+              | if ($apps | length) != 1 then
+                  "Expected one app named \($name), found \($apps | length)."
+                else
+                  $apps[0].spec as $spec
+                  | [($spec.services // [])[], ($spec.jobs // [])[], ($spec.workers // [])[]] as $components
+                  | ($components[] | select(.image == null)
+                      | "\(.name) is not an image source. Apply .do/app.yaml with doctl apps update first."),
+                    (($spec.envs // [])[] | select(.key == "GIT_COMMIT_SHA")
+                      | "The app-level GIT_COMMIT_SHA env would override the one baked into the image. Remove it from the spec."),
+                    ($components[] | .name as $c | (.envs // [])[] | select(.key == "GIT_COMMIT_SHA")
+                      | "The GIT_COMMIT_SHA env on \($c) would override the one baked into the image. Remove it from the spec.")
+                end')"
+          if [ -n "$problems" ]; then
+            while IFS= read -r line; do echo "::error::$line"; done <<<"$problems"
+            exit 1
+          fi
+          echo "Live spec OK"
+
+      - name: Deploy to App Platform
+        uses: digitalocean/app_action/deploy@cc55bc9b848d25f9c1c9f831cf843fbab3fbfb15 # v2.0.11
+        env:
+          IMAGE_DIGEST_API: ${{ steps.digests.outputs.api }}
+          IMAGE_DIGEST_MIGRATE: ${{ steps.digests.outputs.api }}
+          IMAGE_DIGEST_UPDATE_STATS: ${{ steps.digests.outputs.api }}
+          IMAGE_DIGEST_FRONTEND: ${{ steps.digests.outputs.frontend }}
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          app_name: ${{ env.APP_NAME }}

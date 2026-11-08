@@ -104,6 +104,12 @@ USER 1000:1000
 
 EXPOSE 3000
 
+# Release tag for Sentry and the cache keys that change on every deploy.
+# The deploy workflow passes the commit SHA. Declared last so a new SHA
+# doesn't invalidate any earlier layer.
+ARG GIT_COMMIT_SHA
+ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
+
 # Platforms like DigitalOcean App Platform run their own HTTP health check
 # against /health; this one is for plain `docker run` / Compose. /health is
 # exempt from the force_ssl redirect in config/environments/production.rb.
