@@ -185,11 +185,7 @@
               </section>
             </template>
             <LibrarySkeleton v-if="shelvesSkeleton" variant="shelves" />
-            <LibraryEmptyState
-              v-else-if="!shelvesLoading && !shelves.some((shelf) => shelf.totalCount > 0)"
-              :error="shelvesError"
-              :library-empty="gamesCount === 0"
-            />
+            <LibraryEmptyState v-else-if="!hasShelvedGames" :error="shelvesError" :library-empty="gamesCount === 0" />
           </template>
 
           <!-- One status, or everything in one grid -->
@@ -501,7 +497,8 @@ const gamesHasNextPage = computed(() => gamesConnection.value?.pageInfo.hasNextP
 // ── Loading ─────────────────────────────────────────────────────────────────
 // Skeletons stand in only while there's nothing to show yet. A refetch for
 // new filters keeps the current games on screen until the new ones arrive.
-const shelvesSkeleton = computed(() => shelvesLoading.value && !shelvesData.value);
+const hasShelvedGames = computed(() => shelves.value.some((shelf) => shelf.totalCount > 0));
+const shelvesSkeleton = computed(() => shelvesLoading.value && !hasShelvedGames.value);
 const gamesSkeleton = computed(() => gamesLoading.value && !games.value.length);
 const showSkeleton = computed(
   () => (pageLoading.value && !pageData.value) || (grouped.value ? shelvesSkeleton.value : gamesSkeleton.value)

@@ -111,6 +111,23 @@ describe("UserLibraryPage loading state", () => {
     expect(wrapper.text()).toContain("No games in this library yet");
   });
 
+  it("outlines the shelves again while new filters load after an empty result", async () => {
+    const resolve = deferQueries();
+    const wrapper = await mountLibrary();
+    await resolve(GET_LIBRARY_PAGE, PAGE);
+    await resolve(GET_LIBRARY_SHELVES, SHELVES);
+    expect(wrapper.text()).toContain("No games in this library yet");
+
+    await wrapper.vm.$router.push("/users/connorshea/library?platforms=1");
+    await flushPromises();
+    expect(wrapper.findComponent(LibrarySkeleton).props("variant")).toBe("shelves");
+    expect(wrapper.text()).not.toContain("No games in this library yet");
+
+    await resolve(GET_LIBRARY_SHELVES, SHELVES);
+    expect(wrapper.findComponent(LibrarySkeleton).exists()).toBeFalsy();
+    expect(wrapper.text()).toContain("No games in this library yet");
+  });
+
   it("outlines a single grid when a status is picked", async () => {
     const resolve = deferQueries();
     const wrapper = await mountLibrary("/users/connorshea/library?status=COMPLETED");
