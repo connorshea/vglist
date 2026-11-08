@@ -32,12 +32,7 @@ module Resolvers
     MAX_RESULTS_PER_TYPE = 25
 
     def resolve(query:, searchable_types: DEFAULT_SEARCHABLE_TYPES)
-      results = searchable_types.uniq.flat_map do |type|
-        PgSearch.multisearch(query)
-                .where(searchable_type: type)
-                .limit(MAX_RESULTS_PER_TYPE)
-                .to_a
-      end
+      results = search(query, searchable_types.uniq).to_a
 
       preload_searchable_records(results)
 
@@ -45,6 +40,34 @@ module Resolvers
     end
 
     private
+
+    # Runs the search once for all types, then keeps the best
+    # MAX_RESULTS_PER_TYPE matches of each type. Results are grouped by type
+    # in the order the types were requested, and ordered by rank (then id)
+    # within each type, the same as running one query per type.
+    def search(query, types)
+      matches = PgSearch.multisearch(query)
+                        .where(searchable_type: types)
+                        .with_pg_search_rank
+                        .unscope(:order)
+
+      positioned = PgSearch::Document
+                   .from(matches, :pg_search_documents)
+                   .select(
+                     'pg_search_documents.*',
+                     'ROW_NUMBER() OVER (PARTITION BY searchable_type ORDER BY pg_search_rank DESC, id ASC) AS type_position'
+                   )
+
+      PgSearch::Document
+        .from(positioned, :pg_search_documents)
+        .where(type_position: ..MAX_RESULTS_PER_TYPE)
+        .order(
+          Arel.sql(
+            PgSearch::Document.sanitize_sql_array(['array_position(ARRAY[?]::text[], searchable_type::text)', types])
+          ),
+          :type_position
+        )
+    end
 
     # Batch-load the actual records for search result types that need
     # extra fields beyond what PgSearch::Document provides. Without

@@ -2149,6 +2149,13 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 
 
 --
+-- Name: index_companies_on_name_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_companies_on_name_tsvector ON public.companies USING gin (to_tsvector('simple'::regconfig, COALESCE(name, ''::text)));
+
+
+--
 -- Name: index_companies_on_wikidata_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2167,6 +2174,13 @@ CREATE INDEX index_company_versions_on_item_type_and_item_id ON public.company_v
 --
 
 CREATE INDEX index_engine_versions_on_item_type_and_item_id ON public.engine_versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_engines_on_name_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_engines_on_name_tsvector ON public.engines USING gin (to_tsvector('simple'::regconfig, COALESCE(name, ''::text)));
 
 
 --
@@ -2576,6 +2590,13 @@ CREATE UNIQUE INDEX index_games_on_mobygames_id ON public.games USING btree (mob
 
 
 --
+-- Name: index_games_on_name_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_name_tsvector ON public.games USING gin (to_tsvector('simple'::regconfig, COALESCE(name, ''::text)));
+
+
+--
 -- Name: index_games_on_release_date_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2608,6 +2629,20 @@ CREATE INDEX index_genre_versions_on_item_type_and_item_id ON public.genre_versi
 --
 
 CREATE UNIQUE INDEX index_genres_on_wikidata_id ON public.genres USING btree (wikidata_id);
+
+
+--
+-- Name: index_pg_search_documents_on_content_trigram; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pg_search_documents_on_content_trigram ON public.pg_search_documents USING gin (COALESCE(content, ''::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_pg_search_documents_on_content_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pg_search_documents_on_content_tsvector ON public.pg_search_documents USING gin (to_tsvector('simple'::regconfig, COALESCE(content, ''::text)));
 
 
 --
@@ -2650,6 +2685,13 @@ CREATE INDEX index_relationships_on_follower_id ON public.relationships USING bt
 --
 
 CREATE UNIQUE INDEX index_relationships_on_follower_id_and_followed_id ON public.relationships USING btree (follower_id, followed_id);
+
+
+--
+-- Name: index_series_on_name_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_series_on_name_tsvector ON public.series USING gin (to_tsvector('simple'::regconfig, COALESCE(name, ''::text)));
 
 
 --
@@ -2741,6 +2783,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE UNIQUE INDEX index_users_on_slug ON public.users USING btree (slug);
+
+
+--
+-- Name: index_users_on_username_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_username_tsvector ON public.users USING gin (to_tsvector('simple'::regconfig, COALESCE(username, ''::text)));
 
 
 --
@@ -3070,6 +3119,8 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108000200'),
+('20261108000100'),
 ('20261108000000'),
 ('20261107230200'),
 ('20261107230100'),
