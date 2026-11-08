@@ -81,11 +81,11 @@
             v-else-if="totalResults > 0"
             id="search-results-listbox"
             class="results-grid"
-            :class="gridColumnsClass"
+            :class="{ 'results-grid--split': gameResults.length > 0 && hasSideResults }"
             role="listbox"
             aria-label="Search results"
           >
-            <!-- Games column -->
+            <!-- Games -->
             <div v-if="gameResults.length" class="category" role="group" aria-label="Games">
               <div class="category-header" aria-hidden="true">
                 <Gamepad2 class="category-icon" />
@@ -126,146 +126,148 @@
               </a>
             </div>
 
-            <!-- Companies column -->
-            <div v-if="companyResults.length" class="category" role="group" aria-label="Companies">
-              <div class="category-header" aria-hidden="true">
-                <Briefcase class="category-icon" />
-                <span class="category-title">Companies</span>
-                <span class="category-count"
-                  >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
+            <div v-if="hasSideResults" class="category-stack">
+              <!-- Companies -->
+              <div v-if="companyResults.length" class="category" role="group" aria-label="Companies">
+                <div class="category-header" aria-hidden="true">
+                  <Briefcase class="category-icon" />
+                  <span class="category-title">Companies</span>
+                  <span class="category-count"
+                    >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
+                  >
+                </div>
+
+                <a
+                  v-for="(company, idx) in companyResults"
+                  :key="company.searchableId"
+                  :href="resultHref(company)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
+                  :id="optionId(company)"
+                  role="option"
+                  :aria-selected="isActive(company)"
+                  :class="{ 'is-active': isActive(company) }"
+                  @mousemove="setActive(company)"
+                  @click.prevent="goToResult(company)"
                 >
+                  <div class="result-thumb">
+                    <div class="result-thumb-placeholder">
+                      {{ company.content.charAt(0).toUpperCase() }}
+                    </div>
+                  </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ company.content }}</div>
+                  </div>
+                </a>
               </div>
 
-              <a
-                v-for="(company, idx) in companyResults"
-                :key="company.searchableId"
-                :href="resultHref(company)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
-                :id="optionId(company)"
-                role="option"
-                :aria-selected="isActive(company)"
-                :class="{ 'is-active': isActive(company) }"
-                @mousemove="setActive(company)"
-                @click.prevent="goToResult(company)"
-              >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ company.content.charAt(0).toUpperCase() }}
-                  </div>
+              <!-- Platforms -->
+              <div v-if="platformResults.length" class="category" role="group" aria-label="Platforms">
+                <div class="category-header" aria-hidden="true">
+                  <Monitor class="category-icon" />
+                  <span class="category-title">Platforms</span>
+                  <span class="category-count"
+                    >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
+                  >
                 </div>
-                <div class="result-info">
-                  <div class="result-title">{{ company.content }}</div>
-                </div>
-              </a>
-            </div>
 
-            <!-- Platforms column -->
-            <div v-if="platformResults.length" class="category" role="group" aria-label="Platforms">
-              <div class="category-header" aria-hidden="true">
-                <Monitor class="category-icon" />
-                <span class="category-title">Platforms</span>
-                <span class="category-count"
-                  >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
+                <a
+                  v-for="(platform, idx) in platformResults"
+                  :key="platform.searchableId"
+                  :href="resultHref(platform)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                  :id="optionId(platform)"
+                  role="option"
+                  :aria-selected="isActive(platform)"
+                  :class="{ 'is-active': isActive(platform) }"
+                  @mousemove="setActive(platform)"
+                  @click.prevent="goToResult(platform)"
                 >
+                  <div class="result-thumb">
+                    <div class="result-thumb-placeholder">
+                      {{ platform.content.charAt(0).toUpperCase() }}
+                    </div>
+                  </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ platform.content }}</div>
+                  </div>
+                </a>
               </div>
 
-              <a
-                v-for="(platform, idx) in platformResults"
-                :key="platform.searchableId"
-                :href="resultHref(platform)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-                :id="optionId(platform)"
-                role="option"
-                :aria-selected="isActive(platform)"
-                :class="{ 'is-active': isActive(platform) }"
-                @mousemove="setActive(platform)"
-                @click.prevent="goToResult(platform)"
-              >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ platform.content.charAt(0).toUpperCase() }}
-                  </div>
+              <!-- Other resources -->
+              <div v-if="otherResults.length" class="category" role="group" aria-label="Other">
+                <div class="category-header" aria-hidden="true">
+                  <Shapes class="category-icon" />
+                  <span class="category-title">Other</span>
+                  <span class="category-count"
+                    >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
+                  >
                 </div>
-                <div class="result-info">
-                  <div class="result-title">{{ platform.content }}</div>
-                </div>
-              </a>
-            </div>
 
-            <!-- Other resources column -->
-            <div v-if="otherResults.length" class="category" role="group" aria-label="Other">
-              <div class="category-header" aria-hidden="true">
-                <Shapes class="category-icon" />
-                <span class="category-title">Other</span>
-                <span class="category-count"
-                  >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
+                <a
+                  v-for="(item, idx) in otherResults"
+                  :key="item.searchableId"
+                  :href="resultHref(item)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                  :id="optionId(item)"
+                  role="option"
+                  :aria-selected="isActive(item)"
+                  :class="{ 'is-active': isActive(item) }"
+                  @mousemove="setActive(item)"
+                  @click.prevent="goToResult(item)"
                 >
+                  <div class="result-thumb">
+                    <div class="result-thumb-placeholder">
+                      {{ item.content.charAt(0).toUpperCase() }}
+                    </div>
+                  </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ item.content }}</div>
+                    <div class="result-meta">
+                      <span class="result-type-tag">{{
+                        item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
+                      }}</span>
+                    </div>
+                  </div>
+                </a>
               </div>
 
-              <a
-                v-for="(item, idx) in otherResults"
-                :key="item.searchableId"
-                :href="resultHref(item)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-                :id="optionId(item)"
-                role="option"
-                :aria-selected="isActive(item)"
-                :class="{ 'is-active': isActive(item) }"
-                @mousemove="setActive(item)"
-                @click.prevent="goToResult(item)"
-              >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ item.content.charAt(0).toUpperCase() }}
-                  </div>
+              <!-- Users -->
+              <div v-if="userResults.length" class="category" role="group" aria-label="Users">
+                <div class="category-header" aria-hidden="true">
+                  <Users class="category-icon" />
+                  <span class="category-title">Users</span>
+                  <span class="category-count"
+                    >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+                  >
                 </div>
-                <div class="result-info">
-                  <div class="result-title">{{ item.content }}</div>
-                  <div class="result-meta">
-                    <span class="result-type-tag">{{
-                      item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
-                    }}</span>
-                  </div>
-                </div>
-              </a>
-            </div>
 
-            <!-- Users column -->
-            <div v-if="userResults.length" class="category" role="group" aria-label="Users">
-              <div class="category-header" aria-hidden="true">
-                <Users class="category-icon" />
-                <span class="category-title">Users</span>
-                <span class="category-count"
-                  >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+                <a
+                  v-for="(user, idx) in userResults"
+                  :key="user.searchableId"
+                  :href="resultHref(user)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
+                  :id="optionId(user)"
+                  role="option"
+                  :aria-selected="isActive(user)"
+                  :class="{ 'is-active': isActive(user) }"
+                  @mousemove="setActive(user)"
+                  @click.prevent="goToResult(user)"
                 >
-              </div>
-
-              <a
-                v-for="(user, idx) in userResults"
-                :key="user.searchableId"
-                :href="resultHref(user)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
-                :id="optionId(user)"
-                role="option"
-                :aria-selected="isActive(user)"
-                :class="{ 'is-active': isActive(user) }"
-                @mousemove="setActive(user)"
-                @click.prevent="goToResult(user)"
-              >
-                <div class="result-thumb">
-                  <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
-                  <div v-else class="result-thumb-placeholder">
-                    {{ user.content.charAt(0).toUpperCase() }}
+                  <div class="result-thumb">
+                    <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
+                    <div v-else class="result-thumb-placeholder">
+                      {{ user.content.charAt(0).toUpperCase() }}
+                    </div>
                   </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ user.content }}</div>
-                </div>
-              </a>
+                  <div class="result-info">
+                    <div class="result-title">{{ user.content }}</div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -419,17 +421,15 @@ function setActive(result: SearchResultFieldsFragment) {
   activeIndex.value = resultIndex(result);
 }
 
-// Dynamically set grid columns based on which categories have results
-const gridColumnsClass = computed(() => {
-  const cols = [
-    gameResults.value.length > 0,
-    companyResults.value.length > 0,
-    platformResults.value.length > 0,
-    otherResults.value.length > 0,
+// Every category but games stacks in one column beside the games list, so
+// each gets enough width for its names however many categories match.
+const hasSideResults = computed(
+  () =>
+    companyResults.value.length > 0 ||
+    platformResults.value.length > 0 ||
+    otherResults.value.length > 0 ||
     userResults.value.length > 0
-  ].filter(Boolean).length;
-  return `grid-cols-${Math.min(cols, 4)}`;
-});
+);
 
 // Start with the query the overlay was opened with, focus the input, and
 // listen for Escape globally.
@@ -689,7 +689,7 @@ function releaseYear(date: string): string {
 .search-header {
   flex-shrink: 0;
   padding: 48px 24px 0;
-  max-width: 780px;
+  max-width: 960px;
   width: 100%;
 }
 
@@ -850,7 +850,7 @@ function releaseYear(date: string): string {
   flex: 1;
   overflow-y: auto;
   padding: 12px 24px 40px;
-  max-width: 780px;
+  max-width: 960px;
   width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--s-300) transparent;
@@ -874,20 +874,8 @@ function releaseYear(date: string): string {
   gap: 0;
 }
 
-.grid-cols-1 {
-  grid-template-columns: 1fr;
-}
-
-.grid-cols-2 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.grid-cols-3 {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.grid-cols-4 {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+.results-grid--split {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
 }
 
 /* ── Category column ── */
@@ -896,13 +884,21 @@ function releaseYear(date: string): string {
   padding: 0 8px;
 }
 
-.category + .category {
-  border-left: 1px solid rgba(85, 90, 110, 0.4);
-  padding-left: 24px;
+.results-grid--split > .category {
+  padding-right: 24px;
 }
 
-.category:first-child {
-  padding-right: 24px;
+/* Companies, platforms, other and users, one under another. */
+.category-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.results-grid--split > .category-stack {
+  border-left: 1px solid rgba(85, 90, 110, 0.4);
+  padding-left: 16px;
 }
 
 .category-header {
@@ -1095,13 +1091,6 @@ function releaseYear(date: string): string {
 }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-  .grid-cols-3,
-  .grid-cols-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
 @media (max-width: 640px) {
   .search-header {
     padding-top: 16px;
@@ -1127,20 +1116,18 @@ function releaseYear(date: string): string {
     display: none;
   }
 
-  .grid-cols-4,
-  .grid-cols-3,
-  .grid-cols-2 {
+  .results-grid--split {
     grid-template-columns: 1fr;
   }
 
-  .category + .category {
-    border-left: none;
-    padding-left: 8px;
-    margin-top: 16px;
+  .results-grid--split > .category {
+    padding-right: 8px;
   }
 
-  .category:first-child {
-    padding-right: 8px;
+  .results-grid--split > .category-stack {
+    border-left: none;
+    padding-left: 0;
+    margin-top: 16px;
   }
 }
 </style>
