@@ -302,7 +302,9 @@ const TAB_TITLES: Partial<Record<RouteRecordName, string>> = {
 };
 usePageTitle(() => {
   const username = user.value?.username;
-  if (!username) return null;
+  if (!username) {
+    return null;
+  }
   const tab = route.name ? TAB_TITLES[route.name] : undefined;
   return tab ? `${username}'s ${tab}` : username;
 });
@@ -317,13 +319,19 @@ provide(USER_PROFILE_KEY, { user, isOwnProfile, refetch });
 // "412 games · 1,830h played · 56% completed · avg 78"
 const statsLine = computed(() => {
   const stats = user.value?.libraryStatistics;
-  if (!stats) return "";
+  if (!stats) {
+    return "";
+  }
   const parts = [`${stats.gamesCount.toLocaleString()} game${stats.gamesCount === 1 ? "" : "s"}`];
   if (stats.totalHoursPlayed > 0 && !user.value?.hideDaysPlayed) {
     parts.push(`${Math.round(stats.totalHoursPlayed).toLocaleString()}h played`);
   }
-  if (stats.completionPercentage > 0) parts.push(`${stats.completionPercentage}% completed`);
-  if (stats.averageRating !== null) parts.push(`avg ${Math.round(stats.averageRating)}`);
+  if (stats.completionPercentage > 0) {
+    parts.push(`${stats.completionPercentage}% completed`);
+  }
+  if (stats.averageRating !== null) {
+    parts.push(`avg ${Math.round(stats.averageRating)}`);
+  }
   return parts.join(" · ");
 });
 
@@ -386,7 +394,9 @@ const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_
 const showUnfollowConfirm = ref(false);
 
 async function follow() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   try {
     await followUser({ userId: id });
@@ -398,7 +408,9 @@ async function follow() {
 }
 
 async function unfollow() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   try {
     await unfollowUser({ userId: id });
@@ -424,7 +436,9 @@ const actionsMenu = ref<HTMLElement | null>(null);
 const actionsToggle = ref<HTMLButtonElement | null>(null);
 
 function closeActions() {
-  if (!actionsOpen.value) return;
+  if (!actionsOpen.value) {
+    return;
+  }
   actionsOpen.value = false;
   actionsToggle.value?.focus();
 }
@@ -472,13 +486,17 @@ async function moderate(
 }
 
 function ban() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   void moderate(showBanConfirm, () => banUser({ userId: id }), `${username} has been banned.`, "Failed to ban user.");
 }
 
 function unban() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   void moderate(
     showUnbanConfirm,
@@ -489,7 +507,9 @@ function unban() {
 }
 
 function removeAvatar() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id } = user.value;
   void moderate(
     showRemoveAvatarConfirm,
@@ -511,7 +531,9 @@ function promptRoleChange(change: RoleChange) {
 }
 
 function changeRole() {
-  if (!user.value || !pendingRole.value) return;
+  if (!user.value || !pendingRole.value) {
+    return;
+  }
   const { id, username } = user.value;
   const { role, noun } = pendingRole.value;
   void moderate(
@@ -719,7 +741,11 @@ function changeRole() {
   display: flex;
   margin-top: 24px;
   overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
+  overflow-y: hidden;
+  /* The baseline is an inset shadow rather than a border so the active tab's
+     underline can sit on it without a negative margin. That margin made the
+     tabs 1px taller than the bar, which let the bar scroll vertically. */
+  box-shadow: inset 0 -1px 0 var(--color-border);
   scrollbar-width: none;
 }
 
@@ -728,7 +754,6 @@ function changeRole() {
   flex-shrink: 0;
   gap: 6px;
   align-items: center;
-  margin-bottom: -1px;
   padding: 10px 16px;
   border-bottom: 2px solid transparent;
   color: var(--color-text-secondary);

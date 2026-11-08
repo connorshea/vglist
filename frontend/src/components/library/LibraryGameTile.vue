@@ -44,8 +44,12 @@ const hours = computed(() => (props.hideHours ? null : formatHours(props.purchas
 // The dot and badge are visual only, so spell them out for screen readers.
 const ariaLabel = computed(() => {
   const parts = [props.purchase.game.name];
-  if (status.value) parts.push(status.value.label);
-  if (props.purchase.rating !== null) parts.push(`rated ${props.purchase.rating}`);
+  if (status.value) {
+    parts.push(status.value.label);
+  }
+  if (props.purchase.rating !== null) {
+    parts.push(`rated ${props.purchase.rating}`);
+  }
   return parts.join(", ");
 });
 </script>

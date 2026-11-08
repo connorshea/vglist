@@ -189,14 +189,18 @@ watch(results, () => {
 
 function describe(candidate: Candidate): string {
   const parts: string[] = [];
-  if (candidate.releaseDate) parts.push(candidate.releaseDate.slice(0, 4));
+  if (candidate.releaseDate) {
+    parts.push(candidate.releaseDate.slice(0, 4));
+  }
   parts.push(`${candidate.ownerCount} ${candidate.ownerCount === 1 ? "owner" : "owners"}`);
   parts.push(`ID ${candidate.id}`);
   return parts.join(" · ");
 }
 
 function move(step: number) {
-  if (results.value.length === 0) return;
+  if (results.value.length === 0) {
+    return;
+  }
   activeIndex.value = (activeIndex.value + step + results.value.length) % results.value.length;
 }
 
@@ -209,13 +213,17 @@ function choose(candidate: Candidate) {
 
 function chooseActive() {
   const candidate = results.value[activeIndex.value];
-  if (candidate) choose(candidate);
+  if (candidate) {
+    choose(candidate);
+  }
 }
 
 // Escape in a non-empty search box clears it rather than closing the dialog.
 // An empty box lets Escape through to close the dialog as usual.
 function clearSearch(event: KeyboardEvent) {
-  if (!term.value) return;
+  if (!term.value) {
+    return;
+  }
   event.preventDefault();
   event.stopPropagation();
   clearTimeout(debounceTimer);
@@ -230,7 +238,9 @@ function back() {
 }
 
 async function merge() {
-  if (!target.value || merging.value) return;
+  if (!target.value || merging.value) {
+    return;
+  }
   merging.value = true;
   mergeError.value = "";
   try {
@@ -249,7 +259,9 @@ async function merge() {
 }
 
 function close() {
-  if (merging.value) return;
+  if (merging.value) {
+    return;
+  }
   emit("update:modelValue", false);
 }
 
@@ -258,11 +270,15 @@ function onKeydown(event: KeyboardEvent) {
     close();
     return;
   }
-  if (event.key !== "Tab" || !dialogRef.value) return;
+  if (event.key !== "Tab" || !dialogRef.value) {
+    return;
+  }
 
   // Keep focus inside the dialog.
   const focusable = Array.from(dialogRef.value.querySelectorAll<HTMLElement>("button:not([disabled]), input"));
-  if (focusable.length === 0) return;
+  if (focusable.length === 0) {
+    return;
+  }
   const first = focusable[0];
   const last = focusable[focusable.length - 1];
   if (event.shiftKey && document.activeElement === first) {
@@ -286,7 +302,9 @@ watch(
       void nextTick(() => inputRef.value?.focus());
     } else {
       // After a merge the page navigates away, so there may be nothing to return to.
-      if (previouslyFocused?.isConnected) previouslyFocused.focus();
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus();
+      }
       previouslyFocused = null;
     }
   }

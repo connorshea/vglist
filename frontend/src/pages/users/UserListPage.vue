@@ -95,13 +95,17 @@ const hasNextPage = computed(() => data.value?.users?.pageInfo?.hasNextPage ?? f
 const totalCount = computed(() => data.value?.users?.totalCount ?? 0);
 
 function setSort(sort: UserSort | null) {
-  if (sort === currentSort.value) return;
+  if (sort === currentSort.value) {
+    return;
+  }
   const slug = sortOptions.find((o) => o.value === sort)?.slug ?? undefined;
   void router.push({ query: { ...withoutPage(route.query), sort: slug } });
 }
 
 function nextPage() {
-  if (hasNextPage.value) goToNextPage(data.value?.users?.pageInfo?.endCursor);
+  if (hasNextPage.value) {
+    goToNextPage(data.value?.users?.pageInfo?.endCursor);
+  }
 }
 
 function prevPage() {

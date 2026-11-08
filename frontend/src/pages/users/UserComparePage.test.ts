@@ -89,9 +89,15 @@ const ONLY_B = {
 
 function respond(summary: unknown = SUMMARY) {
   mockRequest.mockImplementation((query) => {
-    if (query === GET_LIBRARY_COMPARISON) return Promise.resolve(summary);
-    if (query === GET_COMPARISON_IN_COMMON) return Promise.resolve(IN_COMMON);
-    if (query === GET_COMPARISON_ONLY) return Promise.resolve(ONLY_B);
+    if (query === GET_LIBRARY_COMPARISON) {
+      return Promise.resolve(summary);
+    }
+    if (query === GET_COMPARISON_IN_COMMON) {
+      return Promise.resolve(IN_COMMON);
+    }
+    if (query === GET_COMPARISON_ONLY) {
+      return Promise.resolve(ONLY_B);
+    }
     return Promise.reject(new Error("unexpected query"));
   });
 }

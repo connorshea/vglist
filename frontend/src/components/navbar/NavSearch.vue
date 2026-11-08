@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-search" :style="{ viewTransitionName: isOpen ? 'none' : 'search-bar' }" @click="open()">
+  <div class="navbar-search" @click="open()">
     <div class="control">
       <input class="input is-small" type="search" placeholder="Search..." readonly @keydown="handleKeydown" />
       <kbd class="search-shortcut">{{ isMac ? "⌘" : "Ctrl+" }}K</kbd>
@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 
-const { open, isOpen } = useSearchOverlay();
+const { open } = useSearchOverlay();
 
 const isMac = navigator.platform.toUpperCase().includes("MAC");
 

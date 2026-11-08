@@ -60,28 +60,14 @@ describe("GameHeroPanel", () => {
     expect(mountPanel().find(".hero-panel-you").exists()).toBeFalsy();
   });
 
-  it("collapses long store link lists behind a +N more button", async () => {
+  it("shows every external link without collapsing any", () => {
     const externalLinks = ["Steam", "GOG", "IGDB", "Wikidata", "MobyGames", "PCGamingWiki"].map((label) => ({
       label,
       url: `https://example.com/${label}`
     }));
     const wrapper = mountPanel({ externalLinks });
 
-    expect(wrapper.findAll("a.hero-tag")).toHaveLength(3);
-    const more = wrapper.find(".hero-tag-more");
-    expect(more.text()).toBe("+3 more");
-    expect(more.attributes("aria-expanded")).toBe("false");
-
-    await more.trigger("click");
-    expect(wrapper.findAll("a.hero-tag")).toHaveLength(6);
-    expect(wrapper.find(".hero-tag-more").exists()).toBeFalsy();
-  });
-
-  it("shows up to four links without a +N more button", () => {
-    const externalLinks = ["Steam", "GOG", "IGDB", "Wikidata"].map((label) => ({ label, url: "https://example.com" }));
-    const wrapper = mountPanel({ externalLinks });
-
-    expect(wrapper.findAll("a.hero-tag")).toHaveLength(4);
+    expect(wrapper.findAll("a.hero-tag").map((link) => link.text())).toEqual(externalLinks.map((link) => link.label));
     expect(wrapper.find(".hero-tag-more").exists()).toBeFalsy();
   });
 });

@@ -170,7 +170,9 @@ const profilePath = computed(() => `/users/${authStore.user?.slug}`);
 watch(
   () => authStore.token,
   (token) => {
-    if (token) void refreshCurrentUserAvatar();
+    if (token) {
+      void refreshCurrentUserAvatar();
+    }
   },
   { immediate: true }
 );

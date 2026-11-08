@@ -32,7 +32,9 @@ async function mountCropper(file: File) {
 
 function canvas(): HTMLCanvasElement {
   const el = document.body.querySelector<HTMLCanvasElement>("canvas.ac-canvas");
-  if (!el) throw new Error("crop canvas not rendered");
+  if (!el) {
+    throw new Error("crop canvas not rendered");
+  }
   return el;
 }
 
@@ -40,7 +42,9 @@ function button(label: string): HTMLButtonElement {
   const el = Array.from(document.body.querySelectorAll<HTMLButtonElement>(".ac-btn")).find((b) =>
     b.textContent?.includes(label)
   );
-  if (!el) throw new Error(`no button labelled ${label}`);
+  if (!el) {
+    throw new Error(`no button labelled ${label}`);
+  }
   return el;
 }
 
@@ -48,7 +52,9 @@ function button(label: string): HTMLButtonElement {
 // the 9-argument form.
 function lastExportRect(): { sx: number; sy: number; size: number } {
   const call = [...drawImageCalls].reverse().find((args) => args.length === 9);
-  if (!call) throw new Error("image was never exported");
+  if (!call) {
+    throw new Error("image was never exported");
+  }
   const [, sx, sy, size] = call;
   return { sx, sy, size };
 }
@@ -128,7 +134,9 @@ describe("AvatarCropper", () => {
     await mountCropper(new File(["x"], "photo.jpg", { type: "image/jpeg" }));
 
     const slider = document.body.querySelector<HTMLInputElement>('input[type="range"]');
-    if (!slider) throw new Error("no zoom slider");
+    if (!slider) {
+      throw new Error("no zoom slider");
+    }
     slider.value = "2";
     slider.dispatchEvent(new Event("input", { bubbles: true }));
     await flushPromises();

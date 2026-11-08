@@ -38,10 +38,13 @@
       <p>Failed to load {{ kindPlural }}: {{ error.message }}</p>
     </div>
 
-    <div v-if="!loaded && loading" class="loading-more" role="status">
-      <span class="spinner" aria-hidden="true"></span>
-      Loading {{ kindPlural }}&hellip;
-    </div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? `Loading ${kindPlural}…` : "" }}</p>
+
+    <ul v-if="showSkeleton" class="resource-grid" aria-hidden="true">
+      <li v-for="tile in SKELETON_TILES" :key="tile">
+        <ResourceTileSkeleton :name-width="skeletonNameWidth(tile)" />
+      </li>
+    </ul>
     <div v-else-if="loaded && items.length === 0" class="empty-state">
       <p v-if="nameFilter">No {{ kindPlural }} match &ldquo;{{ nameFilter }}&rdquo;.</p>
       <p v-else>No {{ kindPlural }} yet.</p>
@@ -96,6 +99,7 @@ import { countLabel } from "@/components/games-index/format";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import type { ResourceIndexSortLink } from "@/composables/useResourceIndex";
 import ResourceTile from "./ResourceTile.vue";
+import ResourceTileSkeleton from "./ResourceTileSkeleton.vue";
 
 export interface ResourceIndexItem {
   id: string;
@@ -135,19 +139,32 @@ const emit = defineEmits<{
 }>();
 
 const search = defineModel<string>("search", { required: true });
+// ── First load ──
+// Placeholder tiles until the first page arrives. Later loads (search, sort)
+// keep the current tiles up and dim them instead.
+const showSkeleton = computed(() => !props.loaded && props.loading);
+const SKELETON_TILES = 12;
+const SKELETON_NAME_WIDTHS = ["58%", "42%", "70%", "50%", "64%", "46%"];
+function skeletonNameWidth(i: number): string {
+  return SKELETON_NAME_WIDTHS[(i - 1) % SKELETON_NAME_WIDTHS.length] ?? "55%";
+}
 
 // ── Delete ──
 const itemToDelete = ref<ResourceIndexItem | null>(null);
 const showDeleteConfirm = computed({
   get: () => itemToDelete.value !== null,
   set: (open) => {
-    if (!open) itemToDelete.value = null;
+    if (!open) {
+      itemToDelete.value = null;
+    }
   }
 });
 
 function confirmDelete() {
   const item = itemToDelete.value;
-  if (!item) return;
+  if (!item) {
+    return;
+  }
   // The page runs the mutation and closes the dialog when it's finished.
   emit("delete", item, () => (itemToDelete.value = null));
 }
@@ -159,18 +176,26 @@ const sentinelRef = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | undefined;
 
 watch(sentinelRef, (el, oldEl) => {
-  if (oldEl) observer?.unobserve(oldEl);
-  if (el) observer?.observe(el);
+  if (oldEl) {
+    observer?.unobserve(oldEl);
+  }
+  if (el) {
+    observer?.observe(el);
+  }
 });
 
 onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
-      if (entries.some((entry) => entry.isIntersecting) && !props.loadingMore) emit("loadMore");
+      if (entries.some((entry) => entry.isIntersecting) && !props.loadingMore) {
+        emit("loadMore");
+      }
     },
     { rootMargin: "600px 0px" }
   );
-  if (sentinelRef.value) observer.observe(sentinelRef.value);
+  if (sentinelRef.value) {
+    observer.observe(sentinelRef.value);
+  }
 });
 
 onBeforeUnmount(() => observer?.disconnect());

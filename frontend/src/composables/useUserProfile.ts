@@ -17,6 +17,8 @@ export const USER_PROFILE_KEY: InjectionKey<UserProfileContext> = Symbol("userPr
 // The profile layout's user, for the tabs rendered inside it.
 export function useUserProfile(): UserProfileContext {
   const context = inject(USER_PROFILE_KEY);
-  if (!context) throw new Error("useUserProfile() must be called inside the user profile layout.");
+  if (!context) {
+    throw new Error("useUserProfile() must be called inside the user profile layout.");
+  }
   return context;
 }

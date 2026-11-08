@@ -17,7 +17,9 @@ describe("GameLibrarySheet", () => {
 
   function sheet(): HTMLElement {
     const el = document.body.querySelector<HTMLElement>(".lsheet");
-    if (!el) throw new Error("sheet not rendered");
+    if (!el) {
+      throw new Error("sheet not rendered");
+    }
     return el;
   }
 

@@ -20,6 +20,7 @@
     "eslint/no-self-compare": "error",
     "eslint/no-var": "error",
     "eslint/no-console": "error",
+    "eslint/curly": ["error", "all"],
     "unicorn/no-abusive-eslint-disable": "error",
     "typescript/no-unnecessary-type-assertion": "error",
     "typescript/no-unnecessary-type-constraint": "error",
