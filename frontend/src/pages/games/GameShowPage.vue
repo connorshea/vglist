@@ -510,7 +510,7 @@ const externalLinks = computed<ExternalLink[]>(() => {
     links.push({ label: "Epic Games Store", url: `https://store.epicgames.com/p/${g.epicGamesStoreId}` });
   }
   if (g.gogId) {
-    links.push({ label: "GOG", url: `https://www.gog.com/game/${g.gogId}` });
+    links.push({ label: "GOG.com", url: `https://www.gog.com/game/${g.gogId}` });
   }
 
   return links;
