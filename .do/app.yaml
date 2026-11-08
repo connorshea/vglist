@@ -10,11 +10,12 @@
 #
 # Deploys: App Platform doesn't build anything. .github/workflows/docker.yml
 # builds and tests both images, pushes them to GHCR (ghcr.io/connorshea/
-# vglist-api and vglist-frontend, both public packages) and deploys their
-# digests on every push to main. The `tag: main` below is only what an
-# update from this file points at until the next workflow deploy. The
+# vglist-api and vglist-frontend, both public packages) on every push to
+# main, and .github/workflows/deploy.yml deploys a commit's digests when run
+# by hand. The `tag: main` below is only what an update from this file
+# points at until the next deploy. The
 # frontend's build-time vars (VITE_SENTRY_DSN, VITE_TURNSTILE_SITE_KEY) are
-# repo secrets for that workflow, and the commit SHA is baked into the API
+# repo secrets for the Docker workflow, and the commit SHA is baked into the API
 # image.
 #
 # This file isn't read on deploy. Changes to it are applied by hand:
@@ -91,7 +92,7 @@ databases:
 
 services:
   - name: api
-    # Prebuilt by .github/workflows/docker.yml, which deploys each new digest.
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
     image:
       registry_type: GHCR
       registry: connorshea
@@ -168,7 +169,7 @@ services:
         type: SECRET
 
   - name: frontend
-    # Prebuilt by .github/workflows/docker.yml, which deploys each new digest.
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
     image:
       registry_type: GHCR
       registry: connorshea
@@ -204,7 +205,7 @@ services:
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
-    # Prebuilt by .github/workflows/docker.yml, which deploys each new digest.
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
     image:
       registry_type: GHCR
       registry: connorshea
@@ -232,7 +233,7 @@ jobs:
     schedule:
       cron: "0 0 * * *"
       time_zone: UTC
-    # Prebuilt by .github/workflows/docker.yml, which deploys each new digest.
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
     image:
       registry_type: GHCR
       registry: connorshea

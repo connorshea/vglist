@@ -4,21 +4,16 @@ name: Docker
 # frontend/Dockerfile for the SPA) and smoke-tests that each one boots and
 # answers /health.
 #
-# On pushes to main it also deploys them: both images are pushed to GHCR, and
-# the deploy job points every App Platform component at the new digests and
-# waits for the rollout. App Platform no longer builds anything itself (the
-# components in .do/app.yaml use image sources).
+# On pushes to main it also pushes the tested images to GHCR, tagged with the
+# commit SHA (plus `main`). Deploying them is a separate, manual step: see
+# .github/workflows/deploy.yml.
 #
 # Setup (once):
-#   - A `production` environment (Settings > Environments) limited to the
-#     main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
-#     App Platform read + update access.
 #   - Repo secrets VITE_SENTRY_DSN and VITE_TURNSTILE_SITE_KEY. Neither is
 #     really secret (both ship in the JS bundle), but secrets keep them out
 #     of the build logs.
 #   - After the first push, make the vglist-api and vglist-frontend GHCR
 #     packages public so App Platform can pull them without credentials.
-
 on:
   push:
     branches: [main]
@@ -26,16 +21,16 @@ on:
 
 permissions: {}
 
-# A deploy that's already running finishes before the next one starts. A
-# newer push replaces one that's still waiting.
+# A new push to a PR cancels its older run. Every push to main runs to the end,
+# so each merged commit gets its own images.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'push' && 'deploy' || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   API_IMAGE: ghcr.io/connorshea/vglist-api
   FRONTEND_IMAGE: ghcr.io/connorshea/vglist-frontend
-  DEPLOY: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
 jobs:
   api:
@@ -43,8 +38,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    outputs:
-      digest: ${{ steps.push.outputs.digest }}
     services:
       postgres:
         image: postgres:18
@@ -144,7 +137,7 @@ jobs:
           docker run --rm vglist-api file --version
 
       - name: Log in to GHCR
-        if: env.DEPLOY == 'true'
+        if: env.PUSH == 'true'
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
@@ -153,9 +146,9 @@ jobs:
 
       # Same inputs as the tested build, so every layer comes from the cache.
       # One image serves the api service and the migrate and update-stats jobs.
+      # `main` is whichever push to main finished last; deploys use the SHA tag.
       - name: Push image
-        id: push
-        if: env.DEPLOY == 'true'
+        if: env.PUSH == 'true'
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
@@ -165,6 +158,9 @@ jobs:
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
           build-args: GIT_COMMIT_SHA=${{ github.sha }}
           push: true
+          # A plain image manifest, not an index with an attestation entry, so
+          # the digest is exactly what App Platform pulls.
+          provenance: false
           cache-from: type=gha,scope=api
 
   frontend:
@@ -172,8 +168,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    outputs:
-      digest: ${{ steps.push.outputs.digest }}
     # Baked into the bundle (see frontend/Dockerfile). VITE_API_URL comes from
     # frontend/.env.production. Empty on fork PRs, which the Dockerfile treats
     # as unset.
@@ -279,7 +273,7 @@ jobs:
           fi
 
       - name: Log in to GHCR
-        if: env.DEPLOY == 'true'
+        if: env.PUSH == 'true'
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
@@ -288,8 +282,7 @@ jobs:
 
       # Same inputs as the tested build, so every layer comes from the cache.
       - name: Push image
-        id: push
-        if: env.DEPLOY == 'true'
+        if: env.PUSH == 'true'
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
@@ -300,29 +293,7 @@ jobs:
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
           build-args: ${{ env.BUILD_ARGS }}
           push: true
+          # A plain image manifest, not an index with an attestation entry, so
+          # the digest is exactly what App Platform pulls.
+          provenance: false
           cache-from: type=gha,scope=frontend
-
-  # Points every App Platform component at the digests pushed above and waits
-  # for the rollout (the migrate PRE_DEPLOY job runs first, as before). It
-  # starts from the live app spec, so the encrypted secret values there are
-  # kept and only the image digests change. Changes to .do/app.yaml itself
-  # still need `doctl apps update`.
-  deploy:
-    needs: [api, frontend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions: {}
-    environment:
-      name: production
-      url: https://vglist.co
-    steps:
-      - name: Deploy to App Platform
-        uses: digitalocean/app_action/deploy@cc55bc9b848d25f9c1c9f831cf843fbab3fbfb15 # v2.0.11
-        env:
-          IMAGE_DIGEST_API: ${{ needs.api.outputs.digest }}
-          IMAGE_DIGEST_MIGRATE: ${{ needs.api.outputs.digest }}
-          IMAGE_DIGEST_UPDATE_STATS: ${{ needs.api.outputs.digest }}
-          IMAGE_DIGEST_FRONTEND: ${{ needs.frontend.outputs.digest }}
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-          app_name: vglist
