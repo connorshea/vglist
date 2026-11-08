@@ -2611,6 +2611,20 @@ CREATE UNIQUE INDEX index_genres_on_wikidata_id ON public.genres USING btree (wi
 
 
 --
+-- Name: index_pg_search_documents_on_content_trigram; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pg_search_documents_on_content_trigram ON public.pg_search_documents USING gin (COALESCE(content, ''::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_pg_search_documents_on_content_tsvector; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pg_search_documents_on_content_tsvector ON public.pg_search_documents USING gin (to_tsvector('simple'::regconfig, COALESCE(content, ''::text)));
+
+
+--
 -- Name: index_pg_search_documents_on_searchable_type_and_searchable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3070,6 +3084,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108000100'),
 ('20261108000000'),
 ('20261107230200'),
 ('20261107230100'),
