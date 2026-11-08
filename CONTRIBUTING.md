@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - Ruby 4.0
-- Postgres 17.x
+- Postgres 18.x
 - Node.js 24.x
 - pnpm
 - libvips (for images, like avatars or game covers)

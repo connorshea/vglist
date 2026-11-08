@@ -32,20 +32,25 @@ WORKDIR /rails
 # - libvips42t64: Active Storage image variants via ruby-vips. Trixie ships
 #   libvips 8.16, which satisfies image_processing's >= 8.13 requirement.
 # - libpq5: PostgreSQL client library for the pg gem.
-# - postgresql-client: psql, which `db:schema:load` shells out to when loading
-#   db/structure.sql into an empty database (the Docker CI workflow does
-#   this). Trixie's default is v17.
+# - postgresql-client-18: psql, which `db:schema:load` shells out to when
+#   loading db/structure.sql into an empty database (the Docker CI workflow
+#   does this), plus pg_dump for one-off dumps from `doctl apps console`.
+#   Trixie only ships v17 and pg_dump refuses to dump a newer server, so it
+#   comes from the PGDG apt repo, set up by postgresql-common's helper. Keep
+#   the major version in step with the managed cluster.
 # - libjemalloc2: lower memory fragmentation for Puma's threads/workers.
 # - file: active_storage_validations shells out to `file` to sniff the real
 #   content type of every attachment (spoofing check), so uploads and
 #   import:igdb:covers fail without it.
 RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y ca-certificates postgresql-common && \
+    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
     apt-get install --no-install-recommends -y \
       file \
       libjemalloc2 \
       libpq5 \
       libvips42t64 \
-      postgresql-client && \
+      postgresql-client-18 && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
