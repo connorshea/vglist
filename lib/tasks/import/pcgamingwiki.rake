@@ -146,6 +146,11 @@ namespace :import do
       # the same download, then throw the downloaded tempfile away so an
       # import doesn't accumulate one open file per game it processes.
       begin
+        # The sizes are created below, from the file we already have, so
+        # attaching the cover shouldn't also enqueue a TransformJob for each
+        # one. Those would download the original again, and run on the async
+        # adapter in this process, which drops them when the task exits.
+        game.skip_cover_preprocessing = true
         game.cover.attach(io: cover.io, filename: cover.filename)
 
         # If the cover has any errors, they'll show up on the `Game` record.
@@ -169,10 +174,8 @@ namespace :import do
         end
 
         # Create each size of the cover now, from the file we already have.
-        # Otherwise the TransformJobs `preprocessed: true` queues run on the
-        # async adapter in this process and are dropped when the task exits,
-        # and the sizes end up being created on the web server the first time
-        # a page shows the cover (see ReadyVariant).
+        # Otherwise the sizes end up being created on the web server the first
+        # time a page shows the cover (see ReadyVariant).
         begin
           VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io)
         rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
