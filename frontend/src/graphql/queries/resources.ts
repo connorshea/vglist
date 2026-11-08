@@ -10,21 +10,6 @@ export const RESOURCE_GAME_FIELDS = gql`
   }
 `;
 
-export const GET_PLATFORMS = gql`
-  query GetPlatforms($first: Int, $after: String) {
-    platforms(first: $first, after: $after) {
-      nodes {
-        id
-        name
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
-
 export const GET_PLATFORM = gql`
   ${RESOURCE_GAME_FIELDS}
 
@@ -53,21 +38,6 @@ export const GET_PLATFORM_FOR_EDIT = gql`
       id
       name
       wikidataId
-    }
-  }
-`;
-
-export const GET_COMPANIES = gql`
-  query GetCompanies($first: Int, $after: String) {
-    companies(first: $first, after: $after) {
-      nodes {
-        id
-        name
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
     }
   }
 `;
@@ -140,21 +110,6 @@ export const GET_COMPANY_FOR_EDIT = gql`
   }
 `;
 
-export const GET_GENRES = gql`
-  query GetGenres($first: Int, $after: String) {
-    genres(first: $first, after: $after) {
-      nodes {
-        id
-        name
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
-
 export const GET_GENRE = gql`
   ${RESOURCE_GAME_FIELDS}
 
@@ -183,21 +138,6 @@ export const GET_GENRE_FOR_EDIT = gql`
       id
       name
       wikidataId
-    }
-  }
-`;
-
-export const GET_ENGINES = gql`
-  query GetEngines($first: Int, $after: String) {
-    engines(first: $first, after: $after) {
-      nodes {
-        id
-        name
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
     }
   }
 `;
@@ -252,21 +192,6 @@ export const GET_ENGINE_FOR_EDIT = gql`
       id
       name
       wikidataId
-    }
-  }
-`;
-
-export const GET_SERIES_LIST = gql`
-  query GetSeriesList($first: Int, $after: String) {
-    seriesList(first: $first, after: $after) {
-      nodes {
-        id
-        name
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
     }
   }
 `;

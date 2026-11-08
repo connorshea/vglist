@@ -8,13 +8,7 @@ RSpec.describe "GraphQL complexity and depth limits", type: :request do
   let(:spa_page_sizes) do
     Hash.new(100).merge(
       # UserLibraryPage.vue: each status' shelf shows its first 12 games.
-      'GetLibraryShelves' => 12,
-      # GameFormPage.vue loads whole lists of resources for its pickers.
-      'GetPlatforms' => 500,
-      'GetCompanies' => 500,
-      'GetGenres' => 500,
-      'GetEngines' => 500,
-      'GetSeriesList' => 500
+      'GetLibraryShelves' => 12
     )
   end
 
