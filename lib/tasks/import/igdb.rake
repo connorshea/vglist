@@ -164,24 +164,31 @@ namespace :import do
       end
     ]
     # There's no notification for running a model's validations, so time them
-    # by wrapping Game#run_validations! for the rest of this task's process.
-    # Queries run by the validations count towards `validate`, not `sql`, so
-    # the parts add up to the step's total.
-    Game.prepend(Module.new do
-      define_method(:run_validations!) do
-        breakdown = Thread.current[:igdb_cover_breakdown]
-        sql_before = breakdown&.fetch(:sql, 0)
-        queries_before = breakdown&.fetch(:queries, 0)
-        started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        super()
-      ensure
-        if breakdown
-          breakdown[:validate] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
-          breakdown[:sql] = sql_before
-          breakdown[:queries] = queries_before
-        end
-      end
-    end)
+    # with a before/after pair of Game validation callbacks, which are removed
+    # once the task is done. Queries run by the validations count towards
+    # `validate`, not `sql`, so the parts add up to the step's total.
+    validation_started = lambda do |_game|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      next if breakdown.nil?
+
+      Thread.current[:igdb_cover_validation_start] = [
+        Process.clock_gettime(Process::CLOCK_MONOTONIC),
+        breakdown[:sql],
+        breakdown[:queries]
+      ]
+    end
+    validation_finished = lambda do |_game|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      started, sql_before, queries_before = Thread.current[:igdb_cover_validation_start]
+      next if breakdown.nil? || started.nil?
+
+      Thread.current[:igdb_cover_validation_start] = nil
+      breakdown[:validate] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+      breakdown[:sql] = sql_before
+      breakdown[:queries] = queries_before
+    end
+    Game.before_validation(validation_started)
+    Game.after_validation(validation_finished)
 
     # Time the image work for each size: decoding the original, resizing it
     # and encoding the result. `transform.active_storage` also wraps the
@@ -295,8 +302,14 @@ namespace :import do
         # Create each size of the cover now, from the file we already have,
         # rather than leaving it to TransformJobs (skipped above): those would
         # download the original again, and run on the async adapter in this
-        # process, which drops them if the task exits first.
-        timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
+        # process, which drops them if the task exits first. A cover libvips
+        # can't resize is still added, so one bad image doesn't stop the whole
+        # import; ReadyVariant serves the original until its sizes exist.
+        begin
+          timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
+        rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+          next [true, ["#{label} | Cover added, but its sizes could not be created: #{e.message}"]]
+        end
       ensure
         cover.close
       end
@@ -337,6 +350,8 @@ namespace :import do
     end
     workers.each(&:join)
     breakdown_subscribers.each { |subscriber| ActiveSupport::Notifications.unsubscribe(subscriber) }
+    Game.skip_callback(:validation, :before, validation_started)
+    Game.skip_callback(:validation, :after, validation_finished)
 
     progress_bar.finish unless progress_bar.finished?
 

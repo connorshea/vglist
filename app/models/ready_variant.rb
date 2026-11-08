@@ -8,7 +8,7 @@
 # image, but a page of covers that were never resized spends seconds per cover
 # doing it, which runs past the GraphQL query timeout. Instead, return the
 # original image for now and let ActiveStorage::TransformJob create the variant
-# in the background, the same way `preprocessed: true` variants are created.
+# in the background, the same way preprocessed variants are created.
 module ReadyVariant
   # @param attached [ActiveStorage::Attached::One] e.g. `game.cover`.
   # @param name [Symbol] One of the attachment's named variants.

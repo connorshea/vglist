@@ -118,8 +118,8 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
     expect(game.cover.byte_size).to eq(png.bytesize)
   end
 
-  # Left to the TransformJobs `preprocessed: true` queues, they'd be dropped
-  # when the task exits and then created on the web server instead.
+  # Left to TransformJobs, they'd be dropped when the task exits and then
+  # created on the web server instead.
   it 'creates every size of the cover from the download' do
     allow(Addrinfo).to receive(:getaddrinfo).and_return([Addrinfo.ip('93.184.216.34')])
     game = create(:game, pcgamingwiki_id: 'Some_Game')
@@ -130,6 +130,27 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
     run_task
 
     expect(game.reload.cover.blob.variant_records.count).to eq(Game::COVER_SIZES.size)
+  end
+
+  context 'with the test job adapter' do
+    around(:each) do |example|
+      original_adapter = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :test
+      example.run
+    ensure
+      ActiveJob::Base.queue_adapter = original_adapter
+    end
+
+    it "doesn't enqueue TransformJobs for the sizes it creates itself" do
+      allow(Addrinfo).to receive(:getaddrinfo).and_return([Addrinfo.ip('93.184.216.34')])
+      game = create(:game, pcgamingwiki_id: 'Some_Game')
+      stub_upstream('https://images.pcgamingwiki.com/covers/half-life.png')
+      stub_request(:get, 'https://images.pcgamingwiki.com/covers/half-life.png')
+        .to_return(status: 200, body: png, headers: { 'Content-Type' => 'image/png' })
+
+      expect { run_task }.not_to have_enqueued_job(ActiveStorage::TransformJob)
+      expect(game.reload.cover).to be_attached
+    end
   end
 
   # An import runs through thousands of games in a single process, so a cover

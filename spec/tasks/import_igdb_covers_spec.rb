@@ -50,6 +50,37 @@ RSpec.describe 'import:igdb:covers', type: :task do
     end
   end
 
+  it "times the cover's validations, and removes the callbacks that do it afterwards" do
+    game = create(:game, igdb_id: 'game-0')
+    stub_igdb([game.igdb_id])
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+    callbacks_before = Game._validation_callbacks.count
+    # The task logs each cover's timings through its progress bar.
+    logged = []
+    allow(ProgressBar).to receive(:create).and_wrap_original do |original, **options|
+      original.call(**options).tap { |bar| allow(bar).to receive(:log) { |message| logged << message } }
+    end
+
+    run_task
+
+    expect(logged.join("\n")).to match(/save [\d.]+s \[validate [\d.]+s \(spoof check [\d.]+s\)/)
+    expect(Game._validation_callbacks.count).to eq(callbacks_before)
+  end
+
+  it "keeps importing when a cover's sizes can't be created" do
+    games = Array.new(2) { |i| create(:game, igdb_id: "game-#{i}") }
+    stub_igdb(games.map(&:igdb_id))
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+    backfill = instance_double(VariantBackfillService)
+    allow(backfill).to receive(:call).and_raise(Vips::Error, 'corrupt image')
+    allow(VariantBackfillService).to receive(:new).and_return(backfill)
+
+    expect { run_task }.not_to raise_error
+    games.each { |game| expect(game.reload.cover).to be_attached }
+  end
+
   context 'with the test job adapter' do
     around(:each) do |example|
       original_adapter = ActiveJob::Base.queue_adapter

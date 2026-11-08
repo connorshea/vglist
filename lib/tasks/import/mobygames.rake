@@ -124,13 +124,16 @@ namespace :import do
         # and resized, so an import doesn't accumulate one open file per game it
         # processes.
         begin
+          # The sizes are created below, from the file we already have, so
+          # attaching the cover shouldn't also enqueue a TransformJob for each
+          # one. Those would download the original again, and run on the async
+          # adapter in this process, which drops them when the task exits.
+          game.skip_cover_preprocessing = true
           game.cover.attach(io: cover.io, filename: cover.filename)
 
           # Create each size of the cover now, from the file we already have.
-          # Otherwise the TransformJobs `preprocessed: true` queues run on the
-          # async adapter in this process and are dropped when the task exits,
-          # and the sizes end up being created on the web server the first time
-          # a page shows the cover (see ReadyVariant). An invalid cover is
+          # Otherwise the sizes end up being created on the web server the first
+          # time a page shows the cover (see ReadyVariant). An invalid cover is
           # never saved, so there's nothing to resize.
           begin
             saved = game.errors.empty? && game.reload.cover.attached?
