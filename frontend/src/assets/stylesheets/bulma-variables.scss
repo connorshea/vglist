@@ -8,26 +8,37 @@
   $danger: #e24b4a
 );
 
-@forward "bulma/sass/elements" with (
+// Bulma's elements, components and form controls are forwarded one module at
+// a time so the ones no template uses (box, content, tag, progress, tabs,
+// dropdown, modal, message, pagination, panel, menu, breadcrumb, select,
+// checkbox/radio, file, ...) stay out of the stylesheet. To use one of those
+// classes, add its module back here.
+@forward "bulma/sass/elements/button" with (
   $button-padding-vertical: calc(0.375em - 1px),
   $button-padding-horizontal: 0.75em
 );
+@forward "bulma/sass/elements/delete";
+@forward "bulma/sass/elements/icon";
+@forward "bulma/sass/elements/image";
+@forward "bulma/sass/elements/notification";
+@forward "bulma/sass/elements/table";
+@forward "bulma/sass/elements/title";
 
-@forward "bulma/sass/components" with (
+@forward "bulma/sass/components/card" with (
+  $card-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
+  $card-radius: 0.5rem
+);
+@forward "bulma/sass/components/navbar" with (
   $navbar-item-color-l: 100%,
   $navbar-item-color: hsl(0, 0%, 100%),
   $navbar-burger-color: #fff,
   $navbar-background-color: transparent,
   $navbar-dropdown-arrow: #fff,
   $navbar-divider-height: 1px,
-  $navbar-dropdown-boxed-shadow: "rgba(10, 10, 10, 0.1) 0px 8px 8px 0px",
-  $panel-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
-  $card-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
-  $dropdown-content-shadow: "0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1)",
-  $card-radius: 0.5rem
+  $navbar-dropdown-boxed-shadow: "rgba(10, 10, 10, 0.1) 0px 8px 8px 0px"
 );
 
-@forward "bulma/sass/form" with (
+@forward "bulma/sass/form/shared" with (
   $input-shadow: none,
   $input-focus-shadow-size: 0,
   $input-radius: 4px,
@@ -36,6 +47,8 @@
   // alpha, which is unreadable on the dark input background.
   $input-placeholder-color: var(--color-placeholder)
 );
+@forward "bulma/sass/form/input-textarea";
+@forward "bulma/sass/form/tools";
 
 // Bulma's helpers, minus color.scss. The color helpers generate
 // .has-text-*, .has-background-* and .is-palette-* for every colour and
@@ -71,7 +84,9 @@
 @forward "bulma/sass/base";
 // Only the flexbox columns; Bulma's CSS grid (.grid, .fixed-grid, .cell) is unused.
 @forward "bulma/sass/grid/columns";
-@forward "bulma/sass/layout";
+@forward "bulma/sass/layout/container";
+@forward "bulma/sass/layout/hero";
+@forward "bulma/sass/layout/section";
 
 // Bulma's themes/_index.scss writes the light theme three times (:root,
 // prefers-color-scheme: light, [data-theme=light]) and the dark theme twice
