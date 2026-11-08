@@ -2458,13 +2458,6 @@ CREATE UNIQUE INDEX index_game_genres_on_game_id_and_genre_id ON public.game_gen
 
 
 --
--- Name: index_game_genres_on_genre_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_game_genres_on_genre_id ON public.game_genres USING btree (genre_id);
-
-
---
 -- Name: index_game_genres_on_genre_id_and_release_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2483,13 +2476,6 @@ CREATE INDEX index_game_platforms_on_game_id ON public.game_platforms USING btre
 --
 
 CREATE UNIQUE INDEX index_game_platforms_on_game_id_and_platform_id ON public.game_platforms USING btree (game_id, platform_id);
-
-
---
--- Name: index_game_platforms_on_platform_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_game_platforms_on_platform_id ON public.game_platforms USING btree (platform_id);
 
 
 --
@@ -3197,6 +3183,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108230200'),
 ('20261108230100'),
 ('20261108230000'),
 ('20261108220000'),
