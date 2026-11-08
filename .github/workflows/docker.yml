@@ -146,7 +146,7 @@ jobs:
 
       # Same inputs as the tested build, so every layer comes from the cache.
       # One image serves the api service and the migrate and update-stats jobs.
-      # `main` is whichever push to main finished last; deploys use the SHA tag.
+      # Deploys use the SHA tag; see "Move the main tag" for `main`.
       - name: Push image
         if: env.PUSH == 'true'
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
@@ -154,7 +154,6 @@ jobs:
           context: .
           tags: |
             ${{ env.API_IMAGE }}:${{ github.sha }}
-            ${{ env.API_IMAGE }}:main
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
           build-args: GIT_COMMIT_SHA=${{ github.sha }}
           push: true
@@ -162,6 +161,22 @@ jobs:
           # the digest is exactly what App Platform pulls.
           provenance: false
           cache-from: type=gha,scope=api
+
+      # `main` is only what an update from .do/app.yaml points at. Runs for
+      # different commits finish in any order, so move it only if this commit
+      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Move the main tag
+        if: env.PUSH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$API_IMAGE:main" "$API_IMAGE:$GITHUB_SHA"
 
   frontend:
     runs-on: ubuntu-latest
@@ -289,7 +304,6 @@ jobs:
           file: frontend/Dockerfile
           tags: |
             ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
-            ${{ env.FRONTEND_IMAGE }}:main
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
           build-args: ${{ env.BUILD_ARGS }}
           push: true
@@ -297,3 +311,19 @@ jobs:
           # the digest is exactly what App Platform pulls.
           provenance: false
           cache-from: type=gha,scope=frontend
+
+      # `main` is only what an update from .do/app.yaml points at. Runs for
+      # different commits finish in any order, so move it only if this commit
+      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Move the main tag
+        if: env.PUSH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$FRONTEND_IMAGE:main" "$FRONTEND_IMAGE:$GITHUB_SHA"
