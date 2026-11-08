@@ -1,42 +1,51 @@
 <template>
   <div class="searchable-select" :class="{ 'is-open': open }">
-    <label v-if="label" class="label">{{ label }}</label>
+    <label v-if="label" class="label" :for="inputId">{{ label }}</label>
 
     <!-- Selected tags + input -->
-    <div
-      ref="controlRef"
-      class="ss-control"
-      :class="{ focused: open }"
-      role="combobox"
-      :aria-expanded="open"
-      aria-haspopup="listbox"
-      @click="focusInput"
-    >
-      <span v-for="item in selectedItems" :key="item.id" class="ss-tag">
+    <div class="ss-control" :class="{ focused: open }" @click="focusInput">
+      <span v-for="item in modelValue" :key="item.id" class="ss-tag">
         {{ item.name }}
         <button type="button" class="ss-tag-remove" :aria-label="`Remove ${item.name}`" @click.stop="removeItem(item)">
-          <X :size="12" />
+          <X :size="12" aria-hidden="true" />
         </button>
       </span>
       <input
+        :id="inputId"
         ref="inputRef"
-        v-model="search"
+        v-model="query"
         class="ss-input"
         type="text"
-        :placeholder="selectedItems.length === 0 ? placeholder : ''"
+        role="combobox"
+        aria-autocomplete="list"
+        :aria-expanded="open"
+        :aria-controls="listboxId"
+        :aria-activedescendant="open && results[highlightIndex] ? optionId(highlightIndex) : undefined"
+        :placeholder="modelValue.length === 0 ? placeholder : ''"
         autocomplete="off"
         @focus="open = true"
+        @blur="onBlur"
         @keydown="onKeydown"
       />
     </div>
 
     <!-- Dropdown -->
-    <div v-if="open" ref="dropdownRef" class="ss-dropdown" role="listbox">
-      <div v-if="filteredOptions.length === 0" class="ss-no-results">No results</div>
-      <button
-        v-for="(option, i) in filteredOptions"
+    <div
+      v-show="open"
+      :id="listboxId"
+      ref="dropdownRef"
+      class="ss-dropdown"
+      role="listbox"
+      :aria-label="label"
+      @mousedown.prevent
+    >
+      <div v-if="!query.trim()" class="ss-no-results">Type to search</div>
+      <div v-else-if="searching && results.length === 0" class="ss-no-results">Searching…</div>
+      <div v-else-if="results.length === 0" class="ss-no-results">No results</div>
+      <div
+        v-for="(option, i) in results"
+        :id="optionId(i)"
         :key="option.id"
-        type="button"
         role="option"
         class="ss-option"
         :class="{ highlighted: i === highlightIndex, selected: isSelected(option) }"
@@ -44,17 +53,18 @@
         @mousedown.prevent="toggleOption(option)"
         @mouseenter="highlightIndex = i"
       >
-        <Check v-if="isSelected(option)" :size="14" class="ss-check" />
+        <Check v-if="isSelected(option)" :size="14" class="ss-check" aria-hidden="true" />
         <span v-else class="ss-check-spacer" />
         {{ option.name }}
-      </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { ref, watch, nextTick, useId } from "vue";
 import { X, Check } from "@lucide/vue";
+import { useDebouncedSearch } from "@/composables/useDebouncedSearch";
 
 interface Option {
   id: string;
@@ -63,8 +73,10 @@ interface Option {
 
 const props = withDefaults(
   defineProps<{
-    options: Option[];
-    modelValue: string[];
+    /** The selected records, in the order they were picked. */
+    modelValue: Option[];
+    /** Finds records whose name matches the query. Called after typing pauses. */
+    search: (query: string) => Promise<Option[]>;
     label?: string;
     placeholder?: string;
   }>(),
@@ -75,52 +87,42 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  "update:modelValue": [value: string[]];
+  "update:modelValue": [value: Option[]];
 }>();
 
-const search = ref("");
+const uid = useId();
+const inputId = `${uid}-input`;
+const listboxId = `${uid}-listbox`;
+const optionId = (i: number) => `${uid}-option-${i}`;
+
+const { query, results, searching } = useDebouncedSearch((q) => props.search(q));
 const open = ref(false);
 const highlightIndex = ref(0);
 const inputRef = ref<HTMLInputElement | null>(null);
-const controlRef = ref<HTMLElement | null>(null);
 const dropdownRef = ref<HTMLElement | null>(null);
 
-const selectedItems = computed(() => {
-  const idSet = new Set(props.modelValue);
-  return props.options.filter((o) => idSet.has(o.id));
-});
-
-const filteredOptions = computed(() => {
-  const q = search.value.toLowerCase().trim();
-  if (!q) return props.options;
-  return props.options.filter((o) => o.name.toLowerCase().includes(q));
-});
-
-watch(search, () => {
+watch([query, results], () => {
   highlightIndex.value = 0;
 });
 
 function isSelected(option: Option): boolean {
-  return props.modelValue.includes(option.id);
+  return props.modelValue.some((item) => item.id === option.id);
 }
 
 function toggleOption(option: Option) {
   if (isSelected(option)) {
-    emit(
-      "update:modelValue",
-      props.modelValue.filter((id) => id !== option.id)
-    );
+    removeItem(option);
   } else {
-    emit("update:modelValue", [...props.modelValue, option.id]);
+    emit("update:modelValue", [...props.modelValue, { id: option.id, name: option.name }]);
   }
-  search.value = "";
+  query.value = "";
   nextTick(() => inputRef.value?.focus());
 }
 
 function removeItem(item: Option) {
   emit(
     "update:modelValue",
-    props.modelValue.filter((id) => id !== item.id)
+    props.modelValue.filter((selected) => selected.id !== item.id)
   );
 }
 
@@ -133,7 +135,7 @@ function onKeydown(e: KeyboardEvent) {
     e.preventDefault();
     if (!open.value) {
       open.value = true;
-    } else if (highlightIndex.value < filteredOptions.value.length - 1) {
+    } else if (highlightIndex.value < results.value.length - 1) {
       highlightIndex.value++;
       scrollHighlightedIntoView();
     }
@@ -144,15 +146,24 @@ function onKeydown(e: KeyboardEvent) {
       scrollHighlightedIntoView();
     }
   } else if (e.key === "Enter") {
+    // Don't submit the form while picking from the list.
     e.preventDefault();
-    const option = filteredOptions.value[highlightIndex.value];
-    if (option) toggleOption(option);
+    const option = results.value[highlightIndex.value];
+    if (open.value && option) toggleOption(option);
   } else if (e.key === "Escape") {
     open.value = false;
+    query.value = "";
     inputRef.value?.blur();
-  } else if (e.key === "Backspace" && !search.value && selectedItems.value.length > 0) {
-    removeItem(selectedItems.value[selectedItems.value.length - 1]);
+  } else if (e.key === "Backspace" && !query.value && props.modelValue.length > 0) {
+    removeItem(props.modelValue[props.modelValue.length - 1]);
   }
+}
+
+// Close when focus leaves, e.g. on Tab. The list uses `mousedown.prevent`, so
+// clicking in it doesn't blur the input first.
+function onBlur() {
+  open.value = false;
+  query.value = "";
 }
 
 function scrollHighlightedIntoView() {
@@ -161,21 +172,6 @@ function scrollHighlightedIntoView() {
     el?.scrollIntoView({ block: "nearest" });
   });
 }
-
-function onClickOutside(e: MouseEvent) {
-  const target = e.target as Node;
-  if (!controlRef.value?.contains(target) && !dropdownRef.value?.contains(target)) {
-    open.value = false;
-  }
-}
-
-onMounted(() => {
-  document.addEventListener("mousedown", onClickOutside);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener("mousedown", onClickOutside);
-});
 </script>
 
 <style scoped>
