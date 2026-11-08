@@ -220,6 +220,124 @@ describe("HomePage", () => {
     expect(mockRequest.mock.calls.map(([document]) => operationName(document))).toContain("GetHeroCovers");
   });
 
+  it("downloads the mosaic covers at low priority and only shows each one once it has loaded", async () => {
+    const images: HTMLImageElement[] = [];
+    class FakeImage extends EventTarget {
+      fetchPriority = "auto";
+      src = "";
+      constructor() {
+        super();
+        images.push(this as unknown as HTMLImageElement);
+      }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetHeroCovers"
+        ? Promise.resolve({
+            games: { nodes: [1, 2, 3, 4].map((n) => ({ id: String(n), coverUrl: `https://files.example/${n}.jpg` })) }
+          })
+        : respond(document, variables)
+    );
+    try {
+      const wrapper = await mountPage();
+      expect(images.map((img) => img.src).sort()).toEqual([1, 2, 3, 4].map((n) => `https://files.example/${n}.jpg`));
+      expect(images.every((img) => img.fetchPriority === "low")).toBeTruthy();
+      // Nothing points at a cover until its download finishes, so the
+      // stylesheet never starts a second, normal priority request.
+      expect(wrapper.find(".cover-mosaic").html()).not.toContain("files.example");
+
+      const first = images[0];
+      first.dispatchEvent(new Event("load"));
+      await flushPromises();
+      const html = wrapper.find(".cover-mosaic").html();
+      expect(html).toContain(first.src);
+      for (const img of images.slice(1)) expect(html).not.toContain(img.src);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("doesn't let a cover that loads late replace what a flipped tile is showing", async () => {
+    const images: HTMLImageElement[] = [];
+    class FakeImage extends EventTarget {
+      src = "";
+      constructor() {
+        super();
+        images.push(this as unknown as HTMLImageElement);
+      }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    // Every flip picks the same tile, which is one that gets a cover.
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    vi.useFakeTimers({ toFake: ["setTimeout", "setInterval"] });
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetHeroCovers"
+        ? Promise.resolve({ games: { nodes: [{ id: "1", coverUrl: "https://files.example/1.jpg" }] } })
+        : respond(document, variables)
+    );
+    try {
+      const wrapper = await mountPage();
+      // The cover hasn't loaded, so the 5s fallback reveals the mosaic, flips
+      // start 300ms later, and the first flip swaps its tile 400ms after that.
+      await vi.advanceTimersByTimeAsync(5000 + 300 + 160 + 400 + 50);
+      const flipping = wrapper.findAll(".cover-tile.flipping .tile-face");
+      expect(flipping.length).toBeGreaterThan(0);
+
+      images[0].dispatchEvent(new Event("load"));
+      await flushPromises();
+      expect(wrapper.find(".cover-mosaic").html()).toContain("files.example/1.jpg");
+      for (const face of flipping) expect(face.attributes("style") ?? "").not.toContain("files.example");
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("ignores mosaic covers that finish loading after data saver was toggled", async () => {
+    const images: HTMLImageElement[] = [];
+    class FakeImage extends EventTarget {
+      src = "";
+      constructor() {
+        super();
+        images.push(this as unknown as HTMLImageElement);
+      }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    const connection = Object.assign(new EventTarget(), { saveData: false });
+    Object.defineProperty(navigator, "connection", { value: connection, configurable: true });
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetHeroCovers"
+        ? Promise.resolve({ games: { nodes: [{ id: "1", coverUrl: "https://files.example/1.jpg" }] } })
+        : respond(document, variables)
+    );
+    try {
+      const wrapper = await mountPage();
+      expect(images).toHaveLength(1);
+
+      // Data saver goes on, then off again, before the first preload finishes.
+      connection.saveData = true;
+      connection.dispatchEvent(new Event("change"));
+      await flushPromises();
+      connection.saveData = false;
+      connection.dispatchEvent(new Event("change"));
+      await flushPromises();
+      // Turning it off again restarts the preload (twice: once straight away
+      // and once more when the hero covers query refetches).
+      expect(images.length).toBeGreaterThan(1);
+
+      images[0].dispatchEvent(new Event("load"));
+      await flushPromises();
+      expect(wrapper.find(".cover-mosaic").html()).not.toContain("files.example");
+
+      images[images.length - 1].dispatchEvent(new Event("load"));
+      await flushPromises();
+      expect(wrapper.find(".cover-mosaic").html()).toContain("files.example/1.jpg");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("skips the cover images in the background mosaic when the browser asks to save data", async () => {
     Object.defineProperty(navigator, "connection", {
       value: Object.assign(new EventTarget(), { saveData: true }),
