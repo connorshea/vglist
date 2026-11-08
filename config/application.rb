@@ -44,9 +44,6 @@ module VideoGameList
     # TODO: We can remove this after fully upgrading from SHA1 to SHA256 and rotating all encrypted values.
     config.active_record.encryption.support_sha1_for_non_deterministic_encryption = true
 
-    # Disable yjit because our production server is memory constrained.
-    config.yjit = false
-
     # Use structure.sql because we have SQL views, and the schema.rb doesn't support those.
     config.active_record.schema_format = :sql
 
