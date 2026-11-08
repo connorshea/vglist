@@ -294,6 +294,50 @@ describe("HomePage", () => {
     }
   });
 
+  it("ignores mosaic covers that finish loading after data saver was toggled", async () => {
+    const images: HTMLImageElement[] = [];
+    class FakeImage extends EventTarget {
+      src = "";
+      constructor() {
+        super();
+        images.push(this as unknown as HTMLImageElement);
+      }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    const connection = Object.assign(new EventTarget(), { saveData: false });
+    Object.defineProperty(navigator, "connection", { value: connection, configurable: true });
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetHeroCovers"
+        ? Promise.resolve({ games: { nodes: [{ id: "1", coverUrl: "https://files.example/1.jpg" }] } })
+        : respond(document, variables)
+    );
+    try {
+      const wrapper = await mountPage();
+      expect(images).toHaveLength(1);
+
+      // Data saver goes on, then off again, before the first preload finishes.
+      connection.saveData = true;
+      connection.dispatchEvent(new Event("change"));
+      await flushPromises();
+      connection.saveData = false;
+      connection.dispatchEvent(new Event("change"));
+      await flushPromises();
+      // Turning it off again restarts the preload (twice: once straight away
+      // and once more when the hero covers query refetches).
+      expect(images.length).toBeGreaterThan(1);
+
+      images[0].dispatchEvent(new Event("load"));
+      await flushPromises();
+      expect(wrapper.find(".cover-mosaic").html()).not.toContain("files.example");
+
+      images[images.length - 1].dispatchEvent(new Event("load"));
+      await flushPromises();
+      expect(wrapper.find(".cover-mosaic").html()).toContain("files.example/1.jpg");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("skips the cover images in the background mosaic when the browser asks to save data", async () => {
     Object.defineProperty(navigator, "connection", {
       value: Object.assign(new EventTarget(), { saveData: true }),

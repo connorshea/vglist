@@ -346,11 +346,16 @@ const coverUrls = computed<string[]>(() => {
 // is in here, so the CSS background is served from the cache and the low
 // priority preload below is the only request for each image.
 const loadedCoverUrls = ref<string[]>([]);
+// Bumped each time the watcher below runs, so preloads started by an earlier
+// run (before data saver was toggled, say) are ignored when they finish.
+let coverPreloadRun = 0;
 
 // Distribute cover images across tiles as they finish preloading
 watch(
   coverUrls,
   (urls) => {
+    const run = ++coverPreloadRun;
+    loadedCoverUrls.value = [];
     if (urls.length === 0) return;
     const shuffled = [...urls];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -380,6 +385,7 @@ watch(
       const img = new Image();
       img.fetchPriority = "low";
       const onDone = (ok: boolean) => {
+        if (run !== coverPreloadRun) return;
         if (ok) {
           loadedCoverUrls.value.push(url);
           for (const i of tilesByUrl.get(url) ?? []) {
