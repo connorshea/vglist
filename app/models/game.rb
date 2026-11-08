@@ -209,6 +209,17 @@ class Game < ApplicationRecord
     ReadyVariant.for(cover, size)
   end
 
+  # Recalculate the average rating and how many ratings it's based on (which
+  # Game.highest_avg_rating filters on) from the game's library entries.
+  # With no ratings, the average is nil. Called after every library entry
+  # change, and after a merge moves another game's entries onto this one.
+  # @return [Boolean] Whether the game saved.
+  def update_ratings
+    count, average = game_purchases.where.not(rating: nil)
+                                   .pick(Arel.sql('count(*)'), Arel.sql('avg(rating)'))
+    update(avg_rating: average&.round(1), ratings_count: count)
+  end
+
   protected
 
   # Prevent the game from using a Wikidata ID which has been blocklisted.

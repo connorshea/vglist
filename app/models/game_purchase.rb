@@ -121,11 +121,11 @@ class GamePurchase < ApplicationRecord
       event_category: :add_to_library
     )
 
-    update_average_rating
+    game.update_ratings
   end
 
   def game_purchase_update
-    update_average_rating
+    game.update_ratings
 
     return unless saved_changes.key?('completion_status')
 
@@ -139,15 +139,6 @@ class GamePurchase < ApplicationRecord
   end
 
   def game_purchase_destroy
-    update_average_rating
-  end
-
-  # Recalculate the game's average rating and how many ratings it's based
-  # on (which Game.highest_avg_rating filters on). With no ratings, the
-  # average is nil.
-  def update_average_rating
-    count, average = GamePurchase.where(game_id: game_id).where.not(rating: nil)
-                                 .pick(Arel.sql('count(*)'), Arel.sql('avg(rating)'))
-    game.update(avg_rating: average&.round(1), ratings_count: count)
+    game.update_ratings
   end
 end
