@@ -2177,6 +2177,13 @@ CREATE UNIQUE INDEX index_engines_on_wikidata_id ON public.engines USING btree (
 
 
 --
+-- Name: index_events_favorite_game_events_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_favorite_game_events_on_created_at ON public.events_favorite_game_events USING btree (created_at);
+
+
+--
 -- Name: index_events_favorite_game_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2188,6 +2195,20 @@ CREATE INDEX index_events_favorite_game_events_on_eventable_id ON public.events_
 --
 
 CREATE INDEX index_events_favorite_game_events_on_user_id ON public.events_favorite_game_events USING btree (user_id);
+
+
+--
+-- Name: index_events_favorite_game_events_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_favorite_game_events_on_user_id_and_created_at ON public.events_favorite_game_events USING btree (user_id, created_at);
+
+
+--
+-- Name: index_events_game_purchase_events_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_game_purchase_events_on_created_at ON public.events_game_purchase_events USING btree (created_at);
 
 
 --
@@ -2205,6 +2226,20 @@ CREATE INDEX index_events_game_purchase_events_on_user_id ON public.events_game_
 
 
 --
+-- Name: index_events_game_purchase_events_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_game_purchase_events_on_user_id_and_created_at ON public.events_game_purchase_events USING btree (user_id, created_at);
+
+
+--
+-- Name: index_events_relationship_events_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_relationship_events_on_created_at ON public.events_relationship_events USING btree (created_at);
+
+
+--
 -- Name: index_events_relationship_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2219,6 +2254,20 @@ CREATE INDEX index_events_relationship_events_on_user_id ON public.events_relati
 
 
 --
+-- Name: index_events_relationship_events_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_relationship_events_on_user_id_and_created_at ON public.events_relationship_events USING btree (user_id, created_at);
+
+
+--
+-- Name: index_events_user_events_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_user_events_on_created_at ON public.events_user_events USING btree (created_at);
+
+
+--
 -- Name: index_events_user_events_on_eventable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2230,6 +2279,13 @@ CREATE INDEX index_events_user_events_on_eventable_id ON public.events_user_even
 --
 
 CREATE INDEX index_events_user_events_on_user_id ON public.events_user_events USING btree (user_id);
+
+
+--
+-- Name: index_events_user_events_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_user_events_on_user_id_and_created_at ON public.events_user_events USING btree (user_id, created_at);
 
 
 --
@@ -3014,6 +3070,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108000000'),
 ('20261107230200'),
 ('20261107230100'),
 ('20261107230000'),
