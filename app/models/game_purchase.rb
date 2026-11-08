@@ -142,10 +142,12 @@ class GamePurchase < ApplicationRecord
     update_average_rating
   end
 
-  # If there aren't any game purchases for a given game, it'll return nil so
-  # avg_rating should be set to nil.
+  # Recalculate the game's average rating and how many ratings it's based
+  # on (which Game.highest_avg_rating filters on). With no ratings, the
+  # average is nil.
   def update_average_rating
-    average = GamePurchase.where(game_id: game_id).average(:rating)
-    average.nil? ? game.update(avg_rating: nil) : game.update(avg_rating: average.round(1))
+    count, average = GamePurchase.where(game_id: game_id).where.not(rating: nil)
+                                 .pick(Arel.sql('count(*)'), Arel.sql('avg(rating)'))
+    game.update(avg_rating: average&.round(1), ratings_count: count)
   end
 end

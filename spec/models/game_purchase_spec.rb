@@ -206,6 +206,24 @@ RSpec.describe GamePurchase, type: :model do
         expect { game_purchase2.destroy }.to change(game, :avg_rating).from(15).to(nil)
       end
 
+      it "counts only rated library entries in the game's ratings_count" do
+        game_purchase1
+        game_purchase2
+        expect { game_purchase3 }.to change(game, :ratings_count).from(1).to(2)
+      end
+
+      it "updates the game's ratings_count when a rating is removed or added" do
+        game_purchase2
+        game_purchase3
+        expect { game_purchase3.update!(rating: nil) }.to change(game, :ratings_count).from(2).to(1)
+        expect { game_purchase1.update!(rating: 40) }.to change(game, :ratings_count).from(1).to(2)
+      end
+
+      it "updates the game's ratings_count when a rated entry is deleted" do
+        game_purchase2
+        expect { game_purchase2.destroy }.to change(game, :ratings_count).from(1).to(0)
+      end
+
       it "keeps the game's game_purchases_count up to date" do
         game_purchase1
         game_purchase2

@@ -54,8 +54,9 @@ class Game < ApplicationRecord
 
   # Use PaperTrail to track changes to the record.
 
-  # Track changes to the record, but ignore changes to the average rating.
-  has_paper_trail ignore: [:avg_rating, :updated_at, :created_at],
+  # Track changes to the record, but ignore changes to the average rating
+  # and its count.
+  has_paper_trail ignore: [:avg_rating, :ratings_count, :updated_at, :created_at],
                   versions: {
                     class_name: 'Versions::GameVersion'
                   }
@@ -67,16 +68,15 @@ class Game < ApplicationRecord
   scope :oldest, -> { order(created_at: :asc, id: :asc) }
   scope :recently_updated, -> { order(updated_at: :desc, id: :desc) }
   scope :least_recently_updated, -> { order(updated_at: :asc, id: :asc) }
-  # Sort by average rating.
-  # Must have at least 5 owners w/ ratings to be included.
-  # Also check that the avg_rating column isn't nil to preven[t weirdness in
-  # certain cases where the game record becomes invalid.
+  # Sort by average rating. Only games with at least 5 ratings are listed,
+  # so a single rating can't put a game at the top. Reads the ratings_count
+  # column (kept up to date with avg_rating) rather than counting every
+  # game's ratings per query, and is backed by a partial index on
+  # (avg_rating, id). Games with no avg_rating are skipped too, in case a
+  # game record ends up invalid.
   scope :highest_avg_rating, -> {
-    joins(:game_purchases)
-      .where.not('game_purchases.rating': nil)
-      .where.not('games.avg_rating': nil)
-      .group('games.id')
-      .having("count(game_purchases.id) >= ?", 5)
+    where(ratings_count: 5..)
+      .where.not(avg_rating: nil)
       .order(avg_rating: :desc, id: :desc)
   }
   # Sort by most favorites.
