@@ -7,7 +7,7 @@ Sentry.init do |config|
   # Only run in production.
   config.enabled_environments = ['production']
   config.environment = Rails.env
-  config.release = ENV['GIT_COMMIT_SHA']
+  config.release = ENV['GIT_COMMIT_SHA'].presence
   # Never send request bodies, cookies, IP addresses, or the Authorization
   # header to Sentry. GraphQL request bodies for signIn/updatePassword/
   # updateEmail contain plaintext passwords, and the Authorization header
