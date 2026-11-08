@@ -1,6 +1,8 @@
 <template>
-  <div class="library-page" :class="{ 'is-phone': isPhone }" :aria-busy="showSkeleton">
-    <!-- Always mounted so screen readers announce the text when it changes -->
+  <div class="library-page" :class="{ 'is-phone': isPhone }">
+    <!-- Always mounted so screen readers announce the text when it changes. No
+         aria-busy on the page: screen readers can hold back a live region inside
+         a busy element until it stops being busy, and by then this is empty. -->
     <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading library…" : "" }}</p>
 
     <!-- The whole tab in outline until the filter counts arrive -->

@@ -97,7 +97,7 @@ describe("UserLibraryPage loading state", () => {
     const status = wrapper.find("[role='status']");
 
     expect(wrapper.findComponent(LibraryPageSkeleton).exists()).toBeTruthy();
-    expect(page.attributes("aria-busy")).toBe("true");
+    expect(page.attributes("aria-busy")).toBeUndefined();
     expect(status.text()).toBe("Loading library…");
 
     await resolve(GET_LIBRARY_PAGE, PAGE);
@@ -107,7 +107,6 @@ describe("UserLibraryPage loading state", () => {
 
     await resolve(GET_LIBRARY_SHELVES, SHELVES);
     expect(wrapper.findComponent(LibrarySkeleton).exists()).toBeFalsy();
-    expect(page.attributes("aria-busy")).toBe("false");
     expect(status.text()).toBe("");
     expect(wrapper.text()).toContain("No games in this library yet");
   });
