@@ -364,6 +364,8 @@ function onDocumentKeydown(e: KeyboardEvent) {
 
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", onDocumentKeydown);
+  performSearch.cancel();
+  cancelInFlightSearch();
 });
 
 const query = ref("");
@@ -457,7 +459,7 @@ watch(isOpen, async (open) => {
     // Drop the pending search and ignore any still in flight, so they can't
     // fill the overlay back in after it's been cleared.
     performSearch.cancel();
-    latestSearch++;
+    cancelInFlightSearch();
     query.value = "";
     resultsQuery = null;
     results.value = [];
@@ -479,12 +481,25 @@ onMounted(() => {
 // a slow response for an earlier query (e.g. "hal") could land after the
 // one for "halo" and replace its results.
 let latestSearch = 0;
+// The request for the newest search, so starting another one (or closing the
+// overlay) can cancel it rather than leave it to finish unseen. Otherwise each
+// pause while typing adds a request that the API still has to work through
+// before it gets to the one whose results will actually be shown.
+let searchController: AbortController | null = null;
+
+// Ignore whatever search is in flight, and stop its request.
+function cancelInFlightSearch() {
+  latestSearch++;
+  searchController?.abort();
+  searchController = null;
+}
 // The query the shown results belong to, so Enter can tell when they're
 // out of date with what's typed.
 let resultsQuery: string | null = null;
 
 const performSearch = debounce(async () => {
-  const searchId = ++latestSearch;
+  cancelInFlightSearch();
+  const searchId = latestSearch;
   const searchQuery = trimmedQuery.value;
 
   if (searchQuery.length < 2) {
@@ -497,7 +512,7 @@ const performSearch = debounce(async () => {
   }
 
   // Only spaces changed (e.g. "halo" → "halo "): the shown results already
-  // match. Bumping latestSearch above still drops anything in flight.
+  // match. Cancelling above still drops anything in flight.
   if (searchQuery === resultsQuery && !error.value) {
     loading.value = false;
     return;
@@ -505,8 +520,14 @@ const performSearch = debounce(async () => {
 
   loading.value = true;
   error.value = null;
+  const controller = new AbortController();
+  searchController = controller;
   try {
-    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: searchQuery });
+    const data = await gqlClient.request<GlobalSearchQuery>({
+      document: GLOBAL_SEARCH,
+      variables: { query: searchQuery },
+      signal: controller.signal
+    });
     if (searchId !== latestSearch) {
       return;
     }
@@ -515,6 +536,8 @@ const performSearch = debounce(async () => {
     resultsQuery = searchQuery;
     hasSearched.value = true;
   } catch (e: unknown) {
+    // A cancelled search always has a newer one (or a closed overlay) behind
+    // it, so its AbortError is dropped here rather than shown.
     if (searchId !== latestSearch) {
       return;
     }
@@ -525,6 +548,7 @@ const performSearch = debounce(async () => {
   } finally {
     if (searchId === latestSearch) {
       loading.value = false;
+      searchController = null;
     }
   }
 }, 500);
