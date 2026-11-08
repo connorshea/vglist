@@ -183,13 +183,15 @@ jobs:
     permissions:
       contents: read
       packages: write
-    # Baked into the bundle (see frontend/Dockerfile). VITE_API_URL comes from
+    # Baked into the bundle (see frontend/Dockerfile). The release is the commit
+    # SHA, matching the API image. VITE_API_URL comes from
     # frontend/.env.production. Empty on fork PRs, which the Dockerfile treats
     # as unset.
     env:
       BUILD_ARGS: |
         VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
         VITE_TURNSTILE_SITE_KEY=${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+        VITE_SENTRY_RELEASE=${{ github.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

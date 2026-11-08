@@ -38,9 +38,11 @@ COPY frontend/ ./
 ARG VITE_API_URL
 ARG VITE_SENTRY_DSN
 ARG VITE_TURNSTILE_SITE_KEY
+ARG VITE_SENTRY_RELEASE
 RUN [ -n "$VITE_API_URL" ] || unset VITE_API_URL; \
     [ -n "$VITE_SENTRY_DSN" ] || unset VITE_SENTRY_DSN; \
     [ -n "$VITE_TURNSTILE_SITE_KEY" ] || unset VITE_TURNSTILE_SITE_KEY; \
+    [ -n "$VITE_SENTRY_RELEASE" ] || unset VITE_SENTRY_RELEASE; \
     pnpm run build
 
 # ---------------------------------------------------------------------------
