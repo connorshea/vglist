@@ -47,48 +47,48 @@
 
             <!-- Series -->
             <SearchableSelect
-              v-model="form.seriesId"
-              :options="allSeries"
+              v-model="form.series"
+              :search="searchSeries"
               label="Series"
               placeholder="Search series..."
             />
 
             <!-- Platforms -->
             <SearchableMultiSelect
-              v-model="form.platformIds"
-              :options="allPlatforms"
+              v-model="form.platforms"
+              :search="searchPlatforms"
               label="Platforms"
               placeholder="Search platforms..."
             />
 
             <!-- Developers -->
             <SearchableMultiSelect
-              v-model="form.developerIds"
-              :options="allCompanies"
+              v-model="form.developers"
+              :search="searchCompanies"
               label="Developers"
               placeholder="Search developers..."
             />
 
             <!-- Publishers -->
             <SearchableMultiSelect
-              v-model="form.publisherIds"
-              :options="allCompanies"
+              v-model="form.publishers"
+              :search="searchCompanies"
               label="Publishers"
               placeholder="Search publishers..."
             />
 
             <!-- Genres -->
             <SearchableMultiSelect
-              v-model="form.genreIds"
-              :options="allGenres"
+              v-model="form.genres"
+              :search="searchGenres"
               label="Genres"
               placeholder="Search genres..."
             />
 
             <!-- Engines -->
             <SearchableMultiSelect
-              v-model="form.engineIds"
-              :options="allEngines"
+              v-model="form.engines"
+              :search="searchEngines"
               label="Engines"
               placeholder="Search engines..."
             />
@@ -258,7 +258,21 @@ import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_GAME } from "@/graphql/queries/games";
-import { GET_PLATFORMS, GET_COMPANIES, GET_GENRES, GET_ENGINES, GET_SERIES_LIST } from "@/graphql/queries/resources";
+import {
+  SEARCH_COMPANIES_FOR_GAME_FORM,
+  SEARCH_ENGINES_FOR_GAME_FORM,
+  SEARCH_GENRES_FOR_GAME_FORM,
+  SEARCH_PLATFORMS_FOR_GAME_FORM,
+  SEARCH_SERIES_FOR_GAME_FORM
+} from "@/graphql/queries/game-form";
+import { gqlClient } from "@/graphql/client";
+import type {
+  SearchCompaniesForGameFormQuery,
+  SearchEnginesForGameFormQuery,
+  SearchGenresForGameFormQuery,
+  SearchPlatformsForGameFormQuery,
+  SearchSeriesForGameFormQuery
+} from "@/types/graphql";
 import { CREATE_GAME, UPDATE_GAME } from "@/graphql/mutations/games";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { isValidWikidataId, normalizeWikidataId } from "@/utils/wikidata";
@@ -266,11 +280,13 @@ import SearchableMultiSelect from "@/components/SearchableMultiSelect.vue";
 import SearchableSelect from "@/components/SearchableSelect.vue";
 import WikidataIdInput from "@/components/WikidataIdInput.vue";
 import { gamePrefillFromQuery } from "@/utils/game-prefill";
-import { withSelectedOptions, type IdName } from "@/utils/resource-options";
 
-interface ResourceListResult {
-  nodes: IdName[];
+interface IdName {
+  id: string;
+  name: string;
 }
+
+const ids = (records: IdName[]) => records.map((record) => record.id);
 
 interface GetGameResult {
   game: {
@@ -313,12 +329,12 @@ const gameId = computed(() => route.params.id);
 const form = reactive({
   name: "",
   releaseDate: "",
-  seriesId: "",
-  platformIds: [] as string[],
-  developerIds: [] as string[],
-  publisherIds: [] as string[],
-  genreIds: [] as string[],
-  engineIds: [] as string[],
+  series: null as IdName | null,
+  platforms: [] as IdName[],
+  developers: [] as IdName[],
+  publishers: [] as IdName[],
+  genres: [] as IdName[],
+  engines: [] as IdName[],
   wikidataId: "",
   pcgamingwikiId: "",
   mobygamesId: "",
@@ -361,12 +377,12 @@ watch(
     if (!game) return;
     form.name = game.name;
     form.releaseDate = game.releaseDate ?? "";
-    form.seriesId = game.series?.id ?? "";
-    form.platformIds = game.platforms.nodes.map((p) => p.id);
-    form.developerIds = game.developers.nodes.map((d) => d.id);
-    form.publisherIds = game.publishers.nodes.map((p) => p.id);
-    form.genreIds = game.genres.nodes.map((g) => g.id);
-    form.engineIds = game.engines.nodes.map((e) => e.id);
+    form.series = game.series ? { ...game.series } : null;
+    form.platforms = [...game.platforms.nodes];
+    form.developers = [...game.developers.nodes];
+    form.publishers = [...game.publishers.nodes];
+    form.genres = [...game.genres.nodes];
+    form.engines = [...game.engines.nodes];
     form.wikidataId = game.wikidataId != null ? String(game.wikidataId) : "";
     form.pcgamingwikiId = game.pcgamingwikiId ?? "";
     form.mobygamesId = game.mobygamesId != null ? String(game.mobygamesId) : "";
@@ -386,51 +402,29 @@ watch([gameData, gameError, gameLoading], () => {
   }
 });
 
-// Fetch resource lists for the form dropdowns
-const RESOURCE_PAGE_SIZE = 500;
-
-const { data: platformsData } = useQuery<{ platforms: ResourceListResult }>(GET_PLATFORMS, {
-  variables: { first: RESOURCE_PAGE_SIZE }
-});
-const { data: companiesData } = useQuery<{ companies: ResourceListResult }>(GET_COMPANIES, {
-  variables: { first: RESOURCE_PAGE_SIZE }
-});
-const { data: genresData } = useQuery<{ genres: ResourceListResult }>(GET_GENRES, {
-  variables: { first: RESOURCE_PAGE_SIZE }
-});
-const { data: enginesData } = useQuery<{ engines: ResourceListResult }>(GET_ENGINES, {
-  variables: { first: RESOURCE_PAGE_SIZE }
-});
-const { data: seriesData } = useQuery<{ seriesList: ResourceListResult }>(GET_SERIES_LIST, {
-  variables: { first: RESOURCE_PAGE_SIZE }
-});
-
-// The API caps each page at 100 records, so the game's own selections can be
-// missing from these lists. Seed them from the game (not the form, so a
-// removed selection can still be picked again) so they always display.
-const editedGame = computed(() => (isEditing.value ? gameData.value?.game : null));
-const allPlatforms = computed(() =>
-  withSelectedOptions(platformsData.value?.platforms?.nodes ?? [], editedGame.value?.platforms.nodes ?? [])
-);
-const allCompanies = computed(() =>
-  withSelectedOptions(
-    companiesData.value?.companies?.nodes ?? [],
-    editedGame.value?.developers.nodes ?? [],
-    editedGame.value?.publishers.nodes ?? []
-  )
-);
-const allGenres = computed(() =>
-  withSelectedOptions(genresData.value?.genres?.nodes ?? [], editedGame.value?.genres.nodes ?? [])
-);
-const allEngines = computed(() =>
-  withSelectedOptions(enginesData.value?.engines?.nodes ?? [], editedGame.value?.engines.nodes ?? [])
-);
-const allSeries = computed(() =>
-  withSelectedOptions(
-    seriesData.value?.seriesList?.nodes ?? [],
-    editedGame.value?.series ? [editedGame.value.series] : []
-  )
-);
+// Search-as-you-type for the association fields. Searching the server (rather
+// than filtering one preloaded page, which the API caps at 100 records) means
+// every platform, company, etc. can be found.
+const searchPlatforms = (query: string) =>
+  gqlClient
+    .request<SearchPlatformsForGameFormQuery>(SEARCH_PLATFORMS_FOR_GAME_FORM, { query })
+    .then((d) => d.platformSearch?.nodes ?? []);
+const searchCompanies = (query: string) =>
+  gqlClient
+    .request<SearchCompaniesForGameFormQuery>(SEARCH_COMPANIES_FOR_GAME_FORM, { query })
+    .then((d) => d.companySearch?.nodes ?? []);
+const searchGenres = (query: string) =>
+  gqlClient
+    .request<SearchGenresForGameFormQuery>(SEARCH_GENRES_FOR_GAME_FORM, { query })
+    .then((d) => d.genreSearch?.nodes ?? []);
+const searchEngines = (query: string) =>
+  gqlClient
+    .request<SearchEnginesForGameFormQuery>(SEARCH_ENGINES_FOR_GAME_FORM, { query })
+    .then((d) => d.engineSearch?.nodes ?? []);
+const searchSeries = (query: string) =>
+  gqlClient
+    .request<SearchSeriesForGameFormQuery>(SEARCH_SERIES_FOR_GAME_FORM, { query })
+    .then((d) => d.seriesSearch?.nodes ?? []);
 
 // Mutations
 const { mutate: createGame, loading: creating } = useMutation<CreateGameResult>(CREATE_GAME);
@@ -465,12 +459,12 @@ async function handleSubmit() {
     name: form.name.trim(),
     releaseDate: form.releaseDate || null,
     wikidataId: form.wikidataId || null,
-    seriesId: form.seriesId || null,
-    platformIds: form.platformIds.length > 0 ? form.platformIds : [],
-    developerIds: form.developerIds.length > 0 ? form.developerIds : [],
-    publisherIds: form.publisherIds.length > 0 ? form.publisherIds : [],
-    genreIds: form.genreIds.length > 0 ? form.genreIds : [],
-    engineIds: form.engineIds.length > 0 ? form.engineIds : [],
+    seriesId: form.series?.id ?? null,
+    platformIds: ids(form.platforms),
+    developerIds: ids(form.developers),
+    publisherIds: ids(form.publishers),
+    genreIds: ids(form.genres),
+    engineIds: ids(form.engines),
     pcgamingwikiId: form.pcgamingwikiId || null,
     mobygamesId: form.mobygamesId ? parseInt(form.mobygamesId, 10) : null,
     giantbombId: form.giantbombId || null,

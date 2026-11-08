@@ -1024,6 +1024,46 @@ export interface SearchUsersToCompareQuery {
   } | null;
 }
 
+export type SearchPlatformsForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchPlatformsForGameFormQuery {
+  platformSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchCompaniesForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchCompaniesForGameFormQuery {
+  companySearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchGenresForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchGenresForGameFormQuery {
+  genreSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchEnginesForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchEnginesForGameFormQuery {
+  engineSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchSeriesForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchSeriesForGameFormQuery {
+  seriesSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
 export type GameTileFieldsFragment = {
   id: string;
   name: string;
@@ -1420,18 +1460,6 @@ export type ResourceGameFieldsFragment = {
   isInLibrary: boolean | null;
 };
 
-export type GetPlatformsQueryVariables = Exact<{
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-}>;
-
-export interface GetPlatformsQuery {
-  platforms: {
-    nodes: Array<{ id: string; name: string }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
-  } | null;
-}
-
 export type GetPlatformQueryVariables = Exact<{
   id: string;
   sortBy?: ResourceGameSort | null | undefined;
@@ -1464,18 +1492,6 @@ export type GetPlatformForEditQueryVariables = Exact<{
 
 export interface GetPlatformForEditQuery {
   platform: { id: string; name: string; wikidataId: number | null } | null;
-}
-
-export type GetCompaniesQueryVariables = Exact<{
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-}>;
-
-export interface GetCompaniesQuery {
-  companies: {
-    nodes: Array<{ id: string; name: string }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
-  } | null;
 }
 
 export type GetCompaniesIndexQueryVariables = Exact<{
@@ -1544,18 +1560,6 @@ export interface GetCompanyForEditQuery {
   company: { id: string; name: string; wikidataId: number | null } | null;
 }
 
-export type GetGenresQueryVariables = Exact<{
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-}>;
-
-export interface GetGenresQuery {
-  genres: {
-    nodes: Array<{ id: string; name: string }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
-  } | null;
-}
-
 export type GetGenreQueryVariables = Exact<{
   id: string;
   sortBy?: ResourceGameSort | null | undefined;
@@ -1588,18 +1592,6 @@ export type GetGenreForEditQueryVariables = Exact<{
 
 export interface GetGenreForEditQuery {
   genre: { id: string; name: string; wikidataId: number | null } | null;
-}
-
-export type GetEnginesQueryVariables = Exact<{
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-}>;
-
-export interface GetEnginesQuery {
-  engines: {
-    nodes: Array<{ id: string; name: string }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
-  } | null;
 }
 
 export type GetEnginesIndexQueryVariables = Exact<{
@@ -1654,18 +1646,6 @@ export type GetEngineForEditQueryVariables = Exact<{
 
 export interface GetEngineForEditQuery {
   engine: { id: string; name: string; wikidataId: number | null } | null;
-}
-
-export type GetSeriesListQueryVariables = Exact<{
-  first?: number | null | undefined;
-  after?: string | null | undefined;
-}>;
-
-export interface GetSeriesListQuery {
-  seriesList: {
-    nodes: Array<{ id: string; name: string }>;
-    pageInfo: { hasNextPage: boolean; endCursor: string | null };
-  } | null;
 }
 
 export type GetSeriesIndexQueryVariables = Exact<{
