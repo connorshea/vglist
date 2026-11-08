@@ -116,7 +116,7 @@
                 </div>
                 <div class="result-info">
                   <div class="result-title">{{ game.content }}</div>
-                  <div class="result-meta">
+                  <div class="result-meta result-meta--stacked">
                     <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
                     <span v-if="game.developerName" class="result-developer" :title="game.developerName">{{
                       game.developerName
@@ -1060,10 +1060,17 @@ function releaseYear(date: string): string {
   margin-top: 1px;
 }
 
+/* Games put the developer on its own line under the year, so a long name
+   truncates instead of wrapping beside it. */
+.result-meta--stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
 .result-year {
   font-size: 12px;
   color: var(--s-100);
-  flex-shrink: 0;
 }
 
 .result-developer {
