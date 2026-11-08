@@ -76,6 +76,7 @@
                 v-model.number="formHoursPlayed"
                 type="number"
                 min="0"
+                :max="MAX_HOURS_PLAYED"
                 step="0.1"
                 inputmode="decimal"
                 class="form-input"
@@ -125,8 +126,8 @@
               />
             </div>
           </div>
-          <p v-if="dateValidationError" class="form-date-error">
-            {{ dateValidationError }}
+          <p v-if="progressValidationError" class="form-date-error">
+            {{ progressValidationError }}
           </p>
         </div>
       </section>
@@ -247,7 +248,7 @@
         <button
           type="button"
           class="form-btn-save"
-          :disabled="saving || !entryLoaded || !!dateValidationError"
+          :disabled="saving || !entryLoaded || !!progressValidationError"
           @click="submit"
         >
           {{ saving ? "Saving…" : entryLoaded ? saveLabel : "Loading…" }}
@@ -509,8 +510,8 @@ type SectionKey = "progress" | "owned" | "review";
 const openSections = ref(new Set<SectionKey>(props.variant === "drawer" ? ["progress"] : []));
 
 function isOpen(key: SectionKey): boolean {
-  // A date problem has to be visible to be fixed.
-  if (key === "progress" && dateValidationError.value) return true;
+  // A progress problem has to be visible to be fixed.
+  if (key === "progress" && progressValidationError.value) return true;
   return openSections.value.has(key);
 }
 
@@ -556,7 +557,14 @@ const ownedSummary = computed(() => {
 
 const reviewSummary = computed(() => formComments.value.trim() || "Optional");
 
-const dateValidationError = computed(() => {
+// The largest value the hours_played column can store.
+const MAX_HOURS_PLAYED = 999_999_999.9;
+
+const progressValidationError = computed(() => {
+  const hours = numberOrNull(formHoursPlayed.value);
+  if (hours !== null && hours > MAX_HOURS_PLAYED) {
+    return `Hours played can't be more than ${MAX_HOURS_PLAYED.toLocaleString("en-US")}.`;
+  }
   const todayStr = today.value;
   if (formStartDate.value && formStartDate.value > todayStr) {
     return "Start date cannot be in the future.";
@@ -615,8 +623,8 @@ function buildFormVariables(): Record<string, unknown> {
 
 async function submit() {
   if (!entryLoaded.value) return;
-  if (dateValidationError.value) {
-    emit("error", dateValidationError.value);
+  if (progressValidationError.value) {
+    emit("error", progressValidationError.value);
     return;
   }
 

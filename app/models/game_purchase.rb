@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class GamePurchase < ApplicationRecord
-  # The comments column is NOT NULL with an empty-string default, but clients
-  # clear the review by sending null, so store that as an empty string.
-  before_validation { self.comments = '' if comments.nil? }
+  # The comments and replay_count columns are NOT NULL, but clients clear a
+  # field by sending null, so store their empty values instead.
+  before_validation do
+    self.comments = '' if comments.nil?
+    self.replay_count = 0 if replay_count.nil?
+  end
+
+  # The largest value hours_played's numeric(10,1) column can hold.
+  MAX_HOURS_PLAYED = 999_999_999.9
 
   after_create :game_purchase_create
   after_update :game_purchase_update
@@ -86,6 +92,7 @@ class GamePurchase < ApplicationRecord
   validates :hours_played,
     numericality: {
       greater_than_or_equal_to: 0,
+      less_than_or_equal_to: MAX_HOURS_PLAYED,
       allow_nil: true
     }
 

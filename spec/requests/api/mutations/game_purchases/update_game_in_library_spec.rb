@@ -167,6 +167,40 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
       )
     end
 
+    it "resets the replay count to zero when it is sent as null" do
+      game_purchase = create(:game_purchase, game: game, user: user, replay_count: 3)
+      query = <<-GRAPHQL
+        mutation($id: ID!) {
+          updateGameInLibrary(gamePurchaseId: $id, replayCount: null) {
+            gamePurchase {
+              replayCount
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query, variables: { id: game_purchase.id }, token: access_token)
+
+      expect(result.graphql_dig(:update_game_in_library, :game_purchase)).to eq({ replayCount: 0 })
+    end
+
+    it "returns a validation error for hours played past the column limit" do
+      game_purchase
+      query = <<-GRAPHQL
+        mutation($id: ID!) {
+          updateGameInLibrary(gamePurchaseId: $id, hoursPlayed: 1000000000) {
+            gamePurchase {
+              hoursPlayed
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query, variables: { id: game_purchase.id }, token: access_token)
+
+      expect(result.to_h['errors'].first['message']).to eq("Hours played must be less than or equal to 999999999.9")
+    end
+
     it "correctly overrides other data" do
       game_purchase2
 
