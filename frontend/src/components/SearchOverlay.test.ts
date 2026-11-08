@@ -535,6 +535,49 @@ describe("SearchOverlay", () => {
 
       expect(mockRequest).not.toHaveBeenCalled();
     });
+
+    it("does not count surrounding spaces toward the minimum length", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      await wrapper.find(".search-input").setValue("  a ");
+      await wrapper.find(".search-input").trigger("input");
+
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(mockRequest).not.toHaveBeenCalled();
+    });
+
+    it("sends the trimmed query and skips a new search when only spaces change", async () => {
+      mockRequest.mockResolvedValue({ globalSearch: { nodes: [] } });
+
+      mockIsOpen.value = true;
+      await nextTick();
+
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+
+      await input.setValue(" halo ");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(mockRequest).toHaveBeenCalledTimes(1);
+      expect(mockRequest).toHaveBeenLastCalledWith(expect.anything(), { query: "halo" });
+
+      await input.setValue("halo  ");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(mockRequest).toHaveBeenCalledTimes(1);
+    });
   });
 
   // ── Out-of-order and late responses ──
