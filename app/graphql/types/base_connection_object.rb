@@ -10,6 +10,11 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
     items = object.items
     return items.count unless items.is_a?(ActiveRecord::Relation)
 
+    # The resolver marked this relation as listing every row of its table
+    # (e.g. the games index with no filters set), so use the cached row count
+    # rather than counting the whole table again. See `CachedRowCount`.
+    return items.cached_total_count if items.respond_to?(:cached_total_count)
+
     unless items.group_values.any?
       # A relation that selects extra computed columns (e.g.
       # `Series.with_game_stats`) can't be counted by its select list, which

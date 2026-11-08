@@ -80,10 +80,10 @@ RSpec.describe "Games API", type: :request do
         create(:game_purchase, game: other, rating: 40)
       end
 
-      def total_count(sort_by)
+      def total_count(sort_by, filters = '')
         query_string = <<~GRAPHQL
           query {
-            games(sortBy: #{sort_by}, first: 1) {
+            games(sortBy: #{sort_by}, first: 1#{filters}) {
               totalCount
             }
           }
@@ -100,7 +100,8 @@ RSpec.describe "Games API", type: :request do
       end
 
       it "counts in the database instead of loading every group" do
-        sql = queries_run { total_count('MOST_FAVORITES') }.find { |q| q.include?('COUNT') }
+        # Filtered, as an unfiltered list's count comes from Game.cached_row_count.
+        sql = queries_run { total_count('MOST_FAVORITES', ', fromYear: 1990') }.find { |q| q.include?('COUNT') }
         expect(sql).to match(/SELECT COUNT\(\*\) FROM \(SELECT/)
       end
     end

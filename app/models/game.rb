@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Game < ApplicationRecord
+  include CachedRowCount
   include GlobalSearchable
   include Searchable
 
