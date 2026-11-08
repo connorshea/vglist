@@ -1024,6 +1024,46 @@ export interface SearchUsersToCompareQuery {
   } | null;
 }
 
+export type SearchPlatformsForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchPlatformsForGameFormQuery {
+  platformSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchCompaniesForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchCompaniesForGameFormQuery {
+  companySearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchGenresForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchGenresForGameFormQuery {
+  genreSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchEnginesForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchEnginesForGameFormQuery {
+  engineSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
+export type SearchSeriesForGameFormQueryVariables = Exact<{
+  query: string;
+}>;
+
+export interface SearchSeriesForGameFormQuery {
+  seriesSearch: { nodes: Array<{ id: string; name: string }> } | null;
+}
+
 export type GameTileFieldsFragment = {
   id: string;
   name: string;
