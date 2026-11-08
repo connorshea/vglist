@@ -4,6 +4,7 @@ import { installPageTitles } from "@/composables/usePageTitle";
 import { installRouteFocus } from "@/composables/useRouteFocus";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { waitForScrollableTo } from "@/utils/scroll-restore";
+import { isChunkLoadError, reloadForStaleChunk } from "@/utils/chunk-reload";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -419,6 +420,14 @@ router.beforeEach((to) => {
 
   if (to.meta.guestOnly && authStore.isAuthenticated) {
     return { name: "home" };
+  }
+});
+
+// A link to a page whose chunk is gone after a deploy would otherwise do
+// nothing. See utils/chunk-reload.ts.
+router.onError((error, to) => {
+  if (isChunkLoadError(error)) {
+    reloadForStaleChunk(to.fullPath);
   }
 });
 
