@@ -110,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -159,7 +159,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -199,7 +199,7 @@ jobs:
       PARALLEL_TEST_PROCESSORS: "4"
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -251,7 +251,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
