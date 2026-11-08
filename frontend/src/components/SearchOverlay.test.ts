@@ -15,7 +15,8 @@ const { pushMock, mockIsOpen, mockClose, mockRequest, mockInitialQuery } = vi.ho
     // close() is a simple spy; it does NOT toggle isOpen to avoid
     // mid-test Vue re-renders that conflict with DOM teardown.
     mockClose: vi.fn<() => void>(),
-    mockRequest: vi.fn<() => Promise<unknown>>()
+    // The overlay calls gqlClient.request with a single options object.
+    mockRequest: vi.fn<(options: { signal: AbortSignal }) => Promise<unknown>>()
   };
 });
 
@@ -69,6 +70,11 @@ function mountOverlay() {
   });
   activeWrappers.push(wrapper);
   return wrapper;
+}
+
+/** The options the overlay passes to gqlClient.request for a search. */
+function searchRequest(query: string) {
+  return { document: "GLOBAL_SEARCH_QUERY", variables: { query }, signal: expect.any(AbortSignal) };
 }
 
 /**
@@ -183,7 +189,7 @@ describe("SearchOverlay", () => {
 
       expect((wrapper.find(".search-input").element as HTMLInputElement).value).toBe("hollow");
       await vi.advanceTimersByTimeAsync(550);
-      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "hollow" });
+      expect(mockRequest).toHaveBeenCalledWith(searchRequest("hollow"));
     });
 
     it("starts searching when it mounts already open (e.g. from /search)", async () => {
@@ -196,7 +202,7 @@ describe("SearchOverlay", () => {
 
       expect((wrapper.find(".search-input").element as HTMLInputElement).value).toBe("celeste");
       await vi.advanceTimersByTimeAsync(550);
-      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "celeste" });
+      expect(mockRequest).toHaveBeenCalledWith(searchRequest("celeste"));
     });
   });
 
@@ -569,7 +575,7 @@ describe("SearchOverlay", () => {
       await flushPromises();
 
       expect(mockRequest).toHaveBeenCalledTimes(1);
-      expect(mockRequest).toHaveBeenLastCalledWith(expect.anything(), { query: "halo" });
+      expect(mockRequest).toHaveBeenLastCalledWith(searchRequest("halo"));
 
       await input.setValue("halo  ");
       await input.trigger("input");
@@ -616,6 +622,10 @@ describe("SearchOverlay", () => {
       await input.trigger("input");
     }
 
+    function requestSignal(call: number): AbortSignal {
+      return mockRequest.mock.calls[call][0].signal;
+    }
+
     function titles(wrapper: VueWrapper): string[] {
       return wrapper.findAll(".result-title").map((title) => title.text());
     }
@@ -638,6 +648,43 @@ describe("SearchOverlay", () => {
       await flushPromises();
 
       expect(titles(wrapper)).toEqual(["Halo 3"]);
+    });
+
+    it("cancels the request for an older query when a newer search starts", async () => {
+      const older = deferred();
+      const newer = deferred();
+      mockRequest.mockReturnValueOnce(older.promise).mockReturnValueOnce(newer.promise);
+      const wrapper = await openAndMount();
+
+      await type(wrapper, "hal");
+      await vi.advanceTimersByTimeAsync(550);
+      const olderSignal = requestSignal(0);
+      expect(olderSignal.aborted).toBeFalsy();
+
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(550);
+      expect(olderSignal.aborted).toBeTruthy();
+      expect(requestSignal(1).aborted).toBeFalsy();
+
+      // The cancelled request rejects; that mustn't show as an error.
+      older.resolve(Promise.reject(new DOMException("The operation was aborted.", "AbortError")));
+      newer.resolve({ globalSearch: { nodes: [game("2", "Halo 3")] } });
+      await flushPromises();
+
+      expect(wrapper.find(".search-error-text").exists()).toBeFalsy();
+      expect(titles(wrapper)).toEqual(["Halo 3"]);
+    });
+
+    it("cancels the request in flight when the overlay closes", async () => {
+      mockRequest.mockReturnValueOnce(deferred().promise);
+      const wrapper = await openAndMount();
+
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(550);
+      mockIsOpen.value = false;
+      await nextTick();
+
+      expect(requestSignal(0).aborted).toBeTruthy();
     });
 
     it("doesn't keep a response that lands after it closes for the next search", async () => {
@@ -669,7 +716,7 @@ describe("SearchOverlay", () => {
       await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
       await flushPromises();
 
-      expect(mockRequest).toHaveBeenLastCalledWith("GLOBAL_SEARCH_QUERY", { query: "halo" });
+      expect(mockRequest).toHaveBeenLastCalledWith(searchRequest("halo"));
       expect(pushMock).toHaveBeenCalledTimes(1);
       expect(pushMock).toHaveBeenCalledWith("/games/2");
     });
