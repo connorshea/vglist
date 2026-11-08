@@ -23,6 +23,13 @@
 #   doctl apps create --spec .do/app.yaml          # first time
 #   doctl apps update <app-id> --spec .do/app.yaml # later changes
 #
+# Applying this file redeploys: every component goes back to `tag: main`,
+# the newest commit on main whose images were pushed, and the migrate job
+# runs. That commit may not be the one that's live, and this path skips the
+# Deploy workflow's CI check. So deploy main with the Deploy workflow first,
+# or swap each `tag: main` for the live `digest:` values from
+# `doctl apps spec get` before updating.
+#
 # Secrets: every `type: SECRET` env below is declared without a value so no
 # credentials live in git. Set the values once in the control panel (App →
 # Settings → component → Environment Variables). App Platform then stores

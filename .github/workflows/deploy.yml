@@ -9,7 +9,8 @@ name: Deploy
 # digests and waits for the rollout; the migrate PRE_DEPLOY job runs first, as
 # before. It starts from the live app spec, so the encrypted secret values
 # there are kept and only the image digests change. Changes to .do/app.yaml
-# itself still need `doctl apps update`.
+# itself still need `doctl apps update`, which redeploys `:main` (see the
+# note at the top of that file).
 #
 # Setup (once): a `production` environment (Settings > Environments) limited
 # to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
