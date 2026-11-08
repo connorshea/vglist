@@ -456,7 +456,7 @@ watch(isOpen, async (open) => {
   } else {
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onDocumentKeydown);
-    // Drop the pending search and ignore any still in flight, so they can't
+    // Drop the pending search and cancel any still in flight, so they can't
     // fill the overlay back in after it's been cleared.
     performSearch.cancel();
     cancelInFlightSearch();
