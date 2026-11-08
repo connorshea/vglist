@@ -1,8 +1,17 @@
 <template>
   <div class="profile-layout library-page">
-    <div v-if="loading && !data" class="profile-message">
-      <p>Loading…</p>
-    </div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading profile…" : "" }}</p>
+
+    <template v-if="showSkeleton">
+      <UserProfileHeaderSkeleton />
+      <!-- The tab loads once the profile has, so stand in for it too. -->
+      <div v-if="route.name === 'user'" class="profile-tab-skeleton">
+        <UserOverviewSkeleton />
+      </div>
+      <div v-else-if="route.name === 'userFavorites'" class="profile-tab-skeleton">
+        <UserFavoritesSkeleton />
+      </div>
+    </template>
 
     <div v-else-if="error" class="notification is-danger">
       <p>{{ error.message }}</p>
@@ -256,6 +265,9 @@ import {
 } from "@/graphql/mutations/users";
 import type { GetUserProfileQuery } from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import UserProfileHeaderSkeleton from "@/components/users/UserProfileHeaderSkeleton.vue";
+import UserOverviewSkeleton from "@/components/users/UserOverviewSkeleton.vue";
+import UserFavoritesSkeleton from "@/components/users/UserFavoritesSkeleton.vue";
 import { roleChanges, type RoleChange } from "@/utils/user-roles";
 import "@/assets/stylesheets/library.scss";
 
@@ -277,6 +289,8 @@ watch([data, error, loading], () => {
 });
 
 const user = computed(() => data.value?.user ?? null);
+// Only on the first load.
+const showSkeleton = computed(() => loading.value && !data.value);
 
 // "connor", "connor's Library", ... as on the old app.
 const TAB_TITLES: Partial<Record<RouteRecordName, string>> = {
@@ -745,6 +759,11 @@ function changeRole() {
   margin: 16px 0 0;
 }
 
+/* Spaced like the Overview and Favorites tabs it stands in for. */
+.profile-tab-skeleton {
+  padding-top: 24px;
+}
+
 .profile-message {
   padding: 48px 0;
   color: var(--color-text-secondary);
@@ -757,6 +776,10 @@ function changeRole() {
 }
 
 @media (max-width: 768px) {
+  .profile-tab-skeleton {
+    padding-top: 16px;
+  }
+
   .profile-avatar {
     width: 44px;
     height: 44px;
