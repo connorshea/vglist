@@ -165,10 +165,16 @@ namespace :import do
         next
       end
 
-      # For each cover uploaded, process the variants of that cover so we store them in the database immediately,
-      # otherwise they'll be generated when the user hits them for the first time.
-      Game::COVER_SIZES.each_key do |size|
-        game.sized_cover(size)&.processed
+      # Create each size of the cover now, while we already have the image,
+      # rather than leaving it to the TransformJobs `preprocessed: true`
+      # queues: those run on the async adapter in this process and are dropped
+      # if the task exits first. Images libvips can't resize (e.g. a GIF) only
+      # have the original. `sized_cover` isn't used here because it never
+      # creates a variant (see ReadyVariant).
+      if game.cover.variable?
+        Game::COVER_SIZES.each_key do |size|
+          game.cover.variant(size).processed
+        end
       end
 
       cover_added_count += 1
