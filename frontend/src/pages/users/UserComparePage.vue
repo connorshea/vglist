@@ -435,7 +435,9 @@ function updateIsPhone() {
 }
 
 onMounted(() => {
-  if (typeof window.matchMedia !== "function") return;
+  if (typeof window.matchMedia !== "function") {
+    return;
+  }
   phoneMedia = window.matchMedia(PHONE_QUERY);
   updateIsPhone();
   phoneMedia.addEventListener("change", updateIsPhone);
@@ -484,7 +486,9 @@ function initial(username: string): string {
 }
 
 function possessive(username: string): string {
-  if (viewerIsA.value && username === userA.value.username) return "your";
+  if (viewerIsA.value && username === userA.value.username) {
+    return "your";
+  }
   return `${username}'s`;
 }
 
@@ -496,7 +500,9 @@ function plural(count: number, noun: string): string {
 // 121 games you've both rated"
 const statsLine = computed(() => {
   const c = comparison.value;
-  if (!c) return "";
+  if (!c) {
+    return "";
+  }
   if (isPhone.value) {
     return c.averageRatingGap === null
       ? "Comparing libraries"
@@ -520,7 +526,9 @@ const shares = computed(() =>
 
 const overlapLabel = computed(() => {
   const c = comparison.value;
-  if (!c) return "";
+  if (!c) {
+    return "";
+  }
   return `${plural(c.onlyACount, "game")} only ${userA.value.username} has, ${c.inCommonCount.toLocaleString()} in common, ${plural(c.onlyBCount, "game")} only ${userB.value.username} has`;
 });
 
@@ -580,7 +588,9 @@ const commonSearch = ref("");
 const commonSearchTerm = useDebounced(commonSearch);
 
 function setCommonSort(value: string) {
-  if (isInCommonSort(value)) commonSort.value = value;
+  if (isInCommonSort(value)) {
+    commonSort.value = value;
+  }
 }
 
 const currentSortLabel = computed(
@@ -597,7 +607,9 @@ const columns = computed(() => [
 ]);
 
 function ariaSort(sort: LibraryComparisonSort): "ascending" | "descending" | undefined {
-  if (commonSort.value !== sort) return undefined;
+  if (commonSort.value !== sort) {
+    return undefined;
+  }
   return sort === "GAME_NAME" ? "ascending" : "descending";
 }
 
@@ -624,18 +636,25 @@ const commonTotal = computed(() => commonConnection.value?.totalCount ?? 0);
 const commonHasNextPage = computed(() => commonConnection.value?.pageInfo.hasNextPage ?? false);
 
 const commonEmptyMessage = computed(() => {
-  if (commonSearchTerm.value) return `No shared games match “${commonSearchTerm.value}”.`;
-  if (bothRated.value && (comparison.value?.inCommonCount ?? 0) > 0)
+  if (commonSearchTerm.value) {
+    return `No shared games match “${commonSearchTerm.value}”.`;
+  }
+  if (bothRated.value && (comparison.value?.inCommonCount ?? 0) > 0) {
     return `There are no shared games ${viewerIsA.value ? "you've" : "they've"} both rated yet.`;
+  }
   return "These libraries have no games in common.";
 });
 
 async function loadMoreCommon() {
   const cursor = commonConnection.value?.pageInfo.endCursor;
-  if (!commonHasNextPage.value || commonLoading.value || !cursor) return;
+  if (!commonHasNextPage.value || commonLoading.value || !cursor) {
+    return;
+  }
 
   await fetchMoreCommon({ ...commonVariables.value, after: cursor }, (prev, next) => {
-    if (!prev.libraryComparison || !next.libraryComparison) return next;
+    if (!prev.libraryComparison || !next.libraryComparison) {
+      return next;
+    }
     return {
       libraryComparison: {
         inCommon: {
@@ -653,18 +672,24 @@ function purchaseFor(row: CommonRow, side: "a" | "b") {
 
 function gapStyle(difference: number | null) {
   const meter = gapMeter(difference);
-  if (!meter) return {};
+  if (!meter) {
+    return {};
+  }
   // The bar grows out from the centre line, so half the meter is a gap of 25.
   return meter.side === "a" ? { right: "50%", width: `${meter.width}%` } : { left: "50%", width: `${meter.width}%` };
 }
 
 function gapText(difference: number | null): string {
-  if (difference === null) return "–";
+  if (difference === null) {
+    return "–";
+  }
   return difference === 0 ? "=" : String(Math.abs(difference));
 }
 
 function gapClass(difference: number | null): string {
-  if (difference === null || difference === 0) return "is-even";
+  if (difference === null || difference === 0) {
+    return "is-even";
+  }
   return difference > 0 ? "is-a" : "is-b";
 }
 
@@ -682,7 +707,9 @@ function rowLabel(row: CommonRow): string {
 // ── Only-in shelves ─────────────────────────────────────────────────────────
 const shelves = computed(() => {
   const c = comparison.value;
-  if (!c) return [];
+  if (!c) {
+    return [];
+  }
   return [
     {
       side: "a" as const,
@@ -709,7 +736,9 @@ const onlySideA = computed(() => activeTab.value === "only-a");
 const onlyUser = computed(() => (onlySideA.value ? userA.value : userB.value));
 
 function setOnlySort(value: string) {
-  if (isOnlySort(value)) onlySort.value = value;
+  if (isOnlySort(value)) {
+    onlySort.value = value;
+  }
 }
 
 const onlyVariables = computed(() => ({
@@ -739,13 +768,17 @@ const onlyHasNextPage = computed(() => onlyConnection.value?.pageInfo.hasNextPag
 
 async function loadMoreOnly() {
   const cursor = onlyConnection.value?.pageInfo.endCursor;
-  if (!onlyHasNextPage.value || onlyLoading.value || !cursor) return;
+  if (!onlyHasNextPage.value || onlyLoading.value || !cursor) {
+    return;
+  }
 
   const key = onlySideA.value ? "onlyA" : "onlyB";
   await fetchMoreOnly({ ...onlyVariables.value, after: cursor }, (prev, next) => {
     const before = prev.libraryComparison?.[key];
     const after = next.libraryComparison?.[key];
-    if (!before || !after) return next;
+    if (!before || !after) {
+      return next;
+    }
     return { libraryComparison: { [key]: { ...after, nodes: [...before.nodes, ...after.nodes] } } };
   });
 }

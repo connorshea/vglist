@@ -21,8 +21,12 @@ export function formatPageTitle(title?: string | null): string {
  */
 export function installPageTitles(router: Router): void {
   router.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized, failure) => {
-    if (failure) return;
-    if (from.matched.length > 0 && to.path === from.path && to.name === from.name) return;
+    if (failure) {
+      return;
+    }
+    if (from.matched.length > 0 && to.path === from.path && to.name === from.name) {
+      return;
+    }
     document.title = formatPageTitle(to.meta.title);
   });
 }
@@ -36,7 +40,9 @@ export function usePageTitle(source: MaybeRefOrGetter<string | null | undefined>
   watch(
     () => toValue(source),
     (title) => {
-      if (title) document.title = formatPageTitle(title);
+      if (title) {
+        document.title = formatPageTitle(title);
+      }
     },
     { immediate: true }
   );

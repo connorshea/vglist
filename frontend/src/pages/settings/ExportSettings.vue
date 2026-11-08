@@ -57,13 +57,19 @@ const { mutate, loading: exporting } = useMutation<ExportLibraryMutation>(EXPORT
 // Keep a blob URL for the current export so it can be downloaded as a file,
 // and release the old one whenever it changes.
 watch(exportData, (json) => {
-  if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value);
+  if (downloadUrl.value) {
+    URL.revokeObjectURL(downloadUrl.value);
+  }
   downloadUrl.value = json ? URL.createObjectURL(new Blob([json], { type: "application/json" })) : null;
 });
 
 onBeforeUnmount(() => {
-  if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value);
-  if (copyResetTimer) clearTimeout(copyResetTimer);
+  if (downloadUrl.value) {
+    URL.revokeObjectURL(downloadUrl.value);
+  }
+  if (copyResetTimer) {
+    clearTimeout(copyResetTimer);
+  }
 });
 
 type CopyState = "idle" | "copied" | "failed";
@@ -84,7 +90,9 @@ const copyAnnouncement = computed(() =>
 );
 
 async function copyJson() {
-  if (copyResetTimer) clearTimeout(copyResetTimer);
+  if (copyResetTimer) {
+    clearTimeout(copyResetTimer);
+  }
   try {
     await navigator.clipboard.writeText(exportData.value);
     copyState.value = "copied";

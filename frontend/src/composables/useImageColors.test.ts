@@ -19,7 +19,9 @@ class FakeImage {
   }
 
   fire(type: "load" | "error") {
-    for (const listener of this.listeners[type] ?? []) listener();
+    for (const listener of this.listeners[type] ?? []) {
+      listener();
+    }
   }
 }
 
@@ -36,7 +38,9 @@ function fakePixels(): Uint8ClampedArray {
 
 function imageFor(url: string): FakeImage {
   const img = FakeImage.created.findLast((i) => i.src === url);
-  if (!img) throw new Error(`No image was loaded for ${url}`);
+  if (!img) {
+    throw new Error(`No image was loaded for ${url}`);
+  }
   return img;
 }
 

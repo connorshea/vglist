@@ -459,7 +459,9 @@ const allStores = computed(() => storesData.value?.stores?.nodes ?? []);
 const gameInitials = computed(() => (game.value ? initialsFor(game.value.name) : ""));
 
 const releaseYear = computed(() => {
-  if (!game.value?.releaseDate) return null;
+  if (!game.value?.releaseDate) {
+    return null;
+  }
   return new Date(game.value.releaseDate).getFullYear();
 });
 
@@ -480,7 +482,9 @@ interface ExternalLink {
 }
 
 const externalLinks = computed<ExternalLink[]>(() => {
-  if (!game.value) return [];
+  if (!game.value) {
+    return [];
+  }
   const links: ExternalLink[] = [];
   const g = game.value;
 
@@ -519,7 +523,9 @@ const { data: purchaseData, refetch: refetchPurchase } = useQuery<GetGamePurchas
 });
 
 const myEntry = computed<HeroPanelEntry | null>(() => {
-  if (!game.value?.gamePurchaseId) return null;
+  if (!game.value?.gamePurchaseId) {
+    return null;
+  }
   const purchase = purchaseData.value?.gamePurchase;
   if (!purchase || purchase.id !== game.value.gamePurchaseId) {
     return { completionStatus: null, rating: null, hoursPlayed: null };
@@ -577,9 +583,13 @@ const inLibraryHovered = ref(false);
 const showRemoveConfirm = ref(false);
 
 const libraryButtonLabel = computed(() => {
-  if (!game.value) return "";
+  if (!game.value) {
+    return "";
+  }
   if (game.value.isInLibrary) {
-    if (showAddForm.value) return "Editing\u2026";
+    if (showAddForm.value) {
+      return "Editing\u2026";
+    }
     return inLibraryHovered.value ? "Edit\u2026" : "In library";
   }
   return showAddForm.value ? "Adding\u2026" : "Add to library";
@@ -617,7 +627,9 @@ function updateIsPhone() {
 }
 
 onMounted(() => {
-  if (typeof window.matchMedia !== "function") return;
+  if (typeof window.matchMedia !== "function") {
+    return;
+  }
   phoneMedia = window.matchMedia(PHONE_QUERY);
   updateIsPhone();
   phoneMedia.addEventListener("change", updateIsPhone);
@@ -627,7 +639,9 @@ onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
 
 // When the drawer or sheet closes, put focus back on the button that opened it.
 watch(showAddForm, (open, wasOpen) => {
-  if (wasOpen && !open) void nextTick(() => libraryButtonRef.value?.focus());
+  if (wasOpen && !open) {
+    void nextTick(() => libraryButtonRef.value?.focus());
+  }
 });
 
 // ── Remove from library ──
@@ -635,7 +649,9 @@ const removingFromLibrary = ref(false);
 
 async function confirmRemoveFromLibrary() {
   const purchaseId = game.value?.gamePurchaseId;
-  if (!purchaseId) return;
+  if (!purchaseId) {
+    return;
+  }
 
   removingFromLibrary.value = true;
   actionMessage.value = "";
@@ -756,20 +772,29 @@ function toggleAdminMenu() {
 }
 
 function closeAdminMenu(restoreFocus: boolean) {
-  if (!adminMenuOpen.value) return;
+  if (!adminMenuOpen.value) {
+    return;
+  }
   adminMenuOpen.value = false;
   document.removeEventListener("pointerdown", onDocumentPointerDown);
-  if (restoreFocus) adminButtonRef.value?.focus();
+  if (restoreFocus) {
+    adminButtonRef.value?.focus();
+  }
 }
 
 onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPointerDown));
 
 function openAdminDialog(dialog: "removeCover" | "wikidataBlocklist" | "mergeGame" | "deleteGame") {
   closeAdminMenu(false);
-  if (dialog === "removeCover") showRemoveCoverConfirm.value = true;
-  else if (dialog === "wikidataBlocklist") showWikidataBlocklistConfirm.value = true;
-  else if (dialog === "mergeGame") showMergeGameDialog.value = true;
-  else showDeleteGameConfirm.value = true;
+  if (dialog === "removeCover") {
+    showRemoveCoverConfirm.value = true;
+  } else if (dialog === "wikidataBlocklist") {
+    showWikidataBlocklistConfirm.value = true;
+  } else if (dialog === "mergeGame") {
+    showMergeGameDialog.value = true;
+  } else {
+    showDeleteGameConfirm.value = true;
+  }
 }
 
 async function confirmRemoveCover() {
@@ -787,7 +812,9 @@ async function confirmRemoveCover() {
 }
 
 async function confirmAddToWikidataBlocklist() {
-  if (!game.value?.wikidataId) return;
+  if (!game.value?.wikidataId) {
+    return;
+  }
   addingToBlocklist.value = true;
   try {
     await gqlClient.request(ADD_TO_WIKIDATA_BLOCKLIST, {

@@ -118,14 +118,20 @@ const snapshotFormat = new Intl.DateTimeFormat(undefined, {
 
 const snapshotNote = computed(() => {
   const latest = props.history[0];
-  if (!latest) return "Live counts";
+  if (!latest) {
+    return "Live counts";
+  }
   return `Live counts · last snapshot ${snapshotFormat.format(new Date(latest.timestamp))} UTC`;
 });
 
 function signed(n: number): string {
-  if (n > 0) return `+${n.toLocaleString()}`;
+  if (n > 0) {
+    return `+${n.toLocaleString()}`;
+  }
   // A real minus sign rather than a hyphen.
-  if (n < 0) return `−${Math.abs(n).toLocaleString()}`;
+  if (n < 0) {
+    return `−${Math.abs(n).toLocaleString()}`;
+  }
   return "0";
 }
 
@@ -142,9 +148,13 @@ function buildTile(definition: TileDefinition) {
     : `in ${rangeDays.value} days`;
 
   let deltaText: string;
-  if (trend.delta === null) deltaText = "No history yet";
-  else if (trend.delta === 0) deltaText = `No change ${period}`;
-  else deltaText = `${signed(trend.delta)} ${period}`;
+  if (trend.delta === null) {
+    deltaText = "No history yet";
+  } else if (trend.delta === 0) {
+    deltaText = `No change ${period}`;
+  } else {
+    deltaText = `${signed(trend.delta)} ${period}`;
+  }
 
   return {
     field: definition.field,

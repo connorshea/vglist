@@ -138,7 +138,9 @@ const steamUsername = ref("");
 const { mutate: connectMutate, loading: connecting } = useMutation<ConnectSteamMutation>(CONNECT_STEAM);
 
 async function connectSteam() {
-  if (!userId.value) return;
+  if (!userId.value) {
+    return;
+  }
 
   try {
     await connectMutate({ userId: userId.value, steamUsername: steamUsername.value.trim() });
@@ -155,7 +157,9 @@ const showDisconnectConfirm = ref(false);
 const { mutate: disconnectMutate, loading: disconnecting } = useMutation<DisconnectSteamMutation>(DISCONNECT_STEAM);
 
 async function disconnectSteam() {
-  if (!userId.value) return;
+  if (!userId.value) {
+    return;
+  }
 
   try {
     await disconnectMutate({ userId: userId.value });
@@ -174,7 +178,9 @@ const importResult = ref<ImportResult | null>(null);
 const { mutate: importMutate, loading: importing } = useMutation<ImportSteamLibraryMutation>(IMPORT_STEAM_LIBRARY);
 
 async function importLibrary() {
-  if (!userId.value) return;
+  if (!userId.value) {
+    return;
+  }
   importResult.value = null;
 
   try {

@@ -160,7 +160,9 @@ const panelRef = ref<HTMLElement | null>(null);
 
 const years = computed(() => {
   const list: number[] = [];
-  for (let y = new Date().getFullYear() + 1; y >= EARLIEST_YEAR; y--) list.push(y);
+  for (let y = new Date().getFullYear() + 1; y >= EARLIEST_YEAR; y--) {
+    list.push(y);
+  }
   return list;
 });
 
@@ -169,7 +171,9 @@ function update(changes: Partial<GameFilters>) {
 }
 
 function pick(key: "platform" | "genre" | "engine", record: NamedRecord | null) {
-  if (record) emit("named", record);
+  if (record) {
+    emit("named", record);
+  }
   update({ [key]: record?.id ?? "" });
 }
 
@@ -179,8 +183,11 @@ function setYear(key: "fromYear" | "toYear", event: Event) {
   // Keep the range the right way round.
   const { fromYear, toYear } = { ...props.modelValue, ...changes };
   if (value && fromYear && toYear && Number(fromYear) > Number(toYear)) {
-    if (key === "fromYear") changes.toYear = value;
-    else changes.fromYear = value;
+    if (key === "fromYear") {
+      changes.toYear = value;
+    } else {
+      changes.fromYear = value;
+    }
   }
   update(changes);
 }
@@ -205,9 +212,13 @@ function onKeydown(e: KeyboardEvent) {
     emit("close");
     return;
   }
-  if (e.key !== "Tab") return;
+  if (e.key !== "Tab") {
+    return;
+  }
   const items = focusables();
-  if (items.length === 0) return;
+  if (items.length === 0) {
+    return;
+  }
   const first = items[0];
   const last = items[items.length - 1];
   if (document.activeElement === panelRef.value) {

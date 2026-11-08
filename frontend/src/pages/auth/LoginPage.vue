@@ -175,11 +175,15 @@ function handlePasskeyResult(result: PasskeySignInResult) {
 // the email field's autofill.
 async function startAutofill() {
   clearTimeout(autofillTimer);
-  if (unmounted || !(await browserSupportsWebAuthnAutofill())) return;
+  if (unmounted || !(await browserSupportsWebAuthnAutofill())) {
+    return;
+  }
 
   autofillTimer = setTimeout(() => void startAutofill(), AUTOFILL_REFRESH_MS);
   const result = await signInWithPasskey({ useBrowserAutofill: true });
-  if (unmounted) return;
+  if (unmounted) {
+    return;
+  }
 
   // The options request or the browser's WebAuthn call failed before the
   // user did anything. Stay quiet (the button and password still work) and
@@ -187,13 +191,17 @@ async function startAutofill() {
   // limit. A failed options request is retried by the refresh timer; a
   // browser failure won't fix itself, so give up on autofill.
   if (result.status === "error" && result.stage !== "verify") {
-    if (result.stage === "browser") clearTimeout(autofillTimer);
+    if (result.stage === "browser") {
+      clearTimeout(autofillTimer);
+    }
     return;
   }
 
   handlePasskeyResult(result);
   // The user picked a passkey the server rejected: wait for another pick.
-  if (result.status === "error") void startAutofill();
+  if (result.status === "error") {
+    void startAutofill();
+  }
 }
 
 async function handlePasskeyButton() {
@@ -203,22 +211,30 @@ async function handlePasskeyButton() {
 
   // This aborts the pending autofill request, which then resolves as cancelled.
   const result = await signInWithPasskey();
-  if (unmounted) return;
+  if (unmounted) {
+    return;
+  }
 
   passkeyWaiting.value = false;
   handlePasskeyResult(result);
-  if (result.status !== "success") void startAutofill();
+  if (result.status !== "success") {
+    void startAutofill();
+  }
 }
 
 onMounted(() => {
-  if (passkeysSupported) void startAutofill();
+  if (passkeysSupported) {
+    void startAutofill();
+  }
 });
 
 onBeforeUnmount(() => {
   unmounted = true;
   clearTimeout(autofillTimer);
   clearTimeout(redirectTimer);
-  if (passkeysSupported) WebAuthnAbortService.cancelCeremony();
+  if (passkeysSupported) {
+    WebAuthnAbortService.cancelCeremony();
+  }
 });
 </script>
 

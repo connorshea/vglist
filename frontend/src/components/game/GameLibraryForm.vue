@@ -313,7 +313,9 @@ const COLLAPSED_STORE_COUNT = 3;
 const showAllStores = ref(false);
 
 const visibleStores = computed(() => {
-  if (showAllStores.value) return props.allStores;
+  if (showAllStores.value) {
+    return props.allStores;
+  }
   return props.allStores.filter((store, i) => i < COLLAPSED_STORE_COUNT || formStoreIds.value.has(store.id));
 });
 
@@ -351,7 +353,9 @@ function reviewDraftKey(): string {
 }
 
 function loadReviewDraft(): void {
-  if (formComments.value !== "") return;
+  if (formComments.value !== "") {
+    return;
+  }
   const saved = localStorage.getItem(reviewDraftKey());
   if (saved) {
     formComments.value = saved;
@@ -363,7 +367,9 @@ function clearReviewDraft(): void {
 }
 
 watch(formComments, (value) => {
-  if (suppressDraftSync) return;
+  if (suppressDraftSync) {
+    return;
+  }
   if (value.trim() === "") {
     clearReviewDraft();
   } else {
@@ -392,12 +398,16 @@ function openAsAdd() {
   suppressDraftSync = false;
   loadReviewDraft();
   // An unsent review draft is the first thing you'd want to see again.
-  if (formComments.value !== "") openSections.value = new Set([...openSections.value, "review"]);
+  if (formComments.value !== "") {
+    openSections.value = new Set([...openSections.value, "review"]);
+  }
 }
 
 async function openAsEdit() {
   const purchaseId = props.gamePurchaseId;
-  if (!purchaseId) return;
+  if (!purchaseId) {
+    return;
+  }
 
   suppressDraftSync = true;
   resetForm();
@@ -453,9 +463,15 @@ function toggleFormStore(id: string) {
 }
 
 function clampRating() {
-  if (formRating.value == null) return;
-  if (formRating.value > 100) formRating.value = 100;
-  if (formRating.value < 0) formRating.value = 0;
+  if (formRating.value == null) {
+    return;
+  }
+  if (formRating.value > 100) {
+    formRating.value = 100;
+  }
+  if (formRating.value < 0) {
+    formRating.value = 0;
+  }
 }
 
 // Replays are whole numbers; the API rejects negatives.
@@ -479,12 +495,16 @@ function setDate(field: DateField, value: string) {
   } else {
     formCompletionDate.value = value;
   }
-  if (dateHint.value?.field === field) dateHint.value = null;
+  if (dateHint.value?.field === field) {
+    dateHint.value = null;
+  }
 }
 
 function undoDateHint() {
   const hint = dateHint.value;
-  if (!hint) return;
+  if (!hint) {
+    return;
+  }
   setDate(hint.field, "");
 }
 
@@ -511,7 +531,9 @@ const openSections = ref(new Set<SectionKey>(props.variant === "drawer" ? ["prog
 
 function isOpen(key: SectionKey): boolean {
   // A progress problem has to be visible to be fixed.
-  if (key === "progress" && progressValidationError.value) return true;
+  if (key === "progress" && progressValidationError.value) {
+    return true;
+  }
   return openSections.value.has(key);
 }
 
@@ -536,13 +558,21 @@ function formatDate(iso: string): string {
 
 const progressSummary = computed(() => {
   const parts: string[] = [];
-  if (typeof formHoursPlayed.value === "number" && formHoursPlayed.value > 0) parts.push(`${formHoursPlayed.value} h`);
+  if (typeof formHoursPlayed.value === "number" && formHoursPlayed.value > 0) {
+    parts.push(`${formHoursPlayed.value} h`);
+  }
   if (typeof formReplayCount.value === "number" && formReplayCount.value > 0) {
     parts.push(`replayed ${formReplayCount.value}×`);
   }
-  if (formStartDate.value) parts.push(`started ${formatDate(formStartDate.value)}`);
-  if (formCompletionDate.value) parts.push(`finished ${formatDate(formCompletionDate.value)}`);
-  if (parts.length === 0) return "Not set";
+  if (formStartDate.value) {
+    parts.push(`started ${formatDate(formStartDate.value)}`);
+  }
+  if (formCompletionDate.value) {
+    parts.push(`finished ${formatDate(formCompletionDate.value)}`);
+  }
+  if (parts.length === 0) {
+    return "Not set";
+  }
   const text = parts.join(" · ");
   return text.charAt(0).toUpperCase() + text.slice(1);
 });
@@ -622,7 +652,9 @@ function buildFormVariables(): Record<string, unknown> {
 }
 
 async function submit() {
-  if (!entryLoaded.value) return;
+  if (!entryLoaded.value) {
+    return;
+  }
   if (progressValidationError.value) {
     emit("error", progressValidationError.value);
     return;

@@ -53,7 +53,9 @@ usePageTitle(() => {
 watch(
   () => data.value?.company,
   (company) => {
-    if (!company) return;
+    if (!company) {
+      return;
+    }
     name.value = company.name;
     wikidataId.value = company.wikidataId != null ? String(company.wikidataId) : "";
   },
@@ -64,7 +66,9 @@ watch(
 // reuses the instance when navigating between them. Clear any values carried
 // over from an edit when we land on "new".
 watch(isEditing, (editing) => {
-  if (editing) return;
+  if (editing) {
+    return;
+  }
   name.value = "";
   wikidataId.value = "";
   submitError.value = "";

@@ -154,13 +154,17 @@ const itemToDelete = ref<ResourceIndexItem | null>(null);
 const showDeleteConfirm = computed({
   get: () => itemToDelete.value !== null,
   set: (open) => {
-    if (!open) itemToDelete.value = null;
+    if (!open) {
+      itemToDelete.value = null;
+    }
   }
 });
 
 function confirmDelete() {
   const item = itemToDelete.value;
-  if (!item) return;
+  if (!item) {
+    return;
+  }
   // The page runs the mutation and closes the dialog when it's finished.
   emit("delete", item, () => (itemToDelete.value = null));
 }
@@ -172,18 +176,26 @@ const sentinelRef = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | undefined;
 
 watch(sentinelRef, (el, oldEl) => {
-  if (oldEl) observer?.unobserve(oldEl);
-  if (el) observer?.observe(el);
+  if (oldEl) {
+    observer?.unobserve(oldEl);
+  }
+  if (el) {
+    observer?.observe(el);
+  }
 });
 
 onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
-      if (entries.some((entry) => entry.isIntersecting) && !props.loadingMore) emit("loadMore");
+      if (entries.some((entry) => entry.isIntersecting) && !props.loadingMore) {
+        emit("loadMore");
+      }
     },
     { rootMargin: "600px 0px" }
   );
-  if (sentinelRef.value) observer.observe(sentinelRef.value);
+  if (sentinelRef.value) {
+    observer.observe(sentinelRef.value);
+  }
 });
 
 onBeforeUnmount(() => observer?.disconnect());

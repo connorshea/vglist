@@ -276,7 +276,9 @@ const refreshing = computed(() => loading.value && !loadingMore.value);
 
 async function loadMore() {
   const cursor = data.value?.games?.pageInfo.endCursor;
-  if (!cursor || loadingMore.value || refreshing.value) return;
+  if (!cursor || loadingMore.value || refreshing.value) {
+    return;
+  }
   loadingMore.value = true;
   try {
     await fetchMore({ ...variables.value, after: cursor, withCount: false }, (prev, next) => ({
@@ -296,7 +298,9 @@ async function loadMore() {
   // page wasn't enough to push it back out (a tall window, say), it wouldn't
   // fire again until a scroll. Observing it afresh reports where it is now.
   // Not after an error, which would retry in a loop.
-  if (error.value) return;
+  if (error.value) {
+    return;
+  }
   await nextTick();
   const el = sentinelRef.value;
   if (el && observer) {
@@ -311,8 +315,12 @@ const sentinelRef = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | undefined;
 
 watch(sentinelRef, (el, oldEl) => {
-  if (oldEl) observer?.unobserve(oldEl);
-  if (el) observer?.observe(el);
+  if (oldEl) {
+    observer?.unobserve(oldEl);
+  }
+  if (el) {
+    observer?.observe(el);
+  }
 });
 
 // ── Filter names and the site-wide count ──
@@ -336,14 +344,20 @@ function rememberName(record: NamedRecord) {
 }
 
 function nameFor(id: string, fetched: NamedRecord | null | undefined): string | null {
-  if (!id) return null;
-  if (fetched?.id === id) return fetched.name;
+  if (!id) {
+    return null;
+  }
+  if (fetched?.id === id) {
+    return fetched.name;
+  }
   return pickedNames[id] ?? null;
 }
 
 // The platform, genre and engine dropdowns apply as soon as one is picked.
 function setFacet(key: "platform" | "genre" | "engine", record: NamedRecord | null) {
-  if (record) rememberName(record);
+  if (record) {
+    rememberName(record);
+  }
   updateFilters({ [key]: record?.id ?? "" });
 }
 
@@ -352,7 +366,9 @@ function setFacet(key: "platform" | "genre" | "engine", record: NamedRecord | nu
 // until the games come back.
 const headerCount = computed(() => {
   const shown = data.value?.games?.totalCount;
-  if (shown !== undefined && shown !== null) return countLabel(shown, "game");
+  if (shown !== undefined && shown !== null) {
+    return countLabel(shown, "game");
+  }
   const total = filtersData.value?.basicSiteStatistics.games;
   return total !== undefined ? countLabel(total, "game") : null;
 });
@@ -365,12 +381,18 @@ const activeChips = computed(() => {
   const chips: { key: string; label: string; clear: Partial<GameFilters> }[] = [];
   if (f.fromYear || f.toYear) {
     let label: string;
-    if (f.fromYear && f.toYear) label = f.fromYear === f.toYear ? f.fromYear : `${f.fromYear}–${f.toYear}`;
-    else if (f.fromYear) label = `${f.fromYear} or later`;
-    else label = `${f.toYear} or earlier`;
+    if (f.fromYear && f.toYear) {
+      label = f.fromYear === f.toYear ? f.fromYear : `${f.fromYear}–${f.toYear}`;
+    } else if (f.fromYear) {
+      label = `${f.fromYear} or later`;
+    } else {
+      label = `${f.toYear} or earlier`;
+    }
     chips.push({ key: "year", label, clear: { fromYear: "", toYear: "" } });
   }
-  if (f.hideLibrary) chips.push({ key: "library", label: "Not in my library", clear: { hideLibrary: false } });
+  if (f.hideLibrary) {
+    chips.push({ key: "library", label: "Not in my library", clear: { hideLibrary: false } });
+  }
   return chips;
 });
 
@@ -397,7 +419,9 @@ function togglePanel() {
 }
 
 function closePanel() {
-  if (!panelOpen.value) return;
+  if (!panelOpen.value) {
+    return;
+  }
   panelOpen.value = false;
   void nextTick(() => (isPhone.value ? fabRef.value : moreButtonRef.value)?.focus());
 }
@@ -408,8 +432,12 @@ function applyDraft() {
 }
 
 function onDocumentPointerDown(e: PointerEvent) {
-  if (!panelOpen.value || isPhone.value) return;
-  if (moreRef.value && !moreRef.value.contains(e.target as Node)) closePanel();
+  if (!panelOpen.value || isPhone.value) {
+    return;
+  }
+  if (moreRef.value && !moreRef.value.contains(e.target as Node)) {
+    closePanel();
+  }
 }
 
 // Don't let the page scroll behind the phone sheet.
@@ -433,11 +461,15 @@ onMounted(() => {
   document.addEventListener("pointerdown", onDocumentPointerDown);
   observer = new IntersectionObserver(
     (entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) void loadMore();
+      if (entries.some((entry) => entry.isIntersecting)) {
+        void loadMore();
+      }
     },
     { rootMargin: "600px 0px" }
   );
-  if (sentinelRef.value) observer.observe(sentinelRef.value);
+  if (sentinelRef.value) {
+    observer.observe(sentinelRef.value);
+  }
 });
 
 onBeforeUnmount(() => {

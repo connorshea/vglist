@@ -7,7 +7,9 @@ export async function uploadAvatar(blob: Blob, token: string | null): Promise<st
   body.append("avatar", blob, blob.type === "image/png" ? "avatar.png" : "avatar.jpg");
 
   const headers: Record<string, string> = { Accept: "application/json" };
-  if (token) headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me/avatar`, {
     method: "POST",
@@ -25,7 +27,9 @@ export async function uploadAvatar(blob: Blob, token: string | null): Promise<st
     // Validation errors come back as `errors` strings. Auth failures and
     // Rack::Attack's 429 send `error` (the 429 also sends GraphQL-shaped
     // `errors` objects, which aren't strings), so prefer `error`.
-    if (typeof data.error === "string") throw new Error(data.error);
+    if (typeof data.error === "string") {
+      throw new Error(data.error);
+    }
     const messages = Array.isArray(data.errors)
       ? data.errors.filter((error): error is string => typeof error === "string")
       : [];
