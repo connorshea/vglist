@@ -40,7 +40,7 @@
 
 ## Conventions & Gotchas
 
-- **Database**: Postgres 17.x required. Use structure.sql for schema.
+- **Database**: Postgres 18.x required. Use structure.sql for schema.
 - **Images**: ActiveStorage for uploads, libvips required.
 - **Testing**: Use RSpec for Ruby, prefer TypeScript for Vue tests.
 - **TypeScript**: Strict mode enforced.
