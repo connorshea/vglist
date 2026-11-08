@@ -15,6 +15,11 @@ Sentry.init do |config|
   # attached via Sentry.set_user in ApplicationController#set_sentry_context.
   config.send_default_pii = false
 
+  # Ctrl+C on a rake task run by hand (e.g. in `doctl apps console`) raises
+  # Interrupt, in the task and in any job it had in flight. That's not a
+  # bug, so don't report it.
+  config.excluded_exceptions += ['Interrupt']
+
   # sentry-ruby still forwards every other request header even with
   # send_default_pii disabled, so strip the API token auth headers too.
   config.before_send = lambda do |event, _hint|
