@@ -258,6 +258,43 @@ describe("HomePage", () => {
     }
   });
 
+  it("doesn't let a cover that loads late replace what a flipped tile is showing", async () => {
+    const images: HTMLImageElement[] = [];
+    class FakeImage extends EventTarget {
+      src = "";
+      constructor() {
+        super();
+        images.push(this as unknown as HTMLImageElement);
+      }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    // Every flip picks the same tile, which is one that gets a cover.
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    vi.useFakeTimers({ toFake: ["setTimeout", "setInterval"] });
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetHeroCovers"
+        ? Promise.resolve({ games: { nodes: [{ id: "1", coverUrl: "https://files.example/1.jpg" }] } })
+        : respond(document, variables)
+    );
+    try {
+      const wrapper = await mountPage();
+      // The cover hasn't loaded, so the 5s fallback reveals the mosaic, flips
+      // start 300ms later, and the first flip swaps its tile 400ms after that.
+      await vi.advanceTimersByTimeAsync(5000 + 300 + 160 + 400 + 50);
+      const flipping = wrapper.findAll(".cover-tile.flipping .tile-face");
+      expect(flipping.length).toBeGreaterThan(0);
+
+      images[0].dispatchEvent(new Event("load"));
+      await flushPromises();
+      expect(wrapper.find(".cover-mosaic").html()).toContain("files.example/1.jpg");
+      for (const face of flipping) expect(face.attributes("style") ?? "").not.toContain("files.example");
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("skips the cover images in the background mosaic when the browser asks to save data", async () => {
     Object.defineProperty(navigator, "connection", {
       value: Object.assign(new EventTarget(), { saveData: true }),

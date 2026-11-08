@@ -273,6 +273,9 @@ interface MosaicTile {
   id: number;
   style: Record<string, string>;
   flipping: boolean;
+  // Set once the tile has flipped, so a cover that finishes loading late
+  // doesn't snap over whatever the flip put there.
+  flipped: boolean;
 }
 
 function gradientStyle(index: number): Record<string, string> {
@@ -294,7 +297,8 @@ const mosaicTiles = ref<MosaicTile[]>(
   Array.from({ length: TOTAL }, (_, i) => ({
     id: i,
     style: gradientStyle(i),
-    flipping: false
+    flipping: false,
+    flipped: false
   }))
 );
 
@@ -380,7 +384,8 @@ watch(
         if (ok) {
           loadedCoverUrls.value.push(url);
           for (const i of tilesByUrl.get(url) ?? []) {
-            mosaicTiles.value[i].style = coverStyle(url);
+            const tile = mosaicTiles.value[i];
+            if (!tile.flipped) tile.style = coverStyle(url);
           }
         }
         loaded++;
@@ -407,6 +412,7 @@ function flipTile() {
   if (tile.flipping) return;
 
   tile.flipping = true;
+  tile.flipped = true;
 
   // Swap background at the midpoint (when card is edge-on at 90deg)
   setTimeout(() => {
