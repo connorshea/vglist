@@ -1,10 +1,14 @@
 <template>
   <div class="overview">
-    <p v-if="overview?.bio" class="overview-bio">{{ overview.bio }}</p>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading overview…" : "" }}</p>
 
-    <LibraryEmptyState v-if="!overview" :loading="loading" :error="error" :library-empty="false" />
+    <UserOverviewSkeleton v-if="showSkeleton" />
+
+    <LibraryEmptyState v-else-if="!overview" :error="error" :library-empty="false" />
 
     <template v-else>
+      <p v-if="overview.bio" class="overview-bio">{{ overview.bio }}</p>
+
       <section v-if="favorites.totalCount > 0" class="overview-section" aria-labelledby="overview-favorites">
         <div class="overview-section-header">
           <Heart :size="14" aria-hidden="true" class="overview-heart" />
@@ -99,6 +103,7 @@ import type { GetUserOverviewQuery, LibraryGamePurchaseFieldsFragment } from "@/
 import LibraryEmptyState from "@/components/library/LibraryEmptyState.vue";
 import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
 import LibraryPlayingCard from "@/components/library/LibraryPlayingCard.vue";
+import UserOverviewSkeleton from "@/components/users/UserOverviewSkeleton.vue";
 
 // Five favorites and a "+N more" tile fill one row of six; the next three
 // favorites peek out of that tile.
@@ -124,6 +129,8 @@ const { data, loading, error } = useQuery<GetUserOverviewQuery>(GET_USER_OVERVIE
 });
 
 const overview = computed(() => data.value?.user ?? null);
+// Only on the first load.
+const showSkeleton = computed(() => loading.value && !data.value);
 const favorites = computed(() => overview.value?.favoritedGames ?? { totalCount: 0, nodes: [] });
 const playing = computed(() => overview.value?.playing ?? { totalCount: 0, nodes: [] });
 const topRated = computed(() => overview.value?.topRated ?? { totalCount: 0, nodes: [] });
