@@ -83,14 +83,30 @@ module Types
     end
 
     # Events whose eventable is one of this game's library entries or
-    # favorites. The eventable_type filters let Postgres prune the other
-    # branches of the new_events UNION ALL view.
+    # favorites.
+    #
+    # This reads the two event tables directly, reaching each event through
+    # the game's library entries and favorites (and the eventable_id indexes),
+    # rather than filtering the new_events view. Postgres badly overestimates
+    # how many events an `eventable_id IN (subquery)` filter on the view
+    # matches, so it walked every event newest-first until it had a page's
+    # worth: fine for a popular game, but every event in the table for one
+    # with only a few. A game has at most a few hundred events, so finding
+    # them all and sorting them is cheap. Each branch lists the new_events
+    # view's columns, in its order.
     def activity
-      purchase_ids = @object.game_purchases.select(:id)
-      favorite_ids = @object.favorites.select(:id)
+      purchase_events = Events::GamePurchaseEvent
+                        .joins(:eventable)
+                        .where(game_purchases: { game_id: @object.id })
+                        .select(:id, :user_id, :eventable_id, :differences, :event_category, :created_at, :updated_at,
+                                Arel.sql("'GamePurchase'::text AS eventable_type"))
+      favorite_events = Events::FavoriteGameEvent
+                        .joins(:eventable)
+                        .where(favorite_games: { game_id: @object.id })
+                        .select(:id, :user_id, :eventable_id, Arel.sql('NULL::jsonb AS differences'), :event_category, :created_at, :updated_at,
+                                Arel.sql("'FavoriteGame'::text AS eventable_type"))
 
-      Views::NewEvent.where(eventable_type: 'GamePurchase', eventable_id: purchase_ids)
-                     .or(Views::NewEvent.where(eventable_type: 'FavoriteGame', eventable_id: favorite_ids))
+      Views::NewEvent.from(Arel.sql("(#{purchase_events.to_sql} UNION ALL #{favorite_events.to_sql}) AS new_events"))
                      .joins(:user)
                      .merge(User.public_and_unbanned)
                      .preload(user: AttachmentPreloads::AVATAR)
