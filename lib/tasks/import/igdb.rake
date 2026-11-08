@@ -295,8 +295,14 @@ namespace :import do
         # Create each size of the cover now, from the file we already have,
         # rather than leaving it to TransformJobs (skipped above): those would
         # download the original again, and run on the async adapter in this
-        # process, which drops them if the task exits first.
-        timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
+        # process, which drops them if the task exits first. A cover libvips
+        # can't resize is still added, so one bad image doesn't stop the whole
+        # import; ReadyVariant serves the original until its sizes exist.
+        begin
+          timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
+        rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+          next [true, ["#{label} | Cover added, but its sizes could not be created: #{e.message}"]]
+        end
       ensure
         cover.close
       end
