@@ -16,6 +16,18 @@ module CachedRowCount
 
   EXPIRES_IN = 5.minutes
 
+  # A relation extension that marks a relation as listing every row of its
+  # table exactly once, so its total is the cached row count. Only the code
+  # building the relation knows that for sure, so it opts in with
+  # `.extending(CachedRowCount::EveryRow)`, and `BaseConnectionObject` reads
+  # `cached_total_count` for the connection's `totalCount`.
+  module EveryRow
+    # @return [Integer]
+    def cached_total_count
+      klass.cached_row_count
+    end
+  end
+
   class_methods do
     # @return [Integer] The number of rows in this model's table, as of at most
     #   EXPIRES_IN ago.

@@ -66,4 +66,22 @@ RSpec.describe "games totalCount", type: :request do
     create(:game_platform, game: create(:game), platform: platform)
     expect(total_count(onPlatform: platform.id)).to eq(1)
   end
+
+  it "counts an association's games exactly, not the whole table" do
+    genre = create(:genre)
+    create(:game_genre, game: create(:game), genre: genre)
+    genre_query = <<-GRAPHQL
+      query($id: ID!) {
+        genre(id: $id) {
+          games {
+            totalCount
+          }
+        }
+      }
+    GRAPHQL
+
+    expect(total_count).to eq(4)
+    result = api_request(genre_query, variables: { id: genre.id }, token: access_token)
+    expect(result.graphql_dig(:genre, :games, :total_count)).to eq(1)
+  end
 end
