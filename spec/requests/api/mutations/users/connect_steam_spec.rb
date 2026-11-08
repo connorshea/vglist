@@ -121,6 +121,47 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
         end.not_to change(ExternalAccount, :count)
       end
 
+      it "accepts a full vanity profile URL" do
+        result = api_request(query_string, variables: { id: user.id, steam_username: ' https://steamcommunity.com/id/nicereddy/ ' }, token: access_token)
+
+        expect(result.graphql_dig(:connect_steam)).to eq({ connected: true })
+        expect(WebMock).to have_requested(:get, 'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/')
+          .with(query: { 'key' => 'foo', 'vanityurl' => 'nicereddy' })
+        expect(ExternalAccount.last.steam_profile_url).to eq('https://steamcommunity.com/id/nicereddy/')
+      end
+
+      it "accepts a numeric profile URL without calling the Steam API" do
+        result = api_request(query_string, variables: { id: user.id, steam_username: 'https://steamcommunity.com/profiles/76561197960287930/' }, token: access_token)
+
+        expect(result.graphql_dig(:connect_steam)).to eq({ connected: true })
+        expect(WebMock).not_to have_requested(:get, /api\.steampowered\.com/)
+        expect(ExternalAccount.last).to have_attributes(
+          steam_id: 76_561_197_960_287_930,
+          steam_profile_url: 'https://steamcommunity.com/profiles/76561197960287930/'
+        )
+      end
+
+      it "accepts a bare SteamID64 without calling the Steam API" do
+        result = api_request(query_string, variables: { id: user.id, steam_username: '76561197960287930' }, token: access_token)
+
+        expect(result.graphql_dig(:connect_steam)).to eq({ connected: true })
+        expect(WebMock).not_to have_requested(:get, /api\.steampowered\.com/)
+        expect(ExternalAccount.last.steam_id).to eq(76_561_197_960_287_930)
+      end
+
+      it "returns a clear error when Steam finds no matching username" do
+        stub_request(:get, /api\.steampowered\.com/).to_return(
+          status: 200,
+          body: { 'response': { 'success': 42, 'message': 'No match' } }.to_json,
+          headers: {}
+        )
+
+        expect do
+          result = api_request(query_string, variables: { id: user.id, steam_username: 'nobody' }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq('Unable to find a Steam account with the username "nobody".')
+        end.not_to change(ExternalAccount, :count)
+      end
+
       it "returns an error when the Steam API times out" do
         stub_request(:get, /api\.steampowered\.com/).to_timeout
 
