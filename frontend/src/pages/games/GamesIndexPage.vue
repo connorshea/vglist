@@ -124,7 +124,7 @@
       <button v-if="activeCount > 0" type="button" class="clear-all" @click="clearAll">Clear filters</button>
     </div>
 
-    <ul v-if="games.length" class="games-grid" :class="{ 'is-stale': refreshing }">
+    <ul v-if="games.length" class="games-grid" :class="{ 'is-stale': refreshing }" :aria-busy="refreshing">
       <li v-for="game in games" :key="game.id">
         <GameTile
           :id="game.id"

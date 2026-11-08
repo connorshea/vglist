@@ -360,6 +360,18 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    context 'when sorting by average rating with a game that has fewer than five ratings' do
+      it 'leaves that game out' do
+        rated = create(:game)
+        create_list(:game_purchase, 5, game: rated, rating: 40)
+        barely_rated = create(:game)
+        create_list(:game_purchase, 4, game: barely_rated, rating: 90)
+        create(:game_purchase, game: barely_rated, rating: nil)
+
+        expect(Game.highest_avg_rating).to eq([rated])
+      end
+    end
+
     context 'with games that tie on every sort' do
       let(:release_date) { Date.new(2020, 1, 1) }
       let(:time) { 1.day.ago }

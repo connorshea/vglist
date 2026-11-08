@@ -777,7 +777,8 @@ CREATE TABLE public.games (
     avg_rating double precision,
     igdb_id text,
     mobygames_id bigint,
-    game_purchases_count integer DEFAULT 0 NOT NULL
+    game_purchases_count integer DEFAULT 0 NOT NULL,
+    ratings_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2548,6 +2549,13 @@ CREATE INDEX index_game_versions_on_item_type_and_item_id ON public.game_version
 
 
 --
+-- Name: index_games_on_avg_rating_and_id_when_rated; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_avg_rating_and_id_when_rated ON public.games USING btree (avg_rating, id) WHERE ((ratings_count >= 5) AND (avg_rating IS NOT NULL));
+
+
+--
 -- Name: index_games_on_created_at_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3119,6 +3127,8 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108210100'),
+('20261108210000'),
 ('20261108000200'),
 ('20261108000100'),
 ('20261108000000'),
