@@ -1,3 +1,15 @@
+@use "bulma/sass/utilities/initial-variables" as iv;
+
 .has-fill-text-color {
   fill: var(--bulma-text);
+}
+
+// The only two of Bulma's colour helpers the app uses. The full set is left
+// out of the build (see bulma-variables.scss), so these copy Bulma's rules.
+.has-text-danger {
+  color: hsl(var(--bulma-danger-h), var(--bulma-danger-s), var(--bulma-danger-l)) !important;
+}
+
+.has-text-grey {
+  color: iv.$grey !important;
 }
