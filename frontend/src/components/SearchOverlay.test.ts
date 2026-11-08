@@ -15,7 +15,8 @@ const { pushMock, mockIsOpen, mockClose, mockRequest, mockInitialQuery } = vi.ho
     // close() is a simple spy; it does NOT toggle isOpen to avoid
     // mid-test Vue re-renders that conflict with DOM teardown.
     mockClose: vi.fn<() => void>(),
-    mockRequest: vi.fn<() => Promise<unknown>>()
+    // The overlay calls gqlClient.request with a single options object.
+    mockRequest: vi.fn<(options: { signal: AbortSignal }) => Promise<unknown>>()
   };
 });
 
@@ -622,8 +623,7 @@ describe("SearchOverlay", () => {
     }
 
     function requestSignal(call: number): AbortSignal {
-      const [options] = mockRequest.mock.calls[call] as unknown as [{ signal: AbortSignal }];
-      return options.signal;
+      return mockRequest.mock.calls[call][0].signal;
     }
 
     function titles(wrapper: VueWrapper): string[] {
