@@ -41,8 +41,7 @@ function sentenceWidth(i: number): string {
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  /* The pages draw their card borders differently; they can override this. */
-  border: 1px solid var(--activity-card-border, rgba(0, 0, 0, 0.08));
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   margin-bottom: 8px;
 }
