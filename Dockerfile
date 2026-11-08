@@ -36,8 +36,12 @@ WORKDIR /rails
 #   db/structure.sql into an empty database (the Docker CI workflow does
 #   this). Trixie's default is v17.
 # - libjemalloc2: lower memory fragmentation for Puma's threads/workers.
+# - file: active_storage_validations shells out to `file` to sniff the real
+#   content type of every attachment (spoofing check), so uploads and
+#   import:igdb:covers fail without it.
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
+      file \
       libjemalloc2 \
       libpq5 \
       libvips42t64 \
