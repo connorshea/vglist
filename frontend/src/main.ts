@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 import * as Sentry from "@sentry/vue";
 import App from "./App.vue";
 import router from "./router";
+import { dropHandledChunkErrors } from "./utils/sentry-filter";
 
 import "./assets/stylesheets/application.scss";
 
@@ -12,7 +13,8 @@ Sentry.init({
   app,
   dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [Sentry.browserTracingIntegration({ router })],
-  enabled: !!import.meta.env.VITE_SENTRY_DSN
+  enabled: !!import.meta.env.VITE_SENTRY_DSN,
+  beforeSend: dropHandledChunkErrors
 });
 
 app.use(createPinia());
