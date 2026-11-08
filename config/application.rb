@@ -22,8 +22,8 @@ Bundler.require(*Rails.groups)
 
 module VideoGameList
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 7.2.
-    config.load_defaults 7.2
+    # Initialize configuration defaults for Rails 8.0.
+    config.load_defaults 8.0
 
     # API-only mode: views/flash disabled; cookies/sessions enabled below for Devise.
     config.api_only = true
