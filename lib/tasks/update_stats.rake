@@ -2,16 +2,17 @@
 
 namespace :vglist do
   namespace :update do
-    desc "Recount games.game_purchases_count and fix any game whose counter has drifted"
-    task game_purchases_counts: :environment do
-      fixed = GamePurchasesCountSync.call
-      puts "Corrected game_purchases_count on #{fixed} games."
+    desc "Recalculate games' owner count, ratings count and average rating, fixing any that have drifted"
+    task game_counters: :environment do
+      fixed = GameCountersSync.call
+      puts "Corrected counters on #{fixed} games."
     end
 
     desc "Create an entry in the statistics table for the current data in the database"
     task stats: :environment do
-      # A cheap daily safety net for the counter behind the Popular sort.
-      Rake::Task["vglist:update:game_purchases_counts"].invoke
+      # A cheap daily safety net for the columns behind the Popular and Top
+      # rated sorts.
+      Rake::Task["vglist:update:game_counters"].invoke
 
       Statistic.create!(
         users: User.count,
