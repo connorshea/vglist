@@ -409,6 +409,9 @@ watch(
 // ── Flip animation system ──
 
 let flipTimer: ReturnType<typeof setInterval> | null = null;
+// The reveal fallback and the delayed flip start, cleared on unmount so a
+// page that's gone can't start flipping.
+const startTimers: ReturnType<typeof setTimeout>[] = [];
 
 function flipTile() {
   const tiles = mosaicTiles.value;
@@ -452,22 +455,27 @@ onMounted(() => {
   if (saveData.value) coversReady.value = true;
 
   // Fallback: show mosaic after 5s even if images haven't finished preloading
-  setTimeout(() => {
-    coversReady.value = true;
-  }, 5000);
+  startTimers.push(
+    setTimeout(() => {
+      coversReady.value = true;
+    }, 5000)
+  );
 });
 
 // Start flipping once covers are visible
 watch(coversReady, (ready) => {
   if (ready && !flipTimer) {
-    setTimeout(() => {
-      scheduleFlips();
-      flipTimer = setInterval(scheduleFlips, 2000);
-    }, 300);
+    startTimers.push(
+      setTimeout(() => {
+        scheduleFlips();
+        flipTimer = setInterval(scheduleFlips, 2000);
+      }, 300)
+    );
   }
 });
 
 onUnmounted(() => {
+  for (const timer of startTimers) clearTimeout(timer);
   if (flipTimer) clearInterval(flipTimer);
   quickResizeObserver?.disconnect();
 });

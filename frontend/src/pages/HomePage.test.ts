@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount, flushPromises, RouterLinkStub } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { mount, flushPromises, RouterLinkStub, enableAutoUnmount } from "@vue/test-utils";
 import type { DocumentNode } from "graphql";
 import HomePage from "./HomePage.vue";
 import { resetSaveDataForTests } from "@/composables/useSaveData";
@@ -80,6 +80,12 @@ async function mountPage() {
 // ── Tests ─────────────────────────────────────────────────────────
 
 describe("HomePage", () => {
+  // A page left mounted keeps its mosaic timers running. Once the file has
+  // been going for 5s their fallback fires, flips start, and every new timer
+  // they set while a later test has fake timers on lands on that test's
+  // clock, so the flip test ends up animating every earlier page too.
+  enableAutoUnmount(afterEach);
+
   beforeEach(() => {
     mockRequest.mockReset();
     mockRequest.mockImplementation(respond);
@@ -291,6 +297,22 @@ describe("HomePage", () => {
       vi.useRealTimers();
       vi.restoreAllMocks();
       vi.unstubAllGlobals();
+    }
+  });
+
+  it("doesn't start flipping mosaic tiles after the page has gone", async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "setInterval", "clearTimeout", "clearInterval"] });
+    try {
+      const wrapper = await mountPage();
+      // Unmount between the 5s reveal and the flips starting 300ms later.
+      await vi.advanceTimersByTimeAsync(5100);
+      wrapper.unmount();
+      const setIntervalSpy = vi.spyOn(globalThis, "setInterval");
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(setIntervalSpy).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
     }
   });
 
