@@ -1,5 +1,15 @@
 <template>
   <Teleport to="body">
+    <!--
+      The frosted glass is its own layer, blurred at full strength from the
+      start, and only its opacity animates. Animating the blur radius instead
+      re-blurs the whole viewport at a new radius every frame, which dropped
+      frames. It sits outside the dialog because an ancestor with opacity
+      below 1 would limit the blur to that ancestor's own contents.
+    -->
+    <Transition name="search-backdrop">
+      <div v-if="isOpen" class="search-backdrop" aria-hidden="true"></div>
+    </Transition>
     <Transition name="search-overlay">
       <div
         v-if="isOpen"
@@ -537,15 +547,11 @@ function releaseYear(date: string): string {
 </script>
 
 <style scoped>
-/* ── Overlay backdrop (frosted glass) ── */
-.search-overlay {
+/* ── Frosted glass behind the dialog ── */
+.search-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
+  z-index: 999;
   /*
    * Don't add -webkit-backdrop-filter by hand: Lightning CSS adds the prefix
    * itself, and when both are written it keeps only the prefixed one in the
@@ -556,38 +562,52 @@ function releaseYear(date: string): string {
 }
 
 @media (prefers-color-scheme: light) {
-  .search-overlay {
+  .search-backdrop {
     background: rgba(30, 33, 48, 0.88);
   }
 }
 
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
 /*
- * Ease the frosted glass in and out by animating the blur radius and tint
- * rather than the overlay's opacity: fading opacity would crossfade a sharp
- * page into a blurred one instead of gradually blurring it. The keyframes
- * only give the start state, so they end at whichever tint applies.
+ * Opening fades the glass in while the results drift down into place, and
+ * closing runs the same thing a little faster. Only opacity and transform
+ * animate, so the browser can run them on the compositor. The search bar
+ * itself morphs from the navbar in a view transition (see
+ * useSearchOverlay.ts and application.scss), so it isn't animated here.
  */
+.search-backdrop-enter-active {
+  animation: search-overlay-fade 0.25s cubic-bezier(0.2, 0, 0, 1) both;
+  will-change: opacity;
+}
+
+.search-backdrop-leave-active {
+  animation: search-overlay-fade 0.18s cubic-bezier(0.4, 0, 1, 1) reverse both;
+  will-change: opacity;
+}
+
 .search-overlay-enter-active {
-  animation: search-overlay-frost 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: search-overlay-fade 0.25s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 .search-overlay-leave-active {
-  animation: search-overlay-frost 0.2s cubic-bezier(0.4, 0, 1, 1) reverse both;
+  animation: search-overlay-fade 0.18s cubic-bezier(0.4, 0, 1, 1) reverse both;
 }
 
 .search-overlay-enter-active .search-results {
-  animation: search-overlay-fade 0.3s ease-out both;
+  animation: search-overlay-drift 0.25s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 .search-overlay-leave-active .search-results {
-  animation: search-overlay-fade 0.2s ease-in reverse both;
-}
-
-@keyframes search-overlay-frost {
-  from {
-    backdrop-filter: blur(0) saturate(1);
-    background: rgba(30, 33, 48, 0);
-  }
+  animation: search-overlay-drift 0.18s cubic-bezier(0.4, 0, 1, 1) reverse both;
 }
 
 @keyframes search-overlay-fade {
@@ -596,7 +616,15 @@ function releaseYear(date: string): string {
   }
 }
 
+@keyframes search-overlay-drift {
+  from {
+    transform: translateY(-8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .search-backdrop-enter-active,
+  .search-backdrop-leave-active,
   .search-overlay-enter-active,
   .search-overlay-leave-active,
   .search-overlay-enter-active .search-results,
