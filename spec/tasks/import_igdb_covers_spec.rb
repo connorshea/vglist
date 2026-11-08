@@ -50,6 +50,31 @@ RSpec.describe 'import:igdb:covers', type: :task do
     end
   end
 
+  context 'with the test job adapter' do
+    around(:each) do |example|
+      original_adapter = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :test
+      example.run
+    ensure
+      ActiveJob::Base.queue_adapter = original_adapter
+    end
+
+    it "doesn't enqueue TransformJobs for the sizes it creates itself, but still does for other attachments" do
+      game = create(:game, igdb_id: 'game-0')
+      stub_igdb([game.igdb_id])
+      stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+        .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+
+      expect { run_task }.not_to have_enqueued_job(ActiveStorage::TransformJob)
+      expect(game.reload.cover).to be_attached
+
+      other_game = create(:game)
+      expect do
+        other_game.cover.attach(io: StringIO.new(jpeg), filename: 'cover.jpg', content_type: 'image/jpeg')
+      end.to have_enqueued_job(ActiveStorage::TransformJob).exactly(Game::COVER_SIZES.size).times
+    end
+  end
+
   it 'only asks IGDB about games that have an IGDB ID and no cover' do
     wanted = create(:game, igdb_id: 'no-cover')
     create(:game_with_cover, igdb_id: 'has-cover')

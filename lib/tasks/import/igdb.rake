@@ -183,6 +183,33 @@ namespace :import do
       end
     end)
 
+    # Time the image work for each size: decoding the original, resizing it
+    # and encoding the result. `transform.active_storage` also wraps the
+    # block that saves the variant, so the SQL and upload that happen inside
+    # it (already counted by the subscribers above) are taken back out. What's
+    # left also includes building the variant record, which is negligible.
+    # Like `validate`, the time includes any wait for the CPU or the GVL.
+    transform_timer = Object.new
+    transform_timer.define_singleton_method(:start) do |_name, _id, _payload|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      next if breakdown.nil?
+
+      Thread.current[:igdb_cover_transform_start] = [
+        Process.clock_gettime(Process::CLOCK_MONOTONIC),
+        breakdown[:sql] + breakdown[:upload]
+      ]
+    end
+    transform_timer.define_singleton_method(:finish) do |_name, _id, _payload|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      started, nested_before = Thread.current[:igdb_cover_transform_start]
+      next if breakdown.nil? || started.nil?
+
+      Thread.current[:igdb_cover_transform_start] = nil
+      nested = breakdown[:sql] + breakdown[:upload] - nested_before
+      breakdown[:transform] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started - nested
+    end
+    breakdown_subscribers << ActiveSupport::Notifications.subscribe('transform.active_storage', transform_timer)
+
     # Attach one game's cover and create its variants.
     #
     # Returns [added, messages]: whether the cover was added, and the lines to
@@ -213,7 +240,8 @@ namespace :import do
           parts << "validate #{b[:validate].round(2)}s (spoof check #{b[:spoof].round(2)}s)" if b.key?(:validate)
           parts << "sql #{b[:sql].round(2)}s/#{b[:queries]}" if b.key?(:sql)
           parts << "upload #{b[:upload].round(2)}s" if b.key?(:upload)
-          parts << "other #{(seconds - b[:validate] - b[:sql] - b[:upload]).round(2)}s"
+          parts << "transform #{b[:transform].round(2)}s" if b.key?(:transform)
+          parts << "other #{(seconds - b[:validate] - b[:sql] - b[:upload] - b[:transform]).round(2)}s"
           "#{text} [#{parts.join(', ')}]"
         end.join(', ')
       end
@@ -240,6 +268,13 @@ namespace :import do
           {}
         end
 
+        # This task creates the cover's sizes itself (below), so attaching it
+        # shouldn't also enqueue a TransformJob for each one. Those would run
+        # on the async adapter in this same process, competing with the
+        # workers for the CPU, and any that ran before a worker saved its size
+        # would download the original from R2 and resize it again.
+        game.skip_cover_preprocessing = true
+
         # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
         timed.call(:save) do
           game.cover.attach(
@@ -258,10 +293,9 @@ namespace :import do
         next [false, ["#{label} | Cover could not be added."]] if game.reload.cover.blank?
 
         # Create each size of the cover now, from the file we already have,
-        # rather than leaving it to the TransformJobs `preprocessed: true`
-        # queues: those run on the async adapter in this process and are
-        # dropped if the task exits first. When they do run, they find the
-        # variants already exist and do nothing.
+        # rather than leaving it to TransformJobs (skipped above): those would
+        # download the original again, and run on the async adapter in this
+        # process, which drops them if the task exits first.
         timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
       ensure
         cover.close

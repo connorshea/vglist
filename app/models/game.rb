@@ -43,13 +43,22 @@ class Game < ApplicationRecord
     large: [500, 800]
   }.freeze
 
-  # `preprocessed: true` enqueues an ActiveStorage::TransformJob for each
-  # variant as soon as a cover is attached, so the first page to show a new
-  # cover doesn't have to download, resize, and upload it mid-request.
+  # Preprocessing enqueues an ActiveStorage::TransformJob for each variant as
+  # soon as a cover is attached, so the first page to show a new cover doesn't
+  # have to download, resize, and upload it mid-request.
   has_one_attached :cover do |attachable|
-    attachable.variant :small, resize_to_limit: COVER_SIZES[:small], preprocessed: true
-    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium], preprocessed: true
-    attachable.variant :large, resize_to_limit: COVER_SIZES[:large], preprocessed: true
+    attachable.variant :small, resize_to_limit: COVER_SIZES[:small], preprocessed: :preprocess_cover_variants?
+    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium], preprocessed: :preprocess_cover_variants?
+    attachable.variant :large, resize_to_limit: COVER_SIZES[:large], preprocessed: :preprocess_cover_variants?
+  end
+
+  # Set to true before attaching a cover whose sizes the caller creates
+  # itself (e.g. with VariantBackfillService, from the file it already has),
+  # so attaching it doesn't also enqueue a TransformJob for each size.
+  attr_accessor :skip_cover_preprocessing
+
+  def preprocess_cover_variants?
+    !skip_cover_preprocessing
   end
 
   # Use PaperTrail to track changes to the record.
