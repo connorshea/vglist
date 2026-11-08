@@ -118,7 +118,9 @@
                   <div class="result-title">{{ game.content }}</div>
                   <div class="result-meta">
                     <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
-                    <span v-if="game.developerName" class="result-developer">{{ game.developerName }}</span>
+                    <span v-if="game.developerName" class="result-developer" :title="game.developerName">{{
+                      game.developerName
+                    }}</span>
                   </div>
                 </div>
               </a>
@@ -1060,11 +1062,16 @@ function releaseYear(date: string): string {
 .result-year {
   font-size: 12px;
   color: var(--s-100);
+  flex-shrink: 0;
 }
 
 .result-developer {
   font-size: 12px;
   color: var(--s-100);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .result-type-tag {
