@@ -3,7 +3,7 @@
     <!-- Always mounted so screen readers announce the text when it changes -->
     <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading activity…" : "" }}</p>
 
-    <ActivityFeedSkeleton v-if="showSkeleton" aria-busy="true" />
+    <ActivityFeedSkeleton v-if="showSkeleton" />
 
     <div v-if="error" class="notification is-danger">
       <p>{{ error.message }}</p>

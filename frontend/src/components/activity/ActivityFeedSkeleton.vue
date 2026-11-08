@@ -22,7 +22,7 @@ import SkeletonBlock from "@/components/SkeletonBlock.vue";
 // Activity tab) while the first page loads. The card, cover and text rows use
 // the same sizes as the real `.a-card` so the list doesn't jump when events
 // arrive; keep them in step. Announce the loading state from the page (a
-// role="status" line plus aria-busy), since this is hidden from screen readers.
+// role="status" line), since this is hidden from screen readers.
 
 withDefaults(defineProps<{ count?: number }>(), { count: 8 });
 
