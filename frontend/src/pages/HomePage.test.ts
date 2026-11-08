@@ -300,6 +300,22 @@ describe("HomePage", () => {
     }
   });
 
+  it("doesn't start flipping mosaic tiles after the page has gone", async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "setInterval", "clearTimeout", "clearInterval"] });
+    try {
+      const wrapper = await mountPage();
+      // Unmount between the 5s reveal and the flips starting 300ms later.
+      await vi.advanceTimersByTimeAsync(5100);
+      wrapper.unmount();
+      const setIntervalSpy = vi.spyOn(globalThis, "setInterval");
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(setIntervalSpy).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+
   it("ignores mosaic covers that finish loading after data saver was toggled", async () => {
     const images: HTMLImageElement[] = [];
     class FakeImage extends EventTarget {
