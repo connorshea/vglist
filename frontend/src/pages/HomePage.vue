@@ -338,7 +338,12 @@ const coverUrls = computed<string[]>(() => {
   return heroData.value.games.nodes.filter((g) => g.coverUrl).map((g) => g.coverUrl as string);
 });
 
-// Distribute cover images across tiles when they load, then preload before showing
+// Covers that have finished downloading. Tiles only switch to a cover once it
+// is in here, so the CSS background is served from the cache and the low
+// priority preload below is the only request for each image.
+const loadedCoverUrls = ref<string[]>([]);
+
+// Distribute cover images across tiles as they finish preloading
 watch(
   coverUrls,
   (urls) => {
@@ -348,31 +353,43 @@ watch(
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    const tilesByUrl = new Map<string, number[]>();
     for (let i = 0; i < TOTAL; i++) {
       const row = Math.floor(i / COLS_PER_ROW);
       const col = i % COLS_PER_ROW;
       // Keep ~25% as gradients for visual variety
       const keepGradient = (row * 3 + col * 7 + row * col) % 4 === 0;
-      if (!keepGradient && shuffled.length > 0) {
-        mosaicTiles.value[i].style = coverStyle(shuffled[i % shuffled.length]);
+      if (!keepGradient) {
+        const url = shuffled[i % shuffled.length];
+        tilesByUrl.set(url, [...(tilesByUrl.get(url) ?? []), i]);
       }
     }
 
-    // Preload cover images before revealing mosaic
+    // Preload cover images before revealing mosaic. The mosaic is decorative,
+    // so these downloads go at low priority and stay out of the way of the
+    // page's data and the shelf covers below the hero.
     const uniqueUrls = [...new Set(shuffled)];
     let loaded = 0;
     const threshold = Math.floor(uniqueUrls.length * 0.75);
 
     for (const url of uniqueUrls) {
       const img = new Image();
-      const onDone = () => {
+      img.fetchPriority = "low";
+      img.decoding = "async";
+      const onDone = (ok: boolean) => {
+        if (ok) {
+          loadedCoverUrls.value.push(url);
+          for (const i of tilesByUrl.get(url) ?? []) {
+            mosaicTiles.value[i].style = coverStyle(url);
+          }
+        }
         loaded++;
         if (loaded >= threshold && !coversReady.value) {
           coversReady.value = true;
         }
       };
-      img.addEventListener("load", onDone);
-      img.addEventListener("error", onDone);
+      img.addEventListener("load", () => onDone(true));
+      img.addEventListener("error", () => onDone(false));
       img.src = url;
     }
   },
@@ -393,7 +410,9 @@ function flipTile() {
 
   // Swap background at the midpoint (when card is edge-on at 90deg)
   setTimeout(() => {
-    const urls = coverUrls.value;
+    // Only flip to covers that already downloaded, so a flip never starts a
+    // fresh, normal priority image request.
+    const urls = loadedCoverUrls.value;
     if (urls.length > 0 && Math.random() > 0.2) {
       tile.style = coverStyle(urls[Math.floor(Math.random() * urls.length)]);
     } else {

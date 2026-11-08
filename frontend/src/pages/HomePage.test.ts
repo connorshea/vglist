@@ -220,6 +220,44 @@ describe("HomePage", () => {
     expect(mockRequest.mock.calls.map(([document]) => operationName(document))).toContain("GetHeroCovers");
   });
 
+  it("downloads the mosaic covers at low priority and only shows each one once it has loaded", async () => {
+    const images: HTMLImageElement[] = [];
+    class FakeImage extends EventTarget {
+      fetchPriority = "auto";
+      decoding = "auto";
+      src = "";
+      constructor() {
+        super();
+        images.push(this as unknown as HTMLImageElement);
+      }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetHeroCovers"
+        ? Promise.resolve({
+            games: { nodes: [1, 2, 3, 4].map((n) => ({ id: String(n), coverUrl: `https://files.example/${n}.jpg` })) }
+          })
+        : respond(document, variables)
+    );
+    try {
+      const wrapper = await mountPage();
+      expect(images.map((img) => img.src).sort()).toEqual([1, 2, 3, 4].map((n) => `https://files.example/${n}.jpg`));
+      expect(images.every((img) => img.fetchPriority === "low" && img.decoding === "async")).toBeTruthy();
+      // Nothing points at a cover until its download finishes, so the
+      // stylesheet never starts a second, normal priority request.
+      expect(wrapper.find(".cover-mosaic").html()).not.toContain("files.example");
+
+      const first = images[0];
+      first.dispatchEvent(new Event("load"));
+      await flushPromises();
+      const html = wrapper.find(".cover-mosaic").html();
+      expect(html).toContain(first.src);
+      for (const img of images.slice(1)) expect(html).not.toContain(img.src);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("skips the cover images in the background mosaic when the browser asks to save data", async () => {
     Object.defineProperty(navigator, "connection", {
       value: Object.assign(new EventTarget(), { saveData: true }),
