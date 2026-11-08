@@ -22,7 +22,7 @@ import SkeletonBlock from "@/components/SkeletonBlock.vue";
 // Activity tab) while the first page loads. The card, cover and text rows use
 // the same sizes as the real `.a-card` so the list doesn't jump when events
 // arrive; keep them in step. Announce the loading state from the page (a
-// role="status" line plus aria-busy), since this is hidden from screen readers.
+// role="status" line), since this is hidden from screen readers.
 
 withDefaults(defineProps<{ count?: number }>(), { count: 8 });
 
@@ -41,8 +41,7 @@ function sentenceWidth(i: number): string {
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  /* The pages draw their card borders differently; they can override this. */
-  border: 1px solid var(--activity-card-border, rgba(0, 0, 0, 0.08));
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   margin-bottom: 8px;
 }
@@ -60,12 +59,14 @@ function sentenceWidth(i: number): string {
 }
 
 /* Each row is one line box of the real card's text, with a shorter bar
-   centred in it, so the rows take exactly the height the text will. */
+   centred in it, so the rows take the height the text will. The first row is
+   as tall as its 22px inline avatar, which stretches the 14px × 1.45 line box
+   (about 22.2px measured). */
 .s-row1 {
   display: flex;
   align-items: center;
   gap: 4px;
-  height: calc(14px * 1.45);
+  height: 22px;
   max-width: 480px;
 }
 

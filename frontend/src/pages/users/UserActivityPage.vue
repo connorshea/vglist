@@ -3,7 +3,7 @@
     <!-- Always mounted so screen readers announce the text when it changes -->
     <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading activity…" : "" }}</p>
 
-    <ActivityFeedSkeleton v-if="showSkeleton" class="user-activity-skeleton" aria-busy="true" />
+    <ActivityFeedSkeleton v-if="showSkeleton" />
 
     <div v-if="error" class="notification is-danger">
       <p>{{ error.message }}</p>
@@ -377,11 +377,6 @@ async function confirmDeleteEvent() {
 </script>
 
 <style scoped>
-/* Match this tab's card border (the global feed uses a fainter one). */
-.user-activity-skeleton {
-  --activity-card-border: var(--color-border);
-}
-
 .activity-tab {
   padding-top: 24px;
 }
@@ -389,7 +384,6 @@ async function confirmDeleteEvent() {
 /* Card */
 .a-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 14px 16px;
   display: flex;
