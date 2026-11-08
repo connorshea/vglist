@@ -117,13 +117,39 @@
 	handle {
 		root * /app/dist
 
-		file_server {
-			hide .git
-			hide .env*
-		}
+		# `route` runs these in the order written, so the Cache-Control
+		# matchers below see the path after try_files has rewritten it.
+		route {
+			# SPA fallback — unknown paths serve index.html so Vue Router can
+			# handle client-side routing.
+			try_files {path} {path}.html {path}/index.html /index.html
 
-		# SPA fallback — unknown paths serve index.html so Vue Router can
-		# handle client-side routing.
-		try_files {path} {path}.html {path}/index.html /index.html
+			# Cache-Control. Without it, browsers fall back to heuristic
+			# caching and keep revalidating the hashed bundles.
+			#
+			# - Vite's /assets/* files have a content hash in their name, so
+			#   a changed file always gets a new URL: cache them forever.
+			# - Unhashed files copied from ../public (favicons, manifest,
+			#   opensearch.xml, robots.txt) keep their URL across deploys,
+			#   so cache them briefly.
+			# - Everything else is HTML (index.html, the SPA fallback for
+			#   deep routes and missing /assets/* files, the error pages),
+			#   which must be revalidated so a deploy picks up the new
+			#   bundle names. ETag/Last-Modified keep that a cheap 304.
+			@hashed_asset path /assets/*
+			@public_static {
+				not path /assets/*
+				path *.png *.svg *.ico *.webmanifest *.xml *.txt
+			}
+			@html not path /assets/* *.png *.svg *.ico *.webmanifest *.xml *.txt
+			header @hashed_asset Cache-Control "public, max-age=31536000, immutable"
+			header @public_static Cache-Control "public, max-age=86400"
+			header @html Cache-Control "no-cache"
+
+			file_server {
+				hide .git
+				hide .env*
+			}
+		}
 	}
 }
