@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading engine...</p>
-    </div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading engine…" : "" }}</p>
+
+    <ResourceShowSkeleton v-if="showSkeleton" />
 
     <div v-if="error && !data?.engine" class="notification is-danger">
       <p>Failed to load engine: {{ error.message }}</p>
@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { notFoundLocation } from "@/utils/not-found";
 import { CircleAlert, Cog } from "@lucide/vue";
@@ -75,6 +75,7 @@ import { extractGqlError } from "@/utils/graphql-errors";
 import type { GetEngineQuery, DeleteEngineMutation } from "@/types/graphql";
 import ResourceHeader from "@/components/resource/ResourceHeader.vue";
 import ResourceGameList from "@/components/resource/ResourceGameList.vue";
+import ResourceShowSkeleton from "@/components/resource/ResourceShowSkeleton.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 const route = useRoute("engine");
@@ -87,6 +88,10 @@ const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore,
     variables: () => ({ id: route.params.id }),
     select: (result) => result.engine?.games
   });
+
+// Only on the first load: changing the sort keeps the page up and dims the
+// games instead.
+const showSkeleton = computed(() => loading.value && !data.value);
 
 usePageTitle(() => data.value?.engine?.name);
 

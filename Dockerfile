@@ -36,8 +36,12 @@ WORKDIR /rails
 #   db/structure.sql into an empty database (the Docker CI workflow does
 #   this). Trixie's default is v17.
 # - libjemalloc2: lower memory fragmentation for Puma's threads/workers.
+# - file: active_storage_validations shells out to `file` to sniff the real
+#   content type of every attachment (spoofing check), so uploads and
+#   import:igdb:covers fail without it.
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
+      file \
       libjemalloc2 \
       libpq5 \
       libvips42t64 \
@@ -45,12 +49,15 @@ RUN apt-get update -qq && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
+# VIPS_CONCURRENCY: libvips otherwise starts one worker thread per host core,
+# not per vCPU the instance actually gets.
 ENV RAILS_ENV=production \
     RAILS_LOG_TO_STDOUT=1 \
     BUNDLE_DEPLOYMENT=1 \
     BUNDLE_PATH=/usr/local/bundle \
     BUNDLE_WITHOUT=development:test \
-    LD_PRELOAD=/usr/local/lib/libjemalloc.so
+    LD_PRELOAD=/usr/local/lib/libjemalloc.so \
+    VIPS_CONCURRENCY=1
 
 # ---------------------------------------------------------------------------
 # Build: compile native gems and precompile bootsnap caches.

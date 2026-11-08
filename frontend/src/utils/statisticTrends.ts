@@ -31,7 +31,9 @@ export function computeTrend(snapshots: TrendSnapshot[], current: number, rangeD
     .map((s) => ({ time: new Date(s.timestamp).getTime(), value: s.value }))
     .sort((a, b) => a.time - b.time);
 
-  if (usable.length === 0) return { delta: null, partialSince: null, points: [] };
+  if (usable.length === 0) {
+    return { delta: null, partialSince: null, points: [] };
+  }
 
   const cutoff = now.getTime() - rangeDays * DAY_MS;
   let baselineIndex = 0;
@@ -62,7 +64,9 @@ export function computeTrend(snapshots: TrendSnapshot[], current: number, rangeD
  * series draws a line through the middle.
  */
 export function sparklinePoints(values: number[], width: number, height: number, pad = 2): string {
-  if (values.length === 0) return "";
+  if (values.length === 0) {
+    return "";
+  }
   const series = values.length === 1 ? [values[0], values[0]] : values;
   const min = Math.min(...series);
   const max = Math.max(...series);

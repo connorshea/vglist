@@ -106,7 +106,9 @@ watch(data, (val) => {
 });
 
 function nextPage() {
-  if (hasNextPage.value) goToNextPage(data.value?.stores?.pageInfo.endCursor);
+  if (hasNextPage.value) {
+    goToNextPage(data.value?.stores?.pageInfo.endCursor);
+  }
 }
 
 function prevPage() {
@@ -119,7 +121,9 @@ const storeToDelete = ref<StoreNode | null>(null);
 const showDeleteConfirm = computed({
   get: () => storeToDelete.value !== null,
   set: (open) => {
-    if (!open) storeToDelete.value = null;
+    if (!open) {
+      storeToDelete.value = null;
+    }
   }
 });
 
@@ -127,7 +131,9 @@ const { mutate: deleteStore, loading: deleting } = useMutation<DeleteStoreMutati
 
 async function confirmDelete() {
   const store = storeToDelete.value;
-  if (!store) return;
+  if (!store) {
+    return;
+  }
 
   try {
     await deleteStore({ storeId: store.id });

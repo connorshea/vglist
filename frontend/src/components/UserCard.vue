@@ -74,21 +74,35 @@ const initialFontStyle = computed(() => ({
 }));
 
 const roleBadgeLabel = computed(() => {
-  if (props.banned) return "Banned";
-  if (props.role === "ADMIN") return "Admin";
-  if (props.role === "MODERATOR") return "Mod";
+  if (props.banned) {
+    return "Banned";
+  }
+  if (props.role === "ADMIN") {
+    return "Admin";
+  }
+  if (props.role === "MODERATOR") {
+    return "Mod";
+  }
   return null;
 });
 
 const roleBadgeClass = computed(() => {
-  if (props.banned) return "banned";
-  if (props.role === "ADMIN") return "admin";
-  if (props.role === "MODERATOR") return "mod";
+  if (props.banned) {
+    return "banned";
+  }
+  if (props.role === "ADMIN") {
+    return "admin";
+  }
+  if (props.role === "MODERATOR") {
+    return "mod";
+  }
   return "";
 });
 
 const formattedJoinedDate = computed(() => {
-  if (!props.joinedDate) return "";
+  if (!props.joinedDate) {
+    return "";
+  }
   const date = new Date(props.joinedDate);
   return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 });

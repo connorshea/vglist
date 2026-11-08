@@ -1,8 +1,17 @@
 <template>
   <div class="profile-layout library-page">
-    <div v-if="loading && !data" class="profile-message">
-      <p>Loading…</p>
-    </div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading profile…" : "" }}</p>
+
+    <template v-if="showSkeleton">
+      <UserProfileHeaderSkeleton />
+      <!-- The tab loads once the profile has, so stand in for it too. -->
+      <div v-if="route.name === 'user'" class="profile-tab-skeleton">
+        <UserOverviewSkeleton />
+      </div>
+      <div v-else-if="route.name === 'userFavorites'" class="profile-tab-skeleton">
+        <UserFavoritesSkeleton />
+      </div>
+    </template>
 
     <div v-else-if="error" class="notification is-danger">
       <p>{{ error.message }}</p>
@@ -256,6 +265,9 @@ import {
 } from "@/graphql/mutations/users";
 import type { GetUserProfileQuery } from "@/types/graphql";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import UserProfileHeaderSkeleton from "@/components/users/UserProfileHeaderSkeleton.vue";
+import UserOverviewSkeleton from "@/components/users/UserOverviewSkeleton.vue";
+import UserFavoritesSkeleton from "@/components/users/UserFavoritesSkeleton.vue";
 import { roleChanges, type RoleChange } from "@/utils/user-roles";
 import "@/assets/stylesheets/library.scss";
 
@@ -277,6 +289,8 @@ watch([data, error, loading], () => {
 });
 
 const user = computed(() => data.value?.user ?? null);
+// Only on the first load.
+const showSkeleton = computed(() => loading.value && !data.value);
 
 // "connor", "connor's Library", ... as on the old app.
 const TAB_TITLES: Partial<Record<RouteRecordName, string>> = {
@@ -288,7 +302,9 @@ const TAB_TITLES: Partial<Record<RouteRecordName, string>> = {
 };
 usePageTitle(() => {
   const username = user.value?.username;
-  if (!username) return null;
+  if (!username) {
+    return null;
+  }
   const tab = route.name ? TAB_TITLES[route.name] : undefined;
   return tab ? `${username}'s ${tab}` : username;
 });
@@ -303,13 +319,19 @@ provide(USER_PROFILE_KEY, { user, isOwnProfile, refetch });
 // "412 games · 1,830h played · 56% completed · avg 78"
 const statsLine = computed(() => {
   const stats = user.value?.libraryStatistics;
-  if (!stats) return "";
+  if (!stats) {
+    return "";
+  }
   const parts = [`${stats.gamesCount.toLocaleString()} game${stats.gamesCount === 1 ? "" : "s"}`];
   if (stats.totalHoursPlayed > 0 && !user.value?.hideDaysPlayed) {
     parts.push(`${Math.round(stats.totalHoursPlayed).toLocaleString()}h played`);
   }
-  if (stats.completionPercentage > 0) parts.push(`${stats.completionPercentage}% completed`);
-  if (stats.averageRating !== null) parts.push(`avg ${Math.round(stats.averageRating)}`);
+  if (stats.completionPercentage > 0) {
+    parts.push(`${stats.completionPercentage}% completed`);
+  }
+  if (stats.averageRating !== null) {
+    parts.push(`avg ${Math.round(stats.averageRating)}`);
+  }
   return parts.join(" · ");
 });
 
@@ -372,7 +394,9 @@ const { mutate: unfollowUser, loading: unfollowLoading } = useMutation(UNFOLLOW_
 const showUnfollowConfirm = ref(false);
 
 async function follow() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   try {
     await followUser({ userId: id });
@@ -384,7 +408,9 @@ async function follow() {
 }
 
 async function unfollow() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   try {
     await unfollowUser({ userId: id });
@@ -410,7 +436,9 @@ const actionsMenu = ref<HTMLElement | null>(null);
 const actionsToggle = ref<HTMLButtonElement | null>(null);
 
 function closeActions() {
-  if (!actionsOpen.value) return;
+  if (!actionsOpen.value) {
+    return;
+  }
   actionsOpen.value = false;
   actionsToggle.value?.focus();
 }
@@ -458,13 +486,17 @@ async function moderate(
 }
 
 function ban() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   void moderate(showBanConfirm, () => banUser({ userId: id }), `${username} has been banned.`, "Failed to ban user.");
 }
 
 function unban() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id, username } = user.value;
   void moderate(
     showUnbanConfirm,
@@ -475,7 +507,9 @@ function unban() {
 }
 
 function removeAvatar() {
-  if (!user.value) return;
+  if (!user.value) {
+    return;
+  }
   const { id } = user.value;
   void moderate(
     showRemoveAvatarConfirm,
@@ -497,7 +531,9 @@ function promptRoleChange(change: RoleChange) {
 }
 
 function changeRole() {
-  if (!user.value || !pendingRole.value) return;
+  if (!user.value || !pendingRole.value) {
+    return;
+  }
   const { id, username } = user.value;
   const { role, noun } = pendingRole.value;
   void moderate(
@@ -705,7 +741,11 @@ function changeRole() {
   display: flex;
   margin-top: 24px;
   overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
+  overflow-y: hidden;
+  /* The baseline is an inset shadow rather than a border so the active tab's
+     underline can sit on it without a negative margin. That margin made the
+     tabs 1px taller than the bar, which let the bar scroll vertically. */
+  box-shadow: inset 0 -1px 0 var(--color-border);
   scrollbar-width: none;
 }
 
@@ -714,7 +754,6 @@ function changeRole() {
   flex-shrink: 0;
   gap: 6px;
   align-items: center;
-  margin-bottom: -1px;
   padding: 10px 16px;
   border-bottom: 2px solid transparent;
   color: var(--color-text-secondary);
@@ -745,6 +784,11 @@ function changeRole() {
   margin: 16px 0 0;
 }
 
+/* Spaced like the Overview and Favorites tabs it stands in for. */
+.profile-tab-skeleton {
+  padding-top: 24px;
+}
+
 .profile-message {
   padding: 48px 0;
   color: var(--color-text-secondary);
@@ -757,6 +801,10 @@ function changeRole() {
 }
 
 @media (max-width: 768px) {
+  .profile-tab-skeleton {
+    padding-top: 16px;
+  }
+
   .profile-avatar {
     width: 44px;
     height: 44px;

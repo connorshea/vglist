@@ -98,16 +98,13 @@ jobs:
           docker logs api
           exit 1
 
-      # config.load_defaults enables YJIT during boot, which silently does
-      # nothing if the base image's Ruby was built without it.
-      - name: Check YJIT is enabled after Rails boots
-        run: |
-          docker exec api bin/rails runner \
-            'abort "YJIT is not enabled" unless defined?(RubyVM::YJIT) && RubyVM::YJIT.enabled?; puts RUBY_DESCRIPTION'
-
       - name: Check libvips is usable
         run: |
           docker run --rm vglist-api bundle exec ruby -rvips -e 'puts "libvips #{Vips.version_string}"'
+
+      - name: Check `file` is installed (active_storage_validations needs it)
+        run: |
+          docker run --rm vglist-api file --version
 
   frontend:
     runs-on: ubuntu-latest

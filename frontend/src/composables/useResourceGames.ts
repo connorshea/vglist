@@ -113,7 +113,9 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
   async function loadMore() {
     const cursor = pageInfo.value?.endCursor;
     // While a new first page loads, the cursor belongs to the old list.
-    if (!hasNextPage.value || !cursor || loadingMore.value || loading.value) return;
+    if (!hasNextPage.value || !cursor || loadingMore.value || loading.value) {
+      return;
+    }
 
     const requestGeneration = generation;
     loadingMore.value = true;
@@ -121,17 +123,23 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
 
     try {
       const result = await gqlClient.request<TData>(query, { ...baseVariables(), after: cursor });
-      if (requestGeneration !== generation) return;
+      if (requestGeneration !== generation) {
+        return;
+      }
       const page = options.select(result);
       if (page) {
         morePages.value = [...morePages.value, ...page.nodes];
         latestPageInfo.value = page.pageInfo;
       }
     } catch (e) {
-      if (requestGeneration !== generation) return;
+      if (requestGeneration !== generation) {
+        return;
+      }
       loadMoreError.value = extractGqlError(e);
     } finally {
-      if (requestGeneration === generation) loadingMore.value = false;
+      if (requestGeneration === generation) {
+        loadingMore.value = false;
+      }
     }
   }
 

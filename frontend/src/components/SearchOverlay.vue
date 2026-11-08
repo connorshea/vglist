@@ -1,6 +1,16 @@
 <template>
   <Teleport to="body">
-    <Transition name="search-overlay">
+    <!--
+      The frosted glass is its own layer, blurred at full strength from the
+      start, and only its opacity animates. Animating the blur radius instead
+      re-blurs the whole viewport at a new radius every frame, which dropped
+      frames. It sits outside the dialog because an ancestor with opacity
+      below 1 would limit the blur to that ancestor's own contents.
+    -->
+    <Transition name="search-backdrop">
+      <div v-if="isOpen" class="search-backdrop" aria-hidden="true"></div>
+    </Transition>
+    <Transition name="search-overlay" @enter="morphSearchBar($event, 'in')" @leave="morphSearchBar($event, 'out')">
       <div
         v-if="isOpen"
         ref="overlayRef"
@@ -283,6 +293,39 @@ const { isOpen, close, takeInitialQuery } = useSearchOverlay();
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const overlayRef = ref<HTMLElement | null>(null);
 
+// Fly the search bar between the navbar's search box and its place in the
+// overlay (FLIP: measure both boxes, then animate a transform from one to the
+// other). This used to be a view transition, which snapshots the whole
+// blurred page before anything moves, so opening and closing both stalled
+// for a frame or more first. Phones hide the navbar box, so there the bar
+// just fades in with the rest of the dialog.
+function morphSearchBar(overlay: Element, direction: "in" | "out") {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+  const bar = overlay.querySelector<HTMLElement>(".search-bar-wrap");
+  const navbarBox = document.querySelector<HTMLElement>(".navbar-search .input");
+  if (!bar || !navbarBox) {
+    return;
+  }
+  const from = navbarBox.getBoundingClientRect();
+  const to = bar.getBoundingClientRect();
+  if (from.width === 0 || to.width === 0) {
+    return;
+  }
+  const atNavbar = `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`;
+  bar.animate(
+    [
+      { transformOrigin: "0 0", transform: atNavbar, opacity: 0 },
+      { transformOrigin: "0 0", opacity: 1, offset: 0.4 },
+      { transformOrigin: "0 0", transform: "none", opacity: 1 }
+    ],
+    direction === "in"
+      ? { duration: 250, easing: "cubic-bezier(0.2, 0, 0, 1)" }
+      : { duration: 180, easing: "cubic-bezier(0.4, 0, 1, 1)", direction: "reverse", fill: "forwards" }
+  );
+}
+
 // Close overlay on Escape, and trap focus within the overlay
 function onDocumentKeydown(e: KeyboardEvent) {
   if (e.key === "Escape") {
@@ -294,7 +337,9 @@ function onDocumentKeydown(e: KeyboardEvent) {
     const focusable = overlayRef.value.querySelectorAll<HTMLElement>(
       'input, button, a[href], [tabindex]:not([tabindex="-1"])'
     );
-    if (focusable.length === 0) return;
+    if (focusable.length === 0) {
+      return;
+    }
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -450,19 +495,25 @@ const performSearch = debounce(async () => {
   error.value = null;
   try {
     const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: searchQuery });
-    if (searchId !== latestSearch) return;
+    if (searchId !== latestSearch) {
+      return;
+    }
 
     results.value = data.globalSearch.nodes;
     resultsQuery = searchQuery;
     hasSearched.value = true;
   } catch (e: unknown) {
-    if (searchId !== latestSearch) return;
+    if (searchId !== latestSearch) {
+      return;
+    }
     error.value = extractGqlError(e);
     results.value = [];
     resultsQuery = searchQuery;
     hasSearched.value = true;
   } finally {
-    if (searchId === latestSearch) loading.value = false;
+    if (searchId === latestSearch) {
+      loading.value = false;
+    }
   }
 }, 250);
 
@@ -472,7 +523,9 @@ function onSearch() {
 
 function move(step: number) {
   const count = orderedResults.value.length;
-  if (count === 0) return;
+  if (count === 0) {
+    return;
+  }
   activeIndex.value = (activeIndex.value + step + count) % count;
   void nextTick(() => {
     overlayRef.value?.querySelector(".result-item.is-active")?.scrollIntoView?.({ block: "nearest" });
@@ -486,14 +539,20 @@ async function chooseActive() {
   if (resultsQuery !== query.value) {
     const typed = query.value;
     await performSearch.flush();
-    if (!isOpen.value || query.value !== typed || resultsQuery !== typed) return;
+    if (!isOpen.value || query.value !== typed || resultsQuery !== typed) {
+      return;
+    }
     const first = orderedResults.value[0];
-    if (first) goToResult(first);
+    if (first) {
+      goToResult(first);
+    }
     return;
   }
 
   const active = orderedResults.value[activeIndex.value];
-  if (active) goToResult(active);
+  if (active) {
+    goToResult(active);
+  }
 }
 
 const typeRouteMap: Record<string, string> = {
@@ -509,7 +568,9 @@ const typeRouteMap: Record<string, string> = {
 
 function resultHref(result: SearchResultFieldsFragment): string {
   const path = typeRouteMap[result.searchableType];
-  if (!path) return "#";
+  if (!path) {
+    return "#";
+  }
   const id = result.searchableType === "USER" ? (result as UserSearchResultFieldsFragment).slug : result.searchableId;
   return `/${path}/${id}`;
 }
@@ -537,15 +598,11 @@ function releaseYear(date: string): string {
 </script>
 
 <style scoped>
-/* ── Overlay backdrop (frosted glass) ── */
-.search-overlay {
+/* ── Frosted glass behind the dialog ── */
+.search-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
+  z-index: 999;
   /*
    * Don't add -webkit-backdrop-filter by hand: Lightning CSS adds the prefix
    * itself, and when both are written it keeps only the prefixed one in the
@@ -556,38 +613,51 @@ function releaseYear(date: string): string {
 }
 
 @media (prefers-color-scheme: light) {
-  .search-overlay {
+  .search-backdrop {
     background: rgba(30, 33, 48, 0.88);
   }
 }
 
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
 /*
- * Ease the frosted glass in and out by animating the blur radius and tint
- * rather than the overlay's opacity: fading opacity would crossfade a sharp
- * page into a blurred one instead of gradually blurring it. The keyframes
- * only give the start state, so they end at whichever tint applies.
+ * Opening fades the glass in while the results drift down into place, and
+ * closing runs the same thing a little faster. Only opacity and transform
+ * animate, so the browser can run them on the compositor. The search bar
+ * itself flies in from the navbar's search box (see morphSearchBar).
  */
+.search-backdrop-enter-active {
+  animation: search-overlay-fade 0.25s cubic-bezier(0.2, 0, 0, 1) both;
+  will-change: opacity;
+}
+
+.search-backdrop-leave-active {
+  animation: search-overlay-fade 0.18s cubic-bezier(0.4, 0, 1, 1) reverse both;
+  will-change: opacity;
+}
+
 .search-overlay-enter-active {
-  animation: search-overlay-frost 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: search-overlay-fade 0.25s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 .search-overlay-leave-active {
-  animation: search-overlay-frost 0.2s cubic-bezier(0.4, 0, 1, 1) reverse both;
+  animation: search-overlay-fade 0.18s cubic-bezier(0.4, 0, 1, 1) reverse both;
 }
 
 .search-overlay-enter-active .search-results {
-  animation: search-overlay-fade 0.3s ease-out both;
+  animation: search-overlay-drift 0.25s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 .search-overlay-leave-active .search-results {
-  animation: search-overlay-fade 0.2s ease-in reverse both;
-}
-
-@keyframes search-overlay-frost {
-  from {
-    backdrop-filter: blur(0) saturate(1);
-    background: rgba(30, 33, 48, 0);
-  }
+  animation: search-overlay-drift 0.18s cubic-bezier(0.4, 0, 1, 1) reverse both;
 }
 
 @keyframes search-overlay-fade {
@@ -596,7 +666,15 @@ function releaseYear(date: string): string {
   }
 }
 
+@keyframes search-overlay-drift {
+  from {
+    transform: translateY(-8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .search-backdrop-enter-active,
+  .search-backdrop-leave-active,
   .search-overlay-enter-active,
   .search-overlay-leave-active,
   .search-overlay-enter-active .search-results,
@@ -614,7 +692,6 @@ function releaseYear(date: string): string {
 }
 
 .search-bar-wrap {
-  view-transition-name: search-bar;
   position: relative;
   display: flex;
   align-items: center;

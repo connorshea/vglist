@@ -20,11 +20,17 @@ export function useDebouncedSearch<T>(search: (query: string) => Promise<T[]>, d
   async function run(q: string, requestId: number) {
     try {
       const found = await search(q);
-      if (requestId === latestRequest) results.value = found;
+      if (requestId === latestRequest) {
+        results.value = found;
+      }
     } catch {
-      if (requestId === latestRequest) results.value = [];
+      if (requestId === latestRequest) {
+        results.value = [];
+      }
     } finally {
-      if (requestId === latestRequest) searching.value = false;
+      if (requestId === latestRequest) {
+        searching.value = false;
+      }
     }
   }
 

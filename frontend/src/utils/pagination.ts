@@ -8,7 +8,9 @@
  * spec (spec/requests/api/users_spec.rb) pins the format.
  */
 export function offsetCursor(offset: number): string | null {
-  if (!Number.isInteger(offset) || offset <= 0) return null;
+  if (!Number.isInteger(offset) || offset <= 0) {
+    return null;
+  }
   return btoa(String(offset)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
@@ -18,7 +20,9 @@ export function offsetCursor(offset: number): string | null {
  * page 1.
  */
 export function parsePageParam(value: unknown): number {
-  if (typeof value !== "string" || !/^[1-9]\d*$/.test(value)) return 1;
+  if (typeof value !== "string" || !/^[1-9]\d*$/.test(value)) {
+    return 1;
+  }
   const page = Number(value);
   return Number.isSafeInteger(page) ? page : 1;
 }

@@ -58,13 +58,17 @@ function mountOverview(history: Snapshot[]) {
 
 function tile(wrapper: ReturnType<typeof mountOverview>, label: string) {
   const found = wrapper.findAll(".kpi-tile").find((t) => t.find(".kpi-label").text() === label);
-  if (!found) throw new Error(`No tile labelled ${label}`);
+  if (!found) {
+    throw new Error(`No tile labelled ${label}`);
+  }
   return found;
 }
 
 function miniTile(wrapper: ReturnType<typeof mountOverview>, label: string) {
   const found = wrapper.findAll(".mini-tile").find((t) => t.find("dt").text() === label);
-  if (!found) throw new Error(`No compact tile labelled ${label}`);
+  if (!found) {
+    throw new Error(`No compact tile labelled ${label}`);
+  }
   return found;
 }
 

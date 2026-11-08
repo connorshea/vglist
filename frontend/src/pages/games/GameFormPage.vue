@@ -374,7 +374,9 @@ usePageTitle(() => {
 watch(
   () => gameData.value?.game,
   (game) => {
-    if (!game) return;
+    if (!game) {
+      return;
+    }
     form.name = game.name;
     form.releaseDate = game.releaseDate ?? "";
     form.series = game.series ? { ...game.series } : null;
@@ -432,7 +434,9 @@ const { mutate: updateGame, loading: updating } = useMutation<UpdateGameResult>(
 const submitting = computed(() => creating.value || updating.value);
 
 function parseSteamAppIds(): number[] {
-  if (!steamAppIdsInput.value.trim()) return [];
+  if (!steamAppIdsInput.value.trim()) {
+    return [];
+  }
   return steamAppIdsInput.value
     .split(",")
     .map((s) => parseInt(s.trim(), 10))

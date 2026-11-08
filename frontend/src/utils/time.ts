@@ -10,14 +10,32 @@ export function timeAgo(dateStr: string, now: Date = new Date()): string {
   const diffWeek = Math.floor(diffDay / 7);
   const diffMonth = Math.floor(diffDay / 30);
 
-  if (diffMin < 1) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHr < 24) return `${diffHr}h ago`;
-  if (diffDay === 1) return "1 day ago";
-  if (diffDay < 7) return `${diffDay} days ago`;
-  if (diffWeek === 1) return "1 week ago";
-  if (diffWeek < 5) return `${diffWeek} weeks ago`;
-  if (diffMonth === 1) return "1 month ago";
-  if (diffMonth < 12) return `${diffMonth} months ago`;
+  if (diffMin < 1) {
+    return "just now";
+  }
+  if (diffMin < 60) {
+    return `${diffMin}m ago`;
+  }
+  if (diffHr < 24) {
+    return `${diffHr}h ago`;
+  }
+  if (diffDay === 1) {
+    return "1 day ago";
+  }
+  if (diffDay < 7) {
+    return `${diffDay} days ago`;
+  }
+  if (diffWeek === 1) {
+    return "1 week ago";
+  }
+  if (diffWeek < 5) {
+    return `${diffWeek} weeks ago`;
+  }
+  if (diffMonth === 1) {
+    return "1 month ago";
+  }
+  if (diffMonth < 12) {
+    return `${diffMonth} months ago`;
+  }
   return date.toLocaleDateString();
 }

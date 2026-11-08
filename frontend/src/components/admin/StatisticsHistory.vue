@@ -167,11 +167,17 @@ const tabRefs = ref<(HTMLButtonElement | null)[]>([]);
 // Arrow keys move between tabs (WAI-ARIA tabs pattern), with automatic activation.
 function onTabKeydown(event: KeyboardEvent, index: number) {
   let next: number;
-  if (event.key === "ArrowRight") next = (index + 1) % GROUPS.length;
-  else if (event.key === "ArrowLeft") next = (index - 1 + GROUPS.length) % GROUPS.length;
-  else if (event.key === "Home") next = 0;
-  else if (event.key === "End") next = GROUPS.length - 1;
-  else return;
+  if (event.key === "ArrowRight") {
+    next = (index + 1) % GROUPS.length;
+  } else if (event.key === "ArrowLeft") {
+    next = (index - 1 + GROUPS.length) % GROUPS.length;
+  } else if (event.key === "Home") {
+    next = 0;
+  } else if (event.key === "End") {
+    next = GROUPS.length - 1;
+  } else {
+    return;
+  }
 
   event.preventDefault();
   activeGroup.value = GROUPS[next]!.key;
@@ -193,7 +199,9 @@ const hasNextPage = computed(() => data.value?.siteStatistics?.pageInfo.hasNextP
 
 watch(data, (val) => {
   const endCursor = val?.siteStatistics?.pageInfo.endCursor;
-  if (endCursor) pageCursors.value[currentPage.value] = endCursor;
+  if (endCursor) {
+    pageCursors.value[currentPage.value] = endCursor;
+  }
 });
 
 // Only move forward once the current page has loaded and recorded its end
@@ -203,11 +211,15 @@ watch(data, (val) => {
 const canGoNext = computed(() => hasNextPage.value && Boolean(pageCursors.value[currentPage.value]));
 
 function nextPage() {
-  if (canGoNext.value) currentPage.value++;
+  if (canGoNext.value) {
+    currentPage.value++;
+  }
 }
 
 function prevPage() {
-  if (currentPage.value > 1) currentPage.value--;
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
 }
 
 // The stats task runs once a day at midnight UTC, so show the UTC date (a
@@ -237,12 +249,16 @@ const NEUTRAL_FIELDS = new Set<CountField>(["bannedUsers", "unmatchedGames"]);
 function changeFor(rowIndex: number, field: CountField): number | null {
   const current = rows.value[rowIndex]?.[field];
   const previous = rows.value[rowIndex + 1]?.[field];
-  if (current == null || previous == null) return null;
+  if (current == null || previous == null) {
+    return null;
+  }
   return current - previous;
 }
 
 function formatChange(change: number | null): string {
-  if (!change) return "·";
+  if (!change) {
+    return "·";
+  }
   return change > 0 ? `+${change.toLocaleString()}` : `−${Math.abs(change).toLocaleString()}`;
 }
 

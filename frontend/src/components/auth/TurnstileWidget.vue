@@ -34,7 +34,9 @@ onMounted(async () => {
     loadError.value = true;
     return;
   }
-  if (unmounted || !container.value) return;
+  if (unmounted || !container.value) {
+    return;
+  }
 
   widgetId = api.render(container.value, {
     sitekey: props.siteKey,
@@ -59,12 +61,16 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   unmounted = true;
-  if (api && widgetId !== undefined) api.remove(widgetId);
+  if (api && widgetId !== undefined) {
+    api.remove(widgetId);
+  }
 });
 
 function reset() {
   token.value = "";
-  if (api && widgetId !== undefined) api.reset(widgetId);
+  if (api && widgetId !== undefined) {
+    api.reset(widgetId);
+  }
 }
 
 defineExpose({ reset });

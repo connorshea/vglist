@@ -138,7 +138,9 @@ const addingToBlocklist = ref(false);
 
 async function blocklistUnmatchedGame() {
   const candidate = blocklistCandidate.value;
-  if (!candidate) return;
+  if (!candidate) {
+    return;
+  }
   addingToBlocklist.value = true;
   try {
     await gqlClient.request(ADD_TO_STEAM_BLOCKLIST, {

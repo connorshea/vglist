@@ -51,7 +51,9 @@ usePageTitle(() => {
 watch(
   () => data.value?.store,
   (store) => {
-    if (!store) return;
+    if (!store) {
+      return;
+    }
     name.value = store.name;
   },
   { immediate: true }
@@ -61,7 +63,9 @@ watch(
 // reuses the instance when navigating between them. Clear any values carried
 // over from an edit when we land on "new".
 watch(isEditing, (editing) => {
-  if (editing) return;
+  if (editing) {
+    return;
+  }
   name.value = "";
   submitError.value = "";
 });

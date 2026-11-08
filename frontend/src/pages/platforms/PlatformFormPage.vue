@@ -53,7 +53,9 @@ usePageTitle(() => {
 watch(
   () => data.value?.platform,
   (platform) => {
-    if (!platform) return;
+    if (!platform) {
+      return;
+    }
     name.value = platform.name;
     wikidataId.value = platform.wikidataId != null ? String(platform.wikidataId) : "";
   },
@@ -64,7 +66,9 @@ watch(
 // reuses the instance when navigating between them. Clear any values carried
 // over from an edit when we land on "new".
 watch(isEditing, (editing) => {
-  if (editing) return;
+  if (editing) {
+    return;
+  }
   name.value = "";
   wikidataId.value = "";
   submitError.value = "";

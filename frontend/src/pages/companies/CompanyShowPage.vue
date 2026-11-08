@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="loading && !data" class="has-text-centered">
-      <p>Loading company...</p>
-    </div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading company…" : "" }}</p>
+
+    <ResourceShowSkeleton v-if="showSkeleton" :facts="2" :tabs="2" />
 
     <div v-if="error && !data?.company" class="notification is-danger">
       <p>Failed to load company: {{ error.message }}</p>
@@ -81,6 +81,7 @@ import type { GetCompanyQuery, DeleteCompanyMutation } from "@/types/graphql";
 import ResourceHeader from "@/components/resource/ResourceHeader.vue";
 import ResourceTabs from "@/components/resource/ResourceTabs.vue";
 import ResourceGameList from "@/components/resource/ResourceGameList.vue";
+import ResourceShowSkeleton from "@/components/resource/ResourceShowSkeleton.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 const route = useRoute("company");
@@ -96,6 +97,10 @@ const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore,
     variables: () => ({ id: route.params.id, developed: developed.value }),
     select: (result) => (developed.value ? result.company?.developedGames : result.company?.publishedGames)
   });
+
+// Only on the first load: changing the sort or tab keeps the page up and dims
+// the games instead.
+const showSkeleton = computed(() => loading.value && !data.value);
 
 usePageTitle(() => data.value?.company?.name);
 

@@ -7,7 +7,9 @@ import type { GetCurrentUserAvatarQuery } from "@/types/graphql";
 // show it. Errors are ignored: the navbar falls back to the user's initial.
 export async function refreshCurrentUserAvatar(): Promise<void> {
   const authStore = useAuthStore();
-  if (!authStore.isAuthenticated) return;
+  if (!authStore.isAuthenticated) {
+    return;
+  }
 
   try {
     const data = await gqlClient.request<GetCurrentUserAvatarQuery>(GET_CURRENT_USER_AVATAR);

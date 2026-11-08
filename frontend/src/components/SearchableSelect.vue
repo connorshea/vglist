@@ -148,7 +148,9 @@ function onKeydown(e: KeyboardEvent) {
     // Don't submit the form while picking from the list.
     e.preventDefault();
     const option = results.value[highlightIndex.value];
-    if (open.value && option) selectOption(option);
+    if (open.value && option) {
+      selectOption(option);
+    }
   } else if (e.key === "Escape") {
     open.value = false;
     query.value = "";

@@ -209,11 +209,15 @@ watch(
 );
 
 function clampMin() {
-  if (localMin.value > localMax.value) localMin.value = localMax.value;
+  if (localMin.value > localMax.value) {
+    localMin.value = localMax.value;
+  }
 }
 
 function clampMax() {
-  if (localMax.value < localMin.value) localMax.value = localMin.value;
+  if (localMax.value < localMin.value) {
+    localMax.value = localMin.value;
+  }
 }
 
 // Arrow keys fire a change event per step, so wait for them to settle too.

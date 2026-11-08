@@ -51,11 +51,33 @@
           <kbd class="home-search-kbd" aria-hidden="true">{{ isMac ? "⌘" : "Ctrl+" }}K</kbd>
         </button>
 
-        <nav v-if="quickLinks.length" class="home-quick" aria-label="Browse games by platform or genre">
-          <router-link v-for="link in quickLinks" :key="link.key" :to="link.to" class="home-quick-link">
-            {{ link.name }}
-          </router-link>
-        </nav>
+        <!-- The row keeps its height while the pills load, so nothing below moves. -->
+        <div class="home-quick-slot">
+          <nav
+            v-if="quickLinks.length"
+            ref="quickNav"
+            class="home-quick"
+            aria-label="Browse games by platform or genre"
+          >
+            <router-link
+              v-for="(link, i) in quickLinks"
+              :key="link.key"
+              :to="link.to"
+              class="home-quick-link"
+              :class="{ 'is-overflowing': i >= fittingQuickLinks }"
+            >
+              {{ link.name }}
+            </router-link>
+          </nav>
+          <div v-else-if="!filtersData && !filtersError" class="home-quick">
+            <SkeletonBlock
+              v-for="(width, i) in QUICK_SKELETON_WIDTHS"
+              :key="i"
+              class="home-quick-skeleton"
+              :style="{ width: `${width}px` }"
+            />
+          </div>
+        </div>
       </div>
     </section>
 
@@ -96,6 +118,7 @@ import { GET_HERO_COVERS } from "@/graphql/queries/games";
 import { GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import type { GetBasicSiteStatisticsQuery, GetGamesIndexFiltersQuery } from "@/types/graphql";
 import GameShelf from "@/components/home/GameShelf.vue";
+import SkeletonBlock from "@/components/SkeletonBlock.vue";
 import { countLabel, gameSortFromSlug } from "@/components/games-index/format";
 
 const authStore = useAuthStore();
@@ -128,7 +151,7 @@ const searchPlaceholder = computed(() => {
 
 // The games index's own query for its pills, so the home page sends nothing
 // new. Its record lookups are switched off.
-const { data: filtersData } = useQuery<GetGamesIndexFiltersQuery>(GET_GAMES_INDEX_FILTERS, {
+const { data: filtersData, error: filtersError } = useQuery<GetGamesIndexFiltersQuery>(GET_GAMES_INDEX_FILTERS, {
   variables: {
     platformId: "0",
     hasPlatform: false,
@@ -153,11 +176,57 @@ const quickLinks = computed(() => {
   return [...platforms, ...genres];
 });
 
+// Placeholder pill widths while the links load, roughly the real names'.
+const QUICK_SKELETON_WIDTHS = [92, 80, 72, 120, 84, 104, 76];
+
+// The pills stay on one row. The row wraps but is one pill tall, so pills that
+// would start a second row are cut off; this finds them so they can also be
+// taken out of the tab order and the accessibility tree.
+const quickNav = ref<HTMLElement | null>(null);
+const fittingQuickLinks = ref(Number.POSITIVE_INFINITY);
+
+function fitQuickLinks() {
+  const pills = Array.from(quickNav.value?.children ?? []) as HTMLElement[];
+  if (pills.length === 0) {
+    return;
+  }
+  const firstRowTop = pills[0].offsetTop;
+  const overflowing = pills.findIndex((pill) => pill.offsetTop > firstRowTop);
+  fittingQuickLinks.value = overflowing === -1 ? pills.length : overflowing;
+}
+
+// Pills change size when the web font arrives, and the row when the window
+// does, so watch both.
+let quickResizeObserver: ResizeObserver | null = null;
+
+watch(
+  quickNav,
+  (nav) => {
+    quickResizeObserver?.disconnect();
+    quickResizeObserver = null;
+    if (!nav) {
+      return;
+    }
+    fitQuickLinks();
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
+    quickResizeObserver = new ResizeObserver(fitQuickLinks);
+    quickResizeObserver.observe(nav);
+    for (const pill of Array.from(nav.children)) {
+      quickResizeObserver.observe(pill);
+    }
+  },
+  { flush: "post" }
+);
+
 // ── Site stats, in one line at the bottom ──
 
 const siteStats = computed(() => {
   const s = statsData.value?.basicSiteStatistics;
-  if (!s) return null;
+  if (!s) {
+    return null;
+  }
   return [
     { label: countLabel(s.games, "game"), path: "/games" },
     { label: countLabel(s.series, "series", "series"), path: "/series" },
@@ -214,6 +283,9 @@ interface MosaicTile {
   id: number;
   style: Record<string, string>;
   flipping: boolean;
+  // Set once the tile has flipped, so a cover that finishes loading late
+  // doesn't snap over whatever the flip put there.
+  flipped: boolean;
 }
 
 function gradientStyle(index: number): Record<string, string> {
@@ -235,7 +307,8 @@ const mosaicTiles = ref<MosaicTile[]>(
   Array.from({ length: TOTAL }, (_, i) => ({
     id: i,
     style: gradientStyle(i),
-    flipping: false
+    flipping: false,
+    flipped: false
   }))
 );
 
@@ -275,45 +348,76 @@ const { data: heroData } = useQuery<{ games: { nodes: HeroCoverNode[] } }>(GET_H
 });
 
 const coverUrls = computed<string[]>(() => {
-  if (saveData.value || !heroData.value) return [];
+  if (saveData.value || !heroData.value) {
+    return [];
+  }
   return heroData.value.games.nodes.filter((g) => g.coverUrl).map((g) => g.coverUrl as string);
 });
 
-// Distribute cover images across tiles when they load, then preload before showing
+// Covers that have finished downloading. Tiles only switch to a cover once it
+// is in here, so the CSS background is served from the cache and the low
+// priority preload below is the only request for each image.
+const loadedCoverUrls = ref<string[]>([]);
+// Bumped each time the watcher below runs, so preloads started by an earlier
+// run (before data saver was toggled, say) are ignored when they finish.
+let coverPreloadRun = 0;
+
+// Distribute cover images across tiles as they finish preloading
 watch(
   coverUrls,
   (urls) => {
-    if (urls.length === 0) return;
+    const run = ++coverPreloadRun;
+    loadedCoverUrls.value = [];
+    if (urls.length === 0) {
+      return;
+    }
     const shuffled = [...urls];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    const tilesByUrl = new Map<string, number[]>();
     for (let i = 0; i < TOTAL; i++) {
       const row = Math.floor(i / COLS_PER_ROW);
       const col = i % COLS_PER_ROW;
       // Keep ~25% as gradients for visual variety
       const keepGradient = (row * 3 + col * 7 + row * col) % 4 === 0;
-      if (!keepGradient && shuffled.length > 0) {
-        mosaicTiles.value[i].style = coverStyle(shuffled[i % shuffled.length]);
+      if (!keepGradient) {
+        const url = shuffled[i % shuffled.length];
+        tilesByUrl.set(url, [...(tilesByUrl.get(url) ?? []), i]);
       }
     }
 
-    // Preload cover images before revealing mosaic
+    // Preload cover images before revealing mosaic. The mosaic is decorative,
+    // so these downloads go at low priority and stay out of the way of the
+    // page's data and the shelf covers below the hero.
     const uniqueUrls = [...new Set(shuffled)];
     let loaded = 0;
     const threshold = Math.floor(uniqueUrls.length * 0.75);
 
     for (const url of uniqueUrls) {
       const img = new Image();
-      const onDone = () => {
+      img.fetchPriority = "low";
+      const onDone = (ok: boolean) => {
+        if (run !== coverPreloadRun) {
+          return;
+        }
+        if (ok) {
+          loadedCoverUrls.value.push(url);
+          for (const i of tilesByUrl.get(url) ?? []) {
+            const tile = mosaicTiles.value[i];
+            if (!tile.flipped) {
+              tile.style = coverStyle(url);
+            }
+          }
+        }
         loaded++;
         if (loaded >= threshold && !coversReady.value) {
           coversReady.value = true;
         }
       };
-      img.addEventListener("load", onDone);
-      img.addEventListener("error", onDone);
+      img.addEventListener("load", () => onDone(true));
+      img.addEventListener("error", () => onDone(false));
       img.src = url;
     }
   },
@@ -323,18 +427,26 @@ watch(
 // ── Flip animation system ──
 
 let flipTimer: ReturnType<typeof setInterval> | null = null;
+// The reveal fallback and the delayed flip start, cleared on unmount so a
+// page that's gone can't start flipping.
+const startTimers: ReturnType<typeof setTimeout>[] = [];
 
 function flipTile() {
   const tiles = mosaicTiles.value;
   const idx = Math.floor(Math.random() * tiles.length);
   const tile = tiles[idx];
-  if (tile.flipping) return;
+  if (tile.flipping) {
+    return;
+  }
 
   tile.flipping = true;
+  tile.flipped = true;
 
   // Swap background at the midpoint (when card is edge-on at 90deg)
   setTimeout(() => {
-    const urls = coverUrls.value;
+    // Only flip to covers that already downloaded, so a flip never starts a
+    // fresh, normal priority image request.
+    const urls = loadedCoverUrls.value;
     if (urls.length > 0 && Math.random() > 0.2) {
       tile.style = coverStyle(urls[Math.floor(Math.random() * urls.length)]);
     } else {
@@ -360,30 +472,41 @@ function scheduleFlips() {
 
 onMounted(() => {
   // No covers to wait for, so show the gradients right away.
-  if (saveData.value) coversReady.value = true;
+  if (saveData.value) {
+    coversReady.value = true;
+  }
 
   // Fallback: show mosaic after 5s even if images haven't finished preloading
-  setTimeout(() => {
-    coversReady.value = true;
-  }, 5000);
+  startTimers.push(
+    setTimeout(() => {
+      coversReady.value = true;
+    }, 5000)
+  );
 });
 
 // Start flipping once covers are visible
 watch(coversReady, (ready) => {
   if (ready && !flipTimer) {
-    setTimeout(() => {
-      scheduleFlips();
-      flipTimer = setInterval(scheduleFlips, 2000);
-    }, 300);
+    startTimers.push(
+      setTimeout(() => {
+        scheduleFlips();
+        flipTimer = setInterval(scheduleFlips, 2000);
+      }, 300)
+    );
   }
 });
 
 onUnmounted(() => {
-  if (flipTimer) clearInterval(flipTimer);
+  for (const timer of startTimers) {
+    clearTimeout(timer);
+  }
+  if (flipTimer) {
+    clearInterval(flipTimer);
+  }
+  quickResizeObserver?.disconnect();
 });
 </script>
 
-<style scoped>
 <style scoped>
 /* ── Hero section ── */
 .home-section.hero {
@@ -597,25 +720,51 @@ onUnmounted(() => {
   font-size: 0.75rem;
 }
 
+/* Always one pill tall, loaded or not, so the page doesn't jump. */
+.home-quick-slot {
+  height: 36px;
+  max-width: 640px;
+  margin: 1.25rem auto 0;
+}
+
+/* Pills that don't fit wrap onto a second row, which is clipped away. */
 .home-quick {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  max-width: 640px;
-  margin: 1.25rem auto 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* The cut-off pills, out of the tab order and the accessibility tree too. */
+.home-quick-link.is-overflowing {
+  visibility: hidden;
+}
+
+/* White rather than SkeletonBlock's text tint, which is dark in light mode
+   and would vanish against the hero. */
+.home-quick .home-quick-skeleton {
+  --skeleton-fill: rgba(255, 255, 255, 0.12);
+  --skeleton-shine: rgba(255, 255, 255, 0.1);
+
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
 }
 
 .home-quick-link {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
-  min-height: 36px;
+  height: 36px;
   padding: 0 14px;
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
   font-size: 0.875rem;
+  white-space: nowrap;
   transition: background var(--transition-fast);
 }
 

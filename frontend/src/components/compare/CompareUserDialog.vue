@@ -127,7 +127,9 @@ watch(results, () => {
 });
 
 function move(step: number) {
-  if (results.value.length === 0) return;
+  if (results.value.length === 0) {
+    return;
+  }
   activeIndex.value = (activeIndex.value + step + results.value.length) % results.value.length;
 }
 
@@ -138,7 +140,9 @@ function choose(slug: string) {
 
 function chooseActive() {
   const user = results.value[activeIndex.value];
-  if (user) choose(user.slug);
+  if (user) {
+    choose(user.slug);
+  }
 }
 
 function close() {
@@ -150,7 +154,9 @@ function onKeydown(event: KeyboardEvent) {
     close();
     return;
   }
-  if (event.key !== "Tab" || !dialogRef.value) return;
+  if (event.key !== "Tab" || !dialogRef.value) {
+    return;
+  }
 
   // Keep focus inside the dialog.
   const focusable = Array.from(dialogRef.value.querySelectorAll<HTMLElement>("button, input"));

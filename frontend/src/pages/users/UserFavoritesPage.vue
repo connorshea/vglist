@@ -1,12 +1,15 @@
 <template>
   <div class="favorites">
-    <div class="favorites-grid">
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading favorites…" : "" }}</p>
+
+    <UserFavoritesSkeleton v-if="showSkeleton" />
+
+    <div v-else class="favorites-grid">
       <LibraryGameTile v-for="tile in tiles" :key="tile.id" :purchase="tile" />
     </div>
 
-    <div v-if="!tiles.length" class="favorites-empty" role="status">
-      <p v-if="loading">Loading favorites…</p>
-      <p v-else-if="error">Couldn't load favorites: {{ error.message }}</p>
+    <div v-if="!tiles.length && !showSkeleton" class="favorites-empty" role="status">
+      <p v-if="error">Couldn't load favorites: {{ error.message }}</p>
       <p v-else>No favorite games yet.</p>
     </div>
 
@@ -25,6 +28,7 @@ import { useQuery } from "@/composables/useGraphQL";
 import { GET_USER_FAVORITES } from "@/graphql/queries/users";
 import type { GetUserFavoritesQuery, LibraryGamePurchaseFieldsFragment } from "@/types/graphql";
 import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
+import UserFavoritesSkeleton from "@/components/users/UserFavoritesSkeleton.vue";
 
 const PAGE_SIZE = 48;
 
@@ -35,6 +39,9 @@ const variables = computed(() => ({ slug: route.params.slug, first: PAGE_SIZE })
 const { data, loading, error, fetchMore } = useQuery<GetUserFavoritesQuery>(GET_USER_FAVORITES, {
   variables: () => variables.value
 });
+
+// Only on the first load; "Load more" keeps the grid up.
+const showSkeleton = computed(() => loading.value && !data.value);
 
 const connection = computed(() => data.value?.user?.favoritedGames ?? null);
 const hasNextPage = computed(() => connection.value?.pageInfo.hasNextPage ?? false);
@@ -52,10 +59,14 @@ const tiles = computed<LibraryGamePurchaseFieldsFragment[]>(() =>
 
 async function loadMore() {
   const cursor = connection.value?.pageInfo.endCursor;
-  if (!hasNextPage.value || loading.value || !cursor) return;
+  if (!hasNextPage.value || loading.value || !cursor) {
+    return;
+  }
 
   await fetchMore({ ...variables.value, after: cursor }, (prev, next) => {
-    if (!prev.user || !next.user) return next;
+    if (!prev.user || !next.user) {
+      return next;
+    }
     return {
       ...next,
       user: {

@@ -7,7 +7,9 @@ type Search = (query: string) => Promise<string[]>;
 function setup(search: Search) {
   const scope = effectScope();
   const state = scope.run(() => useDebouncedSearch(search));
-  if (!state) throw new Error("No state");
+  if (!state) {
+    throw new Error("No state");
+  }
   return { ...state, scope };
 }
 
