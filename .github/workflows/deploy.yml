@@ -37,6 +37,10 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # app_action polls until the rollout ends and the app has a live URL, with
+    # no limit of its own. Without this a stuck rollout holds the
+    # deploy-production lock for GitHub's 6-hour default.
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: read
