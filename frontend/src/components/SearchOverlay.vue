@@ -931,6 +931,7 @@ function releaseYear(date: string): string {
   margin-left: auto;
   font-size: 11px;
   color: var(--s-100);
+  white-space: nowrap;
   font-weight: 400;
 }
 
