@@ -719,7 +719,11 @@ function changeRole() {
   display: flex;
   margin-top: 24px;
   overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
+  overflow-y: hidden;
+  /* The baseline is an inset shadow rather than a border so the active tab's
+     underline can sit on it without a negative margin. That margin made the
+     tabs 1px taller than the bar, which let the bar scroll vertically. */
+  box-shadow: inset 0 -1px 0 var(--color-border);
   scrollbar-width: none;
 }
 
@@ -728,7 +732,6 @@ function changeRole() {
   flex-shrink: 0;
   gap: 6px;
   align-items: center;
-  margin-bottom: -1px;
   padding: 10px 16px;
   border-bottom: 2px solid transparent;
   color: var(--color-text-secondary);
