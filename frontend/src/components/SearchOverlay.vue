@@ -50,7 +50,7 @@
 
         <div class="search-results">
           <!-- Empty state -->
-          <div v-if="!query || query.length < 2" class="search-empty">
+          <div v-if="trimmedQuery.length < 2" class="search-empty">
             <Search class="search-empty-icon" :stroke-width="1.5" />
             <p>Start typing to search games, companies, users, and more.</p>
           </div>
@@ -70,7 +70,7 @@
           <!-- No results -->
           <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
             <p>
-              No results found for "<span class="search-query-highlight">{{ query }}</span
+              No results found for "<span class="search-query-highlight">{{ trimmedQuery }}</span
               >"
             </p>
             <p class="search-empty-hint">Try a different search term</p>
@@ -367,6 +367,9 @@ onBeforeUnmount(() => {
 });
 
 const query = ref("");
+// Leading and trailing spaces never change the results, so they neither
+// count toward the minimum length nor start a new search.
+const trimmedQuery = computed(() => query.value.trim());
 const results = ref<SearchResultFieldsFragment[]>([]);
 const loading = ref(false);
 const hasSearched = ref(false);
@@ -482,7 +485,7 @@ let resultsQuery: string | null = null;
 
 const performSearch = debounce(async () => {
   const searchId = ++latestSearch;
-  const searchQuery = query.value;
+  const searchQuery = trimmedQuery.value;
 
   if (searchQuery.length < 2) {
     results.value = [];
@@ -490,6 +493,13 @@ const performSearch = debounce(async () => {
     hasSearched.value = false;
     loading.value = false;
     error.value = null;
+    return;
+  }
+
+  // Only spaces changed (e.g. "halo" → "halo "): the shown results already
+  // match. Bumping latestSearch above still drops anything in flight.
+  if (searchQuery === resultsQuery && !error.value) {
+    loading.value = false;
     return;
   }
 
@@ -517,7 +527,7 @@ const performSearch = debounce(async () => {
       loading.value = false;
     }
   }
-}, 250);
+}, 500);
 
 function onSearch() {
   performSearch();
@@ -538,10 +548,10 @@ async function chooseActive() {
   // Enter pressed right after typing would otherwise open a result for the
   // previous query. Run the pending search now, wait for it, and open the
   // new top hit (if the overlay is still open and nothing was typed since).
-  if (resultsQuery !== query.value) {
-    const typed = query.value;
+  if (resultsQuery !== trimmedQuery.value) {
+    const typed = trimmedQuery.value;
     await performSearch.flush();
-    if (!isOpen.value || query.value !== typed || resultsQuery !== typed) {
+    if (!isOpen.value || trimmedQuery.value !== typed || resultsQuery !== typed) {
       return;
     }
     const first = orderedResults.value[0];
