@@ -486,6 +486,9 @@ let latestSearch = 0;
 // pause while typing adds a request that the API still has to work through
 // before it gets to the one whose results will actually be shown.
 let searchController: AbortController | null = null;
+// The query the shown results belong to, so Enter can tell when they're
+// out of date with what's typed.
+let resultsQuery: string | null = null;
 
 // Ignore whatever search is in flight, and stop its request.
 function cancelInFlightSearch() {
@@ -493,9 +496,6 @@ function cancelInFlightSearch() {
   searchController?.abort();
   searchController = null;
 }
-// The query the shown results belong to, so Enter can tell when they're
-// out of date with what's typed.
-let resultsQuery: string | null = null;
 
 const performSearch = debounce(async () => {
   cancelInFlightSearch();
