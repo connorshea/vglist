@@ -29,6 +29,13 @@
 		respond 200
 	}
 
+	# Same-origin CSP report sink (see report-uri below). Reports go to
+	# Sentry when CSP_REPORT_URI is set; this just keeps the directive
+	# valid without it and stops reports falling through to the SPA.
+	handle /csp-report {
+		respond 204
+	}
+
 	header {
 		# Baseline hardening.
 		X-Content-Type-Options "nosniff"
@@ -47,9 +54,9 @@
 		#   allows the challenge iframe it renders.
 		# - style-src 'self' 'unsafe-inline' + style-src-attr 'unsafe-inline':
 		#   Vue's :style bindings render inline style="" attributes at runtime.
-		#   'unsafe-inline' on style-src-attr covers those; style-src stays
-		#   strict apart from Vite's build-time CSS injection which also needs
-		#   it. We never render untrusted HTML, so this is low-risk.
+		#   'unsafe-inline' on style-src-attr covers those. style-src also
+		#   has 'unsafe-inline' for now, which the report-only policy below
+		#   removes. We never render untrusted HTML, so this is low-risk.
 		# - img-src includes the Cloudflare R2 custom domain that serves game
 		#   covers and user avatars.
 		# - connect-src uses {$API_ORIGIN} (set per-environment on the service)
@@ -61,6 +68,34 @@
 		# - upgrade-insecure-requests auto-upgrades any stray http:// asset
 		#   URLs (e.g. from older cached data) to https://.
 		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
+
+		# Stricter candidate policy, report-only while we check it breaks
+		# nothing. Once it's quiet, it replaces the enforced policy above.
+		# Differences from the enforced policy:
+		#
+		# - style-src drops 'unsafe-inline' (which style-src-attr would
+		#   otherwise fall back to as well, allowing injected <style>
+		#   elements). Vite emits CSS as <link>ed files; the only inline
+		#   <style> is index.html's dark-mode background, allowed by hash.
+		#   Vite minifies that block, so the hash is of the BUILT content:
+		#   after editing it, rebuild and recompute with
+		#     sed -n 's:.*<style>\(.*\)</style>.*:\1:p' frontend/dist/index.html \
+		#       | tr -d '\n' | openssl dgst -sha256 -binary | openssl base64
+		#   The Docker workflow fails if the hash doesn't match.
+		#   style-src-attr keeps 'unsafe-inline' for Vue :style bindings.
+		# - base-uri 'none': the app never uses <base>.
+		# - worker-src 'none': no web workers or service workers.
+		# - connect-src allows only the Sentry ingest origin from the DSN
+		#   (SENTRY_INGEST_ORIGIN, e.g. https://o123.ingest.us.sentry.io),
+		#   falling back to any sentry.io subdomain when unset.
+		# - manifest-src 'self' is explicit for site.webmanifest.
+		# - report-uri sends violations to Sentry's security endpoint
+		#   (CSP_REPORT_URI, from Sentry's project settings under Security
+		#   Headers). /csp-report is a same-origin sink, handled below, so
+		#   the directive stays valid when CSP_REPORT_URI is empty.
+		# - No upgrade-insecure-requests: browsers ignore it (with a console
+		#   warning) in a report-only policy. Add it back when promoting.
+		Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'sha256-WFDtyQ8I111UJiy9VSzAQXXjXb4NUiZ9nrPyP63GEvU='; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} {$SENTRY_INGEST_ORIGIN:https://*.sentry.io}; worker-src 'none'; manifest-src 'self'; report-uri /csp-report {$CSP_REPORT_URI}"
 	}
 
 	encode {

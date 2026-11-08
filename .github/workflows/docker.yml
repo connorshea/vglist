@@ -183,3 +183,32 @@ jobs:
           done
           expect /site.webmanifest "public, max-age=86400"
           expect /favicon-32.png "public, max-age=86400"
+
+      # The report-only CSP allows index.html's inline <style> by hash, and
+      # Vite minifies that block at build time, so editing it silently
+      # breaks the hash. See frontend/Caddyfile.
+      - name: Check CSP hash matches index.html's inline style
+        run: |
+          set -euo pipefail
+          csp="$(curl -sS -o /dev/null -D - http://127.0.0.1:8080/ \
+            | tr -d '\r' | grep -i '^content-security-policy-report-only:' | cut -d' ' -f2-)"
+          if [ -z "$csp" ]; then
+            echo "::error::No Content-Security-Policy-Report-Only header on /"
+            exit 1
+          fi
+          hash="$(curl -fsS http://127.0.0.1:8080/ \
+            | sed -n 's:.*<style>\(.*\)</style>.*:\1:p' | tr -d '\n' \
+            | openssl dgst -sha256 -binary | openssl base64)"
+          case "$csp" in
+            *"'sha256-$hash'"*) echo "Inline style hash sha256-$hash is allowed" ;;
+            *)
+              echo "::error::index.html's inline <style> hashes to sha256-$hash, which the report-only CSP doesn't allow. Update style-src in frontend/Caddyfile."
+              exit 1
+              ;;
+          esac
+          status="$(curl -sS -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/csp-report' --data '{}' http://127.0.0.1:8080/csp-report)"
+          if [ "$status" != "204" ]; then
+            echo "::error::/csp-report: expected status 204, got $status"
+            exit 1
+          fi

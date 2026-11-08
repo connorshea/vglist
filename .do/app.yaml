@@ -184,6 +184,17 @@ services:
       - key: API_ORIGIN
         value: https://api.vglist.co
         scope: RUN_TIME
+      # Origin of VITE_SENTRY_DSN's host (e.g. https://o123.ingest.us.sentry.io),
+      # for the Caddyfile's report-only CSP connect-src. Not secret, but set in
+      # the control panel so the org ID stays out of the repo.
+      - key: SENTRY_INGEST_ORIGIN
+        scope: RUN_TIME
+        type: SECRET
+      # Sentry's CSP report URL (Project settings > Security Headers), for
+      # the Caddyfile's report-only CSP report-uri.
+      - key: CSP_REPORT_URI
+        scope: RUN_TIME
+        type: SECRET
       # Baked into the Vite bundle at build time.
       - key: VITE_API_URL
         value: https://api.vglist.co
