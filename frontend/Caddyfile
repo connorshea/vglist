@@ -149,6 +149,14 @@
 		respond 404
 	}
 
+	# Source maps go to Sentry and are deleted in the build (see
+	# frontend/Dockerfile). Never serve one, even if a build leaves one behind.
+	@source_map path *.map
+	handle @source_map {
+		header Cache-Control "no-store"
+		respond 404
+	}
+
 	handle {
 		root * /app/dist
 

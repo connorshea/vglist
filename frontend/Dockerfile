@@ -39,11 +39,18 @@ ARG VITE_API_URL
 ARG VITE_SENTRY_DSN
 ARG VITE_TURNSTILE_SITE_KEY
 ARG VITE_SENTRY_RELEASE
-RUN [ -n "$VITE_API_URL" ] || unset VITE_API_URL; \
+# SENTRY_AUTH_TOKEN is a BuildKit secret (docker build --secret
+# id=sentry_auth_token,env=SENTRY_AUTH_TOKEN), so it never lands in a layer or
+# the image history. With it and VITE_SENTRY_RELEASE set, vite.config.ts
+# uploads hidden source maps to Sentry and deletes them; the find below makes
+# sure none reach the Caddy stage either way.
+RUN --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
+    [ -n "$VITE_API_URL" ] || unset VITE_API_URL; \
     [ -n "$VITE_SENTRY_DSN" ] || unset VITE_SENTRY_DSN; \
     [ -n "$VITE_TURNSTILE_SITE_KEY" ] || unset VITE_TURNSTILE_SITE_KEY; \
     [ -n "$VITE_SENTRY_RELEASE" ] || unset VITE_SENTRY_RELEASE; \
-    pnpm run build
+    pnpm run build \
+    && find dist -name "*.map" -delete
 
 # ---------------------------------------------------------------------------
 # Serve with Caddy.
