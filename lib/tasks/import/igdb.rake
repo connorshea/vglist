@@ -140,6 +140,48 @@ namespace :import do
       sleep delay if delay.positive?
     end
 
+    # Break the save and sizes steps down further, so a slow run shows whether
+    # the time goes to validation (the content type spoofing check spawns the
+    # `file` command), the database, or R2. Each worker collects its own
+    # numbers in a thread-local hash while a step runs.
+    add_to_breakdown = lambda do |key, seconds, count_key = nil|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      next if breakdown.nil?
+
+      breakdown[key] += seconds
+      breakdown[count_key] += 1 if count_key
+    end
+    breakdown_subscribers = [
+      ActiveSupport::Notifications.subscribe('sql.active_record') do |event|
+        add_to_breakdown.call(:sql, event.duration / 1000.0, :queries) unless event.payload[:name] == 'SCHEMA'
+      end,
+      ActiveSupport::Notifications.subscribe('service_upload.active_storage') do |event|
+        add_to_breakdown.call(:upload, event.duration / 1000.0)
+      end,
+      ActiveSupport::Notifications.subscribe('analyze.active_storage_validations') do |event|
+        add_to_breakdown.call(:spoof, event.duration / 1000.0)
+      end
+    ]
+    # There's no notification for running a model's validations, so time them
+    # by wrapping Game#run_validations! for the rest of this task's process.
+    # Queries run by the validations count towards `validate`, not `sql`, so
+    # the parts add up to the step's total.
+    Game.prepend(Module.new do
+      define_method(:run_validations!) do
+        breakdown = Thread.current[:igdb_cover_breakdown]
+        sql_before = breakdown&.fetch(:sql, 0)
+        queries_before = breakdown&.fetch(:queries, 0)
+        started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        super()
+      ensure
+        if breakdown
+          breakdown[:validate] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+          breakdown[:sql] = sql_before
+          breakdown[:queries] = queries_before
+        end
+      end
+    end)
+
     # Attach one game's cover and create its variants.
     #
     # Returns [added, messages]: whether the cover was added, and the lines to
@@ -149,13 +191,31 @@ namespace :import do
       # How long each step took, logged with the result so a slow run shows
       # where the time goes.
       timings = {}
+      breakdowns = {}
       timed = lambda do |step, &block|
+        Thread.current[:igdb_cover_breakdown] = Hash.new(0)
         started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         block.call
       ensure
         timings[step] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+        breakdowns[step] = Thread.current[:igdb_cover_breakdown]
+        Thread.current[:igdb_cover_breakdown] = nil
       end
-      timings_text = -> { timings.map { |step, seconds| "#{step} #{seconds.round(2)}s" }.join(', ') }
+      # e.g. "save 7.48s [validate 3.1s (spoof check 2.9s), sql 0.4s/9, upload 0.6s, other 3.38s]"
+      timings_text = lambda do
+        timings.map do |step, seconds|
+          text = "#{step} #{seconds.round(2)}s"
+          b = breakdowns[step]
+          next text if b.blank?
+
+          parts = []
+          parts << "validate #{b[:validate].round(2)}s (spoof check #{b[:spoof].round(2)}s)" if b.key?(:validate)
+          parts << "sql #{b[:sql].round(2)}s/#{b[:queries]}" if b.key?(:sql)
+          parts << "upload #{b[:upload].round(2)}s" if b.key?(:upload)
+          parts << "other #{(seconds - b[:validate] - b[:sql] - b[:upload]).round(2)}s"
+          "#{text} [#{parts.join(', ')}]"
+        end.join(', ')
+      end
       # Every remaining game has an IGDB cover (filtered above).
       igdb_game = igdb_games_by_slug[game[:igdb_id]]
 
@@ -238,6 +298,7 @@ namespace :import do
       end
     end
     workers.each(&:join)
+    breakdown_subscribers.each { |subscriber| ActiveSupport::Notifications.unsubscribe(subscriber) }
 
     progress_bar.finish unless progress_bar.finished?
 
