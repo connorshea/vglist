@@ -50,6 +50,18 @@ RSpec.describe 'import:igdb:covers', type: :task do
     end
   end
 
+  # Touching the game rewrites every index on `games`, which made each save
+  # slow in production.
+  it "doesn't touch the game when attaching its cover" do
+    game = create(:game, igdb_id: 'game-0', updated_at: 1.day.ago)
+    stub_igdb([game.igdb_id])
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+
+    expect { run_task }.not_to(change { game.reload.updated_at })
+    expect(game.cover).to be_attached
+  end
+
   it 'starts at most 4 cover downloads a second, across every worker' do
     games = Array.new(4) { |i| create(:game, igdb_id: "game-#{i}") }
     stub_igdb(games.map(&:igdb_id))

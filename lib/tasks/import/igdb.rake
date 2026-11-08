@@ -183,12 +183,20 @@ namespace :import do
         end
 
         # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
+        # Attaching normally touches the game, and that UPDATE has to rewrite
+        # every index on `games` (including the GIN index on name), which in
+        # production took most of each save once several workers ran at once.
+        # A new cover doesn't change anything about the game itself, so skip
+        # it. That also keeps a bulk import from flooding the "recently
+        # updated" sort.
         timed.call(:save) do
-          game.cover.attach(
-            io: cover.io,
-            filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
-            metadata: metadata
-          )
+          Game.no_touching do
+            game.cover.attach(
+              io: cover.io,
+              filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
+              metadata: metadata
+            )
+          end
         end
 
         # If the cover has any errors, they'll show up on the `Game` record.
