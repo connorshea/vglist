@@ -123,6 +123,44 @@ describe("HomePage", () => {
     expect(pills[4].props("to")).toEqual({ path: "/games", query: { genre: "g0" } });
   });
 
+  it("holds the pill row's place with placeholders while the pills load", async () => {
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetGamesIndexFilters" ? new Promise(() => {}) : respond(document, variables)
+    );
+    const wrapper = await mountPage();
+    expect(wrapper.find(".home-quick-slot").exists()).toBeTruthy();
+    expect(wrapper.findAll(".home-quick-skeleton").length).toBeGreaterThan(0);
+    expect(wrapper.find(".home-quick-link").exists()).toBeFalsy();
+  });
+
+  it("keeps the pill row's place but drops the placeholders if the pills fail to load", async () => {
+    mockRequest.mockImplementation((document, variables) =>
+      operationName(document) === "GetGamesIndexFilters"
+        ? Promise.reject(new Error("boom"))
+        : respond(document, variables)
+    );
+    const wrapper = await mountPage();
+    expect(wrapper.find(".home-quick-slot").exists()).toBeTruthy();
+    expect(wrapper.find(".home-quick-skeleton").exists()).toBeFalsy();
+  });
+
+  it("hides the pills that don't fit on the first row", async () => {
+    // jsdom has no layout, so put every pill after the fourth on a second row.
+    const offsetTop = vi.spyOn(HTMLElement.prototype, "offsetTop", "get").mockImplementation(function (
+      this: HTMLElement
+    ) {
+      if (!this.classList.contains("home-quick-link")) return 0;
+      return Array.from(this.parentElement?.children ?? []).indexOf(this) < 4 ? 0 : 44;
+    });
+    try {
+      const wrapper = await mountPage();
+      const hidden = wrapper.findAll(".home-quick-link").map((link) => link.classes("is-overflowing"));
+      expect(hidden).toEqual([false, false, false, false, true, true, true]);
+    } finally {
+      offsetTop.mockRestore();
+    }
+  });
+
   it("shows popular games, new releases and recently added games, each linking to the games index", async () => {
     const wrapper = await mountPage();
     expect(wrapper.findAll(".game-shelf-title").map((h) => h.text())).toEqual([
