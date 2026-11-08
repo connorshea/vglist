@@ -56,7 +56,8 @@
 );
 
 @forward "bulma/sass/base";
-@forward "bulma/sass/grid";
+// Only the flexbox columns; Bulma's CSS grid (.grid, .fixed-grid, .cell) is unused.
+@forward "bulma/sass/grid/columns";
 @forward "bulma/sass/layout";
 
 @forward "bulma/sass/themes";
