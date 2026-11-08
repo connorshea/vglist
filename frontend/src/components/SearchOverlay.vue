@@ -197,7 +197,7 @@
             <!-- Other resources column -->
             <div v-if="otherResults.length" class="category" role="group" aria-label="Other">
               <div class="category-header" aria-hidden="true">
-                <Briefcase class="category-icon" />
+                <Shapes class="category-icon" />
                 <span class="category-title">Other</span>
                 <span class="category-count"
                   >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
@@ -287,7 +287,7 @@ import type {
   GameSearchResultFieldsFragment,
   UserSearchResultFieldsFragment
 } from "@/types/graphql";
-import { Search, X, Gamepad2, Briefcase, Monitor, Users } from "@lucide/vue";
+import { Search, X, Gamepad2, Briefcase, Monitor, Users, Shapes } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const router = useRouter();
