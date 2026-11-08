@@ -6,8 +6,7 @@ require 'rails_helper'
 # `companySearch`, ...), which all rank through the `Searchable` concern.
 RSpec.describe "Per-type search API", type: :request do
   let(:user) { create(:confirmed_user) }
-  let(:application) { build(:application, owner: user) }
-  let(:access_token) { create(:access_token, resource_owner_id: user.id, application: application) }
+  let(:access_token) { JwtService.encode(user) }
 
   def search(field, query, selection: 'id name')
     query_string = <<-GRAPHQL
