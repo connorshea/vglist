@@ -39,9 +39,9 @@
               @input="onSearch"
               @keydown.down.prevent="move(1)"
               @keydown.up.prevent="move(-1)"
-              @keydown.enter.prevent="onEnter"
+              @keydown.enter="onEnter"
             />
-            <div class="search-hint"><kbd class="kbd">↵</kbd> to search · <kbd class="kbd">Esc</kbd> to close</div>
+            <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
             <button class="search-close" aria-label="Close search" @click="close">
               <X :size="16" :stroke-width="2" />
             </button>
@@ -396,9 +396,6 @@ const resultIndexes = computed(() => new Map(orderedResults.value.map((result, i
 // The highlighted result, which Enter opens. The first result is highlighted
 // whenever new results arrive, so Enter keeps opening the top hit by default.
 const activeIndex = ref(-1);
-// Whether the highlight was moved with the arrow keys since the last search,
-// which is what makes Enter open it rather than go to the results page.
-const navigated = ref(false);
 
 watch(orderedResults, (ordered) => {
   activeIndex.value = ordered.length > 0 ? 0 : -1;
@@ -520,46 +517,42 @@ const performSearch = debounce(async () => {
 }, 250);
 
 function onSearch() {
-  navigated.value = false;
   performSearch();
 }
 
 function move(step: number) {
   const count = orderedResults.value.length;
   if (count === 0) return;
-  navigated.value = true;
   activeIndex.value = (activeIndex.value + step + count) % count;
   void nextTick(() => {
     overlayRef.value?.querySelector(".result-item.is-active")?.scrollIntoView?.({ block: "nearest" });
   });
 }
 
-function chooseActive() {
+async function chooseActive() {
+  // Enter pressed right after typing would otherwise open a result for the
+  // previous query. Run the pending search now, wait for it, and open the
+  // new top hit (if the overlay is still open and nothing was typed since).
+  if (resultsQuery !== trimmedQuery.value) {
+    const typed = trimmedQuery.value;
+    await performSearch.flush();
+    if (!isOpen.value || trimmedQuery.value !== typed || resultsQuery !== typed) return;
+    const first = orderedResults.value[0];
+    if (first) goToResult(first);
+    return;
+  }
+
   const active = orderedResults.value[activeIndex.value];
   if (active) goToResult(active);
 }
 
-// Enter opens the result picked with the arrow keys. Otherwise it goes
-// straight to the only match, but several same-named results (e.g. one
-// "Ratatouille" per platform) need the results page to tell apart. Stale or
-// still-loading results also go there rather than to a guess.
+// Enter also confirms an input method's composition (e.g. Japanese kana to
+// kanji); that's not a request to open anything yet, and the browser needs
+// the default action to finish the composition.
 function onEnter(event: KeyboardEvent) {
-  // Enter also confirms an input method's composition (e.g. Japanese kana to
-  // kanji); that's not a request to search yet.
   if (event.isComposing || event.keyCode === 229) return;
-  if (!hasMinQuery.value) return;
-
-  if (navigated.value && resultsQuery === trimmedQuery.value) {
-    chooseActive();
-    return;
-  }
-
-  const settled = !loading.value && resultsQuery === trimmedQuery.value;
-  if (settled && results.value.length === 1) {
-    goToResult(results.value[0]);
-  } else {
-    goToSearchPage();
-  }
+  event.preventDefault();
+  void chooseActive();
 }
 
 function goToSearchPage() {

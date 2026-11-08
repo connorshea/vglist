@@ -710,36 +710,6 @@ describe("SearchOverlay", () => {
       expect(mockClose).toHaveBeenCalled();
     });
 
-    it("opens the results page when Enter is pressed with several results", async () => {
-      const wrapper = await mountWithSearchResults([game("1", "Ratatouille"), game("2", "Ratatouille")], "ratatouille");
-
-      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
-
-      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "ratatouille" } });
-      expect(mockClose).toHaveBeenCalled();
-    });
-
-    it("opens the results page when Enter is pressed with no results", async () => {
-      const wrapper = await mountWithSearchResults([], "zzzz");
-
-      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
-
-      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "zzzz" } });
-    });
-
-    it("opens the results page when Enter is pressed before the results catch up", async () => {
-      const wrapper = await mountWithSearchResults([game("7", "Portal")], "portal");
-
-      // Typed more, but the debounced search hasn't run yet.
-      const input = wrapper.find(".search-input");
-      await input.setValue("portal 2");
-      await input.trigger("input");
-      await input.trigger("keydown", { key: "Enter" });
-
-      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "portal 2" } });
-      expect(pushMock).not.toHaveBeenCalledWith("/games/7");
-    });
-
     it("does nothing on Enter when the query is too short", async () => {
       mockIsOpen.value = true;
       await nextTick();
@@ -764,16 +734,6 @@ describe("SearchOverlay", () => {
 
       expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "portal" } });
       expect(mockClose).toHaveBeenCalled();
-    });
-
-    // Enter opens the single result when there's exactly one, so the hint
-    // can't promise "all results".
-    it("describes Enter in a way that's true either way", async () => {
-      mockIsOpen.value = true;
-      await nextTick();
-      const wrapper = mountOverlay();
-
-      expect(wrapper.find(".search-hint").text()).toContain("↵ to search");
     });
 
     it("ignores Enter while an input method is composing", async () => {

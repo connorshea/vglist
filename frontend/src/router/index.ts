@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { installPageTitles } from "@/composables/usePageTitle";
 import { installRouteFocus } from "@/composables/useRouteFocus";
-import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { waitForScrollableTo } from "@/utils/scroll-restore";
 
 const router = createRouter({
@@ -20,20 +19,9 @@ const router = createRouter({
       component: () => import("@/pages/AboutPage.vue"),
       meta: { title: "About" }
     },
-    // Target of the OpenSearch description (public/opensearch.xml), so
-    // browsers can use vglist as a search engine. Opens the search overlay
-    // with the query over the home page.
-    {
-      path: "/search",
-      name: "search",
-      redirect: (to) => {
-        const query = typeof to.query.query === "string" ? to.query.query : "";
-        useSearchOverlay().open(query);
-        return { name: "home", query: {} };
-      }
-    },
-    // Also the target of the OpenSearch description (browser address-bar
-    // search), so keep `?query=` stable.
+    // Target of the OpenSearch description (public/opensearch.xml), so browsers
+    // can use vglist as a search engine and address-bar searches land here.
+    // Keep `?query=` stable.
     {
       path: "/search",
       name: "search",

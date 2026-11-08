@@ -111,9 +111,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
   }
   if (options?.enabled && (isRef(options.enabled) || typeof options.enabled === "function")) {
     sources.push(
-      typeof options.enabled === "function"
-        ? (options.enabled as () => boolean)
-        : () => (options.enabled as Ref<boolean>).value
+      typeof options.enabled === "function" ? options.enabled : () => (options.enabled as Ref<boolean>).value
     );
   }
   if (sources.length) {

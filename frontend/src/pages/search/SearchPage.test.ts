@@ -6,7 +6,7 @@ import SearchPage from "./SearchPage.vue";
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
 const { mockRoute, pushMock, mockRequest } = vi.hoisted(() => ({
-  mockRoute: { query: {} as Record<string, string> },
+  mockRoute: { query: {} },
   pushMock: vi.fn<(to: { name: string; query: Record<string, string> }) => void>(),
   mockRequest: vi.fn<(query: string, variables: Record<string, unknown>) => Promise<unknown>>()
 }));
@@ -64,7 +64,7 @@ function tabPage(
   return { [type]: { totalCount, pageInfo: { hasNextPage, endCursor }, nodes } };
 }
 
-function respondWith({ overviewData = overview(), tabData = {} as Record<string, unknown> } = {}) {
+function respondWith({ overviewData = overview(), tabData = {} } = {}) {
   mockRequest.mockImplementation((query) => Promise.resolve(query === "SEARCH_OVERVIEW" ? overviewData : tabData));
 }
 
