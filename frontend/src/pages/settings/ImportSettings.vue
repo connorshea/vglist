@@ -45,7 +45,7 @@
             aria-describedby="steam-username-help"
           />
           <span id="steam-username-help" class="set-help">
-            The custom URL name from your profile, as in steamcommunity.com/id/<b>username</b>.
+            Your profile URL, or the custom URL name from it, as in steamcommunity.com/id/<b>username</b>.
           </span>
         </div>
         <button type="submit" class="set-btn" :disabled="connecting || steamUsername.trim() === ''">
