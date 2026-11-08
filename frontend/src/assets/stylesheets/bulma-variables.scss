@@ -37,7 +37,17 @@
   $input-placeholder-color: var(--color-placeholder)
 );
 
-@forward "bulma/sass/helpers" with (
+// Bulma's helpers, minus color.scss. The color helpers generate
+// .has-text-*, .has-background-* and .is-palette-* for every colour and
+// shade (about 180 KB); the two the app uses live in utilities.scss.
+@forward "bulma/sass/helpers/aspect-ratio";
+@forward "bulma/sass/helpers/border";
+@forward "bulma/sass/helpers/flexbox";
+@forward "bulma/sass/helpers/float";
+@forward "bulma/sass/helpers/gap";
+@forward "bulma/sass/helpers/overflow";
+@forward "bulma/sass/helpers/position";
+@forward "bulma/sass/helpers/spacing" with (
   $spacing-values: (
     "0": 0,
     "5": 5px,
@@ -54,6 +64,9 @@
     "100": 100px
   )
 );
+@forward "bulma/sass/helpers/typography";
+@forward "bulma/sass/helpers/visibility";
+@forward "bulma/sass/helpers/other";
 
 @forward "bulma/sass/base";
 // Only the flexbox columns; Bulma's CSS grid (.grid, .fixed-grid, .cell) is unused.
