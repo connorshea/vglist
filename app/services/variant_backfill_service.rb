@@ -89,10 +89,20 @@ class VariantBackfillService
 
   private
 
+  # Decode the original once and make every size from it. ActiveStorage's
+  # transformer always passes loader options, which stops image_processing
+  # from using libvips's shrink-on-load, so handing it the file would decode
+  # the whole original again for each size. Given a decoded image instead,
+  # it goes straight to resizing and saving.
+  #
+  # The output is byte-for-byte what passing the file would produce: the
+  # same pixels go through the same resize and save. libvips decodes the
+  # image into memory the first time its pixels are used, and every size made
+  # from the same Vips::Image reuses that.
   def transform(variations, original)
+    image = Vips::Image.new_from_file(original.path)
     variations.each do |variation|
-      original.rewind
-      variation.transform(original) { |output| create_variant_record(variation, output) }
+      variation.transform(image) { |output| create_variant_record(variation, output) }
     end
   end
 
