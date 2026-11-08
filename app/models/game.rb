@@ -34,7 +34,7 @@ class Game < ApplicationRecord
     through: :favorites,
     source: :user
 
-  belongs_to :series, optional: true
+  belongs_to :series, optional: true, counter_cache: :games_count
 
   # Only use one of the pre-set sizes for these images.
   COVER_SIZES = {

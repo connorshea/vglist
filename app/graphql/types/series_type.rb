@@ -23,13 +23,10 @@ module Types
       ResourceGameSort.apply(@object.games.with_attached_cover, sort_by)
     end
 
-    # `seriesList` loads these with the series (`Series.with_game_stats`), so a
-    # page of series doesn't count each one's games separately. Elsewhere they
-    # are computed for the one record.
-    def games_count
-      preloaded(:index_games_count) { @object.games.count }
-    end
-
+    # `seriesList` loads the release years with the series
+    # (`Series.with_game_stats`), so a page of series doesn't look up each
+    # one's games separately. Elsewhere they are computed for the one record.
+    # `games_count` needs no resolver: it's a counter cache column.
     def first_release_year
       preloaded(:first_release_year) { @object.games.minimum(:release_date)&.year }
     end

@@ -19,8 +19,8 @@
       >
         <template #facts>
           <span>
-            <b>{{ data.genre.games.totalCount.toLocaleString() }}</b>
-            {{ data.genre.games.totalCount === 1 ? "game" : "games" }}
+            <b>{{ data.genre.gamesCount.toLocaleString() }}</b>
+            {{ data.genre.gamesCount === 1 ? "game" : "games" }}
           </span>
         </template>
       </ResourceHeader>

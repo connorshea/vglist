@@ -18,8 +18,8 @@ export const GET_PLATFORM = gql`
       id
       name
       wikidataId
+      gamesCount
       games(sortBy: $sortBy, first: $first, after: $after) {
-        totalCount
         nodes {
           ...ResourceGameFields
         }
@@ -118,8 +118,8 @@ export const GET_GENRE = gql`
       id
       name
       wikidataId
+      gamesCount
       games(sortBy: $sortBy, first: $first, after: $after) {
-        totalCount
         nodes {
           ...ResourceGameFields
         }
@@ -172,8 +172,8 @@ export const GET_ENGINE = gql`
       id
       name
       wikidataId
+      gamesCount
       games(sortBy: $sortBy, first: $first, after: $after) {
-        totalCount
         nodes {
           ...ResourceGameFields
         }
@@ -228,8 +228,8 @@ export const GET_SERIES = gql`
       id
       name
       wikidataId
+      gamesCount
       games(sortBy: $sortBy, first: $first, after: $after) {
-        totalCount
         nodes {
           ...ResourceGameFields
         }

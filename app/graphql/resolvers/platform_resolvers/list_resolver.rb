@@ -10,11 +10,8 @@ module Resolvers
       argument :sort_by, Types::Enums::ResourceSortType, required: false, description: "The order to sort the platforms in. Without one, platforms are ordered by ID."
       argument :name_contains, String, required: false, description: "Only return platforms whose name contains this text, ignoring case."
 
-      extras [:lookahead]
-
-      def resolve(lookahead:, sort_by: nil, name_contains: nil)
+      def resolve(sort_by: nil, name_contains: nil)
         platforms = Platform.all
-        platforms = platforms.with_games_count if ResourceIndex.selects_any?(lookahead, [:games_count])
         platforms = platforms.name_contains(name_contains) if name_contains.present?
 
         ResourceIndex.sort(platforms, sort_by)

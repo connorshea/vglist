@@ -279,7 +279,8 @@ CREATE TABLE public.engines (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -846,7 +847,8 @@ CREATE TABLE public.genres (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1058,7 +1060,8 @@ CREATE TABLE public.platforms (
     name text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1131,7 +1134,8 @@ CREATE TABLE public.series (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -3127,6 +3131,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108220000'),
 ('20261108210100'),
 ('20261108210000'),
 ('20261108000200'),

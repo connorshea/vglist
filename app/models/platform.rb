@@ -11,9 +11,10 @@ class Platform < ApplicationRecord
   has_many :game_purchase_platforms, dependent: :destroy
   has_many :game_purchases, through: :game_purchase_platforms, source: :game_purchase
 
-  game_count_scopes '(SELECT COUNT(*) FROM game_platforms WHERE game_platforms.platform_id = platforms.id)'
+  # A counter cache kept up to date by GamePlatform.
+  game_count_scopes 'platforms.games_count'
 
-  has_paper_trail ignore: [:updated_at, :created_at],
+  has_paper_trail ignore: [:games_count, :updated_at, :created_at],
                   versions: {
                     class_name: 'Versions::PlatformVersion'
                   }

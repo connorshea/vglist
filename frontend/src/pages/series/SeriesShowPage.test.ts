@@ -33,8 +33,8 @@ function seriesFixture() {
       id: "1",
       name: "Half-Life",
       wikidataId: null,
+      gamesCount: 1,
       games: {
-        totalCount: 1,
         nodes: [{ id: "10", name: "Half-Life 2", coverUrl: null, releaseDate: "2004-11-16", isInLibrary: false }],
         pageInfo: { hasNextPage: false, endCursor: null }
       }
