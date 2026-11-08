@@ -16,13 +16,15 @@ namespace :import do
   task 'igdb:covers': :environment do
     puts "This task will attach covers to any games which have IGDB IDs and no cover."
 
-    # Load the set once; it's enumerated in both the metadata-fetch and the
-    # cover-download passes below, so a relation would re-run the query each
-    # time (and .count would fire its own).
-    games = Game.includes(:cover_attachment)
-                .where(active_storage_attachments: { id: nil })
-                .where.not(igdb_id: [nil, ""])
-                .to_a
+    # Only each game's ID and IGDB slug, loaded in batches: this runs in the
+    # same container as the web server, and loading every game without a cover
+    # as a full record took hundreds of MB before any image work started. Each
+    # game's record is loaded when a worker gets to it.
+    games = []
+    Game.left_joins(:cover_attachment)
+        .where(active_storage_attachments: { id: nil })
+        .where.not(igdb_id: [nil, ""])
+        .in_batches(of: 5_000) { |batch| games.concat(batch.pluck(:id, :igdb_id)) }
 
     puts "Found #{games.count} games with an IGDB ID and no cover."
 
@@ -32,11 +34,9 @@ namespace :import do
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    # IGDB results indexed by slug, so the per-game lookup below is a constant
-    # time hit rather than a scan of every result fetched so far. The first
-    # result wins for any duplicated slug, matching the `Array#find` it
-    # replaces.
-    igdb_games_by_slug = {}
+    # Each IGDB cover URL, by slug. Only the URL is kept, not the rest of the
+    # API response. The first result wins for any duplicated slug.
+    cover_urls_by_slug = {}
 
     puts "Getting game information from IGDB..."
 
@@ -51,7 +51,7 @@ namespace :import do
     )
 
     games.in_groups_of(50, false) do |game_batch|
-      slugs = game_batch.pluck(:igdb_id)
+      slugs = game_batch.map(&:second)
 
       # This format is called APIcalypse and is specific to IGDB.
       # API Docs: https://api-docs.igdb.com/#game
@@ -83,8 +83,7 @@ namespace :import do
       end
 
       igdb_response.compact.each do |igdb_game|
-        slug = igdb_game['slug']
-        igdb_games_by_slug[slug] = igdb_game unless igdb_games_by_slug.key?(slug)
+        cover_urls_by_slug[igdb_game['slug']] ||= igdb_game.dig('cover', 'url')
       end
 
       # Advance by the number of games in this batch (the last group may be
@@ -100,10 +99,10 @@ namespace :import do
     # The fetch pass has told us which games IGDB actually returned a cover for;
     # drop the rest before the download pass. There's nothing to do for a game
     # with no IGDB cover, so keeping it only skews the progress bar's ETA and
-    # holds its record in memory. Reassigning games to the filtered subset lets
-    # the unmatched records be collected and removes the per-iteration nil check.
+    # holds it in memory. Reassigning games to the filtered subset lets the
+    # unmatched ones be collected and removes the per-iteration nil check.
     games_found_count = games.count
-    games = games.select { |game| igdb_games_by_slug.key?(game[:igdb_id]) }
+    games = games.select { |_id, slug| cover_urls_by_slug.key?(slug) }
     # Seed with the games IGDB had no cover for, so the final tally still counts
     # them; download errors add to it below.
     cover_not_found_or_errored_count = games_found_count - games.count
@@ -113,8 +112,10 @@ namespace :import do
     # several games are worked on at once. Set CONCURRENCY to change how many.
     # Each worker holds a database connection, and the pool defaults to
     # RAILS_MAX_THREADS (sized for Puma), so make sure it's big enough.
-    # Capped at 8, IGDB's limit on open requests.
-    concurrency = ENV.fetch('CONCURRENCY', 4).to_i.clamp(1, 8)
+    # Capped at 8, IGDB's limit on open requests. Defaults to 2 because this
+    # usually runs in the web server's container, and every worker resizing
+    # covers competes with it for CPU and memory.
+    concurrency = ENV.fetch('CONCURRENCY', 2).to_i.clamp(1, 8)
     db_config = ActiveRecord::Base.connection_db_config.configuration_hash
     pool_size = concurrency + 1
     ActiveRecord::Base.establish_connection(db_config.merge(pool: pool_size)) if db_config.fetch(:pool, 5).to_i < pool_size
@@ -186,7 +187,7 @@ namespace :import do
     #
     # Returns [added, messages]: whether the cover was added, and the lines to
     # log for it.
-    attach_cover = lambda do |game|
+    attach_cover = lambda do |game, cover_url|
       label = game[:name].ljust(40)
       # How long each step took, logged with the result so a slow run shows
       # where the time goes.
@@ -216,15 +217,12 @@ namespace :import do
           "#{text} [#{parts.join(', ')}]"
         end.join(', ')
       end
-      # Every remaining game has an IGDB cover (filtered above).
-      igdb_game = igdb_games_by_slug[game[:igdb_id]]
-
       # The cover URL comes out of the IGDB API response, so it's fetched
       # through RemoteImageFetcher, which refuses non-public addresses. This
       # also catches the case where the cover image doesn't actually exist.
       begin
         timed.call(:wait) { wait_for_turn.call }
-        cover = timed.call(:download) { RemoteImageFetcher.fetch(igdb_game.dig('cover', 'url')) }
+        cover = timed.call(:download) { RemoteImageFetcher.fetch(cover_url) }
       rescue RemoteImageFetcher::Error => e
         next [false, ["#{label} | Error: #{e}"]]
       end
@@ -273,7 +271,7 @@ namespace :import do
     end
 
     queue = Queue.new
-    games.each { |game| queue << game }
+    games.each { |pair| queue << pair }
     queue.close
     lock = Mutex.new
 
@@ -282,8 +280,14 @@ namespace :import do
         # PaperTrail's whodunnit is per thread.
         PaperTrail.request.whodunnit = 'system'
 
-        while (game = queue.pop)
-          added, messages = Rails.application.executor.wrap { attach_cover.call(game) }
+        while (pair = queue.pop)
+          game_id, slug = pair
+          added, messages = Rails.application.executor.wrap do
+            # Loaded now rather than up front (see above). A game deleted since
+            # the list was made is skipped.
+            game = Game.find_by(id: game_id)
+            game.nil? ? [false, ["Game #{game_id} | Skipped: it no longer exists."]] : attach_cover.call(game, cover_urls_by_slug.fetch(slug))
+          end
 
           lock.synchronize do
             messages.each { |msg| progress_bar.log msg }
