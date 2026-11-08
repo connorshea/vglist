@@ -139,13 +139,14 @@ jobs:
           curl -fsS http://127.0.0.1:8080/games/1 | grep -q '<div id="app">'
 
       # Hashed bundles are cached forever; HTML (including the SPA fallback
-      # for deep routes and missing assets) must be revalidated; unhashed
-      # public/ files get a short max-age. See frontend/Caddyfile.
+      # for deep routes) must be revalidated; a missing hashed asset is a
+      # 404 that must not be cached; unhashed public/ files get a short
+      # max-age. See frontend/Caddyfile.
       - name: Check Cache-Control headers
         run: |
           set -euo pipefail
           cache_control() {
-            curl -fsS -o /dev/null -D - "http://127.0.0.1:8080$1" \
+            curl -sS -o /dev/null -D - "http://127.0.0.1:8080$1" \
               | tr -d '\r' | grep -i '^cache-control:' | cut -d' ' -f2-
           }
           expect() {
@@ -156,11 +157,22 @@ jobs:
             fi
             echo "$1 -> $actual"
           }
+          expect_status() {
+            actual="$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:8080$1")"
+            if [ "$actual" != "$2" ]; then
+              echo "::error::$1: expected status $2, got $actual"
+              exit 1
+            fi
+          }
           asset="$(curl -fsS http://127.0.0.1:8080/ | grep -o '/assets/[^"]*\.js' | head -n1)"
           expect "$asset" "public, max-age=31536000, immutable"
           expect / "no-cache"
           expect /index.html "no-cache"
           expect /games/1 "no-cache"
-          expect /assets/does-not-exist.js "no-cache"
+          expect_status /assets/does-not-exist.js 404
+          expect /assets/does-not-exist.js "no-store"
+          for path in "$asset" / /index.html /games/1 /site.webmanifest /favicon-32.png; do
+            expect_status "$path" 200
+          done
           expect /site.webmanifest "public, max-age=86400"
           expect /favicon-32.png "public, max-age=86400"
