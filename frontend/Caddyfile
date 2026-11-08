@@ -78,10 +78,13 @@
 		#   style-src-attr keeps 'unsafe-inline' for Vue :style bindings.
 		# - base-uri 'none': the app never uses <base>.
 		# - worker-src 'none': no web workers or service workers.
+		# - connect-src allows only the Sentry ingest origin from the DSN
+		#   (SENTRY_INGEST_ORIGIN, e.g. https://o123.ingest.us.sentry.io),
+		#   falling back to any sentry.io subdomain when unset.
 		# - manifest-src 'self' is explicit for site.webmanifest.
 		# - No upgrade-insecure-requests: browsers ignore it (with a console
 		#   warning) in a report-only policy. Add it back when promoting.
-		Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'sha256-WFDtyQ8I111UJiy9VSzAQXXjXb4NUiZ9nrPyP63GEvU='; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; worker-src 'none'; manifest-src 'self'"
+		Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'sha256-WFDtyQ8I111UJiy9VSzAQXXjXb4NUiZ9nrPyP63GEvU='; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} {$SENTRY_INGEST_ORIGIN:https://*.sentry.io}; worker-src 'none'; manifest-src 'self'"
 	}
 
 	encode {
