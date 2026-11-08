@@ -67,6 +67,13 @@ Rails.application.configure do
   # GRAPHQL_OPERATION_ALLOWLIST=false to turn this off in an emergency.
   config.x.graphql_operation_allowlist = ENV['GRAPHQL_OPERATION_ALLOWLIST'] != 'false'
 
+  # Jobs run in-process on the async adapter. Its pool defaults to
+  # Concurrent.processor_count threads, which inside a container is the host's
+  # core count, not the instance's 1 vCPU. A page of covers without stored
+  # variants then queued a dozen ActiveStorage::TransformJobs (see
+  # ReadyVariant) that all ran at once, each taking 8-11 s, and starved the
+  # Puma threads serving requests. Run one job at a time per worker instead.
+  config.active_job.queue_adapter = ActiveJob::QueueAdapters::AsyncAdapter.new(max_threads: 1)
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "vglist_production"
