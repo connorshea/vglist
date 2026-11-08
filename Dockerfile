@@ -45,12 +45,15 @@ RUN apt-get update -qq && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
+# VIPS_CONCURRENCY: libvips otherwise starts one worker thread per host core,
+# not per vCPU the instance actually gets.
 ENV RAILS_ENV=production \
     RAILS_LOG_TO_STDOUT=1 \
     BUNDLE_DEPLOYMENT=1 \
     BUNDLE_PATH=/usr/local/bundle \
     BUNDLE_WITHOUT=development:test \
-    LD_PRELOAD=/usr/local/lib/libjemalloc.so
+    LD_PRELOAD=/usr/local/lib/libjemalloc.so \
+    VIPS_CONCURRENCY=1
 
 # ---------------------------------------------------------------------------
 # Build: compile native gems and precompile bootsnap caches.
