@@ -120,10 +120,24 @@ namespace :import do
         end
 
         # Attach the cover and get the filename from the last fragment of the URL.
-        # The downloaded tempfile is thrown away as soon as it's been attached,
-        # so an import doesn't accumulate one open file per game it processes.
+        # The downloaded tempfile is thrown away as soon as it's been attached
+        # and resized, so an import doesn't accumulate one open file per game it
+        # processes.
         begin
           game.cover.attach(io: cover.io, filename: cover.filename)
+
+          # Create each size of the cover now, from the file we already have.
+          # Otherwise the TransformJobs `preprocessed: true` queues run on the
+          # async adapter in this process and are dropped when the task exits,
+          # and the sizes end up being created on the web server the first time
+          # a page shows the cover (see ReadyVariant). An invalid cover is
+          # never saved, so there's nothing to resize.
+          begin
+            saved = game.errors.empty? && game.reload.cover.attached?
+            VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) if saved
+          rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+            progress_bar.log "Added cover for #{game[:name]}, but its sizes could not be created: #{e.message}"
+          end
         ensure
           cover.close
         end

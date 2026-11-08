@@ -68,6 +68,48 @@ RSpec.describe StorageCleanupService, type: :service do
     end
   end
 
+  describe '.each_stale_variant_record' do
+    def stale_records
+      described_class.each_stale_variant_record(Game, :cover, Game::COVER_SIZES.keys).to_a
+    end
+
+    it 'finds variants that are not one of the current sizes' do
+      game = create(:game, :cover)
+      current = game.cover.variant(:small).processed.send(:record)
+      stale = game.cover.variant(resize_to_limit: [10, 10]).processed.send(:record)
+
+      expect(stale_records).to contain_exactly(stale)
+      expect(stale_records).not_to include(current)
+    end
+
+    it 'leaves a cover with only the current sizes alone' do
+      game = create(:game, :cover)
+      Game::COVER_SIZES.each_key { |name| game.cover.variant(name).processed }
+
+      expect(stale_records).to be_empty
+    end
+
+    it "only looks at the given model's attachment" do
+      user = create(:user, :avatar)
+      user.avatar.variant(resize_to_fill: [10, 10]).processed
+
+      expect(stale_records).to be_empty
+      expect(described_class.each_stale_variant_record(User, :avatar, User::AVATAR_SIZES.keys).count).to eq(1)
+    end
+
+    it "removes a stale variant's file when it's destroyed" do
+      game = create(:game, :cover)
+      Game::COVER_SIZES.each_key { |name| game.cover.variant(name).processed }
+      stale_blob = game.cover.variant(resize_to_limit: [10, 10]).processed.image.blob
+
+      described_class.with_inline_jobs { stale_records.each(&:destroy!) }
+
+      expect(stale_blob.service.exist?(stale_blob.key)).to be(false)
+      expect(ActiveStorage::Blob.exists?(stale_blob.id)).to be(false)
+      expect(game.reload.cover.blob.variant_records.count).to eq(Game::COVER_SIZES.size)
+    end
+  end
+
   describe '.with_inline_jobs' do
     it "purges a deleted game's cover along with its variants' files" do
       game = create(:game, :cover)

@@ -6,7 +6,8 @@
 # `preprocessed: true` variants on Game and User.
 #
 # Safe to stop and re-run: images that already have every variant are
-# skipped. Most of the time goes to downloading and uploading images, so it
+# skipped (without downloading them), though the progress bar still counts
+# them. Most of the time goes to downloading and uploading images, so it
 # works on several at a time; set CONCURRENCY to change how many (default 6).
 # The task gives itself a database pool big enough for that many threads, so
 # it isn't capped by RAILS_MAX_THREADS (3 on App Platform). Each thread holds
@@ -16,17 +17,20 @@
 namespace 'active_storage:vglist:variants' do
   require 'ruby-progressbar'
 
-  # Records of `model` whose `attachment_name` is a resizable image that is
-  # missing at least one of `variant_count` variants.
-  variants_missing = lambda do |model, attachment_name, variant_count|
+  # Records of `model` whose `attachment_name` is a resizable image.
+  #
+  # This deliberately doesn't try to skip images that already have their
+  # variants in SQL. Counting an image's variant records isn't enough: images
+  # resized under older size definitions still have those stale records, so an
+  # image can have three or more of them and none of the current sizes. Which
+  # sizes are missing depends on each variation's digest, which includes the
+  # output format derived from the blob's filename, so VariantBackfillService
+  # works it out per image (from the preloaded records, without a download)
+  # and skips the ones that are already complete.
+  variable_attachments = lambda do |model, attachment_name|
     model.joins(:"#{attachment_name}_attachment")
          .joins("JOIN active_storage_blobs ON active_storage_blobs.id = active_storage_attachments.blob_id")
          .where(active_storage_blobs: { content_type: ActiveStorage.variable_content_types })
-         .where("(
-           SELECT COUNT(*)
-           FROM active_storage_variant_records
-           WHERE blob_id = active_storage_blobs.id
-         ) < ?", variant_count)
          .preload("#{attachment_name}_attachment": { blob: :variant_records })
   end
 
@@ -41,7 +45,7 @@ namespace 'active_storage:vglist:variants' do
   end
 
   backfill = lambda do |model, attachment_name, variant_names|
-    records = variants_missing.call(model, attachment_name, variant_names.size)
+    records = variable_attachments.call(model, attachment_name)
     concurrency = ENV.fetch('CONCURRENCY', 6).to_i.clamp(1, 16)
     ensure_pool_size.call(concurrency + 1)
 

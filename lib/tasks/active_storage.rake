@@ -63,6 +63,30 @@ namespace 'active_storage:vglist:clean' do
     puts "Purged all orphan ActiveStorage::Blobs."
   end
 
+  desc "Remove cover and avatar variants (and their files) that aren't one of the current sizes."
+  task stale_variants: :environment do
+    [
+      [Game, :cover, Game::COVER_SIZES.keys],
+      [User, :avatar, User::AVATAR_SIZES.keys]
+    ].each do |model, attachment_name, variant_names|
+      label = "#{model.name.downcase} #{attachment_name}"
+      count = 0
+      bytes = 0
+
+      # Destroying a variant record purges its image, inline so the files
+      # are gone before the task exits.
+      StorageCleanupService.with_inline_jobs do
+        StorageCleanupService.each_stale_variant_record(model, attachment_name, variant_names) do |variant_record|
+          count += 1
+          bytes += variant_record.image.blob.byte_size if variant_record.image.attached?
+          variant_record.destroy! unless dry_run.call
+        end
+      end
+
+      puts "#{dry_run.call ? 'Found' : 'Removed'} #{count} stale #{label} variants, total size #{megabytes.call(bytes)} MB."
+    end
+  end
+
   desc "Remove files in the storage bucket that no blob points to."
   task orphan_files: :environment do
     service = ActiveStorage::Blob.service
@@ -101,6 +125,7 @@ namespace 'active_storage:vglist:clean' do
     # record to exist.
     Rake::Task['active_storage:vglist:clean:orphan_attachments'].invoke
     Rake::Task['active_storage:vglist:clean:bad_content_types'].invoke
+    Rake::Task['active_storage:vglist:clean:stale_variants'].invoke
     Rake::Task['active_storage:vglist:clean:orphan_blobs'].invoke
     Rake::Task['active_storage:vglist:clean:orphan_files'].invoke
   end
