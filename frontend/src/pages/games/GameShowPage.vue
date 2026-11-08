@@ -85,7 +85,7 @@
         <div class="game-hero-inner">
           <div class="game-hero-cover">
             <!-- Covers keep their own shape (square, 16:9, …) in a fixed-width column. -->
-            <img v-if="game.coverUrl" :src="game.coverUrl" :alt="`Cover for ${game.name}`" />
+            <img v-if="game.coverUrl" :src="game.coverUrl" :alt="`Cover for ${game.name}`" fetchpriority="high" />
             <div v-else class="game-cover-placeholder" aria-hidden="true">
               <span>{{ gameInitials }}</span>
             </div>
