@@ -144,6 +144,29 @@ RSpec.describe "UpdateGameInLibrary Mutation API", type: :request do
       )
     end
 
+    it "clears the comments when they are sent as null" do
+      game_purchase = create(:game_purchase, game: game, user: user, comments: "Pretty good")
+      query = <<-GRAPHQL
+        mutation($id: ID!) {
+          updateGameInLibrary(gamePurchaseId: $id, completionStatus: COMPLETED, comments: null) {
+            gamePurchase {
+              completionStatus
+              comments
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query, variables: { id: game_purchase.id }, token: access_token)
+
+      expect(result.graphql_dig(:update_game_in_library, :game_purchase)).to eq(
+        {
+          completionStatus: "COMPLETED",
+          comments: ""
+        }
+      )
+    end
+
     it "correctly overrides other data" do
       game_purchase2
 

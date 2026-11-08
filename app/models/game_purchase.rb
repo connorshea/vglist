@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class GamePurchase < ApplicationRecord
+  # The comments column is NOT NULL with an empty-string default, but clients
+  # clear the review by sending null, so store that as an empty string.
+  before_validation { self.comments = '' if comments.nil? }
+
   after_create :game_purchase_create
   after_update :game_purchase_update
   after_destroy :game_purchase_destroy
