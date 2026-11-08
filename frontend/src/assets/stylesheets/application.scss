@@ -203,37 +203,6 @@
   }
 }
 
-/* ── View Transitions (search bar morph) ── */
-::view-transition-old(search-bar),
-::view-transition-new(search-bar) {
-  animation-duration: 0.3s;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.25s;
-}
-
-/*
- * Browsers leave backdrop-filter out of the page snapshots that the root
- * crossfade blends, so crossfading into the search overlay showed a dimmed but
- * sharp page and then snapped to the blur once the transition ended. Skip the
- * crossfade and let the overlay animate its own blur on the live page instead.
- */
-.search-view-transition::view-transition-old(root),
-.search-view-transition::view-transition-new(root) {
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
 nav.navbar {
   background: var(--color-navbar-bg);
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
