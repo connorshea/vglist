@@ -146,6 +146,16 @@ namespace :import do
     # log for it.
     attach_cover = lambda do |game|
       label = game[:name].ljust(40)
+      # How long each step took, logged with the result so a slow run shows
+      # where the time goes.
+      timings = {}
+      timed = lambda do |step, &block|
+        started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        block.call
+      ensure
+        timings[step] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+      end
+      timings_text = -> { timings.map { |step, seconds| "#{step} #{seconds.round(2)}s" }.join(', ') }
       # Every remaining game has an IGDB cover (filtered above).
       igdb_game = igdb_games_by_slug[game[:igdb_id]]
 
@@ -153,8 +163,8 @@ namespace :import do
       # through RemoteImageFetcher, which refuses non-public addresses. This
       # also catches the case where the cover image doesn't actually exist.
       begin
-        wait_for_turn.call
-        cover = RemoteImageFetcher.fetch(igdb_game.dig('cover', 'url'))
+        timed.call(:wait) { wait_for_turn.call }
+        cover = timed.call(:download) { RemoteImageFetcher.fetch(igdb_game.dig('cover', 'url')) }
       rescue RemoteImageFetcher::Error => e
         next [false, ["#{label} | Error: #{e}"]]
       end
@@ -173,11 +183,13 @@ namespace :import do
         end
 
         # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
-        game.cover.attach(
-          io: cover.io,
-          filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
-          metadata: metadata
-        )
+        timed.call(:save) do
+          game.cover.attach(
+            io: cover.io,
+            filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
+            metadata: metadata
+          )
+        end
 
         # If the cover has any errors, they'll show up on the `Game` record.
         errors = game.errors.full_messages.map { |msg| "#{label} | Cover could not be added: #{msg}" }
@@ -192,12 +204,12 @@ namespace :import do
         # queues: those run on the async adapter in this process and are
         # dropped if the task exits first. When they do run, they find the
         # variants already exist and do nothing.
-        VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io)
+        timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
       ensure
         cover.close
       end
 
-      [true, ["#{label} | Cover added successfully."]]
+      [true, ["#{label} | Cover added successfully (#{timings_text.call})."]]
     end
 
     queue = Queue.new
