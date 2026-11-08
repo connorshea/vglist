@@ -30,9 +30,10 @@ module CachedRowCount
 
   class_methods do
     # @return [Integer] The number of rows in this model's table, as of at most
-    #   EXPIRES_IN ago.
+    #   EXPIRES_IN ago. Unscoped, so a default scope or an enclosing `scoping`
+    #   block can't cache a partial count under the whole-table key.
     def cached_row_count
-      Rails.cache.fetch("row_count/#{table_name}", expires_in: EXPIRES_IN) { count }
+      Rails.cache.fetch("row_count/#{table_name}", expires_in: EXPIRES_IN) { unscoped.count }
     end
   end
 end
