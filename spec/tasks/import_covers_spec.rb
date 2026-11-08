@@ -118,8 +118,8 @@ RSpec.describe 'import:pcgamingwiki:covers', type: :task do
     expect(game.cover.byte_size).to eq(png.bytesize)
   end
 
-  # Left to the TransformJobs `preprocessed: true` queues, they'd be dropped
-  # when the task exits and then created on the web server instead.
+  # Left to TransformJobs, they'd be dropped when the task exits and then
+  # created on the web server instead.
   it 'creates every size of the cover from the download' do
     allow(Addrinfo).to receive(:getaddrinfo).and_return([Addrinfo.ip('93.184.216.34')])
     game = create(:game, pcgamingwiki_id: 'Some_Game')

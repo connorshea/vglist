@@ -3,7 +3,7 @@
 # Creates the named variants (small/medium/large) for every existing game cover
 # and user avatar that doesn't have them yet, so nobody has to wait for one to
 # be generated mid-request. New uploads get theirs in the background, see the
-# `preprocessed: true` variants on Game and User.
+# `preprocessed:` option on the variants in Game and User.
 #
 # Safe to stop and re-run: images that already have every variant are
 # skipped (without downloading them), though the progress bar still counts
