@@ -24,13 +24,15 @@ module Resolvers
         # relationship being removed. Filter the followed users through the
         # same visibility rule the UserPolicy applies, so the feed can't leak
         # events the policy would withhold.
-        user_ids = current_user.following.visible_to(current_user).select(:id)
-        # Build the OR relation first with matching structure on both sides
-        # (no includes/order), otherwise ActiveRecord raises ArgumentError:
-        # "Relation passed to #or must be structurally compatible". Then
-        # layer the includes/order on top of the combined relation.
-        Views::NewEvent.where(user_id: user_ids)
-                       .or(Views::NewEvent.where(user_id: current_user.id))
+        #
+        # The IDs are plucked rather than passed as a subquery on purpose.
+        # With a subquery Postgres can't estimate how many events match, so
+        # it walks the created_at index and filters, which reads most of the
+        # events table when the user follows a few quiet accounts. With
+        # literal IDs it picks the (user_id, created_at) index for small
+        # follow lists and the created_at index for large ones.
+        user_ids = current_user.following.visible_to(current_user).pluck(:id)
+        Views::NewEvent.where(user_id: [current_user.id, *user_ids])
                        .includes(user: AttachmentPreloads::AVATAR)
                        .recently_created
       end
