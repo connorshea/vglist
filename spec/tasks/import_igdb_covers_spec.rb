@@ -30,6 +30,7 @@ RSpec.describe 'import:igdb:covers', type: :task do
     # Keep the pool as-is, so the task doesn't reconnect out from under the
     # spec's transaction.
     with_environment('CONCURRENCY' => '2') { Rake::Task['import:igdb:covers'].invoke }
+    $stdout.string
   ensure
     $stdout = original
   end
@@ -64,7 +65,7 @@ RSpec.describe 'import:igdb:covers', type: :task do
 
     run_task
 
-    expect(logged.join("\n")).to match(/save [\d.]+s \[validate [\d.]+s \(spoof check [\d.]+s\)/)
+    expect(logged.join("\n")).to match(/save [\d.]+s \(cpu [\d.]+s\) \[validate [\d.]+s \(spoof check [\d.]+s\)/)
     expect(Game._validation_callbacks.count).to eq(callbacks_before)
   end
 
@@ -104,6 +105,15 @@ RSpec.describe 'import:igdb:covers', type: :task do
         other_game.cover.attach(io: StringIO.new(jpeg), filename: 'cover.jpg', content_type: 'image/jpeg')
       end.to have_enqueued_job(ActiveStorage::TransformJob).exactly(Game::COVER_SIZES.size).times
     end
+  end
+
+  it "ends with the download pass's CPU and GC totals" do
+    games = Array.new(2) { |i| create(:game, igdb_id: "game-#{i}") }
+    stub_igdb(games.map(&:igdb_id))
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+
+    expect(run_task).to match(/Download pass: 2 games in [\d.]+s, using [\d.]+s of CPU \([\d.]+s per game\), [\d.]+s of it in GC \(\d+ major and \d+ minor collections\)\./)
   end
 
   it 'only asks IGDB about games that have an IGDB ID and no cover' do
