@@ -114,6 +114,30 @@ describe("GameLibraryForm replay count", () => {
   });
 });
 
+describe("GameLibraryForm hours played", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue({});
+  });
+
+  it("blocks saving hours past what the server can store", async () => {
+    const wrapper = await mountForm(null);
+    const input = wrapper.find<HTMLInputElement>("#form-hours-played");
+    expect(input.attributes("max")).toBe("999999999.9");
+
+    await input.setValue("99999999999");
+    expect(wrapper.find(".form-date-error").text()).toBe("Hours played can't be more than 999,999,999.9.");
+    expect(wrapper.find(".form-btn-save").attributes("disabled")).toBeDefined();
+
+    await input.setValue("999999999.9");
+    expect(wrapper.find(".form-date-error").exists()).toBeFalsy();
+    await wrapper.find(".form-btn-save").trigger("click");
+    await flushPromises();
+    expect(variablesFor(ADD_GAME_TO_LIBRARY)).toMatchObject({ hoursPlayed: 999999999.9 });
+  });
+});
+
 describe("GameLibraryForm status and date defaults", () => {
   beforeEach(() => {
     localStorage.clear();
