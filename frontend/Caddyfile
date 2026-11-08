@@ -122,7 +122,18 @@
 		route {
 			# SPA fallback — unknown paths serve index.html so Vue Router can
 			# handle client-side routing.
-			try_files {path} {path}.html {path}/index.html /index.html
+			#
+			# Not for /assets/*: a missing hashed chunk means a tab is still
+			# running the previous deploy. Answering with index.html (200,
+			# text/html) made the module import fail on its MIME type instead,
+			# and a real 404 is the honest answer. Either way the router sees a
+			# failed import and reloads the page (src/utils/chunk-reload.ts).
+			# This is what `try_files` expands to, which takes no matcher.
+			@spa_route {
+				not path /assets/*
+				file {path} {path}.html {path}/index.html /index.html
+			}
+			rewrite @spa_route {file_match.relative}
 
 			# Cache-Control. Without it, browsers fall back to heuristic
 			# caching and keep revalidating the hashed bundles.
@@ -133,16 +144,27 @@
 			#   opensearch.xml, robots.txt) keep their URL across deploys,
 			#   so cache them briefly.
 			# - Everything else is HTML (index.html, the SPA fallback for
-			#   deep routes and missing /assets/* files, the error pages),
-			#   which must be revalidated so a deploy picks up the new
-			#   bundle names. ETag/Last-Modified keep that a cheap 304.
-			@hashed_asset path /assets/*
+			#   deep routes, the error pages), which must be revalidated so a
+			#   deploy picks up the new bundle names. ETag/Last-Modified keep
+			#   that a cheap 304.
+			# - A missing /assets/* file 404s with no-store. During a rolling
+			#   deploy an old container can briefly be asked for a new chunk,
+			#   and a 404 cached for a year would break that URL for good.
+			@hashed_asset {
+				path /assets/*
+				file
+			}
+			@missing_asset {
+				path /assets/*
+				not file
+			}
 			@public_static {
 				not path /assets/*
 				path *.png *.svg *.ico *.webmanifest *.xml *.txt
 			}
 			@html not path /assets/* *.png *.svg *.ico *.webmanifest *.xml *.txt
 			header @hashed_asset Cache-Control "public, max-age=31536000, immutable"
+			header @missing_asset Cache-Control "no-store"
 			header @public_static Cache-Control "public, max-age=86400"
 			header @html Cache-Control "no-cache"
 
