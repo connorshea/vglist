@@ -517,7 +517,7 @@ const performSearch = debounce(async () => {
       loading.value = false;
     }
   }
-}, 250);
+}, 500);
 
 function onSearch() {
   performSearch();
