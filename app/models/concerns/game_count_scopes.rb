@@ -16,13 +16,17 @@ module GameCountScopes
     # @param games_count_sql [String] SQL for one record's game count: its
     #   counter cache column (e.g. `genres.games_count`), or a correlated
     #   subquery that counts them.
-    def game_count_scopes(games_count_sql)
+    # @param with_games_count [Boolean] Whether to define `with_games_count`.
+    #   Only for a subquery count; models with a games_count column read it
+    #   directly.
+    def game_count_scopes(games_count_sql, with_games_count: false)
       table = table_name
 
-      # Loads each record's game count as `index_games_count`, for lists that
-      # show it on every row. Only needed when the count is a subquery; models
-      # with a games_count column can read that directly.
-      scope :with_games_count, -> { select("#{table}.*", "#{games_count_sql} AS index_games_count") }
+      if with_games_count
+        # Loads each record's game count as `index_games_count`, for lists
+        # that show it on every row.
+        scope :with_games_count, -> { select("#{table}.*", "#{games_count_sql} AS index_games_count") }
+      end
 
       # Each order ends on the ID so that pagination is stable across ties.
       scope :most_games, -> { order(Arel.sql("#{games_count_sql} DESC, #{table}.id ASC")) }
