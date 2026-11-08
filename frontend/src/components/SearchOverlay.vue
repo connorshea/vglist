@@ -916,6 +916,7 @@ function releaseYear(date: string): string {
 .category-icon {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
   color: var(--s-100);
 }
 
