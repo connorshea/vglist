@@ -79,7 +79,7 @@
       <h3 class="hero-panel-label">Find it on</h3>
       <div class="hero-tags">
         <a
-          v-for="link in visibleLinks"
+          v-for="link in externalLinks"
           :key="link.label"
           class="hero-tag"
           :href="link.url"
@@ -88,22 +88,13 @@
         >
           {{ link.label }}
         </a>
-        <button
-          v-if="hiddenLinkCount > 0"
-          type="button"
-          class="hero-tag-more"
-          :aria-expanded="showAllLinks"
-          @click="showAllLinks = true"
-        >
-          +{{ hiddenLinkCount }} more
-        </button>
       </div>
     </template>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import type { GamePurchaseCompletionStatus } from "@/types/graphql";
 import { formatHours, libraryStatus } from "@/utils/library";
 import UserAvatar from "@/components/game/UserAvatar.vue";
@@ -156,16 +147,6 @@ const entrySummary = computed(() => {
   }
   return parts.length ? parts.join(" · ") : "In library";
 });
-
-const LINK_LIMIT = 4;
-const showAllLinks = ref(false);
-// Showing three and "+1 more" would take the same room as all four.
-const visibleLinks = computed(() =>
-  showAllLinks.value || props.externalLinks.length <= LINK_LIMIT
-    ? props.externalLinks
-    : props.externalLinks.slice(0, LINK_LIMIT - 1)
-);
-const hiddenLinkCount = computed(() => props.externalLinks.length - visibleLinks.value.length);
 </script>
 
 <style scoped>
@@ -253,7 +234,6 @@ const hiddenLinkCount = computed(() => props.externalLinks.length - visibleLinks
 
 .hero-panel-you:focus-visible,
 .hero-tag:focus-visible,
-.hero-tag-more:focus-visible,
 .hero-avatars a:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
@@ -370,29 +350,6 @@ const hiddenLinkCount = computed(() => props.externalLinks.length - visibleLinks
 
 .hero-tag:hover {
   background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-}
-
-.hero-tag-more {
-  display: inline-block;
-  align-content: center;
-  height: 28px;
-  text-box: trim-both cap alphabetic;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 6px;
-  /* An inset ring rather than a border, so the box stays 28px like the chips. */
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-  background: none;
-  color: rgba(255, 255, 255, 0.85);
-  font: inherit;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.hero-tag-more:hover {
-  background: rgba(255, 255, 255, 0.12);
   color: #fff;
 }
 
