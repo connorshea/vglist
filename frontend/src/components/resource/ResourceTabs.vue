@@ -35,7 +35,13 @@ defineProps<{
 .res-tabs {
   display: flex;
   margin-top: 1.75rem;
+  /* The bar, not each tab, overlaps the header's bottom border, so the active
+     underline still sits on it. A tab with its own negative margin would hang
+     1px below the bar, and since overflow-x: auto makes overflow-y auto too,
+     the bar could then be scrolled vertically. */
+  margin-bottom: -1px;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .res-tab {
@@ -47,8 +53,6 @@ defineProps<{
   white-space: nowrap;
   color: var(--color-text-secondary);
   border-bottom: 2px solid transparent;
-  /* Sits on top of the header's bottom border. */
-  margin-bottom: -1px;
 }
 
 .res-tab:hover {
