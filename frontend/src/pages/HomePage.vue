@@ -384,7 +384,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-<style scoped>
 /* ── Hero section ── */
 .home-section.hero {
   overflow: hidden;
