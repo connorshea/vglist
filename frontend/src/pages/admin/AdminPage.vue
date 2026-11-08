@@ -118,7 +118,11 @@ async function downloadGamesExport() {
 .admin-tabs {
   display: flex;
   overflow-x: auto;
-  border-bottom: 1px solid var(--color-border);
+  overflow-y: hidden;
+  /* The baseline is an inset shadow rather than a border so the active tab's
+     underline can sit on it without a negative margin. That margin made the
+     tabs 1px taller than the bar, which let the bar scroll vertically. */
+  box-shadow: inset 0 -1px 0 var(--color-border);
   margin-bottom: 1.75rem;
 }
 
@@ -128,8 +132,6 @@ async function downloadGamesExport() {
   white-space: nowrap;
   color: var(--color-text-secondary);
   border-bottom: 2px solid transparent;
-  /* Sits on top of the nav's bottom border. */
-  margin-bottom: -1px;
 }
 
 .admin-tab:hover {
