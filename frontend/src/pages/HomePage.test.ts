@@ -224,7 +224,6 @@ describe("HomePage", () => {
     const images: HTMLImageElement[] = [];
     class FakeImage extends EventTarget {
       fetchPriority = "auto";
-      decoding = "auto";
       src = "";
       constructor() {
         super();
@@ -242,7 +241,7 @@ describe("HomePage", () => {
     try {
       const wrapper = await mountPage();
       expect(images.map((img) => img.src).sort()).toEqual([1, 2, 3, 4].map((n) => `https://files.example/${n}.jpg`));
-      expect(images.every((img) => img.fetchPriority === "low" && img.decoding === "async")).toBeTruthy();
+      expect(images.every((img) => img.fetchPriority === "low")).toBeTruthy();
       // Nothing points at a cover until its download finishes, so the
       // stylesheet never starts a second, normal priority request.
       expect(wrapper.find(".cover-mosaic").html()).not.toContain("files.example");

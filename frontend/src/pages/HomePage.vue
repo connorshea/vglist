@@ -379,7 +379,6 @@ watch(
     for (const url of uniqueUrls) {
       const img = new Image();
       img.fetchPriority = "low";
-      img.decoding = "async";
       const onDone = (ok: boolean) => {
         if (ok) {
           loadedCoverUrls.value.push(url);
