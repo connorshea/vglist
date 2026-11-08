@@ -139,13 +139,21 @@ const statusClass = computed(() => libraryStatus(props.entry?.completionStatus)?
 // "Completed · rated 92 · 41h", or "In library" when there's nothing else to say.
 const entrySummary = computed(() => {
   const entry = props.entry;
-  if (!entry) return "";
+  if (!entry) {
+    return "";
+  }
   const parts: string[] = [];
   const status = libraryStatus(entry.completionStatus);
-  if (status) parts.push(status.label);
-  if (entry.rating !== null) parts.push(`rated ${entry.rating}`);
+  if (status) {
+    parts.push(status.label);
+  }
+  if (entry.rating !== null) {
+    parts.push(`rated ${entry.rating}`);
+  }
   const hours = formatHours(entry.hoursPlayed);
-  if (hours) parts.push(hours);
+  if (hours) {
+    parts.push(hours);
+  }
   return parts.length ? parts.join(" · ") : "In library";
 });
 

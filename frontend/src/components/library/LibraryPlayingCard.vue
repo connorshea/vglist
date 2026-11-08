@@ -35,8 +35,12 @@ const where = computed(() =>
 const progress = computed(() => {
   const parts: string[] = [];
   const hours = props.hideHours ? null : formatHours(props.purchase.hoursPlayed);
-  if (hours) parts.push(hours);
-  if (props.purchase.startDate) parts.push(`started ${formatStartDate(props.purchase.startDate)}`);
+  if (hours) {
+    parts.push(hours);
+  }
+  if (props.purchase.startDate) {
+    parts.push(`started ${formatStartDate(props.purchase.startDate)}`);
+  }
   return parts.join(" · ");
 });
 </script>

@@ -268,7 +268,9 @@ function updateIsPhone() {
 }
 
 onMounted(() => {
-  if (typeof window.matchMedia !== "function") return;
+  if (typeof window.matchMedia !== "function") {
+    return;
+  }
   phoneMedia = window.matchMedia(PHONE_QUERY);
   updateIsPhone();
   phoneMedia.addEventListener("change", updateIsPhone);
@@ -299,7 +301,9 @@ const statusCounts = computed(() => {
     counts[key] = count;
     counted += count;
   }
-  if (gamesCount.value > counted) counts[NO_STATUS.key] = gamesCount.value - counted;
+  if (gamesCount.value > counted) {
+    counts[NO_STATUS.key] = gamesCount.value - counted;
+  }
   return counts;
 });
 
@@ -339,7 +343,9 @@ const statusFilters = computed<readonly LibraryStatus<LibraryStatusFilter>[]>(()
 );
 
 function setStatus(value: LibraryStatusFilter | null) {
-  if (value === status.value) return;
+  if (value === status.value) {
+    return;
+  }
   updateQuery({ status: value }, { push: true });
 }
 
@@ -379,7 +385,9 @@ const search = ref(searchQuery.value);
 const commitSearch = debounce((value: string) => updateQuery({ q: value.trim() || null }), 300);
 watch(search, (value) => commitSearch(value));
 watch(searchQuery, (value) => {
-  if (value !== search.value.trim()) search.value = value;
+  if (value !== search.value.trim()) {
+    search.value = value;
+  }
 });
 onBeforeUnmount(() => commitSearch.cancel());
 
@@ -506,10 +514,14 @@ const showSkeleton = computed(
 
 async function loadMoreGames() {
   const cursor = gamesConnection.value?.pageInfo.endCursor;
-  if (!gamesHasNextPage.value || gamesLoading.value || !cursor) return;
+  if (!gamesHasNextPage.value || gamesLoading.value || !cursor) {
+    return;
+  }
 
   await fetchMoreGames({ ...gamesVariables.value, after: cursor }, (prev, next) => {
-    if (!prev.user || !next.user) return next;
+    if (!prev.user || !next.user) {
+      return next;
+    }
     return {
       ...next,
       user: {

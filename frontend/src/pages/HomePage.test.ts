@@ -26,7 +26,9 @@ vi.mock("@/composables/useSearchOverlay", () => ({
 
 function operationName(document: DocumentNode): string {
   for (const definition of document.definitions) {
-    if (definition.kind === "OperationDefinition" && definition.name) return definition.name.value;
+    if (definition.kind === "OperationDefinition" && definition.name) {
+      return definition.name.value;
+    }
   }
   return "";
 }
@@ -155,7 +157,9 @@ describe("HomePage", () => {
     const offsetTop = vi.spyOn(HTMLElement.prototype, "offsetTop", "get").mockImplementation(function (
       this: HTMLElement
     ) {
-      if (!this.classList.contains("home-quick-link")) return 0;
+      if (!this.classList.contains("home-quick-link")) {
+        return 0;
+      }
       return Array.from(this.parentElement?.children ?? []).indexOf(this) < 4 ? 0 : 44;
     });
     try {
@@ -257,7 +261,9 @@ describe("HomePage", () => {
       await flushPromises();
       const html = wrapper.find(".cover-mosaic").html();
       expect(html).toContain(first.src);
-      for (const img of images.slice(1)) expect(html).not.toContain(img.src);
+      for (const img of images.slice(1)) {
+        expect(html).not.toContain(img.src);
+      }
     } finally {
       vi.unstubAllGlobals();
     }
@@ -292,7 +298,9 @@ describe("HomePage", () => {
       images[0].dispatchEvent(new Event("load"));
       await flushPromises();
       expect(wrapper.find(".cover-mosaic").html()).toContain("files.example/1.jpg");
-      for (const face of flipping) expect(face.attributes("style") ?? "").not.toContain("files.example");
+      for (const face of flipping) {
+        expect(face.attributes("style") ?? "").not.toContain("files.example");
+      }
     } finally {
       vi.useRealTimers();
       vi.restoreAllMocks();

@@ -59,10 +59,14 @@ const tiles = computed<LibraryGamePurchaseFieldsFragment[]>(() =>
 
 async function loadMore() {
   const cursor = connection.value?.pageInfo.endCursor;
-  if (!hasNextPage.value || loading.value || !cursor) return;
+  if (!hasNextPage.value || loading.value || !cursor) {
+    return;
+  }
 
   await fetchMore({ ...variables.value, after: cursor }, (prev, next) => {
-    if (!prev.user || !next.user) return next;
+    if (!prev.user || !next.user) {
+      return next;
+    }
     return {
       ...next,
       user: {

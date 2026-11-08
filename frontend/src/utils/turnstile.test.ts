@@ -9,7 +9,9 @@ const fakeApi: TurnstileApi = { render: () => "id", reset: () => {}, remove: () 
 
 describe("loadTurnstile", () => {
   afterEach(() => {
-    for (const script of injectedScripts()) script.remove();
+    for (const script of injectedScripts()) {
+      script.remove();
+    }
     delete window.turnstile;
     resetTurnstileLoaderForTests();
   });

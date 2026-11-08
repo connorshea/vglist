@@ -75,7 +75,9 @@ export function useAuth() {
     try {
       response = await startAuthentication({ optionsJSON, useBrowserAutofill });
     } catch (e) {
-      if (isPasskeyCancellation(e)) return { status: "cancelled" };
+      if (isPasskeyCancellation(e)) {
+        return { status: "cancelled" };
+      }
       return { status: "error", stage: "browser", errors: ["Your browser couldn't use a passkey. Please try again."] };
     }
 

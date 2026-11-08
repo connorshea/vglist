@@ -67,11 +67,15 @@ watch(
 );
 
 watch(isOpen, (open) => {
-  if (!open) openedByHover.value = false;
+  if (!open) {
+    openedByHover.value = false;
+  }
 });
 
 function onMouseEnter() {
-  if (isOpen.value) return;
+  if (isOpen.value) {
+    return;
+  }
   isOpen.value = true;
   openedByHover.value = true;
 }
@@ -102,7 +106,9 @@ async function openAndFocus(which: "first" | "last") {
 
 function moveFocus(step: 1 | -1) {
   const all = items();
-  if (all.length === 0) return;
+  if (all.length === 0) {
+    return;
+  }
   const current = all.indexOf(document.activeElement as HTMLElement);
   const next = current === -1 ? 0 : (current + step + all.length) % all.length;
   all[next].focus();
@@ -113,24 +119,34 @@ function onKeydown(event: KeyboardEvent) {
 
   switch (event.key) {
     case "Escape":
-      if (!isOpen.value) return;
+      if (!isOpen.value) {
+        return;
+      }
       event.preventDefault();
       isOpen.value = false;
       triggerEl.value?.focus();
       break;
     case "ArrowDown":
       event.preventDefault();
-      if (inMenu) moveFocus(1);
-      else void openAndFocus("first");
+      if (inMenu) {
+        moveFocus(1);
+      } else {
+        void openAndFocus("first");
+      }
       break;
     case "ArrowUp":
       event.preventDefault();
-      if (inMenu) moveFocus(-1);
-      else void openAndFocus("last");
+      if (inMenu) {
+        moveFocus(-1);
+      } else {
+        void openAndFocus("last");
+      }
       break;
     case "Home":
     case "End":
-      if (!inMenu) return;
+      if (!inMenu) {
+        return;
+      }
       event.preventDefault();
       void openAndFocus(event.key === "Home" ? "first" : "last");
       break;
@@ -140,13 +156,17 @@ function onKeydown(event: KeyboardEvent) {
 // Close when focus moves somewhere outside the dropdown (e.g. Tab past the last item).
 function onFocusOut(event: FocusEvent) {
   const next = event.relatedTarget as Node | null;
-  if (next && rootEl.value?.contains(next)) return;
+  if (next && rootEl.value?.contains(next)) {
+    return;
+  }
   isOpen.value = false;
 }
 
 // Picking an item closes the menu, including links that open a new tab.
 function onMenuClick(event: MouseEvent) {
-  if ((event.target as HTMLElement).closest("a, button")) isOpen.value = false;
+  if ((event.target as HTMLElement).closest("a, button")) {
+    isOpen.value = false;
+  }
 }
 </script>
 

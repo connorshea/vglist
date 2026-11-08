@@ -25,8 +25,12 @@ export function extractGqlError(err: unknown): string {
     }
     return GENERIC_MESSAGE;
   }
-  if (err instanceof Error) return err.message || GENERIC_MESSAGE;
-  if (typeof err === "string" && err.length > 0) return err;
+  if (err instanceof Error) {
+    return err.message || GENERIC_MESSAGE;
+  }
+  if (typeof err === "string" && err.length > 0) {
+    return err;
+  }
   return GENERIC_MESSAGE;
 }
 

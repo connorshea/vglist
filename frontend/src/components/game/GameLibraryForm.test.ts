@@ -150,7 +150,9 @@ describe("GameLibraryForm status and date defaults", () => {
 
   function tile(wrapper: Awaited<ReturnType<typeof mountForm>>, label: string) {
     const found = wrapper.findAll(".form-tile").find((t) => t.text() === label);
-    if (!found) throw new Error(`no ${label} tile`);
+    if (!found) {
+      throw new Error(`no ${label} tile`);
+    }
     return found;
   }
 

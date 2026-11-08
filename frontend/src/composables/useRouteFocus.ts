@@ -24,9 +24,15 @@ export function focusMainContent(): void {
  */
 export function installRouteFocus(router: Router): void {
   router.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized, failure) => {
-    if (failure) return;
-    if (from.matched.length === 0) return;
-    if (to.path === from.path) return;
+    if (failure) {
+      return;
+    }
+    if (from.matched.length === 0) {
+      return;
+    }
+    if (to.path === from.path) {
+      return;
+    }
     void nextTick(focusMainContent);
   });
 }

@@ -92,9 +92,15 @@ describe("StoreListPage history", () => {
 
   it("makes each page a history entry and pages back with the start cursor", async () => {
     mockRequest.mockImplementation((_query, variables) => {
-      if (variables?.after === "cursor-1") return Promise.resolve(storesPage(["Humble"], "cursor-2", true));
-      if (variables?.after === "cursor-2") return Promise.resolve(storesPage(["itch.io"], "cursor-3", false));
-      if (variables?.before === "start-itch.io") return Promise.resolve(storesPage(["Humble"], "cursor-2", true));
+      if (variables?.after === "cursor-1") {
+        return Promise.resolve(storesPage(["Humble"], "cursor-2", true));
+      }
+      if (variables?.after === "cursor-2") {
+        return Promise.resolve(storesPage(["itch.io"], "cursor-3", false));
+      }
+      if (variables?.before === "start-itch.io") {
+        return Promise.resolve(storesPage(["Humble"], "cursor-2", true));
+      }
       return Promise.resolve(storesPage(["Steam", "GOG"], "cursor-1", true));
     });
 

@@ -48,9 +48,15 @@ const initials = computed(() =>
 // as separate fragments.
 const accessibleName = computed(() => {
   const parts = [props.name];
-  if (props.meta) parts.push(props.meta);
-  if (props.rating !== null) parts.push(`rated ${Math.round(props.rating)}`);
-  if (props.inLibrary) parts.push(`in your library: ${libraryBadgeLabel(props.completionStatus).toLowerCase()}`);
+  if (props.meta) {
+    parts.push(props.meta);
+  }
+  if (props.rating !== null) {
+    parts.push(`rated ${Math.round(props.rating)}`);
+  }
+  if (props.inLibrary) {
+    parts.push(`in your library: ${libraryBadgeLabel(props.completionStatus).toLowerCase()}`);
+  }
   return parts.join(", ");
 });
 </script>

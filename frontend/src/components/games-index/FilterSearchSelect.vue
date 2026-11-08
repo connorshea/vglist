@@ -113,13 +113,19 @@ async function runSearch(q: string) {
   const requestId = ++latestRequest;
   try {
     const data = await gqlClient.request(props.query, { query: q });
-    if (requestId !== latestRequest) return;
+    if (requestId !== latestRequest) {
+      return;
+    }
     options.value = props.resultNodes(data);
   } catch {
-    if (requestId !== latestRequest) return;
+    if (requestId !== latestRequest) {
+      return;
+    }
     options.value = [];
   } finally {
-    if (requestId === latestRequest) searching.value = false;
+    if (requestId === latestRequest) {
+      searching.value = false;
+    }
   }
 }
 
@@ -152,10 +158,14 @@ function onKeydown(e: KeyboardEvent) {
   if (e.key === "ArrowDown") {
     e.preventDefault();
     open.value = true;
-    if (highlightIndex.value < options.value.length - 1) highlightIndex.value++;
+    if (highlightIndex.value < options.value.length - 1) {
+      highlightIndex.value++;
+    }
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    if (highlightIndex.value > 0) highlightIndex.value--;
+    if (highlightIndex.value > 0) {
+      highlightIndex.value--;
+    }
   } else if (e.key === "Enter") {
     const option = options.value[highlightIndex.value];
     if (open.value && option) {

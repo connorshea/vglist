@@ -52,9 +52,15 @@ export function isLibrarySort(value: unknown): value is GamePurchaseSort {
 // The colour tier for a rating badge, matching the design system's
 // `r-great`/`r-good`/`r-ok`/`r-low` classes.
 export function ratingTier(rating: number): "r-great" | "r-good" | "r-ok" | "r-low" {
-  if (rating >= 90) return "r-great";
-  if (rating >= 75) return "r-good";
-  if (rating >= 60) return "r-ok";
+  if (rating >= 90) {
+    return "r-great";
+  }
+  if (rating >= 75) {
+    return "r-good";
+  }
+  if (rating >= 60) {
+    return "r-ok";
+  }
   return "r-low";
 }
 
@@ -70,7 +76,9 @@ export function gameInitials(name: string): string {
 
 // "31h", "2.5h", or null when there's nothing to show.
 export function formatHours(hours: number | null | undefined): string | null {
-  if (hours === null || hours === undefined || hours <= 0) return null;
+  if (hours === null || hours === undefined || hours <= 0) {
+    return null;
+  }
   return `${Number.isInteger(hours) ? hours : hours.toFixed(1)}h`;
 }
 
@@ -96,7 +104,9 @@ export function parseIdList(value: unknown): string[] {
 
 // A rating bound from the query string, or null if it's missing or invalid.
 export function parseRating(value: unknown): number | null {
-  if (typeof value !== "string" || !/^\d+$/.test(value)) return null;
+  if (typeof value !== "string" || !/^\d+$/.test(value)) {
+    return null;
+  }
   const rating = Number(value);
   return rating >= 0 && rating <= 100 ? rating : null;
 }

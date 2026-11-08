@@ -10,7 +10,9 @@ const PAGE_KEYS = ["page", "after", "before"] as const;
  */
 export function withoutPage(query: LocationQuery): LocationQuery {
   const next = { ...query };
-  for (const key of PAGE_KEYS) delete next[key];
+  for (const key of PAGE_KEYS) {
+    delete next[key];
+  }
   return next;
 }
 
@@ -33,7 +35,9 @@ export function useCursorPages(pageSize: number) {
   );
 
   const currentPage = computed(() => {
-    if (after.value === null && before.value === null) return 1;
+    if (after.value === null && before.value === null) {
+      return 1;
+    }
     const page = Number(route.query.page);
     return Number.isInteger(page) && page > 1 ? page : 2;
   });
@@ -45,12 +49,16 @@ export function useCursorPages(pageSize: number) {
   );
 
   function nextPage(endCursor: string | null | undefined) {
-    if (!endCursor) return;
+    if (!endCursor) {
+      return;
+    }
     void router.push({ query: { ...withoutPage(route.query), page: String(currentPage.value + 1), after: endCursor } });
   }
 
   function prevPage(startCursor: string | null | undefined) {
-    if (currentPage.value <= 1) return;
+    if (currentPage.value <= 1) {
+      return;
+    }
     // The first page is the list with no cursor, whichever way it's reached.
     if (currentPage.value === 2 || !startCursor) {
       void router.push({ query: withoutPage(route.query) });

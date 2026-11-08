@@ -26,7 +26,9 @@ async function search(term: string) {
   });
   await wrapper.setProps({ modelValue: true });
   const input = document.body.querySelector<HTMLInputElement>('input[type="search"]');
-  if (!input) throw new Error("no search input");
+  if (!input) {
+    throw new Error("no search input");
+  }
   input.value = term;
   input.dispatchEvent(new Event("input"));
   await vi.advanceTimersByTimeAsync(300);

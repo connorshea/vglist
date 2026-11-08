@@ -44,7 +44,9 @@ export function useImageColors(
       latestUrl = url ?? null;
       // A different owner (e.g. another game): drop the old colours now
       // rather than showing them until the new image has been sampled.
-      if (previous && key !== previous[1]) gradient.value = null;
+      if (previous && key !== previous[1]) {
+        gradient.value = null;
+      }
       if (!url) {
         gradient.value = null;
         return;
@@ -67,7 +69,9 @@ export function useImageColors(
     img.crossOrigin = "anonymous";
 
     img.addEventListener("load", () => {
-      if (url !== latestUrl) return;
+      if (url !== latestUrl) {
+        return;
+      }
       try {
         const colors = sampleDominantColors(img);
         gradient.value = colors.length >= 2 ? buildGradient(colors) : null;
@@ -80,7 +84,9 @@ export function useImageColors(
 
     // Network error or broken URL -- fall back to null.
     img.addEventListener("error", () => {
-      if (url !== latestUrl) return;
+      if (url !== latestUrl) {
+        return;
+      }
       gradient.value = null;
     });
 
@@ -103,7 +109,9 @@ function sampleDominantColors(img: HTMLImageElement): RGB[] {
   canvas.height = sampleSize;
 
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return [];
+  if (!ctx) {
+    return [];
+  }
 
   ctx.drawImage(img, 0, 0, sampleSize, sampleSize);
 
@@ -120,17 +128,23 @@ function sampleDominantColors(img: HTMLImageElement): RGB[] {
     const a = pixels[i + 3];
 
     // Skip nearly-transparent pixels.
-    if (a < 128) continue;
+    if (a < 128) {
+      continue;
+    }
 
     // Skip very dark (near black) and very bright (near white) pixels
     // since they make poor background colors.
     const brightness = (r + g + b) / 3;
-    if (brightness < 20 || brightness > 235) continue;
+    if (brightness < 20 || brightness > 235) {
+      continue;
+    }
 
     samples.push({ r, g, b });
   }
 
-  if (samples.length === 0) return [];
+  if (samples.length === 0) {
+    return [];
+  }
 
   // Use median-cut to find dominant color clusters.
   return medianCut(samples, 3);
@@ -141,7 +155,9 @@ function sampleDominantColors(img: HTMLImageElement): RGB[] {
  * Recursively splits the color space along the channel with the widest range.
  */
 function medianCut(pixels: RGB[], targetCount: number): RGB[] {
-  if (pixels.length === 0) return [];
+  if (pixels.length === 0) {
+    return [];
+  }
   if (targetCount <= 1 || pixels.length <= 1) {
     return [averageColor(pixels)];
   }
@@ -175,7 +191,9 @@ function medianCut(pixels: RGB[], targetCount: number): RGB[] {
 
 /** Average an array of RGB colors into a single color. */
 function averageColor(pixels: RGB[]): RGB {
-  if (pixels.length === 0) return { r: 0, g: 0, b: 0 };
+  if (pixels.length === 0) {
+    return { r: 0, g: 0, b: 0 };
+  }
 
   let rSum = 0;
   let gSum = 0;

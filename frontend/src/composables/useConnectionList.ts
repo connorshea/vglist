@@ -62,21 +62,29 @@ export function useConnectionList<TData, TNode>(query: DocumentNode, options: Us
       let after: string | null = null;
       do {
         const page = await fetchPage(Math.min(MAX_PAGE_SIZE, target - collected.length), after);
-        if (requestGeneration !== generation) return;
+        if (requestGeneration !== generation) {
+          return;
+        }
         collected.push(...page.nodes);
         info = page.pageInfo;
         after = info.endCursor ?? null;
-        if (page.nodes.length === 0) break;
+        if (page.nodes.length === 0) {
+          break;
+        }
       } while (collected.length < target && info.hasNextPage && after);
 
       nodes.value = collected;
       pageInfo.value = info;
       loaded.value = true;
     } catch (e) {
-      if (requestGeneration !== generation) return;
+      if (requestGeneration !== generation) {
+        return;
+      }
       error.value = extractGqlError(e);
     } finally {
-      if (requestGeneration === generation) loading.value = false;
+      if (requestGeneration === generation) {
+        loading.value = false;
+      }
     }
   }
 
@@ -84,7 +92,9 @@ export function useConnectionList<TData, TNode>(query: DocumentNode, options: Us
 
   async function loadMore() {
     const cursor = pageInfo.value?.endCursor;
-    if (!hasNextPage.value || !cursor || loadingMore.value || loading.value) return;
+    if (!hasNextPage.value || !cursor || loadingMore.value || loading.value) {
+      return;
+    }
 
     const requestGeneration = generation;
     loadingMore.value = true;
@@ -92,14 +102,20 @@ export function useConnectionList<TData, TNode>(query: DocumentNode, options: Us
 
     try {
       const page = await fetchPage(pageSize, cursor);
-      if (requestGeneration !== generation) return;
+      if (requestGeneration !== generation) {
+        return;
+      }
       nodes.value = [...nodes.value, ...page.nodes];
       pageInfo.value = page.pageInfo;
     } catch (e) {
-      if (requestGeneration !== generation) return;
+      if (requestGeneration !== generation) {
+        return;
+      }
       loadMoreError.value = extractGqlError(e);
     } finally {
-      if (requestGeneration === generation) loadingMore.value = false;
+      if (requestGeneration === generation) {
+        loadingMore.value = false;
+      }
     }
   }
 

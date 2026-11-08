@@ -176,13 +176,17 @@ function onAvatarFileChosen(e: Event) {
   const file = input.files?.[0] ?? null;
   // Clear the input so choosing the same file again still fires `change`.
   input.value = "";
-  if (!file) return;
+  if (!file) {
+    return;
+  }
   avatarUploadError.value = "";
   avatarFile.value = file;
 }
 
 function closeAvatarCropper() {
-  if (uploadingAvatar.value) return;
+  if (uploadingAvatar.value) {
+    return;
+  }
   avatarFile.value = null;
   avatarUploadError.value = "";
 }
@@ -209,7 +213,9 @@ const { mutate: removeAvatarMutate, loading: removingAvatar } =
 
 async function removeAvatar() {
   const userId = data.value?.currentUser?.id;
-  if (!userId) return;
+  if (!userId) {
+    return;
+  }
 
   try {
     await removeAvatarMutate({ userId });

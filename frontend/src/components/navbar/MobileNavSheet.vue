@@ -139,7 +139,9 @@ const isDragging = ref(false);
 const dragY = ref(0);
 
 const dragStyle = computed(() => {
-  if (!isDragging.value || dragY.value === 0) return {};
+  if (!isDragging.value || dragY.value === 0) {
+    return {};
+  }
   return { transform: `translateY(${dragY.value}px)` };
 });
 
@@ -157,7 +159,9 @@ watch(() => route.path, close);
 
 // Close on Escape
 function onKeydown(e: KeyboardEvent) {
-  if (e.key === "Escape" && props.isOpen) close();
+  if (e.key === "Escape" && props.isOpen) {
+    close();
+  }
 }
 
 onMounted(() => document.addEventListener("keydown", onKeydown));
@@ -168,9 +172,13 @@ const FOCUSABLE =
 
 // Keep Tab inside the sheet while it's open.
 function onSheetKeydown(e: KeyboardEvent) {
-  if (e.key !== "Tab" || !sheetEl.value) return;
+  if (e.key !== "Tab" || !sheetEl.value) {
+    return;
+  }
   const items = Array.from(sheetEl.value.querySelectorAll<HTMLElement>(FOCUSABLE));
-  if (items.length === 0) return;
+  if (items.length === 0) {
+    return;
+  }
   const first = items[0];
   const last = items[items.length - 1];
   if (document.activeElement === sheetEl.value) {
@@ -200,7 +208,9 @@ watch(
     } else {
       const sheetHadFocus =
         !!sheetEl.value?.contains(document.activeElement) || document.activeElement === document.body;
-      if (sheetHadFocus && previouslyFocused?.isConnected) previouslyFocused.focus();
+      if (sheetHadFocus && previouslyFocused?.isConnected) {
+        previouslyFocused.focus();
+      }
       previouslyFocused = null;
     }
   }

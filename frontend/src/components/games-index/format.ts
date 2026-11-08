@@ -2,7 +2,9 @@ import type { GamePurchaseCompletionStatus, GameSort } from "@/types/graphql";
 
 /** The four-digit year of an ISO 8601 date, or null if there isn't one. */
 export function releaseYear(releaseDate: string | null | undefined): string | null {
-  if (!releaseDate) return null;
+  if (!releaseDate) {
+    return null;
+  }
   const year = releaseDate.slice(0, 4);
   return /^\d{4}$/.test(year) ? year : null;
 }
@@ -22,8 +24,12 @@ export function countLabel(count: number, singular: string, plural = `${singular
 export function tileMeta(game: { releaseDate?: string | null; ownerCount?: number | null }): string | null {
   const parts: string[] = [];
   const year = releaseYear(game.releaseDate);
-  if (year) parts.push(year);
-  if (game.ownerCount) parts.push(countLabel(game.ownerCount, "owner"));
+  if (year) {
+    parts.push(year);
+  }
+  if (game.ownerCount) {
+    parts.push(countLabel(game.ownerCount, "owner"));
+  }
   return parts.length > 0 ? parts.join(" · ") : null;
 }
 
@@ -31,9 +37,15 @@ export type RatingTier = "great" | "good" | "ok" | "low";
 
 /** Colour band for an average rating out of 100. */
 export function ratingTier(rating: number): RatingTier {
-  if (rating >= 90) return "great";
-  if (rating >= 75) return "good";
-  if (rating >= 60) return "ok";
+  if (rating >= 90) {
+    return "great";
+  }
+  if (rating >= 75) {
+    return "good";
+  }
+  if (rating >= 60) {
+    return "ok";
+  }
   return "low";
 }
 
@@ -94,7 +106,9 @@ export const EMPTY_FILTERS: GameFilters = {
 export const EARLIEST_YEAR = 1950;
 
 function yearParam(value: unknown): string {
-  if (typeof value !== "string" || !/^\d{4}$/.test(value)) return "";
+  if (typeof value !== "string" || !/^\d{4}$/.test(value)) {
+    return "";
+  }
   return Number(value) >= EARLIEST_YEAR ? value : "";
 }
 
@@ -117,12 +131,24 @@ export function filtersFromQuery(query: Record<string, unknown>): GameFilters {
 /** The URL query for a set of filters, leaving out the unset ones. */
 export function filtersToQuery(filters: GameFilters): Record<string, string> {
   const query: Record<string, string> = {};
-  if (filters.platform) query.platform = filters.platform;
-  if (filters.genre) query.genre = filters.genre;
-  if (filters.engine) query.engine = filters.engine;
-  if (filters.fromYear) query.from = filters.fromYear;
-  if (filters.toYear) query.to = filters.toYear;
-  if (filters.hideLibrary) query.hide = "library";
+  if (filters.platform) {
+    query.platform = filters.platform;
+  }
+  if (filters.genre) {
+    query.genre = filters.genre;
+  }
+  if (filters.engine) {
+    query.engine = filters.engine;
+  }
+  if (filters.fromYear) {
+    query.from = filters.fromYear;
+  }
+  if (filters.toYear) {
+    query.to = filters.toYear;
+  }
+  if (filters.hideLibrary) {
+    query.hide = "library";
+  }
   return query;
 }
 

@@ -58,7 +58,9 @@ describe("GenreShowPage loading skeleton", () => {
   });
 
   async function resolveAll() {
-    for (const resolve of pending.splice(0)) resolve();
+    for (const resolve of pending.splice(0)) {
+      resolve();
+    }
     await flushPromises();
   }
 

@@ -40,7 +40,9 @@ export interface OverlapShares {
 // to a library ten times its size.
 export function overlapShares(onlyA: number, both: number, onlyB: number): OverlapShares {
   const total = onlyA + both + onlyB;
-  if (total === 0) return { onlyA: 0, both: 0, onlyB: 0 };
+  if (total === 0) {
+    return { onlyA: 0, both: 0, onlyB: 0 };
+  }
 
   const MIN = 2;
   const raw = [onlyA, both, onlyB].map((count) => (count === 0 ? 0 : Math.max((count / total) * 100, MIN)));
@@ -52,20 +54,28 @@ export function overlapShares(onlyA: number, both: number, onlyB: number): Overl
 // The bar in the rating difference column. It grows out from the middle towards
 // whoever rated the game higher, reaching the end at a gap of 25 or more.
 export function gapMeter(difference: number | null): { side: "a" | "b"; width: number } | null {
-  if (difference === null || difference === 0) return null;
+  if (difference === null || difference === 0) {
+    return null;
+  }
   return { side: difference > 0 ? "a" : "b", width: Math.min(Math.abs(difference), 25) * 2 };
 }
 
 // The rating difference column for screen readers, since the meter's direction is
 // only shown by its position and colour.
 export function gapDescription(difference: number | null, userA: string, userB: string): string {
-  if (difference === null) return "Not rated by both";
-  if (difference === 0) return "Same rating";
+  if (difference === null) {
+    return "Not rated by both";
+  }
+  if (difference === 0) {
+    return "Same rating";
+  }
   return `${difference > 0 ? userA : userB} rated it ${Math.abs(difference)} higher`;
 }
 
 // The share of A's library that B also owns, e.g. "41%".
 export function sharePercent(part: number, whole: number): string {
-  if (whole === 0) return "0%";
+  if (whole === 0) {
+    return "0%";
+  }
   return `${Math.round((part / whole) * 100)}%`;
 }

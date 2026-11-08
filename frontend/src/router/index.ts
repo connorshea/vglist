@@ -111,7 +111,9 @@ const router = createRouter({
         const authStore = useAuthStore();
         const slug = "slug" in to.params ? to.params.slug : "";
         const viewer = authStore.isAuthenticated ? authStore.user : null;
-        if (!viewer || viewer.slug === slug) return { name: "user", params: { slug } };
+        if (!viewer || viewer.slug === slug) {
+          return { name: "user", params: { slug } };
+        }
         return { name: "userCompare", params: { slug: viewer.slug, otherSlug: slug } };
       }
     },

@@ -30,13 +30,17 @@ function onInput(event: Event) {
 function onChange(event: Event) {
   const target = event.target as HTMLInputElement;
   const normalized = normalizeWikidataId(target.value);
-  if (normalized !== target.value) update(target, normalized);
+  if (normalized !== target.value) {
+    update(target, normalized);
+  }
 }
 
 function update(target: HTMLInputElement, value: string) {
   // Set the DOM value directly too: if the normalized value matches the
   // current model, Vue won't re-render and the raw input would stay visible.
-  if (target.value !== value) target.value = value;
+  if (target.value !== value) {
+    target.value = value;
+  }
   model.value = value;
 }
 </script>

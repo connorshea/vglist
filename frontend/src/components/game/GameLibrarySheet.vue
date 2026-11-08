@@ -64,9 +64,13 @@ function onKeydown(e: KeyboardEvent) {
     emit("close");
     return;
   }
-  if (e.key !== "Tab") return;
+  if (e.key !== "Tab") {
+    return;
+  }
   const items = focusables();
-  if (items.length === 0) return;
+  if (items.length === 0) {
+    return;
+  }
   const first = items[0];
   const last = items[items.length - 1];
   if (document.activeElement === sheetRef.value) {
