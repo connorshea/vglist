@@ -122,12 +122,12 @@ RSpec.describe "ConnectSteam Mutation API", type: :request do
       end
 
       it "accepts a full vanity profile URL" do
-        result = api_request(query_string, variables: { id: user.id, steam_username: ' https://steamcommunity.com/id/nicereddy/ ' }, token: access_token)
+        result = api_request(query_string, variables: { id: user.id, steam_username: ' https://steamcommunity.com/id/foobar/ ' }, token: access_token)
 
         expect(result.graphql_dig(:connect_steam)).to eq({ connected: true })
         expect(WebMock).to have_requested(:get, 'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/')
-          .with(query: { 'key' => 'foo', 'vanityurl' => 'nicereddy' })
-        expect(ExternalAccount.last.steam_profile_url).to eq('https://steamcommunity.com/id/nicereddy/')
+          .with(query: { 'key' => 'foo', 'vanityurl' => 'foobar' })
+        expect(ExternalAccount.last.steam_profile_url).to eq('https://steamcommunity.com/id/foobar/')
       end
 
       it "accepts a numeric profile URL without calling the Steam API" do
