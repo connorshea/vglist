@@ -10,7 +10,7 @@
     <Transition name="search-backdrop">
       <div v-if="isOpen" class="search-backdrop" aria-hidden="true"></div>
     </Transition>
-    <Transition name="search-overlay">
+    <Transition name="search-overlay" @enter="morphSearchBar($event, 'in')" @leave="morphSearchBar($event, 'out')">
       <div
         v-if="isOpen"
         ref="overlayRef"
@@ -292,6 +292,33 @@ const router = useRouter();
 const { isOpen, close, takeInitialQuery } = useSearchOverlay();
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const overlayRef = ref<HTMLElement | null>(null);
+
+// Fly the search bar between the navbar's search box and its place in the
+// overlay (FLIP: measure both boxes, then animate a transform from one to the
+// other). This used to be a view transition, which snapshots the whole
+// blurred page before anything moves, so opening and closing both stalled
+// for a frame or more first. Phones hide the navbar box, so there the bar
+// just fades in with the rest of the dialog.
+function morphSearchBar(overlay: Element, direction: "in" | "out") {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const bar = overlay.querySelector<HTMLElement>(".search-bar-wrap");
+  const navbarBox = document.querySelector<HTMLElement>(".navbar-search .input");
+  if (!bar || !navbarBox) return;
+  const from = navbarBox.getBoundingClientRect();
+  const to = bar.getBoundingClientRect();
+  if (from.width === 0 || to.width === 0) return;
+  const atNavbar = `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`;
+  bar.animate(
+    [
+      { transformOrigin: "0 0", transform: atNavbar, opacity: 0 },
+      { transformOrigin: "0 0", opacity: 1, offset: 0.4 },
+      { transformOrigin: "0 0", transform: "none", opacity: 1 }
+    ],
+    direction === "in"
+      ? { duration: 250, easing: "cubic-bezier(0.2, 0, 0, 1)" }
+      : { duration: 180, easing: "cubic-bezier(0.4, 0, 1, 1)", direction: "reverse", fill: "forwards" }
+  );
+}
 
 // Close overlay on Escape, and trap focus within the overlay
 function onDocumentKeydown(e: KeyboardEvent) {
@@ -581,8 +608,7 @@ function releaseYear(date: string): string {
  * Opening fades the glass in while the results drift down into place, and
  * closing runs the same thing a little faster. Only opacity and transform
  * animate, so the browser can run them on the compositor. The search bar
- * itself morphs from the navbar in a view transition (see
- * useSearchOverlay.ts and application.scss), so it isn't animated here.
+ * itself flies in from the navbar's search box (see morphSearchBar).
  */
 .search-backdrop-enter-active {
   animation: search-overlay-fade 0.25s cubic-bezier(0.2, 0, 0, 1) both;
@@ -642,7 +668,6 @@ function releaseYear(date: string): string {
 }
 
 .search-bar-wrap {
-  view-transition-name: search-bar;
   position: relative;
   display: flex;
   align-items: center;
