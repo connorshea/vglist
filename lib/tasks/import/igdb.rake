@@ -227,19 +227,32 @@ namespace :import do
       # where the time goes.
       timings = {}
       breakdowns = {}
+      # The CPU time each step used on this worker's thread, next to how long
+      # it took: a step that takes long but uses little CPU is waiting (on the
+      # network, the database, or for its turn on the CPU or the GVL). It
+      # doesn't include libvips's own worker threads.
+      cpu_times = {}
+      # Ruby's GC time and collections while this cover was worked on. They
+      # are for the whole process, so they include the other workers' too.
+      gc_before = GC.stat.slice(:time, :major_gc_count, :minor_gc_count)
       timed = lambda do |step, &block|
         Thread.current[:igdb_cover_breakdown] = Hash.new(0)
         started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        cpu_started = Process.clock_gettime(Process::CLOCK_THREAD_CPUTIME_ID)
         block.call
       ensure
         timings[step] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+        cpu_times[step] = Process.clock_gettime(Process::CLOCK_THREAD_CPUTIME_ID) - cpu_started
         breakdowns[step] = Thread.current[:igdb_cover_breakdown]
         Thread.current[:igdb_cover_breakdown] = nil
       end
-      # e.g. "save 7.48s [validate 3.1s (spoof check 2.9s), sql 0.4s/9, upload 0.6s, other 3.38s]"
+      # e.g. "save 7.48s (cpu 0.5s) [validate 3.1s (spoof check 2.9s), sql 0.4s/9, upload 0.6s, other 3.38s], gc 0.2s (1 major, 4 minor)"
       timings_text = lambda do
-        timings.map do |step, seconds|
-          text = "#{step} #{seconds.round(2)}s"
+        gc = GC.stat.slice(:time, :major_gc_count, :minor_gc_count).to_h { |key, value| [key, value - gc_before[key]] }
+        gc_text = "gc #{(gc[:time] / 1000.0).round(2)}s (#{gc[:major_gc_count]} major, #{gc[:minor_gc_count]} minor)"
+
+        steps = timings.map do |step, seconds|
+          text = "#{step} #{seconds.round(2)}s (cpu #{cpu_times[step].round(2)}s)"
           b = breakdowns[step]
           next text if b.blank?
 
@@ -250,7 +263,8 @@ namespace :import do
           parts << "transform #{b[:transform].round(2)}s" if b.key?(:transform)
           parts << "other #{(seconds - b[:validate] - b[:sql] - b[:upload] - b[:transform]).round(2)}s"
           "#{text} [#{parts.join(', ')}]"
-        end.join(', ')
+        end
+        (steps << gc_text).join(', ')
       end
       # The cover URL comes out of the IGDB API response, so it's fetched
       # through RemoteImageFetcher, which refuses non-public addresses. This
@@ -322,6 +336,12 @@ namespace :import do
     queue.close
     lock = Mutex.new
 
+    # Totals for the download pass, printed at the end. Process CPU time
+    # includes every thread (libvips's too), and Ruby's GC time is part of it.
+    pass_started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    pass_cpu_started = Process.clock_gettime(Process::CLOCK_PROCESS_CPUTIME_ID)
+    pass_gc_before = GC.stat.slice(:time, :major_gc_count, :minor_gc_count)
+
     workers = Array.new(concurrency) do
       Thread.new do
         # PaperTrail's whodunnit is per thread.
@@ -349,6 +369,9 @@ namespace :import do
       end
     end
     workers.each(&:join)
+    pass_seconds = Process.clock_gettime(Process::CLOCK_MONOTONIC) - pass_started_at
+    pass_cpu = Process.clock_gettime(Process::CLOCK_PROCESS_CPUTIME_ID) - pass_cpu_started
+    pass_gc = GC.stat.slice(:time, :major_gc_count, :minor_gc_count).to_h { |key, value| [key, value - pass_gc_before[key]] }
     breakdown_subscribers.each { |subscriber| ActiveSupport::Notifications.unsubscribe(subscriber) }
     Game.skip_callback(:validation, :before, validation_started)
     Game.skip_callback(:validation, :after, validation_finished)
@@ -359,6 +382,10 @@ namespace :import do
     puts
     puts "Done. #{games_with_covers.count} games now have covers."
     puts "#{cover_added_count} covers added and #{cover_not_found_or_errored_count} covers not found or failed to upload."
+    processed = [games.count, 1].max
+    puts "Download pass: #{games.count} games in #{pass_seconds.round(1)}s, using #{pass_cpu.round(1)}s of CPU " \
+         "(#{(pass_cpu / processed).round(2)}s per game), #{(pass_gc[:time] / 1000.0).round(1)}s of it in GC " \
+         "(#{pass_gc[:major_gc_count]} major and #{pass_gc[:minor_gc_count]} minor collections)."
   end
 
   # SPARQL query for getting all video games with IGDB IDs on Wikidata.
