@@ -18,15 +18,36 @@ module ResourceGameSort
     name: 'games.name ASC, games.id ASC'
   }.freeze
 
+  # Join tables that carry a copy of each game's release date (kept in sync by
+  # database triggers), indexed by the resource and that date. Sorting on the
+  # join table's copy lets Postgres read a page of a platform's games
+  # newest-first straight from the index, rather than fetching and sorting
+  # every game on the platform. `game_id` is the same as `games.id`, so the
+  # order is the same as `ORDERS[:newest_release]`.
+  RELEASE_DATE_JOIN_TABLES = ['game_platforms', 'game_genres'].freeze
+
   module_function
 
   # @param relation [ActiveRecord::Relation] A relation of games.
   # @param sort_by [Symbol, nil] A `ResourceGameSortType` value. Without one,
   #   the games are ordered by ID so that pagination is still stable.
+  # @param join_table [String, nil] The join table the relation goes through,
+  #   if it's one of `RELEASE_DATE_JOIN_TABLES`.
   # @return [ActiveRecord::Relation]
-  def apply(relation, sort_by)
+  def apply(relation, sort_by, join_table: nil)
     return relation.order('games.id ASC') if sort_by.nil?
 
-    relation.order(Arel.sql(ORDERS.fetch(sort_by)))
+    relation.order(Arel.sql(order_for(sort_by, join_table)))
+  end
+
+  # @param sort_by [Symbol]
+  # @param join_table [String, nil]
+  # @return [String]
+  def order_for(sort_by, join_table)
+    return ORDERS.fetch(sort_by) unless sort_by == :newest_release && join_table
+
+    raise ArgumentError, "#{join_table} has no release_date column" unless RELEASE_DATE_JOIN_TABLES.include?(join_table)
+
+    "#{join_table}.release_date DESC NULLS LAST, #{join_table}.game_id DESC"
   end
 end

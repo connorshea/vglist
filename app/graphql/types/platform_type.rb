@@ -18,7 +18,7 @@ module Types
     end
 
     def games(sort_by: nil)
-      ResourceGameSort.apply(@object.games.with_attached_cover, sort_by)
+      ResourceGameSort.apply(@object.games.with_attached_cover, sort_by, join_table: 'game_platforms')
     end
 
     def cover_games
