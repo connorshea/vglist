@@ -60,6 +60,34 @@ RSpec.describe "Game activity API", type: :request do
       expect(result.graphql_dig(:game, :activity, :nodes).map { |n| n.dig(:eventable, :id) }).to eq([second.id.to_s, first.id.to_s])
     end
 
+    it "pages through the events" do
+      purchases = Array.new(3) { create(:game_purchase, game: game) }
+      purchases.each_with_index do |purchase, i|
+        Events::GamePurchaseEvent.find_by!(eventable_id: purchase.id).update!(created_at: (3 - i).days.ago)
+      end
+      paged_query = <<-GRAPHQL
+        query($id: ID!, $after: String) {
+          game(id: $id) {
+            activity(first: 2, after: $after) {
+              nodes { eventable { ... on GamePurchase { id } } }
+              pageInfo { hasNextPage endCursor }
+            }
+          }
+        }
+      GRAPHQL
+
+      first_page = api_request(paged_query, variables: { id: game.id }, token: access_token).graphql_dig(:game, :activity)
+      second_page = api_request(
+        paged_query, variables: { id: game.id, after: first_page.dig(:pageInfo, :endCursor) }, token: access_token
+      ).graphql_dig(:game, :activity)
+
+      summary = [first_page, second_page].map do |page|
+        [page[:nodes].map { |n| n.dig(:eventable, :id) }, page.dig(:pageInfo, :hasNextPage)]
+      end
+      expected = [[[purchases[2].id.to_s, purchases[1].id.to_s], true], [[purchases[0].id.to_s], false]]
+      expect(summary).to eq(expected)
+    end
+
     it "hides events from private and banned users" do
       [user, private_user, banned_user].each do |u|
         create(:game_purchase, game: game, user: u)
