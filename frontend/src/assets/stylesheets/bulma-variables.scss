@@ -73,4 +73,22 @@
 @forward "bulma/sass/grid/columns";
 @forward "bulma/sass/layout";
 
-@forward "bulma/sass/themes";
+// Bulma's themes/_index.scss writes the light theme three times (:root,
+// prefers-color-scheme: light, [data-theme=light]) and the dark theme twice
+// (prefers-color-scheme: dark, [data-theme=dark]), at roughly 60 KB per light
+// copy. The app follows the system colour scheme and never sets data-theme
+// or .theme-*, so only the :root and prefers-color-scheme: dark copies apply.
+@use "bulma/sass/themes/light";
+@use "bulma/sass/themes/dark";
+@use "bulma/sass/themes/setup";
+
+:root {
+  @include light.light-theme;
+  @include setup.setup-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include dark.dark-theme;
+  }
+}
