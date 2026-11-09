@@ -47,6 +47,14 @@
 name: vglist
 region: sfo
 
+# App Platform caches responses with a public Cache-Control at its own edge
+# "until the next deployment", with no way to purge them. The signed-out
+# GraphQL GETs (see GraphqlController#allow_shared_caching) are cached by
+# our own Cloudflare zone instead, which honours s-maxage and expires them
+# after minutes. DigitalOcean recommends turning this off when you put your
+# own CDN in front.
+disable_edge_cache: true
+
 # Private networking to the database. The cluster vglist-postgres is in sfo3,
 # the datacenter App Platform uses for `sfo`, and this is its VPC. Without it,
 # the API reached the database over its public address (~3ms per query from
