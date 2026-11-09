@@ -54,6 +54,19 @@ region: sfo
 # after minutes. DigitalOcean recommends turning this off when you put your
 # own CDN in front.
 #
+# The api.vglist.co record is proxied, and the zone has three rules for
+# GET /graphql on that host (set in the dashboard, not here):
+#   - Cache Rule "Cache GraphQL GETs": eligible for cache, Edge TTL from
+#     Cache-Control or bypass if none, sorted query string in the cache key.
+#   - Cache Rule "Bypass authenticated GraphQL", after the first: bypass when
+#     an Authorization header is present.
+#   - Cache Response Rule: strip Set-Cookie before caching. App Platform runs
+#     on Cloudflare for SaaS, so this is an orange-to-orange setup, and DO's
+#     zone adds a __cf_bm bot-management cookie to every response. Cloudflare
+#     never caches a response with Set-Cookie, so without this rule every
+#     GraphQL GET is a BYPASS. A Response Header Transform Rule doesn't work
+#     here: it runs after the cache decision.
+#
 # This is app-wide, so it also stops App Platform caching the frontend's
 # hashed /assets/* bundles (which Caddy marks immutable for a year). Proxy
 # the vglist.co record through Cloudflare (orange cloud) before applying it,
@@ -167,17 +180,21 @@ services:
       # App Platform puts its ingress in X-Forwarded-For and the client in
       # DO-Connecting-IP, so Rack::Attack must throttle by this header or
       # every visitor shares one set of counters. See rack_attack.rb.
-      # With the api.vglist.co record DNS-only in Cloudflare, App Platform is
-      # the first proxy and this header is the client.
+      # DO-Connecting-IP is whoever connected to App Platform: the client if
+      # the api.vglist.co record were DNS-only, a Cloudflare edge now that
+      # it's proxied (see BEHIND_CLOUDFLARE).
       - key: CLIENT_IP_HEADER
         value: DO-Connecting-IP
-      # Set to "true" when the api.vglist.co record is proxied (orange cloud),
-      # e.g. so Cloudflare can cache GraphQL GETs. DO-Connecting-IP then holds
-      # a Cloudflare edge IP shared by many visitors, so Rack::Attack uses
+      # "true" because the api.vglist.co record is proxied (orange cloud) so
+      # Cloudflare can cache GraphQL GETs. DO-Connecting-IP then holds a
+      # Cloudflare edge IP shared by many visitors, so Rack::Attack uses
       # CF-Connecting-IP instead, but only for requests that really come from
-      # a Cloudflare IP. Leave CLIENT_IP_HEADER as it is.
+      # a Cloudflare IP. Leave CLIENT_IP_HEADER as it is. "true" is harmless
+      # if the record ever goes back to DNS-only (DO-Connecting-IP is then
+      # never a Cloudflare IP). Never proxy the record with "false": every
+      # visitor would share a few edge IPs' throttle counters.
       - key: BEHIND_CLOUDFLARE
-        value: "false"
+        value: "true"
       - key: DATABASE_URL
         value: ${db.DATABASE_URL}
       - key: RAILS_MASTER_KEY
