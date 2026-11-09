@@ -1,7 +1,3 @@
-withCount: false }), enabled: () => !isNewReleases.value }); const games = computed(() => isNewReleases.value ?
-(newReleases.data.value?.newReleases ?? []) : (sorted.data.value?.games?.nodes ?? []) ); // A shelf that failed to load
-is left out rather than shown broken. const loaded = computed(() => { const { data, error } = isNewReleases.value ?
-newReleases : sorted; return data.value !== null || error.value !== null; });
 <template>
   <section v-if="!loaded || games.length > 0" class="game-shelf" :aria-labelledby="headingId" :aria-busy="!loaded">
     <div class="game-shelf-head">
