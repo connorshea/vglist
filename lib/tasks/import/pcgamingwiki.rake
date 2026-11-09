@@ -16,7 +16,11 @@ namespace :import do
   task 'pcgamingwiki:covers': :environment do
     puts "This task will attach covers to any games which have PCGamingWiki IDs and no cover."
 
-    games = Game.includes(:cover_attachment)
+    # A relation, iterated with find_each below so only one batch of games is
+    # in memory at a time. Iterating it with `each` would load every game
+    # without a cover up front, and keep each one (and the cover attached to
+    # it) until the task finished.
+    games = Game.left_joins(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
                 .where.not(pcgamingwiki_id: [nil, ""])
 
@@ -38,7 +42,7 @@ namespace :import do
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games.each do |game|
+    games.find_each do |game|
       progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
 
       # The ID is interpolated into Cargo's SQL-like `where` clause as a

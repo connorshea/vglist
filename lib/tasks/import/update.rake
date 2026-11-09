@@ -92,9 +92,8 @@ namespace :import do
       games_with_no_series = nil
       # rubocop:enable Lint/UselessAssignment
 
-      # Preload the games and a Wikidata ID -> Series ID map once, instead of a
-      # Game.find_by per row and a Series.find_by per game.
-      games_by_wikidata_id = Game.where(wikidata_id: series_by_game_wikidata_id.keys).index_by(&:wikidata_id)
+      # Load a Wikidata ID -> Series ID map once, instead of a Series.find_by per
+      # game. The games are loaded a slice at a time in the loop below.
       series_id_by_wikidata_id = Series.where.not(wikidata_id: nil).pluck(:wikidata_id, :id).to_h
 
       progress_bar = ProgressBar.create(
@@ -108,23 +107,30 @@ namespace :import do
       Rails.logger.level = 2 if Rails.env.production?
 
       updated_games_count = 0
-      series_by_game_wikidata_id.each do |game_wikidata_id, series_wikidata_id|
-        progress_bar.increment
+      series_by_game_wikidata_id.each_slice(5_000) do |slice|
+        # Each slice's games in one query, instead of a Game.find_by per row.
+        # Loaded a slice at a time rather than all up front, so only one slice's
+        # records are in memory at once.
+        games_by_wikidata_id = Game.where(wikidata_id: slice.map(&:first)).index_by(&:wikidata_id)
 
-        progress_bar.log 'Adding series.' if ENV['DEBUG']
+        slice.each do |game_wikidata_id, series_wikidata_id|
+          progress_bar.increment
 
-        game = games_by_wikidata_id[game_wikidata_id]
-        next if game.nil?
+          progress_bar.log 'Adding series.' if ENV['DEBUG']
 
-        series_id = series_id_by_wikidata_id[series_wikidata_id]
-        next if series_id.nil?
+          game = games_by_wikidata_id[game_wikidata_id]
+          next if game.nil?
 
-        progress_bar.log "Adding series ID to #{game.name}."
+          series_id = series_id_by_wikidata_id[series_wikidata_id]
+          next if series_id.nil?
 
-        # Update the game to include the missing series ID.
-        game.update!(series_id: series_id)
+          progress_bar.log "Adding series ID to #{game.name}."
 
-        updated_games_count += 1
+          # Update the game to include the missing series ID.
+          game.update!(series_id: series_id)
+
+          updated_games_count += 1
+        end
       end
 
       puts "Added #{updated_games_count} series IDs to games."
