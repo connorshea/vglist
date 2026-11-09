@@ -30,6 +30,15 @@ const config: CodegenConfig = {
     // The operation allowlist the API enforces. See codegen/operation-manifest.mjs.
     "../config/graphql/operations.json": {
       plugins: ["./codegen/operation-manifest.mjs"]
+    },
+    // IDs for the queries signed-out visitors send as cacheable GET requests.
+    // Keep in sync with PublicResponseCache::OPERATIONS. See
+    // codegen/persisted-documents.mjs.
+    "src/types/persisted-documents.ts": {
+      plugins: ["./codegen/persisted-documents.mjs"],
+      config: {
+        operations: ["GetGamesIndex", "GetGamesIndexFilters", "GetHeroCovers", "GetNewReleases"]
+      }
     }
   }
 };

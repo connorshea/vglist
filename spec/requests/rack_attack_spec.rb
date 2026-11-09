@@ -274,6 +274,50 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       21.times { |i| sign_in_from('10.10.0.2', "203.0.113.#{i}") }
       expect(response).to have_http_status(:too_many_requests)
     end
+
+    context "when BEHIND_CLOUDFLARE is set" do
+      def sign_in_via(connecting_ip, cloudflare_client_ip)
+        post api_auth_sign_in_path,
+          params: { email: "nobody-#{SecureRandom.hex(4)}@example.com", password: "wrong" },
+          headers: { 'DO-Connecting-IP' => connecting_ip, 'CF-Connecting-IP' => cloudflare_client_ip }
+      end
+
+      around(:each) do |example|
+        with_environment('CLIENT_IP_HEADER' => 'DO-Connecting-IP', 'BEHIND_CLOUDFLARE' => 'true') { example.run }
+      end
+
+      it "counts clients behind the same Cloudflare edge IP separately", :aggregate_failures do
+        25.times { |i| sign_in_via('172.68.10.1', "203.0.113.#{i}") }
+        expect(response).to have_http_status(:unauthorized)
+
+        21.times { sign_in_via('172.68.10.1', '198.51.100.8') }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "counts IPv6 Cloudflare edge IPs too" do
+        expect(RackAttackConfig.cloudflare_ip?('2606:4700:10::6816:1')).to be(true)
+      end
+
+      it "ignores CF-Connecting-IP from a client that isn't Cloudflare" do
+        21.times { |i| sign_in_via('198.51.100.9', "203.0.113.#{i}") }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "ignores an unparseable connecting IP" do
+        expect(RackAttackConfig.cloudflare_ip?('not an ip')).to be(false)
+      end
+    end
+
+    it "ignores CF-Connecting-IP unless BEHIND_CLOUDFLARE is set" do
+      with_environment('CLIENT_IP_HEADER' => 'DO-Connecting-IP') do
+        21.times do |i|
+          post api_auth_sign_in_path,
+            params: { email: "nobody-#{SecureRandom.hex(4)}@example.com", password: "wrong" },
+            headers: { 'DO-Connecting-IP' => '172.68.10.2', 'CF-Connecting-IP' => "203.0.113.#{i}" }
+        end
+        expect(response).to have_http_status(:too_many_requests)
+      end
+    end
   end
 
   describe "per-IP avatar upload throttle" do
@@ -310,6 +354,15 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       # A different client is unaffected.
       graphql_from('10.11.0.2')
       expect(response).to have_http_status(:success)
+    end
+
+    it "counts GET requests too" do
+      document = OperationAllowlist.operations.fetch('GetHeroCovers')
+      params = { operationName: 'GetHeroCovers', documentId: "sha256:#{Digest::SHA256.hexdigest(document)}" }
+      120.times { get graphql_path, params: params, headers: { 'REMOTE_ADDR' => '10.11.0.3' } }
+
+      graphql_from('10.11.0.3')
+      expect(response).to have_http_status(:too_many_requests)
     end
   end
 end

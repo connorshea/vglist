@@ -11,7 +11,11 @@
 // graphql-request sends.
 import { Kind, print, visit } from "graphql";
 
-export const plugin = (_schema, documents) => {
+// Every operation under `src/graphql/`, as a Map of name => { operation,
+// document }, sorted by name. `document` is the printed operation plus the
+// fragments it uses, exactly as it appears in the manifest. The persisted
+// document IDs (see persisted-documents.mjs) are hashes of this string.
+export const collectOperations = (documents) => {
   const fragments = new Map();
   const operations = new Map();
 
@@ -58,11 +62,19 @@ export const plugin = (_schema, documents) => {
   };
 
   const byName = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
-  const manifest = {};
+  const collected = new Map();
   for (const name of [...operations.keys()].sort(byName)) {
     const operation = operations.get(name);
     const used = [...fragmentsUsedBy(operation)].sort(byName).map((fragment) => fragments.get(fragment));
-    manifest[name] = print({ kind: Kind.DOCUMENT, definitions: [operation, ...used] });
+    collected.set(name, { operation, document: print({ kind: Kind.DOCUMENT, definitions: [operation, ...used] }) });
+  }
+  return collected;
+};
+
+export const plugin = (_schema, documents) => {
+  const manifest = {};
+  for (const [name, { document }] of collectOperations(documents)) {
+    manifest[name] = document;
   }
 
   return `${JSON.stringify(manifest, null, 2)}\n`;
