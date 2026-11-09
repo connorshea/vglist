@@ -6,10 +6,13 @@ name: Docker
 #
 # On pushes to main, the push-api and push-frontend jobs then push the tested
 # images to GHCR, tagged with the commit SHA (plus `main`), and attest their
-# build provenance. Deploying them is never automatic: approve-deploy then
-# waits for approval, and approving it starts a .github/workflows/deploy.yml
-# run for this commit. deploy.yml only deploys images attested by this workflow on
-# main.
+# build provenance. Deploying them is never automatic: run
+# .github/workflows/deploy.yml (`gh workflow run deploy.yml`), which only
+# deploys images attested by this workflow on main.
+#
+# There is deliberately no "approve to deploy" job here. A job waiting on an
+# environment approval gets cancelled when a newer push replaces it, and a
+# cancelled job marks the commit as failed.
 #
 # Only the push jobs get `packages: write`, and they never run for pull
 # requests, so a PR's run (which uses the PR's copy of this file) has no
@@ -424,37 +427,3 @@ jobs:
             exit 0
           fi
           docker buildx imagetools create --tag "$FRONTEND_IMAGE:main" "$FRONTEND_IMAGE:$GITHUB_SHA"
-
-  # Waits for a reviewer of the production-approval environment (no
-  # secrets), so nothing deploys until someone approves it from this run.
-  # A newer push to main cancels a still-waiting approval here, so only
-  # main's latest commit waits. A waiting job holds its concurrency group,
-  # which is why this gate has its own group, separate from
-  # deploy-production: that one never cancels a deploy in progress.
-  #
-  # Approving it starts a separate Deploy run for this commit rather than
-  # calling deploy.yml as a reusable workflow: a called workflow doesn't see
-  # the production environment's DIGITALOCEAN_ACCESS_TOKEN, so the deploy
-  # failed with a 401. A workflow_dispatch sent with GITHUB_TOKEN is one of
-  # the events that still starts a run.
-  approve-deploy:
-    needs: [push-api, push-frontend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    # Not ubuntu-slim: this step needs the gh CLI. The job takes no runner
-    # while it waits for approval.
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    permissions:
-      actions: write
-    environment: production-approval
-    concurrency:
-      group: deploy-approval
-      cancel-in-progress: true
-    steps:
-      - name: Start the Deploy workflow
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main -f ref="$GITHUB_SHA"
-          echo "Deploy of $GITHUB_SHA approved. Follow it under Actions > Deploy." >> "$GITHUB_STEP_SUMMARY"

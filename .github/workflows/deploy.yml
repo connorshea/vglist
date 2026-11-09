@@ -1,16 +1,9 @@
 name: Deploy
 
 # Deploys a commit's prebuilt images (pushed to GHCR by the Docker workflow)
-# to DigitalOcean App Platform. Never automatic. Two ways to start it:
-#
-#   - From the Docker workflow run for a push to main: once its images are
-#     pushed, its approve-deploy job waits for a reviewer of the
-#     `production-approval` environment. Approving it ("Review deployments"
-#     on the run page) runs this workflow for that commit. A newer merge
-#     replaces the waiting approval, so only main's latest commit waits.
-#   - Manually: Actions > Deploy > Run workflow, or `gh workflow run
-#     deploy.yml` (add `-f ref=<sha>` to pick a commit, which also works as
-#     a rollback).
+# to DigitalOcean App Platform. Never automatic: Actions > Deploy > Run
+# workflow, or `gh workflow run deploy.yml` (add `-f ref=<sha>` to pick a
+# commit, which also works as a rollback).
 #
 # It points api, migrate, update-stats and frontend at that commit's image
 # digests and waits for the rollout; the migrate PRE_DEPLOY job runs first, as
@@ -23,9 +16,7 @@ name: Deploy
 # built and attested on main (see "Verify image provenance"). Images pushed
 # before docker.yml started attesting them can't be deployed by this workflow.
 #
-# Setup (once): a `production-approval` environment limited to the main
-# branch with yourself as a required reviewer (no secrets), and a
-# `production` environment (Settings > Environments) limited
+# Setup (once): a `production` environment (Settings > Environments) limited
 # to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
 # the app:read, app:update and database:read scopes (updating an app with an
 # attached database cluster checks database:read). Optionally a SENTRY_AUTH_TOKEN repo secret
@@ -95,8 +86,8 @@ jobs:
       # if RSpec or lint failed in CI, so check CI before deploying. A
       # rerun counts: a run's conclusion is its latest attempt's. Runs are
       # matched by workflow file and branch, not name, so a run of an edited
-      # copy on another branch doesn't count. A deploy approved from the
-      # Docker run can start before CI finishes, so wait for it (up to 20
+      # copy on another branch doesn't count. A deploy started right after a
+      # merge can start before CI finishes, so wait for it (up to 20
       # minutes). The Docker workflow itself is covered by "Verify image
       # provenance": only its push jobs, after the smoke tests pass, attest
       # images.
