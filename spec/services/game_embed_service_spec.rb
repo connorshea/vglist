@@ -56,7 +56,7 @@ RSpec.describe GameEmbedService do
 
       it 'is a single container with the expected parts', :aggregate_failures do
         expect(payload['component']['type']).to eq(17)
-        expect(text_content).to include('## [Half\\-Life 2](http://localhost:5173/games/')
+        expect(text_content).to include('## [Half-Life 2](http://localhost:5173/games/')
         expect(text_content).to include('Valve · Released November 16, 2004')
         expect(text_content).to include('**Platforms:** Windows')
         expect(text_content).to include('**Genres:** First\\-person shooter')
@@ -76,6 +76,16 @@ RSpec.describe GameEmbedService do
       it 'only uses allowed fields on link buttons' do
         buttons = all_components.select { |c| c['type'] == 2 }
         expect(buttons).to all(satisfy { |b| b['style'] == 5 && (b.keys - %w[type style label url]).empty? })
+      end
+    end
+
+    context 'with punctuation in the name' do
+      let(:game) { create(:game, name: 'The Legend of Zelda: Ocarina of Time (3D) - *Remix* [v1.0]') }
+
+      it 'only escapes link-label syntax in the title' do
+        expect(text_content).to include(
+          '## [The Legend of Zelda: Ocarina of Time (3D) - \\*Remix\\* \\[v1.0\\]](http://localhost:5173/games/'
+        )
       end
     end
 
