@@ -415,7 +415,7 @@ namespace 'import:wikidata' do
         OPTIONAL { ?item wdt:P2725 ?gog. } # GOG.com ID
         OPTIONAL { ?item wdt:P5794 ?igdb. } # IGDB ID
         OPTIONAL { ?item wdt:P11688 ?mobygames. } # MobyGames ID
-        OPTIONAL { ?item wdt:P5247 ?giantbomb. } # Giant Bomb ID
+        OPTIONAL { ?item wdt:P14470 ?giantbomb. } # Giant Bomb Wiki ID
       }
       GROUP BY ?item
     SPARQL
