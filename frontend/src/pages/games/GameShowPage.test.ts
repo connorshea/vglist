@@ -187,3 +187,41 @@ describe("GameShowPage loading skeleton", () => {
     expect(wrapper.find(".game-title").text()).toBe("Game 1");
   });
 });
+
+describe("GameShowPage external links", () => {
+  beforeEach(() => {
+    mockRoute.params.id = "1";
+    authState.isAuthenticated = false;
+    mockRequest.mockReset();
+    mockRequest.mockImplementation((query) => {
+      if (query === GET_GAME) {
+        const fixture = gameFixture("1", "Portal 2");
+        return Promise.resolve({ game: { ...fixture.game, giantbombId: "Games/Portal_2" } });
+      }
+      return Promise.resolve({ stores: { nodes: [] }, game: null });
+    });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn<(query: string) => Partial<MediaQueryList>>(() => ({
+        matches: false,
+        addEventListener: () => {},
+        removeEventListener: () => {}
+      }))
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("links the Giant Bomb Wiki page for a Giant Bomb Wiki ID", async () => {
+    const wrapper = mountPage();
+    await flushPromises();
+
+    const links = wrapper.findComponent({ name: "GameHeroPanel" }).props("externalLinks");
+    expect(links).toContainEqual({
+      label: "GiantBomb",
+      url: "https://giantbomb.com/wiki/Games/Portal_2"
+    });
+  });
+});
