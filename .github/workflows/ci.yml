@@ -13,6 +13,22 @@ env:
   NODE_ENV: test
 
 jobs:
+  zizmor:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Audit GitHub Actions workflows and dependabot.yml. Findings are emitted
+      # as annotations and fail the job (no SARIF upload, so no
+      # security-events permission needed). Online audits use the default
+      # read-only token to check for impostor commits / known-vulnerable actions.
+      - uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+        with:
+          advanced-security: false
+          annotations: true
+          version: "1.32.0"
+
   rubocop:
     runs-on: ubuntu-slim
     steps:
