@@ -21,6 +21,9 @@ namespace :import do
       SELECT ?item ?giantbombId WHERE {
         ?item wdt:P31 wd:Q7889; # Instances of video games
               wdt:P14470 ?giantbombId. # Items with a Giant Bomb Wiki ID.
+        # A few items also link non-game pages (e.g. "Franchises/..."), which
+        # fail validation and could be picked over the item's real game page.
+        FILTER(STRSTARTS(STR(?giantbombId), "Games/"))
       }
     SPARQL
 
