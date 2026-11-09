@@ -81,4 +81,48 @@ describe("ResourceGameList", () => {
     expect(wrapper.find(".res-more-btn").attributes("disabled")).toBeDefined();
     expect(wrapper.find(".res-more-btn").text()).toBe("Loading…");
   });
+
+  describe("with page numbers", () => {
+    it("shows Previous/Next instead of Show more, and asks for the next page", async () => {
+      const wrapper = mountList({ page: 1, hasNextPage: true });
+
+      expect(wrapper.find(".res-more-btn").exists()).toBeFalsy();
+      expect(wrapper.find("[aria-current='page']").text()).toBe("1");
+      expect(wrapper.find("[aria-label='Previous page']").attributes("disabled")).toBeDefined();
+
+      await wrapper.find("[aria-label='Next page']").trigger("click");
+
+      expect(wrapper.emitted("goToPage")).toEqual([[2]]);
+    });
+
+    it("asks for the previous page", async () => {
+      const wrapper = mountList({ page: 3, hasNextPage: false });
+
+      expect(wrapper.find("[aria-label='Next page']").attributes("disabled")).toBeDefined();
+      await wrapper.find("[aria-label='Previous page']").trigger("click");
+
+      expect(wrapper.emitted("goToPage")).toEqual([[2]]);
+    });
+
+    it("hides the page buttons when everything fits on one page", () => {
+      expect(mountList({ page: 1, hasNextPage: false }).find("nav").exists()).toBeFalsy();
+    });
+
+    it("disables the page buttons while a page loads", () => {
+      const wrapper = mountList({ page: 2, hasNextPage: true, refreshing: true });
+
+      expect(wrapper.find("[aria-label='Previous page']").attributes("disabled")).toBeDefined();
+      expect(wrapper.find("[aria-label='Next page']").attributes("disabled")).toBeDefined();
+    });
+
+    it("offers the first page when a later page is empty", async () => {
+      const wrapper = mountList({ games: [], page: 9, hasNextPage: false });
+
+      expect(wrapper.find(".res-empty").text()).toContain("There's nothing on page 9.");
+      expect(wrapper.find("nav").exists()).toBeFalsy();
+      await wrapper.find(".res-link-btn").trigger("click");
+
+      expect(wrapper.emitted("goToPage")).toEqual([[1]]);
+    });
+  });
 });
