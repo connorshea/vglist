@@ -181,9 +181,10 @@ class Game < ApplicationRecord
   validates :giantbomb_id,
     uniqueness: true,
     allow_nil: true,
-    # Validate that it's in a format like 3030-1539.
-    format: /\A\d{4}-\d+\z/,
-    length: { maximum: 100 }
+    # A Giant Bomb Wiki page title like "Games/Portal_2" (Wikidata P14470).
+    format: %r{\AGames/\S+\z},
+    # MediaWiki titles are at most 255 bytes, plus the "Games/" namespace.
+    length: { maximum: 300 }
 
   validates :epic_games_store_id,
     uniqueness: true,

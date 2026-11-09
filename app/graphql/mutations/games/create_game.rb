@@ -14,7 +14,7 @@ class Mutations::Games::CreateGame < Mutations::BaseMutation
   argument :engine_ids, [ID], required: false, description: 'The ID(s) of the game\'s engines.'
   argument :pcgamingwiki_id, String, required: false, description: 'The ID of the game on PCGamingWiki.'
   argument :mobygames_id, Integer, required: false, description: 'The ID of the game on MobyGames.'
-  argument :giantbomb_id, String, required: false, description: 'The ID of the game on the GiantBomb Wiki.'
+  argument :giantbomb_id, String, required: false, description: 'The page title of the game on the Giant Bomb Wiki, e.g. "Games/Portal_2".'
   argument :epic_games_store_id, String, required: false, description: 'The ID of the game on the Epic Games Store.'
   argument :gog_id, String, required: false, description: 'The ID of the game on GOG.com.'
   argument :igdb_id, String, required: false, description: 'The ID of the game on IGDB.'

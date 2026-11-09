@@ -64,21 +64,22 @@ RSpec.describe Game, type: :model do
     end
 
     it { should validate_uniqueness_of(:giantbomb_id).allow_nil }
-    it { should validate_length_of(:giantbomb_id).is_at_most(100) }
+    it { should validate_length_of(:giantbomb_id).is_at_most(300) }
 
     it 'allows valid Giant Bomb IDs' do
       expect(game).to allow_values(
-        '3030-1539',
-        '3025-953',
-        '3030-7110'
+        'Games/Portal_2',
+        'Games/Castlevania_Circle_of_the_Moon',
+        'Games/Half-Life_2'
       ).for(:giantbomb_id)
     end
 
     it 'disallows invalid Giant Bomb IDs' do
       expect(game).not_to allow_values(
-        '30301539',
-        '1-1234',
-        '1234-'
+        '3030-1539',
+        'Portal_2',
+        'Games/',
+        'Games/Portal 2'
       ).for(:giantbomb_id)
     end
 

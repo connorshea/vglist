@@ -12,7 +12,7 @@ module Types
     field :wikidata_id, Integer, null: true, description: "Identifier for Wikidata."
     field :pcgamingwiki_id, String, null: true, description: "Identifier for PCGamingWiki."
     field :mobygames_id, Integer, null: true, description: "Identifier for the MobyGames database."
-    field :giantbomb_id, String, null: true, description: "Identifier for Giant Bomb."
+    field :giantbomb_id, String, null: true, description: "Page title of the game on the Giant Bomb Wiki, e.g. `Games/Portal_2`."
     field :epic_games_store_id, String, null: true, description: "Identifier for the Epic Games Store."
     field :gog_id, String, null: true, description: "Identifier for GOG.com."
     field :igdb_id, String, null: true, description: "Identifier for Internet Game Database."
