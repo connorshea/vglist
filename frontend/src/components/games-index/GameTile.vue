@@ -16,8 +16,8 @@
         {{ Math.round(rating) }}
       </span>
       <span v-if="inLibrary" class="game-tile-owned" aria-hidden="true">
-        <Check :size="11" :stroke-width="3" />
-        {{ libraryBadgeLabel(completionStatus) }}
+        <Check class="game-tile-owned-icon" :size="11" :stroke-width="3" />
+        <span class="game-tile-owned-label">{{ libraryBadgeLabel(completionStatus) }}</span>
       </span>
     </span>
     <b class="game-tile-name" aria-hidden="true">{{ name }}</b>
@@ -141,6 +141,8 @@ const accessibleName = computed(() => {
   width: 100%;
   overflow: hidden;
   border-radius: 10px;
+  /* The status pill shrinks to fit narrow tiles (see .game-tile-owned). */
+  container-type: inline-size;
   /* The same fill as SkeletonBlock, so a cover that is still loading reads as
      loading. --color-bg-subtle matches the page background in dark mode, which
      left loading covers looking like empty boxes. */
@@ -210,20 +212,56 @@ const accessibleName = computed(() => {
 
 .game-tile-owned {
   position: absolute;
-  top: 6px;
+  /* Vertically centred on the rating badge (top 6px, 24px tall). */
+  top: 8px;
   left: 6px;
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  max-width: calc(100% - 44px);
-  padding: 2px 7px 2px 5px;
+  /* Leaves room for the rating badge and a 4px gap before it. */
+  max-width: calc(100% - 40px);
+  height: 20px;
+  padding: 0 7px 0 5px;
   border-radius: 999px;
   background: rgba(17, 11, 36, 0.72);
   backdrop-filter: blur(4px);
   color: #fff;
   font-size: 10px;
   font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
+}
+
+.game-tile-owned-icon {
+  flex-shrink: 0;
+}
+
+.game-tile-owned-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Phone tiles are about 100-112px wide, too narrow for the check, the label
+   and the rating badge side by side, so the check goes and the label gets the
+   room. */
+@container (max-width: 139px) {
+  .game-tile-owned {
+    padding: 0 5px;
+    font-size: 9.5px;
+    letter-spacing: -0.01em;
+  }
+
+  .game-tile-owned-icon {
+    display: none;
+  }
+}
+
+@container (max-width: 100px) {
+  .game-tile-owned {
+    padding: 0 4px;
+    font-size: 9px;
+  }
 }
 
 .game-tile-name {
