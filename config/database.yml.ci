@@ -9,3 +9,8 @@ test:
   host: localhost
   username: postgres
   password: ""
+  # Mirrors config/database.yml, which CI replaces with this file.
+  <% if ENV['DB_STATEMENT_TIMEOUT'].present? %>
+  variables:
+    statement_timeout: <%= ENV['DB_STATEMENT_TIMEOUT'] %>
+  <% end %>
