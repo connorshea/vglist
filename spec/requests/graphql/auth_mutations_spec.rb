@@ -158,6 +158,25 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(User.find_by(email: "graphqluser@example.com")).to be_present
     end
 
+    it "stores the email downcased and rejects a case-only duplicate", :aggregate_failures do
+      variables = {
+        username: "graphqluser",
+        email: "GraphQLUser@Example.com",
+        password: "password123",
+        passwordConfirmation: "password123"
+      }
+      post graphql_path, params: { query: query, variables: variables.to_json }
+      expect(User.find_by(username: "graphqluser").email).to eq("graphqluser@example.com")
+
+      post graphql_path, params: {
+        query: query,
+        variables: variables.merge(username: "graphqluser2", email: "GRAPHQLUSER@EXAMPLE.COM").to_json
+      }
+      data = JSON.parse(response.body).dig('data', 'signUp')
+      expect(data['errors']).to include(a_string_matching(/Email has already been taken/))
+      expect(User.where(email: "graphqluser@example.com").count).to eq(1)
+    end
+
     it "returns errors for invalid input" do
       post graphql_path, params: {
         query: query,
