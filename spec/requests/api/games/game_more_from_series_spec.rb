@@ -24,7 +24,16 @@ RSpec.describe "Game moreFromSeries API", type: :request do
     result.graphql_dig(:game, :moreFromSeries)
   end
 
-  it "returns the series' other games in release order, undated games last" do
+  it "returns the series' other games, most owned first" do
+    game = create(:game, series: series)
+    niche = create(:game, series: series, release_date: Date.new(1990, 1, 1), game_purchases_count: 2)
+    popular = create(:game, series: series, release_date: Date.new(2010, 1, 1), game_purchases_count: 50)
+    middling = create(:game, series: series, release_date: Date.new(2000, 1, 1), game_purchases_count: 10)
+
+    expect(more_from_series(game)[:nodes]).to eq([popular, middling, niche].map { |g| { id: g.id.to_s } })
+  end
+
+  it "breaks owner count ties by release date, undated games last" do
     game = create(:game, series: series, release_date: Date.new(2004, 11, 16))
     undated = create(:game, series: series, release_date: nil)
     later = create(:game, series: series, release_date: Date.new(2007, 10, 10))
@@ -37,7 +46,7 @@ RSpec.describe "Game moreFromSeries API", type: :request do
     )
   end
 
-  it "breaks release date ties by id" do
+  it "breaks owner count and release date ties by id" do
     game = create(:game, series: series)
     first = create(:game, series: series, release_date: Date.new(2010, 1, 1))
     second = create(:game, series: series, release_date: Date.new(2010, 1, 1))

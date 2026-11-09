@@ -34,7 +34,7 @@ module Types
       argument :sort_by, Enums::GameReviewSortType, required: false, default_value: 'recent', description: "The order to sort the reviews in."
     end
     field :activity, EventType.connection_type, null: false, description: "Activity Events about this game (library additions, completion status changes and favorites), from public, unbanned users."
-    field :more_from_series, GameType.connection_type, null: false, description: "Other games in the same series as this game, oldest release first. Empty if the game isn't in a series."
+    field :more_from_series, GameType.connection_type, null: false, description: "Other games in the same series as this game, most owned first (ties go to the oldest release). Empty if the game isn't in a series."
 
     field :cover_url, String, null: true, description: "URL for the game's cover image. `null` means the game has no associated cover." do
       argument :size, Enums::GameCoverSizeType, required: false, default_value: :small, description: "The size of the game cover image being requested."
@@ -113,15 +113,18 @@ module Types
                      .recently_created
     end
 
-    # The rest of the game's series, in release order so the list is stable
-    # (and cacheable) rather than a random pick on every load.
+    # The rest of the game's series, most owned first so the shelf shows the
+    # games people know, falling back to release order (then id) for ties so
+    # the list is stable rather than a random pick on every load. Reads the
+    # game_purchases_count counter cache, and a series is small enough that
+    # sorting its rows after the series_id index lookup costs nothing.
     def more_from_series
       return Game.none if @object.series_id.nil?
 
       Game.where(series_id: @object.series_id)
           .where.not(id: @object.id)
           .with_attached_cover
-          .order(Arel.sql('games.release_date ASC NULLS LAST, games.id ASC'))
+          .order(Arel.sql('games.game_purchases_count DESC, games.release_date ASC NULLS LAST, games.id ASC'))
     end
 
     # Get the Steam App ID values as an array.
