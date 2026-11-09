@@ -1,4 +1,4 @@
-import { computed, ref, watch, type Ref, type WritableComputedRef } from "vue";
+import { computed, nextTick, ref, watch, type Ref, type WritableComputedRef } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { DocumentNode } from "graphql";
 import { gqlClient } from "@/graphql/client";
@@ -78,7 +78,7 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
     first: RESOURCE_GAMES_PAGE_SIZE
   });
 
-  const { data, loading, error } = useQuery<TData>(query, { variables: baseVariables });
+  const { data, loading, revalidating, error, whenRevalidated } = useQuery<TData>(query, { variables: baseVariables });
 
   const firstPage = computed(() => (data.value ? options.select(data.value) : null));
 
@@ -114,6 +114,19 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
     const cursor = pageInfo.value?.endCursor;
     // While a new first page loads, the cursor belongs to the old list.
     if (!hasNextPage.value || !cursor || loadingMore.value || loading.value) {
+      return;
+    }
+
+    // A cached first page is being refreshed. When the fresh one lands it
+    // resets the pages, which would throw this one away (or drop it from the
+    // screen), so wait for it and load the page after the fresh first page.
+    if (revalidating.value) {
+      loadingMore.value = true;
+      await whenRevalidated();
+      // Let `watch(data, resetPages)` run first.
+      await nextTick();
+      loadingMore.value = false;
+      await loadMore();
       return;
     }
 
