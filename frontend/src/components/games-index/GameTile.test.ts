@@ -39,11 +39,11 @@ let wrapper: VueWrapper | undefined;
 let DWELL_MS: number;
 
 // The shared observer lives at module level, so each test imports a fresh copy.
-async function mountTile(coverUrl: string | null = COVER, { onScreen = false } = {}) {
+async function mountTile(coverUrl: string | null = COVER, { onScreen = false, deferCover = true } = {}) {
   const { default: GameTile } = await import("./GameTile.vue");
   ({ NEAR_VIEWPORT_DWELL_MS: DWELL_MS } = await import("@/composables/useNearViewport"));
   wrapper = mount(GameTile, {
-    props: { id: "1", name: "Half-Life 2", coverUrl },
+    props: { id: "1", name: "Half-Life 2", coverUrl, deferCover },
     global: { stubs: { RouterLink: RouterLinkStub } }
   });
   // A real observer reports where the tile is as soon as it's observed.
@@ -134,5 +134,28 @@ describe("GameTile cover loading", () => {
     const tile = await mountTile();
 
     expect(tile.find("img").attributes("src")).toBe(COVER);
+  });
+});
+
+describe("GameTile cover loading without deferCover", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubGlobal("IntersectionObserver", FakeIntersectionObserver);
+  });
+
+  afterEach(() => {
+    wrapper?.unmount();
+    wrapper = undefined;
+    vi.unstubAllGlobals();
+  });
+
+  // Shelves scroll sideways on phones, where the observer's margin doesn't
+  // reach; the browser's own lazy loading preloads ahead there.
+  it("leaves the cover to the browser's lazy loading", async () => {
+    const tile = await mountTile(COVER, { deferCover: false });
+
+    const img = tile.find("img");
+    expect(img.attributes("src")).toBe(COVER);
+    expect(img.attributes("loading")).toBe("lazy");
   });
 });

@@ -2,7 +2,13 @@
   <router-link :to="`/games/${id}`" class="game-tile" :aria-label="accessibleName">
     <span ref="coverRef" class="game-tile-cover">
       <template v-if="coverUrl">
-        <img v-if="nearViewport || loadedUrl === coverUrl" :src="coverUrl" alt="" @load="loadedUrl = coverUrl" />
+        <img
+          v-if="nearViewport || loadedUrl === coverUrl"
+          :src="coverUrl"
+          alt=""
+          :loading="deferCover ? undefined : 'lazy'"
+          @load="loadedUrl = coverUrl"
+        />
       </template>
       <span v-else class="game-tile-placeholder" aria-hidden="true">{{ initials }}</span>
       <span v-if="rating !== null" class="game-tile-rating" :class="`is-${ratingTier(rating)}`" aria-hidden="true">
@@ -34,17 +40,21 @@ const props = withDefaults(
     rating?: number | null;
     inLibrary?: boolean | null;
     completionStatus?: GamePurchaseCompletionStatus | null;
+    // Wait for the tile to settle near the viewport before loading its cover,
+    // for long grids that people scroll through fast. Otherwise the cover
+    // lazy-loads, which also preloads ahead inside sideways-scrolling shelves.
+    deferCover?: boolean;
   }>(),
-  { meta: null, rating: null, inLibrary: false, completionStatus: null }
+  { meta: null, rating: null, inLibrary: false, completionStatus: null, deferCover: false }
 );
 
-// The cover only loads once the tile settles near the viewport. Otherwise a
-// fast scroll starts a download for every tile it passes, and the covers where
-// it stops wait behind all of them. If the tile leaves before its cover has
-// loaded, the image is removed so a browser that drops unused image requests
-// can stop it. A cover that has loaded stays.
+// With `deferCover`, the cover only loads once the tile settles near the
+// viewport. Otherwise a fast scroll starts a download for every tile it
+// passes, and the covers where it stops wait behind all of them. If the tile
+// leaves before its cover has loaded, the image is removed so a browser that
+// drops unused image requests can stop it. A cover that has loaded stays.
 const coverRef = ref<HTMLElement | null>(null);
-const nearViewport = useNearViewport(coverRef);
+const nearViewport = useNearViewport(coverRef, props.deferCover);
 const loadedUrl = ref<string | null>(null);
 
 const initials = computed(() =>
