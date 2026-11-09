@@ -7,7 +7,8 @@ name: Deploy
 #     pushed, its approve-deploy job waits for a reviewer of the
 #     `production-approval` environment. Approving it ("Review deployments"
 #     on the run page) runs this workflow for that commit. A newer merge
-#     replaces the waiting approval, so only main's latest commit waits.
+#     replaces the waiting approval, and a run whose commit is no longer
+#     main's head skips it, so only main's latest commit waits.
 #   - Manually: Actions > Deploy > Run workflow, or `gh workflow run
 #     deploy.yml` (add `-f ref=<sha>` to pick a commit, which also works as
 #     a rollback).
