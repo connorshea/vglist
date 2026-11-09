@@ -33,18 +33,10 @@ RSpec.describe 'vglist:wikidata:check_game_names', type: :task do
     create(:game, name: 'Portal 2', wikidata_id: 101)
     allow(WikidataSparql).to receive(:query).and_return([label_row(100, 'The Turn'), label_row(101, 'Portal 2')])
 
-    csv = CSV.parse(run_task, headers: true)
-
-    expect(csv.map(&:to_h)).to eq(
+    expect(run_task.lines(chomp: true)).to eq(
       [
-        {
-          'kind' => 'mismatch',
-          'game_id' => mismatched.id.to_s,
-          'wikidata_id' => '100',
-          'game_name' => 'Turn, The',
-          'wikidata_label' => 'The Turn',
-          'label_language' => 'en'
-        }
+        'kind,game_id,wikidata_id,game_name,wikidata_label,label_language',
+        "mismatch,#{mismatched.id},100,\"Turn, The\",The Turn,en"
       ]
     )
     expect(mismatched.reload.name).to eq('Turn, The')
@@ -57,8 +49,8 @@ RSpec.describe 'vglist:wikidata:check_game_names', type: :task do
     end
 
     stub_const('ENV', ENV.to_h.merge('MIN_ID' => games[1].id.to_s, 'MAX_ID' => games[1].id.to_s))
-    csv = CSV.parse(run_task, headers: true)
+    rows = run_task.lines(chomp: true).drop(1)
 
-    expect(csv.pluck('game_id')).to eq([games[1].id.to_s])
+    expect(rows.map { |row| row.split(',')[1] }).to eq([games[1].id.to_s])
   end
 end

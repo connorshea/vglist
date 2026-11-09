@@ -2,7 +2,6 @@
 
 namespace :vglist do
   namespace :wikidata do
-    require 'csv'
     require 'ruby-progressbar'
 
     # Read-only: reports games whose names differ from their Wikidata labels,
@@ -36,13 +35,22 @@ namespace :vglist do
       $stdout.puts columns.join(',')
       check.each_result(on_chunk: ->(size) { progress_bar.progress += size }) do |result|
         counts[result.kind] += 1
-        $stdout.puts CSV.generate_line(columns.map { |column| result[column] }).chomp
+        $stdout.puts columns.map { |column| csv_field(result[column]) }.join(',')
       end
       progress_bar.finish unless progress_bar.finished?
 
       warn "Checked #{check.count} games with Wikidata IDs."
       warn "#{counts[:mismatch]} names differ from Wikidata."
       warn "#{counts[:no_label]} Wikidata items have no en or mul label."
+    end
+
+    # Quote a CSV field when it needs it (RFC 4180). The csv gem left the
+    # standard library in Ruby 3.4, and this is all the report needs.
+    def csv_field(value)
+      string = value.to_s
+      return string unless string.match?(/[",\r\n]/)
+
+      "\"#{string.gsub('"', '""')}\""
     end
   end
 end
