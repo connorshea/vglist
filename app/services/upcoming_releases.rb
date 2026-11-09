@@ -72,7 +72,7 @@ module UpcomingReleases
   # @return [Array<Integer>]
   def ranked_ids
     columns = [:id, :release_date, :game_purchases_count, *NewReleases::EXTERNAL_ID_COLUMNS]
-    candidates = Game.upcoming.where('release_date < ?', WINDOW.from_now).limit(CANDIDATES).select(*columns)
+    candidates = Game.upcoming.where('games.release_date < ?', WINDOW.from_now).limit(CANDIDATES).select(*columns)
 
     ranked = Game.from(candidates, :games).order(
       Arel.sql("(#{NewReleases::HAS_COVER_SQL}) DESC"),
