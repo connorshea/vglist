@@ -9,7 +9,7 @@
 # to cache.
 #
 # The set of keys is small and fixed: an operation is only cacheable with the
-# variables the home page and the first page of the games index send. Anything
+# variables the home page (including its new releases shelf) and the first page of the games index send. Anything
 # else (other filters, later pages, a signed-in user's game tiles) runs
 # normally, so a client can't fill the cache with arbitrary variations and
 # evict the Rack::Attack counters that share the store.
@@ -55,6 +55,8 @@ module PublicResponseCache
       [] if %w[hasPlatform hasGenre hasEngine].none? { |name| variables[name] }
     when 'GetGamesIndex'
       games_index_parts(variables, user)
+    when 'GetNewReleases'
+      new_releases_parts(variables, user)
     end
   end
 
@@ -74,6 +76,15 @@ module PublicResponseCache
     return nil unless [true, false].include?(with_count)
 
     [first, sort_by || 'default', with_count]
+  end
+
+  # Like the games index, the new releases tiles carry the signed-in user's
+  # library status, so only signed-out responses are cached.
+  def new_releases_parts(variables, user)
+    return nil unless user.nil?
+
+    first = variables['first']
+    [first] if first.is_a?(Integer) && first.between?(1, NewReleases::MAX)
   end
 
   def canonical_document(operation_name)

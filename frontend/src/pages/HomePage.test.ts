@@ -68,6 +68,8 @@ function respond(document: DocumentNode, variables?: Record<string, unknown>) {
           pageInfo: { hasNextPage: true, endCursor: "c" }
         }
       });
+    case "GetNewReleases":
+      return Promise.resolve({ newReleases: [game("new-1", "Hades II")] });
     default:
       return Promise.resolve({ games: { nodes: [] } });
   }
@@ -187,14 +189,15 @@ describe("HomePage", () => {
     const sorts = mockRequest.mock.calls
       .filter(([document]) => operationName(document) === "GetGamesIndex")
       .map(([, variables]) => variables?.sortBy);
-    expect(sorts).toEqual(["MOST_OWNERS", "RECENTLY_RELEASED", "NEWEST"]);
+    expect(sorts).toEqual(["MOST_OWNERS", "NEWEST"]);
+    const newReleases = mockRequest.mock.calls.filter(([document]) => operationName(document) === "GetNewReleases");
+    expect(newReleases.map(([, variables]) => variables)).toEqual([{ first: 6 }]);
+    expect(wrapper.findAll(".game-shelf")[1].text()).toContain("Hades II");
   });
 
   it("leaves out a shelf with no games", async () => {
     mockRequest.mockImplementation((document, variables) =>
-      operationName(document) === "GetGamesIndex" && variables?.sortBy === "RECENTLY_RELEASED"
-        ? Promise.resolve({ games: { nodes: [], pageInfo: { hasNextPage: false, endCursor: null } } })
-        : respond(document, variables)
+      operationName(document) === "GetNewReleases" ? Promise.resolve({ newReleases: [] }) : respond(document, variables)
     );
     const wrapper = await mountPage();
     expect(wrapper.findAll(".game-shelf-title").map((h) => h.text())).toEqual(["Popular", "Recently added to vglist"]);

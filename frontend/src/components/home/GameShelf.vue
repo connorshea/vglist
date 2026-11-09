@@ -30,8 +30,8 @@
 import { computed } from "vue";
 import { ArrowRight } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_GAMES_INDEX } from "@/graphql/queries/games-index";
-import type { GetGamesIndexQuery } from "@/types/graphql";
+import { GET_GAMES_INDEX, GET_NEW_RELEASES } from "@/graphql/queries/games-index";
+import type { GetGamesIndexQuery, GetNewReleasesQuery } from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
 import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
 import {
@@ -56,21 +56,37 @@ const seeAllLink = computed(() => ({
   query: props.sort === DEFAULT_GAME_SORT ? {} : { sort: props.sort.slug }
 }));
 
-// Uses the games index's own query, so the home page sends nothing the index
-// doesn't already.
-const { data, error } = useQuery<GetGamesIndexQuery>(GET_GAMES_INDEX, {
+// The new releases shelf has its own query, which puts games with covers and
+// more external IDs ahead of sparse entries. "See all" still links to the
+// index's plain release-date sort.
+const isNewReleases = computed(() => props.sort.value === "RECENTLY_RELEASED");
+
+const newReleases = useQuery<GetNewReleasesQuery>(GET_NEW_RELEASES, {
+  variables: () => ({ first: SHELF_SIZE }),
+  enabled: isNewReleases
+});
+
+// The other shelves use the games index's own query, so the home page sends
+// nothing the index doesn't already.
+const sorted = useQuery<GetGamesIndexQuery>(GET_GAMES_INDEX, {
   variables: () => ({
     first: SHELF_SIZE,
     after: null,
     sortBy: props.sort.value,
     ...filterVariables(EMPTY_FILTERS),
     withCount: false
-  })
+  }),
+  enabled: () => !isNewReleases.value
 });
 
-const games = computed(() => data.value?.games?.nodes ?? []);
+const games = computed(() =>
+  isNewReleases.value ? (newReleases.data.value?.newReleases ?? []) : (sorted.data.value?.games?.nodes ?? [])
+);
 // A shelf that failed to load is left out rather than shown broken.
-const loaded = computed(() => data.value !== null || error.value !== null);
+const loaded = computed(() => {
+  const { data, error } = isNewReleases.value ? newReleases : sorted;
+  return data.value !== null || error.value !== null;
+});
 </script>
 
 <style scoped>
