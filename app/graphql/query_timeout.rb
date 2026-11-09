@@ -13,4 +13,9 @@ class QueryTimeout < GraphQL::Schema::Timeout
   def max_seconds(query)
     query.mutation? ? false : super
   end
+
+  # Called once per query, on the first field that starts after the deadline.
+  def handle_timeout(error, query)
+    GraphqlTimeoutReport.capture(query, kind: :query_timeout, message: error.message)
+  end
 end

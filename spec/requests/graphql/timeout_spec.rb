@@ -41,6 +41,55 @@ RSpec.describe "GraphQL timeouts", type: :request do
     expect(response.parsed_body['errors'].first['message']).to eq('This request took too long and was cancelled.')
   end
 
+  describe 'reporting to Sentry' do
+    # The tags and fingerprint of the scope each event was captured in.
+    let(:captured) { [] }
+
+    def record_capture(*args)
+      scope = Sentry.get_current_scope
+      captured << { args: args, tags: scope.tags, fingerprint: scope.fingerprint }
+      nil
+    end
+
+    before(:each) do
+      allow(Sentry).to receive(:capture_exception) { |*args, **kwargs| record_capture(*args, **kwargs) }
+      allow(Sentry).to receive(:capture_message) { |*args, **kwargs| record_capture(*args, **kwargs) }
+    end
+
+    it 'reports a cancelled statement, grouped by operation', :aggregate_failures do
+      allow(Game).to receive(:count) { ActiveRecord::Base.lease_connection.execute('SELECT pg_sleep(1)') }
+
+      with_environment('GRAPHQL_STATEMENT_TIMEOUT' => '50ms') do
+        graphql('query SlowStats { basicSiteStatistics { games } }')
+      end
+
+      expect(captured.size).to eq(1)
+      expect(captured.first[:args].first).to be_a(ActiveRecord::QueryCanceled)
+      expect(captured.first[:tags]).to include(graphql_operation: 'SlowStats', graphql_timeout: 'statement_timeout')
+      expect(captured.first[:fingerprint]).to eq(%w[graphql-timeout statement_timeout SlowStats])
+    end
+
+    it 'reports a query that runs past its time limit', :aggregate_failures do
+      # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(GraphQL::Schema::Timeout).to receive(:max_seconds).and_return(-1)
+      # rubocop:enable RSpec/AnyInstance
+
+      graphql(query)
+
+      expect(captured.size).to eq(1)
+      expect(captured.first[:args]).to eq(
+        ['GraphQL anonymous timed out: Timeout on Query.basicSiteStatistics', { level: :warning }]
+      )
+      expect(captured.first[:fingerprint]).to eq(%w[graphql-timeout query_timeout anonymous])
+    end
+
+    it "doesn't report a request that finishes in time" do
+      graphql(query)
+
+      expect(captured).to be_empty
+    end
+  end
+
   it 'stops resolving fields once the whole request runs past its time limit', :aggregate_failures do
     # A deadline already in the past, so the first field resolved times out.
     # rubocop:disable RSpec/AnyInstance

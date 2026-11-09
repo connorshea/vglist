@@ -49,7 +49,13 @@ class VideoGameListSchema < GraphQL::Schema
   lazy_resolve(LazyGamePurchase, :value)
 
   # A statement cancelled by the statement timeout (see GraphqlController).
-  rescue_from(ActiveRecord::QueryCanceled) do |_err, _obj, _args, _ctx, _field|
+  rescue_from(ActiveRecord::QueryCanceled) do |err, _obj, _args, ctx, field|
+    GraphqlTimeoutReport.capture(
+      ctx&.query,
+      kind: :statement_timeout,
+      message: "Statement cancelled#{" in #{field.path}" if field}",
+      exception: err
+    )
     raise GraphQL::ExecutionError, "This request took too long and was cancelled."
   end
 
