@@ -35,6 +35,20 @@ module Resolvers
 
       extras [:lookahead]
 
+      # The games column each lookup argument (other than steam_app_id) filters
+      # on. Building the condition from this list, rather than passing the
+      # arguments straight to `where`, keeps the filter limited to these columns.
+      LOOKUP_COLUMNS = {
+        id: :id,
+        wikidata_id: :wikidata_id,
+        giantbomb_id: :giantbomb_id,
+        igdb_id: :igdb_id,
+        mobygames_id: :mobygames_id,
+        pcgamingwiki_id: :pcgamingwiki_id,
+        epic_games_store_id: :epic_games_store_id,
+        gog_id: :gog_id
+      }.freeze
+
       def resolve(lookahead:, **kwargs)
         # An explicit null (e.g. `wikidataId: null`) would otherwise match
         # every game without that ID.
@@ -43,7 +57,8 @@ module Resolvers
         games = if kwargs.key?(:steam_app_id)
                   Game.joins(:steam_app_ids).where(steam_app_ids: { app_id: kwargs[:steam_app_id] })
                 else
-                  Game.where(**kwargs)
+                  argument, value = kwargs.first
+                  Game.where(LOOKUP_COLUMNS.fetch(argument) => value)
                 end
 
         # Reading the cover URL otherwise takes five queries one after the
