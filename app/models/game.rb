@@ -102,6 +102,12 @@ class Game < ApplicationRecord
   scope :recently_released, -> {
     where("release_date < ?", 1.day.from_now).order(release_date: :desc, id: :desc)
   }
+  # Games that haven't been released yet, soonest first. The exact complement
+  # of recently_released (which allows a day of slack for time zones), so a
+  # game is never in both.
+  scope :upcoming, -> {
+    where("release_date >= ?", 1.day.from_now).order(release_date: :asc, id: :asc)
+  }
 
   # Find games available on a given platform.
   scope :on_platform, ->(platform_id) {
