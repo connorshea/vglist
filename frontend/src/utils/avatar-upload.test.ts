@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { queryCacheGeneration, readQueryCache, writeQueryCache } from "@/graphql/query-cache";
 import { uploadAvatar } from "./avatar-upload";
 
 function jsonResponse(status: number, body: unknown): Response {
@@ -15,6 +16,26 @@ describe("uploadAvatar", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("clears the query cache, since cached results may show the old avatar", async () => {
+    writeQueryCache("GetUserProfile:{}", { user: { avatarUrl: "old" } }, queryCacheGeneration());
+    fetchMock.mockResolvedValue(jsonResponse(201, { avatar_url: "new" }));
+
+    await uploadAvatar(new Blob(["png"], { type: "image/png" }), "jwt-token");
+
+    expect(readQueryCache("GetUserProfile:{}")).toBeNull();
+  });
+
+  it("clears it even when the connection drops", async () => {
+    writeQueryCache("GetUserProfile:{}", { user: { avatarUrl: "old" } }, queryCacheGeneration());
+    fetchMock.mockRejectedValue(new TypeError("Failed to fetch"));
+
+    await expect(uploadAvatar(new Blob(["png"], { type: "image/png" }), "jwt-token")).rejects.toThrow(
+      "Failed to fetch"
+    );
+
+    expect(readQueryCache("GetUserProfile:{}")).toBeNull();
   });
 
   it("posts the image as multipart form data with the bearer token", async () => {

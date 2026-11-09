@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { UserRole } from "@/types/graphql";
+import { clearQueryCache } from "@/graphql/query-cache";
 
 export const REVIEW_DRAFT_KEY_PREFIX = "vglist-review-draft-";
 
@@ -41,7 +42,11 @@ export const useAuthStore = defineStore("auth", () => {
   const isAdmin = computed(() => user.value?.role === "ADMIN");
   const isModerator = computed(() => user.value?.role === "MODERATOR" || user.value?.role === "ADMIN");
 
+  // Cached query results can depend on who was signed in (library status,
+  // private profiles, moderator-only fields), so neither sign-in nor sign-out
+  // may show the previous viewer's.
   function setAuth(newToken: string, newUser: AuthUser) {
+    clearQueryCache();
     token.value = newToken;
     user.value = newUser;
     localStorage.setItem("auth_token", newToken);
@@ -49,6 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   function clearAuth() {
+    clearQueryCache();
     token.value = null;
     user.value = null;
     localStorage.removeItem("auth_token");

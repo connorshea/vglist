@@ -40,7 +40,9 @@ const submitError = ref("");
 
 const { data, loading, error } = useQuery<GetStoreForEditQuery>(GET_STORE_FOR_EDIT, {
   variables: () => ({ id: storeId.value }),
-  enabled: () => isEditing.value
+  enabled: () => isEditing.value,
+  // Seeds the form, which a fresh result arriving later would overwrite.
+  cache: false
 });
 
 usePageTitle(() => {

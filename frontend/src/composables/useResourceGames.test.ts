@@ -108,6 +108,33 @@ describe("useResourceGames", () => {
     expect(games().games.value.map((g) => g.id)).toEqual(["p1"]);
   });
 
+  it("waits for a cached first page to refresh before loading more, and keeps the page", async () => {
+    // A first visit caches the first page.
+    mockRequest.mockResolvedValueOnce(companyResult({ developed: connection(["d1"], "stale-30") }));
+    mountCompanyGames();
+    await flushPromises();
+
+    const fresh = deferred<GetCompanyQuery>();
+    mockRequest
+      .mockReturnValueOnce(fresh.promise)
+      .mockResolvedValueOnce(companyResult({ developed: connection(["d2"], "fresh-60") }));
+    const { games } = mountCompanyGames();
+    expect(games().games.value.map((g) => g.id)).toEqual(["d1"]);
+
+    const loaded = games().loadMore();
+    await flushPromises();
+    expect(games().loadingMore.value).toBeTruthy();
+    expect(mockRequest).toHaveBeenCalledTimes(2);
+
+    fresh.resolve(companyResult({ developed: connection(["d1-new"], "fresh-30") }));
+    await loaded;
+
+    expect(mockRequest).toHaveBeenCalledTimes(3);
+    expect(mockRequest).toHaveBeenLastCalledWith(GET_COMPANY, expect.objectContaining({ after: "fresh-30" }));
+    expect(games().games.value.map((g) => g.id)).toEqual(["d1-new", "d2"]);
+    expect(games().loadingMore.value).toBeFalsy();
+  });
+
   it("doesn't load more with the old list's cursor while a new sort loads", async () => {
     const newSortPage = deferred<GetCompanyQuery>();
     mockRequest
