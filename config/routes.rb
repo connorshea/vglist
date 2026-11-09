@@ -35,8 +35,11 @@ Rails.application.routes.draw do
     passwords: 'users/passwords'
   }, skip: [:sessions, :registrations]
 
-  # Execute GraphQL queries posted to '/graphql'.
+  # Execute GraphQL queries posted to '/graphql'. Signed-out queries can
+  # also be sent as GET with a persisted document ID, so Cloudflare can cache
+  # them (see GraphqlController#persisted_query).
   post "/graphql", to: "graphql#execute"
+  get "/graphql", to: "graphql#execute"
 
   # Link-preview HTML (Open Graph tags + Discord component embed) for game
   # pages. frontend/Caddyfile proxies link-preview crawlers here.
