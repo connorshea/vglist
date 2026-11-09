@@ -21,6 +21,12 @@ SENTRY_TRACES_SAMPLER = lambda do |sampling_context|
   SENTRY_TRACES_SAMPLE_RATE
 end
 
+# Share of traced transactions that also get a CPU profile, so slow requests
+# show which code the time went to, not just which SQL ran. Relative to the
+# trace sample rate: 1.0 profiles every traced transaction. Override with
+# SENTRY_PROFILES_SAMPLE_RATE (0.0 to 1.0).
+SENTRY_PROFILES_SAMPLE_RATE = ENV.fetch('SENTRY_PROFILES_SAMPLE_RATE', '1.0').to_f
+
 # Response statuses whose transactions are never traced.
 SENTRY_TRACE_IGNORE_STATUS_CODES = [(301..303), (305..399), (401..404)].freeze
 
@@ -38,6 +44,11 @@ Sentry.init do |config|
   config.send_default_pii = false
 
   config.traces_sampler = SENTRY_TRACES_SAMPLER
+
+  # Vernier, not the default StackProf: Puma runs several threads per worker,
+  # and Vernier samples all of them and shows time spent waiting for the GVL.
+  config.profiler_class = Sentry::Vernier::Profiler
+  config.profiles_sample_rate = SENTRY_PROFILES_SAMPLE_RATE
 
   # Don't trace redirects. sentry-ruby 7.1 started tracing 302s and 303s by
   # default; this is the 6.x default, so they don't use up the span quota.

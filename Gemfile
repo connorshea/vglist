@@ -60,6 +60,10 @@ gem 'ruby-progressbar', '~> 1.13', require: false
 # Use Sentry for error tracking in production.
 gem 'sentry-ruby', '~> 7.2.0'
 gem 'sentry-rails', '~> 7.2.0'
+# Profiler for Sentry's request profiles. Unlike StackProf it samples every
+# thread and records when each one waits for the GVL. Sentry requires it when
+# profiling is on.
+gem 'vernier', '~> 1.12', require: false
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 2.6.14'
