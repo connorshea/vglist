@@ -34,6 +34,10 @@ module Resolvers
       }
 
       def resolve(**kwargs)
+        # An explicit null (e.g. `wikidataId: null`) would otherwise match
+        # every game without that ID.
+        return nil if kwargs.values.any?(&:nil?)
+
         if kwargs.key?(:steam_app_id)
           SteamAppId.find_by(app_id: kwargs[:steam_app_id])&.game
         else

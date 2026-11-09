@@ -273,6 +273,22 @@ RSpec.describe "Game query API", type: :request do
       )
     end
 
+    it "returns null rather than an arbitrary game for an explicit null ID" do
+      game_with_wikidata_id
+      game
+      query_string = <<-GRAPHQL
+        query {
+          game(wikidataId: null) {
+            id
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+
+      expect(result.graphql_dig(:game)).to be_nil
+    end
+
     it "returns an error if the query uses both an id and giantbomb_id" do
       query_string = <<-GRAPHQL
         query($id: ID!, $giantbombId: String!) {
