@@ -43,12 +43,16 @@ ARG VITE_SENTRY_RELEASE
 # id=sentry_auth_token,env=SENTRY_AUTH_TOKEN), so it never lands in a layer or
 # the image history. With it and VITE_SENTRY_RELEASE set, vite.config.ts
 # uploads hidden source maps to Sentry and deletes them; the find below makes
-# sure none reach the Caddy stage either way.
+# sure none reach the Caddy stage either way. A failed upload doesn't fail the
+# build; vite.config.ts writes it to SENTRY_UPLOAD_ERRORS_FILE, which goes into
+# the image (outside the served dist/) so the Docker workflow can warn about it.
 RUN --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
     [ -n "$VITE_API_URL" ] || unset VITE_API_URL; \
     [ -n "$VITE_SENTRY_DSN" ] || unset VITE_SENTRY_DSN; \
     [ -n "$VITE_TURNSTILE_SITE_KEY" ] || unset VITE_TURNSTILE_SITE_KEY; \
     [ -n "$VITE_SENTRY_RELEASE" ] || unset VITE_SENTRY_RELEASE; \
+    export SENTRY_UPLOAD_ERRORS_FILE=/app/sentry-upload-errors; \
+    : > "$SENTRY_UPLOAD_ERRORS_FILE"; \
     pnpm run build \
     && find dist -name "*.map" -delete
 
@@ -59,6 +63,7 @@ FROM caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf5
 
 COPY frontend/Caddyfile /etc/caddy/Caddyfile
 COPY --from=build /app/frontend/dist /app/dist
+COPY --from=build /app/sentry-upload-errors /app/sentry-upload-errors
 
 # Listen on an unprivileged port and drop root. The Caddyfile reads PORT.
 ENV PORT=8080
