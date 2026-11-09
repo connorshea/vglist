@@ -93,7 +93,10 @@ const accessibleName = computed(() => {
   width: 100%;
   overflow: hidden;
   border-radius: 10px;
-  background: var(--color-bg-subtle);
+  /* The same fill as SkeletonBlock, so a cover that is still loading reads as
+     loading. --color-bg-subtle matches the page background in dark mode, which
+     left loading covers looking like empty boxes. */
+  background: color-mix(in srgb, var(--color-text-primary) 9%, transparent);
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
