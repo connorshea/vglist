@@ -50,7 +50,12 @@ namespace :import do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    games.in_groups_of(50, false) do |game_batch|
+    games.in_groups_of(50, false).each_with_index do |game_batch, batch_index|
+      # Wait between batches to prevent the rate limiter from killing us. Not
+      # before the first one, and not after the last, which would just delay
+      # the download pass.
+      sleep 1 unless batch_index.zero?
+
       slugs = game_batch.map(&:second)
 
       # This format is called APIcalypse and is specific to IGDB.
@@ -89,9 +94,6 @@ namespace :import do
       # Advance by the number of games in this batch (the last group may be
       # smaller than 50).
       fetch_progress_bar.progress += game_batch.size
-
-      # Sleep to prevent the rate limiter from killing us.
-      sleep 1
     end
 
     fetch_progress_bar.finish unless fetch_progress_bar.finished?

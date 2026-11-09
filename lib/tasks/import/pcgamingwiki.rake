@@ -24,6 +24,8 @@ namespace :import do
 
     cover_not_found_or_errored_count = 0
     cover_added_count = 0
+    # Whether a request has gone to PCGamingWiki yet, for pacing them.
+    made_request = false
 
     progress_bar = ProgressBar.create(
       total: games.count,
@@ -70,15 +72,17 @@ namespace :import do
       # sent too quickly.
       req['User-Agent'] = WikidataSparql::USER_AGENT
 
+      # Pace requests so we stay under PCGamingWiki's rate limit rather than
+      # hammering it back-to-back (which is what gets us served the Cloudflare
+      # page handled below). Waiting before every request but the first paces
+      # them all, whether the previous game got a cover or was skipped, without
+      # a pointless wait after the last one.
+      sleep(1) if made_request
+      made_request = true
+
       res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
         http.request(req)
       end
-
-      # Pace requests so we stay under PCGamingWiki's rate limit rather than
-      # hammering it back-to-back (which is what gets us served the Cloudflare
-      # page handled below). Placed right after the request so every path from
-      # here on is paced, whether the game gets a cover or is skipped.
-      sleep(1)
 
       # PCGamingWiki sometimes answers with an HTML error or Cloudflare page
       # instead of JSON (typically when it's rate-limiting us). Parsing that as
