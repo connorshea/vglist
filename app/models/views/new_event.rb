@@ -31,18 +31,17 @@ module Views
       'following' => Events::RelationshipEvent
     }.freeze
 
-    # Nested associations to preload for each event category's eventable.
+    # Nested associations to preload for each event class's eventable.
     #
     # Game purchases also preload their owner, which `GamePurchaseType`'s
     # authorization check reads for every record. These are loaded by ID rather
     # than through a user's association, so there's no `inverse_of` to fall back
     # on and the owner would otherwise be fetched one purchase at a time.
     EVENTABLE_INCLUDES = {
-      'add_to_library' => [:user, { game: AttachmentPreloads::COVER }],
-      'change_completion_status' => [:user, { game: AttachmentPreloads::COVER }],
-      'favorite_game' => { game: AttachmentPreloads::COVER },
-      'new_user' => AttachmentPreloads::AVATAR,
-      'following' => { followed: AttachmentPreloads::AVATAR }
+      Events::GamePurchaseEvent => [:user, { game: AttachmentPreloads::COVER }],
+      Events::FavoriteGameEvent => { game: AttachmentPreloads::COVER },
+      Events::UserEvent => AttachmentPreloads::AVATAR,
+      Events::RelationshipEvent => { followed: AttachmentPreloads::AVATAR }
     }.freeze
 
     # Get a specific event subclass record based on the ID.
@@ -68,20 +67,22 @@ module Views
     end
 
     # Batch-load eventables for a collection of events to avoid N+1 queries.
-    # Groups events by category, batch-loads subclass records, then preloads eventables.
+    # Groups events by table, batch-loads subclass records, then preloads eventables.
     def self.preload_eventables(events)
       events_array = events.to_a
       return events_array if events_array.empty?
 
-      grouped = events_array.group_by(&:event_category)
+      # Both library events (add_to_library and change_completion_status) are
+      # in the same table, so they are loaded together, along with one set of
+      # their library entries, games and covers.
+      grouped = events_array.group_by { |event| EVENT_CLASS_MAP[event.event_category] }
       subclass_map = {}
 
-      grouped.each do |category, category_events|
-        klass = EVENT_CLASS_MAP[category]
+      grouped.each do |klass, class_events|
         next unless klass
 
-        ids = category_events.map(&:id)
-        records = klass.where(id: ids).includes(eventable: EVENTABLE_INCLUDES[category])
+        ids = class_events.map(&:id)
+        records = klass.where(id: ids).includes(eventable: EVENTABLE_INCLUDES[klass])
         records.each { |r| subclass_map[r.id] = r }
       end
 
