@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+import { appendFileSync } from "fs";
 import { resolve } from "path";
 
 export default defineConfig(({ mode }) => {
@@ -38,6 +39,19 @@ export default defineConfig(({ mode }) => {
           project: "vglist-frontend",
           authToken: sentryAuthToken,
           telemetry: false,
+          // By default a failed upload only logs, the build still passes, and the
+          // maps are deleted anyway, so a bad token would quietly leave Sentry
+          // with minified stack traces. The Docker build points
+          // SENTRY_UPLOAD_ERRORS_FILE at a file the Docker workflow checks and
+          // turns into a warning. It doesn't fail the build, so a Sentry outage
+          // can't block the image push.
+          errorHandler: (err) => {
+            process.stderr.write(`[sentry-vite-plugin] ${err.stack ?? err.message}\n`);
+            const errorsFile = env.SENTRY_UPLOAD_ERRORS_FILE;
+            if (errorsFile) {
+              appendFileSync(errorsFile, `${err.message.split("\n")[0]}\n`);
+            }
+          },
           release: {
             name: sentryRelease,
             // main.ts sets the release from VITE_SENTRY_RELEASE already.
