@@ -17,11 +17,20 @@
 # a forked child's first run of them took ~560 ms without this and ~195 ms
 # with it. Right after a deploy, with both workers cold and sharing the CPU,
 # the same requests took 7-16 s in production.
+#
+# Everything runs twice over: once as a signed-out visitor and once as a
+# signed-in user. A signed-in request also resolves the user's avatar and
+# checks each game against their library, and with only the signed-out run
+# those were still cold: profiles of the slow requests after a deploy showed
+# the time going to avatar URLs and library lookups.
 module ProcessWarmup
   # Operations from the SPA's manifest (config/graphql/operations.json), with
   # the variables the SPA sends: the home page, the games index and a game
-  # page. A lambda is called for variables that depend on the data, and may
-  # return nil to skip the operation.
+  # page (which loads its reviews and activity separately). A lambda is called
+  # for variables that depend on the data, and may return nil to skip the
+  # operation.
+  GAME_ID = -> { Game.joins(:cover_attachment).order(:id).pick(:id)&.to_s }
+
   QUERIES = {
     'GetHeroCovers' => {},
     'GetBasicSiteStatistics' => {},
@@ -34,9 +43,23 @@ module ProcessWarmup
     'GetUpcomingReleases' => { 'first' => 6 },
     'GetGamesIndex' => { 'first' => 36, 'sortBy' => 'MOST_OWNERS', 'withCount' => true },
     'GetGame' => lambda {
-      id = Game.joins(:cover_attachment).order(:id).pick(:id)
-      { 'id' => id.to_s } if id
+      id = GAME_ID.call
+      { 'id' => id } if id
+    },
+    'GetGameReviews' => lambda {
+      id = GAME_ID.call
+      { 'id' => id, 'sortBy' => 'RECENT', 'first' => 5 } if id
+    },
+    'GetGameActivity' => lambda {
+      id = GAME_ID.call
+      { 'id' => id, 'first' => 6 } if id
     }
+  }.freeze
+
+  # Operations only a signed-in session sends, run on top of QUERIES for the
+  # signed-in user.
+  SIGNED_IN_QUERIES = {
+    'GetCurrentUserAvatar' => {}
   }.freeze
 
   # One pass leaves much of the code below YJIT's call threshold. Locally a
@@ -71,31 +94,55 @@ module ProcessWarmup
     end
   end
 
-  # Run QUERIES PASSES times. Results are thrown away. An operation that
-  # raises is logged and skipped, so the rest still run.
+  # Run QUERIES PASSES times signed out, and QUERIES plus SIGNED_IN_QUERIES
+  # PASSES times as signed_in_user (when there is one). Results are thrown
+  # away. An operation that raises is logged and skipped, so the rest still
+  # run.
   def run_queries
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    queries = QUERIES.filter_map do |name, variables|
-      variables = variables.call if variables.respond_to?(:call)
-      [name, variables] if variables
-    end
+    queries = with_variables(QUERIES)
+    user = signed_in_user
+    signed_in_queries = user ? queries + with_variables(SIGNED_IN_QUERIES) : []
 
     without_jobs_or_cache do
       PASSES.times do
         queries.each { |name, variables| execute(name, variables) }
+        signed_in_queries.each { |name, variables| execute(name, variables, current_user: user) }
       end
     end
 
     elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000).round
-    Rails.logger.info("ProcessWarmup ran #{queries.size} GraphQL operations #{PASSES}x in #{elapsed_ms}ms")
+    count = queries.size + signed_in_queries.size
+    Rails.logger.info("ProcessWarmup ran #{count} GraphQL operations #{PASSES}x in #{elapsed_ms}ms")
   end
 
-  def execute(name, variables)
+  # @return [Array<Array(String, Hash)>] Each operation with its variables,
+  #   without the ones whose lambda returned nil.
+  def with_variables(queries)
+    queries.filter_map do |name, variables|
+      variables = variables.call if variables.respond_to?(:call)
+      [name, variables] if variables
+    end
+  end
+
+  # The user the signed-in run is made as: one with an avatar and a library,
+  # so the avatar and in-library lookups have something to find. The queries
+  # only read, and their results are thrown away.
+  # @return [User, nil]
+  def signed_in_user
+    User.joins(:avatar_attachment)
+        .where(banned: false)
+        .where(GamePurchase.where('game_purchases.user_id = users.id').arel.exists)
+        .order(:id)
+        .first
+  end
+
+  def execute(name, variables, current_user: nil)
     VideoGameListSchema.execute(
       OperationAllowlist.operations.fetch(name),
       variables: variables,
       operation_name: name,
-      context: {}
+      context: { current_user: current_user }.compact
     )
   rescue StandardError => e
     Rails.logger.warn("ProcessWarmup: #{name} failed: #{e.class}: #{e.message}")
