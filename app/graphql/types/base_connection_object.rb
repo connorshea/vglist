@@ -16,6 +16,11 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
     return items.cached_total_count if items.respond_to?(:cached_total_count)
 
     unless items.group_values.any?
+      # A nested connection whose association was preloaded (e.g.
+      # `platforms { totalCount }` on a page of games) counts in memory
+      # instead of running a COUNT per parent.
+      return items.size if items.loaded?
+
       # A relation that selects extra computed columns (e.g.
       # `Series.with_game_stats`) can't be counted by its select list, which
       # .count would try to do, so count rows instead.

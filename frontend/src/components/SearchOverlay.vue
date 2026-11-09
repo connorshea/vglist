@@ -39,7 +39,7 @@
               @input="onSearch"
               @keydown.down.prevent="move(1)"
               @keydown.up.prevent="move(-1)"
-              @keydown.enter.prevent="chooseActive"
+              @keydown.enter="onEnter"
             />
             <div class="search-hint"><kbd class="kbd">Esc</kbd> to close</div>
             <button class="search-close" aria-label="Close search" @click="close">
@@ -48,7 +48,8 @@
           </div>
         </div>
 
-        <div class="search-results">
+        <!-- tabindex="-1" stops browsers making this scroller its own Tab stop. -->
+        <div class="search-results" tabindex="-1">
           <!-- Empty state -->
           <div v-if="trimmedQuery.length < 2" class="search-empty">
             <Search class="search-empty-icon" :stroke-width="1.5" />
@@ -271,6 +272,13 @@
             </div>
           </div>
         </div>
+
+        <!-- Always reachable by tap or Tab, since Enter isn't on every keyboard. -->
+        <div v-if="hasMinQuery" class="search-footer">
+          <button class="see-all-results" type="button" @click="goToSearchPage">
+            See all results for "{{ trimmedQuery }}" <ArrowRight :size="14" :stroke-width="2" aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </Transition>
   </Teleport>
@@ -283,13 +291,14 @@ import { debounce } from "lodash-es";
 import { gqlClient } from "@/graphql/client";
 import { GLOBAL_SEARCH } from "@/graphql/queries/resources";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
+import { recordPath, searchableTypeKey } from "@/utils/search";
 import type {
   GlobalSearchQuery,
   SearchResultFieldsFragment,
   GameSearchResultFieldsFragment,
   UserSearchResultFieldsFragment
 } from "@/types/graphql";
-import { Search, X, Gamepad2, Briefcase, Monitor, Users, Shapes } from "@lucide/vue";
+import { Search, X, Gamepad2, Briefcase, Monitor, Users, Shapes, ArrowRight } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
@@ -491,6 +500,8 @@ let searchController: AbortController | null = null;
 // out of date with what's typed.
 let resultsQuery: string | null = null;
 
+const hasMinQuery = computed(() => trimmedQuery.value.length >= 2);
+
 // Ignore whatever search is in flight, and stop its request.
 function cancelInFlightSearch() {
   latestSearch++;
@@ -503,7 +514,7 @@ const performSearch = debounce(async () => {
   const searchId = latestSearch;
   const searchQuery = trimmedQuery.value;
 
-  if (searchQuery.length < 2) {
+  if (!hasMinQuery.value) {
     results.value = [];
     resultsQuery = searchQuery;
     hasSearched.value = false;
@@ -592,31 +603,30 @@ async function chooseActive() {
   }
 }
 
-const typeRouteMap: Record<string, string> = {
-  GAME: "games",
-  USER: "users",
-  PLATFORM: "platforms",
-  COMPANY: "companies",
-  ENGINE: "engines",
-  GENRE: "genres",
-  SERIES: "series",
-  STORE: "stores"
-};
+// Enter also confirms an input method's composition (e.g. Japanese kana to
+// kanji); that's not a request to open anything yet, and the browser needs
+// the default action to finish the composition.
+function onEnter(event: KeyboardEvent) {
+  if (event.isComposing || event.keyCode === 229) {
+    return;
+  }
+  event.preventDefault();
+  void chooseActive();
+}
+
+function goToSearchPage() {
+  performSearch.cancel();
+  router.push({ name: "search", query: { query: trimmedQuery.value } });
+  close();
+}
 
 function resultHref(result: SearchResultFieldsFragment): string {
-  const path = typeRouteMap[result.searchableType];
-  if (!path) {
-    return "#";
-  }
   const id = result.searchableType === "USER" ? (result as UserSearchResultFieldsFragment).slug : result.searchableId;
-  return `/${path}/${id}`;
+  return recordPath(searchableTypeKey(result.searchableType), id);
 }
 
 function goToResult(result: SearchResultFieldsFragment) {
-  const href = resultHref(result);
-  if (href !== "#") {
-    router.push(href);
-  }
+  router.push(resultHref(result));
   close();
 }
 
@@ -881,6 +891,38 @@ function releaseYear(date: string): string {
 }
 
 /* ── Results area ── */
+.search-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 780px;
+  padding: 12px 24px 20px;
+}
+
+.see-all-results {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--s-300);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.see-all-results:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.see-all-results:focus-visible {
+  outline: 2px solid var(--p-400);
+  outline-offset: 2px;
+}
+
 .search-results {
   flex: 1;
   overflow-y: auto;

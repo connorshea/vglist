@@ -7,7 +7,7 @@ module Resolvers
 
       description "Find a game engine by searching based on its name."
 
-      argument :query, String, required: true, description: "Name to search by."
+      search_query_argument "Name to search by."
 
       def resolve(query:)
         Engine.search(query)
