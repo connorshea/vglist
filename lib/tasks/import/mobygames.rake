@@ -33,7 +33,12 @@ namespace :import do
     # string to nil for an integer column but still emits `mobygames_id = NULL`,
     # which is never true, so `where.not` over it matches zero rows regardless of
     # the data.
-    games = Game.includes(:cover_attachment)
+    #
+    # A relation, iterated in batches below so only one batch of games is in
+    # memory at a time. Iterating it all at once would load every game without
+    # a cover up front, and keep each one (and the cover attached to it) until
+    # the task finished.
+    games = Game.left_joins(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
                 .where.not(mobygames_id: nil)
 
@@ -55,7 +60,7 @@ namespace :import do
     no_cover_url_count = 0
     no_matching_game_count = 0
 
-    games.each_slice(MOBYGAMES_GAME_ID_BATCH_SIZE) do |batch|
+    games.find_in_batches(batch_size: MOBYGAMES_GAME_ID_BATCH_SIZE) do |batch|
       # Pace against the MobyGames rate limit (see NOTE above): one request, one
       # sleep, per batch of up to 100 games.
       progress_bar.log ""

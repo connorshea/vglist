@@ -44,9 +44,9 @@ namespace :import do
   # skip the row (e.g. GOG IDs that aren't for a game). Games we don't have, or
   # that already have the identifier set, are left alone.
   #
-  # The candidate games are loaded up front in bounded batches and each is
-  # updated in place, rather than running a Game lookup per row and re-finding
-  # the record before updating it.
+  # The rows are handled in slices: each slice's candidate games are loaded in
+  # one query and updated in place, rather than running a Game lookup per row,
+  # and only one slice's records are in memory at a time.
   #
   # @param [String] query the SPARQL query returning ?item and the identifier
   # @param [Symbol] column the Game column to set, e.g. :igdb_id
@@ -80,31 +80,31 @@ namespace :import do
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    # Load the games we actually have that still lack this identifier, keyed by
-    # Wikidata ID, in bounded batches — one pass instead of a lookup per row.
-    candidates = {}
-    games.map { |game| game[:wikidata_id] }.each_slice(5_000) do |wikidata_ids|
-      Game.where(wikidata_id: wikidata_ids, column => nil).find_each do |game|
-        candidates[game.wikidata_id] = game
-      end
-    end
-
     updated_count = 0
-    games.each do |game|
-      progress_bar.increment
+    games.each_slice(5_000) do |slice|
+      # The games in this slice we actually have that still lack this
+      # identifier, keyed by Wikidata ID. Loaded per slice rather than for every
+      # row up front, so a first run that sets the identifier on most games
+      # doesn't hold all of them in memory at once.
+      candidates = Game.where(wikidata_id: slice.map { |game| game[:wikidata_id] }, column => nil)
+                       .index_by(&:wikidata_id)
 
-      record = candidates[game[:wikidata_id]]
-      next if record.nil?
+      slice.each do |game|
+        progress_bar.increment
 
-      begin
-        record.update!(column => game[:value])
-      rescue ActiveRecord::RecordInvalid => e
-        progress_bar.log "Invalid: #{record.name.ljust(30)} | #{e}"
-        next
+        record = candidates[game[:wikidata_id]]
+        next if record.nil?
+
+        begin
+          record.update!(column => game[:value])
+        rescue ActiveRecord::RecordInvalid => e
+          progress_bar.log "Invalid: #{record.name.ljust(30)} | #{e}"
+          next
+        end
+
+        progress_bar.log "Added #{label} '#{game[:value]}' to #{record.name}."
+        updated_count += 1
       end
-
-      progress_bar.log "Added #{label} '#{game[:value]}' to #{record.name}."
-      updated_count += 1
     end
 
     progress_bar.finish unless progress_bar.finished?
