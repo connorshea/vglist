@@ -153,7 +153,7 @@
                       v-model="form.giantbombId"
                       class="input"
                       type="text"
-                      placeholder="e.g. 3030-12345"
+                      placeholder="e.g. Games/Portal_2"
                     />
                   </div>
                 </div>

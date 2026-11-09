@@ -55,7 +55,7 @@ FactoryBot.define do
     end
 
     trait :giantbomb_id do
-      sequence(:giantbomb_id) { |n| "3030-#{n}" }
+      sequence(:giantbomb_id) { |n| "Games/Game_#{n}" }
     end
 
     trait :epic_games_store_id do
