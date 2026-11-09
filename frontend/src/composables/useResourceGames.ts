@@ -3,6 +3,8 @@ import { useRoute, useRouter } from "vue-router";
 import type { DocumentNode } from "graphql";
 import { gqlClient } from "@/graphql/client";
 import { useQuery } from "@/composables/useGraphQL";
+import { useUrlPage } from "@/composables/useUrlPage";
+import { offsetCursor } from "@/utils/pagination";
 import { extractGqlError } from "@/utils/graphql-errors";
 import type { ResourceGameFieldsFragment, ResourceGameSort } from "@/types/graphql";
 
@@ -46,6 +48,9 @@ export function useResourceGameSort(): WritableComputedRef<ResourceGameSort> {
     set(value) {
       const option = RESOURCE_GAME_SORTS.find((o) => o.value === value) ?? DEFAULT_SORT;
       const query = { ...route.query };
+      // A new order starts back on the first page: page 3 of the old order
+      // would show an arbitrary slice of the new one.
+      delete query.page;
       if (option === DEFAULT_SORT) {
         delete query.sort;
       } else {
@@ -157,4 +162,32 @@ export function useResourceGames<TData>(query: DocumentNode, options: UseResourc
   }
 
   return { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore, loadMoreError };
+}
+
+/**
+ * Like `useResourceGames`, but shows one numbered page of games at a time
+ * instead of appending pages. The page number lives in the URL (`?page=N`,
+ * pushed to history), so a reload or a shared link opens the same page and
+ * Back returns to the previous one. Each page is one request for the
+ * resource and that page's games, cached like any other query, so going back
+ * to a page already seen shows it straight away.
+ */
+export function useResourceGamePages<TData>(query: DocumentNode, options: UseResourceGamesOptions<TData>) {
+  const sortBy = useResourceGameSort();
+  const { page, goToPage } = useUrlPage();
+
+  const { data, loading, error } = useQuery<TData>(query, {
+    variables: () => ({
+      ...options.variables(),
+      sortBy: sortBy.value,
+      first: RESOURCE_GAMES_PAGE_SIZE,
+      after: offsetCursor((page.value - 1) * RESOURCE_GAMES_PAGE_SIZE)
+    })
+  });
+
+  const connection = computed(() => (data.value ? options.select(data.value) : null));
+  const games = computed(() => connection.value?.nodes ?? []);
+  const hasNextPage = computed(() => connection.value?.pageInfo.hasNextPage ?? false);
+
+  return { data, loading, error, sortBy, games, page, hasNextPage, goToPage };
 }
