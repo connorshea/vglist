@@ -327,6 +327,22 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    context 'with games released before, on and after today' do
+      let!(:released) { create(:game, release_date: 1.day.ago) }
+      let!(:today) { create(:game, release_date: Time.zone.today) }
+      let!(:later) { create(:game, release_date: 1.month.from_now) }
+      let!(:soon) { create(:game, release_date: 1.day.from_now) }
+      before(:each) { create(:game) } # No release date.
+
+      it "lists only unreleased games as upcoming, soonest first" do
+        expect(Game.upcoming).to eq([soon, later])
+      end
+
+      it "puts every dated game in exactly one of upcoming and recently_released" do
+        expect(Game.upcoming + Game.recently_released).to contain_exactly(released, today, soon, later)
+      end
+    end
+
     context 'with three games with varying average ratings' do
       let!(:game1) { create(:game) }
       let!(:game2) { create(:game) }

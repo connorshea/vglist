@@ -94,6 +94,7 @@
       </aside>
 
       <GameShelf :sort="NEW_RELEASES" :rows="2" />
+      <GameShelf :sort="UPCOMING_RELEASES" />
       <GameShelf :sort="RECENTLY_ADDED" />
 
       <p v-if="siteStats" class="home-stats">
@@ -128,6 +129,7 @@ const isMac = navigator.platform.toUpperCase().includes("MAC");
 
 const POPULAR = gameSortFromSlug("popular");
 const NEW_RELEASES = gameSortFromSlug("new");
+const UPCOMING_RELEASES = gameSortFromSlug("upcoming");
 const RECENTLY_ADDED = gameSortFromSlug("added");
 
 // ── Search ──

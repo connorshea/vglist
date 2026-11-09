@@ -43,7 +43,7 @@ RSpec.describe "Games API", type: :request do
       # Test each sort order and make sure it matches the corresponding sort
       # method. We test the sort scopes individually in method specs, so we
       # should be able to rely on those tests for testing the specific order.
-      [:newest, :oldest, :recently_updated, :least_recently_updated, :most_favorites, :most_owners, :recently_released, :highest_avg_rating].each do |sort_order|
+      [:newest, :oldest, :recently_updated, :least_recently_updated, :most_favorites, :most_owners, :recently_released, :upcoming, :highest_avg_rating].each do |sort_order|
         it "returns data in expected order for #{sort_order}" do
           query_string = <<~GRAPHQL_WITH_INTERP
             query {

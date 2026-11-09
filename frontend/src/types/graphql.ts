@@ -74,7 +74,9 @@ export type GameSort =
   /** Sorted with the games that were most recently released first. */
   | "RECENTLY_RELEASED"
   /** Sorted with most recently updated game records first. */
-  | "RECENTLY_UPDATED";
+  | "RECENTLY_UPDATED"
+  /** Only games that haven't been released yet, soonest first. */
+  | "UPCOMING";
 
 /** Options for sorting the games two users have in common. */
 export type LibraryComparisonSort =
@@ -1111,6 +1113,23 @@ export type GetNewReleasesQueryVariables = Exact<{
 
 export interface GetNewReleasesQuery {
   newReleases: Array<{
+    id: string;
+    name: string;
+    releaseDate: string | null;
+    avgRating: number | null;
+    coverUrl: string | null;
+    isInLibrary: boolean | null;
+    libraryCompletionStatus: GamePurchaseCompletionStatus | null;
+    ownerCount: number;
+  }>;
+}
+
+export type GetUpcomingReleasesQueryVariables = Exact<{
+  first: number;
+}>;
+
+export interface GetUpcomingReleasesQuery {
+  upcomingReleases: Array<{
     id: string;
     name: string;
     releaseDate: string | null;

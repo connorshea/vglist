@@ -19,7 +19,7 @@
           :id="game.id"
           :name="game.name"
           :cover-url="game.coverUrl ?? null"
-          :meta="tileMeta(game)"
+          :meta="tileMeta(game, { upcoming: source === 'upcoming' })"
           :rating="game.avgRating"
           :in-library="game.isInLibrary"
           :completion-status="game.libraryCompletionStatus"
@@ -36,8 +36,8 @@
 import { computed } from "vue";
 import { ArrowRight } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_GAMES_INDEX, GET_NEW_RELEASES } from "@/graphql/queries/games-index";
-import type { GetGamesIndexQuery, GetNewReleasesQuery } from "@/types/graphql";
+import { GET_GAMES_INDEX, GET_NEW_RELEASES, GET_UPCOMING_RELEASES } from "@/graphql/queries/games-index";
+import type { GetGamesIndexQuery, GetNewReleasesQuery, GetUpcomingReleasesQuery } from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
 import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
 import {
@@ -66,14 +66,28 @@ const seeAllLink = computed(() => ({
   query: props.sort === DEFAULT_GAME_SORT ? {} : { sort: props.sort.slug }
 }));
 
-// The new releases shelf has its own query, which puts games with covers and
-// more external IDs ahead of sparse entries. "See all" still links to the
-// index's plain release-date sort.
-const isNewReleases = computed(() => props.sort.value === "RECENTLY_RELEASED");
+// The new releases and upcoming releases shelves have their own queries, which
+// put games with covers and more external IDs ahead of sparse entries. "See
+// all" still links to the index's plain release-date sorts.
+const source = computed<"new" | "upcoming" | "sorted">(() => {
+  switch (props.sort.value) {
+    case "RECENTLY_RELEASED":
+      return "new";
+    case "UPCOMING":
+      return "upcoming";
+    default:
+      return "sorted";
+  }
+});
 
 const newReleases = useQuery<GetNewReleasesQuery>(GET_NEW_RELEASES, {
   variables: () => ({ first: shelfSize.value }),
-  enabled: isNewReleases
+  enabled: () => source.value === "new"
+});
+
+const upcomingReleases = useQuery<GetUpcomingReleasesQuery>(GET_UPCOMING_RELEASES, {
+  variables: () => ({ first: shelfSize.value }),
+  enabled: () => source.value === "upcoming"
 });
 
 // The other shelves use the games index's own query, so the home page sends
@@ -86,15 +100,23 @@ const sorted = useQuery<GetGamesIndexQuery>(GET_GAMES_INDEX, {
     ...filterVariables(EMPTY_FILTERS),
     withCount: false
   }),
-  enabled: () => !isNewReleases.value
+  enabled: () => source.value === "sorted"
 });
 
-const games = computed(() =>
-  isNewReleases.value ? (newReleases.data.value?.newReleases ?? []) : (sorted.data.value?.games?.nodes ?? [])
-);
+const games = computed(() => {
+  switch (source.value) {
+    case "new":
+      return newReleases.data.value?.newReleases ?? [];
+    case "upcoming":
+      return upcomingReleases.data.value?.upcomingReleases ?? [];
+    default:
+      return sorted.data.value?.games?.nodes ?? [];
+  }
+});
+
 // A shelf that failed to load is left out rather than shown broken.
 const loaded = computed(() => {
-  const { data, error } = isNewReleases.value ? newReleases : sorted;
+  const { data, error } = { new: newReleases, upcoming: upcomingReleases, sorted }[source.value];
   return data.value !== null || error.value !== null;
 });
 </script>

@@ -65,6 +65,18 @@ export const GET_NEW_RELEASES = gql`
   }
 `;
 
+// The home page's "Upcoming releases" shelf: games releasing in the next few
+// months, ranked like the new releases shelf. The server recomputes the list
+// every few hours.
+export const GET_UPCOMING_RELEASES = gql`
+  ${GAME_TILE_FIELDS}
+  query GetUpcomingReleases($first: Int!) {
+    upcomingReleases(first: $first) {
+      ...GameTileFields
+    }
+  }
+`;
+
 // The home page's platform and genre links, the site-wide game count
 // for the page header, and the names of whichever filters are set in the URL
 // (which only carries IDs).

@@ -92,6 +92,27 @@ RSpec.describe "GraphQL public response cache", type: :request do
     end
   end
 
+  describe "the upcoming releases shelf" do
+    before(:each) { game.update!(release_date: 1.week.from_now) }
+
+    def upcoming_release_names(body)
+      body.dig('data', 'upcomingReleases').pluck('name')
+    end
+
+    it "serves it from the cache when signed out" do
+      expect(upcoming_release_names(graphql('GetUpcomingReleases', variables: { first: 6 }))).to eq(['Before'])
+      game.update!(name: 'After')
+      expect(upcoming_release_names(graphql('GetUpcomingReleases', variables: { first: 6 }))).to eq(['Before'])
+    end
+
+    it "doesn't cache it for a signed-in user" do
+      token = JwtService.encode(user)
+      graphql('GetUpcomingReleases', variables: { first: 6 }, token: token)
+      game.update!(name: 'After')
+      expect(upcoming_release_names(graphql('GetUpcomingReleases', variables: { first: 6 }, token: token))).to eq(['After'])
+    end
+  end
+
   it "caches the hero covers for signed-in users too" do
     graphql('GetHeroCovers', token: JwtService.encode(user))
     expect(Rails.cache.exist?(PublicResponseCache.key_for(operations['GetHeroCovers'], 'GetHeroCovers', {}, user))).to be(true)
