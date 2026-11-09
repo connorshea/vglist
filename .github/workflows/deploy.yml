@@ -12,6 +12,10 @@ name: Deploy
 # itself still need `doctl apps update`, which redeploys `:main` (see the
 # note at the top of that file).
 #
+# Only commits on main can be deployed, and only images the Docker workflow
+# built and attested on main (see "Verify image provenance"). Images pushed
+# before docker.yml started attesting them can't be deployed by this workflow.
+#
 # Setup (once): a `production` environment (Settings > Environments) limited
 # to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
 # the app:read, app:update and database:read scopes (updating an app with an
@@ -53,6 +57,9 @@ jobs:
       contents: read
       packages: read
       actions: read
+      attestations: read
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
     environment:
       name: production
       url: https://vglist.co
@@ -65,12 +72,22 @@ jobs:
         run: |
           set -euo pipefail
           sha="$(gh api "repos/$GITHUB_REPOSITORY/commits/$REF" --jq .sha)"
+          # The environment's branch policy only covers the ref this workflow
+          # runs from, not the commit it deploys, so check that separately.
+          # "behind": the commit is an ancestor of main.
+          status="$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$sha" --jq .status)"
+          if [ "$status" != "identical" ] && [ "$status" != "behind" ]; then
+            echo "::error::$sha isn't on main (compared to main it's $status). Only commits on main can be deployed."
+            exit 1
+          fi
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "Deploying $sha" >> "$GITHUB_STEP_SUMMARY"
 
       # The Docker workflow pushes images once its own smoke tests pass, even
       # if RSpec or lint failed in CI, so check both before deploying. A
-      # rerun counts: a run's conclusion is its latest attempt's.
+      # rerun counts: a run's conclusion is its latest attempt's. Runs are
+      # matched by workflow file and branch, not name, so a run of an edited
+      # copy on another branch doesn't count.
       - name: Check CI and Docker passed
         if: ${{ !inputs.skip_ci_check }}
         env:
@@ -78,12 +95,12 @@ jobs:
           SHA: ${{ steps.commit.outputs.sha }}
         run: |
           set -euo pipefail
-          runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA&event=push&per_page=100")"
+          runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA&event=push&branch=main&per_page=100")"
           failed=0
-          for workflow in CI Docker; do
+          for workflow in ci docker; do
             # Newest run of that workflow for this commit.
-            result="$(jq -r --arg w "$workflow" \
-              '[.workflow_runs[] | select(.name == $w)] | sort_by(.created_at) | last
+            result="$(jq -r --arg path ".github/workflows/$workflow.yml" \
+              '[.workflow_runs[] | select(.path == $path and .head_branch == "main")] | sort_by(.created_at) | last
                | if . == null then "missing" else "\(.status)/\(.conclusion // "none")" end' <<<"$runs")"
             echo "$workflow: $result"
             if [ "$result" != "completed/success" ]; then
@@ -114,6 +131,31 @@ jobs:
             fi
             echo "$name=$digest" >> "$GITHUB_OUTPUT"
             echo "- $image@$digest" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      # Anything that can write to the GHCR packages could have replaced the
+      # SHA tag, so check each digest was built and attested by docker.yml,
+      # running on GitHub-hosted runners for a push to main, from this
+      # commit. Not skippable: skip_ci_check only covers the CI check.
+      - name: Verify image provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+          API_DIGEST: ${{ steps.digests.outputs.api }}
+          FRONTEND_DIGEST: ${{ steps.digests.outputs.frontend }}
+        run: |
+          set -euo pipefail
+          for ref in "$API_IMAGE@$API_DIGEST" "$FRONTEND_IMAGE@$FRONTEND_DIGEST"; do
+            if ! gh attestation verify "oci://$ref" \
+              --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/docker.yml" \
+              --source-ref refs/heads/main \
+              --source-digest "$SHA" \
+              --deny-self-hosted-runners > /dev/null; then
+              echo "::error::$ref has no valid provenance attestation from docker.yml on main for $SHA."
+              exit 1
+            fi
+            echo "Verified $ref"
           done
 
       # app_action only swaps digests on components that are already image
@@ -158,12 +200,21 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           app_name: ${{ env.APP_NAME }}
 
-      # Tells Sentry about the deploy: creates the release in both projects if
-      # the build hasn't already, attaches the commits since the previous
-      # release (needs Sentry's GitHub integration for connorshea/vglist),
-      # finalizes it, and records a production deploy. That's what makes
-      # "resolved in next release", regression detection and suspect commits
-      # work. The app is already live by now, so a Sentry problem only warns.
+  # Tells Sentry about the deploy: creates the release in both projects if
+  # the build hasn't already, attaches the commits since the previous
+  # release (needs Sentry's GitHub integration for connorshea/vglist),
+  # finalizes it, and records a production deploy. That's what makes
+  # "resolved in next release", regression detection and suspect commits
+  # work. The app is already live by now, so a Sentry problem only warns.
+  # It's a separate job so the Sentry action and the sentry-cli it downloads never
+  # run on the machine that held the DigitalOcean token.
+  sentry:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
       - name: Check for a Sentry token
         id: sentry
         env:
@@ -179,7 +230,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: steps.sentry.outputs.enabled == 'true'
         with:
-          ref: ${{ steps.commit.outputs.sha }}
+          ref: ${{ needs.deploy.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -191,7 +242,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: vglist
         with:
-          release: ${{ steps.commit.outputs.sha }}
+          release: ${{ needs.deploy.outputs.sha }}
           projects: vglist-backend vglist-frontend
           environment: production
           set_commits: auto
