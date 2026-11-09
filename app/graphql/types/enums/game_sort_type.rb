@@ -11,6 +11,7 @@ module Types::Enums
     value "MOST_FAVORITES", value: 'most_favorites', description: 'Sorted by the games that have been favorited the most times.'
     value "MOST_OWNERS", value: 'most_owners', description: 'Sorted by the games that are in the most users\' libraries.'
     value "RECENTLY_RELEASED", value: 'recently_released', description: 'Sorted with the games that were most recently released first.'
+    value "UPCOMING", value: 'upcoming', description: 'Only games that haven\'t been released yet, soonest first.'
     value "HIGHEST_AVG_RATING", value: 'highest_avg_rating', description: 'Sorted by the games that have the highest average rating.'
   end
 end
