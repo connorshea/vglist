@@ -69,6 +69,17 @@ module RackAttackConfig
       ActionDispatch::Journey::Router::Utils.normalize_path(req.path).sub(%r{\.[^/.]+\z}, '')
   end
 
+  # Cloudflare's edge IP ranges, from https://www.cloudflare.com/ips/
+  # (last checked 2026-11-09). They rarely change.
+  CLOUDFLARE_IP_RANGES = %w[
+    173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22
+    141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20
+    197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13
+    104.24.0.0/14 172.64.0.0/13 131.0.72.0/22
+    2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32
+    2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+  ].map { |range| IPAddr.new(range) }.freeze
+
   # The client's IP address.
   #
   # Behind a proxy that puts the client IP in its own header, set
@@ -78,16 +89,40 @@ module RackAttackConfig
   # counters. Only set it where the proxy always overwrites the header,
   # otherwise clients could pick their own IP.
   #
+  # If the API is also behind our own Cloudflare zone (the api.vglist.co
+  # record proxied, so Cloudflare can cache GraphQL GETs), set
+  # BEHIND_CLOUDFLARE=true. Then CLIENT_IP_HEADER holds a Cloudflare edge IP
+  # shared by many visitors, and the client is in `CF-Connecting-IP` instead.
+  # That header is only trusted when CLIENT_IP_HEADER really is a Cloudflare
+  # IP, because anyone can send it straight to App Platform's
+  # ondigitalocean.app hostname, which skips our zone.
+  #
   # Otherwise, use the IP computed by ActionDispatch::RemoteIp (which knows
   # about trusted proxies) and fall back to Rack's best guess.
   def client_ip(req)
     header = ENV.fetch('CLIENT_IP_HEADER', nil)
     if header.present?
-      forwarded = req.get_header("HTTP_#{header.upcase.tr('-', '_')}")
-      return forwarded.strip if forwarded.present?
+      forwarded = req.get_header("HTTP_#{header.upcase.tr('-', '_')}")&.strip
+      if forwarded.present?
+        cloudflare_client = req.get_header('HTTP_CF_CONNECTING_IP')&.strip
+        return cloudflare_client if cloudflare_client.present? && behind_cloudflare? && cloudflare_ip?(forwarded)
+
+        return forwarded
+      end
     end
 
     req.env['action_dispatch.remote_ip']&.to_s || req.ip
+  end
+
+  def behind_cloudflare?
+    ENV['BEHIND_CLOUDFLARE'] == 'true'
+  end
+
+  def cloudflare_ip?(ip)
+    address = IPAddr.new(ip)
+    CLOUDFLARE_IP_RANGES.any? { |range| range.include?(address) }
+  rescue IPAddr::Error
+    false
   end
 
   # The email the request is acting on, normalized so "Foo@Example.com " and
