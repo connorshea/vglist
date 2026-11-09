@@ -33,16 +33,28 @@ module Resolvers
         message: 'Cannot provide more than one argument to game at a time.'
       }
 
-      def resolve(**kwargs)
+      extras [:lookahead]
+
+      def resolve(lookahead:, **kwargs)
         # An explicit null (e.g. `wikidataId: null`) would otherwise match
         # every game without that ID.
         return nil if kwargs.values.any?(&:nil?)
 
-        if kwargs.key?(:steam_app_id)
-          SteamAppId.find_by(app_id: kwargs[:steam_app_id])&.game
-        else
-          Game.find_by(**kwargs)
-        end
+        games = if kwargs.key?(:steam_app_id)
+                  Game.joins(:steam_app_ids).where(steam_app_ids: { app_id: kwargs[:steam_app_id] })
+                else
+                  Game.where(**kwargs)
+                end
+
+        # Reading the cover URL otherwise takes five queries one after the
+        # other (attachment, blob, variant record, and the variant's own
+        # attachment and blob). When it's selected, fetch them with the game
+        # in one joined query. That one has no LIMIT, since Rails would then
+        # need a second query to apply it to the joined rows; every filter is
+        # a unique ID, so it matches at most one game anyway.
+        return games.first unless lookahead.selects?(:cover_url)
+
+        games.eager_load(AttachmentPreloads::COVER).to_a.first
       end
     end
   end
