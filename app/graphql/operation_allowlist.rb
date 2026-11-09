@@ -45,6 +45,27 @@ module OperationAllowlist
     @operations ||= JSON.parse(File.read(MANIFEST_PATH)).freeze
   end
 
+  # The document a persisted document ID stands for, or nil if there is none.
+  #
+  # Over GET, the SPA sends `documentId=sha256:<hex>` instead of the document
+  # (the name comes from the GraphQL over HTTP spec's persisted documents
+  # proposal), where <hex> is the SHA-256 of the document exactly as it appears
+  # in the manifest. `frontend/codegen/persisted-documents.mjs` computes the
+  # same hashes for the SPA. Because the ID changes whenever the document does,
+  # a CDN never serves a response for an old version of a query under a new
+  # query's URL.
+  #
+  # @param document_id [String, nil]
+  # @return [String, nil]
+  def persisted_document(document_id)
+    persisted_documents[document_id.to_s]
+  end
+
+  # @return [Hash{String => String}] Persisted document ID => document.
+  def persisted_documents
+    @persisted_documents ||= operations.values.index_by { |document| "sha256:#{Digest::SHA256.hexdigest(document)}" }.freeze
+  end
+
   def canonical_documents
     @canonical_documents ||= operations.values.to_set { |document| canonical(document) }.freeze
   end
