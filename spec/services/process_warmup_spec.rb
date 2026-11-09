@@ -29,7 +29,9 @@ RSpec.describe ProcessWarmup do
   end
 
   it "only names operations the SPA sends" do
-    expect(OperationAllowlist.operations.keys).to include(*described_class::QUERIES.keys)
+    expect(OperationAllowlist.operations.keys).to include(
+      *described_class::QUERIES.keys, *described_class::SIGNED_IN_QUERIES.keys
+    )
   end
 
   describe '.run_queries' do
@@ -49,13 +51,60 @@ RSpec.describe ProcessWarmup do
       expect(game_result.dig('data', 'game', 'id')).to eq(game.id.to_s)
     end
 
-    it "skips GetGame when there's no game with a cover" do
+    it "skips the game page's operations when there's no game with a cover" do
       game.cover.purge
       allow(VideoGameListSchema).to receive(:execute).and_call_original
 
       described_class.run_queries
 
-      expect(VideoGameListSchema).not_to have_received(:execute).with(anything, hash_including(operation_name: 'GetGame'))
+      ['GetGame', 'GetGameReviews', 'GetGameActivity'].each do |name|
+        expect(VideoGameListSchema).not_to have_received(:execute).with(anything, hash_including(operation_name: name))
+      end
+    end
+
+    context 'with a user who has an avatar and a library' do
+      let!(:user) { create(:user, :avatar) }
+
+      before(:each) { create(:game_purchase, user: user, game: game) }
+
+      it 'also runs every operation as that user, plus the signed-in ones' do
+        results = []
+        allow(VideoGameListSchema).to receive(:execute).and_wrap_original do |original, *args, **kwargs|
+          original.call(*args, **kwargs).tap { |result| results << [kwargs[:operation_name], kwargs[:context], result] }
+        end
+
+        described_class.run_queries
+
+        signed_in = results.select { |_, context, _| context[:current_user] == user }
+        signed_out = results.reject { |_, context, _| context.key?(:current_user) }
+        expect(signed_out.map(&:first).tally).to eq(described_class::QUERIES.keys.index_with { described_class::PASSES })
+        expect(signed_in.map(&:first).tally).to eq(
+          [*described_class::QUERIES.keys, *described_class::SIGNED_IN_QUERIES.keys].index_with { described_class::PASSES }
+        )
+      end
+
+      it "resolves that user's avatar without errors" do
+        results = []
+        allow(VideoGameListSchema).to receive(:execute).and_wrap_original do |original, *args, **kwargs|
+          original.call(*args, **kwargs).tap { |result| results << [kwargs[:operation_name], result] }
+        end
+
+        described_class.run_queries
+
+        expect(results.filter_map { |_, result| result['errors'] }).to be_empty
+        avatar_result = results.find { |name, _| name == 'GetCurrentUserAvatar' }.second
+        expect(avatar_result.dig('data', 'currentUser', 'avatarUrl')).to be_present
+      end
+    end
+
+    it 'never runs as a banned user' do
+      banned = create(:user, :avatar, :banned)
+      create(:game_purchase, user: banned, game: game)
+      allow(VideoGameListSchema).to receive(:execute).and_call_original
+
+      described_class.run_queries
+
+      expect(VideoGameListSchema).not_to have_received(:execute).with(anything, hash_including(context: hash_including(:current_user)))
     end
 
     it 'keeps going when an operation raises' do
