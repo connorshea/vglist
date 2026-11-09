@@ -21,6 +21,9 @@ SENTRY_TRACES_SAMPLER = lambda do |sampling_context|
   SENTRY_TRACES_SAMPLE_RATE
 end
 
+# Response statuses whose transactions are never traced.
+SENTRY_TRACE_IGNORE_STATUS_CODES = [(301..303), (305..399), (401..404)].freeze
+
 Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN_RAILS']
   # Only run in production.
@@ -36,6 +39,10 @@ Sentry.init do |config|
 
   config.traces_sampler = SENTRY_TRACES_SAMPLER
 
+  # Don't trace redirects. sentry-ruby 7.1 started tracing 302s and 303s by
+  # default; this is the 6.x default, so they don't use up the span quota.
+  config.trace_ignore_status_codes = SENTRY_TRACE_IGNORE_STATUS_CODES
+
   # Ctrl+C on a rake task run by hand (e.g. in `doctl apps console`) raises
   # Interrupt, in the task and in any job it had in flight. That's not a
   # bug, so don't report it.
@@ -49,8 +56,11 @@ Sentry.init do |config|
     event
   end
 
-  # Enable sending logs to Sentry
-  config.enable_logs = true
+  # sentry-ruby 7 sends metrics by default and has no option to turn them off,
+  # so drop every metric here. We don't use Sentry metrics.
+  config.before_send_metric = ->(_metric) {}
+
+  # Logs are sent to Sentry by default as of sentry-ruby 7.
   # Patch Ruby logger to forward logs
   config.enabled_patches = [:logger]
 
