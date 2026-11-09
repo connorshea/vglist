@@ -4,9 +4,15 @@ name: Docker
 # frontend/Dockerfile for the SPA) and smoke-tests that each one boots and
 # answers /health.
 #
-# On pushes to main it also pushes the tested images to GHCR, tagged with the
-# commit SHA (plus `main`). Deploying them is a separate, manual step: see
-# .github/workflows/deploy.yml.
+# On pushes to main, the push-api and push-frontend jobs then push the tested
+# images to GHCR, tagged with the commit SHA (plus `main`), and attest their
+# build provenance. Deploying them is a separate, manual step: see
+# .github/workflows/deploy.yml, which only deploys images attested by this
+# workflow on main.
+#
+# Only the push jobs get `packages: write`, and they never run for pull
+# requests, so a PR's run (which uses the PR's copy of this file) has no
+# token that can write to GHCR.
 #
 # Setup (once):
 #   - Repo secrets VITE_SENTRY_DSN and VITE_TURNSTILE_SITE_KEY. Neither is
@@ -39,7 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
     services:
       postgres:
         image: postgres:18
@@ -138,53 +143,10 @@ jobs:
         run: |
           docker run --rm vglist-api file --version
 
-      - name: Log in to GHCR
-        if: env.PUSH == 'true'
-        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Same inputs as the tested build, so every layer comes from the cache.
-      # One image serves the api service and the migrate and update-stats jobs.
-      # Deploys use the SHA tag; see "Move the main tag" for `main`.
-      - name: Push image
-        if: env.PUSH == 'true'
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
-        with:
-          context: .
-          tags: |
-            ${{ env.API_IMAGE }}:${{ github.sha }}
-          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
-          build-args: GIT_COMMIT_SHA=${{ github.sha }}
-          push: true
-          # A plain image manifest, not an index with an attestation entry, so
-          # the digest is exactly what App Platform pulls.
-          provenance: false
-          cache-from: type=gha,scope=api
-
-      # `main` is only what an update from .do/app.yaml points at. Runs for
-      # different commits finish in any order, so move it only if this commit
-      # is still main's head; a newer commit's run moves it otherwise.
-      - name: Move the main tag
-        if: env.PUSH == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
-          if [ "$head" != "$GITHUB_SHA" ]; then
-            echo "main is now $head, leaving the main tag alone"
-            exit 0
-          fi
-          docker buildx imagetools create --tag "$API_IMAGE:main" "$API_IMAGE:$GITHUB_SHA"
-
   frontend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
     # Baked into the bundle (see frontend/Dockerfile). The release is the commit
     # SHA, matching the API image. VITE_API_URL comes from
     # frontend/.env.production. Empty on fork PRs, which the Dockerfile treats
@@ -315,17 +277,107 @@ jobs:
             exit 1
           fi
 
+  # Rebuilds with the same inputs as the tested build, so every layer comes
+  # from the GHA cache that job just wrote. One image serves the api service
+  # and the migrate and update-stats jobs. Deploys use the SHA tag; see "Move
+  # the main tag" for `main`.
+  push-api:
+    needs: api
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # For the provenance attestation: a Sigstore certificate from the OIDC
+      # token, stored through GitHub's attestations API.
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
       - name: Log in to GHCR
-        if: env.PUSH == 'true'
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Same inputs as the tested build, so every layer comes from the cache.
       - name: Push image
-        if: env.PUSH == 'true'
+        id: push
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          tags: |
+            ${{ env.API_IMAGE }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          build-args: GIT_COMMIT_SHA=${{ github.sha }}
+          push: true
+          # A plain image manifest, not an index with an attestation entry, so
+          # the digest is exactly what App Platform pulls. The provenance
+          # attestation below lives in GitHub's attestations API instead.
+          provenance: false
+          cache-from: type=gha,scope=api
+
+      # deploy.yml verifies this before deploying, so an image pushed to the
+      # SHA tag from anywhere else can't be deployed.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.API_IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+
+      # `main` is only what an update from .do/app.yaml points at. Runs for
+      # different commits finish in any order, so move it only if this commit
+      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Move the main tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$API_IMAGE:main" "$API_IMAGE:$GITHUB_SHA"
+
+  # Same as push-api, for the frontend image.
+  push-frontend:
+    needs: frontend
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    # Must match the frontend job's, or the build misses the cache and bakes
+    # in different values.
+    env:
+      BUILD_ARGS: |
+        VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+        VITE_TURNSTILE_SITE_KEY=${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+        VITE_SENTRY_RELEASE=${{ github.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        id: push
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
@@ -334,18 +386,18 @@ jobs:
             ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
           build-args: ${{ env.BUILD_ARGS }}
-          secrets: ${{ env.PUSH == 'true' && secrets.SENTRY_AUTH_TOKEN != '' && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
+          secrets: ${{ secrets.SENTRY_AUTH_TOKEN != '' && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           push: true
-          # A plain image manifest, not an index with an attestation entry, so
-          # the digest is exactly what App Platform pulls.
           provenance: false
           cache-from: type=gha,scope=frontend
 
-      # `main` is only what an update from .do/app.yaml points at. Runs for
-      # different commits finish in any order, so move it only if this commit
-      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.FRONTEND_IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+
       - name: Move the main tag
-        if: env.PUSH == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
