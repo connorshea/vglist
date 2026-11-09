@@ -1,7 +1,16 @@
 <template>
   <router-link :to="`/games/${id}`" class="game-tile" :aria-label="accessibleName">
-    <span class="game-tile-cover">
-      <img v-if="coverUrl" :src="coverUrl" alt="" loading="lazy" />
+    <span ref="coverRef" class="game-tile-cover">
+      <template v-if="coverUrl && !coverFailed">
+        <img
+          v-if="nearViewport || coverLoaded"
+          :src="coverUrl"
+          alt=""
+          :loading="deferCover ? undefined : 'lazy'"
+          @load="onCoverLoad"
+          @error="onCoverError"
+        />
+      </template>
       <span v-else class="game-tile-placeholder" aria-hidden="true">{{ initials }}</span>
       <span v-if="rating !== null" class="game-tile-rating" :class="`is-${ratingTier(rating)}`" aria-hidden="true">
         {{ Math.round(rating) }}
@@ -16,11 +25,23 @@
   </router-link>
 </template>
 
+<script lang="ts">
+// Covers that have loaded this session, which the browser has cached. A tile
+// mounted again (the SWR cache re-renders a list instantly on back
+// navigation) shows these in its first paint instead of waiting for the
+// observer.
+const loadedCovers = new Set<string>();
+// Covers that failed to load this session. Their tiles show the initials, and
+// don't request the cover again each time they scroll back into view.
+const failedCovers = new Set<string>();
+</script>
+
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Check } from "@lucide/vue";
 import type { GamePurchaseCompletionStatus } from "@/types/graphql";
 import { libraryBadgeLabel, ratingTier } from "./format";
+import { useNearViewport } from "@/composables/useNearViewport";
 
 const props = withDefaults(
   defineProps<{
@@ -31,9 +52,45 @@ const props = withDefaults(
     rating?: number | null;
     inLibrary?: boolean | null;
     completionStatus?: GamePurchaseCompletionStatus | null;
+    // Wait for the tile to settle near the viewport before loading its cover,
+    // for long grids that people scroll through fast. Otherwise the cover
+    // lazy-loads, which also preloads ahead inside sideways-scrolling shelves.
+    deferCover?: boolean;
   }>(),
-  { meta: null, rating: null, inLibrary: false, completionStatus: null }
+  { meta: null, rating: null, inLibrary: false, completionStatus: null, deferCover: false }
 );
+
+// With `deferCover`, the cover only loads once the tile settles near the
+// viewport. Otherwise a fast scroll starts a download for every tile it
+// passes, and the covers where it stops wait behind all of them. If the tile
+// leaves before its cover has loaded, the image is removed so a browser that
+// drops unused image requests can stop it. A cover that has loaded stays.
+const coverRef = ref<HTMLElement | null>(null);
+const nearViewport = useNearViewport(coverRef, props.deferCover);
+const loadedUrl = ref<string | null>(null);
+// `loadedCovers` isn't reactive; `loadedUrl` changing re-evaluates this.
+const coverLoaded = computed(
+  () => !!props.coverUrl && (loadedUrl.value === props.coverUrl || loadedCovers.has(props.coverUrl))
+);
+
+const failedUrl = ref<string | null>(null);
+const coverFailed = computed(
+  () => !!props.coverUrl && (failedUrl.value === props.coverUrl || failedCovers.has(props.coverUrl))
+);
+
+function onCoverError() {
+  if (props.coverUrl) {
+    failedCovers.add(props.coverUrl);
+    failedUrl.value = props.coverUrl;
+  }
+}
+
+function onCoverLoad() {
+  if (props.coverUrl) {
+    loadedCovers.add(props.coverUrl);
+    loadedUrl.value = props.coverUrl;
+  }
+}
 
 const initials = computed(() =>
   props.name
@@ -81,7 +138,10 @@ const accessibleName = computed(() => {
   width: 100%;
   overflow: hidden;
   border-radius: 10px;
-  background: var(--color-bg-subtle);
+  /* The same fill as SkeletonBlock, so a cover that is still loading reads as
+     loading. --color-bg-subtle matches the page background in dark mode, which
+     left loading covers looking like empty boxes. */
+  background: color-mix(in srgb, var(--color-text-primary) 9%, transparent);
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);

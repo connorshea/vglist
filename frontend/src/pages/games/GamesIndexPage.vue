@@ -135,6 +135,7 @@
           :rating="game.avgRating"
           :in-library="game.isInLibrary"
           :completion-status="game.libraryCompletionStatus"
+          defer-cover
         />
       </li>
     </ul>
