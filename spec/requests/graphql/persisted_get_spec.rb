@@ -58,6 +58,13 @@ RSpec.describe "GraphQL GET requests with persisted documents", type: :request d
     expect(response.headers['Cache-Control']).to eq('max-age=60, public, stale-while-revalidate=600, s-maxage=300')
   end
 
+  it "answers 400 for variables that aren't a JSON object", :aggregate_failures do
+    ['{bad', '5', '[1]'].each do |raw|
+      get graphql_path, params: { operationName: 'GetNewReleases', documentId: document_id('GetNewReleases'), variables: raw }
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
   it "answers HEAD like GET, so `curl -I` shows the cache headers", :aggregate_failures do
     head graphql_path, params: { operationName: 'GetHeroCovers', documentId: document_id('GetHeroCovers') }
     expect(response).to have_http_status(:ok)

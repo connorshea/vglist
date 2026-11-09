@@ -18,7 +18,9 @@ class GraphqlController < ApplicationController
     # Only cacheable GET responses are allowed into a shared cache, see below.
     no_store
 
-    variables = ensure_hash(params[:variables])
+    variables = parse_variables
+    return if performed?
+
     operation_name = params[:operationName]
 
     if persisted_query_request?
@@ -169,6 +171,16 @@ class GraphqlController < ApplicationController
     return true if user&.admin?
 
     OperationAllowlist.allowed?(query)
+  end
+
+  # The request's variables as a hash, or nil after rendering a 400 for
+  # variables that aren't a JSON object, so a malformed GET URL can't cause a
+  # 500.
+  def parse_variables
+    ensure_hash(params[:variables])
+  rescue JSON::ParserError, ArgumentError
+    render_error("variables must be a JSON object.", :bad_request)
+    nil
   end
 
   # Handle form data, JSON body, or a blank value
