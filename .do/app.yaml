@@ -115,7 +115,9 @@ services:
       repository: vglist-api
       tag: main
     http_port: 3000
-    instance_size_slug: apps-s-1vcpu-2gb
+    # 2 shared vCPUs / 4 GiB ($50/mo, was apps-s-1vcpu-2gb at $25/mo). On one
+    # vCPU, the parallel GraphQL requests a page makes seemed to queue for CPU.
+    instance_size_slug: apps-s-2vcpu-4gb
     # See the single-instance caveat at the top of this file.
     instance_count: 1
     # Puma answers /health within ~2s of starting in the Docker CI job, so
@@ -132,7 +134,8 @@ services:
     envs:
       - key: PORT
         value: "3000"
-      # Two Puma workers x 3 threads. 2 GB matches the old VPS (1 vCPU / 2 GB).
+      # Two Puma workers (one per vCPU) x 3 threads = 6 DB connections, well
+      # under the cluster's ~22.
       - key: WEB_CONCURRENCY
         value: "2"
       - key: RAILS_MAX_THREADS
