@@ -42,6 +42,17 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(decoded.first['user_id']).to eq(user.id)
     end
 
+    it "matches the email case-insensitively" do
+      post graphql_path, params: {
+        query: query,
+        variables: { email: user.email.upcase, password: "password" }.to_json
+      }
+
+      data = JSON.parse(response.body).dig('data', 'signIn')
+      expect(data['errors']).to be_empty
+      expect(data['userId']).to eq(user.id.to_s)
+    end
+
     it "returns the small avatar URL for a user with an avatar" do
       user_with_avatar = create(:confirmed_user_with_avatar)
       post graphql_path, params: {
