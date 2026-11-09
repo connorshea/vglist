@@ -311,5 +311,14 @@ RSpec.describe "Rack::Attack throttling", type: :request do
       graphql_from('10.11.0.2')
       expect(response).to have_http_status(:success)
     end
+
+    it "counts GET requests too" do
+      document = OperationAllowlist.operations.fetch('GetHeroCovers')
+      params = { operationName: 'GetHeroCovers', documentId: "sha256:#{Digest::SHA256.hexdigest(document)}" }
+      120.times { get graphql_path, params: params, headers: { 'REMOTE_ADDR' => '10.11.0.3' } }
+
+      graphql_from('10.11.0.3')
+      expect(response).to have_http_status(:too_many_requests)
+    end
   end
 end
