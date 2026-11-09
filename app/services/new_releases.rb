@@ -59,8 +59,10 @@ module NewReleases
   # @param limit [Integer] How many games to return, at most MAX.
   # @return [ActiveRecord::Relation<Game>] The games, best first.
   def games(limit)
-    ids = game_ids.first(limit.clamp(0, MAX))
-    Game.where(id: ids).in_order_of(:id, ids)
+    # Looks up all the cached IDs before limiting, so a game deleted since the
+    # list was cached is replaced by the next one instead of leaving a gap.
+    ids = game_ids
+    Game.where(id: ids).in_order_of(:id, ids).limit(limit.clamp(0, MAX))
   end
 
   # @return [Array<Integer>] The IDs of the top MAX games, best first.

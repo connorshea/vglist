@@ -53,6 +53,16 @@ RSpec.describe NewReleases do
       Rails.cache = original
     end
 
+    it 'fills the gap left by a deleted game from the rest of the cached list' do
+      first = create(:game, release_date: 1.day.ago)
+      second = create(:game, release_date: 2.days.ago)
+      third = create(:game, release_date: 3.days.ago)
+      expect(described_class.games(2)).to eq([first, second])
+
+      first.destroy!
+      expect(described_class.games(2)).to eq([second, third])
+    end
+
     it 'keeps the ranked list until it expires, while still dropping deleted games' do
       first = create(:game, :wikidata_id, release_date: 1.day.ago)
       second = create(:game, release_date: 2.days.ago)
