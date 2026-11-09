@@ -9,10 +9,11 @@
 # to cache.
 #
 # The set of keys is small and fixed: an operation is only cacheable with the
-# variables the home page (including its new releases shelf) and the first page of the games index send. Anything
-# else (other filters, later pages, a signed-in user's game tiles) runs
-# normally, so a client can't fill the cache with arbitrary variations and
-# evict the Rack::Attack counters that share the store.
+# variables the home page (including its new and upcoming releases shelves) and
+# the first page of the games index send. Anything else (other filters, later
+# pages, a signed-in user's game tiles) runs normally, so a client can't fill
+# the cache with arbitrary variations and evict the Rack::Attack counters that
+# share the store.
 module PublicResponseCache
   EXPIRES_IN = 5.minutes
 
@@ -55,8 +56,8 @@ module PublicResponseCache
       [] if %w[hasPlatform hasGenre hasEngine].none? { |name| variables[name] }
     when 'GetGamesIndex'
       games_index_parts(variables, user)
-    when 'GetNewReleases'
-      new_releases_parts(variables, user)
+    when 'GetNewReleases', 'GetUpcomingReleases'
+      release_shelf_parts(variables, user)
     end
   end
 
@@ -78,9 +79,10 @@ module PublicResponseCache
     [first, sort_by || 'default', with_count]
   end
 
-  # Like the games index, the new releases tiles carry the signed-in user's
-  # library status, so only signed-out responses are cached.
-  def new_releases_parts(variables, user)
+  # Like the games index, the new and upcoming releases tiles carry the
+  # signed-in user's library status, so only signed-out responses are cached.
+  # Both shelves take the same `first` values.
+  def release_shelf_parts(variables, user)
     return nil unless user.nil?
 
     first = variables['first']
