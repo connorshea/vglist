@@ -1,9 +1,16 @@
 name: Deploy
 
 # Deploys a commit's prebuilt images (pushed to GHCR by the Docker workflow)
-# to DigitalOcean App Platform. Manual only: Actions > Deploy > Run workflow,
-# or `gh workflow run deploy.yml` (add `-f ref=<sha>` to pick a commit, which
-# also works as a rollback).
+# to DigitalOcean App Platform. Never automatic. Two ways to start it:
+#
+#   - From the Docker workflow run for a push to main: once its images are
+#     pushed, its approve-deploy job waits for a reviewer of the
+#     `production-approval` environment. Approving it ("Review deployments"
+#     on the run page) runs this workflow for that commit. A newer merge
+#     replaces the waiting approval, so only main's latest commit waits.
+#   - Manually: Actions > Deploy > Run workflow, or `gh workflow run
+#     deploy.yml` (add `-f ref=<sha>` to pick a commit, which also works as
+#     a rollback).
 #
 # It points api, migrate, update-stats and frontend at that commit's image
 # digests and waits for the rollout; the migrate PRE_DEPLOY job runs first, as
@@ -16,7 +23,9 @@ name: Deploy
 # built and attested on main (see "Verify image provenance"). Images pushed
 # before docker.yml started attesting them can't be deployed by this workflow.
 #
-# Setup (once): a `production` environment (Settings > Environments) limited
+# Setup (once): a `production-approval` environment limited to the main
+# branch with yourself as a required reviewer (no secrets), and a
+# `production` environment (Settings > Environments) limited
 # to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
 # the app:read, app:update and database:read scopes (updating an app with an
 # attached database cluster checks database:read). Optionally a SENTRY_AUTH_TOKEN repo secret
@@ -30,16 +39,26 @@ on:
         required: true
         default: main
       skip_ci_check:
-        description: Deploy even if the commit's CI or Docker workflow runs haven't passed. Emergencies only.
+        description: Deploy even if the commit's CI run hasn't passed. Emergencies only.
         type: boolean
         default: false
+  # Called by docker.yml's deploy job after its approve-deploy gate.
+  workflow_call:
+    inputs:
+      ref:
+        description: Commit SHA to deploy.
+        type: string
+        required: true
+      skip_ci_check:
+        type: boolean
+        default: false
+    secrets:
+      # The production environment's secrets reach the deploy job directly;
+      # repo secrets have to be passed in by the caller.
+      SENTRY_AUTH_TOKEN:
+        required: false
 
 permissions: {}
-
-# One deploy at a time. A deploy that's already running finishes first.
-concurrency:
-  group: deploy-production
-  cancel-in-progress: false
 
 env:
   API_IMAGE: ghcr.io/connorshea/vglist-api
@@ -53,6 +72,12 @@ jobs:
     # no limit of its own. Without this a stuck rollout holds the
     # deploy-production lock for GitHub's 6-hour default.
     timeout-minutes: 30
+    # One deploy at a time. A deploy that's already running finishes first.
+    # On the job rather than the workflow so it also applies when docker.yml
+    # calls this workflow.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
     permissions:
       contents: read
       packages: read
@@ -84,31 +109,38 @@ jobs:
           echo "Deploying $sha" >> "$GITHUB_STEP_SUMMARY"
 
       # The Docker workflow pushes images once its own smoke tests pass, even
-      # if RSpec or lint failed in CI, so check both before deploying. A
+      # if RSpec or lint failed in CI, so check CI before deploying. A
       # rerun counts: a run's conclusion is its latest attempt's. Runs are
       # matched by workflow file and branch, not name, so a run of an edited
-      # copy on another branch doesn't count.
-      - name: Check CI and Docker passed
+      # copy on another branch doesn't count. A deploy approved from the
+      # Docker run can start before CI finishes, so wait for it (up to 20
+      # minutes). The Docker workflow itself is covered by "Verify image
+      # provenance": only its push jobs, after the smoke tests pass, attest
+      # images.
+      - name: Check CI passed
         if: ${{ !inputs.skip_ci_check }}
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ steps.commit.outputs.sha }}
         run: |
           set -euo pipefail
-          runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA&event=push&branch=main&per_page=100")"
-          failed=0
-          for workflow in ci docker; do
-            # Newest run of that workflow for this commit.
-            result="$(jq -r --arg path ".github/workflows/$workflow.yml" \
-              '[.workflow_runs[] | select(.path == $path and .head_branch == "main")] | sort_by(.created_at) | last
+          for _ in $(seq 1 40); do
+            runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA&event=push&branch=main&per_page=100")"
+            # Newest CI run for this commit.
+            result="$(jq -r \
+              '[.workflow_runs[] | select(.path == ".github/workflows/ci.yml" and .head_branch == "main")] | sort_by(.created_at) | last
                | if . == null then "missing" else "\(.status)/\(.conclusion // "none")" end' <<<"$runs")"
-            echo "$workflow: $result"
-            if [ "$result" != "completed/success" ]; then
-              echo "::error::The $workflow workflow hasn't passed for $SHA ($result). Wait for it, fix it, or rerun with skip_ci_check for an emergency deploy."
-              failed=1
-            fi
+            case "$result" in
+              missing|completed/*) break ;;
+            esac
+            echo "ci: $result, waiting for it to finish"
+            sleep 30
           done
-          exit "$failed"
+          echo "ci: $result"
+          if [ "$result" != "completed/success" ]; then
+            echo "::error::The CI workflow hasn't passed for $SHA ($result). Wait for it, fix it, or rerun with skip_ci_check for an emergency deploy."
+            exit 1
+          fi
 
       - name: Log in to GHCR
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0

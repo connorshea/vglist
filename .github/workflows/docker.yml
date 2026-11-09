@@ -6,9 +6,10 @@ name: Docker
 #
 # On pushes to main, the push-api and push-frontend jobs then push the tested
 # images to GHCR, tagged with the commit SHA (plus `main`), and attest their
-# build provenance. Deploying them is a separate, manual step: see
-# .github/workflows/deploy.yml, which only deploys images attested by this
-# workflow on main.
+# build provenance. Deploying them is never automatic: approve-deploy then
+# waits for approval, and approving it runs .github/workflows/deploy.yml for
+# this commit. deploy.yml only deploys images attested by this workflow on
+# main.
 #
 # Only the push jobs get `packages: write`, and they never run for pull
 # requests, so a PR's run (which uses the PR's copy of this file) has no
@@ -408,3 +409,34 @@ jobs:
             exit 0
           fi
           docker buildx imagetools create --tag "$FRONTEND_IMAGE:main" "$FRONTEND_IMAGE:$GITHUB_SHA"
+
+  # Waits for a reviewer of the production-approval environment (no
+  # secrets), so nothing deploys until someone approves it from this run.
+  # A newer push to main cancels a still-waiting approval here, so only
+  # main's latest commit waits. A waiting job holds its concurrency group,
+  # which is why this gate has its own group, separate from
+  # deploy-production: that one never cancels a deploy in progress.
+  approve-deploy:
+    needs: [push-api, push-frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-slim
+    permissions: {}
+    environment: production-approval
+    concurrency:
+      group: deploy-approval
+      cancel-in-progress: true
+    steps:
+      - run: echo "Deploy of $GITHUB_SHA approved"
+
+  deploy:
+    needs: approve-deploy
+    permissions:
+      contents: read
+      packages: read
+      actions: read
+      attestations: read
+    uses: $/.github/workflows/deploy.yml
+    with:
+      ref: ${{ github.sha }}
+    secrets:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
