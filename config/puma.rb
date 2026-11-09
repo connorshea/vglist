@@ -40,7 +40,7 @@ threads max_threads, max_threads
 # applies to Puma, and not to migrations, rake tasks or the console, which
 # share the same environment variables on App Platform. Override with
 # WEB_STATEMENT_TIMEOUT (a Postgres duration, e.g. "15s").
-ENV["DB_STATEMENT_TIMEOUT"] = ENV.fetch("WEB_STATEMENT_TIMEOUT", "10s")
+ENV["DB_STATEMENT_TIMEOUT"] = ENV.fetch("WEB_STATEMENT_TIMEOUT", "30s")
 
 # Worker mode for better throughput in production.
 # Default to 0 in development to avoid macOS fork() crashes.
