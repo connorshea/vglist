@@ -959,11 +959,11 @@ COMMENT ON COLUMN public.unmatched_games.name IS 'The name of the game that was 
 
 CREATE VIEW public.grouped_unmatched_games AS
  SELECT count(*) AS count,
-    unmatched_games.external_service_id,
-    unmatched_games.external_service_name,
-    array_agg(unmatched_games.name) AS names
+    external_service_id,
+    external_service_name,
+    array_agg(name) AS names
    FROM public.unmatched_games
-  GROUP BY unmatched_games.external_service_id, unmatched_games.external_service_name
+  GROUP BY external_service_id, external_service_name
   ORDER BY (count(*)) DESC;
 
 
@@ -3183,6 +3183,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261109030000'),
 ('20261108230200'),
 ('20261108230100'),
 ('20261108230000'),
