@@ -35,6 +35,7 @@ permissions: {}
 jobs:
   detect:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     permissions:
       pull-requests: read
     outputs:
