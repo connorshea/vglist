@@ -63,7 +63,7 @@ jobs:
           fi
 
           # Both sides of a rename count as changed.
-          files="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" \
+          files="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" \
             --jq '.[] | .filename, (.previous_filename // empty)')"
           echo "Changed files:"
           echo "$files"
