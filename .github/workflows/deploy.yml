@@ -42,21 +42,6 @@ on:
         description: Deploy even if the commit's CI run hasn't passed. Emergencies only.
         type: boolean
         default: false
-  # Called by docker.yml's deploy job after its approve-deploy gate.
-  workflow_call:
-    inputs:
-      ref:
-        description: Commit SHA to deploy.
-        type: string
-        required: true
-      skip_ci_check:
-        type: boolean
-        default: false
-    secrets:
-      # The production environment's secrets reach the deploy job directly;
-      # repo secrets have to be passed in by the caller.
-      SENTRY_AUTH_TOKEN:
-        required: false
 
 permissions: {}
 
@@ -73,8 +58,6 @@ jobs:
     # deploy-production lock for GitHub's 6-hour default.
     timeout-minutes: 30
     # One deploy at a time. A deploy that's already running finishes first.
-    # On the job rather than the workflow so it also applies when docker.yml
-    # calls this workflow.
     concurrency:
       group: deploy-production
       cancel-in-progress: false
