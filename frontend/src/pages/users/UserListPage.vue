@@ -67,7 +67,7 @@ import UserCard from "@/components/UserCard.vue";
 import UserCardSkeleton from "@/components/UserCardSkeleton.vue";
 
 const sortOptions: { label: string; value: UserSort | null; slug: string | null }[] = [
-  { label: "A–Z", value: null, slug: null },
+  { label: "First joined", value: null, slug: null },
   { label: "Most games", value: "MOST_GAMES", slug: "most-games" },
   { label: "Most followers", value: "MOST_FOLLOWERS", slug: "most-followers" }
 ];
