@@ -24,10 +24,17 @@ class GameEmbedService
   # The left border color. Matches Bulma $primary in bulma-variables.scss.
   ACCENT_COLOR = 0x5957D6
 
-  # Characters that Discord markdown treats specially. Escaping punctuation
-  # with a backslash is always safe, so escape all of them rather than trying
-  # to work out which ones matter in context.
+  # Characters that Discord markdown treats specially. In plain text, escaping
+  # punctuation with a backslash is safe, so escape all of them rather than
+  # trying to work out which ones matter in context.
   MARKDOWN_SPECIAL_CHARS = /([\\*_~`|\[\]()<>#\-:.!])/
+
+  # Inside a masked link's label, Discord shows some escapes literally: "The
+  # Legend of Zelda: Ocarina of Time" rendered as "Zelda\: Ocarina". The label
+  # always sits mid-line after `## [`, so line-start syntax (`#`, `-`, `>`,
+  # `1.`) can't trigger there. Only escape what would end the label early or
+  # start inline formatting.
+  LINK_LABEL_SPECIAL_CHARS = /([\\*_~`|\[\]])/
 
   # Component types, see the Discord docs.
   ACTION_ROW = 1
@@ -161,7 +168,7 @@ class GameEmbedService
       release_line
     ].compact.join(' · ')
 
-    lines = ["## [#{escape_markdown(game.name)}](#{canonical_url})"]
+    lines = ["## [#{escape_markdown(game.name, LINK_LABEL_SPECIAL_CHARS)}](#{canonical_url})"]
     lines << escape_markdown(subtitle) if subtitle.present?
     lines.join("\n")
   end
@@ -232,8 +239,8 @@ class GameEmbedService
     @genres ||= game.genres.order(:name).pluck(:name)
   end
 
-  def escape_markdown(text)
-    text.to_s.gsub(MARKDOWN_SPECIAL_CHARS) { "\\#{::Regexp.last_match(1)}" }
+  def escape_markdown(text, chars = MARKDOWN_SPECIAL_CHARS)
+    text.to_s.gsub(chars) { "\\#{::Regexp.last_match(1)}" }
   end
 
   def frontend_url
