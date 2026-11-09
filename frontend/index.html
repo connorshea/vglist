@@ -23,6 +23,25 @@
     <link rel="search" type="application/opensearchdescription+xml" title="vglist" href="/opensearch.xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vglist</title>
+    <!--
+      Link previews. Crawlers don't run JavaScript, so these have to be in the
+      served HTML. Caddy serves this file for every SPA route, so they're the
+      site-wide default; game pages get their own tags from the API (see the
+      link-preview bot route in Caddyfile). og:url is left out on purpose:
+      without it crawlers use the URL they fetched, whereas a fixed
+      https://vglist.co/ would fold every shared page into the home page.
+    -->
+    <meta name="description" content="Track your entire video game library across every store and platform." />
+    <meta property="og:site_name" content="vglist" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="vglist" />
+    <meta property="og:description" content="Track your entire video game library across every store and platform." />
+    <meta property="og:image" content="https://vglist.co/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The vglist logo over a mosaic of game-cover-shaped tiles" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="app"></div>
