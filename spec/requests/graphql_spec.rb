@@ -19,6 +19,27 @@ RSpec.describe "GraphQL", type: :request do
       expect(JSON.parse(response.body).dig('data', 'currentUser')).to be_nil
     end
 
+    describe 'Sentry transaction name' do
+      let(:scope) { instance_double(Sentry::Scope, set_transaction_name: nil) }
+
+      before(:each) do
+        allow(Sentry).to receive(:configure_scope).and_yield(scope)
+      end
+
+      it 'names the transaction after an allowlisted operation' do
+        operation_name = OperationAllowlist.operations.keys.first
+        post graphql_path(format: :json), params: { query: '{ __typename }', operationName: operation_name }
+
+        expect(scope).to have_received(:set_transaction_name).with("GraphQL #{operation_name}")
+      end
+
+      it "leaves the name alone for an operation name that isn't in the allowlist" do
+        post graphql_path(format: :json), params: { query: '{ __typename }', operationName: 'MadeUp' }
+
+        expect(scope).not_to have_received(:set_transaction_name)
+      end
+    end
+
     it 'allows unauthenticated requests (for signIn/signUp mutations)' do
       query = '{ __typename }'
       post graphql_path(format: :json), params: { query: query }

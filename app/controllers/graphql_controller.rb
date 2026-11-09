@@ -27,6 +27,8 @@ class GraphqlController < ApplicationController
       return
     end
 
+    name_sentry_transaction(operation_name)
+
     context = {
       current_user: current_user,
       client_ip: RackAttackConfig.client_ip(request),
@@ -62,6 +64,16 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  # Every request is POST /graphql, so name the Sentry transaction after the
+  # operation instead, e.g. "GraphQL GetGame". Otherwise every trace would be
+  # grouped under GraphqlController#execute. operationName is whatever the
+  # client sent, so only names from the SPA's operation allowlist are used.
+  def name_sentry_transaction(operation_name)
+    return unless OperationAllowlist.operations.key?(operation_name)
+
+    Sentry.configure_scope { |scope| scope.set_transaction_name("GraphQL #{operation_name}") }
+  end
 
   # Cap how long any single SQL statement may run while serving a GraphQL
   # request, so one expensive query can't hold a database connection
