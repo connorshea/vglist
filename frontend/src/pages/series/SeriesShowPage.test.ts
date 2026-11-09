@@ -95,4 +95,21 @@ describe("SeriesShowPage loading skeleton", () => {
     expect(wrapper.findComponent(ResourceShowSkeleton).exists()).toBeFalsy();
     expect(wrapper.find("h1").text()).toBe("Half-Life");
   });
+
+  it("loads the page in the URL and keeps the series up while another page loads", async () => {
+    reactive(mockRoute).query = { page: "2" };
+    const wrapper = mountPage();
+    await resolveAll();
+
+    expect(mockRequest).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ after: "MzA" }));
+    expect(wrapper.find("[aria-current='page']").text()).toBe("2");
+
+    reactive(mockRoute).query = { page: "3" };
+    await nextTick();
+    await flushPromises();
+
+    expect(mockRequest).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ after: "NjA" }));
+    expect(wrapper.findComponent(ResourceShowSkeleton).exists()).toBeFalsy();
+    expect(wrapper.find(".res-grid").classes()).toContain("is-refreshing");
+  });
 });
