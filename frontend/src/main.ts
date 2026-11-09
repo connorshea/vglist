@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/vue";
 import App from "./App.vue";
 import router from "./router";
 import { useAuthStore } from "./stores/auth";
-import { beforeSend, beforeSendTransaction } from "./utils/sentry-filter";
+import { beforeSend, beforeSendTransaction, tracesSampler } from "./utils/sentry-filter";
 
 import "./assets/stylesheets/application.scss";
 
@@ -23,9 +23,9 @@ Sentry.init({
     // out too, since that's off by default.
     Sentry.graphqlClientIntegration({ endpoints: [`${import.meta.env.VITE_API_URL}/graphql`] })
   ],
-  // Trace 25% of page loads and navigations. Each trace's spans count against
-  // the monthly span quota, so watch usage if this is raised further.
-  tracesSampleRate: 0.25,
+  // Traces a share of page loads and navigations, and none from headless or
+  // otherwise automated browsers.
+  tracesSampler,
   // Send the trace headers (sentry-trace, baggage) on API requests so a
   // traced page load continues into the Rails trace, and the API follows the
   // same sampling decision. The API's CORS config allows any request header.
