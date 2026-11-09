@@ -30,14 +30,19 @@ export const gqlClient = new GraphQLClient(`${import.meta.env.VITE_API_URL}/grap
     }
     return headers;
   },
+  // Any mutation, whether it succeeded or not, may change what cached queries
+  // would return, so the cache starts over both when one is sent and when its
+  // response arrives. Clearing on send covers a dropped connection, where the
+  // server may have made the change but no response (and so no response
+  // middleware) ever comes. Clearing again on the response drops anything a
+  // query cached while the mutation was in flight.
   requestMiddleware: (request) => {
     if (isMutationBody(request.body)) {
       mutationNames.add(request.operationName ?? "");
+      clearQueryCache();
     }
     return request;
   },
-  // Any mutation, whether it succeeded or not, may have changed what cached
-  // queries would return, so start over once it's done.
   responseMiddleware: (_response, request) => {
     if (mutationNames.has(request.operationName ?? "")) {
       clearQueryCache();

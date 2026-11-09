@@ -63,6 +63,50 @@ describe("gqlClient", () => {
     expect(readQueryCache("GetThing:{}")).toBeNull();
   });
 
+  it("clears it when a mutation is sent, so a dropped connection can't leave it stale", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new TypeError("Failed to fetch");
+      })
+    );
+    await expect(
+      gqlClient.request(gql`
+        mutation DeleteGame {
+          deleteGame {
+            deleted
+          }
+        }
+      `)
+    ).rejects.toThrow("Failed to fetch");
+    expect(readQueryCache("GetThing:{}")).toBeNull();
+  });
+
+  it("drops a result a query cached while a mutation was in flight", async () => {
+    let cachedMidFlight = false;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        // A query that started after the mutation was sent finishes first.
+        writeQueryCache("GetThing:{}", { thing: 2 }, queryCacheGeneration());
+        cachedMidFlight = readQueryCache("GetThing:{}") !== null;
+        return new Response(JSON.stringify({ data: { deleteGame: { deleted: true } } }), {
+          status: 200,
+          headers: { "content-type": "application/json" }
+        });
+      })
+    );
+    await gqlClient.request(gql`
+      mutation DeleteGame {
+        deleteGame {
+          deleted
+        }
+      }
+    `);
+    expect(cachedMidFlight).toBeTruthy();
+    expect(readQueryCache("GetThing:{}")).toBeNull();
+  });
+
   it("leaves it alone after a query", async () => {
     respondWith({ data: { thing: 2 } });
     await gqlClient.request(gql`
