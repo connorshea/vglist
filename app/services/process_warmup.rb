@@ -30,7 +30,7 @@ module ProcessWarmup
       'genreId' => '0', 'hasGenre' => false,
       'engineId' => '0', 'hasEngine' => false
     },
-    'GetNewReleases' => { 'first' => 6 },
+    'GetNewReleases' => { 'first' => 12 },
     'GetUpcomingReleases' => { 'first' => 6 },
     'GetGamesIndex' => { 'first' => 36, 'sortBy' => 'MOST_OWNERS', 'withCount' => true },
     'GetGame' => lambda {
