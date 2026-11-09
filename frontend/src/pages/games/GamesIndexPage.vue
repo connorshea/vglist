@@ -288,16 +288,24 @@ async function loadMore() {
   }
   loadingMore.value = true;
   try {
-    await fetchMore({ ...variables.value, after: cursor, withCount: false }, (prev, next) => ({
-      games:
-        prev.games && next.games
-          ? {
-              ...next.games,
-              totalCount: prev.games.totalCount,
-              nodes: [...prev.games.nodes, ...next.games.nodes]
-            }
-          : next.games
-    }));
+    // A function, so the cursor comes from the result on screen when the page is
+    // fetched, which may be a refreshed one (see `fetchMore`).
+    await fetchMore(
+      () => {
+        const after = hasNextPage.value ? data.value?.games?.pageInfo.endCursor : null;
+        return after ? { ...variables.value, after, withCount: false } : null;
+      },
+      (prev, next) => ({
+        games:
+          prev.games && next.games
+            ? {
+                ...next.games,
+                totalCount: prev.games.totalCount,
+                nodes: [...prev.games.nodes, ...next.games.nodes]
+              }
+            : next.games
+      })
+    );
   } finally {
     loadingMore.value = false;
   }

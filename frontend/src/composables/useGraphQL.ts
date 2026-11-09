@@ -44,8 +44,18 @@ interface UseQueryReturn<TData> {
   // True while a cached result is on screen and a fresh one is on its way.
   revalidating: Ref<boolean>;
   refetch: () => Promise<void>;
-  fetchMore: (variables: Record<string, unknown>, merge: (prev: TData, next: TData) => TData) => Promise<void>;
+  /**
+   * Loads another page and merges it in. If a cached result is being
+   * refreshed, this waits for the fresh one first, so pass the variables as a
+   * function that reads the cursor from `data` when it's called (returning
+   * null to skip, e.g. when the fresh result has no next page).
+   */
+  fetchMore: (variables: FetchMoreVariables, merge: (prev: TData, next: TData) => TData) => Promise<void>;
+  // Resolves once no cached result is being refreshed.
+  whenRevalidated: () => Promise<void>;
 }
+
+type FetchMoreVariables = Record<string, unknown> | (() => Record<string, unknown> | null);
 
 export function useQuery<TData = Record<string, unknown>, TVariables = Record<string, unknown>>(
   query: DocumentNode,
@@ -62,6 +72,10 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
   // reactive variable changes twice) race, and whichever the server answers
   // last wins — which may be the older one.
   let latestRequestId = 0;
+
+  // Settles when the newest refresh of a cached result does (see
+  // `whenRevalidated`).
+  let revalidation: Promise<void> = Promise.resolve();
 
   // A disabled query must not write state, and `enabled` can flip to false
   // while a request is in flight (e.g. navigating from an edit route to a new
@@ -85,12 +99,17 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     const cacheKey = useCache ? queryCacheKey(query, variables) : null;
     const cached = showCached && cacheKey ? readQueryCache<TData>(cacheKey) : null;
     const generation = queryCacheGeneration();
+    let settleRevalidation: (() => void) | undefined;
     if (cached) {
       data.value = cached;
       loading.value = false;
       revalidating.value = true;
+      revalidation = new Promise((resolve) => {
+        settleRevalidation = resolve;
+      });
     } else {
       loading.value = true;
+      revalidating.value = false;
     }
     error.value = null;
 
@@ -117,17 +136,41 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
         loading.value = false;
         revalidating.value = false;
       }
+      settleRevalidation?.();
     }
   }
 
-  async function fetchMore(variables: Record<string, unknown>, merge: (prev: TData, next: TData) => TData) {
+  async function whenRevalidated() {
+    // A newer refresh may have started by the time this one settles.
+    while (revalidating.value) {
+      await revalidation;
+    }
+  }
+
+  async function fetchMore(variables: FetchMoreVariables, merge: (prev: TData, next: TData) => TData) {
+    // Loading a page now would supersede the refresh, leaving the stale first
+    // page on screen with a fresh second page after it. Wait for the fresh
+    // first page and take the cursor from that instead.
+    if (revalidating.value) {
+      await whenRevalidated();
+      // Different variables are loading meanwhile, so this page belongs to
+      // the old list.
+      if (loading.value) {
+        return;
+      }
+    }
+    const resolvedVariables = typeof variables === "function" ? variables() : variables;
+    if (!resolvedVariables) {
+      return;
+    }
+
     // Shares the counter with `execute` so that loading another page and
     // re-running the base query can't interleave into a mangled result.
     const requestId = ++latestRequestId;
     loading.value = true;
     revalidating.value = false;
     try {
-      const nextData = await gqlClient.request<TData>(query, variables);
+      const nextData = await gqlClient.request<TData>(query, resolvedVariables);
       if (requestId !== latestRequestId || !isEnabled()) {
         return;
       }
@@ -182,7 +225,7 @@ export function useQuery<TData = Record<string, unknown>, TVariables = Record<st
     void execute(true);
   });
 
-  return { data, loading, revalidating, error, refetch: () => execute(), fetchMore };
+  return { data, loading, revalidating, error, refetch: () => execute(), fetchMore, whenRevalidated };
 }
 
 interface UseMutationReturn<TData, TVariables> {

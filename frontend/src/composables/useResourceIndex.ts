@@ -119,14 +119,22 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
     }
     loadingMore.value = true;
     try {
-      await fetchMore({ ...variables.value, after: cursor }, (prev, next) => {
-        const prevList = options.connection(prev);
-        const nextList = options.connection(next);
-        if (!prevList || !nextList) {
-          return next;
+      // A function, so the cursor comes from the result on screen when the page is
+      // fetched, which may be a refreshed one (see `fetchMore`).
+      await fetchMore(
+        () => {
+          const after = hasNextPage.value ? list.value?.pageInfo.endCursor : null;
+          return after ? { ...variables.value, after } : null;
+        },
+        (prev, next) => {
+          const prevList = options.connection(prev);
+          const nextList = options.connection(next);
+          if (!prevList || !nextList) {
+            return next;
+          }
+          return options.withConnection(next, { ...nextList, nodes: [...prevList.nodes, ...nextList.nodes] });
         }
-        return options.withConnection(next, { ...nextList, nodes: [...prevList.nodes, ...nextList.nodes] });
-      });
+      );
     } finally {
       loadingMore.value = false;
     }
@@ -143,9 +151,12 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
     if (!data.value || !list.value) {
       return;
     }
-    const loadedCount = list.value.nodes.filter((node) => node.id !== id).length;
+    // Counted when the page is fetched, as with `loadMore`.
     await fetchMore(
-      { ...variables.value, first: Math.min(Math.max(loadedCount, 1), MAX_PAGE_SIZE) },
+      () => {
+        const loadedCount = (list.value?.nodes ?? []).filter((node) => node.id !== id).length;
+        return { ...variables.value, first: Math.min(Math.max(loadedCount, 1), MAX_PAGE_SIZE) };
+      },
       (_prev, next) => next
     );
   }

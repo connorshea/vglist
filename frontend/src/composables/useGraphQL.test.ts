@@ -301,6 +301,83 @@ describe("useQuery stale-while-revalidate cache", () => {
     expect(mountQuery().query().data.value).toBeNull();
   });
 
+  it("waits for a refresh of a cached result before loading another page", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1", cursor: "old" } });
+    mountQuery().wrapper.unmount();
+    await settle();
+
+    const fresh = deferred<unknown>();
+    const nextPage = deferred<unknown>();
+    mockRequest.mockReturnValueOnce(fresh.promise).mockReturnValueOnce(nextPage.promise);
+    const { query } = mountQuery();
+    await settle();
+    expect(query().revalidating.value).toBeTruthy();
+
+    const merge = vi.fn<(prev: ThingData, next: ThingData) => ThingData>((prev, next) => ({ ...prev, ...next }));
+    const loaded = query().fetchMore(() => {
+      const data = query().data.value as { platform: { cursor: string } } | null;
+      return { id: "1", after: data?.platform.cursor };
+    }, merge);
+    await settle();
+    // Nothing goes out until the fresh first page is in.
+    expect(mockRequest).toHaveBeenCalledTimes(2);
+
+    fresh.resolve({ platform: { id: "1", cursor: "new" } });
+    await settle();
+    expect(query().data.value).toEqual({ platform: { id: "1", cursor: "new" } });
+    expect(mockRequest).toHaveBeenCalledTimes(3);
+    // The cursor comes from the fresh first page, not the cached one.
+    expect(mockRequest).toHaveBeenLastCalledWith(GET_PLATFORM_FOR_EDIT, { id: "1", after: "new" });
+
+    nextPage.resolve({ platform: { id: "1", cursor: "next" } });
+    await loaded;
+    expect(merge).toHaveBeenCalledWith(
+      { platform: { id: "1", cursor: "new" } },
+      { platform: { id: "1", cursor: "next" } }
+    );
+    expect(query().data.value).toEqual({ platform: { id: "1", cursor: "next" } });
+  });
+
+  it("skips a page whose variables come back null after the refresh", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    mountQuery().wrapper.unmount();
+    await settle();
+
+    const fresh = deferred<unknown>();
+    mockRequest.mockReturnValueOnce(fresh.promise);
+    const { query } = mountQuery();
+    await settle();
+
+    const loaded = query().fetchMore(
+      () => null,
+      (prev) => prev
+    );
+    fresh.resolve({ platform: { id: "1" } });
+    await loaded;
+    expect(mockRequest).toHaveBeenCalledTimes(2);
+  });
+
+  it("drops a waiting page when the variables change during the refresh", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    mountQuery().wrapper.unmount();
+    await settle();
+
+    const fresh = deferred<unknown>();
+    const otherList = deferred<unknown>();
+    mockRequest.mockReturnValueOnce(fresh.promise).mockReturnValueOnce(otherList.promise);
+    const { id, query } = mountQuery();
+    await settle();
+
+    const loaded = query().fetchMore({ id: "1", after: "x" }, (prev) => prev);
+    // Uncached variables, so they load from scratch.
+    id.value = "2";
+    await settle();
+    fresh.resolve({ platform: { id: "1" } });
+    await loaded;
+    expect(mockRequest).toHaveBeenCalledTimes(3);
+    expect(mockRequest).not.toHaveBeenCalledWith(GET_PLATFORM_FOR_EDIT, { id: "1", after: "x" });
+  });
+
   it("refetch shows loading rather than reusing the cache", async () => {
     mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
     const { query } = mountQuery();

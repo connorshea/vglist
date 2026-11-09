@@ -63,21 +63,29 @@ async function loadMore() {
     return;
   }
 
-  await fetchMore({ ...variables.value, after: cursor }, (prev, next) => {
-    if (!prev.user || !next.user) {
-      return next;
-    }
-    return {
-      ...next,
-      user: {
-        ...next.user,
-        favoritedGames: {
-          ...next.user.favoritedGames,
-          nodes: [...prev.user.favoritedGames.nodes, ...next.user.favoritedGames.nodes]
-        }
+  // A function, so the cursor comes from the result on screen when the page is
+  // fetched, which may be a refreshed one (see `fetchMore`).
+  await fetchMore(
+    () => {
+      const after = hasNextPage.value ? connection.value?.pageInfo.endCursor : null;
+      return after ? { ...variables.value, after } : null;
+    },
+    (prev, next) => {
+      if (!prev.user || !next.user) {
+        return next;
       }
-    };
-  });
+      return {
+        ...next,
+        user: {
+          ...next.user,
+          favoritedGames: {
+            ...next.user.favoritedGames,
+            nodes: [...prev.user.favoritedGames.nodes, ...next.user.favoritedGames.nodes]
+          }
+        }
+      };
+    }
+  );
 }
 </script>
 
