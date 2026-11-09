@@ -42,7 +42,9 @@ const submitError = ref("");
 
 const { data, loading, error } = useQuery<GetCompanyForEditQuery>(GET_COMPANY_FOR_EDIT, {
   variables: () => ({ id: companyId.value }),
-  enabled: () => isEditing.value
+  enabled: () => isEditing.value,
+  // Seeds the form, which a fresh result arriving later would overwrite.
+  cache: false
 });
 
 usePageTitle(() => {

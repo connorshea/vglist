@@ -1,7 +1,14 @@
+import { clearQueryCache } from "@/graphql/query-cache";
+
 // Upload a cropped avatar for the signed-in user. This goes to a REST endpoint
 // rather than GraphQL because graphql-request can't send multipart bodies.
 // Resolves to the new avatar's URL, or throws an Error with a message that's
 // safe to show to the user.
+//
+// Being REST, it skips the GraphQL client's clearing of the query cache after
+// mutations, so it clears it itself: before sending, in case the connection
+// drops after the server has saved the avatar, and once it's done, in case a
+// query cached the old avatar meanwhile.
 export async function uploadAvatar(blob: Blob, token: string | null): Promise<string | null> {
   const body = new FormData();
   body.append("avatar", blob, blob.type === "image/png" ? "avatar.png" : "avatar.jpg");
@@ -11,11 +18,17 @@ export async function uploadAvatar(blob: Blob, token: string | null): Promise<st
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me/avatar`, {
-    method: "POST",
-    headers,
-    body
-  });
+  clearQueryCache();
+  let response: Response;
+  try {
+    response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me/avatar`, {
+      method: "POST",
+      headers,
+      body
+    });
+  } finally {
+    clearQueryCache();
+  }
 
   const data = (await response.json().catch(() => ({}))) as {
     avatar_url?: unknown;

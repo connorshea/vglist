@@ -362,7 +362,9 @@ const {
   error: gameError
 } = useQuery<GetGameResult>(GET_GAME, {
   variables: () => ({ id: gameId.value }),
-  enabled: () => isEditing.value
+  enabled: () => isEditing.value,
+  // Seeds the form, which a fresh result arriving later would overwrite.
+  cache: false
 });
 
 usePageTitle(() => {
