@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount, flushPromises, RouterLinkStub } from "@vue/test-utils";
 import GamesIndexPage from "./GamesIndexPage.vue";
+import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
+import { GET_GAMES_INDEX } from "@/graphql/queries/games-index";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
@@ -78,5 +80,35 @@ describe("GamesIndexPage", () => {
     await flushPromises();
 
     expect(wrapper.find(".new-btn").exists()).toBeFalsy();
+  });
+
+  it("shows placeholder tiles until the first page of games loads", async () => {
+    let resolveGames: (value: unknown) => void = () => {};
+    mockRequest.mockImplementation((query) =>
+      query === GET_GAMES_INDEX
+        ? new Promise((resolve) => {
+            resolveGames = resolve;
+          })
+        : Promise.resolve({ basicSiteStatistics: { games: 1 } })
+    );
+    const wrapper = mountPage();
+    await flushPromises();
+
+    expect(wrapper.findAllComponents(GameTileSkeleton)).toHaveLength(18);
+    expect(wrapper.find("[role=status]").text()).toBe("Loading games…");
+
+    resolveGames({
+      games: {
+        nodes: [{ id: "1", name: "Portal" }],
+        totalCount: 1,
+        pageInfo: { hasNextPage: false, endCursor: null }
+      }
+    });
+    await flushPromises();
+
+    expect(wrapper.findAllComponents(GameTileSkeleton)).toHaveLength(0);
+    expect(wrapper.find("[role=status]").text()).toBe("");
+    expect(wrapper.findAll(".games-grid li")).toHaveLength(1);
+    wrapper.unmount();
   });
 });
