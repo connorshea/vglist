@@ -224,6 +224,18 @@ jobs:
             exit 1
           fi
 
+      # A failed Sentry upload doesn't fail the build (see vite.config.ts), so
+      # surface it here. The image still ships; errors from it just get
+      # minified stack traces in Sentry.
+      - name: Check the Sentry source map upload
+        run: |
+          errors="$(docker run --rm --entrypoint cat vglist-frontend /app/sentry-upload-errors)"
+          if [ -n "$errors" ]; then
+            while IFS= read -r line; do
+              echo "::warning::Source maps weren't uploaded to Sentry: $line"
+            done <<<"$errors"
+          fi
+
       - name: Serve and check /health and SPA fallback
         run: |
           docker run -d --name frontend -p 8080:8080 vglist-frontend
