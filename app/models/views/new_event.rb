@@ -44,6 +44,13 @@ module Views
       Events::RelationshipEvent => { followed: AttachmentPreloads::AVATAR }
     }.freeze
 
+    # The same, minus the library entries' and favorites' games, for when
+    # the query doesn't read them (see Types::EventConnectionType).
+    EVENTABLE_INCLUDES_WITHOUT_GAMES = EVENTABLE_INCLUDES.merge(
+      Events::GamePurchaseEvent => [:user],
+      Events::FavoriteGameEvent => []
+    ).freeze
+
     # Get a specific event subclass record based on the ID.
     # When event_category is known, queries only the correct table (1 query instead of up to 4).
     def self.find_event_subclass_by_id(id, category = nil)
@@ -68,7 +75,9 @@ module Views
 
     # Batch-load eventables for a collection of events to avoid N+1 queries.
     # Groups events by table, batch-loads subclass records, then preloads eventables.
-    def self.preload_eventables(events)
+    # @param include_games [Boolean] Also preload the games (and covers) of
+    #   library entries and favorites.
+    def self.preload_eventables(events, include_games: true)
       events_array = events.to_a
       return events_array if events_array.empty?
 
@@ -76,13 +85,14 @@ module Views
       # in the same table, so they are loaded together, along with one set of
       # their library entries, games and covers.
       grouped = events_array.group_by { |event| EVENT_CLASS_MAP[event.event_category] }
+      includes = include_games ? EVENTABLE_INCLUDES : EVENTABLE_INCLUDES_WITHOUT_GAMES
       subclass_map = {}
 
       grouped.each do |klass, class_events|
         next unless klass
 
         ids = class_events.map(&:id)
-        records = klass.where(id: ids).includes(eventable: EVENTABLE_INCLUDES[klass])
+        records = klass.where(id: ids).includes(eventable: includes[klass])
         records.each { |r| subclass_map[r.id] = r }
       end
 
