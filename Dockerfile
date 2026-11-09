@@ -54,6 +54,12 @@ RUN apt-get update -qq && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
+# RubyGems (and the default Bundler it ships with) pinned to match the
+# setup-ruby steps in CI and BUNDLED WITH in Gemfile.lock.
+RUN gem update --system 4.0.24 --no-document && \
+    gem uninstall rubygems-update --all --executables && \
+    rm -rf "$(gem env gemdir)"/cache/*.gem
+
 # VIPS_CONCURRENCY: libvips otherwise starts one worker thread per host core,
 # not per vCPU the instance actually gets.
 ENV RAILS_ENV=production \
