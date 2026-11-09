@@ -433,6 +433,30 @@ RSpec.describe Game, type: :model do
       end
     end
 
+    # game_platforms and game_genres carry their own release_date column, so
+    # the release date scopes have to say which table they mean.
+    context 'when combining release date scopes with a platform or genre filter' do
+      let(:platform) { create(:platform) }
+      let(:genre) { create(:genre) }
+      let!(:released) { create(:game, release_date: Date.new(2017, 6, 1), platforms: [platform], genres: [genre]) }
+      let!(:unreleased) { create(:game, release_date: 1.month.from_now, platforms: [platform], genres: [genre]) }
+
+      it 'sorts a platform\'s games by release date' do
+        expect(Game.on_platform(platform.id).recently_released).to eq([released])
+        expect(Game.on_platform(platform.id).upcoming).to eq([unreleased])
+      end
+
+      it 'sorts a genre\'s games by release date' do
+        expect(Game.by_genre(genre.id).recently_released).to eq([released])
+        expect(Game.by_genre(genre.id).upcoming).to eq([unreleased])
+      end
+
+      it 'filters a platform\'s and a genre\'s games by year' do
+        expect(Game.on_platform(platform.id).by_year(2017)).to eq([released])
+        expect(Game.by_genre(genre.id).by_year(2017)).to eq([released])
+      end
+    end
+
     context 'with three games where each was made in a different year' do
       let!(:game2014) { create(:game, release_date: Faker::Date.between(from: 'January 1, 2014', to: 'December 31, 2014')) }
       let!(:game2017) { create(:game, release_date: Faker::Date.between(from: 'January 1, 2017', to: 'December 31, 2017')) }

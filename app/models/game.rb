@@ -100,13 +100,13 @@ class Game < ApplicationRecord
   scope :most_owners, -> { order(game_purchases_count: :desc, id: :desc) }
   # Sort by recently released.
   scope :recently_released, -> {
-    where("release_date < ?", 1.day.from_now).order(release_date: :desc, id: :desc)
+    where("games.release_date < ?", 1.day.from_now).order(release_date: :desc, id: :desc)
   }
   # Games that haven't been released yet, soonest first. The exact complement
   # of recently_released (which allows a day of slack for time zones), so a
   # game is never in both.
   scope :upcoming, -> {
-    where("release_date >= ?", 1.day.from_now).order(release_date: :asc, id: :asc)
+    where("games.release_date >= ?", 1.day.from_now).order(release_date: :asc, id: :asc)
   }
 
   # Find games available on a given platform.
@@ -126,7 +126,7 @@ class Game < ApplicationRecord
 
   # Find games released in a given year.
   scope :by_year, ->(year) {
-    where('extract(year from release_date) = ?', year)
+    where('extract(year from games.release_date) = ?', year)
   }
 
   # Find games released in or after a given year.
