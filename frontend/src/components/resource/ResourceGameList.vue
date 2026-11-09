@@ -16,7 +16,13 @@
       </div>
     </div>
 
-    <p v-if="!games.length && !refreshing" class="res-empty">{{ emptyText }}</p>
+    <p v-if="!games.length && !refreshing" class="res-empty">
+      <template v-if="page && page > 1">
+        There's nothing on page {{ page }}.
+        <button type="button" class="res-link-btn" @click="emit('goToPage', 1)">Go to the first page</button>
+      </template>
+      <template v-else>{{ emptyText }}</template>
+    </p>
 
     <ul class="res-grid" :class="{ 'is-refreshing': refreshing }" :aria-busy="refreshing">
       <li v-for="game in games" :key="game.id">
@@ -39,7 +45,18 @@
 
     <p v-if="loadMoreError" class="res-load-error" role="alert">Failed to load more games: {{ loadMoreError }}</p>
 
-    <div v-if="hasNextPage" class="res-more">
+    <template v-if="page !== undefined">
+      <PaginationNav
+        v-if="games.length && (page > 1 || hasNextPage)"
+        :current-page="page"
+        :has-next-page="hasNextPage"
+        :loading="refreshing"
+        @prev="emit('goToPage', page - 1)"
+        @next="emit('goToPage', page + 1)"
+      />
+    </template>
+
+    <div v-else-if="hasNextPage" class="res-more">
       <button type="button" class="res-more-btn" :disabled="loadingMore" @click="emit('loadMore')">
         {{ loadingMore ? "Loading…" : "Show more games" }}
       </button>
@@ -51,6 +68,7 @@
 import { Check } from "@lucide/vue";
 import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import { RESOURCE_GAME_SORTS } from "@/composables/useResourceGames";
+import PaginationNav from "@/components/PaginationNav.vue";
 import type { ResourceGameFieldsFragment, ResourceGameSort } from "@/types/graphql";
 
 defineProps<{
@@ -60,7 +78,10 @@ defineProps<{
   // A new sort order is loading; the current games stay up, dimmed.
   refreshing: boolean;
   hasNextPage: boolean;
-  loadingMore: boolean;
+  // With a page number, the list shows that one page with Previous/Next
+  // buttons (`goToPage`). Without one, it shows "Show more" (`loadMore`).
+  page?: number;
+  loadingMore?: boolean;
   loadMoreError?: string | null;
 }>();
 
@@ -68,6 +89,7 @@ const sortBy = defineModel<ResourceGameSort>("sortBy", { required: true });
 
 const emit = defineEmits<{
   loadMore: [];
+  goToPage: [page: number];
 }>();
 
 function initials(name: string): string {
@@ -275,6 +297,24 @@ function initials(name: string): string {
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
+}
+
+.res-link-btn {
+  padding: 0;
+  font: inherit;
+  color: var(--color-accent);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.res-link-btn:hover {
+  text-decoration: underline;
+}
+
+.res-link-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .res-load-error {

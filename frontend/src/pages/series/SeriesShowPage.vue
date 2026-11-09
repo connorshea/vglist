@@ -35,10 +35,9 @@
         :games="games"
         empty-text="No games are in this series yet."
         :refreshing="loading"
+        :page="page"
         :has-next-page="hasNextPage"
-        :loading-more="loadingMore"
-        :load-more-error="loadMoreError"
-        @load-more="loadMore"
+        @go-to-page="goToPage"
       />
 
       <ConfirmDialog
@@ -66,7 +65,7 @@ import { notFoundLocation } from "@/utils/not-found";
 import { CircleAlert, Library } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useMutation } from "@/composables/useGraphQL";
-import { useResourceGames } from "@/composables/useResourceGames";
+import { useResourceGamePages } from "@/composables/useResourceGames";
 import { usePageTitle } from "@/composables/usePageTitle";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { GET_SERIES } from "@/graphql/queries/resources";
@@ -83,20 +82,23 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
 
-const { data, loading, error, sortBy, games, hasNextPage, loadMore, loadingMore, loadMoreError } =
-  useResourceGames<GetSeriesQuery>(GET_SERIES, {
+const { data, loading, error, sortBy, games, page, hasNextPage, goToPage } = useResourceGamePages<GetSeriesQuery>(
+  GET_SERIES,
+  {
     variables: () => ({ id: route.params.id }),
     select: (result) => result.series?.games
-  });
+  }
+);
 
-// Only on the first load: changing the sort keeps the page up and dims the
-// games instead.
+// Only on the first load: changing the sort or page keeps the page up and
+// dims the games instead.
 const showSkeleton = computed(() => loading.value && !data.value);
 
 usePageTitle(() => data.value?.series?.name);
 
 // Only a failed first load means the series doesn't exist. Once it has
-// loaded, an error from changing the sort is shown above the games instead.
+// loaded, an error from changing the sort or page is shown above the games
+// instead.
 watch([data, error, loading], () => {
   if (!loading.value && ((error.value && !data.value) || (data.value && !data.value.series))) {
     router.replace(notFoundLocation(route));
