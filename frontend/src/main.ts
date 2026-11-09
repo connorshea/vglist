@@ -15,7 +15,14 @@ Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   // The commit SHA, same as the API, so both projects share releases.
   release: import.meta.env.VITE_SENTRY_RELEASE,
-  integrations: [Sentry.browserTracingIntegration({ router })],
+  integrations: [
+    Sentry.browserTracingIntegration({ router }),
+    // Every API request is POST /graphql, so add the operation (e.g. "query
+    // GetGame") to request breadcrumbs and spans. Only the operation's name
+    // and type are added, never its variables. The query document is left
+    // out too, since that's off by default.
+    Sentry.graphqlClientIntegration({ endpoints: [`${import.meta.env.VITE_API_URL}/graphql`] })
+  ],
   // Trace 5% of page loads and navigations. Each trace's spans count against
   // the monthly span quota, so keep this low.
   tracesSampleRate: 0.05,
