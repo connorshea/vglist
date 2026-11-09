@@ -86,7 +86,7 @@
           <div class="game-hero-cover">
             <!-- Covers keep their own shape (square, 16:9, …) in a fixed-width column. -->
             <img v-if="game.coverUrl" :src="game.coverUrl" :alt="`Cover for ${game.name}`" fetchpriority="high" />
-            <div v-else class="game-cover-placeholder" aria-hidden="true">
+            <div v-else class="game-cover-placeholder" :style="coverPlaceholderStyle(game.name)" aria-hidden="true">
               <span>{{ gameInitials }}</span>
             </div>
 
@@ -413,6 +413,7 @@ import LinkedNames from "@/components/game/LinkedNames.vue";
 import GameReviewsCard from "@/components/game/GameReviewsCard.vue";
 import GameSeriesShelf from "@/components/game/GameSeriesShelf.vue";
 import { gameInitials as initialsFor } from "@/utils/library";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import "@/assets/stylesheets/game-page.scss";
 
 const route = useRoute("game");
@@ -901,7 +902,6 @@ function onGameMerged(kept: { id: string; name: string }) {
   width: 100%;
   aspect-ratio: 3 / 4;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   display: flex;
   align-items: center;
   justify-content: center;

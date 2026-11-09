@@ -1,7 +1,12 @@
 <template>
   <router-link :to="{ name: 'game', params: { id: purchase.game.id } }" class="library-tile" :aria-label="ariaLabel">
     <img v-if="purchase.game.coverUrl" :src="purchase.game.coverUrl" alt="" class="library-tile-cover" loading="lazy" />
-    <span v-else class="cover-placeholder library-tile-placeholder" aria-hidden="true">
+    <span
+      v-else
+      class="cover-placeholder library-tile-placeholder"
+      :style="coverPlaceholderStyle(purchase.game.name)"
+      aria-hidden="true"
+    >
       {{ gameInitials(purchase.game.name) }}
     </span>
 
@@ -32,6 +37,7 @@
 import { computed } from "vue";
 import type { LibraryGamePurchaseFieldsFragment } from "@/types/graphql";
 import { formatHours, gameInitials, libraryStatus, ratingTier } from "@/utils/library";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 const props = defineProps<{
   purchase: LibraryGamePurchaseFieldsFragment;

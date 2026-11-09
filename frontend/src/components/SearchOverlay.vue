@@ -110,7 +110,7 @@
               >
                 <div class="result-thumb">
                   <img v-if="game.coverUrl" :src="game.coverUrl" alt="" />
-                  <div v-else class="result-thumb-placeholder">
+                  <div v-else class="result-thumb-placeholder is-cover" :style="coverPlaceholderStyle(game.content)">
                     {{ gameInitials(game.content) }}
                   </div>
                 </div>
@@ -291,6 +291,7 @@ import type {
 } from "@/types/graphql";
 import { Search, X, Gamepad2, Briefcase, Monitor, Users, Shapes } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 const router = useRouter();
 const { isOpen, close, takeInitialQuery } = useSearchOverlay();
@@ -1041,6 +1042,13 @@ function releaseYear(date: string): string {
   letter-spacing: 0.3px;
   line-height: 1.3;
   user-select: none;
+}
+
+.result-thumb-placeholder.is-cover {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
 }
 
 /* ── Compact items (users, companies) ── */

@@ -2,13 +2,15 @@
   <div class="resource-tile" :class="{ 'can-edit': canEdit, 'menu-open': menuOpen }">
     <router-link :to="to" class="tile-link" :aria-label="accessibleName">
       <span v-if="coverGames.length === 0 || saveData" class="tile-mosaic is-placeholder" aria-hidden="true">
-        <span class="tile-placeholder">{{ initials(name) }}</span>
+        <span class="tile-placeholder" :style="coverPlaceholderStyle(name)">{{ initials(name) }}</span>
       </span>
       <span v-else class="tile-mosaic" aria-hidden="true">
         <span v-for="(slot, i) in slots" :key="i" class="tile-slot" :class="{ 'is-empty': !slot }">
           <template v-if="slot">
             <img v-if="slot.coverUrl" :src="slot.coverUrl" alt="" loading="lazy" />
-            <span v-else class="tile-slot-placeholder">{{ initials(slot.name) }}</span>
+            <span v-else class="tile-slot-placeholder" :style="coverPlaceholderStyle(slot.name)">{{
+              initials(slot.name)
+            }}</span>
           </template>
         </span>
       </span>
@@ -50,6 +52,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { ChevronRight, Ellipsis, Pencil, Trash2 } from "@lucide/vue";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import type { RouteLocationRaw } from "vue-router";
 import { useSaveData } from "@/composables/useSaveData";
 
@@ -248,7 +251,6 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   color: #fff;
   font-size: 15px;
   font-weight: 700;
@@ -268,7 +270,6 @@ onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPoin
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   color: #fff;
   font-size: 32px;
   font-weight: 700;

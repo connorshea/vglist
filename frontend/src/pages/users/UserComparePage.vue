@@ -180,7 +180,13 @@
               >
                 <span class="compare-row-cover">
                   <img v-if="row.game.coverUrl" :src="row.game.coverUrl" alt="" loading="lazy" />
-                  <span v-else class="cover-placeholder" aria-hidden="true">{{ gameInitials(row.game.name) }}</span>
+                  <span
+                    v-else
+                    class="cover-placeholder"
+                    :style="coverPlaceholderStyle(row.game.name)"
+                    aria-hidden="true"
+                    >{{ gameInitials(row.game.name) }}</span
+                  >
                 </span>
                 <span class="compare-row-text" aria-hidden="true">
                   <b>{{ row.game.name }}</b>
@@ -235,7 +241,13 @@
                   <router-link :to="{ name: 'game', params: { id: row.game.id } }" class="compare-game">
                     <span class="compare-game-cover">
                       <img v-if="row.game.coverUrl" :src="row.game.coverUrl" alt="" loading="lazy" />
-                      <span v-else class="cover-placeholder" aria-hidden="true">{{ gameInitials(row.game.name) }}</span>
+                      <span
+                        v-else
+                        class="cover-placeholder"
+                        :style="coverPlaceholderStyle(row.game.name)"
+                        aria-hidden="true"
+                        >{{ gameInitials(row.game.name) }}</span
+                      >
                     </span>
                     <span class="compare-game-text">
                       <span class="compare-game-name">{{ row.game.name }}</span>
@@ -410,6 +422,7 @@ import {
   type CompareTab
 } from "@/utils/compare";
 import { gameInitials, libraryStatus } from "@/utils/library";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import CompareUserDialog from "@/components/compare/CompareUserDialog.vue";
 import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
 import "@/assets/stylesheets/library.scss";

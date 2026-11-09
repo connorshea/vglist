@@ -14,10 +14,6 @@
   --rating-ok: var(--status-paused);
   --rating-low: var(--status-dropped);
 
-  --cover-placeholder-1: #e879a0;
-  --cover-placeholder-2: #c266d6;
-  --cover-placeholder-3: #7c5ce7;
-
   .status-dot {
     display: inline-block;
     flex-shrink: 0;
@@ -87,12 +83,7 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      135deg,
-      var(--cover-placeholder-1) 0%,
-      var(--cover-placeholder-2) 50%,
-      var(--cover-placeholder-3) 100%
-    );
+    /* The gradient comes from coverPlaceholderStyle(), seeded from the name. */
     color: #fff;
     font-weight: 700;
     letter-spacing: 0.05em;
