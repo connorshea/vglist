@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-vglist is a Ruby on Rails application for tracking video game libraries. It uses a Rails 7.2 backend with PostgreSQL 18, a standalone Vue 3 + TypeScript SPA frontend (in `frontend/`, bundled with Vite), and exposes both REST and GraphQL APIs.
+vglist is a Ruby on Rails application for tracking video game libraries. It uses a Rails 8.1 backend with PostgreSQL 18, a standalone Vue 3 + TypeScript SPA frontend (in `frontend/`, bundled with Vite), and exposes both REST and GraphQL APIs.
 
 ## Common Commands
 
