@@ -53,6 +53,12 @@ region: sfo
 # our own Cloudflare zone instead, which honours s-maxage and expires them
 # after minutes. DigitalOcean recommends turning this off when you put your
 # own CDN in front.
+#
+# This is app-wide, so it also stops App Platform caching the frontend's
+# hashed /assets/* bundles (which Caddy marks immutable for a year). Proxy
+# the vglist.co record through Cloudflare (orange cloud) before applying it,
+# so Cloudflare caches those instead; otherwise every first visit fetches the
+# bundles from the single frontend container.
 disable_edge_cache: true
 
 # Private networking to the database. The cluster vglist-postgres is in sfo3,
