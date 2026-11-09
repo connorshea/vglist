@@ -47,6 +47,15 @@
 name: vglist
 region: sfo
 
+# Private networking to the database. The cluster vglist-postgres is in sfo3,
+# the datacenter App Platform uses for `sfo`, and this is its VPC. Without it,
+# the API reached the database over its public address (~3ms per query from
+# the console, vs under 1ms expected in-VPC). The database firewall must allow
+# the app (an `app:<id>` rule, or its VPC egress IP from the Networking tab).
+# Can't be combined with dedicated egress IPs.
+vpc:
+  id: 1c2f97c1-7994-4a0e-b99e-4ce41ed97272
+
 alerts:
   - rule: DEPLOYMENT_FAILED
   - rule: DOMAIN_FAILED
