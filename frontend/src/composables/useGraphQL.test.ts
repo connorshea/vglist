@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { defineComponent, nextTick, ref, type Ref } from "vue";
 import { mount } from "@vue/test-utils";
 import { GET_PLATFORM_FOR_EDIT } from "@/graphql/queries/resources";
+import { clearQueryCache } from "@/graphql/query-cache";
 import { useQuery } from "./useGraphQL";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
@@ -36,8 +37,11 @@ type ThingData = { platform: { id: string } };
  * `enabled` ref to also drive the enabled flag; leaving it off exercises the
  * always-enabled path where the option is omitted entirely.
  */
-function mountQuery({ enabled }: { enabled?: Ref<boolean> } = {}) {
-  const id = ref("1");
+function mountQuery({
+  enabled,
+  cache,
+  id = ref("1")
+}: { enabled?: Ref<boolean>; cache?: boolean; id?: Ref<string> } = {}) {
   // Held in a plain binding rather than a ref — a ref would deeply unwrap the
   // refs the composable returns, leaving `.value` undefined.
   let composable: ReturnType<typeof useQuery<ThingData>> | null = null;
@@ -47,7 +51,8 @@ function mountQuery({ enabled }: { enabled?: Ref<boolean> } = {}) {
       setup() {
         composable = useQuery<ThingData>(GET_PLATFORM_FOR_EDIT, {
           variables: () => ({ id: id.value }),
-          enabled: enabled ? () => enabled.value : undefined
+          enabled: enabled ? () => enabled.value : undefined,
+          cache
         });
         return () => null;
       }
@@ -194,5 +199,116 @@ describe("useQuery", () => {
 
     expect(query().error.value?.message).toBe("boom");
     expect(query().loading.value).toBeFalsy();
+  });
+});
+
+describe("useQuery stale-while-revalidate cache", () => {
+  beforeEach(() => {
+    mockRequest.mockReset();
+  });
+
+  async function settle() {
+    await nextTick();
+    await nextTick();
+  }
+
+  it("shows a cached result in the first render, then replaces it with the fresh one", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1", name: "Old" } });
+    const first = mountQuery();
+    await settle();
+    first.wrapper.unmount();
+
+    const fresh = deferred<unknown>();
+    mockRequest.mockReturnValueOnce(fresh.promise);
+    const second = mountQuery();
+
+    // No await: the cached result is there before mount finishes.
+    expect(second.query().data.value).toEqual({ platform: { id: "1", name: "Old" } });
+    expect(second.query().loading.value).toBeFalsy();
+    expect(second.query().revalidating.value).toBeTruthy();
+    expect(mockRequest).toHaveBeenCalledTimes(2);
+
+    fresh.resolve({ platform: { id: "1", name: "New" } });
+    await settle();
+    expect(second.query().data.value).toEqual({ platform: { id: "1", name: "New" } });
+    expect(second.query().revalidating.value).toBeFalsy();
+  });
+
+  it("shows the cached result for new variables while they load", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "2" } });
+    mountQuery({ id: ref("2") }).wrapper.unmount();
+    await settle();
+
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    const { id, query } = mountQuery();
+    await settle();
+
+    const pending = deferred<unknown>();
+    mockRequest.mockReturnValueOnce(pending.promise);
+    id.value = "2";
+    await nextTick();
+
+    expect(query().data.value).toEqual({ platform: { id: "2" } });
+    expect(query().loading.value).toBeFalsy();
+  });
+
+  it("hands each mount its own copy, so editing data in place doesn't change the cache", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    const first = mountQuery();
+    await settle();
+    first.query().data.value!.platform.id = "edited";
+    first.wrapper.unmount();
+
+    mockRequest.mockReturnValueOnce(new Promise(() => {}));
+    const second = mountQuery();
+    expect(second.query().data.value).toEqual({ platform: { id: "1" } });
+  });
+
+  it("doesn't read or write the cache when turned off", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    mountQuery({ cache: false }).wrapper.unmount();
+    await settle();
+
+    mockRequest.mockReturnValueOnce(new Promise(() => {}));
+    const second = mountQuery();
+    expect(second.query().data.value).toBeNull();
+    expect(second.query().loading.value).toBeTruthy();
+  });
+
+  it("starts from nothing after the cache is cleared", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    mountQuery().wrapper.unmount();
+    await settle();
+    clearQueryCache();
+
+    mockRequest.mockReturnValueOnce(new Promise(() => {}));
+    expect(mountQuery().query().data.value).toBeNull();
+  });
+
+  it("doesn't cache a response to a request that started before the cache was cleared", async () => {
+    const inFlight = deferred<unknown>();
+    mockRequest.mockReturnValueOnce(inFlight.promise);
+    const first = mountQuery();
+    await nextTick();
+
+    // Standing in for a mutation finishing while the query is in flight.
+    clearQueryCache();
+    inFlight.resolve({ platform: { id: "before the mutation" } });
+    await settle();
+    first.wrapper.unmount();
+
+    mockRequest.mockReturnValueOnce(new Promise(() => {}));
+    expect(mountQuery().query().data.value).toBeNull();
+  });
+
+  it("refetch shows loading rather than reusing the cache", async () => {
+    mockRequest.mockResolvedValueOnce({ platform: { id: "1" } });
+    const { query } = mountQuery();
+    await settle();
+
+    mockRequest.mockReturnValueOnce(new Promise(() => {}));
+    void query().refetch();
+    expect(query().loading.value).toBeTruthy();
+    expect(query().revalidating.value).toBeFalsy();
   });
 });

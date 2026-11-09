@@ -42,7 +42,9 @@ const submitError = ref("");
 
 const { data, loading, error } = useQuery<GetEngineForEditQuery>(GET_ENGINE_FOR_EDIT, {
   variables: () => ({ id: engineId.value }),
-  enabled: () => isEditing.value
+  enabled: () => isEditing.value,
+  // Seeds the form, which a fresh result arriving later would overwrite.
+  cache: false
 });
 
 usePageTitle(() => {
