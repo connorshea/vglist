@@ -23,7 +23,7 @@
             :src="eventGame(event)!.coverUrl!"
             :alt="eventGame(event)!.name"
           />
-          <div v-else class="a-cover a-cover-placeholder">
+          <div v-else class="a-cover a-cover-placeholder" :style="coverPlaceholderStyle(eventGame(event)!.name)">
             <span>{{ eventGame(event)!.name.charAt(0).toUpperCase() }}</span>
           </div>
         </router-link>
@@ -155,6 +155,7 @@ import { Trash2 } from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { timeAgo } from "@/utils/time";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 const route = useRoute("userActivity");
 const authStore = useAuthStore();

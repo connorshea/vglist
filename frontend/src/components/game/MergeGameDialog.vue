@@ -58,7 +58,9 @@
             >
               <span class="mg-cover" aria-hidden="true">
                 <img v-if="result.coverUrl" :src="result.coverUrl" alt="" />
-                <span v-else>{{ gameInitials(result.name) }}</span>
+                <span v-else class="mg-cover-ph" :style="coverPlaceholderStyle(result.name)">{{
+                  gameInitials(result.name)
+                }}</span>
               </span>
               <span class="mg-result-text">
                 <span class="mg-result-name">{{ result.name }}</span>
@@ -78,7 +80,9 @@
             <div class="mg-pair-row is-deleted">
               <span class="mg-cover" aria-hidden="true">
                 <img v-if="game.coverUrl" :src="game.coverUrl" alt="" />
-                <span v-else>{{ gameInitials(game.name) }}</span>
+                <span v-else class="mg-cover-ph" :style="coverPlaceholderStyle(game.name)">{{
+                  gameInitials(game.name)
+                }}</span>
               </span>
               <span class="mg-result-text">
                 <span class="mg-pair-label">Deleted</span>
@@ -89,7 +93,9 @@
             <div class="mg-pair-row is-kept">
               <span class="mg-cover" aria-hidden="true">
                 <img v-if="target.coverUrl" :src="target.coverUrl" alt="" />
-                <span v-else>{{ gameInitials(target.name) }}</span>
+                <span v-else class="mg-cover-ph" :style="coverPlaceholderStyle(target.name)">{{
+                  gameInitials(target.name)
+                }}</span>
               </span>
               <span class="mg-result-text">
                 <span class="mg-pair-label">Kept</span>
@@ -136,6 +142,7 @@ import { MERGE_GAMES } from "@/graphql/mutations/admin";
 import type { MergeGamesMutation, SearchGamesToMergeQuery } from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { gameInitials } from "@/utils/library";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 type Candidate = NonNullable<SearchGamesToMergeQuery["gameSearch"]>["nodes"][number];
 
@@ -451,6 +458,16 @@ onBeforeUnmount(() => clearTimeout(debounceTimer));
   color: var(--color-text-tertiary);
   font-size: 0.65rem;
   font-weight: 600;
+}
+
+.mg-cover-ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  font-weight: 700;
 }
 
 .mg-cover img {
