@@ -1,5 +1,11 @@
 <template>
-  <section v-if="!loaded || games.length > 0" class="game-shelf" :aria-labelledby="headingId" :aria-busy="!loaded">
+  <section
+    v-if="!loaded || games.length > 0"
+    class="game-shelf"
+    :class="{ 'is-two-rows': rows === 2 }"
+    :aria-labelledby="headingId"
+    :aria-busy="!loaded"
+  >
     <div class="game-shelf-head">
       <h2 :id="headingId" class="game-shelf-title">{{ sort.label }}</h2>
       <router-link :to="seeAllLink" class="game-shelf-more">
@@ -21,7 +27,7 @@
       </li>
     </ul>
     <ul v-else class="game-shelf-grid" aria-hidden="true">
-      <li v-for="n in SHELF_SIZE" :key="n"><GameTileSkeleton /></li>
+      <li v-for="n in shelfSize" :key="n"><GameTileSkeleton /></li>
     </ul>
   </section>
 </template>
@@ -42,12 +48,16 @@ import {
   type GameSortOption
 } from "@/components/games-index/format";
 
-// One row of games on the home page: the first few games under one of the
-// games index's sorts, with a link to the rest of them there.
+// One or two rows of games on the home page: the first few games under one of
+// the games index's sorts, with a link to the rest of them there.
 
-const SHELF_SIZE = 6;
+// Games per row on a desktop. Narrower screens show 4 per row and hide the
+// rest, and phones scroll the rows sideways.
+const ROW_SIZE = 6;
 
-const props = defineProps<{ sort: GameSortOption }>();
+const props = withDefaults(defineProps<{ sort: GameSortOption; rows?: 1 | 2 }>(), { rows: 1 });
+
+const shelfSize = computed(() => ROW_SIZE * props.rows);
 
 const headingId = computed(() => `shelf-${props.sort.slug}`);
 
@@ -62,7 +72,7 @@ const seeAllLink = computed(() => ({
 const isNewReleases = computed(() => props.sort.value === "RECENTLY_RELEASED");
 
 const newReleases = useQuery<GetNewReleasesQuery>(GET_NEW_RELEASES, {
-  variables: () => ({ first: SHELF_SIZE }),
+  variables: () => ({ first: shelfSize.value }),
   enabled: isNewReleases
 });
 
@@ -70,7 +80,7 @@ const newReleases = useQuery<GetNewReleasesQuery>(GET_NEW_RELEASES, {
 // nothing the index doesn't already.
 const sorted = useQuery<GetGamesIndexQuery>(GET_GAMES_INDEX, {
   variables: () => ({
-    first: SHELF_SIZE,
+    first: shelfSize.value,
     after: null,
     sortBy: props.sort.value,
     ...filterVariables(EMPTY_FILTERS),
@@ -140,6 +150,14 @@ const loaded = computed(() => {
   .game-shelf-grid > li:nth-child(n + 5) {
     display: none;
   }
+
+  .is-two-rows .game-shelf-grid > li:nth-child(n + 5) {
+    display: block;
+  }
+
+  .is-two-rows .game-shelf-grid > li:nth-child(n + 9) {
+    display: none;
+  }
 }
 
 /* On a phone the row scrolls sideways instead of wrapping. */
@@ -155,11 +173,19 @@ const loaded = computed(() => {
   }
 
   .game-shelf-grid > li,
-  .game-shelf-grid > li:nth-child(n + 5) {
+  .game-shelf-grid > li:nth-child(n + 5),
+  .is-two-rows .game-shelf-grid > li:nth-child(n + 9) {
     display: block;
     flex: 0 0 112px;
     min-width: 0;
     scroll-snap-align: start;
+  }
+
+  /* Two rows of six scroll sideways together, in the same order as on a
+     desktop. */
+  .is-two-rows .game-shelf-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 112px);
   }
 }
 </style>

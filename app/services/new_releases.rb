@@ -24,14 +24,19 @@
 module NewReleases
   # How many of the most recently released games are considered. Bounded so
   # the ranking only ever looks at a small slice of the release_date index.
-  CANDIDATES = 100
+  CANDIDATES = 200
 
-  # The most games that can be asked for at once, and how many are cached.
+  # The most games that can be asked for at once: two rows of six on the home
+  # page.
   MAX = 12
+
+  # How many ranked IDs are cached. More than MAX, so that a game deleted since
+  # the list was cached is replaced by the next one and a full shelf stays full.
+  CACHED = MAX * 2
 
   EXPIRES_IN = 3.hours
 
-  CACHE_KEY = 'home_new_releases/v2'
+  CACHE_KEY = 'home_new_releases/v3'
 
   # How much owners count against external IDs. See the score above.
   OWNER_WEIGHT = 2
@@ -80,7 +85,7 @@ module NewReleases
     Game.where(id: ids).in_order_of(:id, ids).limit(limit.clamp(0, MAX))
   end
 
-  # @return [Array<Integer>] The IDs of the top MAX games, best first.
+  # @return [Array<Integer>] The IDs of the top CACHED games, best first.
   def game_ids
     Rails.cache.fetch(CACHE_KEY, expires_in: EXPIRES_IN, race_condition_ttl: 1.minute) { ranked_ids }
   end
@@ -99,6 +104,6 @@ module NewReleases
       release_date: :desc,
       id: :desc
     )
-    ranked.limit(MAX).pluck(:id)
+    ranked.limit(CACHED).pluck(:id)
   end
 end

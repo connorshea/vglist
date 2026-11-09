@@ -191,7 +191,7 @@ describe("HomePage", () => {
       .map(([, variables]) => variables?.sortBy);
     expect(sorts).toEqual(["MOST_OWNERS", "NEWEST"]);
     const newReleases = mockRequest.mock.calls.filter(([document]) => operationName(document) === "GetNewReleases");
-    expect(newReleases.map(([, variables]) => variables)).toEqual([{ first: 6 }]);
+    expect(newReleases.map(([, variables]) => variables)).toEqual([{ first: 12 }]);
     expect(wrapper.findAll(".game-shelf")[1].text()).toContain("Hades II");
   });
 

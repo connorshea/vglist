@@ -93,7 +93,7 @@
         <router-link to="/signup" class="home-banner-btn">Create an account</router-link>
       </aside>
 
-      <GameShelf :sort="NEW_RELEASES" />
+      <GameShelf :sort="NEW_RELEASES" :rows="2" />
       <GameShelf :sort="RECENTLY_ADDED" />
 
       <p v-if="siteStats" class="home-stats">

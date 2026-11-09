@@ -82,6 +82,14 @@ RSpec.describe NewReleases do
       expect(described_class.games(2)).to eq([second, third])
     end
 
+    it 'keeps a full shelf after a game is deleted' do
+      games = create_list(:game, described_class::MAX + 1, release_date: 1.day.ago)
+      expect(described_class.games(described_class::MAX).size).to eq(described_class::MAX)
+
+      games.first.destroy!
+      expect(described_class.games(described_class::MAX).size).to eq(described_class::MAX)
+    end
+
     it 'keeps the ranked list until it expires, while still dropping deleted games' do
       first = create(:game, :wikidata_id, release_date: 1.day.ago)
       second = create(:game, release_date: 2.days.ago)
