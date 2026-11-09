@@ -6,6 +6,13 @@ import { persistedDocumentIds } from "@/types/persisted-documents";
 const apiUrl: string = import.meta.env.VITE_API_URL ?? "";
 const endpoint = `${apiUrl}/graphql`;
 
+/**
+ * API URLs Sentry should send trace headers to: all of them except persisted
+ * GET queries, where the headers would force a CORS preflight on requests
+ * Cloudflare otherwise answers from its cache.
+ */
+export const tracedApiUrls = new RegExp(`^${apiUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?!/graphql\\?)`);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }

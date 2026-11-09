@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { persistedDocumentIds } from "@/types/persisted-documents";
-import { persistedGetUrl, persistedQueryFetch } from "./client";
+import { persistedGetUrl, persistedQueryFetch, tracedApiUrls } from "./client";
 
 const apiUrl: string = import.meta.env.VITE_API_URL ?? "";
 const endpoint = `${apiUrl}/graphql`;
@@ -111,5 +111,13 @@ describe("persistedQueryFetch", () => {
     await persistedQueryFetch(endpoint, init);
 
     expect(fetchMock.mock.calls).toEqual([[endpoint, init]]);
+  });
+});
+
+describe("tracedApiUrls", () => {
+  it("matches API requests except persisted GET queries", () => {
+    expect(tracedApiUrls.test(endpoint)).toBeTruthy();
+    expect(tracedApiUrls.test(`${apiUrl}/api/users/me/avatar`)).toBeTruthy();
+    expect(tracedApiUrls.test(`${endpoint}?operationName=GetHeroCovers&documentId=${heroCoversId}`)).toBeFalsy();
   });
 });

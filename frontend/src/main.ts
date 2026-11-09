@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 import * as Sentry from "@sentry/vue";
 import App from "./App.vue";
 import router from "./router";
+import { tracedApiUrls } from "./graphql/client";
 import { useAuthStore } from "./stores/auth";
 import { beforeSend, beforeSendTransaction } from "./utils/sentry-filter";
 
@@ -29,7 +30,10 @@ Sentry.init({
   // Send the trace headers (sentry-trace, baggage) on API requests so a
   // traced page load continues into the Rails trace, and the API follows the
   // same sampling decision. The API's CORS config allows any request header.
-  tracePropagationTargets: [import.meta.env.VITE_API_URL],
+  // Persisted GET queries (`/graphql?...`, see graphql/client.ts) are left
+  // out: the headers would force a CORS preflight on requests Cloudflare
+  // otherwise answers from its cache.
+  tracePropagationTargets: [tracedApiUrls],
   enabled: !!import.meta.env.VITE_SENTRY_DSN,
   // Drops handled chunk errors and scrubs tokens (e.g. the password reset
   // token in the URL) from errors, breadcrumbs, and span attributes.
