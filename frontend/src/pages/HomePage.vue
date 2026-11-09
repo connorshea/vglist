@@ -546,9 +546,15 @@ onUnmounted(() => {
 }
 
 /* ── Row-based scrolling ── */
+/* Each row holds its tiles twice and scrolls by -50% of its own width, so the
+   second copy lands exactly where the first started. That only holds if the
+   row's width is two equal copies of tile + gap: the trailing padding is the
+   gap after the last tile, without which -50% falls 5px short of one copy and
+   the whole row jumps sideways every time the animation loops. */
 .mosaic-row {
   display: flex;
   gap: 10px;
+  padding-right: 10px;
   animation: rowScrollLeft 80s linear infinite;
 }
 
