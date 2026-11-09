@@ -53,6 +53,18 @@ export const GET_GAMES_INDEX = gql`
   }
 `;
 
+// The home page's "New releases" shelf. Unlike the games index's RECENTLY_RELEASED
+// sort, it ranks recent games with a cover and more external IDs first, and the
+// server recomputes the list every few hours.
+export const GET_NEW_RELEASES = gql`
+  ${GAME_TILE_FIELDS}
+  query GetNewReleases($first: Int!) {
+    newReleases(first: $first) {
+      ...GameTileFields
+    }
+  }
+`;
+
 // The home page's platform and genre links, the site-wide game count
 // for the page header, and the names of whichever filters are set in the URL
 // (which only carries IDs).

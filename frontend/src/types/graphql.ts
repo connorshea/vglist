@@ -1105,6 +1105,23 @@ export interface GetGamesIndexQuery {
   } | null;
 }
 
+export type GetNewReleasesQueryVariables = Exact<{
+  first: number;
+}>;
+
+export interface GetNewReleasesQuery {
+  newReleases: Array<{
+    id: string;
+    name: string;
+    releaseDate: string | null;
+    avgRating: number | null;
+    coverUrl: string | null;
+    isInLibrary: boolean | null;
+    libraryCompletionStatus: GamePurchaseCompletionStatus | null;
+    ownerCount: number;
+  }>;
+}
+
 export type GetGamesIndexFiltersQueryVariables = Exact<{
   platformId: string;
   hasPlatform: boolean;
