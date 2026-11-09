@@ -1,7 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mount, RouterLinkStub, type VueWrapper } from "@vue/test-utils";
-import { NEAR_VIEWPORT_DWELL_MS } from "@/composables/useNearViewport";
-import GameTile from "./GameTile.vue";
 
 // An IntersectionObserver the test drives by hand.
 class FakeIntersectionObserver {
@@ -38,21 +36,33 @@ class FakeIntersectionObserver {
 const COVER = "https://files.vglist.co/cover.jpg";
 
 let wrapper: VueWrapper | undefined;
+let DWELL_MS: number;
 
-function mountTile(coverUrl: string | null = COVER) {
+// The shared observer lives at module level, so each test imports a fresh copy.
+async function mountTile(coverUrl: string | null = COVER, { onScreen = false } = {}) {
+  const { default: GameTile } = await import("./GameTile.vue");
+  ({ NEAR_VIEWPORT_DWELL_MS: DWELL_MS } = await import("@/composables/useNearViewport"));
   wrapper = mount(GameTile, {
     props: { id: "1", name: "Half-Life 2", coverUrl },
     global: { stubs: { RouterLink: RouterLinkStub } }
   });
+  // A real observer reports where the tile is as soon as it's observed.
+  FakeIntersectionObserver.fire(onScreen);
+  await wrapper.vm.$nextTick();
   return wrapper;
+}
+
+async function scrollIntoView(dwell: number) {
+  FakeIntersectionObserver.fire(true);
+  await vi.advanceTimersByTimeAsync(dwell);
 }
 
 describe("GameTile cover loading", () => {
   beforeEach(() => {
+    vi.resetModules();
     vi.useFakeTimers();
     FakeIntersectionObserver.instances = [];
-    // A fresh class each time, so the tile gets a fresh shared observer.
-    vi.stubGlobal("IntersectionObserver", class extends FakeIntersectionObserver {});
+    vi.stubGlobal("IntersectionObserver", FakeIntersectionObserver);
   });
 
   afterEach(() => {
@@ -62,35 +72,38 @@ describe("GameTile cover loading", () => {
     vi.useRealTimers();
   });
 
-  it("doesn't request the cover until the tile is near the viewport", async () => {
-    const tile = mountTile();
+  it("doesn't request the cover until the tile settles near the viewport", async () => {
+    const tile = await mountTile();
 
     expect(tile.find("img").exists()).toBeFalsy();
     // Not the initials placeholder either: the tile has a cover, it just isn't loaded.
     expect(tile.find(".game-tile-placeholder").exists()).toBeFalsy();
 
-    FakeIntersectionObserver.fire(true);
-    await vi.advanceTimersByTimeAsync(NEAR_VIEWPORT_DWELL_MS);
+    await scrollIntoView(DWELL_MS);
+
+    expect(tile.find("img").attributes("src")).toBe(COVER);
+  });
+
+  it("loads a cover that is on screen when the tile mounts straight away", async () => {
+    const tile = await mountTile(COVER, { onScreen: true });
 
     expect(tile.find("img").attributes("src")).toBe(COVER);
   });
 
   it("skips covers a fast scroll only passes over", async () => {
-    const tile = mountTile();
+    const tile = await mountTile();
 
-    FakeIntersectionObserver.fire(true);
-    await vi.advanceTimersByTimeAsync(NEAR_VIEWPORT_DWELL_MS - 50);
+    await scrollIntoView(DWELL_MS - 50);
     FakeIntersectionObserver.fire(false);
-    await vi.advanceTimersByTimeAsync(NEAR_VIEWPORT_DWELL_MS);
+    await vi.advanceTimersByTimeAsync(DWELL_MS);
 
     expect(tile.find("img").exists()).toBeFalsy();
   });
 
   it("drops a cover still loading when the tile leaves the viewport", async () => {
-    const tile = mountTile();
+    const tile = await mountTile();
 
-    FakeIntersectionObserver.fire(true);
-    await vi.advanceTimersByTimeAsync(NEAR_VIEWPORT_DWELL_MS);
+    await scrollIntoView(DWELL_MS);
     expect(tile.find("img").exists()).toBeTruthy();
 
     FakeIntersectionObserver.fire(false);
@@ -100,10 +113,9 @@ describe("GameTile cover loading", () => {
   });
 
   it("keeps a cover that has loaded when the tile leaves the viewport", async () => {
-    const tile = mountTile();
+    const tile = await mountTile();
 
-    FakeIntersectionObserver.fire(true);
-    await vi.advanceTimersByTimeAsync(NEAR_VIEWPORT_DWELL_MS);
+    await scrollIntoView(DWELL_MS);
     await tile.find("img").trigger("load");
     FakeIntersectionObserver.fire(false);
     await tile.vm.$nextTick();
@@ -111,15 +123,15 @@ describe("GameTile cover loading", () => {
     expect(tile.find("img").attributes("src")).toBe(COVER);
   });
 
-  it("shows the initials straight away for a game without a cover", () => {
-    const tile = mountTile(null);
+  it("shows the initials straight away for a game without a cover", async () => {
+    const tile = await mountTile(null);
 
     expect(tile.find(".game-tile-placeholder").text()).toBe("H2");
   });
 
-  it("loads the cover right away without IntersectionObserver", () => {
+  it("loads the cover right away without IntersectionObserver", async () => {
     vi.stubGlobal("IntersectionObserver", undefined);
-    const tile = mountTile();
+    const tile = await mountTile();
 
     expect(tile.find("img").attributes("src")).toBe(COVER);
   });
