@@ -425,12 +425,43 @@ jobs:
           fi
           docker buildx imagetools create --tag "$FRONTEND_IMAGE:main" "$FRONTEND_IMAGE:$GITHUB_SHA"
 
+  # Whether this commit is still main's head once its images are pushed. Runs
+  # for different commits finish in any order, and cancel-in-progress cancels
+  # whatever holds the deploy-approval group, not just older commits. Without
+  # this, an older commit whose run finished last took the gate and cancelled
+  # a newer commit's waiting approval. A concurrency group is joined before
+  # any step runs, so the check has to be a job of its own.
+  newest-commit:
+    needs: [push-api, push-frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+    outputs:
+      newest: ${{ steps.head.outputs.newest }}
+    steps:
+      - name: Compare with main's head
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" = "$GITHUB_SHA" ]; then
+            echo "newest=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "newest=false" >> "$GITHUB_OUTPUT"
+            echo "main is now $head, so this commit skips the deploy approval. Approve the newest commit's run instead, or deploy this one with \`gh workflow run deploy.yml -f ref=$GITHUB_SHA\`." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   # Waits for a reviewer of the production-approval environment (no
   # secrets), so nothing deploys until someone approves it from this run.
-  # A newer push to main cancels a still-waiting approval here, so only
-  # main's latest commit waits. A waiting job holds its concurrency group,
-  # which is why this gate has its own group, separate from
-  # deploy-production: that one never cancels a deploy in progress.
+  # Only main's head gets here (see newest-commit), and a newer push to main
+  # cancels a still-waiting approval, so only main's latest commit waits.
+  # A waiting job holds its concurrency group, which is why this gate has its
+  # own group, separate from deploy-production: that one never cancels a
+  # deploy in progress.
   #
   # Approving it starts a separate Deploy run for this commit rather than
   # calling deploy.yml as a reusable workflow: a called workflow doesn't see
@@ -438,8 +469,8 @@ jobs:
   # failed with a 401. A workflow_dispatch sent with GITHUB_TOKEN is one of
   # the events that still starts a run.
   approve-deploy:
-    needs: [push-api, push-frontend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: newest-commit
+    if: needs.newest-commit.outputs.newest == 'true'
     # Not ubuntu-slim: this step needs the gh CLI. The job takes no runner
     # while it waits for approval.
     runs-on: ubuntu-latest
