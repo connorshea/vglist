@@ -119,7 +119,6 @@ import { GET_HERO_COVERS } from "@/graphql/queries/games";
 import { GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import type { GetBasicSiteStatisticsQuery, GetGamesIndexFiltersQuery } from "@/types/graphql";
 import GameShelf from "@/components/home/GameShelf.vue";
-import { UPCOMING_RELEASES } from "@/components/home/shelves";
 import SkeletonBlock from "@/components/SkeletonBlock.vue";
 import { countLabel, gameSortFromSlug } from "@/components/games-index/format";
 
@@ -130,6 +129,7 @@ const isMac = navigator.platform.toUpperCase().includes("MAC");
 
 const POPULAR = gameSortFromSlug("popular");
 const NEW_RELEASES = gameSortFromSlug("new");
+const UPCOMING_RELEASES = gameSortFromSlug("upcoming");
 const RECENTLY_ADDED = gameSortFromSlug("added");
 
 // ── Search ──

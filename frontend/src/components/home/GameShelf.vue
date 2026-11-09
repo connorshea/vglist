@@ -8,7 +8,7 @@
   >
     <div class="game-shelf-head">
       <h2 :id="headingId" class="game-shelf-title">{{ sort.label }}</h2>
-      <router-link v-if="seeAllLink" :to="seeAllLink" class="game-shelf-more">
+      <router-link :to="seeAllLink" class="game-shelf-more">
         See all<span class="is-sr-only"> {{ sort.label.toLowerCase() }}</span>
         <ArrowRight :size="14" aria-hidden="true" />
       </router-link>
@@ -19,7 +19,7 @@
           :id="game.id"
           :name="game.name"
           :cover-url="game.coverUrl ?? null"
-          :meta="meta(game)"
+          :meta="tileMeta(game, { upcoming: source === 'upcoming' })"
           :rating="game.avgRating"
           :in-library="game.isInLibrary"
           :completion-status="game.libraryCompletionStatus"
@@ -40,41 +40,41 @@ import { GET_GAMES_INDEX, GET_NEW_RELEASES, GET_UPCOMING_RELEASES } from "@/grap
 import type { GetGamesIndexQuery, GetNewReleasesQuery, GetUpcomingReleasesQuery } from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
 import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
-import { DEFAULT_GAME_SORT, EMPTY_FILTERS, filterVariables, tileMeta } from "@/components/games-index/format";
-import { formatStartDate } from "@/utils/library";
-import type { HomeShelf } from "@/components/home/shelves";
+import {
+  DEFAULT_GAME_SORT,
+  EMPTY_FILTERS,
+  filterVariables,
+  tileMeta,
+  type GameSortOption
+} from "@/components/games-index/format";
 
 // One or two rows of games on the home page: the first few games under one of
-// the games index's sorts, with a link to the rest of them there, or the
-// upcoming releases.
+// the games index's sorts, with a link to the rest of them there.
 
 // Games per row on a desktop. Narrower screens show 4 per row and hide the
 // rest, and phones scroll the rows sideways.
 const ROW_SIZE = 6;
 
-const props = withDefaults(defineProps<{ sort: HomeShelf; rows?: 1 | 2 }>(), { rows: 1 });
+const props = withDefaults(defineProps<{ sort: GameSortOption; rows?: 1 | 2 }>(), { rows: 1 });
 
 const shelfSize = computed(() => ROW_SIZE * props.rows);
 
 const headingId = computed(() => `shelf-${props.sort.slug}`);
 
-const seeAllLink = computed(() => {
-  const sort = props.sort;
-  if (sort.value === null) {
-    return null;
-  }
-  return { path: "/games", query: sort === DEFAULT_GAME_SORT ? {} : { sort: sort.slug } };
-});
+const seeAllLink = computed(() => ({
+  path: "/games",
+  query: props.sort === DEFAULT_GAME_SORT ? {} : { sort: props.sort.slug }
+}));
 
 // The new releases and upcoming releases shelves have their own queries, which
 // put games with covers and more external IDs ahead of sparse entries. "See
-// all" on new releases still links to the index's plain release-date sort.
+// all" still links to the index's plain release-date sorts.
 const source = computed<"new" | "upcoming" | "sorted">(() => {
   switch (props.sort.value) {
-    case null:
-      return "upcoming";
     case "RECENTLY_RELEASED":
       return "new";
+    case "UPCOMING":
+      return "upcoming";
     default:
       return "sorted";
   }
@@ -119,16 +119,6 @@ const loaded = computed(() => {
   const { data, error } = { new: newReleases, upcoming: upcomingReleases, sorted }[source.value];
   return data.value !== null || error.value !== null;
 });
-
-// Upcoming games show the day they come out ("Dec 4", or "Jan 15, 2027" for
-// next year) instead of the year and owner count. The date is what matters
-// before release, and with the owners it wraps onto a second line on phones.
-function meta(game: { releaseDate?: string | null; ownerCount?: number | null }): string | null {
-  if (source.value === "upcoming" && game.releaseDate) {
-    return formatStartDate(game.releaseDate);
-  }
-  return tileMeta(game);
-}
 </script>
 
 <style scoped>

@@ -189,6 +189,7 @@ describe("HomePage", () => {
     expect(seeAll.map((link) => link.props("to"))).toEqual([
       { path: "/games", query: {} },
       { path: "/games", query: { sort: "new" } },
+      { path: "/games", query: { sort: "upcoming" } },
       { path: "/games", query: { sort: "added" } }
     ]);
     const sorts = mockRequest.mock.calls
@@ -200,10 +201,9 @@ describe("HomePage", () => {
     expect(wrapper.findAll(".game-shelf")[1].text()).toContain("Hades II");
     const upcoming = mockRequest.mock.calls.filter(([document]) => operationName(document) === "GetUpcomingReleases");
     expect(upcoming.map(([, variables]) => variables)).toEqual([{ first: 6 }]);
-    // Upcoming games show the day they come out, and there's no index sort to link to.
+    // Upcoming games show the day they come out.
     const upcomingShelf = wrapper.findAll(".game-shelf")[2];
     expect(upcomingShelf.find(".game-tile-meta").text()).toBe("Feb 24, 2099");
-    expect(upcomingShelf.find(".game-shelf-more").exists()).toBeFalsy();
   });
 
   it("leaves out a shelf with no games", async () => {
