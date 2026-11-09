@@ -7,8 +7,8 @@ name: Docker
 # On pushes to main, the push-api and push-frontend jobs then push the tested
 # images to GHCR, tagged with the commit SHA (plus `main`), and attest their
 # build provenance. Deploying them is never automatic: approve-deploy then
-# waits for approval, and approving it runs .github/workflows/deploy.yml for
-# this commit. deploy.yml only deploys images attested by this workflow on
+# waits for approval, and approving it starts a .github/workflows/deploy.yml
+# run for this commit. deploy.yml only deploys images attested by this workflow on
 # main.
 #
 # Only the push jobs get `packages: write`, and they never run for pull
@@ -416,27 +416,29 @@ jobs:
   # main's latest commit waits. A waiting job holds its concurrency group,
   # which is why this gate has its own group, separate from
   # deploy-production: that one never cancels a deploy in progress.
+  #
+  # Approving it starts a separate Deploy run for this commit rather than
+  # calling deploy.yml as a reusable workflow: a called workflow doesn't see
+  # the production environment's DIGITALOCEAN_ACCESS_TOKEN, so the deploy
+  # failed with a 401. A workflow_dispatch sent with GITHUB_TOKEN is one of
+  # the events that still starts a run.
   approve-deploy:
     needs: [push-api, push-frontend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-slim
-    permissions: {}
+    # Not ubuntu-slim: this step needs the gh CLI. The job takes no runner
+    # while it waits for approval.
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
     environment: production-approval
     concurrency:
       group: deploy-approval
       cancel-in-progress: true
     steps:
-      - run: echo "Deploy of $GITHUB_SHA approved"
-
-  deploy:
-    needs: approve-deploy
-    permissions:
-      contents: read
-      packages: read
-      actions: read
-      attestations: read
-    uses: $/.github/workflows/deploy.yml
-    with:
-      ref: ${{ github.sha }}
-    secrets:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      - name: Start the Deploy workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main -f ref="$GITHUB_SHA"
+          echo "Deploy of $GITHUB_SHA approved. Follow it under Actions > Deploy." >> "$GITHUB_STEP_SUMMARY"
