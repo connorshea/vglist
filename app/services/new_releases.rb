@@ -5,9 +5,17 @@
 # Sorting purely by release date fills the shelf with whatever came out most
 # recently, which is often a sparse record with no cover and no links to any
 # other site. Instead, this takes the CANDIDATES most recently released games
-# and ranks them so that games with a cover come first, then games with more
-# external IDs (Wikidata, Steam, PCGamingWiki, IGDB, ...), which is a decent
-# signal of how complete and notable a record is. Release date breaks ties.
+# and ranks them so that games with a cover come first. Within each group, games
+# are ordered by a score that blends how complete the record is with how many
+# people own it:
+#
+#   score = external IDs + OWNER_WEIGHT * ln(1 + owners)
+#
+# Each external ID (Wikidata, Steam, PCGamingWiki, IGDB, ...) is one point.
+# Owners count on a log scale, so the first few owners matter most and a hit
+# can't completely bury a well-linked record: with OWNER_WEIGHT 2, 1 owner is
+# worth about 1.4 points, 10 owners about 4.8 and 100 owners about 9.2, against
+# at most 8 points for IDs. Release date breaks ties.
 #
 # The ranked IDs are cached for EXPIRES_IN, since the shelf doesn't need to
 # change by the minute. The games themselves are loaded fresh on every
@@ -23,7 +31,10 @@ module NewReleases
 
   EXPIRES_IN = 3.hours
 
-  CACHE_KEY = 'home_new_releases/v1'
+  CACHE_KEY = 'home_new_releases/v2'
+
+  # How much owners count against external IDs. See the score above.
+  OWNER_WEIGHT = 2
 
   # Each external ID column counts as one point of completeness.
   EXTERNAL_ID_COLUMNS = %w[
@@ -54,6 +65,10 @@ module NewReleases
     "(#{HAS_STEAM_APP_ID_SQL})::int"
   ].join(' + ').freeze
 
+  # Reads the game_purchases_count counter cache rather than counting library
+  # entries.
+  SCORE_SQL = "(#{EXTERNAL_ID_COUNT_SQL}) + #{OWNER_WEIGHT} * ln(1 + games.game_purchases_count)".freeze
+
   module_function
 
   # @param limit [Integer] How many games to return, at most MAX.
@@ -76,11 +91,11 @@ module NewReleases
   #
   # @return [Array<Integer>]
   def ranked_ids
-    candidates = Game.recently_released.limit(CANDIDATES).select(:id, :release_date, *EXTERNAL_ID_COLUMNS)
+    candidates = Game.recently_released.limit(CANDIDATES).select(:id, :release_date, :game_purchases_count, *EXTERNAL_ID_COLUMNS)
 
     ranked = Game.from(candidates, :games).order(
       Arel.sql("(#{HAS_COVER_SQL}) DESC"),
-      Arel.sql("(#{EXTERNAL_ID_COUNT_SQL}) DESC"),
+      Arel.sql("(#{SCORE_SQL}) DESC"),
       release_date: :desc,
       id: :desc
     )
