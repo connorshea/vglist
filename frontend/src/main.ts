@@ -12,6 +12,8 @@ const app = createApp(App);
 Sentry.init({
   app,
   dsn: import.meta.env.VITE_SENTRY_DSN,
+  // The commit SHA, same as the API, so both projects share releases.
+  release: import.meta.env.VITE_SENTRY_RELEASE,
   integrations: [Sentry.browserTracingIntegration({ router })],
   enabled: !!import.meta.env.VITE_SENTRY_DSN,
   beforeSend: dropHandledChunkErrors

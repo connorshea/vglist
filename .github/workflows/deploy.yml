@@ -14,7 +14,9 @@ name: Deploy
 #
 # Setup (once): a `production` environment (Settings > Environments) limited
 # to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
-# App Platform read + update access.
+# the app:read, app:update and database:read scopes (updating an app with an
+# attached database cluster checks database:read). Optionally a SENTRY_AUTH_TOKEN repo secret
+# (a Sentry org token) to finalize the Sentry release after each deploy.
 
 on:
   workflow_dispatch:
@@ -155,3 +157,45 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           app_name: ${{ env.APP_NAME }}
+
+      # Tells Sentry about the deploy: creates the release in both projects if
+      # the build hasn't already, attaches the commits since the previous
+      # release (needs Sentry's GitHub integration for connorshea/vglist),
+      # finalizes it, and records a production deploy. That's what makes
+      # "resolved in next release", regression detection and suspect commits
+      # work. The app is already live by now, so a Sentry problem only warns.
+      - name: Check for a Sentry token
+        id: sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          if [ -n "$SENTRY_AUTH_TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::SENTRY_AUTH_TOKEN isn't set, so the Sentry release wasn't finalized."
+          fi
+
+      # set_commits needs the history back to the previous release.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.sentry.outputs.enabled == 'true'
+        with:
+          ref: ${{ steps.commit.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Finalize the Sentry release
+        if: steps.sentry.outputs.enabled == 'true'
+        continue-on-error: true
+        uses: getsentry/action-release@e6703d0b00208e0b3687ba660d18ab5af7892821 # v3.7.2
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: vglist
+        with:
+          release: ${{ steps.commit.outputs.sha }}
+          projects: vglist-backend vglist-frontend
+          environment: production
+          set_commits: auto
+          # The first release has no previous one to diff against.
+          ignore_missing: true
+          finalize: true
+          disable_telemetry: true

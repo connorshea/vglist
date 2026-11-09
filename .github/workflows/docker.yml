@@ -12,6 +12,8 @@ name: Docker
 #   - Repo secrets VITE_SENTRY_DSN and VITE_TURNSTILE_SITE_KEY. Neither is
 #     really secret (both ship in the JS bundle), but secrets keep them out
 #     of the build logs.
+#   - Optionally SENTRY_AUTH_TOKEN (a Sentry org token): frontend builds on
+#     main upload source maps to Sentry with it. deploy.yml uses it too.
 #   - After the first push, make the vglist-api and vglist-frontend GHCR
 #     packages public so App Platform can pull them without credentials.
 on:
@@ -183,13 +185,15 @@ jobs:
     permissions:
       contents: read
       packages: write
-    # Baked into the bundle (see frontend/Dockerfile). VITE_API_URL comes from
+    # Baked into the bundle (see frontend/Dockerfile). The release is the commit
+    # SHA, matching the API image. VITE_API_URL comes from
     # frontend/.env.production. Empty on fork PRs, which the Dockerfile treats
     # as unset.
     env:
       BUILD_ARGS: |
         VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
         VITE_TURNSTILE_SITE_KEY=${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+        VITE_SENTRY_RELEASE=${{ github.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -205,9 +209,20 @@ jobs:
           file: frontend/Dockerfile
           tags: vglist-frontend
           build-args: ${{ env.BUILD_ARGS }}
+          # Lets vite.config.ts upload source maps to Sentry, on main only. A
+          # BuildKit secret, so it stays out of the image and the cache key.
+          secrets: ${{ env.PUSH == 'true' && secrets.SENTRY_AUTH_TOKEN != '' && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           load: true
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,mode=max,scope=frontend
+
+      - name: Check the image has no source maps
+        run: |
+          maps="$(docker run --rm --entrypoint find vglist-frontend /app/dist -name '*.map')"
+          if [ -n "$maps" ]; then
+            echo "::error::Source maps in the image: $maps"
+            exit 1
+          fi
 
       - name: Serve and check /health and SPA fallback
         run: |
@@ -251,6 +266,7 @@ jobs:
           expect /index.html "no-cache"
           expect /games/1 "no-cache"
           expect_status /assets/does-not-exist.js 404
+          expect_status "$asset.map" 404
           expect /assets/does-not-exist.js "no-store"
           for path in "$asset" / /index.html /games/1 /site.webmanifest /favicon-32.png; do
             expect_status "$path" 200
@@ -306,6 +322,7 @@ jobs:
             ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
           build-args: ${{ env.BUILD_ARGS }}
+          secrets: ${{ env.PUSH == 'true' && secrets.SENTRY_AUTH_TOKEN != '' && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           push: true
           # A plain image manifest, not an index with an attestation entry, so
           # the digest is exactly what App Platform pulls.
