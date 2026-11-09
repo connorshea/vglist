@@ -1,9 +1,10 @@
-import { createApp } from "vue";
+import { createApp, watch } from "vue";
 import { createPinia } from "pinia";
 import * as Sentry from "@sentry/vue";
 import App from "./App.vue";
 import router from "./router";
-import { dropHandledChunkErrors } from "./utils/sentry-filter";
+import { useAuthStore } from "./stores/auth";
+import { beforeSend, beforeSendTransaction } from "./utils/sentry-filter";
 
 import "./assets/stylesheets/application.scss";
 
@@ -23,10 +24,24 @@ Sentry.init({
   // same sampling decision. The API's CORS config allows any request header.
   tracePropagationTargets: [import.meta.env.VITE_API_URL],
   enabled: !!import.meta.env.VITE_SENTRY_DSN,
-  beforeSend: dropHandledChunkErrors
+  // Drops handled chunk errors and scrubs tokens (e.g. the password reset
+  // token in the URL) from errors, breadcrumbs, and span attributes.
+  beforeSend,
+  beforeSendTransaction
 });
 
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
+
+// Tag events with the signed-in user, like the API does. Only the id and
+// username: sendDefaultPii is off, so no email or IP address.
+const auth = useAuthStore(pinia);
+watch(
+  () => auth.user,
+  (user) => Sentry.setUser(user ? { id: user.id, username: user.username } : null),
+  { immediate: true }
+);
+
 app.use(router);
 
 app.mount("#app");
