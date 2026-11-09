@@ -17,6 +17,25 @@ RSpec.describe NewReleases do
       )
     end
 
+    it 'blends owners into the score on a log scale, after covers' do
+      # 2 IDs = 2 points.
+      two_ids = create(:game, :wikidata_id, :steam_app_id, release_date: 1.day.ago)
+      # 3 owners = 2 * ln(4) ≈ 2.8 points.
+      three_owners = create(:game, release_date: 2.days.ago)
+      create_list(:game_purchase, 3, game: three_owners)
+      # 1 owner = 2 * ln(2) ≈ 1.4 points.
+      one_owner = create(:game, release_date: 3.days.ago)
+      create(:game_purchase, game: one_owner)
+      # 1 ID + 1 owner ≈ 2.4 points.
+      id_and_owner = create(:game, :wikidata_id, release_date: 4.days.ago)
+      create(:game_purchase, game: id_and_owner)
+      # A cover still wins over any number of owners.
+      covered = create(:game, :cover, release_date: 5.days.ago)
+      bare = create(:game, release_date: Time.zone.today)
+
+      expect(described_class.games(12)).to eq([covered, three_owners, id_and_owner, two_ids, one_owner, bare])
+    end
+
     it 'leaves out unreleased games and games with no release date' do
       released = create(:game, release_date: 2.days.ago)
       create(:game, :cover, :wikidata_id, release_date: 1.week.from_now)
