@@ -4,20 +4,21 @@
     <div class="s-line s-username">
       <SkeletonBlock class="s-bar" :style="{ width: nameWidth, height: '9px' }" />
     </div>
-    <div class="s-line s-game-count">
-      <SkeletonBlock class="s-bar" :style="{ width: '52px', height: '7px' }" />
-    </div>
-    <div class="s-line s-joined">
-      <SkeletonBlock class="s-bar" :style="{ width: '64px', height: '6px' }" />
-    </div>
+    <template v-if="meta">
+      <div class="s-line s-game-count">
+        <SkeletonBlock class="s-bar" :style="{ width: '52px', height: '7px' }" />
+      </div>
+      <div class="s-line s-joined">
+        <SkeletonBlock class="s-bar" :style="{ width: '64px', height: '6px' }" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import SkeletonBlock from "@/components/SkeletonBlock.vue";
 
-// Stands in for a UserCard (with game count and join date) while a list of
-// users loads. The border, padding, avatar size and line boxes are copied from
+// Stands in for a UserCard while a list of users loads. The border, padding, avatar size and line boxes are copied from
 // UserCard so the grid doesn't move when the real cards arrive; keep them in
 // step.
 withDefaults(
@@ -26,8 +27,10 @@ withDefaults(
     // Width of the username bar, varied by the parent so the grid isn't a
     // pattern.
     nameWidth?: string;
+    // Whether the card shows the game count and join date lines.
+    meta?: boolean;
   }>(),
-  { size: 48, nameWidth: "60%" }
+  { size: 48, nameWidth: "60%", meta: true }
 );
 </script>
 
