@@ -518,21 +518,29 @@ async function loadMoreGames() {
     return;
   }
 
-  await fetchMoreGames({ ...gamesVariables.value, after: cursor }, (prev, next) => {
-    if (!prev.user || !next.user) {
-      return next;
-    }
-    return {
-      ...next,
-      user: {
-        ...next.user,
-        gamePurchases: {
-          ...next.user.gamePurchases,
-          nodes: [...prev.user.gamePurchases.nodes, ...next.user.gamePurchases.nodes]
-        }
+  // A function, so the cursor comes from the result on screen when the page is
+  // fetched, which may be a refreshed one (see `fetchMore`).
+  await fetchMoreGames(
+    () => {
+      const after = gamesHasNextPage.value ? gamesConnection.value?.pageInfo.endCursor : null;
+      return after ? { ...gamesVariables.value, after } : null;
+    },
+    (prev, next) => {
+      if (!prev.user || !next.user) {
+        return next;
       }
-    };
-  });
+      return {
+        ...next,
+        user: {
+          ...next.user,
+          gamePurchases: {
+            ...next.user.gamePurchases,
+            nodes: [...prev.user.gamePurchases.nodes, ...next.user.gamePurchases.nodes]
+          }
+        }
+      };
+    }
+  );
 }
 </script>
 

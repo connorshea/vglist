@@ -2,7 +2,8 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   schema: "../schema.graphql",
-  documents: ["src/graphql/**/*.ts"],
+  // Tests in src/graphql use made-up operations that aren't in the schema.
+  documents: ["src/graphql/**/*.ts", "!src/graphql/**/*.test.ts"],
   generates: {
     "src/types/graphql.ts": {
       plugins: ["typescript-operations"],

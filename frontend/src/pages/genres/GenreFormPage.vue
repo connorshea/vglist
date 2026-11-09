@@ -42,7 +42,9 @@ const submitError = ref("");
 
 const { data, loading, error } = useQuery<GetGenreForEditQuery>(GET_GENRE_FOR_EDIT, {
   variables: () => ({ id: genreId.value }),
-  enabled: () => isEditing.value
+  enabled: () => isEditing.value,
+  // Seeds the form, which a fresh result arriving later would overwrite.
+  cache: false
 });
 
 usePageTitle(() => {

@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import type { DocumentNode } from "graphql";
+import { clearQueryCache } from "@/graphql/query-cache";
 import { mount, flushPromises, RouterLinkStub, type VueWrapper } from "@vue/test-utils";
 import { nextTick } from "vue";
 import SearchPage from "./SearchPage.vue";
@@ -8,7 +10,7 @@ import SearchPage from "./SearchPage.vue";
 const { mockRoute, pushMock, mockRequest } = vi.hoisted(() => ({
   mockRoute: { query: {} },
   pushMock: vi.fn<(to: { name: string; query: Record<string, string> }) => void>(),
-  mockRequest: vi.fn<(query: string, variables: Record<string, unknown>) => Promise<unknown>>()
+  mockRequest: vi.fn<(query: unknown, variables: Record<string, unknown>) => Promise<unknown>>()
 }));
 
 // A reactive route that `push` updates, so tab switches and new searches
@@ -29,10 +31,14 @@ vi.mock("@/graphql/client", () => ({
   gqlClient: { request: mockRequest }
 }));
 
-vi.mock("@/graphql/queries/search", () => ({
-  SEARCH_OVERVIEW: "SEARCH_OVERVIEW",
-  SEARCH_TAB: "SEARCH_TAB"
-}));
+// Real (named) documents: useQuery builds its cache key from the operation name.
+vi.mock("@/graphql/queries/search", async () => {
+  const { parse } = await import("graphql");
+  return {
+    SEARCH_OVERVIEW: parse("query SEARCH_OVERVIEW { __typename }"),
+    SEARCH_TAB: parse("query SEARCH_TAB { __typename }")
+  };
+});
 
 // ── Helpers ───────────────────────────────────────────────────────
 
@@ -65,7 +71,9 @@ function tabPage(
 }
 
 function respondWith({ overviewData = overview(), tabData = {} } = {}) {
-  mockRequest.mockImplementation((query) => Promise.resolve(query === "SEARCH_OVERVIEW" ? overviewData : tabData));
+  mockRequest.mockImplementation((query) =>
+    Promise.resolve(operationName(query) === "SEARCH_OVERVIEW" ? overviewData : tabData)
+  );
 }
 
 // Every test shares the reactive route, so pages from earlier tests are
@@ -86,8 +94,13 @@ async function settle() {
   await flushPromises();
 }
 
-function requestsFor(document: string) {
-  return mockRequest.mock.calls.filter(([query]) => query === document);
+function operationName(query: unknown): string | undefined {
+  const definition = (query as DocumentNode).definitions[0];
+  return definition?.kind === "OperationDefinition" ? definition.name?.value : undefined;
+}
+
+function requestsFor(name: string) {
+  return mockRequest.mock.calls.filter(([query]) => operationName(query) === name);
 }
 
 function tab(wrapper: VueWrapper, label: string) {
@@ -104,6 +117,7 @@ describe("SearchPage", () => {
   beforeEach(() => {
     pushMock.mockClear();
     mockRequest.mockReset();
+    clearQueryCache();
   });
 
   afterEach(() => {

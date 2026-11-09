@@ -125,7 +125,10 @@ const avatarUrl = ref<string | null>(null);
 const saveError = ref("");
 const { show: showSnackbar } = useSnackbar();
 
-const { data, loading, error } = useQuery<GetCurrentUserProfileQuery>(GET_CURRENT_USER_PROFILE);
+const { data, loading, error } = useQuery<GetCurrentUserProfileQuery>(GET_CURRENT_USER_PROFILE, {
+  // Seeds the form, which a fresh result arriving later would overwrite.
+  cache: false
+});
 
 watch(
   data,

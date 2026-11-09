@@ -651,19 +651,27 @@ async function loadMoreCommon() {
     return;
   }
 
-  await fetchMoreCommon({ ...commonVariables.value, after: cursor }, (prev, next) => {
-    if (!prev.libraryComparison || !next.libraryComparison) {
-      return next;
-    }
-    return {
-      libraryComparison: {
-        inCommon: {
-          ...next.libraryComparison.inCommon,
-          nodes: [...prev.libraryComparison.inCommon.nodes, ...next.libraryComparison.inCommon.nodes]
-        }
+  // A function, so the cursor comes from the result on screen when the page is
+  // fetched, which may be a refreshed one (see `fetchMore`).
+  await fetchMoreCommon(
+    () => {
+      const after = commonHasNextPage.value ? commonConnection.value?.pageInfo.endCursor : null;
+      return after ? { ...commonVariables.value, after } : null;
+    },
+    (prev, next) => {
+      if (!prev.libraryComparison || !next.libraryComparison) {
+        return next;
       }
-    };
-  });
+      return {
+        libraryComparison: {
+          inCommon: {
+            ...next.libraryComparison.inCommon,
+            nodes: [...prev.libraryComparison.inCommon.nodes, ...next.libraryComparison.inCommon.nodes]
+          }
+        }
+      };
+    }
+  );
 }
 
 function purchaseFor(row: CommonRow, side: "a" | "b") {
@@ -773,14 +781,22 @@ async function loadMoreOnly() {
   }
 
   const key = onlySideA.value ? "onlyA" : "onlyB";
-  await fetchMoreOnly({ ...onlyVariables.value, after: cursor }, (prev, next) => {
-    const before = prev.libraryComparison?.[key];
-    const after = next.libraryComparison?.[key];
-    if (!before || !after) {
-      return next;
+  // A function, so the cursor comes from the result on screen when the page is
+  // fetched, which may be a refreshed one (see `fetchMore`).
+  await fetchMoreOnly(
+    () => {
+      const after = onlyHasNextPage.value ? onlyConnection.value?.pageInfo.endCursor : null;
+      return after ? { ...onlyVariables.value, after } : null;
+    },
+    (prev, next) => {
+      const before = prev.libraryComparison?.[key];
+      const after = next.libraryComparison?.[key];
+      if (!before || !after) {
+        return next;
+      }
+      return { libraryComparison: { [key]: { ...after, nodes: [...before.nodes, ...after.nodes] } } };
     }
-    return { libraryComparison: { [key]: { ...after, nodes: [...before.nodes, ...after.nodes] } } };
-  });
+  );
 }
 
 // Clear the searches when switching to another pair of users.
