@@ -140,6 +140,12 @@ services:
         value: "2"
       - key: RAILS_MAX_THREADS
         value: "3"
+      # How long a busy thread keeps the GVL before Ruby hands it to another,
+      # in ms (default 100). A thread whose query has returned waits up to
+      # that long while another thread runs Ruby, so with a page's parallel
+      # requests sharing a worker, 2ms queries took 100-160ms.
+      - key: RUBY_THREAD_TIMESLICE
+        value: "10"
       - key: API_HOST
         value: api.vglist.co
       - key: FRONTEND_URL
