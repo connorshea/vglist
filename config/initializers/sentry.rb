@@ -2,6 +2,25 @@
 
 SENTRY_SENSITIVE_HEADERS = %w[authorization cookie x-user-email x-user-token].freeze
 
+# Share of requests and jobs that get a performance trace. Each trace counts
+# every SQL query as a span against the monthly span quota, so keep this
+# low. Override with SENTRY_TRACES_SAMPLE_RATE (0.0 to 1.0).
+SENTRY_TRACES_SAMPLE_RATE = ENV.fetch('SENTRY_TRACES_SAMPLE_RATE', '0.05').to_f
+
+# Decides which transactions are traced. Requests from the SPA carry the
+# frontend's sampling decision in their sentry-trace header, so a page load
+# traced in the browser is traced through the API too, and an untraced one
+# isn't. The health check (App Platform probes it every few seconds, Sentry
+# uptime every minute) is never traced, so it can't eat the quota.
+SENTRY_TRACES_SAMPLER = lambda do |sampling_context|
+  next 0.0 if sampling_context.dig(:env, 'PATH_INFO') == '/health'
+
+  parent_sampled = sampling_context[:parent_sampled]
+  next parent_sampled ? 1.0 : 0.0 unless parent_sampled.nil?
+
+  SENTRY_TRACES_SAMPLE_RATE
+end
+
 Sentry.init do |config|
   config.dsn = ENV['SENTRY_DSN_RAILS']
   # Only run in production.
@@ -14,6 +33,8 @@ Sentry.init do |config|
   # carries live JWTs. The user's id and username are still
   # attached via Sentry.set_user in ApplicationController#set_sentry_context.
   config.send_default_pii = false
+
+  config.traces_sampler = SENTRY_TRACES_SAMPLER
 
   # Ctrl+C on a rake task run by hand (e.g. in `doctl apps console`) raises
   # Interrupt, in the task and in any job it had in flight. That's not a
