@@ -31,6 +31,7 @@ module ProcessWarmup
       'engineId' => '0', 'hasEngine' => false
     },
     'GetNewReleases' => { 'first' => 6 },
+    'GetUpcomingReleases' => { 'first' => 6 },
     'GetGamesIndex' => { 'first' => 36, 'sortBy' => 'MOST_OWNERS', 'withCount' => true },
     'GetGame' => lambda {
       id = Game.joins(:cover_attachment).order(:id).pick(:id)
