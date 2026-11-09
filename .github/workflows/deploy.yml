@@ -14,7 +14,8 @@ name: Deploy
 #
 # Setup (once): a `production` environment (Settings > Environments) limited
 # to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
-# App Platform read + update access. Optionally a SENTRY_AUTH_TOKEN repo secret
+# the app:read, app:update and database:read scopes (updating an app with an
+# attached database cluster checks database:read). Optionally a SENTRY_AUTH_TOKEN repo secret
 # (a Sentry org token) to finalize the Sentry release after each deploy.
 
 on:
