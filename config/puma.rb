@@ -54,3 +54,9 @@ workers ENV.fetch("WEB_CONCURRENCY") { ENV["RAILS_ENV"] == "production" ? 2 : 0 
 # process behavior so workers use less memory.
 #
 preload_app!
+
+# Load model schemas (and the like) once in the master process, so each worker
+# doesn't have to on its first requests after a deploy. See ProcessWarmup.
+before_fork do
+  ProcessWarmup.run
+end
