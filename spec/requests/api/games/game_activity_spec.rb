@@ -98,5 +98,47 @@ RSpec.describe "Game activity API", type: :request do
 
       expect(result.graphql_dig(:game, :activity, :nodes).map { |n| n.dig(:user, :id) }.uniq).to eq([user.id.to_s])
     end
+
+    describe "preloading" do
+      # The SQL statements run while answering `query_string`.
+      def queries_for(query_string)
+        queries = []
+        callback = ->(*, payload) { queries << payload[:sql] unless payload[:name] == 'SCHEMA' }
+        ActiveSupport::Notifications.subscribed(callback, 'sql.active_record') do
+          api_request(query_string, variables: { id: game.id }, token: access_token)
+        end
+        queries
+      end
+
+      before(:each) do
+        create(:game_purchase, game: game, user: user)
+        create(:favorite_game, game: game, user: user)
+      end
+
+      it "doesn't load the eventables' games when they aren't selected" do
+        # Only the game being looked up.
+        expect(queries_for(query_string).grep(/FROM "games"/).size).to eq(1)
+      end
+
+      it "preloads the eventables' games when they are selected" do
+        with_games = <<-GRAPHQL
+          query($id: ID!) {
+            game(id: $id) {
+              activity {
+                nodes {
+                  eventable {
+                    ... on GamePurchase { game { name } }
+                    ... on FavoriteGame { game { name } }
+                  }
+                }
+              }
+            }
+          }
+        GRAPHQL
+
+        # The game being looked up, then one preload per event table.
+        expect(queries_for(with_games).grep(/FROM "games"/).size).to eq(3)
+      end
+    end
   end
 end

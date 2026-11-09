@@ -84,6 +84,24 @@ RSpec.describe Views::NewEvent, type: :model do
       expect(follow_event.eventable).to eq(relationship)
     end
 
+    it "loads both kinds of library events from their table in one query", :aggregate_failures do
+      game_purchase = create(:game_purchase, user: user)
+      create(:game_purchase_completion_event, user: user, eventable: game_purchase)
+
+      events = Views::NewEvent.where(eventable_id: game_purchase.id, event_category: %w[add_to_library change_completion_status]).to_a
+      expect(events.map(&:event_category)).to contain_exactly('add_to_library', 'change_completion_status')
+
+      queries = []
+      callback = ->(*, payload) { queries << payload[:sql] }
+      result = ActiveSupport::Notifications.subscribed(callback, 'sql.active_record') do
+        Views::NewEvent.preload_eventables(events)
+      end
+
+      expect(queries.grep(/FROM "events_game_purchase_events"/).size).to eq(1)
+      expect(queries.grep(/FROM "game_purchases"/).size).to eq(1)
+      expect(result.map(&:eventable)).to all(eq(game_purchase))
+    end
+
     it "returns an empty array when given no events" do
       result = Views::NewEvent.preload_eventables([])
       expect(result).to eq([])
