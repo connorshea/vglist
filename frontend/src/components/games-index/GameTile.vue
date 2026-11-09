@@ -1,13 +1,14 @@
 <template>
   <router-link :to="`/games/${id}`" class="game-tile" :aria-label="accessibleName">
     <span ref="coverRef" class="game-tile-cover">
-      <template v-if="coverUrl">
+      <template v-if="coverUrl && !coverFailed">
         <img
           v-if="nearViewport || coverLoaded"
           :src="coverUrl"
           alt=""
           :loading="deferCover ? undefined : 'lazy'"
           @load="onCoverLoad"
+          @error="onCoverError"
         />
       </template>
       <span v-else class="game-tile-placeholder" aria-hidden="true">{{ initials }}</span>
@@ -30,6 +31,9 @@
 // navigation) shows these in its first paint instead of waiting for the
 // observer.
 const loadedCovers = new Set<string>();
+// Covers that failed to load this session. Their tiles show the initials, and
+// don't request the cover again each time they scroll back into view.
+const failedCovers = new Set<string>();
 </script>
 
 <script setup lang="ts">
@@ -68,6 +72,18 @@ const loadedUrl = ref<string | null>(null);
 const coverLoaded = computed(
   () => !!props.coverUrl && (loadedUrl.value === props.coverUrl || loadedCovers.has(props.coverUrl))
 );
+
+const failedUrl = ref<string | null>(null);
+const coverFailed = computed(
+  () => !!props.coverUrl && (failedUrl.value === props.coverUrl || failedCovers.has(props.coverUrl))
+);
+
+function onCoverError() {
+  if (props.coverUrl) {
+    failedCovers.add(props.coverUrl);
+    failedUrl.value = props.coverUrl;
+  }
+}
 
 function onCoverLoad() {
   if (props.coverUrl) {

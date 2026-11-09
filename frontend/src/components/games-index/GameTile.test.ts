@@ -135,6 +135,21 @@ describe("GameTile cover loading", () => {
     expect(again.find("img").attributes("src")).toBe(COVER);
   });
 
+  it("falls back to the initials when the cover fails, and doesn't request it again", async () => {
+    const first = await mountTile();
+    await scrollIntoView(DWELL_MS);
+    await first.find("img").trigger("error");
+
+    expect(first.find("img").exists()).toBeFalsy();
+    expect(first.find(".game-tile-placeholder").text()).toBe("H2");
+    first.unmount();
+
+    const again = await mountTile(COVER, { onScreen: true });
+
+    expect(again.find("img").exists()).toBeFalsy();
+    expect(again.find(".game-tile-placeholder").exists()).toBeTruthy();
+  });
+
   it("shows the initials straight away for a game without a cover", async () => {
     const tile = await mountTile(null);
 
