@@ -54,7 +54,27 @@ module Resolvers
         current_user = context[:current_user]
         games = games.where.not(id: current_user.game_purchases.select(:game_id)) if exclude_library && current_user
 
-        sort_by.nil? ? games.order(:id) : games.public_send(sort_by.to_sym)
+        games = sort_by.nil? ? games.order(:id) : games.public_send(sort_by.to_sym)
+        every_game?(games) ? games.extending(CachedRowCount::EveryRow) : games
+      end
+
+      private
+
+      # Whether the list still has every game in it, so its totalCount can come
+      # from `Game.cached_row_count`. Every filter, `excludeLibrary`, and the
+      # sorts that leave games out (e.g. `HIGHEST_AVG_RATING`) add a `where`,
+      # and the filters by association add an inner join. Sorting by most
+      # favorites left joins favorites but groups by `games.id`, so it still
+      # lists each game once.
+      #
+      # This is only safe because the relation starts from `Game.all`. An
+      # association's relation (e.g. a genre's games) keeps its conditions
+      # elsewhere, so it can look unfiltered here.
+      #
+      # @param games [ActiveRecord::Relation<Game>]
+      # @return [Boolean]
+      def every_game?(games)
+        games.where_clause.empty? && games.joins_values.empty?
       end
     end
   end

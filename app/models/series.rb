@@ -7,25 +7,24 @@ class Series < ApplicationRecord
 
   has_many :games, dependent: :nullify
 
-  GAMES_COUNT_SQL = '(SELECT COUNT(*) FROM games WHERE games.series_id = series.id)'
   FIRST_RELEASE_YEAR_SQL = '(SELECT EXTRACT(YEAR FROM MIN(games.release_date))::integer FROM games WHERE games.series_id = series.id)'
   LAST_RELEASE_YEAR_SQL = '(SELECT EXTRACT(YEAR FROM MAX(games.release_date))::integer FROM games WHERE games.series_id = series.id)'
 
-  game_count_scopes GAMES_COUNT_SQL
+  # A counter cache kept up to date by Game's belongs_to :series.
+  game_count_scopes 'series.games_count'
 
-  # Loads each series' game count and release-year span in the same query as
-  # the series, for lists that show them on every row. `SeriesType` falls back
-  # to counting per record when these weren't selected.
+  # Loads each series' release-year span in the same query as the series, for
+  # lists that show it on every row. `SeriesType` falls back to looking it up
+  # per record when these weren't selected. (The game count is a column.)
   scope :with_game_stats, -> {
     select(
       'series.*',
-      "#{GAMES_COUNT_SQL} AS index_games_count",
       "#{FIRST_RELEASE_YEAR_SQL} AS first_release_year",
       "#{LAST_RELEASE_YEAR_SQL} AS last_release_year"
     )
   }
 
-  has_paper_trail ignore: [:updated_at, :created_at],
+  has_paper_trail ignore: [:games_count, :updated_at, :created_at],
                   versions: {
                     class_name: 'Versions::SeriesVersion'
                   }

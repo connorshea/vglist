@@ -121,11 +121,11 @@ class GamePurchase < ApplicationRecord
       event_category: :add_to_library
     )
 
-    update_average_rating
+    game.update_ratings
   end
 
   def game_purchase_update
-    update_average_rating
+    game.update_ratings
 
     return unless saved_changes.key?('completion_status')
 
@@ -139,13 +139,6 @@ class GamePurchase < ApplicationRecord
   end
 
   def game_purchase_destroy
-    update_average_rating
-  end
-
-  # If there aren't any game purchases for a given game, it'll return nil so
-  # avg_rating should be set to nil.
-  def update_average_rating
-    average = GamePurchase.where(game_id: game_id).average(:rating)
-    average.nil? ? game.update(avg_rating: nil) : game.update(avg_rating: average.round(1))
+    game.update_ratings
   end
 end

@@ -3,7 +3,26 @@ name: Docker
 # Builds the production images (root Dockerfile for the API,
 # frontend/Dockerfile for the SPA) and smoke-tests that each one boots and
 # answers /health.
-
+#
+# On pushes to main, the push-api and push-frontend jobs then push the tested
+# images to GHCR, tagged with the commit SHA (plus `main`), and attest their
+# build provenance. Deploying them is never automatic: approve-deploy then
+# waits for approval, and approving it starts a .github/workflows/deploy.yml
+# run for this commit. deploy.yml only deploys images attested by this workflow on
+# main.
+#
+# Only the push jobs get `packages: write`, and they never run for pull
+# requests, so a PR's run (which uses the PR's copy of this file) has no
+# token that can write to GHCR.
+#
+# Setup (once):
+#   - Repo secrets VITE_SENTRY_DSN and VITE_TURNSTILE_SITE_KEY. Neither is
+#     really secret (both ship in the JS bundle), but secrets keep them out
+#     of the build logs.
+#   - Optionally SENTRY_AUTH_TOKEN (a Sentry org token): frontend builds on
+#     main upload source maps to Sentry with it. deploy.yml uses it too.
+#   - After the first push, make the vglist-api and vglist-frontend GHCR
+#     packages public so App Platform can pull them without credentials.
 on:
   push:
     branches: [main]
@@ -11,14 +30,35 @@ on:
 
 permissions: {}
 
+# A new push to a PR cancels its older run. Every push to main runs to the end,
+# so each merged commit gets its own images.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  API_IMAGE: ghcr.io/connorshea/vglist-api
+  FRONTEND_IMAGE: ghcr.io/connorshea/vglist-frontend
+  PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
 jobs:
+  # Which parts of the repo this PR touches. Jobs below skip when their part
+  # is unchanged; see changes.yml for why the `if:`s are written as they are.
+  changes:
+    uses: $/.github/workflows/changes.yml
+    permissions:
+      pull-requests: read
+
   api:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
@@ -48,6 +88,7 @@ jobs:
         with:
           context: .
           tags: vglist-api
+          build-args: GIT_COMMIT_SHA=${{ github.sha }}
           load: true
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
@@ -114,9 +155,21 @@ jobs:
           docker run --rm vglist-api file --version
 
   frontend:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
+    # Baked into the bundle (see frontend/Dockerfile). The release is the commit
+    # SHA, matching the API image. VITE_API_URL comes from
+    # frontend/.env.production. Empty on fork PRs, which the Dockerfile treats
+    # as unset.
+    env:
+      BUILD_ARGS: |
+        VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+        VITE_TURNSTILE_SITE_KEY=${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+        VITE_SENTRY_RELEASE=${{ github.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -131,9 +184,33 @@ jobs:
           context: .
           file: frontend/Dockerfile
           tags: vglist-frontend
+          build-args: ${{ env.BUILD_ARGS }}
+          # Lets vite.config.ts upload source maps to Sentry, on main only. A
+          # BuildKit secret, so it stays out of the image and the cache key.
+          secrets: ${{ env.PUSH == 'true' && secrets.SENTRY_AUTH_TOKEN != '' && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           load: true
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,mode=max,scope=frontend
+
+      - name: Check the image has no source maps
+        run: |
+          maps="$(docker run --rm --entrypoint find vglist-frontend /app/dist -name '*.map')"
+          if [ -n "$maps" ]; then
+            echo "::error::Source maps in the image: $maps"
+            exit 1
+          fi
+
+      # A failed Sentry upload doesn't fail the build (see vite.config.ts), so
+      # surface it here. The image still ships; errors from it just get
+      # minified stack traces in Sentry.
+      - name: Check the Sentry source map upload
+        run: |
+          errors="$(docker run --rm --entrypoint cat vglist-frontend /app/sentry-upload-errors)"
+          if [ -n "$errors" ]; then
+            while IFS= read -r line; do
+              echo "::warning::Source maps weren't uploaded to Sentry: $line"
+            done <<<"$errors"
+          fi
 
       - name: Serve and check /health and SPA fallback
         run: |
@@ -177,9 +254,238 @@ jobs:
           expect /index.html "no-cache"
           expect /games/1 "no-cache"
           expect_status /assets/does-not-exist.js 404
+          expect_status "$asset.map" 404
           expect /assets/does-not-exist.js "no-store"
           for path in "$asset" / /index.html /games/1 /site.webmanifest /favicon-32.png; do
             expect_status "$path" 200
           done
           expect /site.webmanifest "public, max-age=86400"
           expect /favicon-32.png "public, max-age=86400"
+
+      # The report-only CSP allows index.html's inline <style> by hash, and
+      # Vite minifies that block at build time, so editing it silently
+      # breaks the hash. See frontend/Caddyfile.
+      - name: Check CSP hash matches index.html's inline style
+        run: |
+          set -euo pipefail
+          csp="$(curl -sS -o /dev/null -D - http://127.0.0.1:8080/ \
+            | tr -d '\r' | grep -i '^content-security-policy-report-only:' | cut -d' ' -f2-)"
+          if [ -z "$csp" ]; then
+            echo "::error::No Content-Security-Policy-Report-Only header on /"
+            exit 1
+          fi
+          hash="$(curl -fsS http://127.0.0.1:8080/ \
+            | sed -n 's:.*<style>\(.*\)</style>.*:\1:p' | tr -d '\n' \
+            | openssl dgst -sha256 -binary | openssl base64)"
+          case "$csp" in
+            *"'sha256-$hash'"*) echo "Inline style hash sha256-$hash is allowed" ;;
+            *)
+              echo "::error::index.html's inline <style> hashes to sha256-$hash, which the report-only CSP doesn't allow. Update style-src in frontend/Caddyfile."
+              exit 1
+              ;;
+          esac
+          status="$(curl -sS -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/csp-report' --data '{}' http://127.0.0.1:8080/csp-report)"
+          if [ "$status" != "204" ]; then
+            echo "::error::/csp-report: expected status 204, got $status"
+            exit 1
+          fi
+
+  # Rebuilds with the same inputs as the tested build, so every layer comes
+  # from the GHA cache that job just wrote. One image serves the api service
+  # and the migrate and update-stats jobs. Deploys use the SHA tag; see "Move
+  # the main tag" for `main`.
+  push-api:
+    needs: api
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+      # For the provenance attestation: a Sigstore certificate from the OIDC
+      # token, stored through GitHub's attestations API.
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        id: push
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          tags: |
+            ${{ env.API_IMAGE }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          build-args: GIT_COMMIT_SHA=${{ github.sha }}
+          push: true
+          # A plain image manifest, not an index with an attestation entry, so
+          # the digest is exactly what App Platform pulls. The provenance
+          # attestation below lives in GitHub's attestations API instead.
+          provenance: false
+          cache-from: type=gha,scope=api
+
+      # deploy.yml verifies this before deploying, so an image pushed to the
+      # SHA tag from anywhere else can't be deployed.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.API_IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+
+      # `main` is only what an update from .do/app.yaml points at. Runs for
+      # different commits finish in any order, so move it only if this commit
+      # is still main's head; a newer commit's run moves it otherwise.
+      - name: Move the main tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$API_IMAGE:main" "$API_IMAGE:$GITHUB_SHA"
+
+  # Same as push-api, for the frontend image.
+  push-frontend:
+    needs: frontend
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    # Must match the frontend job's, or the build misses the cache and bakes
+    # in different values.
+    env:
+      BUILD_ARGS: |
+        VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+        VITE_TURNSTILE_SITE_KEY=${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+        VITE_SENTRY_RELEASE=${{ github.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        id: push
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: frontend/Dockerfile
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          build-args: ${{ env.BUILD_ARGS }}
+          secrets: ${{ secrets.SENTRY_AUTH_TOKEN != '' && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
+          push: true
+          provenance: false
+          cache-from: type=gha,scope=frontend
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.FRONTEND_IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+
+      - name: Move the main tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "main is now $head, leaving the main tag alone"
+            exit 0
+          fi
+          docker buildx imagetools create --tag "$FRONTEND_IMAGE:main" "$FRONTEND_IMAGE:$GITHUB_SHA"
+
+  # Whether this commit is still main's head once its images are pushed. Runs
+  # for different commits finish in any order, and cancel-in-progress cancels
+  # whatever holds the deploy-approval group, not just older commits. Without
+  # this, an older commit whose run finished last took the gate and cancelled
+  # a newer commit's waiting approval. A concurrency group is joined before
+  # any step runs, so the check has to be a job of its own.
+  newest-commit:
+    needs: [push-api, push-frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+    outputs:
+      newest: ${{ steps.head.outputs.newest }}
+    steps:
+      - name: Compare with main's head
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" = "$GITHUB_SHA" ]; then
+            echo "newest=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "newest=false" >> "$GITHUB_OUTPUT"
+            echo "main is now $head, so this commit skips the deploy approval. Approve the newest commit's run instead, or deploy this one with \`gh workflow run deploy.yml -f ref=$GITHUB_SHA\`." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # Waits for a reviewer of the production-approval environment (no
+  # secrets), so nothing deploys until someone approves it from this run.
+  # Only main's head gets here (see newest-commit), and a newer push to main
+  # cancels a still-waiting approval, so only main's latest commit waits.
+  # A waiting job holds its concurrency group, which is why this gate has its
+  # own group, separate from deploy-production: that one never cancels a
+  # deploy in progress.
+  #
+  # Approving it starts a separate Deploy run for this commit rather than
+  # calling deploy.yml as a reusable workflow: a called workflow doesn't see
+  # the production environment's DIGITALOCEAN_ACCESS_TOKEN, so the deploy
+  # failed with a 401. A workflow_dispatch sent with GITHUB_TOKEN is one of
+  # the events that still starts a run.
+  approve-deploy:
+    needs: newest-commit
+    if: needs.newest-commit.outputs.newest == 'true'
+    # Not ubuntu-slim: this step needs the gh CLI. The job takes no runner
+    # while it waits for approval.
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+    environment: production-approval
+    concurrency:
+      group: deploy-approval
+      cancel-in-progress: true
+    steps:
+      - name: Start the Deploy workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main -f ref="$GITHUB_SHA"
+          echo "Deploy of $GITHUB_SHA approved. Follow it under Actions > Deploy." >> "$GITHUB_STEP_SUMMARY"

@@ -16,7 +16,11 @@ namespace :import do
   task 'pcgamingwiki:covers': :environment do
     puts "This task will attach covers to any games which have PCGamingWiki IDs and no cover."
 
-    games = Game.includes(:cover_attachment)
+    # A relation, iterated with find_each below so only one batch of games is
+    # in memory at a time. Iterating it with `each` would load every game
+    # without a cover up front, and keep each one (and the cover attached to
+    # it) until the task finished.
+    games = Game.left_joins(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
                 .where.not(pcgamingwiki_id: [nil, ""])
 
@@ -24,6 +28,8 @@ namespace :import do
 
     cover_not_found_or_errored_count = 0
     cover_added_count = 0
+    # Whether a request has gone to PCGamingWiki yet, for pacing them.
+    made_request = false
 
     progress_bar = ProgressBar.create(
       total: games.count,
@@ -36,7 +42,7 @@ namespace :import do
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    games.each do |game|
+    games.find_each do |game|
       progress_bar.log "#{game[:name].ljust(40)} | Adding cover..."
 
       # The ID is interpolated into Cargo's SQL-like `where` clause as a
@@ -70,15 +76,17 @@ namespace :import do
       # sent too quickly.
       req['User-Agent'] = WikidataSparql::USER_AGENT
 
+      # Pace requests so we stay under PCGamingWiki's rate limit rather than
+      # hammering it back-to-back (which is what gets us served the Cloudflare
+      # page handled below). Waiting before every request but the first paces
+      # them all, whether the previous game got a cover or was skipped, without
+      # a pointless wait after the last one.
+      sleep(1) if made_request
+      made_request = true
+
       res = Net::HTTP.start(api_url.hostname, api_url.port, use_ssl: true) do |http|
         http.request(req)
       end
-
-      # Pace requests so we stay under PCGamingWiki's rate limit rather than
-      # hammering it back-to-back (which is what gets us served the Cloudflare
-      # page handled below). Placed right after the request so every path from
-      # here on is paced, whether the game gets a cover or is skipped.
-      sleep(1)
 
       # PCGamingWiki sometimes answers with an HTML error or Cloudflare page
       # instead of JSON (typically when it's rate-limiting us). Parsing that as
@@ -142,33 +150,47 @@ namespace :import do
         next
       end
 
-      # Copy the image data to a file with ActiveStorage, then throw the
-      # downloaded tempfile away so an import doesn't accumulate one open file
-      # per game it processes.
+      # Copy the image data to a file with ActiveStorage, create its sizes from
+      # the same download, then throw the downloaded tempfile away so an
+      # import doesn't accumulate one open file per game it processes.
       begin
+        # The sizes are created below, from the file we already have, so
+        # attaching the cover shouldn't also enqueue a TransformJob for each
+        # one. Those would download the original again, and run on the async
+        # adapter in this process, which drops them when the task exits.
+        game.skip_cover_preprocessing = true
         game.cover.attach(io: cover.io, filename: cover.filename)
+
+        # If the cover has any errors, they'll show up on the `Game` record.
+        # Check for any errors and print them if they exist.
+        if game.errors.any?
+          game.errors.full_messages.each do |msg|
+            progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added: #{msg}"
+          end
+          progress_bar.increment
+          cover_not_found_or_errored_count += 1
+          next
+        end
+
+        # If the cover is invalid but somehow wasn't caught in the last step,
+        # do the same thing but with a generic message.
+        if game.reload.cover.blank?
+          progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
+          progress_bar.increment
+          cover_not_found_or_errored_count += 1
+          next
+        end
+
+        # Create each size of the cover now, from the file we already have.
+        # Otherwise the sizes end up being created on the web server the first
+        # time a page shows the cover (see ReadyVariant).
+        begin
+          VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io)
+        rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+          progress_bar.log "#{game[:name].ljust(40)} | Cover added, but its sizes could not be created: #{e.message}"
+        end
       ensure
         cover.close
-      end
-
-      # If the cover has any errors, they'll show up on the `Game` record.
-      # Check for any errors and print them if they exist.
-      if game.errors.any?
-        game.errors.full_messages.each do |msg|
-          progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added: #{msg}"
-        end
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
-      end
-
-      # If the cover is invalid but somehow wasn't caught in the last step, do
-      # the same thing but with a generic message.
-      if game.reload.cover.blank?
-        progress_bar.log "#{game[:name].ljust(40)} | Cover could not be added."
-        progress_bar.increment
-        cover_not_found_or_errored_count += 1
-        next
       end
 
       cover_added_count += 1

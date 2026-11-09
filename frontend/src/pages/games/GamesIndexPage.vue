@@ -115,16 +115,17 @@
       <p>Failed to load games: {{ error.message }}</p>
     </div>
 
-    <div v-if="!data && loading" class="loading-more" role="status">
-      <span class="spinner" aria-hidden="true"></span>
-      Loading games&hellip;
-    </div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading games…" : "" }}</p>
+
+    <ul v-if="showSkeleton" class="games-grid" aria-hidden="true">
+      <li v-for="n in SKELETON_TILES" :key="n"><GameTileSkeleton /></li>
+    </ul>
     <div v-else-if="data && games.length === 0" class="empty-state">
       <p>No games match these filters.</p>
       <button v-if="activeCount > 0" type="button" class="clear-all" @click="clearAll">Clear filters</button>
     </div>
 
-    <ul v-if="games.length" class="games-grid" :class="{ 'is-stale': refreshing }">
+    <ul v-if="games.length" class="games-grid" :class="{ 'is-stale': refreshing }" :aria-busy="refreshing">
       <li v-for="game in games" :key="game.id">
         <GameTile
           :id="game.id"
@@ -196,6 +197,7 @@ import type {
   SearchPlatformsForFilterQuery
 } from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
+import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
 import FilterSearchSelect from "@/components/games-index/FilterSearchSelect.vue";
 import GamesFilterPanel from "@/components/games-index/GamesFilterPanel.vue";
 import {
@@ -220,6 +222,8 @@ interface NamedRecord {
 }
 
 const PAGE_SIZE = 36;
+// Enough placeholder tiles to fill the first screen at most widths.
+const SKELETON_TILES = 18;
 
 const SORT_ICONS: Record<GameSortOption["slug"], Component> = {
   popular: Flame,
@@ -273,6 +277,9 @@ const hasNextPage = computed(() => data.value?.games?.pageInfo.hasNextPage ?? fa
 const loadingMore = ref(false);
 // The grid is showing results for the previous sort or filters.
 const refreshing = computed(() => loading.value && !loadingMore.value);
+// Nothing to show yet, so placeholder tiles stand in. Later sort and filter
+// changes keep the current grid (dimmed) instead.
+const showSkeleton = computed(() => !data.value && loading.value);
 
 async function loadMore() {
   const cursor = data.value?.games?.pageInfo.endCursor;

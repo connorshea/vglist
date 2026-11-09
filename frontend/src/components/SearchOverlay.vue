@@ -51,7 +51,7 @@
         <!-- tabindex="-1" stops browsers making this scroller its own Tab stop. -->
         <div class="search-results" tabindex="-1">
           <!-- Empty state -->
-          <div v-if="!query || query.length < 2" class="search-empty">
+          <div v-if="trimmedQuery.length < 2" class="search-empty">
             <Search class="search-empty-icon" :stroke-width="1.5" />
             <p>Start typing to search games, companies, users, and more.</p>
           </div>
@@ -71,7 +71,7 @@
           <!-- No results -->
           <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
             <p>
-              No results found for "<span class="search-query-highlight">{{ query }}</span
+              No results found for "<span class="search-query-highlight">{{ trimmedQuery }}</span
               >"
             </p>
             <p class="search-empty-hint">Try a different search term</p>
@@ -82,11 +82,11 @@
             v-else-if="totalResults > 0"
             id="search-results-listbox"
             class="results-grid"
-            :class="gridColumnsClass"
+            :class="{ 'results-grid--split': gameResults.length > 0 && hasSideResults }"
             role="listbox"
             aria-label="Search results"
           >
-            <!-- Games column -->
+            <!-- Games -->
             <div v-if="gameResults.length" class="category" role="group" aria-label="Games">
               <div class="category-header" aria-hidden="true">
                 <Gamepad2 class="category-icon" />
@@ -117,154 +117,158 @@
                 </div>
                 <div class="result-info">
                   <div class="result-title">{{ game.content }}</div>
-                  <div class="result-meta">
+                  <div class="result-meta result-meta--stacked">
                     <span v-if="game.releaseDate" class="result-year">{{ releaseYear(game.releaseDate) }}</span>
-                    <span v-if="game.developerName" class="result-developer">{{ game.developerName }}</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-
-            <!-- Companies column -->
-            <div v-if="companyResults.length" class="category" role="group" aria-label="Companies">
-              <div class="category-header" aria-hidden="true">
-                <Briefcase class="category-icon" />
-                <span class="category-title">Companies</span>
-                <span class="category-count"
-                  >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
-                >
-              </div>
-
-              <a
-                v-for="(company, idx) in companyResults"
-                :key="company.searchableId"
-                :href="resultHref(company)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
-                :id="optionId(company)"
-                role="option"
-                :aria-selected="isActive(company)"
-                :class="{ 'is-active': isActive(company) }"
-                @mousemove="setActive(company)"
-                @click.prevent="goToResult(company)"
-              >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ company.content.charAt(0).toUpperCase() }}
-                  </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ company.content }}</div>
-                </div>
-              </a>
-            </div>
-
-            <!-- Platforms column -->
-            <div v-if="platformResults.length" class="category" role="group" aria-label="Platforms">
-              <div class="category-header" aria-hidden="true">
-                <Monitor class="category-icon" />
-                <span class="category-title">Platforms</span>
-                <span class="category-count"
-                  >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
-                >
-              </div>
-
-              <a
-                v-for="(platform, idx) in platformResults"
-                :key="platform.searchableId"
-                :href="resultHref(platform)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-                :id="optionId(platform)"
-                role="option"
-                :aria-selected="isActive(platform)"
-                :class="{ 'is-active': isActive(platform) }"
-                @mousemove="setActive(platform)"
-                @click.prevent="goToResult(platform)"
-              >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ platform.content.charAt(0).toUpperCase() }}
-                  </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ platform.content }}</div>
-                </div>
-              </a>
-            </div>
-
-            <!-- Other resources column -->
-            <div v-if="otherResults.length" class="category" role="group" aria-label="Other">
-              <div class="category-header" aria-hidden="true">
-                <Briefcase class="category-icon" />
-                <span class="category-title">Other</span>
-                <span class="category-count"
-                  >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
-                >
-              </div>
-
-              <a
-                v-for="(item, idx) in otherResults"
-                :key="item.searchableId"
-                :href="resultHref(item)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
-                :id="optionId(item)"
-                role="option"
-                :aria-selected="isActive(item)"
-                :class="{ 'is-active': isActive(item) }"
-                @mousemove="setActive(item)"
-                @click.prevent="goToResult(item)"
-              >
-                <div class="result-thumb">
-                  <div class="result-thumb-placeholder">
-                    {{ item.content.charAt(0).toUpperCase() }}
-                  </div>
-                </div>
-                <div class="result-info">
-                  <div class="result-title">{{ item.content }}</div>
-                  <div class="result-meta">
-                    <span class="result-type-tag">{{
-                      item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
+                    <span v-if="game.developerName" class="result-developer" :title="game.developerName">{{
+                      game.developerName
                     }}</span>
                   </div>
                 </div>
               </a>
             </div>
 
-            <!-- Users column -->
-            <div v-if="userResults.length" class="category" role="group" aria-label="Users">
-              <div class="category-header" aria-hidden="true">
-                <Users class="category-icon" />
-                <span class="category-title">Users</span>
-                <span class="category-count"
-                  >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+            <div v-if="hasSideResults" class="category-stack">
+              <!-- Companies -->
+              <div v-if="companyResults.length" class="category" role="group" aria-label="Companies">
+                <div class="category-header" aria-hidden="true">
+                  <Briefcase class="category-icon" />
+                  <span class="category-title">Companies</span>
+                  <span class="category-count"
+                    >{{ companyResults.length }} result{{ companyResults.length === 1 ? "" : "s" }}</span
+                  >
+                </div>
+
+                <a
+                  v-for="(company, idx) in companyResults"
+                  :key="company.searchableId"
+                  :href="resultHref(company)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.05 + idx * 0.03}s` }"
+                  :id="optionId(company)"
+                  role="option"
+                  :aria-selected="isActive(company)"
+                  :class="{ 'is-active': isActive(company) }"
+                  @mousemove="setActive(company)"
+                  @click.prevent="goToResult(company)"
                 >
+                  <div class="result-thumb">
+                    <div class="result-thumb-placeholder">
+                      {{ company.content.charAt(0).toUpperCase() }}
+                    </div>
+                  </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ company.content }}</div>
+                  </div>
+                </a>
               </div>
 
-              <a
-                v-for="(user, idx) in userResults"
-                :key="user.searchableId"
-                :href="resultHref(user)"
-                class="result-item result-item--compact"
-                :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
-                :id="optionId(user)"
-                role="option"
-                :aria-selected="isActive(user)"
-                :class="{ 'is-active': isActive(user) }"
-                @mousemove="setActive(user)"
-                @click.prevent="goToResult(user)"
-              >
-                <div class="result-thumb">
-                  <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
-                  <div v-else class="result-thumb-placeholder">
-                    {{ user.content.charAt(0).toUpperCase() }}
+              <!-- Platforms -->
+              <div v-if="platformResults.length" class="category" role="group" aria-label="Platforms">
+                <div class="category-header" aria-hidden="true">
+                  <Monitor class="category-icon" />
+                  <span class="category-title">Platforms</span>
+                  <span class="category-count"
+                    >{{ platformResults.length }} result{{ platformResults.length === 1 ? "" : "s" }}</span
+                  >
+                </div>
+
+                <a
+                  v-for="(platform, idx) in platformResults"
+                  :key="platform.searchableId"
+                  :href="resultHref(platform)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                  :id="optionId(platform)"
+                  role="option"
+                  :aria-selected="isActive(platform)"
+                  :class="{ 'is-active': isActive(platform) }"
+                  @mousemove="setActive(platform)"
+                  @click.prevent="goToResult(platform)"
+                >
+                  <div class="result-thumb">
+                    <div class="result-thumb-placeholder">
+                      {{ platform.content.charAt(0).toUpperCase() }}
+                    </div>
                   </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ platform.content }}</div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Other resources -->
+              <div v-if="otherResults.length" class="category" role="group" aria-label="Other">
+                <div class="category-header" aria-hidden="true">
+                  <Shapes class="category-icon" />
+                  <span class="category-title">Other</span>
+                  <span class="category-count"
+                    >{{ otherResults.length }} result{{ otherResults.length === 1 ? "" : "s" }}</span
+                  >
                 </div>
-                <div class="result-info">
-                  <div class="result-title">{{ user.content }}</div>
+
+                <a
+                  v-for="(item, idx) in otherResults"
+                  :key="item.searchableId"
+                  :href="resultHref(item)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.06 + idx * 0.03}s` }"
+                  :id="optionId(item)"
+                  role="option"
+                  :aria-selected="isActive(item)"
+                  :class="{ 'is-active': isActive(item) }"
+                  @mousemove="setActive(item)"
+                  @click.prevent="goToResult(item)"
+                >
+                  <div class="result-thumb">
+                    <div class="result-thumb-placeholder">
+                      {{ item.content.charAt(0).toUpperCase() }}
+                    </div>
+                  </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ item.content }}</div>
+                    <div class="result-meta">
+                      <span class="result-type-tag">{{
+                        item.searchableType.charAt(0) + item.searchableType.slice(1).toLowerCase()
+                      }}</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Users -->
+              <div v-if="userResults.length" class="category" role="group" aria-label="Users">
+                <div class="category-header" aria-hidden="true">
+                  <Users class="category-icon" />
+                  <span class="category-title">Users</span>
+                  <span class="category-count"
+                    >{{ userResults.length }} result{{ userResults.length === 1 ? "" : "s" }}</span
+                  >
                 </div>
-              </a>
+
+                <a
+                  v-for="(user, idx) in userResults"
+                  :key="user.searchableId"
+                  :href="resultHref(user)"
+                  class="result-item result-item--compact"
+                  :style="{ animationDelay: `${0.08 + idx * 0.03}s` }"
+                  :id="optionId(user)"
+                  role="option"
+                  :aria-selected="isActive(user)"
+                  :class="{ 'is-active': isActive(user) }"
+                  @mousemove="setActive(user)"
+                  @click.prevent="goToResult(user)"
+                >
+                  <div class="result-thumb">
+                    <img v-if="user.avatarUrl" :src="user.avatarUrl" alt="" />
+                    <div v-else class="result-thumb-placeholder">
+                      {{ user.content.charAt(0).toUpperCase() }}
+                    </div>
+                  </div>
+                  <div class="result-info">
+                    <div class="result-title">{{ user.content }}</div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -294,7 +298,7 @@ import type {
   GameSearchResultFieldsFragment,
   UserSearchResultFieldsFragment
 } from "@/types/graphql";
-import { Search, X, Gamepad2, Briefcase, Monitor, Users, ArrowRight } from "@lucide/vue";
+import { Search, X, Gamepad2, Briefcase, Monitor, Users, Shapes, ArrowRight } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 
 const router = useRouter();
@@ -369,9 +373,14 @@ function onDocumentKeydown(e: KeyboardEvent) {
 
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", onDocumentKeydown);
+  performSearch.cancel();
+  cancelInFlightSearch();
 });
 
 const query = ref("");
+// Leading and trailing spaces never change the results, so they neither
+// count toward the minimum length nor start a new search.
+const trimmedQuery = computed(() => query.value.trim());
 const results = ref<SearchResultFieldsFragment[]>([]);
 const loading = ref(false);
 const hasSearched = ref(false);
@@ -426,17 +435,15 @@ function setActive(result: SearchResultFieldsFragment) {
   activeIndex.value = resultIndex(result);
 }
 
-// Dynamically set grid columns based on which categories have results
-const gridColumnsClass = computed(() => {
-  const cols = [
-    gameResults.value.length > 0,
-    companyResults.value.length > 0,
-    platformResults.value.length > 0,
-    otherResults.value.length > 0,
+// Every category but games stacks in one column beside the games list, so
+// each gets enough width for its names however many categories match.
+const hasSideResults = computed(
+  () =>
+    companyResults.value.length > 0 ||
+    platformResults.value.length > 0 ||
+    otherResults.value.length > 0 ||
     userResults.value.length > 0
-  ].filter(Boolean).length;
-  return `grid-cols-${Math.min(cols, 4)}`;
-});
+);
 
 // Start with the query the overlay was opened with, focus the input, and
 // listen for Escape globally.
@@ -458,10 +465,10 @@ watch(isOpen, async (open) => {
   } else {
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onDocumentKeydown);
-    // Drop the pending search and ignore any still in flight, so they can't
+    // Drop the pending search and cancel any still in flight, so they can't
     // fill the overlay back in after it's been cleared.
     performSearch.cancel();
-    latestSearch++;
+    cancelInFlightSearch();
     query.value = "";
     resultsQuery = null;
     results.value = [];
@@ -483,17 +490,27 @@ onMounted(() => {
 // a slow response for an earlier query (e.g. "hal") could land after the
 // one for "halo" and replace its results.
 let latestSearch = 0;
+// The request for the newest search, so starting another one (or closing the
+// overlay) can cancel it rather than leave it to finish unseen. Otherwise each
+// pause while typing adds a request that the API still has to work through
+// before it gets to the one whose results will actually be shown.
+let searchController: AbortController | null = null;
 // The query the shown results belong to, so Enter can tell when they're
 // out of date with what's typed.
 let resultsQuery: string | null = null;
 
-// Leading/trailing spaces don't change a search, so the request, the
-// minimum-length check, the staleness check and navigation all use this.
-const trimmedQuery = computed(() => query.value.trim());
 const hasMinQuery = computed(() => trimmedQuery.value.length >= 2);
 
+// Ignore whatever search is in flight, and stop its request.
+function cancelInFlightSearch() {
+  latestSearch++;
+  searchController?.abort();
+  searchController = null;
+}
+
 const performSearch = debounce(async () => {
-  const searchId = ++latestSearch;
+  cancelInFlightSearch();
+  const searchId = latestSearch;
   const searchQuery = trimmedQuery.value;
 
   if (!hasMinQuery.value) {
@@ -505,10 +522,23 @@ const performSearch = debounce(async () => {
     return;
   }
 
+  // Only spaces changed (e.g. "halo" → "halo "): the shown results already
+  // match. Cancelling above still drops anything in flight.
+  if (searchQuery === resultsQuery && !error.value) {
+    loading.value = false;
+    return;
+  }
+
   loading.value = true;
   error.value = null;
+  const controller = new AbortController();
+  searchController = controller;
   try {
-    const data = await gqlClient.request<GlobalSearchQuery>(GLOBAL_SEARCH, { query: searchQuery });
+    const data = await gqlClient.request<GlobalSearchQuery>({
+      document: GLOBAL_SEARCH,
+      variables: { query: searchQuery },
+      signal: controller.signal
+    });
     if (searchId !== latestSearch) {
       return;
     }
@@ -517,6 +547,8 @@ const performSearch = debounce(async () => {
     resultsQuery = searchQuery;
     hasSearched.value = true;
   } catch (e: unknown) {
+    // A cancelled search always has a newer one (or a closed overlay) behind
+    // it, so its AbortError is dropped here rather than shown.
     if (searchId !== latestSearch) {
       return;
     }
@@ -527,9 +559,10 @@ const performSearch = debounce(async () => {
   } finally {
     if (searchId === latestSearch) {
       loading.value = false;
+      searchController = null;
     }
   }
-}, 250);
+}, 500);
 
 function onSearch() {
   performSearch();
@@ -700,7 +733,7 @@ function releaseYear(date: string): string {
 .search-header {
   flex-shrink: 0;
   padding: 48px 24px 0;
-  max-width: 780px;
+  max-width: 960px;
   width: 100%;
 }
 
@@ -893,7 +926,7 @@ function releaseYear(date: string): string {
   flex: 1;
   overflow-y: auto;
   padding: 12px 24px 40px;
-  max-width: 780px;
+  max-width: 960px;
   width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--s-300) transparent;
@@ -917,20 +950,8 @@ function releaseYear(date: string): string {
   gap: 0;
 }
 
-.grid-cols-1 {
-  grid-template-columns: 1fr;
-}
-
-.grid-cols-2 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.grid-cols-3 {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.grid-cols-4 {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+.results-grid--split {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
 }
 
 /* ── Category column ── */
@@ -939,13 +960,21 @@ function releaseYear(date: string): string {
   padding: 0 8px;
 }
 
-.category + .category {
-  border-left: 1px solid rgba(85, 90, 110, 0.4);
-  padding-left: 24px;
+.results-grid--split > .category {
+  padding-right: 24px;
 }
 
-.category:first-child {
-  padding-right: 24px;
+/* Companies, platforms, other and users, one under another. */
+.category-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.results-grid--split > .category-stack {
+  border-left: 1px solid rgba(85, 90, 110, 0.4);
+  padding-left: 16px;
 }
 
 .category-header {
@@ -959,6 +988,7 @@ function releaseYear(date: string): string {
 .category-icon {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
   color: var(--s-100);
 }
 
@@ -974,6 +1004,7 @@ function releaseYear(date: string): string {
   margin-left: auto;
   font-size: 11px;
   color: var(--s-100);
+  white-space: nowrap;
   font-weight: 400;
 }
 
@@ -1102,6 +1133,14 @@ function releaseYear(date: string): string {
   margin-top: 1px;
 }
 
+/* Games put the developer on its own line under the year, so a long name
+   truncates instead of wrapping beside it. */
+.result-meta--stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
 .result-year {
   font-size: 12px;
   color: var(--s-100);
@@ -1110,6 +1149,10 @@ function releaseYear(date: string): string {
 .result-developer {
   font-size: 12px;
   color: var(--s-100);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .result-type-tag {
@@ -1124,13 +1167,6 @@ function releaseYear(date: string): string {
 }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-  .grid-cols-3,
-  .grid-cols-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
 @media (max-width: 640px) {
   .search-header {
     padding-top: 16px;
@@ -1156,20 +1192,18 @@ function releaseYear(date: string): string {
     display: none;
   }
 
-  .grid-cols-4,
-  .grid-cols-3,
-  .grid-cols-2 {
+  .results-grid--split {
     grid-template-columns: 1fr;
   }
 
-  .category + .category {
-    border-left: none;
-    padding-left: 8px;
-    margin-top: 16px;
+  .results-grid--split > .category {
+    padding-right: 8px;
   }
 
-  .category:first-child {
-    padding-right: 8px;
+  .results-grid--split > .category-stack {
+    border-left: none;
+    padding-left: 0;
+    margin-top: 16px;
   }
 }
 </style>

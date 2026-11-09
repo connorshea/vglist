@@ -30,7 +30,25 @@ module GamePreloads
   #   connection field itself, not for its nodes.
   # @return [ActiveRecord::Relation]
   def self.apply(relation, lookahead)
-    nodes = node_lookaheads(lookahead)
+    preload(relation, node_lookaheads(lookahead))
+  end
+
+  # Like `apply`, for a field that returns a plain list of games rather than a
+  # connection.
+  #
+  # @param relation [ActiveRecord::Relation] A relation of games.
+  # @param lookahead [GraphQL::Execution::Lookahead] The lookahead for the list
+  #   field, whose selections are the game fields.
+  # @return [ActiveRecord::Relation]
+  def self.apply_to_list(relation, lookahead)
+    preload(relation, [lookahead].select(&:selected?))
+  end
+
+  # @param relation [ActiveRecord::Relation]
+  # @param nodes [Array<GraphQL::Execution::Lookahead>] Lookaheads whose
+  #   selections are game fields.
+  # @return [ActiveRecord::Relation]
+  def self.preload(relation, nodes)
     # Nothing under `nodes`/`edges` was selected, e.g. a `totalCount`-only
     # query, so no game records will be rendered at all.
     return relation if nodes.empty?
@@ -58,5 +76,5 @@ module GamePreloads
       lookahead.selection(:edges).selection(:node)
     ].select(&:selected?)
   end
-  private_class_method :node_lookaheads
+  private_class_method :preload, :node_lookaheads
 end

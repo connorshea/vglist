@@ -495,7 +495,9 @@ const externalLinks = computed<ExternalLink[]>(() => {
     links.push({ label: "MobyGames", url: `https://www.mobygames.com/game/${g.mobygamesId}` });
   }
   if (g.giantbombId) {
-    links.push({ label: "GiantBomb", url: `https://www.giantbomb.com/game/${g.giantbombId}/` });
+    // A Giant Bomb Wiki page title like "Games/Portal_2".
+    const path = g.giantbombId.split("/").map(encodeURIComponent).join("/");
+    links.push({ label: "GiantBomb", url: `https://giantbomb.com/wiki/${path}` });
   }
   if (g.igdbId) {
     links.push({ label: "IGDB", url: `https://www.igdb.com/games/${g.igdbId}` });
@@ -510,7 +512,7 @@ const externalLinks = computed<ExternalLink[]>(() => {
     links.push({ label: "Epic Games Store", url: `https://store.epicgames.com/p/${g.epicGamesStoreId}` });
   }
   if (g.gogId) {
-    links.push({ label: "GOG", url: `https://www.gog.com/game/${g.gogId}` });
+    links.push({ label: "GOG.com", url: `https://www.gog.com/game/${g.gogId}` });
   }
 
   return links;

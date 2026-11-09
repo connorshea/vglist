@@ -35,6 +35,15 @@ port ENV.fetch("PORT", 3000)
 max_threads = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads max_threads, max_threads
 
+# Statement timeout for the web server's database connections, read by
+# config/database.yml. Set here rather than in the environment so it only
+# applies to Puma, and not to migrations, rake tasks or the console, which
+# share the same environment variables on App Platform. Override with
+# WEB_STATEMENT_TIMEOUT (a Postgres duration, e.g. "20s"). Shorter than the
+# 30s GraphQL QueryTimeout (app/graphql/video_game_list_schema.rb), since one
+# GraphQL request usually runs several statements.
+ENV["DB_STATEMENT_TIMEOUT"] = ENV.fetch("WEB_STATEMENT_TIMEOUT", "15s")
+
 # Worker mode for better throughput in production.
 # Default to 0 in development to avoid macOS fork() crashes.
 workers ENV.fetch("WEB_CONCURRENCY") { ENV["RAILS_ENV"] == "production" ? 2 : 0 }
@@ -45,3 +54,9 @@ workers ENV.fetch("WEB_CONCURRENCY") { ENV["RAILS_ENV"] == "production" ? 2 : 0 
 # process behavior so workers use less memory.
 #
 preload_app!
+
+# Load model schemas (and the like) once in the master process, so each worker
+# doesn't have to on its first requests after a deploy. See ProcessWarmup.
+before_fork do
+  ProcessWarmup.run
+end

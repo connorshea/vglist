@@ -1,0 +1,7 @@
+# Configuration for zizmor (https://docs.zizmor.sh/configuration/),
+# which audits our GitHub Actions workflows and dependabot.yml in CI.
+rules:
+  dependabot-cooldown:
+    config:
+      # zizmor defaults to requiring 7 days; we deliberately use 3.
+      days: 3

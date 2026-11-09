@@ -51,6 +51,35 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
+--
+-- Name: copy_release_date_from_game(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.copy_release_date_from_game() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  SELECT release_date INTO NEW.release_date FROM public.games WHERE id = NEW.game_id;
+  RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: copy_release_date_to_game_joins(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.copy_release_date_to_game_joins() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  UPDATE public.game_platforms SET release_date = NEW.release_date WHERE game_id = NEW.id;
+  UPDATE public.game_genres SET release_date = NEW.release_date WHERE game_id = NEW.id;
+  RETURN NULL;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -279,7 +308,8 @@ CREATE TABLE public.engines (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -531,7 +561,8 @@ CREATE TABLE public.game_genres (
     game_id bigint NOT NULL,
     genre_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    release_date date
 );
 
 
@@ -563,7 +594,8 @@ CREATE TABLE public.game_platforms (
     game_id bigint NOT NULL,
     platform_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    release_date date
 );
 
 
@@ -777,7 +809,8 @@ CREATE TABLE public.games (
     avg_rating double precision,
     igdb_id text,
     mobygames_id bigint,
-    game_purchases_count integer DEFAULT 0 NOT NULL
+    game_purchases_count integer DEFAULT 0 NOT NULL,
+    ratings_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -845,7 +878,8 @@ CREATE TABLE public.genres (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -925,11 +959,11 @@ COMMENT ON COLUMN public.unmatched_games.name IS 'The name of the game that was 
 
 CREATE VIEW public.grouped_unmatched_games AS
  SELECT count(*) AS count,
-    unmatched_games.external_service_id,
-    unmatched_games.external_service_name,
-    array_agg(unmatched_games.name) AS names
+    external_service_id,
+    external_service_name,
+    array_agg(name) AS names
    FROM public.unmatched_games
-  GROUP BY unmatched_games.external_service_id, unmatched_games.external_service_name
+  GROUP BY external_service_id, external_service_name
   ORDER BY (count(*)) DESC;
 
 
@@ -1057,7 +1091,8 @@ CREATE TABLE public.platforms (
     name text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1130,7 +1165,8 @@ CREATE TABLE public.series (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2422,10 +2458,10 @@ CREATE UNIQUE INDEX index_game_genres_on_game_id_and_genre_id ON public.game_gen
 
 
 --
--- Name: index_game_genres_on_genre_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_game_genres_on_genre_id_and_release_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_game_genres_on_genre_id ON public.game_genres USING btree (genre_id);
+CREATE INDEX index_game_genres_on_genre_id_and_release_date ON public.game_genres USING btree (genre_id, release_date DESC NULLS LAST, game_id DESC);
 
 
 --
@@ -2443,10 +2479,10 @@ CREATE UNIQUE INDEX index_game_platforms_on_game_id_and_platform_id ON public.ga
 
 
 --
--- Name: index_game_platforms_on_platform_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_game_platforms_on_platform_id_and_release_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_game_platforms_on_platform_id ON public.game_platforms USING btree (platform_id);
+CREATE INDEX index_game_platforms_on_platform_id_and_release_date ON public.game_platforms USING btree (platform_id, release_date DESC NULLS LAST, game_id DESC);
 
 
 --
@@ -2545,6 +2581,13 @@ CREATE INDEX index_game_purchases_on_user_id ON public.game_purchases USING btre
 --
 
 CREATE INDEX index_game_versions_on_item_type_and_item_id ON public.game_versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_games_on_avg_rating_and_id_when_rated; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_avg_rating_and_id_when_rated ON public.games USING btree (avg_rating, id) WHERE ((ratings_count >= 5) AND (avg_rating IS NOT NULL));
 
 
 --
@@ -2849,6 +2892,27 @@ CREATE UNIQUE INDEX index_wikidata_blocklist_on_wikidata_id ON public.wikidata_b
 
 
 --
+-- Name: game_genres copy_release_date_from_game; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER copy_release_date_from_game BEFORE INSERT OR UPDATE ON public.game_genres FOR EACH ROW EXECUTE FUNCTION public.copy_release_date_from_game();
+
+
+--
+-- Name: game_platforms copy_release_date_from_game; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER copy_release_date_from_game BEFORE INSERT OR UPDATE ON public.game_platforms FOR EACH ROW EXECUTE FUNCTION public.copy_release_date_from_game();
+
+
+--
+-- Name: games copy_release_date_to_game_joins; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER copy_release_date_to_game_joins AFTER UPDATE OF release_date ON public.games FOR EACH ROW WHEN ((old.release_date IS DISTINCT FROM new.release_date)) EXECUTE FUNCTION public.copy_release_date_to_game_joins();
+
+
+--
 -- Name: events_relationship_events fk_rails_05a7410ab8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3119,6 +3183,13 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261109030000'),
+('20261108230200'),
+('20261108230100'),
+('20261108230000'),
+('20261108220000'),
+('20261108210100'),
+('20261108210000'),
 ('20261108000200'),
 ('20261108000100'),
 ('20261108000000'),

@@ -18,13 +18,7 @@ module Types
     end
 
     def games(sort_by: nil)
-      ResourceGameSort.apply(@object.games.with_attached_cover, sort_by)
-    end
-
-    # The list resolver loads this with the records (`with_games_count`), so a
-    # page of them doesn't count each one's games separately.
-    def games_count
-      @object.has_attribute?(:index_games_count) ? @object[:index_games_count] : @object.games.count
+      ResourceGameSort.apply(@object.games.with_attached_cover, sort_by, join_table: 'game_platforms')
     end
 
     def cover_games

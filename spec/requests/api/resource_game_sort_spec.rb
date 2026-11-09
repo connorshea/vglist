@@ -46,6 +46,33 @@ RSpec.describe "Sorting the games on a resource", type: :request do
     expect(platform_game_names('NEWEST_RELEASE')).to eq(%w[Alpha Charlie Bravo Delta])
   end
 
+  it "sorts by newest release using the join table's copy of the release date, so it can use the index" do
+    sql = ResourceGameSort.apply(platform.games, :newest_release, join_table: 'game_platforms').to_sql
+    expect(sql).to end_with('ORDER BY game_platforms.release_date DESC NULLS LAST, game_platforms.game_id DESC')
+  end
+
+  it "sorts a genre's games by newest release" do
+    genre = create(:genre)
+    [old_popular, new_unpopular, unreleased, bare].each { |game| create(:game_genre, game: game, genre: genre) }
+    # Changed after the game was added to the genre, so the copy has to follow it.
+    old_popular.update!(release_date: Date.new(2021, 1, 1))
+
+    query_string = <<-GRAPHQL
+      query($id: ID!) {
+        genre(id: $id) {
+          games(sortBy: NEWEST_RELEASE) { nodes { name } }
+        }
+      }
+    GRAPHQL
+
+    result = api_request(query_string, variables: { id: genre.id }, token: access_token)
+    expect(result.graphql_dig(:genre, :games, :nodes).pluck(:name)).to eq(%w[Alpha Bravo Charlie Delta])
+  end
+
+  it "refuses to sort by a join table without a release date copy" do
+    expect { ResourceGameSort.apply(Game.all, :newest_release, join_table: 'game_engines') }.to raise_error(ArgumentError)
+  end
+
   it "sorts by most owners" do
     expect(platform_game_names('MOST_OWNERS')).to eq(%w[Bravo Alpha Delta Charlie])
   end

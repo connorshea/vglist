@@ -12,7 +12,7 @@ class Company < ApplicationRecord
   has_many :published_games, through: :game_publishers, source: :game
 
   # A game counts once even if the company both developed and published it.
-  game_count_scopes <<~SQL.squish
+  game_count_scopes <<~SQL.squish, with_games_count: true
     (SELECT COUNT(*) FROM (
       SELECT game_id FROM game_developers WHERE game_developers.company_id = companies.id
       UNION

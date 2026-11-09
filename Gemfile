@@ -6,7 +6,7 @@ source 'https://rubygems.org', cooldown: 3
 ruby '>= 4.0.9'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0.0'
+gem 'rails', '~> 8.1.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.7'
@@ -58,8 +58,8 @@ gem 'aws-sdk-s3', '~> 1.208', require: false
 gem 'ruby-progressbar', '~> 1.13', require: false
 
 # Use Sentry for error tracking in production.
-gem 'sentry-ruby', '~> 6.4.0'
-gem 'sentry-rails', '~> 6.4.0'
+gem 'sentry-ruby', '~> 7.2.0'
+gem 'sentry-rails', '~> 7.2.0'
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
 gem 'graphql', '~> 2.6.14'

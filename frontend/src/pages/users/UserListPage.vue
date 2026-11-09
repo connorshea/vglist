@@ -19,7 +19,11 @@
       </div>
     </div>
 
-    <div v-if="loading && !data" class="loading-state">Loading...</div>
+    <p class="is-sr-only" role="status">{{ showSkeleton ? "Loading users…" : "" }}</p>
+
+    <div v-if="showSkeleton" class="users-grid" aria-hidden="true">
+      <UserCardSkeleton v-for="card in SKELETON_CARDS" :key="card" :name-width="skeletonNameWidth(card)" />
+    </div>
 
     <div v-if="error" class="notification is-danger">
       <p>{{ error.message }}</p>
@@ -60,6 +64,7 @@ import { GET_USERS } from "@/graphql/queries/users";
 import type { GetUsersQuery, UserSort } from "@/types/graphql";
 import PaginationNav from "@/components/PaginationNav.vue";
 import UserCard from "@/components/UserCard.vue";
+import UserCardSkeleton from "@/components/UserCardSkeleton.vue";
 
 const sortOptions: { label: string; value: UserSort | null; slug: string | null }[] = [
   { label: "A–Z", value: null, slug: null },
@@ -93,6 +98,16 @@ const { data, loading, error } = useQuery<GetUsersQuery>(GET_USERS, {
 const users = computed(() => data.value?.users?.nodes ?? []);
 const hasNextPage = computed(() => data.value?.users?.pageInfo?.hasNextPage ?? false);
 const totalCount = computed(() => data.value?.users?.totalCount ?? 0);
+
+// ── First load ──
+// Placeholder cards until the first page arrives. Later loads (sort, page)
+// keep the current cards up until the new ones replace them.
+const showSkeleton = computed(() => loading.value && !data.value);
+const SKELETON_CARDS = PAGE_SIZE;
+const SKELETON_NAME_WIDTHS = ["58%", "42%", "70%", "50%", "64%", "46%"];
+function skeletonNameWidth(i: number): string {
+  return SKELETON_NAME_WIDTHS[(i - 1) % SKELETON_NAME_WIDTHS.length] ?? "55%";
+}
 
 function setSort(sort: UserSort | null) {
   if (sort === currentSort.value) {
@@ -206,12 +221,5 @@ function prevPage() {
   .users-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-
-/* Loading */
-.loading-state {
-  text-align: center;
-  padding: 2rem;
-  color: var(--color-text-secondary);
 }
 </style>

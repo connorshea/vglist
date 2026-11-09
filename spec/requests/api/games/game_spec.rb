@@ -273,6 +273,59 @@ RSpec.describe "Game query API", type: :request do
       )
     end
 
+    it "loads the game and its cover in one query" do
+      game_with_cover.cover.variant(:small).processed
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          game(id: $id) {
+            coverUrl
+          }
+        }
+      GRAPHQL
+
+      queries = []
+      callback = ->(*, payload) { queries << payload[:sql] unless payload[:name] == 'SCHEMA' }
+      result = ActiveSupport::Notifications.subscribed(callback, 'sql.active_record') do
+        api_request(query_string, variables: { id: game_with_cover.id }, token: access_token)
+      end
+
+      expect(result.graphql_dig(:game, :coverUrl)).to be_present
+      expect(queries.grep(/active_storage|FROM "games"/).size).to eq(1)
+    end
+
+    it "finds a game by Steam App ID with its cover" do
+      game_with_steam_app_id.cover.attach(io: Rails.root.join('spec/factories/images/crysis.jpg').open, filename: 'crysis.jpg')
+      query_string = <<-GRAPHQL
+        query($steamAppId: Int!) {
+          game(steamAppId: $steamAppId) {
+            id
+            coverUrl
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { steam_app_id: game_with_steam_app_id.steam_app_ids.first.app_id }, token: access_token)
+
+      expect(result.graphql_dig(:game, :id)).to eq(game_with_steam_app_id.id.to_s)
+      expect(result.graphql_dig(:game, :coverUrl)).to be_present
+    end
+
+    it "returns null rather than an arbitrary game for an explicit null ID" do
+      game_with_wikidata_id
+      game
+      query_string = <<-GRAPHQL
+        query {
+          game(wikidataId: null) {
+            id
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, token: access_token)
+
+      expect(result.graphql_dig(:game)).to be_nil
+    end
+
     it "returns an error if the query uses both an id and giantbomb_id" do
       query_string = <<-GRAPHQL
         query($id: ID!, $giantbombId: String!) {

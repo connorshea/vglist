@@ -12,7 +12,8 @@ module Resolvers
 
       extras [:lookahead]
 
-      STAT_FIELDS = [:games_count, :first_release_year, :last_release_year].freeze
+      # games_count is a column on series, so only the release years need loading.
+      STAT_FIELDS = [:first_release_year, :last_release_year].freeze
 
       def resolve(lookahead:, sort_by: nil, name_contains: nil)
         series = Series.all

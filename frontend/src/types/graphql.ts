@@ -1105,6 +1105,23 @@ export interface GetGamesIndexQuery {
   } | null;
 }
 
+export type GetNewReleasesQueryVariables = Exact<{
+  first: number;
+}>;
+
+export interface GetNewReleasesQuery {
+  newReleases: Array<{
+    id: string;
+    name: string;
+    releaseDate: string | null;
+    avgRating: number | null;
+    coverUrl: string | null;
+    isInLibrary: boolean | null;
+    libraryCompletionStatus: GamePurchaseCompletionStatus | null;
+    ownerCount: number;
+  }>;
+}
+
 export type GetGamesIndexFiltersQueryVariables = Exact<{
   platformId: string;
   hasPlatform: boolean;
@@ -1472,8 +1489,8 @@ export interface GetPlatformQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
@@ -1572,8 +1589,8 @@ export interface GetGenreQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
@@ -1626,8 +1643,8 @@ export interface GetEngineQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;
@@ -1682,8 +1699,8 @@ export interface GetSeriesQuery {
     id: string;
     name: string;
     wikidataId: number | null;
+    gamesCount: number;
     games: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         name: string;

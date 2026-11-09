@@ -11,34 +11,89 @@ RSpec.describe "GraphQL timeouts", type: :request do
     post graphql_path, params: { query: query }.to_json, headers: { 'Content-Type' => 'application/json' }
   end
 
-  def statement_timeout
-    ActiveRecord::Base.lease_connection.select_value('SHOW statement_timeout')
+  # Stand-in for a statement that runs past the statement timeout. The real
+  # timeout is set per connection from config/database.yml, so lower it for
+  # this test's transaction only.
+  def make_game_count_slow
+    allow(Game).to receive(:count) do
+      connection = ActiveRecord::Base.lease_connection
+      connection.execute("SET LOCAL statement_timeout = '50ms'")
+      connection.execute('SELECT pg_sleep(1)')
+    end
   end
 
-  it 'sets a statement timeout while executing and resets it afterwards' do
-    timeout_during_request = nil
-    allow(Game).to receive(:count) do
-      timeout_during_request = statement_timeout
-      0
+  describe 'the statement timeout in config/database.yml' do
+    def database_config(timeout)
+      with_environment('DB_STATEMENT_TIMEOUT' => timeout) do
+        Rails.application.config.database_configuration.fetch('test')
+      end
     end
-    default = statement_timeout
+
+    it 'is set on each connection when DB_STATEMENT_TIMEOUT is set' do
+      expect(database_config('10s')['variables']).to eq('statement_timeout' => '10s')
+    end
+
+    # Migrations, rake tasks and the console don't load config/puma.rb, so they
+    # keep the server default. An empty `variables` would also break dbconsole.
+    it 'is left out when DB_STATEMENT_TIMEOUT is unset' do
+      expect(database_config(nil)).not_to have_key('variables')
+    end
+  end
+
+  it 'cancels a slow statement and returns a GraphQL error' do
+    make_game_count_slow
 
     graphql(query)
 
     expect(response).to have_http_status(:success)
-    expect(timeout_during_request).to eq('10s')
-    expect(statement_timeout).to eq(default)
+    expect(response.parsed_body['errors'].first['message']).to eq('This request took too long and was cancelled.')
   end
 
-  it 'cancels a slow statement and returns a GraphQL error' do
-    allow(Game).to receive(:count) { ActiveRecord::Base.lease_connection.execute('SELECT pg_sleep(1)') }
+  describe 'reporting to Sentry' do
+    # The tags and fingerprint of the scope each event was captured in.
+    let(:captured) { [] }
 
-    with_environment('GRAPHQL_STATEMENT_TIMEOUT' => '50ms') do
-      graphql(query)
+    def record_capture(*args)
+      scope = Sentry.get_current_scope
+      captured << { args: args, tags: scope.tags, fingerprint: scope.fingerprint }
+      nil
     end
 
-    expect(response).to have_http_status(:success)
-    expect(response.parsed_body['errors'].first['message']).to eq('This request took too long and was cancelled.')
+    before(:each) do
+      allow(Sentry).to receive(:capture_exception) { |*args, **kwargs| record_capture(*args, **kwargs) }
+      allow(Sentry).to receive(:capture_message) { |*args, **kwargs| record_capture(*args, **kwargs) }
+    end
+
+    it 'reports a cancelled statement, grouped by operation', :aggregate_failures do
+      make_game_count_slow
+
+      graphql('query SlowStats { basicSiteStatistics { games } }')
+
+      expect(captured.size).to eq(1)
+      expect(captured.first[:args].first).to be_a(ActiveRecord::QueryCanceled)
+      expect(captured.first[:tags]).to include(graphql_operation: 'SlowStats', graphql_timeout: 'statement_timeout')
+      expect(captured.first[:fingerprint]).to eq(%w[graphql-timeout statement_timeout SlowStats])
+    end
+
+    it 'reports a query that runs past its time limit', :aggregate_failures do
+      # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(GraphQL::Schema::Timeout).to receive(:max_seconds).and_return(-1)
+      # rubocop:enable RSpec/AnyInstance
+
+      graphql(query)
+
+      expect(captured.size).to eq(1)
+      expect(captured.first[:args]).to eq(
+        ['GraphQL anonymous timed out: Timeout on Query.basicSiteStatistics', { level: :warning }]
+      )
+      expect(captured.first[:fingerprint]).to eq(%w[graphql-timeout query_timeout anonymous])
+    end
+
+    it "doesn't report a request that finishes in time" do
+      graphql(query)
+
+      expect(captured).to be_empty
+    end
   end
 
   it 'stops resolving fields once the whole request runs past its time limit', :aggregate_failures do

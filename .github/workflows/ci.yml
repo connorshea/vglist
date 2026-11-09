@@ -13,8 +13,37 @@ env:
   NODE_ENV: test
 
 jobs:
-  rubocop:
+  # Which parts of the repo this PR touches. Jobs below skip when their part
+  # is unchanged; see changes.yml for why the `if:`s are written as they are.
+  changes:
+    uses: $/.github/workflows/changes.yml
+    permissions:
+      pull-requests: read
+
+  zizmor:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.github != 'false' }}
     runs-on: ubuntu-slim
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Audit GitHub Actions workflows and dependabot.yml. Findings are emitted
+      # as annotations and fail the job (no SARIF upload, so no
+      # security-events permission needed). Online audits use the default
+      # read-only token to check for impostor commits / known-vulnerable actions.
+      - uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+        with:
+          advanced-security: false
+          annotations: true
+          version: "1.32.0"
+
+  rubocop:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -22,11 +51,15 @@ jobs:
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "4.0.9"
+          rubygems: "4.0.24"
           bundler-cache: true
       - run: bundle exec rubocop
 
   frontend_lint:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: frontend
@@ -47,7 +80,10 @@ jobs:
       - run: pnpm run lint
 
   frontend_typecheck:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: frontend
@@ -67,7 +103,10 @@ jobs:
       - run: pnpm run typecheck
 
   frontend_build:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: frontend
@@ -87,7 +126,10 @@ jobs:
       - run: pnpm run build
 
   frontend_test:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: frontend
@@ -107,10 +149,13 @@ jobs:
       - run: pnpm run test
 
   graphql_lint:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.graphql != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -135,6 +180,7 @@ jobs:
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "4.0.9"
+          rubygems: "4.0.24"
           bundler-cache: true
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
         with:
@@ -156,10 +202,13 @@ jobs:
           git diff --exit-code frontend/src/types/graphql.ts config/graphql/operations.json
 
   factory_bot_lint:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -184,6 +233,7 @@ jobs:
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "4.0.9"
+          rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create
@@ -191,7 +241,10 @@ jobs:
       - run: bundle exec rake factory_bot:lint
 
   rspec:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       COVERAGE_COMMAND_NAME: "RSpec:Unit"
       # Split the suite across this many processes. GitHub-hosted ubuntu runners
@@ -199,7 +252,7 @@ jobs:
       PARALLEL_TEST_PROCESSORS: "4"
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -224,6 +277,7 @@ jobs:
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "4.0.9"
+          rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       # Create and load one test database per parallel process (ci_test, ci_test2, ...).
@@ -248,10 +302,13 @@ jobs:
           retention-days: 10
 
   db_seed:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     services:
       postgres:
-        image: postgres:17
+        image: postgres:18
         env:
           POSTGRES_DB: ci_test
           POSTGRES_USER: postgres
@@ -276,6 +333,7 @@ jobs:
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: "4.0.9"
+          rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create

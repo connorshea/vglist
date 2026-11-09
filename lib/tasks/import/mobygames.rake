@@ -33,7 +33,12 @@ namespace :import do
     # string to nil for an integer column but still emits `mobygames_id = NULL`,
     # which is never true, so `where.not` over it matches zero rows regardless of
     # the data.
-    games = Game.includes(:cover_attachment)
+    #
+    # A relation, iterated in batches below so only one batch of games is in
+    # memory at a time. Iterating it all at once would load every game without
+    # a cover up front, and keep each one (and the cover attached to it) until
+    # the task finished.
+    games = Game.left_joins(:cover_attachment)
                 .where(active_storage_attachments: { id: nil })
                 .where.not(mobygames_id: nil)
 
@@ -55,7 +60,7 @@ namespace :import do
     no_cover_url_count = 0
     no_matching_game_count = 0
 
-    games.each_slice(MOBYGAMES_GAME_ID_BATCH_SIZE) do |batch|
+    games.find_in_batches(batch_size: MOBYGAMES_GAME_ID_BATCH_SIZE) do |batch|
       # Pace against the MobyGames rate limit (see NOTE above): one request, one
       # sleep, per batch of up to 100 games.
       progress_bar.log ""
@@ -120,10 +125,27 @@ namespace :import do
         end
 
         # Attach the cover and get the filename from the last fragment of the URL.
-        # The downloaded tempfile is thrown away as soon as it's been attached,
-        # so an import doesn't accumulate one open file per game it processes.
+        # The downloaded tempfile is thrown away as soon as it's been attached
+        # and resized, so an import doesn't accumulate one open file per game it
+        # processes.
         begin
+          # The sizes are created below, from the file we already have, so
+          # attaching the cover shouldn't also enqueue a TransformJob for each
+          # one. Those would download the original again, and run on the async
+          # adapter in this process, which drops them when the task exits.
+          game.skip_cover_preprocessing = true
           game.cover.attach(io: cover.io, filename: cover.filename)
+
+          # Create each size of the cover now, from the file we already have.
+          # Otherwise the sizes end up being created on the web server the first
+          # time a page shows the cover (see ReadyVariant). An invalid cover is
+          # never saved, so there's nothing to resize.
+          begin
+            saved = game.errors.empty? && game.reload.cover.attached?
+            VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) if saved
+          rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+            progress_bar.log "Added cover for #{game[:name]}, but its sizes could not be created: #{e.message}"
+          end
         ensure
           cover.close
         end

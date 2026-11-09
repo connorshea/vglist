@@ -15,7 +15,8 @@ const { pushMock, mockIsOpen, mockClose, mockRequest, mockInitialQuery } = vi.ho
     // close() is a simple spy; it does NOT toggle isOpen to avoid
     // mid-test Vue re-renders that conflict with DOM teardown.
     mockClose: vi.fn<() => void>(),
-    mockRequest: vi.fn<() => Promise<unknown>>()
+    // The overlay calls gqlClient.request with a single options object.
+    mockRequest: vi.fn<(options: { signal: AbortSignal }) => Promise<unknown>>()
   };
 });
 
@@ -71,6 +72,11 @@ function mountOverlay() {
   return wrapper;
 }
 
+/** The options the overlay passes to gqlClient.request for a search. */
+function searchRequest(query: string) {
+  return { document: "GLOBAL_SEARCH_QUERY", variables: { query }, signal: expect.any(AbortSignal) };
+}
+
 /**
  * Opens the overlay, types a query, waits for debounce, and returns wrapper
  * with search results rendered.
@@ -90,8 +96,8 @@ async function mountWithSearchResults(results: Record<string, unknown>[], query 
   await input.setValue(query);
   await input.trigger("input");
 
-  // Advance past the 250ms debounce
-  await vi.advanceTimersByTimeAsync(300);
+  // Advance past the 500ms debounce
+  await vi.advanceTimersByTimeAsync(550);
   await flushPromises();
   await nextTick();
 
@@ -190,8 +196,8 @@ describe("SearchOverlay", () => {
       await nextTick();
 
       expect((wrapper.find(".search-input").element as HTMLInputElement).value).toBe("hollow");
-      await vi.advanceTimersByTimeAsync(300);
-      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "hollow" });
+      await vi.advanceTimersByTimeAsync(550);
+      expect(mockRequest).toHaveBeenCalledWith(searchRequest("hollow"));
     });
 
     it("starts searching when it mounts already open (e.g. from /search)", async () => {
@@ -203,8 +209,8 @@ describe("SearchOverlay", () => {
       await nextTick();
 
       expect((wrapper.find(".search-input").element as HTMLInputElement).value).toBe("celeste");
-      await vi.advanceTimersByTimeAsync(300);
-      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "celeste" });
+      await vi.advanceTimersByTimeAsync(550);
+      expect(mockRequest).toHaveBeenCalledWith(searchRequest("celeste"));
     });
   });
 
@@ -475,11 +481,11 @@ describe("SearchOverlay", () => {
       await wrapper.find(".search-input").setValue("test");
       await wrapper.find(".search-input").trigger("input");
 
-      // debounce is 250ms, so no call should have been made yet
+      // debounce is 500ms, so no call should have been made yet
       expect(mockRequest).not.toHaveBeenCalled();
     });
 
-    it("calls the API after the 250ms debounce period", async () => {
+    it("calls the API after the 500ms debounce period", async () => {
       mockRequest.mockResolvedValueOnce({ globalSearch: { nodes: [] } });
 
       mockIsOpen.value = true;
@@ -491,7 +497,10 @@ describe("SearchOverlay", () => {
       await wrapper.find(".search-input").setValue("test");
       await wrapper.find(".search-input").trigger("input");
 
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(450);
+      expect(mockRequest).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(100);
       await flushPromises();
 
       expect(mockRequest).toHaveBeenCalledTimes(1);
@@ -510,15 +519,15 @@ describe("SearchOverlay", () => {
 
       await input.setValue("te");
       await input.trigger("input");
-      await vi.advanceTimersByTimeAsync(100);
+      await vi.advanceTimersByTimeAsync(200);
 
       await input.setValue("tes");
       await input.trigger("input");
-      await vi.advanceTimersByTimeAsync(100);
+      await vi.advanceTimersByTimeAsync(200);
 
       await input.setValue("test");
       await input.trigger("input");
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
 
       await flushPromises();
 
@@ -535,10 +544,53 @@ describe("SearchOverlay", () => {
       await wrapper.find(".search-input").setValue("a");
       await wrapper.find(".search-input").trigger("input");
 
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
       await flushPromises();
 
       expect(mockRequest).not.toHaveBeenCalled();
+    });
+
+    it("does not count surrounding spaces toward the minimum length", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      await wrapper.find(".search-input").setValue("  a ");
+      await wrapper.find(".search-input").trigger("input");
+
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(mockRequest).not.toHaveBeenCalled();
+    });
+
+    it("sends the trimmed query and skips a new search when only spaces change", async () => {
+      mockRequest.mockResolvedValue({ globalSearch: { nodes: [] } });
+
+      mockIsOpen.value = true;
+      await nextTick();
+
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+
+      await input.setValue(" halo ");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(mockRequest).toHaveBeenCalledTimes(1);
+      expect(mockRequest).toHaveBeenLastCalledWith(searchRequest("halo"));
+
+      await input.setValue("halo  ");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(mockRequest).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -578,6 +630,10 @@ describe("SearchOverlay", () => {
       await input.trigger("input");
     }
 
+    function requestSignal(call: number): AbortSignal {
+      return mockRequest.mock.calls[call][0].signal;
+    }
+
     function titles(wrapper: VueWrapper): string[] {
       return wrapper.findAll(".result-title").map((title) => title.text());
     }
@@ -589,9 +645,9 @@ describe("SearchOverlay", () => {
       const wrapper = await openAndMount();
 
       await type(wrapper, "hal");
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
       await type(wrapper, "halo");
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
       expect(mockRequest).toHaveBeenCalledTimes(2);
 
       newer.resolve({ globalSearch: { nodes: [game("2", "Halo 3")] } });
@@ -602,13 +658,50 @@ describe("SearchOverlay", () => {
       expect(titles(wrapper)).toEqual(["Halo 3"]);
     });
 
+    it("cancels the request for an older query when a newer search starts", async () => {
+      const older = deferred();
+      const newer = deferred();
+      mockRequest.mockReturnValueOnce(older.promise).mockReturnValueOnce(newer.promise);
+      const wrapper = await openAndMount();
+
+      await type(wrapper, "hal");
+      await vi.advanceTimersByTimeAsync(550);
+      const olderSignal = requestSignal(0);
+      expect(olderSignal.aborted).toBeFalsy();
+
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(550);
+      expect(olderSignal.aborted).toBeTruthy();
+      expect(requestSignal(1).aborted).toBeFalsy();
+
+      // The cancelled request rejects; that mustn't show as an error.
+      older.resolve(Promise.reject(new DOMException("The operation was aborted.", "AbortError")));
+      newer.resolve({ globalSearch: { nodes: [game("2", "Halo 3")] } });
+      await flushPromises();
+
+      expect(wrapper.find(".search-error-text").exists()).toBeFalsy();
+      expect(titles(wrapper)).toEqual(["Halo 3"]);
+    });
+
+    it("cancels the request in flight when the overlay closes", async () => {
+      mockRequest.mockReturnValueOnce(deferred().promise);
+      const wrapper = await openAndMount();
+
+      await type(wrapper, "halo");
+      await vi.advanceTimersByTimeAsync(550);
+      mockIsOpen.value = false;
+      await nextTick();
+
+      expect(requestSignal(0).aborted).toBeTruthy();
+    });
+
     it("doesn't keep a response that lands after it closes for the next search", async () => {
       const pending = deferred();
       mockRequest.mockReturnValueOnce(pending.promise);
       const wrapper = await openAndMount();
 
       await type(wrapper, "halo");
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
 
       mockIsOpen.value = false;
       await nextTick();
@@ -631,7 +724,7 @@ describe("SearchOverlay", () => {
       await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
       await flushPromises();
 
-      expect(mockRequest).toHaveBeenLastCalledWith("GLOBAL_SEARCH_QUERY", { query: "halo" });
+      expect(mockRequest).toHaveBeenLastCalledWith(searchRequest("halo"));
       expect(pushMock).toHaveBeenCalledTimes(1);
       expect(pushMock).toHaveBeenCalledWith("/games/2");
     });
@@ -642,7 +735,7 @@ describe("SearchOverlay", () => {
       mockRequest.mockReturnValueOnce(pending.promise);
 
       await type(wrapper, "halo");
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
       await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
       await flushPromises();
       expect(pushMock).not.toHaveBeenCalled();
@@ -755,7 +848,7 @@ describe("SearchOverlay", () => {
     it("searches, gates, and navigates with the same trimmed query", async () => {
       const wrapper = await mountWithSearchResults([game("7", "Portal")], " portal  ");
 
-      expect(mockRequest).toHaveBeenCalledWith("GLOBAL_SEARCH_QUERY", { query: "portal" });
+      expect(mockRequest).toHaveBeenCalledWith(searchRequest("portal"));
 
       // Results for "portal" are current for " portal  ", so Enter opens the one result.
       await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
@@ -790,7 +883,7 @@ describe("SearchOverlay", () => {
       const input = wrapper.find(".search-input");
       await input.setValue("portal");
       await input.trigger("input");
-      await vi.advanceTimersByTimeAsync(300);
+      await vi.advanceTimersByTimeAsync(550);
       await flushPromises();
 
       expect(wrapper.find(".search-error-text").text()).toBe("Search failed: query is too long");

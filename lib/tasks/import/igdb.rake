@@ -16,13 +16,15 @@ namespace :import do
   task 'igdb:covers': :environment do
     puts "This task will attach covers to any games which have IGDB IDs and no cover."
 
-    # Load the set once; it's enumerated in both the metadata-fetch and the
-    # cover-download passes below, so a relation would re-run the query each
-    # time (and .count would fire its own).
-    games = Game.includes(:cover_attachment)
-                .where(active_storage_attachments: { id: nil })
-                .where.not(igdb_id: [nil, ""])
-                .to_a
+    # Only each game's ID and IGDB slug, loaded in batches: this runs in the
+    # same container as the web server, and loading every game without a cover
+    # as a full record took hundreds of MB before any image work started. Each
+    # game's record is loaded when a worker gets to it.
+    games = []
+    Game.left_joins(:cover_attachment)
+        .where(active_storage_attachments: { id: nil })
+        .where.not(igdb_id: [nil, ""])
+        .in_batches(of: 5_000) { |batch| games.concat(batch.pluck(:id, :igdb_id)) }
 
     puts "Found #{games.count} games with an IGDB ID and no cover."
 
@@ -32,11 +34,9 @@ namespace :import do
     # Limit logging in production to allow the progress bar to work.
     Rails.logger.level = 2 if Rails.env.production?
 
-    # IGDB results indexed by slug, so the per-game lookup below is a constant
-    # time hit rather than a scan of every result fetched so far. The first
-    # result wins for any duplicated slug, matching the `Array#find` it
-    # replaces.
-    igdb_games_by_slug = {}
+    # Each IGDB cover URL, by slug. Only the URL is kept, not the rest of the
+    # API response. The first result wins for any duplicated slug.
+    cover_urls_by_slug = {}
 
     puts "Getting game information from IGDB..."
 
@@ -50,8 +50,13 @@ namespace :import do
       format: "\e[0;32m%c/%C |%b>%i| %e\e[0m"
     )
 
-    games.in_groups_of(50, false) do |game_batch|
-      slugs = game_batch.pluck(:igdb_id)
+    games.in_groups_of(50, false).each_with_index do |game_batch, batch_index|
+      # Wait between batches to prevent the rate limiter from killing us. Not
+      # before the first one, and not after the last, which would just delay
+      # the download pass.
+      sleep 1 unless batch_index.zero?
+
+      slugs = game_batch.map(&:second)
 
       # This format is called APIcalypse and is specific to IGDB.
       # API Docs: https://api-docs.igdb.com/#game
@@ -83,16 +88,12 @@ namespace :import do
       end
 
       igdb_response.compact.each do |igdb_game|
-        slug = igdb_game['slug']
-        igdb_games_by_slug[slug] = igdb_game unless igdb_games_by_slug.key?(slug)
+        cover_urls_by_slug[igdb_game['slug']] ||= igdb_game.dig('cover', 'url')
       end
 
       # Advance by the number of games in this batch (the last group may be
       # smaller than 50).
       fetch_progress_bar.progress += game_batch.size
-
-      # Sleep to prevent the rate limiter from killing us.
-      sleep 1
     end
 
     fetch_progress_bar.finish unless fetch_progress_bar.finished?
@@ -100,10 +101,10 @@ namespace :import do
     # The fetch pass has told us which games IGDB actually returned a cover for;
     # drop the rest before the download pass. There's nothing to do for a game
     # with no IGDB cover, so keeping it only skews the progress bar's ETA and
-    # holds its record in memory. Reassigning games to the filtered subset lets
-    # the unmatched records be collected and removes the per-iteration nil check.
+    # holds it in memory. Reassigning games to the filtered subset lets the
+    # unmatched ones be collected and removes the per-iteration nil check.
     games_found_count = games.count
-    games = games.select { |game| igdb_games_by_slug.key?(game[:igdb_id]) }
+    games = games.select { |_id, slug| cover_urls_by_slug.key?(slug) }
     # Seed with the games IGDB had no cover for, so the final tally still counts
     # them; download errors add to it below.
     cover_not_found_or_errored_count = games_found_count - games.count
@@ -113,8 +114,10 @@ namespace :import do
     # several games are worked on at once. Set CONCURRENCY to change how many.
     # Each worker holds a database connection, and the pool defaults to
     # RAILS_MAX_THREADS (sized for Puma), so make sure it's big enough.
-    # Capped at 8, IGDB's limit on open requests.
-    concurrency = ENV.fetch('CONCURRENCY', 4).to_i.clamp(1, 8)
+    # Capped at 8, IGDB's limit on open requests. Defaults to 2 because this
+    # usually runs in the web server's container, and every worker resizing
+    # covers competes with it for CPU and memory.
+    concurrency = ENV.fetch('CONCURRENCY', 2).to_i.clamp(1, 8)
     db_config = ActiveRecord::Base.connection_db_config.configuration_hash
     pool_size = concurrency + 1
     ActiveRecord::Base.establish_connection(db_config.merge(pool: pool_size)) if db_config.fetch(:pool, 5).to_i < pool_size
@@ -140,21 +143,137 @@ namespace :import do
       sleep delay if delay.positive?
     end
 
+    # Break the save and sizes steps down further, so a slow run shows whether
+    # the time goes to validation (the content type spoofing check spawns the
+    # `file` command), the database, or R2. Each worker collects its own
+    # numbers in a thread-local hash while a step runs.
+    add_to_breakdown = lambda do |key, seconds, count_key = nil|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      next if breakdown.nil?
+
+      breakdown[key] += seconds
+      breakdown[count_key] += 1 if count_key
+    end
+    breakdown_subscribers = [
+      ActiveSupport::Notifications.subscribe('sql.active_record') do |event|
+        add_to_breakdown.call(:sql, event.duration / 1000.0, :queries) unless event.payload[:name] == 'SCHEMA'
+      end,
+      ActiveSupport::Notifications.subscribe('service_upload.active_storage') do |event|
+        add_to_breakdown.call(:upload, event.duration / 1000.0)
+      end,
+      ActiveSupport::Notifications.subscribe('analyze.active_storage_validations') do |event|
+        add_to_breakdown.call(:spoof, event.duration / 1000.0)
+      end
+    ]
+    # There's no notification for running a model's validations, so time them
+    # with a before/after pair of Game validation callbacks, which are removed
+    # once the task is done. Queries run by the validations count towards
+    # `validate`, not `sql`, so the parts add up to the step's total.
+    validation_started = lambda do |_game|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      next if breakdown.nil?
+
+      Thread.current[:igdb_cover_validation_start] = [
+        Process.clock_gettime(Process::CLOCK_MONOTONIC),
+        breakdown[:sql],
+        breakdown[:queries]
+      ]
+    end
+    validation_finished = lambda do |_game|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      started, sql_before, queries_before = Thread.current[:igdb_cover_validation_start]
+      next if breakdown.nil? || started.nil?
+
+      Thread.current[:igdb_cover_validation_start] = nil
+      breakdown[:validate] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+      breakdown[:sql] = sql_before
+      breakdown[:queries] = queries_before
+    end
+    Game.before_validation(validation_started)
+    Game.after_validation(validation_finished)
+
+    # Time the image work for each size: decoding the original, resizing it
+    # and encoding the result. `transform.active_storage` also wraps the
+    # block that saves the variant, so the SQL and upload that happen inside
+    # it (already counted by the subscribers above) are taken back out. What's
+    # left also includes building the variant record, which is negligible.
+    # Like `validate`, the time includes any wait for the CPU or the GVL.
+    transform_timer = Object.new
+    transform_timer.define_singleton_method(:start) do |_name, _id, _payload|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      next if breakdown.nil?
+
+      Thread.current[:igdb_cover_transform_start] = [
+        Process.clock_gettime(Process::CLOCK_MONOTONIC),
+        breakdown[:sql] + breakdown[:upload]
+      ]
+    end
+    transform_timer.define_singleton_method(:finish) do |_name, _id, _payload|
+      breakdown = Thread.current[:igdb_cover_breakdown]
+      started, nested_before = Thread.current[:igdb_cover_transform_start]
+      next if breakdown.nil? || started.nil?
+
+      Thread.current[:igdb_cover_transform_start] = nil
+      nested = breakdown[:sql] + breakdown[:upload] - nested_before
+      breakdown[:transform] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started - nested
+    end
+    breakdown_subscribers << ActiveSupport::Notifications.subscribe('transform.active_storage', transform_timer)
+
     # Attach one game's cover and create its variants.
     #
     # Returns [added, messages]: whether the cover was added, and the lines to
     # log for it.
-    attach_cover = lambda do |game|
+    attach_cover = lambda do |game, cover_url|
       label = game[:name].ljust(40)
-      # Every remaining game has an IGDB cover (filtered above).
-      igdb_game = igdb_games_by_slug[game[:igdb_id]]
+      # How long each step took, logged with the result so a slow run shows
+      # where the time goes.
+      timings = {}
+      breakdowns = {}
+      # The CPU time each step used on this worker's thread, next to how long
+      # it took: a step that takes long but uses little CPU is waiting (on the
+      # network, the database, or for its turn on the CPU or the GVL). It
+      # doesn't include libvips's own worker threads.
+      cpu_times = {}
+      # Ruby's GC time and collections while this cover was worked on. They
+      # are for the whole process, so they include the other workers' too.
+      gc_before = GC.stat.slice(:time, :major_gc_count, :minor_gc_count)
+      timed = lambda do |step, &block|
+        Thread.current[:igdb_cover_breakdown] = Hash.new(0)
+        started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        cpu_started = Process.clock_gettime(Process::CLOCK_THREAD_CPUTIME_ID)
+        block.call
+      ensure
+        timings[step] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+        cpu_times[step] = Process.clock_gettime(Process::CLOCK_THREAD_CPUTIME_ID) - cpu_started
+        breakdowns[step] = Thread.current[:igdb_cover_breakdown]
+        Thread.current[:igdb_cover_breakdown] = nil
+      end
+      # e.g. "save 7.48s (cpu 0.5s) [validate 3.1s (spoof check 2.9s), sql 0.4s/9, upload 0.6s, other 3.38s], gc 0.2s (1 major, 4 minor)"
+      timings_text = lambda do
+        gc = GC.stat.slice(:time, :major_gc_count, :minor_gc_count).to_h { |key, value| [key, value - gc_before[key]] }
+        gc_text = "gc #{(gc[:time] / 1000.0).round(2)}s (#{gc[:major_gc_count]} major, #{gc[:minor_gc_count]} minor)"
 
+        steps = timings.map do |step, seconds|
+          text = "#{step} #{seconds.round(2)}s (cpu #{cpu_times[step].round(2)}s)"
+          b = breakdowns[step]
+          next text if b.blank?
+
+          parts = []
+          parts << "validate #{b[:validate].round(2)}s (spoof check #{b[:spoof].round(2)}s)" if b.key?(:validate)
+          parts << "sql #{b[:sql].round(2)}s/#{b[:queries]}" if b.key?(:sql)
+          parts << "upload #{b[:upload].round(2)}s" if b.key?(:upload)
+          parts << "transform #{b[:transform].round(2)}s" if b.key?(:transform)
+          parts << "other #{(seconds - b[:validate] - b[:sql] - b[:upload] - b[:transform]).round(2)}s"
+          "#{text} [#{parts.join(', ')}]"
+        end
+        (steps << gc_text).join(', ')
+      end
       # The cover URL comes out of the IGDB API response, so it's fetched
       # through RemoteImageFetcher, which refuses non-public addresses. This
       # also catches the case where the cover image doesn't actually exist.
       begin
-        wait_for_turn.call
-        cover = RemoteImageFetcher.fetch(igdb_game.dig('cover', 'url'))
+        timed.call(:wait) { wait_for_turn.call }
+        cover = timed.call(:download) { RemoteImageFetcher.fetch(cover_url) }
       rescue RemoteImageFetcher::Error => e
         next [false, ["#{label} | Error: #{e}"]]
       end
@@ -172,12 +291,21 @@ namespace :import do
           {}
         end
 
+        # This task creates the cover's sizes itself (below), so attaching it
+        # shouldn't also enqueue a TransformJob for each one. Those would run
+        # on the async adapter in this same process, competing with the
+        # workers for the CPU, and any that ran before a worker saved its size
+        # would download the original from R2 and resize it again.
+        game.skip_cover_preprocessing = true
+
         # Call the cover file "123_from_igdb.jpg", where 123 is the vglist game ID.
-        game.cover.attach(
-          io: cover.io,
-          filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
-          metadata: metadata
-        )
+        timed.call(:save) do
+          game.cover.attach(
+            io: cover.io,
+            filename: "#{game.id}_from_igdb.#{cover.extension.presence || 'jpg'}",
+            metadata: metadata
+          )
+        end
 
         # If the cover has any errors, they'll show up on the `Game` record.
         errors = game.errors.full_messages.map { |msg| "#{label} | Cover could not be added: #{msg}" }
@@ -188,30 +316,47 @@ namespace :import do
         next [false, ["#{label} | Cover could not be added."]] if game.reload.cover.blank?
 
         # Create each size of the cover now, from the file we already have,
-        # rather than leaving it to the TransformJobs `preprocessed: true`
-        # queues: those run on the async adapter in this process and are
-        # dropped if the task exits first. When they do run, they find the
-        # variants already exist and do nothing.
-        VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io)
+        # rather than leaving it to TransformJobs (skipped above): those would
+        # download the original again, and run on the async adapter in this
+        # process, which drops them if the task exits first. A cover libvips
+        # can't resize is still added, so one bad image doesn't stop the whole
+        # import; ReadyVariant serves the original until its sizes exist.
+        begin
+          timed.call(:sizes) { VariantBackfillService.new(game.cover, Game::COVER_SIZES.keys).call(original: cover.io) }
+        rescue *VariantBackfillService::SKIPPABLE_ERRORS => e
+          next [true, ["#{label} | Cover added, but its sizes could not be created: #{e.message}"]]
+        end
       ensure
         cover.close
       end
 
-      [true, ["#{label} | Cover added successfully."]]
+      [true, ["#{label} | Cover added successfully (#{timings_text.call})."]]
     end
 
     queue = Queue.new
-    games.each { |game| queue << game }
+    games.each { |pair| queue << pair }
     queue.close
     lock = Mutex.new
+
+    # Totals for the download pass, printed at the end. Process CPU time
+    # includes every thread (libvips's too), and Ruby's GC time is part of it.
+    pass_started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    pass_cpu_started = Process.clock_gettime(Process::CLOCK_PROCESS_CPUTIME_ID)
+    pass_gc_before = GC.stat.slice(:time, :major_gc_count, :minor_gc_count)
 
     workers = Array.new(concurrency) do
       Thread.new do
         # PaperTrail's whodunnit is per thread.
         PaperTrail.request.whodunnit = 'system'
 
-        while (game = queue.pop)
-          added, messages = Rails.application.executor.wrap { attach_cover.call(game) }
+        while (pair = queue.pop)
+          game_id, slug = pair
+          added, messages = Rails.application.executor.wrap do
+            # Loaded now rather than up front (see above). A game deleted since
+            # the list was made is skipped.
+            game = Game.find_by(id: game_id)
+            game.nil? ? [false, ["Game #{game_id} | Skipped: it no longer exists."]] : attach_cover.call(game, cover_urls_by_slug.fetch(slug))
+          end
 
           lock.synchronize do
             messages.each { |msg| progress_bar.log msg }
@@ -226,6 +371,12 @@ namespace :import do
       end
     end
     workers.each(&:join)
+    pass_seconds = Process.clock_gettime(Process::CLOCK_MONOTONIC) - pass_started_at
+    pass_cpu = Process.clock_gettime(Process::CLOCK_PROCESS_CPUTIME_ID) - pass_cpu_started
+    pass_gc = GC.stat.slice(:time, :major_gc_count, :minor_gc_count).to_h { |key, value| [key, value - pass_gc_before[key]] }
+    breakdown_subscribers.each { |subscriber| ActiveSupport::Notifications.unsubscribe(subscriber) }
+    Game.skip_callback(:validation, :before, validation_started)
+    Game.skip_callback(:validation, :after, validation_finished)
 
     progress_bar.finish unless progress_bar.finished?
 
@@ -233,6 +384,10 @@ namespace :import do
     puts
     puts "Done. #{games_with_covers.count} games now have covers."
     puts "#{cover_added_count} covers added and #{cover_not_found_or_errored_count} covers not found or failed to upload."
+    processed = [games.count, 1].max
+    puts "Download pass: #{games.count} games in #{pass_seconds.round(1)}s, using #{pass_cpu.round(1)}s of CPU " \
+         "(#{(pass_cpu / processed).round(2)}s per game), #{(pass_gc[:time] / 1000.0).round(1)}s of it in GC " \
+         "(#{pass_gc[:major_gc_count]} major and #{pass_gc[:minor_gc_count]} minor collections)."
   end
 
   # SPARQL query for getting all video games with IGDB IDs on Wikidata.

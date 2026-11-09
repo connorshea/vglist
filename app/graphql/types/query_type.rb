@@ -7,6 +7,7 @@ module Types
     field :game, resolver: Resolvers::GameResolvers::GameResolver
     field :games, resolver: Resolvers::GameResolvers::ListResolver
     field :game_search, resolver: Resolvers::GameResolvers::SearchResolver
+    field :new_releases, resolver: Resolvers::GameResolvers::NewReleasesResolver
 
     field :series, resolver: Resolvers::SeriesResolvers::SeriesResolver
     field :series_list, resolver: Resolvers::SeriesResolvers::ListResolver

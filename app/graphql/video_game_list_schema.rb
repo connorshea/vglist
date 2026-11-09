@@ -36,10 +36,10 @@ class VideoGameListSchema < GraphQL::Schema
 
   # Stop resolving fields once a query has run for this long. Fields that
   # haven't resolved yet return null with an error. Mutations are exempt, see
-  # QueryTimeout. This complements the Postgres statement timeout set in
-  # GraphqlController, which catches a single slow statement, whereas this
+  # QueryTimeout. This complements the Postgres statement timeout set
+  # per connection in config/database.yml, which catches a single slow statement, whereas this
   # catches many fast ones.
-  use QueryTimeout, max_seconds: 10
+  use QueryTimeout, max_seconds: 30
 
   # Batches `Game.ownerCount` into one query per response.
   lazy_resolve(LazyOwnerCount, :value)
@@ -48,8 +48,14 @@ class VideoGameListSchema < GraphQL::Schema
   # Batches the second user's purchases in a library comparison.
   lazy_resolve(LazyGamePurchase, :value)
 
-  # A statement cancelled by the statement timeout (see GraphqlController).
-  rescue_from(ActiveRecord::QueryCanceled) do |_err, _obj, _args, _ctx, _field|
+  # A statement cancelled by the statement timeout (see config/database.yml).
+  rescue_from(ActiveRecord::QueryCanceled) do |err, _obj, _args, ctx, field|
+    GraphqlTimeoutReport.capture(
+      ctx&.query,
+      kind: :statement_timeout,
+      message: "Statement cancelled#{" in #{field.path}" if field}",
+      exception: err
+    )
     raise GraphQL::ExecutionError, "This request took too long and was cancelled."
   end
 

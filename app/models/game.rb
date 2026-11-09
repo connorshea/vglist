@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Game < ApplicationRecord
+  include CachedRowCount
   include GlobalSearchable
   include Searchable
 
@@ -34,7 +35,7 @@ class Game < ApplicationRecord
     through: :favorites,
     source: :user
 
-  belongs_to :series, optional: true
+  belongs_to :series, optional: true, counter_cache: :games_count
 
   # Only use one of the pre-set sizes for these images.
   COVER_SIZES = {
@@ -43,19 +44,29 @@ class Game < ApplicationRecord
     large: [500, 800]
   }.freeze
 
-  # `preprocessed: true` enqueues an ActiveStorage::TransformJob for each
-  # variant as soon as a cover is attached, so the first page to show a new
-  # cover doesn't have to download, resize, and upload it mid-request.
+  # Preprocessing enqueues an ActiveStorage::TransformJob for each variant as
+  # soon as a cover is attached, so the first page to show a new cover doesn't
+  # have to download, resize, and upload it mid-request.
   has_one_attached :cover do |attachable|
-    attachable.variant :small, resize_to_limit: COVER_SIZES[:small], preprocessed: true
-    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium], preprocessed: true
-    attachable.variant :large, resize_to_limit: COVER_SIZES[:large], preprocessed: true
+    attachable.variant :small, resize_to_limit: COVER_SIZES[:small], preprocessed: :preprocess_cover_variants?
+    attachable.variant :medium, resize_to_limit: COVER_SIZES[:medium], preprocessed: :preprocess_cover_variants?
+    attachable.variant :large, resize_to_limit: COVER_SIZES[:large], preprocessed: :preprocess_cover_variants?
+  end
+
+  # Set to true before attaching a cover whose sizes the caller creates
+  # itself (e.g. with VariantBackfillService, from the file it already has),
+  # so attaching it doesn't also enqueue a TransformJob for each size.
+  attr_accessor :skip_cover_preprocessing
+
+  def preprocess_cover_variants?
+    !skip_cover_preprocessing
   end
 
   # Use PaperTrail to track changes to the record.
 
-  # Track changes to the record, but ignore changes to the average rating.
-  has_paper_trail ignore: [:avg_rating, :updated_at, :created_at],
+  # Track changes to the record, but ignore changes to the average rating
+  # and its count.
+  has_paper_trail ignore: [:avg_rating, :ratings_count, :updated_at, :created_at],
                   versions: {
                     class_name: 'Versions::GameVersion'
                   }
@@ -67,16 +78,15 @@ class Game < ApplicationRecord
   scope :oldest, -> { order(created_at: :asc, id: :asc) }
   scope :recently_updated, -> { order(updated_at: :desc, id: :desc) }
   scope :least_recently_updated, -> { order(updated_at: :asc, id: :asc) }
-  # Sort by average rating.
-  # Must have at least 5 owners w/ ratings to be included.
-  # Also check that the avg_rating column isn't nil to preven[t weirdness in
-  # certain cases where the game record becomes invalid.
+  # Sort by average rating. Only games with at least 5 ratings are listed,
+  # so a single rating can't put a game at the top. Reads the ratings_count
+  # column (kept up to date with avg_rating) rather than counting every
+  # game's ratings per query, and is backed by a partial index on
+  # (avg_rating, id). Games with no avg_rating are skipped too, in case a
+  # game record ends up invalid.
   scope :highest_avg_rating, -> {
-    joins(:game_purchases)
-      .where.not('game_purchases.rating': nil)
-      .where.not('games.avg_rating': nil)
-      .group('games.id')
-      .having("count(game_purchases.id) >= ?", 5)
+    where(ratings_count: 5..)
+      .where.not(avg_rating: nil)
       .order(avg_rating: :desc, id: :desc)
   }
   # Sort by most favorites.
@@ -171,9 +181,10 @@ class Game < ApplicationRecord
   validates :giantbomb_id,
     uniqueness: true,
     allow_nil: true,
-    # Validate that it's in a format like 3030-1539.
-    format: /\A\d{4}-\d+\z/,
-    length: { maximum: 100 }
+    # A Giant Bomb Wiki page title like "Games/Portal_2" (Wikidata P14470).
+    format: %r{\AGames/\S+\z},
+    # MediaWiki titles are at most 255 bytes, plus the "Games/" namespace.
+    length: { maximum: 300 }
 
   validates :epic_games_store_id,
     uniqueness: true,
@@ -207,6 +218,17 @@ class Game < ApplicationRecord
   #   Something that responds to `url`, or nil if there's no cover.
   def sized_cover(size)
     ReadyVariant.for(cover, size)
+  end
+
+  # Recalculate the average rating and how many ratings it's based on (which
+  # Game.highest_avg_rating filters on) from the game's library entries.
+  # With no ratings, the average is nil. Called after every library entry
+  # change, and after a merge moves another game's entries onto this one.
+  # @return [Boolean] Whether the game saved.
+  def update_ratings
+    count, average = game_purchases.where.not(rating: nil)
+                                   .pick(Arel.sql('count(*)'), Arel.sql('avg(rating)'))
+    update(avg_rating: average&.round(1), ratings_count: count)
   end
 
   protected

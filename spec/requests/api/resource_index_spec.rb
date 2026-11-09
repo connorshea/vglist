@@ -143,6 +143,23 @@ RSpec.describe "Resource index API", type: :request do
       )
     end
 
+    it "gives the same games for records big enough to walk the most-owned index" do
+      games = Array.new(5) { |i| create(:game, :cover, name: "Game #{i}") }
+      games.each { |game| create(:game_genre, game: game, genre: genre) }
+      create(:game_genre, game: create(:game, name: "No cover"), genre: genre)
+      create_list(:game_purchase, 2, game: games[3])
+      create(:game_purchase, game: games[1])
+      small = create(:genre, name: "Small")
+      create(:game_genre, game: games[4], genre: small)
+      # Action has 6 games, Small has 1: one of each kind in the same batch.
+      stub_const("LazyCoverGames::WALK_THRESHOLD", 2)
+
+      expect(cover_game_names).to eq(
+        "Action" => ["Game 3", "Game 1", "Game 0", "Game 2"],
+        "Small" => ["Game 4"]
+      )
+    end
+
     it "runs no more queries as the list grows" do
       create(:game_genre, game: create(:game, :cover), genre: genre)
       # The first request generates the cover variants, which writes records
@@ -174,6 +191,22 @@ RSpec.describe "Resource index API", type: :request do
       create(:game_publisher, company: company, game: create(:game, :cover, name: "Published"))
 
       expect(covers(:companies)).to eq("Valve" => ["Both", "Published"])
+    end
+
+    it "uses the same company games when the company is big enough to walk the most-owned index" do
+      company = create(:company, name: "Valve")
+      both = create(:game, :cover, name: "Both")
+      create(:game_developer, company: company, game: both)
+      create(:game_publisher, company: company, game: both)
+      create(:game_purchase, game: both)
+      create(:game_publisher, company: company, game: create(:game, :cover, name: "Published"))
+      stub_const("LazyCoverGames::WALK_THRESHOLD", 2)
+
+      # The company's count is only loaded when the list asks for it.
+      query = "query { companies(sortBy: NAME) { nodes { name gamesCount coverGames { name } } } }"
+      nodes = api_request(query, token: access_token).graphql_dig(:companies, :nodes)
+
+      expect(nodes.map { |node| [node[:gamesCount], node[:coverGames].pluck(:name)] }).to eq([[2, ["Both", "Published"]]])
     end
 
     it "uses games built with an engine" do

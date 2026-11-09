@@ -1,0 +1,268 @@
+name: Deploy
+
+# Deploys a commit's prebuilt images (pushed to GHCR by the Docker workflow)
+# to DigitalOcean App Platform. Never automatic. Two ways to start it:
+#
+#   - From the Docker workflow run for a push to main: once its images are
+#     pushed, its approve-deploy job waits for a reviewer of the
+#     `production-approval` environment. Approving it ("Review deployments"
+#     on the run page) runs this workflow for that commit. A newer merge
+#     replaces the waiting approval, and a run whose commit is no longer
+#     main's head skips it, so only main's latest commit waits.
+#   - Manually: Actions > Deploy > Run workflow, or `gh workflow run
+#     deploy.yml` (add `-f ref=<sha>` to pick a commit, which also works as
+#     a rollback).
+#
+# It points api, migrate, update-stats and frontend at that commit's image
+# digests and waits for the rollout; the migrate PRE_DEPLOY job runs first, as
+# before. It starts from the live app spec, so the encrypted secret values
+# there are kept and only the image digests change. Changes to .do/app.yaml
+# itself still need `doctl apps update`, which redeploys `:main` (see the
+# note at the top of that file).
+#
+# Only commits on main can be deployed, and only images the Docker workflow
+# built and attested on main (see "Verify image provenance"). Images pushed
+# before docker.yml started attesting them can't be deployed by this workflow.
+#
+# Setup (once): a `production-approval` environment limited to the main
+# branch with yourself as a required reviewer (no secrets), and a
+# `production` environment (Settings > Environments) limited
+# to the main branch, holding DIGITALOCEAN_ACCESS_TOKEN: a DO API token with
+# the app:read, app:update and database:read scopes (updating an app with an
+# attached database cluster checks database:read). Optionally a SENTRY_AUTH_TOKEN repo secret
+# (a Sentry org token) to finalize the Sentry release after each deploy.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit SHA or branch to deploy. Its images must already be built by the Docker workflow.
+        required: true
+        default: main
+      skip_ci_check:
+        description: Deploy even if the commit's CI run hasn't passed. Emergencies only.
+        type: boolean
+        default: false
+
+permissions: {}
+
+env:
+  API_IMAGE: ghcr.io/connorshea/vglist-api
+  FRONTEND_IMAGE: ghcr.io/connorshea/vglist-frontend
+  APP_NAME: vglist
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # app_action polls until the rollout ends and the app has a live URL, with
+    # no limit of its own. Without this a stuck rollout holds the
+    # deploy-production lock for GitHub's 6-hour default.
+    timeout-minutes: 30
+    # One deploy at a time. A deploy that's already running finishes first.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: read
+      actions: read
+      attestations: read
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    environment:
+      name: production
+      url: https://vglist.co
+    steps:
+      - name: Resolve commit
+        id: commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          sha="$(gh api "repos/$GITHUB_REPOSITORY/commits/$REF" --jq .sha)"
+          # The environment's branch policy only covers the ref this workflow
+          # runs from, not the commit it deploys, so check that separately.
+          # "behind": the commit is an ancestor of main.
+          status="$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$sha" --jq .status)"
+          if [ "$status" != "identical" ] && [ "$status" != "behind" ]; then
+            echo "::error::$sha isn't on main (compared to main it's $status). Only commits on main can be deployed."
+            exit 1
+          fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "Deploying $sha" >> "$GITHUB_STEP_SUMMARY"
+
+      # The Docker workflow pushes images once its own smoke tests pass, even
+      # if RSpec or lint failed in CI, so check CI before deploying. A
+      # rerun counts: a run's conclusion is its latest attempt's. Runs are
+      # matched by workflow file and branch, not name, so a run of an edited
+      # copy on another branch doesn't count. A deploy approved from the
+      # Docker run can start before CI finishes, so wait for it (up to 20
+      # minutes). The Docker workflow itself is covered by "Verify image
+      # provenance": only its push jobs, after the smoke tests pass, attest
+      # images.
+      - name: Check CI passed
+        if: ${{ !inputs.skip_ci_check }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          for _ in $(seq 1 40); do
+            runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$SHA&event=push&branch=main&per_page=100")"
+            # Newest CI run for this commit.
+            result="$(jq -r \
+              '[.workflow_runs[] | select(.path == ".github/workflows/ci.yml" and .head_branch == "main")] | sort_by(.created_at) | last
+               | if . == null then "missing" else "\(.status)/\(.conclusion // "none")" end' <<<"$runs")"
+            case "$result" in
+              missing|completed/*) break ;;
+            esac
+            echo "ci: $result, waiting for it to finish"
+            sleep 30
+          done
+          echo "ci: $result"
+          if [ "$result" != "completed/success" ]; then
+            echo "::error::The CI workflow hasn't passed for $SHA ($result). Wait for it, fix it, or rerun with skip_ci_check for an emergency deploy."
+            exit 1
+          fi
+
+      - name: Log in to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Look up image digests
+        id: digests
+        env:
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          for name in api frontend; do
+            if [ "$name" = api ]; then image="$API_IMAGE"; else image="$FRONTEND_IMAGE"; fi
+            if ! digest="$(docker buildx imagetools inspect "$image:$SHA" --format '{{json .Manifest}}' | jq -er .digest)"; then
+              echo "::error::No $image:$SHA image. Images are only pushed for commits on main; if this one just merged, wait for its Docker workflow run to finish."
+              exit 1
+            fi
+            echo "$name=$digest" >> "$GITHUB_OUTPUT"
+            echo "- $image@$digest" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      # Anything that can write to the GHCR packages could have replaced the
+      # SHA tag, so check each digest was built and attested by docker.yml,
+      # running on GitHub-hosted runners for a push to main, from this
+      # commit. Not skippable: skip_ci_check only covers the CI check.
+      - name: Verify image provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.commit.outputs.sha }}
+          API_DIGEST: ${{ steps.digests.outputs.api }}
+          FRONTEND_DIGEST: ${{ steps.digests.outputs.frontend }}
+        run: |
+          set -euo pipefail
+          for ref in "$API_IMAGE@$API_DIGEST" "$FRONTEND_IMAGE@$FRONTEND_DIGEST"; do
+            if ! gh attestation verify "oci://$ref" \
+              --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/docker.yml" \
+              --source-ref refs/heads/main \
+              --source-digest "$SHA" \
+              --deny-self-hosted-runners > /dev/null; then
+              echo "::error::$ref has no valid provenance attestation from docker.yml on main for $SHA."
+              exit 1
+            fi
+            echo "Verified $ref"
+          done
+
+      # app_action only swaps digests on components that are already image
+      # sources; a GitHub-sourced one would be rebuilt from its branch instead.
+      # And a GIT_COMMIT_SHA env in the spec (the old ${_self.COMMIT_HASH},
+      # empty for images) overrides the SHA baked into the API image.
+      - name: Check the live app spec
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          problems="$(curl -fsS -H "Authorization: Bearer $DIGITALOCEAN_ACCESS_TOKEN" \
+            "https://api.digitalocean.com/v2/apps?per_page=200" \
+            | jq -r --arg name "$APP_NAME" '
+              [.apps[]? | select(.spec.name == $name)] as $apps
+              | if ($apps | length) != 1 then
+                  "Expected one app named \($name), found \($apps | length)."
+                else
+                  $apps[0].spec as $spec
+                  | [($spec.services // [])[], ($spec.jobs // [])[], ($spec.workers // [])[]] as $components
+                  | ($components[] | select(.image == null)
+                      | "\(.name) is not an image source. Apply .do/app.yaml with doctl apps update first."),
+                    (($spec.envs // [])[] | select(.key == "GIT_COMMIT_SHA")
+                      | "The app-level GIT_COMMIT_SHA env would override the one baked into the image. Remove it from the spec."),
+                    ($components[] | .name as $c | (.envs // [])[] | select(.key == "GIT_COMMIT_SHA")
+                      | "The GIT_COMMIT_SHA env on \($c) would override the one baked into the image. Remove it from the spec.")
+                end')"
+          if [ -n "$problems" ]; then
+            while IFS= read -r line; do echo "::error::$line"; done <<<"$problems"
+            exit 1
+          fi
+          echo "Live spec OK"
+
+      - name: Deploy to App Platform
+        uses: digitalocean/app_action/deploy@cc55bc9b848d25f9c1c9f831cf843fbab3fbfb15 # v2.0.11
+        env:
+          IMAGE_DIGEST_API: ${{ steps.digests.outputs.api }}
+          IMAGE_DIGEST_MIGRATE: ${{ steps.digests.outputs.api }}
+          IMAGE_DIGEST_UPDATE_STATS: ${{ steps.digests.outputs.api }}
+          IMAGE_DIGEST_FRONTEND: ${{ steps.digests.outputs.frontend }}
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          app_name: ${{ env.APP_NAME }}
+
+  # Tells Sentry about the deploy: creates the release in both projects if
+  # the build hasn't already, attaches the commits since the previous
+  # release (needs Sentry's GitHub integration for connorshea/vglist),
+  # finalizes it, and records a production deploy. That's what makes
+  # "resolved in next release", regression detection and suspect commits
+  # work. The app is already live by now, so a Sentry problem only warns.
+  # It's a separate job so the Sentry action and the sentry-cli it downloads never
+  # run on the machine that held the DigitalOcean token.
+  sentry:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check for a Sentry token
+        id: sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          if [ -n "$SENTRY_AUTH_TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::SENTRY_AUTH_TOKEN isn't set, so the Sentry release wasn't finalized."
+          fi
+
+      # set_commits needs the history back to the previous release.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.sentry.outputs.enabled == 'true'
+        with:
+          ref: ${{ needs.deploy.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Finalize the Sentry release
+        if: steps.sentry.outputs.enabled == 'true'
+        continue-on-error: true
+        uses: getsentry/action-release@e6703d0b00208e0b3687ba660d18ab5af7892821 # v3.7.2
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: vglist
+        with:
+          release: ${{ needs.deploy.outputs.sha }}
+          projects: vglist-backend vglist-frontend
+          environment: production
+          set_commits: auto
+          # The first release has no previous one to diff against.
+          ignore_missing: true
+          finalize: true
+          disable_telemetry: true

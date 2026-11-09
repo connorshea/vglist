@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - Ruby 4.0
-- Postgres 17.x
+- Postgres 18.x
 - Node.js 24.x
 - pnpm
 - libvips (for images, like avatars or game covers)
@@ -13,7 +13,7 @@
 ### Setup instructions
 
 1. Clone the repository with git
-1. To get Bundler 4.0.15, `gem install bundler:4.0.15`
+1. To get Bundler 4.0.24, `gem install bundler:4.0.24`
 1. `bundle install`
 1. `pnpm --dir frontend install`
 1. `bundle exec rails db:setup`

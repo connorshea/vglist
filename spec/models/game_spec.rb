@@ -64,21 +64,22 @@ RSpec.describe Game, type: :model do
     end
 
     it { should validate_uniqueness_of(:giantbomb_id).allow_nil }
-    it { should validate_length_of(:giantbomb_id).is_at_most(100) }
+    it { should validate_length_of(:giantbomb_id).is_at_most(300) }
 
     it 'allows valid Giant Bomb IDs' do
       expect(game).to allow_values(
-        '3030-1539',
-        '3025-953',
-        '3030-7110'
+        'Games/Portal_2',
+        'Games/Castlevania_Circle_of_the_Moon',
+        'Games/Half-Life_2'
       ).for(:giantbomb_id)
     end
 
     it 'disallows invalid Giant Bomb IDs' do
       expect(game).not_to allow_values(
-        '30301539',
-        '1-1234',
-        '1234-'
+        '3030-1539',
+        'Portal_2',
+        'Games/',
+        'Games/Portal 2'
       ).for(:giantbomb_id)
     end
 
@@ -357,6 +358,18 @@ RSpec.describe Game, type: :model do
 
       it "return the two non-nil games in proper order" do
         expect(Game.highest_avg_rating).to eq([game2, game1])
+      end
+    end
+
+    context 'when sorting by average rating with a game that has fewer than five ratings' do
+      it 'leaves that game out' do
+        rated = create(:game)
+        create_list(:game_purchase, 5, game: rated, rating: 40)
+        barely_rated = create(:game)
+        create_list(:game_purchase, 4, game: barely_rated, rating: 90)
+        create(:game_purchase, game: barely_rated, rating: nil)
+
+        expect(Game.highest_avg_rating).to eq([rated])
       end
     end
 

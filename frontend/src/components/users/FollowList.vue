@@ -27,9 +27,20 @@
         :size="64"
       />
     </div>
+    <template v-else-if="loading">
+      <p class="is-sr-only" role="status">Loading {{ kind }}…</p>
+      <div class="follow-grid" aria-hidden="true">
+        <UserCardSkeleton
+          v-for="card in SKELETON_CARDS"
+          :key="card"
+          :size="64"
+          :meta="false"
+          :name-width="skeletonNameWidth(card)"
+        />
+      </div>
+    </template>
     <div v-else class="follow-empty" role="status">
-      <p v-if="loading">Loading…</p>
-      <p v-else-if="error">{{ error.message }}</p>
+      <p v-if="error">{{ error.message }}</p>
       <p v-else-if="page > 1">
         There's nothing on page {{ page }}.
         <router-link :to="{ query: {} }">Go to the first page</router-link>
@@ -55,6 +66,7 @@
 import { computed } from "vue";
 import { useUserProfile } from "@/composables/useUserProfile";
 import UserCard from "@/components/UserCard.vue";
+import UserCardSkeleton from "@/components/UserCardSkeleton.vue";
 import PaginationNav from "@/components/PaginationNav.vue";
 import type { FollowListUser } from "@/composables/useFollowList";
 
@@ -73,6 +85,15 @@ const emit = defineEmits<{
 
 const { user } = useUserProfile();
 const slug = computed(() => user.value?.slug ?? "");
+
+// Placeholder cards while a page loads with nothing on screen yet. Most users
+// follow fewer people than a full page, so show a short grid rather than one
+// card per page slot.
+const SKELETON_CARDS = 12;
+const SKELETON_NAME_WIDTHS = ["58%", "42%", "70%", "50%", "64%", "46%"];
+function skeletonNameWidth(i: number): string {
+  return SKELETON_NAME_WIDTHS[(i - 1) % SKELETON_NAME_WIDTHS.length] ?? "55%";
+}
 </script>
 
 <style scoped>

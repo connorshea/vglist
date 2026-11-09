@@ -8,10 +8,27 @@
 #                   from the VPS crontab, 00:00 UTC)
 #   - db         Existing managed PostgreSQL cluster, attached to the app
 #
-# Usage:
+# Deploys: App Platform doesn't build anything. .github/workflows/docker.yml
+# builds and tests both images, pushes them to GHCR (ghcr.io/connorshea/
+# vglist-api and vglist-frontend, both public packages) on every push to
+# main, and .github/workflows/deploy.yml deploys a commit's digests when run
+# by hand. The `tag: main` below is only what an update from this file
+# points at until the next deploy. The
+# frontend's build-time vars (VITE_SENTRY_DSN, VITE_TURNSTILE_SITE_KEY) are
+# repo secrets for the Docker workflow, and the commit SHA is baked into the API
+# image.
+#
+# This file isn't read on deploy. Changes to it are applied by hand:
 #   doctl apps spec validate .do/app.yaml
 #   doctl apps create --spec .do/app.yaml          # first time
 #   doctl apps update <app-id> --spec .do/app.yaml # later changes
+#
+# Applying this file redeploys: every component goes back to `tag: main`,
+# the newest commit on main whose images were pushed, and the migrate job
+# runs. That commit may not be the one that's live, and this path skips the
+# Deploy workflow's CI check. So deploy main with the Deploy workflow first,
+# or swap each `tag: main` for the live `digest:` values from
+# `doctl apps spec get` before updating.
 #
 # Secrets: every `type: SECRET` env below is declared without a value so no
 # credentials live in git. Set the values once in the control panel (App →
@@ -29,6 +46,15 @@
 
 name: vglist
 region: sfo
+
+# Private networking to the database. The cluster vglist-postgres is in sfo3,
+# the datacenter App Platform uses for `sfo`, and this is its VPC. Without it,
+# the API reached the database over its public address (~3ms per query from
+# the console, vs under 1ms expected in-VPC). The database firewall must allow
+# the app (an `app:<id>` rule, or its VPC egress IP from the Networking tab).
+# Can't be combined with dedicated egress IPs.
+vpc:
+  id: 1c2f97c1-7994-4a0e-b99e-4ce41ed97272
 
 alerts:
   - rule: DEPLOYMENT_FAILED
@@ -69,12 +95,12 @@ ingress:
 databases:
   # Reuses the existing DO Managed Postgres cluster the VPS already talks to
   # (database vglist_production, user vglist). Cluster vglist-postgres,
-  # PostgreSQL 17. App Platform
+  # PostgreSQL 18. App Platform
   # attaches it and adds the app to its trusted sources. The 1 GB plan allows
   # ~22 connections: the API uses 2 workers x 3 threads = 6, plus 1 per job.
   - name: db
     engine: PG
-    version: "17"
+    version: "18"
     production: true
     cluster_name: vglist-postgres
     db_name: vglist_production
@@ -82,26 +108,34 @@ databases:
 
 services:
   - name: api
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    source_dir: /
-    dockerfile_path: Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-api
+      tag: main
     http_port: 3000
-    instance_size_slug: apps-s-1vcpu-2gb
+    # 2 shared vCPUs / 4 GiB ($50/mo, was apps-s-1vcpu-2gb at $25/mo). On one
+    # vCPU, the parallel GraphQL requests a page makes seemed to queue for CPU.
+    instance_size_slug: apps-s-2vcpu-4gb
     # See the single-instance caveat at the top of this file.
     instance_count: 1
+    # Puma answers /health within ~2s of starting in the Docker CI job, so
+    # probe early and often instead of idling 20s first. App Platform holds
+    # the old container until this passes, so every second here is deploy
+    # time. Budget before failing is unchanged: 5 + 15 x 5 = 80s, same as
+    # the old 20 + 6 x 10.
     health_check:
       http_path: /health
-      initial_delay_seconds: 20
-      period_seconds: 10
+      initial_delay_seconds: 5
+      period_seconds: 5
       timeout_seconds: 5
-      failure_threshold: 6
+      failure_threshold: 15
     envs:
       - key: PORT
         value: "3000"
-      # Two Puma workers x 3 threads. 2 GB matches the old VPS (1 vCPU / 2 GB).
+      # Two Puma workers (one per vCPU) x 3 threads = 6 DB connections, well
+      # under the cluster's ~22.
       - key: WEB_CONCURRENCY
         value: "2"
       - key: RAILS_MAX_THREADS
@@ -119,9 +153,6 @@ services:
       # CLIENT_IP_HEADER should be CF-Connecting-IP instead.
       - key: CLIENT_IP_HEADER
         value: DO-Connecting-IP
-      # Release tag for Sentry and the home-page stats cache key.
-      - key: GIT_COMMIT_SHA
-        value: ${_self.COMMIT_HASH}
       - key: DATABASE_URL
         value: ${db.DATABASE_URL}
       - key: RAILS_MASTER_KEY
@@ -157,18 +188,19 @@ services:
         type: SECRET
 
   - name: frontend
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    # Build context is the repo root because vite.config.ts uses ../public.
-    source_dir: /
-    dockerfile_path: frontend/Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-frontend
+      tag: main
     http_port: 8080
     instance_size_slug: apps-s-1vcpu-0.5gb
     instance_count: 1
+    # Caddy is up almost instantly; probe every 5s rather than the default 10s.
     health_check:
       http_path: /health
+      period_seconds: 5
     envs:
       - key: PORT
         value: "8080"
@@ -177,29 +209,27 @@ services:
       - key: API_ORIGIN
         value: https://api.vglist.co
         scope: RUN_TIME
-      # Baked into the Vite bundle at build time.
-      - key: VITE_API_URL
-        value: https://api.vglist.co
-        scope: BUILD_TIME
-      - key: VITE_SENTRY_DSN
-        scope: BUILD_TIME
+      # Origin of VITE_SENTRY_DSN's host (e.g. https://o123.ingest.us.sentry.io),
+      # for the Caddyfile's report-only CSP connect-src. Not secret, but set in
+      # the control panel so the org ID stays out of the repo.
+      - key: SENTRY_INGEST_ORIGIN
+        scope: RUN_TIME
         type: SECRET
-      # Cloudflare Turnstile site key. Public (it ships in the bundle), but
-      # declared like the DSN so its value is set in the control panel.
-      # Unset, the sign-up form shows no challenge.
-      - key: VITE_TURNSTILE_SITE_KEY
-        scope: BUILD_TIME
+      # Sentry's CSP report URL (Project settings > Security Headers), for
+      # the Caddyfile's report-only CSP report-uri.
+      - key: CSP_REPORT_URI
+        scope: RUN_TIME
         type: SECRET
 
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    source_dir: /
-    dockerfile_path: Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-api
+      tag: main
     instance_size_slug: apps-s-1vcpu-1gb
     instance_count: 1
     # db:migrate, not db:prepare: on an empty database db:prepare would also
@@ -222,12 +252,12 @@ jobs:
     schedule:
       cron: "0 0 * * *"
       time_zone: UTC
-    github:
-      repo: connorshea/vglist
-      branch: main
-      deploy_on_push: true
-    source_dir: /
-    dockerfile_path: Dockerfile
+    # Prebuilt by .github/workflows/docker.yml, deployed by deploy.yml.
+    image:
+      registry_type: GHCR
+      registry: connorshea
+      repository: vglist-api
+      tag: main
     instance_size_slug: apps-s-1vcpu-1gb
     instance_count: 1
     run_command: bundle exec rake vglist:update:stats

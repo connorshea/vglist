@@ -8,9 +8,10 @@ class Genre < ApplicationRecord
   has_many :game_genres, dependent: :destroy
   has_many :games, through: :game_genres, source: :game
 
-  game_count_scopes '(SELECT COUNT(*) FROM game_genres WHERE game_genres.genre_id = genres.id)'
+  # A counter cache kept up to date by GameGenre.
+  game_count_scopes 'genres.games_count'
 
-  has_paper_trail ignore: [:updated_at, :created_at],
+  has_paper_trail ignore: [:games_count, :updated_at, :created_at],
                   versions: {
                     class_name: 'Versions::GenreVersion'
                   }

@@ -30,6 +30,7 @@ RSpec.describe 'import:igdb:covers', type: :task do
     # Keep the pool as-is, so the task doesn't reconnect out from under the
     # spec's transaction.
     with_environment('CONCURRENCY' => '2') { Rake::Task['import:igdb:covers'].invoke }
+    $stdout.string
   ensure
     $stdout = original
   end
@@ -48,6 +49,100 @@ RSpec.describe 'import:igdb:covers', type: :task do
       expect(cover.metadata).to include('width' => 40, 'height' => 60, 'analyzed' => true)
       expect(cover.blob.variant_records.count).to eq(Game::COVER_SIZES.size)
     end
+  end
+
+  it "times the cover's validations, and removes the callbacks that do it afterwards" do
+    game = create(:game, igdb_id: 'game-0')
+    stub_igdb([game.igdb_id])
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+    callbacks_before = Game._validation_callbacks.count
+    # The task logs each cover's timings through its progress bar.
+    logged = []
+    allow(ProgressBar).to receive(:create).and_wrap_original do |original, **options|
+      original.call(**options).tap { |bar| allow(bar).to receive(:log) { |message| logged << message } }
+    end
+
+    run_task
+
+    expect(logged.join("\n")).to match(/save [\d.]+s \(cpu [\d.]+s\) \[validate [\d.]+s \(spoof check [\d.]+s\)/)
+    expect(Game._validation_callbacks.count).to eq(callbacks_before)
+  end
+
+  it "keeps importing when a cover's sizes can't be created" do
+    games = Array.new(2) { |i| create(:game, igdb_id: "game-#{i}") }
+    stub_igdb(games.map(&:igdb_id))
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+    backfill = instance_double(VariantBackfillService)
+    allow(backfill).to receive(:call).and_raise(Vips::Error, 'corrupt image')
+    allow(VariantBackfillService).to receive(:new).and_return(backfill)
+
+    expect { run_task }.not_to raise_error
+    games.each { |game| expect(game.reload.cover).to be_attached }
+  end
+
+  context 'with the test job adapter' do
+    around(:each) do |example|
+      original_adapter = ActiveJob::Base.queue_adapter
+      ActiveJob::Base.queue_adapter = :test
+      example.run
+    ensure
+      ActiveJob::Base.queue_adapter = original_adapter
+    end
+
+    it "doesn't enqueue TransformJobs for the sizes it creates itself, but still does for other attachments" do
+      game = create(:game, igdb_id: 'game-0')
+      stub_igdb([game.igdb_id])
+      stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+        .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+
+      expect { run_task }.not_to have_enqueued_job(ActiveStorage::TransformJob)
+      expect(game.reload.cover).to be_attached
+
+      other_game = create(:game)
+      expect do
+        other_game.cover.attach(io: StringIO.new(jpeg), filename: 'cover.jpg', content_type: 'image/jpeg')
+      end.to have_enqueued_job(ActiveStorage::TransformJob).exactly(Game::COVER_SIZES.size).times
+    end
+  end
+
+  it "ends with the download pass's CPU and GC totals" do
+    games = Array.new(2) { |i| create(:game, igdb_id: "game-#{i}") }
+    stub_igdb(games.map(&:igdb_id))
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+
+    expect(run_task).to match(/Download pass: 2 games in [\d.]+s, using [\d.]+s of CPU \([\d.]+s per game\), [\d.]+s of it in GC \(\d+ major and \d+ minor collections\)\./)
+  end
+
+  it 'only asks IGDB about games that have an IGDB ID and no cover' do
+    wanted = create(:game, igdb_id: 'no-cover')
+    create(:game_with_cover, igdb_id: 'has-cover')
+    create(:game, igdb_id: nil)
+    stub_igdb([])
+
+    run_task
+
+    expect(WebMock).to(have_requested(:post, 'https://api.igdb.com/v4/games').with { |request| request.body.include?(%("#{wanted.igdb_id}")) && request.body.exclude?('has-cover') })
+  end
+
+  it 'skips a game deleted after the list of games was made' do
+    games = Array.new(2) { |i| create(:game, igdb_id: "game-#{i}") }
+    stub_igdb(games.map(&:igdb_id))
+    stub_request(:get, %r{images\.igdb\.com/igdb/image/upload/t_1080p/})
+      .to_return(status: 200, body: jpeg, headers: { 'Content-Type' => 'image/jpeg' })
+    # Delete one game once IGDB has answered, before the download pass reaches it.
+    deleted = games.first
+    WebMock.after_request do |request, _response|
+      deleted.destroy if request.uri.host == 'api.igdb.com' && Game.exists?(deleted.id)
+    end
+
+    run_task
+
+    expect(games.last.reload.cover).to be_attached
+  ensure
+    WebMock.reset_callbacks
   end
 
   it 'starts at most 4 cover downloads a second, across every worker' do

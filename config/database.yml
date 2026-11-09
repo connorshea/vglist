@@ -20,6 +20,16 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # Cap how long a single SQL statement may run, so one expensive query can't
+  # hold a connection indefinitely. config/puma.rb sets DB_STATEMENT_TIMEOUT
+  # (from WEB_STATEMENT_TIMEOUT, default 15s), so this applies to the web server
+  # (and jobs running inside it) but not to migrations, rake tasks or the
+  # console. Setting it here, once per connection, saves the two round trips a
+  # SET/RESET around every request would cost.
+  <% if ENV['DB_STATEMENT_TIMEOUT'].present? %>
+  variables:
+    statement_timeout: <%= ENV['DB_STATEMENT_TIMEOUT'] %>
+  <% end %>
 
 development:
   <<: *default

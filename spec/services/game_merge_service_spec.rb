@@ -32,6 +32,16 @@ RSpec.describe GameMergeService, type: :service do
       expect(game_a.reload.game_purchases_count).to eq(3)
     end
 
+    it "recalculates game_a's ratings from both games' purchases", :aggregate_failures do
+      create(:game_purchase, game: game_a, rating: 50)
+      create(:game_purchase, game: game_b, rating: 80)
+      create(:game_purchase, game: game_b, rating: nil)
+      GameMergeService.new(game_a, game_b).merge!
+      game_a.reload
+      expect(game_a.ratings_count).to eq(2)
+      expect(game_a.avg_rating).to eq(65)
+    end
+
     it 'does not count a purchase twice when the user owns both games' do
       game_a_purchase
       game_b_purchase

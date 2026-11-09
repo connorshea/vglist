@@ -1,0 +1,109 @@
+name: Changes
+
+# Reusable workflow: works out which parts of the repo a pull request touches,
+# so ci.yml and docker.yml can skip jobs that can't be affected.
+#
+# Callers gate each job with `if: ${{ !cancelled() && needs.changes.outputs.<flag> != 'false' }}`.
+# The `!= 'false'` matters: if this workflow fails, its outputs are empty and
+# every job runs. A plain `needs:` would skip them instead, and required checks
+# count a skipped job as passing.
+#
+# Filters go in jobs' `if:`, never in `on.pull_request.paths`: a workflow that
+# never starts leaves its required checks pending, and the PR can't merge.
+#
+# Pushes (and anything that isn't a pull request) get every flag set: each
+# commit on main runs everything, which deploy.yml's CI check and the per-commit
+# Docker images rely on.
+on:
+  workflow_call:
+    outputs:
+      backend:
+        description: Rails app, Ruby tooling, DB schema, or anything outside frontend/ that isn't docs.
+        value: ${{ jobs.detect.outputs.backend }}
+      frontend:
+        description: frontend/ or public/ (Vite's publicDir, copied into the frontend image).
+        value: ${{ jobs.detect.outputs.frontend }}
+      graphql:
+        description: Backend, or the frontend's GraphQL documents, generated types, or codegen setup.
+        value: ${{ jobs.detect.outputs.graphql }}
+      github:
+        description: Anything under .github/ (workflows, dependabot.yml, zizmor.yml).
+        value: ${{ jobs.detect.outputs.github }}
+
+permissions: {}
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      graphql: ${{ steps.filter.outputs.graphql }}
+      github: ${{ steps.filter.outputs.github }}
+    steps:
+      - id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          flags="backend frontend graphql github"
+          set_all() {
+            for flag in $flags; do echo "$flag=$1" >> "$GITHUB_OUTPUT"; done
+          }
+
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "Not a pull request ($EVENT_NAME), running everything."
+            set_all true
+            exit 0
+          fi
+
+          # Both sides of a rename count as changed.
+          files="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" \
+            --jq '.[] | .filename, (.previous_filename // empty)')"
+          echo "Changed files:"
+          echo "$files"
+
+          # The API lists at most 3000 files, so a list that long may be truncated.
+          if [ "$(grep -c '' <<<"$files")" -ge 3000 ]; then
+            echo "3000+ changed files, the list may be truncated. Running everything."
+            set_all true
+            exit 0
+          fi
+
+          # A workflow change can affect any job, so run them all.
+          if grep -qE '^\.github/workflows/' <<<"$files"; then
+            echo "Workflows changed, running everything."
+            set_all true
+            exit 0
+          fi
+
+          matches() { grep -qE "$1" <<<"$files" && echo true || echo false; }
+
+          # Everything not excluded here counts as backend, so a new top-level
+          # directory runs the backend jobs until someone decides otherwise.
+          not_backend='^frontend/|\.md$|^\.github/|^\.claude/|^\.vscode/'
+          if grep -qvE "$not_backend" <<<"$files"; then backend=true; else backend=false; fi
+
+          frontend="$(matches '^(frontend|public)/')"
+
+          # codegen.ts reads ../schema.graphql and src/graphql/**/*.ts, and
+          # writes src/types/graphql.ts and ../config/graphql/operations.json.
+          graphql="$backend"
+          if [ "$graphql" = false ]; then
+            graphql="$(matches '^frontend/(src/graphql/|src/types/graphql\.ts$|codegen|package\.json$|pnpm-lock\.yaml$)')"
+          fi
+
+          github="$(matches '^\.github/')"
+
+          {
+            echo "backend=$backend"
+            echo "frontend=$frontend"
+            echo "graphql=$graphql"
+            echo "github=$github"
+          } | tee -a "$GITHUB_OUTPUT"
