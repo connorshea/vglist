@@ -13,7 +13,16 @@ env:
   NODE_ENV: test
 
 jobs:
+  # Which parts of the repo this PR touches. Jobs below skip when their part
+  # is unchanged; see changes.yml for why the `if:`s are written as they are.
+  changes:
+    uses: $/.github/workflows/changes.yml
+    permissions:
+      pull-requests: read
+
   zizmor:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.github != 'false' }}
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -30,6 +39,8 @@ jobs:
           version: "1.32.0"
 
   rubocop:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -43,6 +54,8 @@ jobs:
       - run: bundle exec rubocop
 
   frontend_lint:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -64,6 +77,8 @@ jobs:
       - run: pnpm run lint
 
   frontend_typecheck:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -84,6 +99,8 @@ jobs:
       - run: pnpm run typecheck
 
   frontend_build:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -104,6 +121,8 @@ jobs:
       - run: pnpm run build
 
   frontend_test:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -124,6 +143,8 @@ jobs:
       - run: pnpm run test
 
   graphql_lint:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.graphql != 'false' }}
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -174,6 +195,8 @@ jobs:
           git diff --exit-code frontend/src/types/graphql.ts config/graphql/operations.json
 
   factory_bot_lint:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -210,6 +233,8 @@ jobs:
       - run: bundle exec rake factory_bot:lint
 
   rspec:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
     env:
       COVERAGE_COMMAND_NAME: "RSpec:Unit"
@@ -268,6 +293,8 @@ jobs:
           retention-days: 10
 
   db_seed:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
     services:
       postgres:

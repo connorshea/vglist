@@ -42,7 +42,16 @@ env:
   PUSH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
 jobs:
+  # Which parts of the repo this PR touches. Jobs below skip when their part
+  # is unchanged; see changes.yml for why the `if:`s are written as they are.
+  changes:
+    uses: $/.github/workflows/changes.yml
+    permissions:
+      pull-requests: read
+
   api:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.backend != 'false' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -145,6 +154,8 @@ jobs:
           docker run --rm vglist-api file --version
 
   frontend:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.frontend != 'false' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
