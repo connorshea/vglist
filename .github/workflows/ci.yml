@@ -199,7 +199,7 @@ jobs:
       - name: Verify codegen is up to date
         run: |
           pnpm --dir frontend run codegen
-          git diff --exit-code frontend/src/types/graphql.ts config/graphql/operations.json
+          git diff --exit-code frontend/src/types/graphql.ts frontend/src/types/persisted-documents.ts config/graphql/operations.json
 
   factory_bot_lint:
     needs: changes

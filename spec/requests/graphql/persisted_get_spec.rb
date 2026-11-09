@@ -101,6 +101,12 @@ RSpec.describe "GraphQL GET requests with persisted documents", type: :request d
     expect(response.headers['Allow']).to eq('POST')
   end
 
+  it "gives the SPA persisted document IDs for exactly the operations PublicResponseCache can cache" do
+    generated = Rails.root.join('frontend/src/types/persisted-documents.ts').read
+    ids = generated.scan(/(\w+): "(sha256:\h{64})"/).to_h
+    expect(ids).to eq(PublicResponseCache::OPERATIONS.index_with { |name| document_id(name) })
+  end
+
   it "never lets a POST response be cached, even a cacheable one" do
     post graphql_path, params: { query: operations['GetHeroCovers'], operationName: 'GetHeroCovers' }
     expect(response.headers['Cache-Control']).to eq('no-store')

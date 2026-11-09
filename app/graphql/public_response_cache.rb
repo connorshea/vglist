@@ -16,6 +16,13 @@
 module PublicResponseCache
   EXPIRES_IN = 5.minutes
 
+  # The operations whose responses can be cached, with the right variables.
+  # Signed-out visitors send these as GET requests, so Cloudflare can cache
+  # them too (see GraphqlController#allow_shared_caching). The SPA gets their
+  # persisted document IDs from codegen, whose config in frontend/codegen.ts
+  # must list the same operations.
+  OPERATIONS = %w[GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases].freeze
+
   # The largest `first` that's cached for GetGamesIndex: the games index's
   # page size. The home page shelves ask for 6.
   MAX_GAMES_PAGE = 36

@@ -93,10 +93,11 @@ jobs:
           frontend="$(matches '^(frontend|public)/')"
 
           # codegen.ts reads ../schema.graphql and src/graphql/**/*.ts, and
-          # writes src/types/graphql.ts and ../config/graphql/operations.json.
+          # writes src/types/graphql.ts, src/types/persisted-documents.ts and
+          # ../config/graphql/operations.json.
           graphql="$backend"
           if [ "$graphql" = false ]; then
-            graphql="$(matches '^frontend/(src/graphql/|src/types/graphql\.ts$|codegen|package\.json$|pnpm-lock\.yaml$)')"
+            graphql="$(matches '^frontend/(src/graphql/|src/types/(graphql|persisted-documents)\.ts$|codegen|package\.json$|pnpm-lock\.yaml$)')"
           fi
 
           github="$(matches '^\.github/')"
