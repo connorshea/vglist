@@ -33,7 +33,7 @@
             <span class="overview-peek" aria-hidden="true">
               <span v-for="game in peekFavorites" :key="game.id" class="overview-peek-cover">
                 <img v-if="game.coverUrl" :src="game.coverUrl" alt="" loading="lazy" />
-                <span v-else class="cover-placeholder"></span>
+                <span v-else class="cover-placeholder" :style="coverPlaceholderStyle(game.name)"></span>
               </span>
             </span>
             <b aria-hidden="true">+{{ moreFavorites.toLocaleString() }}</b>
@@ -96,6 +96,7 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { Heart } from "@lucide/vue";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import { useQuery } from "@/composables/useGraphQL";
 import { useUserProfile } from "@/composables/useUserProfile";
 import { GET_USER_OVERVIEW } from "@/graphql/queries/users";

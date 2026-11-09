@@ -12,7 +12,13 @@
           <router-link :to="{ name: 'game', params: { id: game.id } }" class="import-game">
             <span class="import-cover">
               <img v-if="game.coverUrl" :src="game.coverUrl" alt="" loading="lazy" />
-              <span v-else aria-hidden="true">{{ gameInitials(game.name) }}</span>
+              <span
+                v-else
+                class="import-cover-placeholder"
+                :style="coverPlaceholderStyle(game.name)"
+                aria-hidden="true"
+                >{{ gameInitials(game.name) }}</span
+              >
             </span>
             <span class="import-game-name">{{ game.name }}</span>
           </router-link>
@@ -35,7 +41,13 @@
           <router-link :to="{ name: 'game', params: { id: game.id } }" class="import-game">
             <span class="import-cover">
               <img v-if="game.coverUrl" :src="game.coverUrl" alt="" loading="lazy" />
-              <span v-else aria-hidden="true">{{ gameInitials(game.name) }}</span>
+              <span
+                v-else
+                class="import-cover-placeholder"
+                :style="coverPlaceholderStyle(game.name)"
+                aria-hidden="true"
+                >{{ gameInitials(game.name) }}</span
+              >
             </span>
             <span class="import-game-name">{{ game.name }}</span>
           </router-link>
@@ -98,6 +110,7 @@ import { ExternalLink } from "@lucide/vue";
 import ShowAllButton from "@/components/settings/ShowAllButton.vue";
 import type { ImportSteamLibraryMutation } from "@/types/graphql";
 import { gameInitials } from "@/utils/library";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 type ImportResult = NonNullable<ImportSteamLibraryMutation["importSteamLibrary"]>;
 type Group = "added" | "updated" | "unmatched";
@@ -192,10 +205,15 @@ const nothingChanged = computed(
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 4px;
+  background: color-mix(in srgb, var(--color-text-primary) 9%, transparent);
+}
+
+.import-cover-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--p-300), var(--p-600));
+  width: 100%;
+  height: 100%;
   color: #fff;
   font-size: 10px;
   font-weight: 700;

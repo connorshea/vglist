@@ -11,7 +11,7 @@
           @error="onCoverError"
         />
       </template>
-      <span v-else class="game-tile-placeholder" aria-hidden="true">{{ initials }}</span>
+      <span v-else class="game-tile-placeholder" :style="placeholderStyle" aria-hidden="true">{{ initials }}</span>
       <span v-if="rating !== null" class="game-tile-rating" :class="`is-${ratingTier(rating)}`" aria-hidden="true">
         {{ Math.round(rating) }}
       </span>
@@ -39,6 +39,7 @@ const failedCovers = new Set<string>();
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { Check } from "@lucide/vue";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import type { GamePurchaseCompletionStatus } from "@/types/graphql";
 import { libraryBadgeLabel, ratingTier } from "./format";
 import { useNearViewport } from "@/composables/useNearViewport";
@@ -100,6 +101,8 @@ const initials = computed(() =>
     .map((w) => w[0].toUpperCase())
     .join("")
 );
+
+const placeholderStyle = computed(() => coverPlaceholderStyle(props.name));
 
 // One sentence for screen readers instead of reading the badges and meta line
 // as separate fragments.
@@ -165,7 +168,6 @@ const accessibleName = computed(() => {
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   color: #fff;
   font-size: 28px;
   font-weight: 700;

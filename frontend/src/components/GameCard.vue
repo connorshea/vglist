@@ -7,7 +7,7 @@
         </figure>
       </div>
       <div class="card-image" v-else>
-        <div class="game-cover-placeholder">
+        <div class="game-cover-placeholder" :style="coverPlaceholderStyle(name)">
           <span>{{ gameInitials }}</span>
         </div>
       </div>
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 const props = defineProps<{
   id: string;
@@ -67,7 +68,6 @@ const gameInitials = computed(() => {
 
 .game-cover-placeholder {
   aspect-ratio: 3 / 4;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   display: flex;
   align-items: center;
   justify-content: center;

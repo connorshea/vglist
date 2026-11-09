@@ -23,7 +23,9 @@
         <router-link :to="{ name: 'game', params: { id: game.id } }" class="res-card">
           <span class="res-cover">
             <img v-if="game.coverUrl" :src="game.coverUrl" alt="" loading="lazy" />
-            <span v-else class="res-cover-ph" aria-hidden="true">{{ initials(game.name) }}</span>
+            <span v-else class="res-cover-ph" :style="coverPlaceholderStyle(game.name)" aria-hidden="true">{{
+              initials(game.name)
+            }}</span>
             <span v-if="game.isInLibrary" class="res-owned">
               <Check :size="11" :stroke-width="3" aria-hidden="true" />
               In library
@@ -47,6 +49,7 @@
 
 <script setup lang="ts">
 import { Check } from "@lucide/vue";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import { RESOURCE_GAME_SORTS } from "@/composables/useResourceGames";
 import type { ResourceGameFieldsFragment, ResourceGameSort } from "@/types/graphql";
 
@@ -221,7 +224,6 @@ function initials(name: string): string {
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e879a0 0%, #c266d6 50%, #7c5ce7 100%);
   color: #fff;
   font-size: 1.75rem;
   font-weight: 700;

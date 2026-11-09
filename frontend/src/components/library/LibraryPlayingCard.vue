@@ -2,7 +2,9 @@
   <router-link :to="{ name: 'game', params: { id: purchase.game.id } }" class="playing-card">
     <span class="playing-card-cover">
       <img v-if="purchase.game.coverUrl" :src="purchase.game.coverUrl" alt="" loading="lazy" />
-      <span v-else class="cover-placeholder" aria-hidden="true">{{ gameInitials(purchase.game.name) }}</span>
+      <span v-else class="cover-placeholder" :style="coverPlaceholderStyle(purchase.game.name)" aria-hidden="true">{{
+        gameInitials(purchase.game.name)
+      }}</span>
     </span>
     <span class="playing-card-body">
       <b class="playing-card-name">{{ purchase.game.name }}</b>
@@ -20,6 +22,7 @@ import { computed } from "vue";
 import { Clock } from "@lucide/vue";
 import type { LibraryPlayingPurchaseFieldsFragment } from "@/types/graphql";
 import { formatHours, formatStartDate, gameInitials } from "@/utils/library";
+import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 
 const props = defineProps<{
   purchase: LibraryPlayingPurchaseFieldsFragment;
