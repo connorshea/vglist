@@ -3,11 +3,11 @@
     <span ref="coverRef" class="game-tile-cover">
       <template v-if="coverUrl">
         <img
-          v-if="nearViewport || loadedUrl === coverUrl"
+          v-if="nearViewport || coverLoaded"
           :src="coverUrl"
           alt=""
           :loading="deferCover ? undefined : 'lazy'"
-          @load="loadedUrl = coverUrl"
+          @load="onCoverLoad"
         />
       </template>
       <span v-else class="game-tile-placeholder" aria-hidden="true">{{ initials }}</span>
@@ -23,6 +23,14 @@
     <span v-if="meta" class="game-tile-meta" aria-hidden="true">{{ meta }}</span>
   </router-link>
 </template>
+
+<script lang="ts">
+// Covers that have loaded this session, which the browser has cached. A tile
+// mounted again (the SWR cache re-renders a list instantly on back
+// navigation) shows these in its first paint instead of waiting for the
+// observer.
+const loadedCovers = new Set<string>();
+</script>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
@@ -56,6 +64,17 @@ const props = withDefaults(
 const coverRef = ref<HTMLElement | null>(null);
 const nearViewport = useNearViewport(coverRef, props.deferCover);
 const loadedUrl = ref<string | null>(null);
+// `loadedCovers` isn't reactive; `loadedUrl` changing re-evaluates this.
+const coverLoaded = computed(
+  () => !!props.coverUrl && (loadedUrl.value === props.coverUrl || loadedCovers.has(props.coverUrl))
+);
+
+function onCoverLoad() {
+  if (props.coverUrl) {
+    loadedCovers.add(props.coverUrl);
+    loadedUrl.value = props.coverUrl;
+  }
+}
 
 const initials = computed(() =>
   props.name

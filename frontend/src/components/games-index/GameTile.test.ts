@@ -123,6 +123,18 @@ describe("GameTile cover loading", () => {
     expect(tile.find("img").attributes("src")).toBe(COVER);
   });
 
+  it("shows a cover that loaded earlier this session in the first paint", async () => {
+    const first = await mountTile();
+    await scrollIntoView(DWELL_MS);
+    await first.find("img").trigger("load");
+    first.unmount();
+
+    // Mounted again off screen, as when going back to a cached list.
+    const again = await mountTile();
+
+    expect(again.find("img").attributes("src")).toBe(COVER);
+  });
+
   it("shows the initials straight away for a game without a cover", async () => {
     const tile = await mountTile(null);
 
