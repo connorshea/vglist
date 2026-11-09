@@ -39,8 +39,10 @@ threads max_threads, max_threads
 # config/database.yml. Set here rather than in the environment so it only
 # applies to Puma, and not to migrations, rake tasks or the console, which
 # share the same environment variables on App Platform. Override with
-# WEB_STATEMENT_TIMEOUT (a Postgres duration, e.g. "15s").
-ENV["DB_STATEMENT_TIMEOUT"] = ENV.fetch("WEB_STATEMENT_TIMEOUT", "30s")
+# WEB_STATEMENT_TIMEOUT (a Postgres duration, e.g. "20s"). Shorter than the
+# 30s GraphQL QueryTimeout (app/graphql/video_game_list_schema.rb), since one
+# GraphQL request usually runs several statements.
+ENV["DB_STATEMENT_TIMEOUT"] = ENV.fetch("WEB_STATEMENT_TIMEOUT", "15s")
 
 # Worker mode for better throughput in production.
 # Default to 0 in development to avoid macOS fork() crashes.
