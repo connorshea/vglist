@@ -39,7 +39,7 @@ class VideoGameListSchema < GraphQL::Schema
   # QueryTimeout. This complements the Postgres statement timeout set
   # per connection in config/database.yml, which catches a single slow statement, whereas this
   # catches many fast ones.
-  use QueryTimeout, max_seconds: 10
+  use QueryTimeout, max_seconds: 30
 
   # Batches `Game.ownerCount` into one query per response.
   lazy_resolve(LazyOwnerCount, :value)
