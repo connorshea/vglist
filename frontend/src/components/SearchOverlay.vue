@@ -48,7 +48,8 @@
           </div>
         </div>
 
-        <div class="search-results">
+        <!-- tabindex="-1" stops browsers making this scroller its own Tab stop. -->
+        <div class="search-results" tabindex="-1">
           <!-- Empty state -->
           <div v-if="!query || query.length < 2" class="search-empty">
             <Search class="search-empty-icon" :stroke-width="1.5" />

@@ -172,6 +172,14 @@ describe("SearchOverlay", () => {
       document.body.removeChild(container);
     });
 
+    it("keeps the scrollable results container out of the Tab order", async () => {
+      const wrapper = mountOverlay();
+      mockIsOpen.value = true;
+      await nextTick();
+
+      expect(wrapper.find(".search-results").attributes("tabindex")).toBe("-1");
+    });
+
     it("starts searching for the query it was opened with", async () => {
       mockRequest.mockResolvedValueOnce({ globalSearch: { nodes: [] } });
       const wrapper = mountOverlay();
