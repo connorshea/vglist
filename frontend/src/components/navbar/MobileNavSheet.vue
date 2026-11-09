@@ -410,7 +410,7 @@ function onPointerDown(e: PointerEvent) {
   flex-wrap: wrap;
   gap: 8px;
   padding: 0 8px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .mn-chip {
@@ -449,7 +449,7 @@ function onPointerDown(e: PointerEvent) {
   padding: 14px 12px;
   border-radius: var(--radius-lg);
   background: var(--color-bg-subtle);
-  margin-top: 4px;
+  margin-bottom: 18px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -529,7 +529,8 @@ function onPointerDown(e: PointerEvent) {
 .mn-auth-buttons {
   display: flex;
   gap: 10px;
-  margin-top: 4px;
+  /* Inset to line up with the dividers and section labels. */
+  margin: 0 12px 18px;
 }
 
 .mn-auth-btn {
