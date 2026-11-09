@@ -131,7 +131,7 @@
           :id="game.id"
           :name="game.name"
           :cover-url="game.coverUrl ?? null"
-          :meta="tileMeta(game)"
+          :meta="tileMeta(game, { upcoming: sort.value === 'UPCOMING' })"
           :rating="game.avgRating"
           :in-library="game.isInLibrary"
           :completion-status="game.libraryCompletionStatus"
@@ -180,7 +180,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch, type Component } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CalendarDays, Clock, Flame, Heart, ListFilter, Plus, Star, X } from "@lucide/vue";
+import { CalendarClock, CalendarDays, Clock, Flame, Heart, ListFilter, Plus, Star, X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import {
   GET_GAMES_INDEX,
@@ -229,6 +229,7 @@ const SKELETON_TILES = 18;
 const SORT_ICONS: Record<GameSortOption["slug"], Component> = {
   popular: Flame,
   new: CalendarDays,
+  upcoming: CalendarClock,
   top: Star,
   favorited: Heart,
   added: Clock

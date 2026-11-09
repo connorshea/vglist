@@ -74,7 +74,9 @@ export type GameSort =
   /** Sorted with the games that were most recently released first. */
   | "RECENTLY_RELEASED"
   /** Sorted with most recently updated game records first. */
-  | "RECENTLY_UPDATED";
+  | "RECENTLY_UPDATED"
+  /** Only games that haven't been released yet, soonest first. */
+  | "UPCOMING";
 
 /** Options for sorting the games two users have in common. */
 export type LibraryComparisonSort =

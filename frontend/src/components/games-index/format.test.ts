@@ -42,6 +42,11 @@ describe("tileMeta", () => {
     expect(tileMeta({ releaseDate: "2017-02-24", ownerCount: 0 })).toBe("2017");
     expect(tileMeta({ releaseDate: null, ownerCount: 0 })).toBeNull();
   });
+
+  it("shows the release day instead for upcoming games", () => {
+    expect(tileMeta({ releaseDate: "2099-02-24", ownerCount: 12 }, { upcoming: true })).toBe("Feb 24, 2099");
+    expect(tileMeta({ releaseDate: null, ownerCount: 12 }, { upcoming: true })).toBe("12 owners");
+  });
 });
 
 describe("ratingTier", () => {

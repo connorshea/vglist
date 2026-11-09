@@ -1,4 +1,5 @@
 import type { GamePurchaseCompletionStatus, GameSort } from "@/types/graphql";
+import { formatStartDate } from "@/utils/library";
 
 /** The four-digit year of an ISO 8601 date, or null if there isn't one. */
 export function releaseYear(releaseDate: string | null | undefined): string | null {
@@ -20,8 +21,19 @@ export function countLabel(count: number, singular: string, plural = `${singular
   return `${formatNumber(count)} ${count === 1 ? singular : plural}`;
 }
 
-/** "2021 · 612 owners", or whichever half of it the game has. */
-export function tileMeta(game: { releaseDate?: string | null; ownerCount?: number | null }): string | null {
+/**
+ * "2021 · 612 owners", or whichever half of it the game has. With `upcoming`,
+ * the day the game comes out instead ("Dec 4", or "Jan 15, 2027" for another
+ * year): that's what matters before release, and with the owners it wraps
+ * onto a second line on phones.
+ */
+export function tileMeta(
+  game: { releaseDate?: string | null; ownerCount?: number | null },
+  { upcoming = false }: { upcoming?: boolean } = {}
+): string | null {
+  if (upcoming && game.releaseDate) {
+    return formatStartDate(game.releaseDate);
+  }
   const parts: string[] = [];
   const year = releaseYear(game.releaseDate);
   if (year) {
@@ -71,6 +83,7 @@ export function libraryBadgeLabel(status: GamePurchaseCompletionStatus | null | 
 export const GAME_SORTS = [
   { slug: "popular", label: "Popular", value: "MOST_OWNERS" },
   { slug: "new", label: "New releases", value: "RECENTLY_RELEASED" },
+  { slug: "upcoming", label: "Upcoming releases", value: "UPCOMING" },
   { slug: "top", label: "Top rated", value: "HIGHEST_AVG_RATING" },
   { slug: "favorited", label: "Most favorited", value: "MOST_FAVORITES" },
   { slug: "added", label: "Recently added to vglist", value: "NEWEST" }
