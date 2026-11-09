@@ -21,7 +21,7 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     operation_name = params[:operationName]
 
-    if request.get?
+    if persisted_query_request?
       query = persisted_query(operation_name)
       return if performed?
     else
@@ -70,6 +70,12 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  # Rails routes HEAD to the GET action, and HEAD should behave the same, just
+  # without a body (e.g. `curl -I` when checking the cache headers).
+  def persisted_query_request?
+    request.get? || request.head?
+  end
 
   def render_error(message, status, code: nil)
     error = { message: message }
@@ -136,7 +142,7 @@ class GraphqlController < ApplicationController
   # background. With PublicResponseCache's own five minutes at the origin, a
   # change can take up to ~20 minutes to reach signed-out visitors.
   def allow_shared_caching
-    return unless request.get?
+    return unless persisted_query_request?
 
     expires_in 1.minute, public: true, stale_while_revalidate: 10.minutes, 's-maxage': 5.minutes.to_i
     # Rack::Cors only adds this when the request has a matching Origin, but a

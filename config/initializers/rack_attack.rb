@@ -25,10 +25,10 @@ module RackAttackConfig
 
   module_function
 
-  # POST, or GET with a persisted document ID. GET responses served from
-  # Cloudflare's cache never get here, which is fine.
+  # POST, or GET (or HEAD) with a persisted document ID. GET responses served
+  # from Cloudflare's cache never get here, which is fine.
   def graphql_request?(req)
-    (req.post? || req.get?) && path(req) == '/graphql'
+    (req.post? || req.get? || req.head?) && path(req) == '/graphql'
   end
 
   def avatar_upload_request?(req)

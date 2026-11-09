@@ -58,6 +58,12 @@ RSpec.describe "GraphQL GET requests with persisted documents", type: :request d
     expect(response.headers['Cache-Control']).to eq('max-age=60, public, stale-while-revalidate=600, s-maxage=300')
   end
 
+  it "answers HEAD like GET, so `curl -I` shows the cache headers", :aggregate_failures do
+    head graphql_path, params: { operationName: 'GetHeroCovers', documentId: document_id('GetHeroCovers') }
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).to eq('max-age=60, public, stale-while-revalidate=600, s-maxage=300')
+  end
+
   it "doesn't let anything cache an uncacheable query" do
     graphql_get('GetGamesIndex', variables: shelf_variables.merge(fromYear: 2000))
     expect(response).to have_http_status(:ok)
