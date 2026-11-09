@@ -175,8 +175,12 @@ class User < ApplicationRecord
   # or nil otherwise. When no user has that email, hash the password anyway
   # and discard the result, so the response time doesn't reveal whether the
   # email is registered.
+  #
+  # `find_for_authentication` applies Devise's `case_insensitive_keys` and
+  # `strip_whitespace_keys`, so " Foo@Example.com" finds "foo@example.com"
+  # (Devise downcases and strips emails on save, so that's how they're stored).
   def self.authenticate_with_password(email, password)
-    user = find_by(email: email)
+    user = find_for_authentication(email: email)
     return user if user&.valid_password?(password)
 
     Devise::Encryptor.digest(self, password) if user.nil?

@@ -164,6 +164,14 @@ RSpec.describe User, type: :model do
       expect(User.authenticate_with_password(user.email, 'wrong-password')).to be_nil
     end
 
+    it 'matches the email case-insensitively' do
+      expect(User.authenticate_with_password(user.email.upcase, 'correct-password')).to eq(user)
+    end
+
+    it 'ignores surrounding whitespace in the email' do
+      expect(User.authenticate_with_password("  #{user.email}  ", 'correct-password')).to eq(user)
+    end
+
     it 'still hashes the password when no user has that email' do
       allow(Devise::Encryptor).to receive(:digest).and_call_original
 

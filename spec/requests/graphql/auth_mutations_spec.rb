@@ -42,6 +42,17 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(decoded.first['user_id']).to eq(user.id)
     end
 
+    it "matches the email case-insensitively" do
+      post graphql_path, params: {
+        query: query,
+        variables: { email: user.email.upcase, password: "password" }.to_json
+      }
+
+      data = JSON.parse(response.body).dig('data', 'signIn')
+      expect(data['errors']).to be_empty
+      expect(data['userId']).to eq(user.id.to_s)
+    end
+
     it "returns the small avatar URL for a user with an avatar" do
       user_with_avatar = create(:confirmed_user_with_avatar)
       post graphql_path, params: {
@@ -145,6 +156,25 @@ RSpec.describe "GraphQL Auth Mutations", type: :request do
       expect(data['errors']).to be_empty
       expect(data['message']).to include("Account created successfully")
       expect(User.find_by(email: "graphqluser@example.com")).to be_present
+    end
+
+    it "stores the email downcased and rejects a case-only duplicate", :aggregate_failures do
+      variables = {
+        username: "graphqluser",
+        email: "GraphQLUser@Example.com",
+        password: "password123",
+        passwordConfirmation: "password123"
+      }
+      post graphql_path, params: { query: query, variables: variables.to_json }
+      expect(User.find_by(username: "graphqluser").email).to eq("graphqluser@example.com")
+
+      post graphql_path, params: {
+        query: query,
+        variables: variables.merge(username: "graphqluser2", email: "GRAPHQLUSER@EXAMPLE.COM").to_json
+      }
+      data = JSON.parse(response.body).dig('data', 'signUp')
+      expect(data['errors']).to include(a_string_matching(/Email has already been taken/))
+      expect(User.where(email: "graphqluser@example.com").count).to eq(1)
     end
 
     it "returns errors for invalid input" do
