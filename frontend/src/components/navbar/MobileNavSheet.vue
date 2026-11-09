@@ -100,20 +100,22 @@
 
         <!-- External links -->
         <h2 class="mn-section mn-stagger">Links</h2>
-        <div class="mn-browse mn-stagger">
-          <router-link class="mn-chip" to="/about" @click="close">About</router-link>
-          <a
-            class="mn-chip"
-            href="https://github.com/connorshea/vglist/blob/main/CHANGELOG.md"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Changelog</a
-          >
-          <a class="mn-chip" href="https://github.com/connorshea/vglist" target="_blank" rel="noopener noreferrer"
-            >GitHub</a
-          >
-          <a class="mn-chip" href="https://discord.gg/Ma8Ztcc" target="_blank" rel="noopener noreferrer">Discord</a>
-        </div>
+        <ul class="mn-links mn-stagger">
+          <li>
+            <router-link class="mn-link" to="/about" @click="close">
+              <Info class="mn-link-icon" :stroke-width="1.6" />
+              About
+            </router-link>
+          </li>
+          <li v-for="link in externalLinks" :key="link.label">
+            <a class="mn-link" :href="link.href" target="_blank" rel="noopener noreferrer">
+              <component :is="link.icon" class="mn-link-icon" :stroke-width="1.6" />
+              {{ link.label }}
+              <ArrowUpRight class="mn-link-ext" :size="14" :stroke-width="1.6" aria-hidden="true" />
+              <span class="is-sr-only">(opens in a new tab)</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </Teleport>
@@ -125,7 +127,19 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useAuth } from "@/composables/useAuth";
 import NavAvatar from "./NavAvatar.vue";
-import { Activity, Gamepad2, User, ChevronRight, LogOut, Settings } from "@lucide/vue";
+import {
+  Activity,
+  ArrowUpRight,
+  CodeXml,
+  Gamepad2,
+  Info,
+  MessagesSquare,
+  ScrollText,
+  User,
+  ChevronRight,
+  LogOut,
+  Settings
+} from "@lucide/vue";
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits<{ (e: "close"): void }>();
@@ -133,6 +147,12 @@ const emit = defineEmits<{ (e: "close"): void }>();
 const route = useRoute();
 const authStore = useAuthStore();
 const { signOut } = useAuth();
+
+const externalLinks = [
+  { label: "Changelog", href: "https://github.com/connorshea/vglist/blob/main/CHANGELOG.md", icon: ScrollText },
+  { label: "GitHub", href: "https://github.com/connorshea/vglist", icon: CodeXml },
+  { label: "Discord", href: "https://discord.gg/Ma8Ztcc", icon: MessagesSquare }
+];
 
 const sheetEl = ref<HTMLElement | null>(null);
 const isDragging = ref(false);
@@ -410,7 +430,7 @@ function onPointerDown(e: PointerEvent) {
   flex-wrap: wrap;
   gap: 8px;
   padding: 0 8px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .mn-chip {
@@ -441,6 +461,65 @@ function onPointerDown(e: PointerEvent) {
   border-color: var(--color-text-tertiary);
 }
 
+/* Links: a 2x2 grid of tiles, inset to line up with the dividers. */
+.mn-links {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 12px;
+  padding: 0;
+}
+
+.mn-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-subtle);
+  border: 0.5px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  .mn-link {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.mn-link:active {
+  background: var(--n-100);
+  border-color: var(--color-text-tertiary);
+}
+
+.mn-link-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--p-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  .mn-link-icon {
+    color: var(--p-300);
+  }
+}
+
+.mn-link-ext {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
+}
+
 /* User row */
 .mn-user {
   display: flex;
@@ -449,7 +528,7 @@ function onPointerDown(e: PointerEvent) {
   padding: 14px 12px;
   border-radius: var(--radius-lg);
   background: var(--color-bg-subtle);
-  margin-top: 4px;
+  margin-bottom: 18px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -529,7 +608,8 @@ function onPointerDown(e: PointerEvent) {
 .mn-auth-buttons {
   display: flex;
   gap: 10px;
-  margin-top: 4px;
+  /* Inset to line up with the dividers and section labels. */
+  margin: 0 12px 18px;
 }
 
 .mn-auth-btn {
@@ -616,6 +696,7 @@ function onPointerDown(e: PointerEvent) {
 
 .mn-nav-item:focus-visible,
 .mn-chip:focus-visible,
+.mn-link:focus-visible,
 .mn-ubtn:focus-visible,
 .mn-auth-btn:focus-visible,
 .mn-user-info:focus-visible {
