@@ -23,8 +23,8 @@ RSpec.describe 'Sentry initializer' do # rubocop:disable RSpec/DescribeClass
       expect(sampler.call(parent_sampled: nil)).to eq(SENTRY_TRACES_SAMPLE_RATE)
     end
 
-    it 'defaults to 5%' do
-      expect(SENTRY_TRACES_SAMPLE_RATE).to eq(0.05)
+    it 'defaults to 25%' do
+      expect(SENTRY_TRACES_SAMPLE_RATE).to eq(0.25)
     end
   end
 

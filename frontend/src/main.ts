@@ -23,9 +23,9 @@ Sentry.init({
     // out too, since that's off by default.
     Sentry.graphqlClientIntegration({ endpoints: [`${import.meta.env.VITE_API_URL}/graphql`] })
   ],
-  // Trace 5% of page loads and navigations. Each trace's spans count against
-  // the monthly span quota, so keep this low.
-  tracesSampleRate: 0.05,
+  // Trace 25% of page loads and navigations. Each trace's spans count against
+  // the monthly span quota, so watch usage if this is raised further.
+  tracesSampleRate: 0.25,
   // Send the trace headers (sentry-trace, baggage) on API requests so a
   // traced page load continues into the Rails trace, and the API follows the
   // same sampling decision. The API's CORS config allows any request header.

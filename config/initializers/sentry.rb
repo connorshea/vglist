@@ -3,9 +3,9 @@
 SENTRY_SENSITIVE_HEADERS = %w[authorization cookie x-user-email x-user-token].freeze
 
 # Share of requests and jobs that get a performance trace. Each trace counts
-# every SQL query as a span against the monthly span quota, so keep this
-# low. Override with SENTRY_TRACES_SAMPLE_RATE (0.0 to 1.0).
-SENTRY_TRACES_SAMPLE_RATE = ENV.fetch('SENTRY_TRACES_SAMPLE_RATE', '0.05').to_f
+# every SQL query as a span against the monthly span quota, so watch usage
+# if this is raised further. Override with SENTRY_TRACES_SAMPLE_RATE (0.0 to 1.0).
+SENTRY_TRACES_SAMPLE_RATE = ENV.fetch('SENTRY_TRACES_SAMPLE_RATE', '0.25').to_f
 
 # Decides which transactions are traced. Requests from the SPA carry the
 # frontend's sampling decision in their sentry-trace header, so a page load
