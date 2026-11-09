@@ -26,6 +26,29 @@ RSpec.describe UpcomingReleases do
       expect(described_class.games(12)).to eq([covered, three_owners, two_ids])
     end
 
+    it 'boosts games releasing within SOON, after covers' do
+      # 3 IDs + the soon bonus = 8 points, tying all 8 IDs; the sooner date wins.
+      soon_three_ids = create(:game, :wikidata_id, :pcgamingwiki_id, :giantbomb_id, release_date: 2.months.from_now)
+      later_all_ids = create(
+        :game, :wikidata_id, :pcgamingwiki_id, :giantbomb_id, :steam_app_id, :epic_games_store_id, :gog_id, :igdb_id,
+        :mobygames_id, release_date: 4.months.from_now
+      )
+      # 2 IDs + the bonus = 7 points, beating 6 IDs.
+      soon_two_ids = create(:game, :wikidata_id, :pcgamingwiki_id, release_date: 1.week.from_now)
+      later_six_ids = create(
+        :game, :wikidata_id, :pcgamingwiki_id, :giantbomb_id, :steam_app_id, :gog_id, :igdb_id,
+        release_date: 5.months.from_now
+      )
+      # The bonus alone (5 points) doesn't beat 6 IDs.
+      soon_bare = create(:game, release_date: 3.days.from_now)
+      # A cover still beats the bonus.
+      covered_later = create(:game, :cover, release_date: 5.months.from_now)
+
+      expect(described_class.games(12)).to eq(
+        [covered_later, soon_three_ids, later_all_ids, soon_two_ids, later_six_ids, soon_bare]
+      )
+    end
+
     it 'leaves out released games, games with no release date and games beyond the window' do
       upcoming = create(:game, release_date: 2.days.from_now)
       create(:game, :cover, :wikidata_id, release_date: Time.zone.today)

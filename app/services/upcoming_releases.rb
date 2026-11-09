@@ -4,15 +4,24 @@
 #
 # Works like NewReleases, looking forward instead of back: it takes the
 # CANDIDATES soonest upcoming games within WINDOW and ranks them with the same
-# rules, so games with a cover come first and, within each group, games with
-# more external IDs and more owners come before sparse records. The release
-# date (soonest first) breaks ties.
+# rules, plus a bonus for games releasing soon (see below). Games with a cover
+# come first and, within each group, games with more external IDs and more
+# owners come before sparse records. The release date (soonest first) breaks
+# ties.
 #
 # WINDOW keeps the shelf to games that are actually coming up. Without it, a
 # quiet stretch of the calendar would let a well-linked game that's years out
 # (often a placeholder date) outrank everything releasing in the next few
 # weeks. Six months covers the next couple of release seasons, which is about
 # as far ahead as most release dates are firm.
+#
+# Games releasing within SOON get SOON_BONUS extra points, so the shelf leans
+# toward what's coming in the next few months. Covers still come first. With a
+# bonus of 5 against at most 8 points for external IDs, a game due soon needs
+# only a few links to beat a fully linked game that's further out: 3 IDs and
+# the bonus tie with all 8 IDs. A bare record due soon (5 points) still loses
+# to a well-linked one later on, so the bonus doesn't fill the shelf with
+# empty entries just because their dates are close.
 #
 # The ranked IDs are cached for EXPIRES_IN. The games are loaded fresh on every
 # request, and a game whose release date has arrived since the list was cached
@@ -35,7 +44,11 @@ module UpcomingReleases
   # How far ahead to look. See above.
   WINDOW = 6.months
 
-  CACHE_KEY = 'home_upcoming_releases/v1'
+  # Games releasing within this long get SOON_BONUS. See above.
+  SOON = 3.months
+  SOON_BONUS = 5
+
+  CACHE_KEY = 'home_upcoming_releases/v2'
 
   module_function
 
@@ -63,10 +76,18 @@ module UpcomingReleases
 
     ranked = Game.from(candidates, :games).order(
       Arel.sql("(#{NewReleases::HAS_COVER_SQL}) DESC"),
-      Arel.sql("(#{NewReleases::SCORE_SQL}) DESC"),
+      Arel.sql("#{score_sql} DESC"),
       release_date: :asc,
       id: :asc
     )
     ranked.limit(CACHED).pluck(:id)
+  end
+
+  # NewReleases' score plus SOON_BONUS for games releasing within SOON.
+  #
+  # @return [String]
+  def score_sql
+    soon_sql = Game.sanitize_sql_array(['(CASE WHEN release_date < ? THEN ? ELSE 0 END)', SOON.from_now.to_date, SOON_BONUS])
+    "(#{NewReleases::SCORE_SQL}) + #{soon_sql}"
   end
 end
