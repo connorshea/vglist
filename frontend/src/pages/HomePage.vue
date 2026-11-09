@@ -94,6 +94,7 @@
       </aside>
 
       <GameShelf :sort="NEW_RELEASES" :rows="2" />
+      <GameShelf :sort="UPCOMING_RELEASES" />
       <GameShelf :sort="RECENTLY_ADDED" />
 
       <p v-if="siteStats" class="home-stats">
@@ -118,6 +119,7 @@ import { GET_HERO_COVERS } from "@/graphql/queries/games";
 import { GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import type { GetBasicSiteStatisticsQuery, GetGamesIndexFiltersQuery } from "@/types/graphql";
 import GameShelf from "@/components/home/GameShelf.vue";
+import { UPCOMING_RELEASES } from "@/components/home/shelves";
 import SkeletonBlock from "@/components/SkeletonBlock.vue";
 import { countLabel, gameSortFromSlug } from "@/components/games-index/format";
 
