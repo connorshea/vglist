@@ -1,7 +1,19 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import type { ErrorEvent } from "@sentry/vue";
 import type { TransactionEvent } from "./sentry-filter";
-import { beforeSend, beforeSendTransaction, dropHandledChunkErrors, scrubTokenParams } from "./sentry-filter";
+import {
+  beforeSend,
+  beforeSendTransaction,
+  dropHandledChunkErrors,
+  isAutomatedBrowser,
+  scrubTokenParams,
+  TRACES_SAMPLE_RATE,
+  tracesSampler
+} from "./sentry-filter";
+
+const CHROME =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36";
+const HEADLESS_CHROME = CHROME.replace("Chrome/", "HeadlessChrome/");
 
 function eventWith(message: string): ErrorEvent {
   return { type: undefined, exception: { values: [{ type: "TypeError", value: message }] } };
@@ -92,5 +104,35 @@ describe("beforeSendTransaction", () => {
     expect(JSON.stringify(scrubbed)).not.toContain("secret");
     expect(scrubbed.contexts?.trace?.data?.["query.reset_password_token"]).toBe("[Filtered]");
     expect(scrubbed.contexts?.trace?.data?.["query.page"]).toBe("2");
+  });
+});
+
+describe("isAutomatedBrowser", () => {
+  it("is false for a regular browser", () => {
+    expect(isAutomatedBrowser({ userAgent: CHROME, webdriver: false })).toBeFalsy();
+  });
+
+  it("detects headless Chrome by its user agent", () => {
+    expect(isAutomatedBrowser({ userAgent: HEADLESS_CHROME, webdriver: false })).toBeTruthy();
+  });
+
+  it("detects a WebDriver-controlled browser with a regular user agent", () => {
+    expect(isAutomatedBrowser({ userAgent: CHROME, webdriver: true })).toBeTruthy();
+  });
+});
+
+describe("tracesSampler", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("samples regular browsers at the normal rate", () => {
+    vi.stubGlobal("navigator", { userAgent: CHROME, webdriver: false });
+    expect(tracesSampler()).toBe(TRACES_SAMPLE_RATE);
+  });
+
+  it("never samples automated browsers", () => {
+    vi.stubGlobal("navigator", { userAgent: HEADLESS_CHROME, webdriver: false });
+    expect(tracesSampler()).toBe(0);
   });
 });

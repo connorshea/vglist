@@ -78,3 +78,28 @@ export function beforeSend(event: ErrorEvent, hint: EventHint): ErrorEvent | nul
 export function beforeSendTransaction(event: TransactionEvent): TransactionEvent {
   return scrubTokens(event);
 }
+
+// Share of real page loads and navigations that are traced. Each trace's
+// spans count against the monthly span quota, so watch usage if this is
+// raised further.
+export const TRACES_SAMPLE_RATE = 0.25;
+
+/**
+ * Whether the page is running in a script-driven browser: crawlers,
+ * screenshot services, and uptime checks. Old headless Chrome says so in its
+ * user agent. The new headless mode doesn't, but anything driven over
+ * WebDriver or the DevTools protocol sets `navigator.webdriver`.
+ */
+export function isAutomatedBrowser(nav: Pick<Navigator, "userAgent" | "webdriver"> = navigator): boolean {
+  return nav.webdriver || /HeadlessChrome/i.test(nav.userAgent);
+}
+
+/**
+ * Sentry `tracesSampler`. Never traces automated browsers: they were a fifth
+ * of page loads, which skewed the page load timings and spent span quota on
+ * visits nobody was waiting on. The decision travels to the API in the trace
+ * headers, so their GraphQL requests go untraced too. Errors aren't affected.
+ */
+export function tracesSampler(): number {
+  return isAutomatedBrowser() ? 0 : TRACES_SAMPLE_RATE;
+}
