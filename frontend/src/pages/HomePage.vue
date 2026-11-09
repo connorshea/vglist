@@ -530,10 +530,16 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+/* The width is set explicitly because browsers disagree on the shrink-to-fit
+   width of this absolutely positioned box. Firefox sizes it to the space left
+   in the scene (150%), while Chrome uses the rows' full max-content width
+   (~4800px). That moves the transform origin far to the right in Chrome, so
+   the rotated mosaic no longer covers the left side of the hero. */
 .cover-mosaic {
   position: absolute;
   top: -45%;
   left: -50%;
+  width: 150%;
   transform: rotateX(12deg) rotateZ(-23deg);
   transform-style: preserve-3d;
   opacity: 0;
@@ -552,9 +558,12 @@ onUnmounted(() => {
    second copy lands exactly where the first started. That only holds if the
    row's width is two equal copies of tile + gap: the trailing padding is the
    gap after the last tile, without which -50% falls 5px short of one copy and
-   the whole row jumps sideways every time the animation loops. */
+   the whole row jumps sideways every time the animation loops. The row must
+   also be as wide as its tiles (max-content) rather than stretched to the
+   mosaic's width, or -50% is half the mosaic instead of one copy. */
 .mosaic-row {
   display: flex;
+  width: max-content;
   gap: 10px;
   padding-right: 10px;
   animation: rowScrollLeft 80s linear infinite;
