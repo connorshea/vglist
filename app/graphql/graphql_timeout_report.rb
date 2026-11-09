@@ -5,7 +5,7 @@
 # so without this they'd never show up in Sentry:
 #
 # - :statement_timeout, a single SQL statement cancelled by the Postgres
-#   statement timeout (see GraphqlController#with_statement_timeout).
+#   statement timeout (see config/database.yml).
 # - :query_timeout, the whole query running past QueryTimeout's limit.
 #
 # Events are grouped by timeout kind and operation, so each slow operation

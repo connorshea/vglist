@@ -6,8 +6,6 @@ class GraphqlController < ApplicationController
   # used in development and tests builds URLs from the current request's host.
   include ActiveStorage::SetCurrent
 
-  around_action :with_statement_timeout, only: :execute
-
   # Authentication is optional here: `current_user` comes from the JWT if one
   # is sent, and the schema itself handles auth for individual queries and
   # mutations. This allows unauthenticated mutations like signIn and signUp
@@ -73,29 +71,6 @@ class GraphqlController < ApplicationController
     return unless OperationAllowlist.operations.key?(operation_name)
 
     Sentry.configure_scope { |scope| scope.set_transaction_name("GraphQL #{operation_name}") }
-  end
-
-  # Cap how long any single SQL statement may run while serving a GraphQL
-  # request, so one expensive query can't hold a database connection
-  # indefinitely. Postgres cancels the statement and VideoGameListSchema turns
-  # the error into a GraphQL error. Override with GRAPHQL_STATEMENT_TIMEOUT
-  # (a Postgres duration, e.g. "15s").
-  def with_statement_timeout
-    connection = ActiveRecord::Base.lease_connection
-    timeout = ENV.fetch('GRAPHQL_STATEMENT_TIMEOUT', '10s')
-    connection.execute("SET statement_timeout = #{connection.quote(timeout)}")
-    yield
-  ensure
-    # Connections are pooled and reused by other requests and jobs, so put the
-    # server default back. The SET ran outside any transaction, so nothing rolls
-    # it back for us. If the RESET fails, drop the connection instead: the next
-    # checkout reconnects with a fresh session and the default timeout.
-    begin
-      connection&.execute('RESET statement_timeout')
-    rescue ActiveRecord::ActiveRecordError => e
-      Rails.logger.warn("Could not reset statement_timeout, disconnecting: #{e.message}")
-      connection.disconnect!
-    end
   end
 
   # Only operations the SPA sends are executed, see OperationAllowlist. Admins

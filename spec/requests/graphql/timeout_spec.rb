@@ -11,31 +11,39 @@ RSpec.describe "GraphQL timeouts", type: :request do
     post graphql_path, params: { query: query }.to_json, headers: { 'Content-Type' => 'application/json' }
   end
 
-  def statement_timeout
-    ActiveRecord::Base.lease_connection.select_value('SHOW statement_timeout')
+  # Stand-in for a statement that runs past the statement timeout. The real
+  # timeout is set per connection from config/database.yml, so lower it for
+  # this test's transaction only.
+  def make_game_count_slow
+    allow(Game).to receive(:count) do
+      connection = ActiveRecord::Base.lease_connection
+      connection.execute("SET LOCAL statement_timeout = '50ms'")
+      connection.execute('SELECT pg_sleep(1)')
+    end
   end
 
-  it 'sets a statement timeout while executing and resets it afterwards' do
-    timeout_during_request = nil
-    allow(Game).to receive(:count) do
-      timeout_during_request = statement_timeout
-      0
+  describe 'the statement timeout in config/database.yml' do
+    def database_config(timeout)
+      with_environment('DB_STATEMENT_TIMEOUT' => timeout) do
+        Rails.application.config.database_configuration.fetch('test')
+      end
     end
-    default = statement_timeout
 
-    graphql(query)
+    it 'is set on each connection when DB_STATEMENT_TIMEOUT is set' do
+      expect(database_config('10s')['variables']).to eq('statement_timeout' => '10s')
+    end
 
-    expect(response).to have_http_status(:success)
-    expect(timeout_during_request).to eq('10s')
-    expect(statement_timeout).to eq(default)
+    # Migrations, rake tasks and the console don't load config/puma.rb, so they
+    # keep the server default. An empty `variables` would also break dbconsole.
+    it 'is left out when DB_STATEMENT_TIMEOUT is unset' do
+      expect(database_config(nil)).not_to have_key('variables')
+    end
   end
 
   it 'cancels a slow statement and returns a GraphQL error' do
-    allow(Game).to receive(:count) { ActiveRecord::Base.lease_connection.execute('SELECT pg_sleep(1)') }
+    make_game_count_slow
 
-    with_environment('GRAPHQL_STATEMENT_TIMEOUT' => '50ms') do
-      graphql(query)
-    end
+    graphql(query)
 
     expect(response).to have_http_status(:success)
     expect(response.parsed_body['errors'].first['message']).to eq('This request took too long and was cancelled.')
@@ -57,11 +65,9 @@ RSpec.describe "GraphQL timeouts", type: :request do
     end
 
     it 'reports a cancelled statement, grouped by operation', :aggregate_failures do
-      allow(Game).to receive(:count) { ActiveRecord::Base.lease_connection.execute('SELECT pg_sleep(1)') }
+      make_game_count_slow
 
-      with_environment('GRAPHQL_STATEMENT_TIMEOUT' => '50ms') do
-        graphql('query SlowStats { basicSiteStatistics { games } }')
-      end
+      graphql('query SlowStats { basicSiteStatistics { games } }')
 
       expect(captured.size).to eq(1)
       expect(captured.first[:args].first).to be_a(ActiveRecord::QueryCanceled)
