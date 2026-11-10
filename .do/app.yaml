@@ -173,6 +173,15 @@ services:
       # requests sharing a worker, 2ms queries took 100-160ms.
       - key: RUBY_THREAD_TIMESLICE
         value: "10"
+      # YJIT off (see config.yjit in production.rb). With it on, requests ran
+      # about ten times slower for the first ten minutes after every deploy
+      # (GraphQL p50 ~360ms against 27ms) while the API's CPU was spent
+      # compiling. With it off they're at full speed from the first minute,
+      # and the pre-fork warm-up takes 3s instead of 23s. The cost once warm
+      # is small because most request time is the database (GetGame p50 68ms
+      # against 58ms). Measured on the Nov 10 2026 00:24 UTC deploy.
+      - key: YJIT_ENABLED
+        value: "false"
       - key: API_HOST
         value: api.vglist.co
       - key: FRONTEND_URL
