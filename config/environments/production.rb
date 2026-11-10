@@ -14,6 +14,11 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
+  # YJIT is on by default (config.load_defaults enables it). Set YJIT_ENABLED
+  # to "false" on the API service to boot without it, e.g. to compare request
+  # times in the minutes after a deploy with and without the JIT.
+  config.yjit = ENV.fetch('YJIT_ENABLED', 'true') != 'false'
+
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
