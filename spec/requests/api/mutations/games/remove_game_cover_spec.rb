@@ -31,6 +31,14 @@ RSpec.describe "RemoveGameCover Mutation API", type: :request do
         end.to change(Game.where.missing(:cover_attachment), :count).by(1)
       end
 
+      it "deletes the cover's files in the background" do
+        game
+
+        expect do
+          api_request(query_string, variables: { id: game.id }, token: access_token)
+        end.to have_enqueued_job(ActiveStorage::PurgeJob).with(game.cover.blob)
+      end
+
       it "returns basic data for game after removing cover" do
         game
 

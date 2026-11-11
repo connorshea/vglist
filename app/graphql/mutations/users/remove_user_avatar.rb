@@ -12,7 +12,9 @@ class Mutations::Users::RemoveUserAvatar < Mutations::BaseMutation
 
     raise GraphQL::ExecutionError, "User has no avatar attached." unless user&.avatar&.attached?
 
-    user&.avatar&.purge
+    # Deleting the files from storage takes seconds (the original plus every
+    # variant), so do it in the background. The avatar is detached straight away.
+    user.avatar.purge_later
 
     {
       user: user

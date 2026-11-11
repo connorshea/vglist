@@ -31,6 +31,14 @@ RSpec.describe "RemoveUserAvatar Mutation API", type: :request do
         end.to change(User.where.missing(:avatar_attachment), :count).by(1)
       end
 
+      it "deletes the avatar's files in the background" do
+        user2
+
+        expect do
+          api_request(query_string, variables: { id: user2.id }, token: access_token)
+        end.to have_enqueued_job(ActiveStorage::PurgeJob).with(user2.avatar.blob)
+      end
+
       it "returns basic data for user after removing avatar" do
         user2
 
