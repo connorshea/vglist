@@ -14,6 +14,9 @@ interface AuthUser {
   // The small (80px) avatar for the navbar, or null when the user has none.
   // Loaded after sign-in by refreshCurrentUserAvatar(), so it can be missing.
   avatarUrl?: string | null;
+  // When avatarUrl was last fetched (ms since the epoch), so the navbar can
+  // skip re-fetching it on every page load. See refreshCurrentUserAvatar().
+  avatarCheckedAt?: number;
 }
 
 function loadStoredUser(): AuthUser | null {

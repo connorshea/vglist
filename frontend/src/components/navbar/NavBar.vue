@@ -165,8 +165,9 @@ const username = computed(() => authStore.user?.username ?? "");
 const profilePath = computed(() => `/users/${authStore.user?.slug}`);
 
 // signIn stores the avatar, so it shows straight away; this refresh keeps it
-// current if it changed on another device. The sign-in page has no navbar,
-// so this also runs once when the navbar mounts after signing in.
+// current if it changed on another device (checking at most hourly, see
+// refreshCurrentUserAvatar). The sign-in page has no navbar, so this also
+// runs once when the navbar mounts after signing in.
 watch(
   () => authStore.token,
   (token) => {

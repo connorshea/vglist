@@ -200,7 +200,7 @@ async function saveAvatar(blob: Blob) {
   try {
     avatarUrl.value = await uploadAvatar(blob, authStore.token);
     // The upload returns the large variant; the navbar wants the small one.
-    void refreshCurrentUserAvatar();
+    void refreshCurrentUserAvatar({ force: true });
     avatarFile.value = null;
     showSnackbar("Your avatar has been updated.");
   } catch (e) {
