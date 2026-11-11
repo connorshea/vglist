@@ -30,7 +30,7 @@ class Mutations::GamePurchases::AddGameToLibrary < Mutations::BaseMutation
   )
     game = Game.find(game_id)
 
-    game_purchase = GamePurchase.create(
+    game_purchase = GamePurchase.new(
       user: @context[:current_user],
       game: game,
       completion_status: completion_status,
