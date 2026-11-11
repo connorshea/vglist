@@ -206,6 +206,14 @@ RSpec.describe GamePurchase, type: :model do
         expect { game_purchase2.destroy }.to change(game, :avg_rating).from(15).to(nil)
       end
 
+      it "updates the rating of a game that wouldn't pass its own validations" do
+        game_purchase2
+        # Ratings changes come from a user's library, so a problem with the
+        # game's own data mustn't stop them from being counted.
+        game.update_column(:name, 'a' * 200) # rubocop:disable Rails/SkipsModelValidations
+        expect { game_purchase3 }.to change { game.reload.avg_rating }.from(15).to(10)
+      end
+
       it "counts only rated library entries in the game's ratings_count" do
         game_purchase1
         game_purchase2

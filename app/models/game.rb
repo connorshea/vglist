@@ -230,11 +230,19 @@ class Game < ApplicationRecord
   # Game.highest_avg_rating filters on) from the game's library entries.
   # With no ratings, the average is nil. Called after every library entry
   # change, and after a merge moves another game's entries onto this one.
+  #
+  # Writes the two columns directly. A full save would re-run every Game
+  # validation (one uniqueness query per external ID, the Wikidata blocklist)
+  # and the search document update on each library change, none of which a
+  # rating change can affect.
   # @return [Boolean] Whether the game saved.
   def update_ratings
     count, average = game_purchases.where.not(rating: nil)
                                    .pick(Arel.sql('count(*)'), Arel.sql('avg(rating)'))
-    update(avg_rating: average&.round(1), ratings_count: count)
+    average = average&.round(1)
+    return true if ratings_count == count && avg_rating == average
+
+    update_columns(avg_rating: average, ratings_count: count, updated_at: Time.current) # rubocop:disable Rails/SkipsModelValidations
   end
 
   protected
