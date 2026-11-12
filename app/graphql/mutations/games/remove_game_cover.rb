@@ -12,7 +12,9 @@ class Mutations::Games::RemoveGameCover < Mutations::BaseMutation
 
     raise GraphQL::ExecutionError, "Game has no cover attached." unless game&.cover&.attached?
 
-    game&.cover&.purge
+    # Deleting the files from storage takes seconds (the original plus every
+    # variant), so do it in the background. The cover is detached straight away.
+    game.cover.purge_later
 
     {
       game: game

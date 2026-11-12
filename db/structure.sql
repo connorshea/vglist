@@ -2640,6 +2640,13 @@ CREATE INDEX index_games_on_name_tsvector ON public.games USING gin (to_tsvector
 
 
 --
+-- Name: index_games_on_pcgamingwiki_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_games_on_pcgamingwiki_id ON public.games USING btree (pcgamingwiki_id);
+
+
+--
 -- Name: index_games_on_release_date_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3183,6 +3190,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261112000000'),
 ('20261109030000'),
 ('20261108230200'),
 ('20261108230100'),

@@ -36,6 +36,19 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
       end.to change(GamePurchase, :count).by(1)
     end
 
+    it "saves the library entry once" do
+      game
+      rating_queries = 0
+      count_rating_queries = ->(*, payload) { rating_queries += 1 if payload[:sql].include?('avg(rating)') }
+
+      ActiveSupport::Notifications.subscribed(count_rating_queries, 'sql.active_record') do
+        api_request(query_string, variables: { id: game.id }, token: access_token)
+      end
+
+      # Each save recalculates the game's ratings (GamePurchase#game_purchase_update).
+      expect(rating_queries).to eq(1)
+    end
+
     it "returns basic data for game purchase after adding it to user's library" do
       game
 
