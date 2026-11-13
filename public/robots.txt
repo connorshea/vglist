@@ -16,6 +16,15 @@ Disallow: /
 User-agent: ShapBot
 Disallow: /
 
+# Reflection AI's crawler, which collects training data for its models
+User-agent: Reflectionbot
+Disallow: /
+
+# Lyrenth's AI web index
+User-agent: AIWebIndex
+User-agent: AIWebIndex-Agent
+Disallow: /
+
 User-agent: ClaudeBot
 Crawl-delay: 20
 Disallow: /rails/active_storage/
