@@ -66,7 +66,7 @@ gem 'sentry-rails', '~> 7.2.0'
 gem 'vernier', '~> 1.12', require: false
 
 # GraphQL API https://github.com/rmosolgo/graphql-ruby
-gem 'graphql', '~> 2.6.14'
+gem 'graphql', '~> 2.6.15'
 
 # Rack::Cors for handling CORS in API requests.
 gem "rack-cors", "~> 3.0"
