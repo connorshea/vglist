@@ -12,6 +12,10 @@ Allow: /
 User-agent: GPTBot
 Disallow: /
 
+# Parallel's AI search crawler
+User-agent: ShapBot
+Disallow: /
+
 User-agent: ClaudeBot
 Crawl-delay: 20
 Disallow: /rails/active_storage/
