@@ -9,8 +9,15 @@
 #
 # Without this, a page of 24 tiles runs a `games(first: 4)` query plus the
 # attachment and variant lookups for every tile, about 145 queries in all.
+#
+# Each record's game IDs are then cached for EXPIRES_IN, since finding them
+# reads every game of a mid-sized genre or company along with its cover
+# attachment (100-500ms for a page in production), and which games make up a
+# tile only matters roughly. The games themselves are always loaded fresh.
 class LazyCoverGames
   LIMIT = 4
+
+  EXPIRES_IN = 6.hours
 
   # Records with at least this many games find their top games by walking
   # every game from most-owned down, stopping at the fourth of theirs with a
@@ -67,16 +74,38 @@ class LazyCoverGames
   end
 
   def load_pending
-    big, small = @state[:pending].keys.partition { |id| @state[:pending][id].to_i >= WALK_THRESHOLD }
-    rows = ActiveRecord::Base.connection.select_rows(top_games_sql(big, small))
-    games = Game.where(id: rows.map(&:second)).with_attached_cover.index_by(&:id)
+    ids = cover_game_ids(@state[:pending])
+    games = Game.where(id: ids.values.flatten).with_attached_cover.index_by(&:id)
 
-    loaded = @state[:pending].keys.index_with { [] }
-    rows.each { |record_id, game_id| loaded[record_id] << games.fetch(game_id) }
-    # The union's rows come back in no particular order.
-    loaded.each_value { |list| list.sort_by! { |game| [-game.game_purchases_count, game.id] } }
+    # A cached game may have been deleted or lost its cover since.
+    loaded = ids.transform_values do |game_ids|
+      game_ids.filter_map { |id| games[id] if games[id]&.cover&.attached? }
+              .sort_by { |game| [-game.game_purchases_count, game.id] }
+    end
     @state[:loaded].merge!(loaded)
     @state[:pending].clear
+  end
+
+  # @param pending [Hash{Integer => Integer, nil}] Record ID => its game count.
+  # @return [Hash{Integer => Array<Integer>}] Record ID => its top game IDs,
+  #   from the cache where they're there and from the database otherwise.
+  def cover_game_ids(pending)
+    keys = pending.keys.index_by { |id| cache_key(id) }
+    cached = Rails.cache.read_multi(*keys.keys).transform_keys(&keys)
+    missing = pending.except(*cached.keys)
+    return cached if missing.empty?
+
+    big, small = missing.keys.partition { |id| missing[id].to_i >= WALK_THRESHOLD }
+    rows = ActiveRecord::Base.connection.select_rows(top_games_sql(big, small))
+    found = missing.keys.index_with { [] }
+    rows.each { |record_id, game_id| found[record_id] << game_id }
+
+    Rails.cache.write_multi(found.transform_keys { |id| cache_key(id) }, expires_in: EXPIRES_IN)
+    cached.merge(found)
+  end
+
+  def cache_key(record_id)
+    "cover_games/#{@kind}/#{record_id}"
   end
 
   # The top games per record, by the same owner counter cache as

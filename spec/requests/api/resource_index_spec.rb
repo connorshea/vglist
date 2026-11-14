@@ -172,6 +172,50 @@ RSpec.describe "Resource index API", type: :request do
 
       expect(query_count { api_request(query_string, token: access_token) }).to eq(baseline)
     end
+
+    context "with a cache" do
+      include ActiveSupport::Testing::TimeHelpers
+
+      around(:each) do |example|
+        original = Rails.cache
+        Rails.cache = ActiveSupport::Cache::MemoryStore.new
+        example.run
+      ensure
+        Rails.cache = original
+      end
+
+      let!(:games) do
+        Array.new(2) { |i| create(:game, :cover, name: "Game #{i}").tap { |game| create(:game_genre, game: game, genre: genre) } }
+      end
+
+      it "keeps each record's games until they expire" do
+        expect(cover_game_names).to eq("Action" => ["Game 0", "Game 1"])
+
+        create(:game_genre, game: create(:game, :cover, name: "New"), genre: genre)
+        expect(cover_game_names).to eq("Action" => ["Game 0", "Game 1"])
+
+        travel(LazyCoverGames::EXPIRES_IN + 1.minute) do
+          expect(cover_game_names).to eq("Action" => ["Game 0", "Game 1", "New"])
+        end
+      end
+
+      it "drops cached games that were deleted or lost their cover" do
+        expect(cover_game_names).to eq("Action" => ["Game 0", "Game 1"])
+
+        games.first.destroy!
+        expect(cover_game_names).to eq("Action" => ["Game 1"])
+
+        games.second.cover.purge
+        expect(cover_game_names).to eq("Action" => [])
+      end
+
+      it "reorders cached games by their current owner counts" do
+        expect(cover_game_names).to eq("Action" => ["Game 0", "Game 1"])
+
+        create(:game_purchase, game: games.second)
+        expect(cover_game_names).to eq("Action" => ["Game 1", "Game 0"])
+      end
+    end
   end
 
   describe "coverGames on companies and engines" do
@@ -202,11 +246,7 @@ RSpec.describe "Resource index API", type: :request do
       create(:game_publisher, company: company, game: create(:game, :cover, name: "Published"))
       stub_const("LazyCoverGames::WALK_THRESHOLD", 2)
 
-      # The company's count is only loaded when the list asks for it.
-      query = "query { companies(sortBy: NAME) { nodes { name gamesCount coverGames { name } } } }"
-      nodes = api_request(query, token: access_token).graphql_dig(:companies, :nodes)
-
-      expect(nodes.map { |node| [node[:gamesCount], node[:coverGames].pluck(:name)] }).to eq([[2, ["Both", "Published"]]])
+      expect(covers(:companies)).to eq("Valve" => ["Both", "Published"])
     end
 
     it "uses games built with an engine" do
