@@ -112,15 +112,21 @@ RSpec.describe WikidataSparql do
 
     before(:each) { allow(described_class).to receive(:sleep) }
 
-    it 'sends the configured User-Agent' do
+    it 'sends the configured User-Agent over HTTP' do
       ENV['WIKIDATA_QUERY_USER_AGENT'] = 'test-agent'
-      client = instance_double(SPARQL::Client, query: [])
-      allow(SPARQL::Client).to receive(:new).and_return(client)
+      # Stub at the HTTP layer rather than SPARQL::Client.new: sparql-client
+      # only recognizes a String 'User-Agent' key and silently replaces
+      # anything else with its own default, so only the real request proves
+      # which header goes out.
+      request = stub_request(:post, described_class::ENDPOINT).to_return(
+        status: 200,
+        headers: { 'Content-Type' => 'application/sparql-results+json' },
+        body: { head: { vars: ['s'] }, results: { bindings: [] } }.to_json
+      )
 
       described_class.query('SELECT * WHERE { ?s ?p ?o } LIMIT 1')
 
-      expect(SPARQL::Client).to have_received(:new)
-        .with(described_class::ENDPOINT, hash_including(headers: { 'User-Agent': 'test-agent' }))
+      expect(request.with(headers: { 'User-Agent' => 'test-agent' })).to have_been_made.once
     end
 
     it 'fails before sending anything when WIKIDATA_QUERY_USER_AGENT is unset' do

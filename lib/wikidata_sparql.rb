@@ -147,7 +147,9 @@ module WikidataSparql
     SPARQL::Client.new(
       ENDPOINT,
       method: :post,
-      headers: { 'User-Agent': user_agent },
+      # String key on purpose: sparql-client only checks headers['User-Agent']
+      # and otherwise sends its own default, overriding a Symbol key.
+      headers: { 'User-Agent' => user_agent },
       read_timeout: 300
     )
   end
