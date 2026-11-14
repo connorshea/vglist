@@ -89,9 +89,15 @@ updates:
       - connorshea
     cooldown:
       default-days: 3
-    # One PR across both Dockerfiles for minor/patch/digest bumps. Majors
-    # (e.g. a new Ruby or Node line) stay separate since they need manual
-    # follow-up elsewhere.
+    # Ruby gets its own PR because any version bump needs manual follow-up
+    # commits (see above), which would stall the shared group's rebases.
+    # Dependabot assigns each update to the first group it matches.
     groups:
+      docker-ruby:
+        patterns: ["ruby"]
+        update-types: [minor, patch]
+      # One PR across both Dockerfiles for the remaining minor/patch/digest
+      # bumps. Majors (e.g. a new Node line) stay separate since they need
+      # manual follow-up elsewhere.
       docker-minor-patch:
         update-types: [minor, patch]
