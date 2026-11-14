@@ -52,6 +52,15 @@
 		#   inline <script> tags. challenges.cloudflare.com serves the
 		#   Turnstile script for the sign-up form's bot check, and frame-src
 		#   allows the challenge iframe it renders.
+		# - 'nonce-{http.request.uuid}' is for Cloudflare, not us. Bot Fight
+		#   Mode injects an inline JavaScript Detections script into every
+		#   HTML response, and that script embeds a per-request ray ID, so
+		#   it can't be allowed by hash. Cloudflare reads the nonce from this
+		#   header and adds it to the script it injects. The UUID is new on
+		#   every request and the same across both CSP headers below; HTML
+		#   is served no-cache, so a nonce is never reused from a cache. Our
+		#   own scripts load from 'self' and don't use the nonce.
+		#   https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/#if-you-have-a-content-security-policy-csp
 		# - style-src 'self' 'unsafe-inline' + style-src-attr 'unsafe-inline':
 		#   Vue's :style bindings render inline style="" attributes at runtime.
 		#   'unsafe-inline' on style-src-attr covers those. style-src also
@@ -67,7 +76,7 @@
 		#   (only works as a real header, not via <meta>).
 		# - upgrade-insecure-requests auto-upgrades any stray http:// asset
 		#   URLs (e.g. from older cached data) to https://.
-		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-{http.request.uuid}' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} https://*.sentry.io; upgrade-insecure-requests"
 
 		# Stricter candidate policy, report-only while we check it breaks
 		# nothing. Once it's quiet, it replaces the enforced policy above.
@@ -95,7 +104,7 @@
 		#   the directive stays valid when CSP_REPORT_URI is empty.
 		# - No upgrade-insecure-requests: browsers ignore it (with a console
 		#   warning) in a report-only policy. Add it back when promoting.
-		Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'sha256-WFDtyQ8I111UJiy9VSzAQXXjXb4NUiZ9nrPyP63GEvU='; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} {$SENTRY_INGEST_ORIGIN:https://*.sentry.io}; worker-src 'none'; manifest-src 'self'; report-uri /csp-report {$CSP_REPORT_URI}"
+		Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-{http.request.uuid}' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'sha256-WFDtyQ8I111UJiy9VSzAQXXjXb4NUiZ9nrPyP63GEvU='; style-src-attr 'unsafe-inline'; img-src 'self' data: https://files.vglist.co; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:https://api.vglist.co} {$SENTRY_INGEST_ORIGIN:https://*.sentry.io}; worker-src 'none'; manifest-src 'self'; report-uri /csp-report {$CSP_REPORT_URI}"
 	}
 
 	encode {
