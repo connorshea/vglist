@@ -43,7 +43,8 @@ class GraphqlController < ApplicationController
     }
 
     cache_key = PublicResponseCache.key_for(query, operation_name, variables, current_user)
-    if cache_key && (cached = Rails.cache.read(cache_key))
+    store_at_origin = cache_key && PublicResponseCache.store_at_origin?(operation_name)
+    if store_at_origin && (cached = Rails.cache.read(cache_key))
       allow_shared_caching
       render json: cached
       return
@@ -52,7 +53,7 @@ class GraphqlController < ApplicationController
     result = VideoGameListSchema.execute(query.to_s, variables: variables, context: context, operation_name: operation_name)
     # Only successful responses are cached, so a timeout isn't served for minutes.
     if cache_key && result['errors'].blank?
-      Rails.cache.write(cache_key, result.to_json, expires_in: PublicResponseCache::EXPIRES_IN)
+      Rails.cache.write(cache_key, result.to_json, expires_in: PublicResponseCache::EXPIRES_IN) if store_at_origin
       allow_shared_caching
     end
     render json: result
