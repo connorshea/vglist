@@ -237,3 +237,19 @@ export const GET_LIBRARY_SHELVES = gql`
   }
   ${LIBRARY_PLAYING_PURCHASE_FIELDS}
 `;
+
+// The game's platforms, which the library entry form offers when it's opened
+// from the library rather than from the game's page.
+export const GET_LIBRARY_ENTRY_GAME = gql`
+  query GetLibraryEntryGame($id: ID!) {
+    game(id: $id) {
+      id
+      platforms {
+        nodes {
+          id
+          name
+        }
+      }
+    }
+  }
+`;

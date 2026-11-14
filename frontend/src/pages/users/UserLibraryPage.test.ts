@@ -3,6 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils";
 import { createMemoryHistory, createRouter } from "vue-router";
 import UserLibraryPage from "./UserLibraryPage.vue";
 import LibraryPageSkeleton from "@/components/library/LibraryPageSkeleton.vue";
+import LibraryEntryEditor from "@/components/library/LibraryEntryEditor.vue";
 import LibrarySkeleton from "@/components/library/LibrarySkeleton.vue";
 import { GET_LIBRARY_GAMES, GET_LIBRARY_PAGE, GET_LIBRARY_SHELVES } from "@/graphql/queries/library";
 
@@ -80,7 +81,10 @@ async function mountLibrary(path = "/users/connorshea/library") {
     ]
   });
   await router.push(path);
-  const wrapper = mount({ template: "<router-view />" }, { global: { plugins: [router] } });
+  const wrapper = mount(
+    { template: "<router-view />" },
+    { global: { plugins: [router], stubs: { LibraryEntryEditor: true } } }
+  );
   await flushPromises();
   return wrapper;
 }
@@ -141,5 +145,74 @@ describe("UserLibraryPage loading state", () => {
     await resolve(GET_LIBRARY_GAMES, GAMES);
     expect(wrapper.findComponent(LibrarySkeleton).exists()).toBeFalsy();
     expect(wrapper.find(".library-result-count").text()).toBe("0 games");
+  });
+});
+
+describe("UserLibraryPage editing", () => {
+  const GAME = {
+    id: "50",
+    game: { id: "500", name: "Outer Wilds", coverUrl: null },
+    hoursPlayed: null,
+    completionStatus: "COMPLETED",
+    rating: 95
+  };
+
+  function respond(pageUserId: string) {
+    mockRequest.mockImplementation((query) => {
+      if (query === GET_LIBRARY_PAGE) {
+        return Promise.resolve({ user: { ...PAGE.user, id: pageUserId } });
+      }
+      if (query === GET_LIBRARY_GAMES) {
+        return Promise.resolve({
+          user: {
+            id: pageUserId,
+            gamePurchases: { totalCount: 1, pageInfo: { hasNextPage: false, endCursor: null }, nodes: [GAME] }
+          }
+        });
+      }
+      return Promise.resolve(SHELVES);
+    });
+  }
+
+  beforeEach(() => {
+    mockRequest.mockReset();
+  });
+
+  it("offers an edit button on each game in your own library, which opens the drawer", async () => {
+    respond("1");
+    const wrapper = await mountLibrary("/users/connorshea/library?status=COMPLETED");
+
+    const edit = wrapper.find(".library-tile-edit");
+    expect(edit.attributes("aria-label")).toBe("Edit library entry for Outer Wilds");
+    expect(wrapper.findComponent(LibraryEntryEditor).exists()).toBeFalsy();
+
+    await edit.trigger("click");
+    expect(wrapper.findComponent(LibraryEntryEditor).props("purchase")).toEqual(GAME);
+    expect(wrapper.findComponent(LibraryEntryEditor).props("variant")).toBe("drawer");
+  });
+
+  it("fetches the library again after a change, and closes the drawer", async () => {
+    respond("1");
+    const wrapper = await mountLibrary("/users/connorshea/library?status=COMPLETED");
+    await wrapper.find(".library-tile-edit").trigger("click");
+    mockRequest.mockClear();
+
+    const editor = wrapper.findComponent(LibraryEntryEditor);
+    editor.vm.$emit("changed");
+    editor.vm.$emit("close");
+    await flushPromises();
+
+    const queries = mockRequest.mock.calls.map(([query]) => query);
+    expect(queries).toContain(GET_LIBRARY_PAGE);
+    expect(queries).toContain(GET_LIBRARY_GAMES);
+    expect(wrapper.findComponent(LibraryEntryEditor).exists()).toBeFalsy();
+  });
+
+  it("doesn't offer editing on someone else's library", async () => {
+    respond("2");
+    const wrapper = await mountLibrary("/users/someone/library?status=COMPLETED");
+
+    expect(wrapper.find(".library-tile").exists()).toBeTruthy();
+    expect(wrapper.find(".library-tile-edit").exists()).toBeFalsy();
   });
 });

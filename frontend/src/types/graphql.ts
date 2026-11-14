@@ -1488,6 +1488,14 @@ export type LibraryShelfFieldsFragment = {
   }>;
 };
 
+export type GetLibraryEntryGameQueryVariables = Exact<{
+  id: string;
+}>;
+
+export interface GetLibraryEntryGameQuery {
+  game: { id: string; platforms: { nodes: Array<{ id: string; name: string }> } } | null;
+}
+
 export type ResourceGameFieldsFragment = {
   id: string;
   name: string;

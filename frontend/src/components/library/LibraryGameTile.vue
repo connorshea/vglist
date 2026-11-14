@@ -1,40 +1,61 @@
 <template>
-  <router-link :to="{ name: 'game', params: { id: purchase.game.id } }" class="library-tile" :aria-label="ariaLabel">
-    <img v-if="purchase.game.coverUrl" :src="purchase.game.coverUrl" alt="" class="library-tile-cover" loading="lazy" />
-    <span
-      v-else
-      class="cover-placeholder library-tile-placeholder"
-      :style="coverPlaceholderStyle(purchase.game.name)"
-      aria-hidden="true"
-    >
-      {{ gameInitials(purchase.game.name) }}
-    </span>
-
-    <span v-if="status" class="status-dot library-tile-dot" :class="status.className" aria-hidden="true"></span>
-    <span
-      v-if="purchase.rating !== null"
-      class="rating-badge library-tile-rating"
-      :class="ratingTier(purchase.rating)"
-      aria-hidden="true"
-    >
-      {{ purchase.rating }}
-    </span>
-
-    <span class="library-tile-name" aria-hidden="true">{{ purchase.game.name }}</span>
-
-    <span class="library-tile-hover" aria-hidden="true">
-      <b>{{ purchase.game.name }}</b>
-      <span v-if="status || hours || purchase.rating !== null" class="library-tile-meta">
-        <span v-if="status" class="library-tile-status" :class="status.className">{{ status.label }}</span>
-        <span v-if="hours">{{ hours }}</span>
-        <span v-if="purchase.rating !== null">{{ purchase.rating }}/100</span>
+  <div class="library-tile-wrap" :class="{ 'is-editable': editable }">
+    <router-link :to="{ name: 'game', params: { id: purchase.game.id } }" class="library-tile" :aria-label="ariaLabel">
+      <img
+        v-if="purchase.game.coverUrl"
+        :src="purchase.game.coverUrl"
+        alt=""
+        class="library-tile-cover"
+        loading="lazy"
+      />
+      <span
+        v-else
+        class="cover-placeholder library-tile-placeholder"
+        :style="coverPlaceholderStyle(purchase.game.name)"
+        aria-hidden="true"
+      >
+        {{ gameInitials(purchase.game.name) }}
       </span>
-    </span>
-  </router-link>
+
+      <span v-if="status" class="status-dot library-tile-dot" :class="status.className" aria-hidden="true"></span>
+      <span
+        v-if="purchase.rating !== null"
+        class="rating-badge library-tile-rating"
+        :class="ratingTier(purchase.rating)"
+        aria-hidden="true"
+      >
+        {{ purchase.rating }}
+      </span>
+
+      <span class="library-tile-name" aria-hidden="true">{{ purchase.game.name }}</span>
+
+      <span class="library-tile-hover" aria-hidden="true">
+        <b>{{ purchase.game.name }}</b>
+        <span v-if="status || hours || purchase.rating !== null" class="library-tile-meta">
+          <span v-if="status" class="library-tile-status" :class="status.className">{{ status.label }}</span>
+          <span v-if="hours">{{ hours }}</span>
+          <span v-if="purchase.rating !== null">{{ purchase.rating }}/100</span>
+        </span>
+      </span>
+    </router-link>
+
+    <!-- A sibling of the link, since a button can't go inside one -->
+    <button
+      v-if="editable"
+      type="button"
+      class="library-tile-edit"
+      :aria-label="`Edit library entry for ${purchase.game.name}`"
+      :data-edit-purchase-id="purchase.id"
+      @click="emit('edit')"
+    >
+      <Pencil :size="14" :stroke-width="2" aria-hidden="true" />
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { Pencil } from "@lucide/vue";
 import type { LibraryGamePurchaseFieldsFragment } from "@/types/graphql";
 import { formatHours, gameInitials, libraryStatus, ratingTier } from "@/utils/library";
 import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
@@ -42,7 +63,11 @@ import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 const props = defineProps<{
   purchase: LibraryGamePurchaseFieldsFragment;
   hideHours?: boolean;
+  /** Show a button that opens the library entry for editing (the owner's own library). */
+  editable?: boolean;
 }>();
+
+const emit = defineEmits<{ edit: [] }>();
 
 const status = computed(() => libraryStatus(props.purchase.completionStatus));
 const hours = computed(() => (props.hideHours ? null : formatHours(props.purchase.hoursPlayed)));
@@ -61,6 +86,16 @@ const ariaLabel = computed(() => {
 </script>
 
 <style scoped>
+/* The wrapper lifts on hover, so the edit button moves with the tile. */
+.library-tile-wrap {
+  position: relative;
+  transition: transform var(--transition-fast);
+}
+
+.library-tile-wrap:hover {
+  transform: translateY(-2px);
+}
+
 .library-tile {
   position: relative;
   display: block;
@@ -69,13 +104,10 @@ const ariaLabel = computed(() => {
   border-radius: 10px;
   background: var(--color-bg-subtle);
   color: #fff;
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
+  transition: box-shadow var(--transition-fast);
 }
 
-.library-tile:hover {
-  transform: translateY(-2px);
+.library-tile-wrap:hover .library-tile {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -126,8 +158,8 @@ const ariaLabel = computed(() => {
 
 /* The hover panel repeats the name, so hide this one underneath it or it
    shows through the panel's translucent background as a second copy. */
-.library-tile:hover .library-tile-name,
-.library-tile:focus-visible .library-tile-name {
+.library-tile-wrap:hover .library-tile-name,
+.library-tile-wrap:has(:focus-visible) .library-tile-name {
   opacity: 0;
 }
 
@@ -144,8 +176,8 @@ const ariaLabel = computed(() => {
   transition: opacity var(--transition-fast);
 }
 
-.library-tile:hover .library-tile-hover,
-.library-tile:focus-visible .library-tile-hover {
+.library-tile-wrap:hover .library-tile-hover,
+.library-tile-wrap:has(:focus-visible) .library-tile-hover {
   opacity: 1;
 }
 
@@ -178,20 +210,82 @@ const ariaLabel = computed(() => {
   text-transform: uppercase;
 }
 
+/* Edit button: in the rating badge's corner while the tile is hovered or
+   focused (the hover panel repeats the rating), and always shown on touch
+   screens, where there's no hover. */
+.library-tile-edit {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.library-tile-wrap:hover .library-tile-edit,
+.library-tile-wrap:has(:focus-visible) .library-tile-edit {
+  opacity: 1;
+}
+
+.library-tile-edit:hover {
+  background: var(--vglist-theme);
+}
+
+.library-tile-edit:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.library-tile-rating {
+  transition: opacity var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .is-editable:hover .library-tile-rating,
+  .is-editable:has(:focus-visible) .library-tile-rating {
+    opacity: 0;
+  }
+}
+
+@media (hover: none) {
+  .library-tile-edit {
+    opacity: 1;
+  }
+
+  .is-editable .library-tile-rating {
+    right: 42px;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
-  .library-tile:hover {
+  .library-tile-wrap:hover .library-tile {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .library-tile-wrap,
   .library-tile,
   .library-tile-name,
-  .library-tile-hover {
+  .library-tile-hover,
+  .library-tile-edit,
+  .library-tile-rating {
     transition: none;
   }
 
-  .library-tile:hover {
+  .library-tile-wrap:hover {
     transform: none;
   }
 }

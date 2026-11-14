@@ -74,6 +74,8 @@
             :key="purchase.id"
             :purchase="purchase"
             :hide-hours="user.hideDaysPlayed"
+            :editable="isOwner"
+            @edit="openEditor(purchase)"
           />
           <LibrarySkeleton v-if="gamesSkeleton" variant="rows" />
         </div>
@@ -172,6 +174,8 @@
                     :key="purchase.id"
                     :purchase="purchase"
                     :hide-hours="user.hideDaysPlayed"
+                    :editable="isOwner"
+                    @edit="openEditor(purchase)"
                   />
                 </div>
                 <div v-else class="library-grid">
@@ -180,6 +184,8 @@
                     :key="purchase.id"
                     :purchase="purchase"
                     :hide-hours="user.hideDaysPlayed"
+                    :editable="isOwner"
+                    @edit="openEditor(purchase)"
                   />
                 </div>
               </section>
@@ -200,6 +206,8 @@
                 :key="purchase.id"
                 :purchase="purchase"
                 :hide-hours="user.hideDaysPlayed"
+                :editable="isOwner"
+                @edit="openEditor(purchase)"
               />
             </div>
             <LibraryEmptyState
@@ -216,17 +224,32 @@
         </main>
       </div>
     </template>
+
+    <LibraryEntryEditor
+      v-if="editing"
+      :purchase="editing"
+      :variant="isPhone ? 'sheet' : 'drawer'"
+      @close="closeEditor"
+      @changed="refetchLibrary"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter, type LocationQuery, type LocationQueryValueRaw } from "vue-router";
 import { ArrowUpDown, ChevronDown, Search, X } from "@lucide/vue";
 import { debounce } from "lodash-es";
 import { useQuery } from "@/composables/useGraphQL";
+import { USER_PROFILE_KEY } from "@/composables/useUserProfile";
+import { useAuthStore } from "@/stores/auth";
 import { GET_LIBRARY_GAMES, GET_LIBRARY_PAGE, GET_LIBRARY_SHELVES } from "@/graphql/queries/library";
-import type { GetLibraryGamesQuery, GetLibraryPageQuery, GetLibraryShelvesQuery } from "@/types/graphql";
+import type {
+  GetLibraryGamesQuery,
+  GetLibraryPageQuery,
+  GetLibraryShelvesQuery,
+  LibraryGamePurchaseFieldsFragment
+} from "@/types/graphql";
 import {
   DEFAULT_LIBRARY_SORT,
   LIBRARY_SORTS,
@@ -239,6 +262,7 @@ import {
   type LibraryStatus,
   type LibraryStatusFilter
 } from "@/utils/library";
+import LibraryEntryEditor from "@/components/library/LibraryEntryEditor.vue";
 import LibraryEmptyState from "@/components/library/LibraryEmptyState.vue";
 import LibraryFilterRail from "@/components/library/LibraryFilterRail.vue";
 import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
@@ -283,7 +307,8 @@ onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
 const {
   data: pageData,
   loading: pageLoading,
-  error: pageError
+  error: pageError,
+  refetch: refetchPage
 } = useQuery<GetLibraryPageQuery>(GET_LIBRARY_PAGE, {
   variables: () => ({ slug: route.params.slug })
 });
@@ -445,7 +470,8 @@ const grouped = computed(() => !isPhone.value && status.value === null && groupB
 const {
   data: shelvesData,
   loading: shelvesLoading,
-  error: shelvesError
+  error: shelvesError,
+  refetch: refetchShelves
 } = useQuery<GetLibraryShelvesQuery>(GET_LIBRARY_SHELVES, {
   variables: () => ({ ...filterVariables.value, first: SHELF_SIZE }),
   enabled: () => grouped.value
@@ -491,6 +517,7 @@ const {
   data: gamesData,
   loading: gamesLoading,
   error: gamesError,
+  refetch: refetchGames,
   fetchMore: fetchMoreGames
 } = useQuery<GetLibraryGamesQuery>(GET_LIBRARY_GAMES, {
   variables: () => gamesVariables.value,
@@ -541,6 +568,51 @@ async function loadMoreGames() {
       };
     }
   );
+}
+
+// ── Editing an entry ────────────────────────────────────────────────────────
+// On your own library each game has an edit button, which opens the same
+// drawer (or phone sheet) as the game page without leaving the library.
+const authStore = useAuthStore();
+const profile = inject(USER_PROFILE_KEY, null);
+const isOwner = computed(
+  () => authStore.isAuthenticated && user.value !== null && authStore.user?.id === user.value.id
+);
+
+const editing = ref<LibraryGamePurchaseFieldsFragment | null>(null);
+let editTrigger: HTMLElement | null = null;
+let pendingRefetch: Promise<unknown> | null = null;
+
+function openEditor(purchase: LibraryGamePurchaseFieldsFragment) {
+  editTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  editing.value = purchase;
+}
+
+// Focus goes back to the button that opened the drawer. After a save it waits
+// for the refreshed library, since re-sorting moves the tile and that drops
+// focus. If the game moved to another shelf (say Playing to Completed), that
+// button was replaced, so the game's new edit button gets focus instead.
+// Nothing is focused if the game has left the page (removed, or filtered out).
+async function closeEditor() {
+  const purchaseId = editing.value?.id;
+  editing.value = null;
+  const trigger = editTrigger;
+  editTrigger = null;
+  await pendingRefetch;
+  pendingRefetch = null;
+  await nextTick();
+  if (trigger?.isConnected) {
+    trigger.focus();
+  } else if (trigger && purchaseId) {
+    document.querySelector<HTMLElement>(`[data-edit-purchase-id="${purchaseId}"]`)?.focus();
+  }
+}
+
+// A save can change the game's status, rating or platforms, so everything
+// on the page (and the counts in the profile header) is fetched again.
+function refetchLibrary() {
+  void profile?.refetch();
+  pendingRefetch = Promise.all([refetchPage(), refetchShelves(), refetchGames()]);
 }
 </script>
 

@@ -48,3 +48,25 @@ describe("LibraryGameTile", () => {
     expect(wrapper.find("img").attributes("alt")).toBe("");
   });
 });
+
+describe("LibraryGameTile edit button", () => {
+  it("is left out unless the tile is editable", () => {
+    const wrapper = mountTile(purchase());
+
+    expect(wrapper.find(".library-tile-edit").exists()).toBeFalsy();
+  });
+
+  it("sits beside the link rather than inside it, and asks to edit the entry", async () => {
+    const wrapper = mount(LibraryGameTile, {
+      props: { purchase: purchase(), editable: true },
+      global: { stubs: { RouterLink: RouterLinkStub } }
+    });
+
+    const edit = wrapper.find("button.library-tile-edit");
+    expect(edit.attributes("aria-label")).toBe("Edit library entry for Half-Life: Alyx");
+    expect(wrapper.findComponent(RouterLinkStub).find("button").exists()).toBeFalsy();
+
+    await edit.trigger("click");
+    expect(wrapper.emitted("edit")).toHaveLength(1);
+  });
+});
