@@ -57,8 +57,10 @@
 		#   HTML response, and that script embeds a per-request ray ID, so
 		#   it can't be allowed by hash. Cloudflare reads the nonce from this
 		#   header and adds it to the script it injects. The UUID is new on
-		#   every request and the same across both CSP headers below; HTML
-		#   is served no-cache, so a nonce is never reused from a cache. Our
+		#   every request and the same across both CSP headers below. HTML
+		#   has no ETag or Last-Modified (see Cache-Control below), so a
+		#   browser can't revalidate a cached page into a 304 that carries a
+		#   new nonce the cached script doesn't match. Our
 		#   own scripts load from 'self' and don't use the nonce.
 		#   https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/#if-you-have-a-content-security-policy-csp
 		# - style-src 'self' 'unsafe-inline' + style-src-attr 'unsafe-inline':
@@ -197,8 +199,11 @@
 			#   so cache them briefly.
 			# - Everything else is HTML (index.html, the SPA fallback for
 			#   deep routes, the error pages), which must be revalidated so a
-			#   deploy picks up the new bundle names. ETag/Last-Modified keep
-			#   that a cheap 304.
+			#   deploy picks up the new bundle names. ETag and Last-Modified are
+			#   stripped: a 304 would carry a new CSP nonce while the cached
+			#   body keeps Cloudflare's script with the old one (see the CSP
+			#   notes above). index.html is a few KB, so a full 200 costs
+			#   little.
 			# - A missing /assets/* file 404s with no-store. During a rolling
 			#   deploy an old container can briefly be asked for a new chunk,
 			#   and a 404 cached for a year would break that URL for good.
@@ -218,7 +223,11 @@
 			header @hashed_asset Cache-Control "public, max-age=31536000, immutable"
 			header @missing_asset Cache-Control "no-store"
 			header @public_static Cache-Control "public, max-age=86400"
-			header @html Cache-Control "no-cache"
+			header @html {
+				Cache-Control "no-cache"
+				-ETag
+				-Last-Modified
+			}
 
 			file_server {
 				hide .git
