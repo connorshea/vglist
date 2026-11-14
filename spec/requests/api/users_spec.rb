@@ -601,6 +601,24 @@ RSpec.describe "Users API", type: :request do
           )
         end
 
+        it "doesn't share counts between shelves with different filters" do
+          query = <<-GRAPHQL
+            query($id: ID!) {
+              user(id: $id) {
+                completed: gamePurchases(completionStatus: COMPLETED) { totalCount }
+                unplayed: gamePurchases(completionStatus: UNPLAYED) { totalCount }
+                searchedCompleted: gamePurchases(completionStatus: COMPLETED, search: "cele") { totalCount }
+                searchedUnplayed: gamePurchases(completionStatus: UNPLAYED, search: "cele", sortBy: GAME_NAME) { totalCount }
+              }
+            }
+          GRAPHQL
+          result = api_request(query, variables: { id: user.id }, token: access_token)
+
+          expect(result.graphql_dig(:user).transform_values { |shelf| shelf[:totalCount] }).to eq(
+            completed: 1, unplayed: 2, searchedCompleted: 0, searchedUnplayed: 2
+          )
+        end
+
         it "counts the status shelves in one query" do
           count_queries = []
           callback = ->(*, payload) { count_queries << payload[:sql] if payload[:sql].include?('COUNT(') }
