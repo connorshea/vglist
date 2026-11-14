@@ -22,10 +22,12 @@ require 'wikidata_sparql'
 # This is the same detection as script/find_stale_wikidata_ids.rb, which runs
 # without the app against vglist's public API.
 class WikidataItemStatus
-  # Items per SPARQL round-trip. The statement query returns a row per item
-  # and property, and larger chunks have made the endpoint time out (see
-  # script/find_stale_wikidata_ids.rb).
-  CHUNK_SIZE = 100
+  # Items per SPARQL round-trip. Every query is paced (see
+  # WikidataSparql::INTER_QUERY_DELAY_SECONDS) and costs a round-trip, so at
+  # 100 a full run of the games took over an hour. The statement query only
+  # returns one DISTINCT row per item, so this stays cheap for the endpoint.
+  # Lower it with the task's CHUNK_SIZE if the endpoint starts timing out.
+  CHUNK_SIZE = 1000
 
   # How many redirects to follow before giving up. Wikidata fixes double
   # redirects, so more than one hop is rare.
