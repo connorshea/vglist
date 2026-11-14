@@ -16,7 +16,7 @@ class AddGamesCountToCompanies < ActiveRecord::Migration[8.1]
   def up
     add_column :companies, :games_count, :integer, default: 0, null: false
 
-    execute <<~SQL # rubocop:disable Rails/SquishedSQLHeredocs -- keeps the function readable in structure.sql
+    execute <<~SQL
       CREATE FUNCTION refresh_company_games_count() RETURNS trigger
       LANGUAGE plpgsql AS $$
       DECLARE
