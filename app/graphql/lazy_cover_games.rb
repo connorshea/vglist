@@ -61,12 +61,9 @@ class LazyCoverGames
 
   private
 
-  # The record's stored game count, or its `index_games_count` for companies
-  # (which have no column) when the list loaded one. Nil when unknown.
+  # The record's stored game count. Nil when the record was loaded without it.
   def games_count(record)
-    return record.games_count if record.has_attribute?(:games_count)
-
-    record.attributes['index_games_count']
+    record.games_count if record.has_attribute?(:games_count)
   end
 
   def load_pending

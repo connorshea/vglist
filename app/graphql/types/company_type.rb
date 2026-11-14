@@ -28,12 +28,6 @@ module Types
       ResourceGameSort.apply(@object.developed_games.with_attached_cover, sort_by)
     end
 
-    # The list resolver loads this with the records (`with_games_count`), so a
-    # page of them doesn't count each one's games separately.
-    def games_count
-      @object.has_attribute?(:index_games_count) ? @object[:index_games_count] : @object.games.count
-    end
-
     def cover_games
       LazyCoverGames.new(@context, @object)
     end

@@ -36,6 +36,59 @@ RSpec.describe Company, type: :model do
 
   describe "Indexes" do
     it { should have_db_index(:wikidata_id).unique }
+    it { should have_db_index([:games_count, :id]) }
+  end
+
+  # Kept up to date by database triggers on game_developers and game_publishers.
+  describe "Games count" do
+    let(:company) { create(:company) }
+    let(:other_company) { create(:company) }
+    let(:game) { create(:game) }
+
+    define_method(:games_count) { company.reload.games_count }
+
+    it "counts developed and published games" do
+      create(:game, developers: [company])
+      create(:game, publishers: [company])
+      expect(games_count).to eq(2)
+    end
+
+    it "counts a game the company both developed and published once" do
+      create(:game, developers: [company], publishers: [company])
+      expect(games_count).to eq(1)
+    end
+
+    it "goes down when a game loses the company, but not while the other role keeps it" do
+      game.update!(developers: [company], publishers: [company])
+
+      game.update!(publishers: [])
+      expect(games_count).to eq(1)
+
+      game.update!(developers: [])
+      expect(games_count).to eq(0)
+    end
+
+    it "goes down when the game is deleted" do
+      game.update!(developers: [company])
+      game.destroy!
+      expect(games_count).to eq(0)
+    end
+
+    it "moves with a row that's reassigned to another company" do
+      game_developer = create(:game_developer, game: game, company: company)
+      game_developer.update!(company: other_company)
+
+      expect(games_count).to eq(0)
+      expect(other_company.reload.games_count).to eq(1)
+    end
+
+    it "follows writes that skip callbacks" do
+      create(:game_publisher, game: game, company: company)
+      GamePublisher.where(company: company).update_all(company_id: other_company.id) # rubocop:disable Rails/SkipsModelValidations
+
+      expect(games_count).to eq(0)
+      expect(other_company.reload.games_count).to eq(1)
+    end
   end
 
   describe 'Destructions' do

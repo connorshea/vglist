@@ -80,6 +80,39 @@ END;
 $$;
 
 
+--
+-- Name: refresh_company_games_count(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.refresh_company_games_count() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  changed_company_ids bigint[];
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    changed_company_ids := ARRAY[NEW.company_id];
+  ELSIF TG_OP = 'DELETE' THEN
+    changed_company_ids := ARRAY[OLD.company_id];
+  ELSE
+    changed_company_ids := ARRAY[OLD.company_id, NEW.company_id];
+  END IF;
+
+  UPDATE public.companies
+  SET games_count = (
+    SELECT COUNT(*) FROM (
+      SELECT game_id FROM public.game_developers WHERE company_id = companies.id
+      UNION
+      SELECT game_id FROM public.game_publishers WHERE company_id = companies.id
+    ) company_games
+  )
+  WHERE id = ANY(changed_company_ids);
+
+  RETURN NULL;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -204,7 +237,8 @@ CREATE TABLE public.companies (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2185,6 +2219,13 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 
 
 --
+-- Name: index_companies_on_games_count_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_companies_on_games_count_and_id ON public.companies USING btree (games_count DESC, id);
+
+
+--
 -- Name: index_companies_on_name_tsvector; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2920,6 +2961,20 @@ CREATE TRIGGER copy_release_date_to_game_joins AFTER UPDATE OF release_date ON p
 
 
 --
+-- Name: game_developers refresh_company_games_count; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER refresh_company_games_count AFTER INSERT OR DELETE OR UPDATE OF company_id, game_id ON public.game_developers FOR EACH ROW EXECUTE FUNCTION public.refresh_company_games_count();
+
+
+--
+-- Name: game_publishers refresh_company_games_count; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER refresh_company_games_count AFTER INSERT OR DELETE OR UPDATE OF company_id, game_id ON public.game_publishers FOR EACH ROW EXECUTE FUNCTION public.refresh_company_games_count();
+
+
+--
 -- Name: events_relationship_events fk_rails_05a7410ab8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3190,6 +3245,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261114160000'),
 ('20261112000000'),
 ('20261109030000'),
 ('20261108230200'),
