@@ -455,9 +455,11 @@ const coverUrl = computed(() => game.value?.coverUrl ?? null);
 const { gradient: heroGradient } = useImageColors(coverUrl, { resetKey: () => game.value?.id });
 const heroStyle = computed(() => (heroGradient.value ? { background: heroGradient.value } : undefined));
 
-// Fetch all stores for the form
+// All stores, for the library form. Only signed-in users can open it, so
+// signed-out visitors (and crawlers) skip the request.
 const { data: storesData, loading: storesLoading } = useQuery<GetStoresQuery>(GET_STORES, {
-  variables: { first: 100 }
+  variables: { first: 100 },
+  enabled: () => authStore.isAuthenticated
 });
 const allStores = computed(() => storesData.value?.stores?.nodes ?? []);
 

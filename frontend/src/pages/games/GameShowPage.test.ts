@@ -4,6 +4,7 @@ import { nextTick, reactive } from "vue";
 import type * as Vue from "vue";
 import GameShowPage from "./GameShowPage.vue";
 import { GET_GAME } from "@/graphql/queries/games";
+import { GET_STORES } from "@/graphql/queries/resources";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
@@ -243,5 +244,50 @@ describe("GameShowPage external links", () => {
       label: "GiantBomb",
       url: "https://giantbomb.com/wiki/Games/Portal_2"
     });
+  });
+});
+
+describe("GameShowPage stores", () => {
+  beforeEach(() => {
+    mockRoute.params.id = "1";
+    mockRequest.mockReset();
+    mockRequest.mockImplementation((query) => {
+      if (query === GET_GAME) {
+        return Promise.resolve(gameFixture("1", "Portal 2"));
+      }
+      return Promise.resolve({ stores: { nodes: [] }, game: null });
+    });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn<(query: string) => Partial<MediaQueryList>>(() => ({
+        matches: false,
+        addEventListener: () => {},
+        removeEventListener: () => {}
+      }))
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const storesRequests = () => mockRequest.mock.calls.filter(([query]) => query === GET_STORES);
+
+  it("doesn't fetch stores for signed-out visitors, who can't open the library form", async () => {
+    authState.isAuthenticated = false;
+    const wrapper = mountPage();
+    await flushPromises();
+
+    expect(storesRequests()).toHaveLength(0);
+    wrapper.unmount();
+  });
+
+  it("fetches stores for the library form when signed in", async () => {
+    authState.isAuthenticated = true;
+    const wrapper = mountPage();
+    await flushPromises();
+
+    expect(storesRequests()).toHaveLength(1);
+    wrapper.unmount();
   });
 });
