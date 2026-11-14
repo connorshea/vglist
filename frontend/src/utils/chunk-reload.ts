@@ -1,3 +1,5 @@
+import { safeSessionStorage } from "@/utils/safe-storage";
+
 // A deploy replaces every hashed file in /assets/, so a tab opened before
 // the deploy still references chunk names that no longer exist. Clicking a
 // link then makes the router import a missing chunk, the import rejects, and
@@ -29,15 +31,13 @@ const RELOAD_COOLDOWN_MS = 10_000;
  * few seconds. Returns whether it reloaded.
  */
 export function reloadForStaleChunk(path: string, now: number = Date.now()): boolean {
-  try {
-    const last = Number(sessionStorage.getItem(STORAGE_KEY));
-    if (last && now - last < RELOAD_COOLDOWN_MS) {
-      return false;
-    }
-    sessionStorage.setItem(STORAGE_KEY, String(now));
-  } catch {
-    // Storage blocked: reload anyway, a loop is unlikely and a dead link is worse.
+  // When storage is blocked this falls back to memory, which a reload
+  // forgets: a loop is unlikely, and a dead link is worse.
+  const last = Number(safeSessionStorage.getItem(STORAGE_KEY));
+  if (last && now - last < RELOAD_COOLDOWN_MS) {
+    return false;
   }
+  safeSessionStorage.setItem(STORAGE_KEY, String(now));
   window.location.assign(path);
   return true;
 }
