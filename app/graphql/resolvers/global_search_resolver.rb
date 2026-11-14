@@ -43,8 +43,13 @@ module Resolvers
 
     # Runs the search once for all types, then keeps the best
     # MAX_RESULTS_PER_TYPE matches of each type. Results are grouped by type
-    # in the order the types were requested, and ordered by rank (then id)
-    # within each type, the same as running one query per type.
+    # in the order the types were requested, and ordered by rank within each
+    # type, the same as running one query per type.
+    #
+    # Ties go to the shorter name, then the lower id. Short queries use
+    # prefix tsearch alone, which gives every match the same rank, so without
+    # the length tiebreak an exact title like "Ico" sorts by id behind
+    # "Iconoclasts" and can fall outside the per-type cap.
     def search(query, types)
       matches = PgSearch.multisearch(query)
                         .where(searchable_type: types)
@@ -55,7 +60,7 @@ module Resolvers
                    .from(matches, :pg_search_documents)
                    .select(
                      'pg_search_documents.*',
-                     'ROW_NUMBER() OVER (PARTITION BY searchable_type ORDER BY pg_search_rank DESC, id ASC) AS type_position'
+                     'ROW_NUMBER() OVER (PARTITION BY searchable_type ORDER BY pg_search_rank DESC, length(content) ASC, id ASC) AS type_position'
                    )
 
       PgSearch::Document

@@ -258,6 +258,18 @@ RSpec.describe "Global Search API", type: :request do
 
         expect(result.graphql_dig(:global_search, :nodes).pluck(:content)).to eq(['Elf'])
       end
+
+      it "ranks shorter names first when matches tie" do
+        create(:game, name: 'Iconoclasts')
+        create(:game, name: 'ICO and Shadow of the Colossus Collection')
+        create(:game, name: 'Ico')
+
+        result = api_request(query_string, variables: { query: 'ico' }, token: access_token)
+
+        expect(result.graphql_dig(:global_search, :nodes).pluck(:content)).to eq(
+          ['Ico', 'Iconoclasts', 'ICO and Shadow of the Colossus Collection']
+        )
+      end
     end
 
     context 'with per-type result limits' do
