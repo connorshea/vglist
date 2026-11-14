@@ -12,8 +12,7 @@ class Company < ApplicationRecord
   has_many :published_games, through: :game_publishers, source: :game
 
   # games_count counts a game once even if the company both developed and
-  # published it. Database triggers on game_developers and game_publishers keep
-  # it up to date.
+  # published it. See CompanyGamesCount.
   game_count_scopes 'companies.games_count'
 
   has_paper_trail ignore: [:updated_at, :created_at],

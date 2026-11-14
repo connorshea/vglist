@@ -6,7 +6,7 @@
 #
 # Each model stores its game count in a `games_count` column: a counter cache
 # for genres, platforms, engines and series, and one kept up to date by
-# database triggers for companies, since their games come from two join
+# CompanyGamesCount for companies, since their games come from two join
 # tables and a game can be in both.
 module GameCountScopes
   extend ActiveSupport::Concern

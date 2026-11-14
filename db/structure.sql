@@ -80,46 +80,6 @@ END;
 $$;
 
 
---
--- Name: refresh_company_games_count(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.refresh_company_games_count() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-  changed_company_ids bigint[];
-BEGIN
-  IF TG_OP = 'INSERT' THEN
-    changed_company_ids := ARRAY[NEW.company_id];
-  ELSIF TG_OP = 'DELETE' THEN
-    changed_company_ids := ARRAY[OLD.company_id];
-  ELSE
-    changed_company_ids := ARRAY[OLD.company_id, NEW.company_id];
-  END IF;
-
-  -- Lock the companies first. Otherwise two transactions that add games to
-  -- the same company at once each recount without seeing the other's row,
-  -- and the second one to commit overwrites the first one's count. Once
-  -- the lock is free, the UPDATE below takes a fresh snapshot that sees
-  -- the other transaction's rows.
-  PERFORM 1 FROM public.companies WHERE id = ANY(changed_company_ids) ORDER BY id FOR UPDATE;
-
-  UPDATE public.companies
-  SET games_count = (
-    SELECT COUNT(*) FROM (
-      SELECT game_id FROM public.game_developers WHERE company_id = companies.id
-      UNION
-      SELECT game_id FROM public.game_publishers WHERE company_id = companies.id
-    ) company_games
-  )
-  WHERE id = ANY(changed_company_ids);
-
-  RETURN NULL;
-END;
-$$;
-
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -2965,20 +2925,6 @@ CREATE TRIGGER copy_release_date_from_game BEFORE INSERT OR UPDATE ON public.gam
 --
 
 CREATE TRIGGER copy_release_date_to_game_joins AFTER UPDATE OF release_date ON public.games FOR EACH ROW WHEN ((old.release_date IS DISTINCT FROM new.release_date)) EXECUTE FUNCTION public.copy_release_date_to_game_joins();
-
-
---
--- Name: game_developers refresh_company_games_count; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER refresh_company_games_count AFTER INSERT OR DELETE OR UPDATE OF company_id, game_id ON public.game_developers FOR EACH ROW EXECUTE FUNCTION public.refresh_company_games_count();
-
-
---
--- Name: game_publishers refresh_company_games_count; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER refresh_company_games_count AFTER INSERT OR DELETE OR UPDATE OF company_id, game_id ON public.game_publishers FOR EACH ROW EXECUTE FUNCTION public.refresh_company_games_count();
 
 
 --
