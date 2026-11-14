@@ -1,6 +1,6 @@
 <template>
   <div class="library-skeleton" aria-hidden="true">
-    <!-- A shelf per status: the Playing cards, then a row of tiles per shelf -->
+    <!-- A shelf per status, each a row of tiles -->
     <template v-if="variant === 'shelves'">
       <section v-for="(shelf, index) in SHELVES" :key="index" class="library-shelf">
         <div class="library-shelf-header">
@@ -8,17 +8,7 @@
           <SkeletonBlock class="library-skeleton-heading" :style="{ width: shelf.headingWidth }" />
           <SkeletonBlock class="library-skeleton-count" />
         </div>
-        <div v-if="shelf.playing" class="library-playing">
-          <div v-for="card in PLAYING_CARDS" :key="card" class="library-skeleton-card">
-            <SkeletonBlock class="library-skeleton-card-cover" />
-            <div class="library-skeleton-card-body">
-              <SkeletonBlock class="library-skeleton-line is-name" />
-              <SkeletonBlock class="library-skeleton-line is-meta" />
-              <SkeletonBlock class="library-skeleton-line is-progress" />
-            </div>
-          </div>
-        </div>
-        <div v-else class="library-grid library-skeleton-one-row">
+        <div class="library-grid library-skeleton-one-row">
           <SkeletonBlock v-for="tile in SHELF_TILES" :key="tile" class="library-skeleton-tile" />
         </div>
       </section>
@@ -52,20 +42,15 @@ import SkeletonBlock from "@/components/SkeletonBlock.vue";
 
 // Stands in for the library's games while they load, in the shape of whichever
 // layout is about to appear: shelves, a single grid, or the phone's list. The
-// sizes follow LibraryPlayingCard, LibraryGameTile and LibraryPhoneRow, and it
-// reuses the page's own .library-shelf/.library-grid/.library-playing classes,
+// sizes follow LibraryGameTile and LibraryPhoneRow, and it reuses the page's
+// own .library-shelf/.library-grid classes,
 // so the columns line up with the real content; keep them in step. It's hidden
 // from screen readers: the page announces the loading state itself.
 defineProps<{
   variant: "shelves" | "grid" | "rows";
 }>();
 
-const SHELVES = [
-  { playing: true, headingWidth: "64px" },
-  { playing: false, headingWidth: "88px" },
-  { playing: false, headingWidth: "72px" }
-] as const;
-const PLAYING_CARDS = 2;
+const SHELVES = [{ headingWidth: "64px" }, { headingWidth: "88px" }, { headingWidth: "72px" }] as const;
 // More than fit in one row on a wide screen; the extra ones are clipped.
 const SHELF_TILES = 10;
 const GRID_TILES = 24;
@@ -94,48 +79,6 @@ const ROWS = 10;
 .library-skeleton-count {
   width: 18px;
   height: 9px;
-}
-
-/* ── Playing cards ── */
-.library-skeleton-card {
-  display: flex;
-  gap: 12px;
-  padding: 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: var(--color-surface);
-}
-
-.library-skeleton-card-cover {
-  flex-shrink: 0;
-  width: 64px;
-  aspect-ratio: 3 / 4;
-}
-
-.library-skeleton-card-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  padding-top: 3px;
-}
-
-.library-skeleton-card-body .is-name {
-  width: 70%;
-  height: 11px;
-}
-
-.library-skeleton-card-body .is-meta {
-  width: 45%;
-  height: 8px;
-}
-
-.library-skeleton-card-body .is-progress {
-  width: 55%;
-  height: 8px;
-  margin-top: auto;
-  margin-bottom: 3px;
 }
 
 /* ── Tiles ── */
