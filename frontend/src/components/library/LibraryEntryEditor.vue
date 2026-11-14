@@ -45,6 +45,7 @@ import { GET_STORES } from "@/graphql/queries/resources";
 import { REVIEW_DRAFT_KEY_PREFIX } from "@/stores/auth";
 import type { GetLibraryEntryGameQuery, GetStoresQuery, LibraryGamePurchaseFieldsFragment } from "@/types/graphql";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { safeLocalStorage } from "@/utils/safe-storage";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
 import GameLibrarySheet from "@/components/game/GameLibrarySheet.vue";
@@ -95,7 +96,7 @@ async function confirmRemove() {
   removing.value = true;
   try {
     await gqlClient.request(REMOVE_GAME_FROM_LIBRARY, { gamePurchaseId: props.purchase.id });
-    localStorage.removeItem(`${REVIEW_DRAFT_KEY_PREFIX}${props.purchase.game.id}`);
+    safeLocalStorage.removeItem(`${REVIEW_DRAFT_KEY_PREFIX}${props.purchase.game.id}`);
     showSnackbar(`${props.purchase.game.name} has been removed from your library.`);
     showRemoveConfirm.value = false;
     emit("changed");

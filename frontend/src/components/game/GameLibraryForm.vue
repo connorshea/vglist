@@ -266,6 +266,7 @@ import { ADD_GAME_TO_LIBRARY, UPDATE_GAME_IN_LIBRARY } from "@/graphql/mutations
 import type { GetGamePurchaseQuery, GamePurchaseCompletionStatus } from "@/types/graphql";
 import { REVIEW_DRAFT_KEY_PREFIX } from "@/stores/auth";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { safeLocalStorage } from "@/utils/safe-storage";
 import { ChevronDown, ChevronRight, Info, Trash2 } from "@lucide/vue";
 
 const props = withDefaults(
@@ -356,14 +357,14 @@ function loadReviewDraft(): void {
   if (formComments.value !== "") {
     return;
   }
-  const saved = localStorage.getItem(reviewDraftKey());
+  const saved = safeLocalStorage.getItem(reviewDraftKey());
   if (saved) {
     formComments.value = saved;
   }
 }
 
 function clearReviewDraft(): void {
-  localStorage.removeItem(reviewDraftKey());
+  safeLocalStorage.removeItem(reviewDraftKey());
 }
 
 watch(formComments, (value) => {
@@ -373,7 +374,7 @@ watch(formComments, (value) => {
   if (value.trim() === "") {
     clearReviewDraft();
   } else {
-    localStorage.setItem(reviewDraftKey(), value);
+    safeLocalStorage.setItem(reviewDraftKey(), value);
   }
 });
 
