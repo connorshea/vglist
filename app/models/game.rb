@@ -9,10 +9,12 @@ class Game < ApplicationRecord
   has_many :purchasers, through: :game_purchases, source: :user
 
   has_many :game_developers, dependent: :destroy
-  has_many :developers, through: :game_developers, source: :company
+  # dependent: :destroy so that replacing them (developer_ids=) runs the join
+  # models' callbacks, which keep companies.games_count up to date.
+  has_many :developers, through: :game_developers, source: :company, dependent: :destroy
 
   has_many :game_publishers, dependent: :destroy
-  has_many :publishers, through: :game_publishers, source: :company
+  has_many :publishers, through: :game_publishers, source: :company, dependent: :destroy
 
   has_many :game_platforms, dependent: :destroy
   has_many :platforms, through: :game_platforms, source: :platform

@@ -204,7 +204,8 @@ CREATE TABLE public.companies (
     name text DEFAULT ''::text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    wikidata_id bigint NOT NULL
+    wikidata_id bigint NOT NULL,
+    games_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2185,6 +2186,13 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 
 
 --
+-- Name: index_companies_on_games_count_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_companies_on_games_count_and_id ON public.companies USING btree (games_count DESC, id);
+
+
+--
 -- Name: index_companies_on_name_tsvector; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3190,6 +3198,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261114160000'),
 ('20261112000000'),
 ('20261109030000'),
 ('20261108230200'),

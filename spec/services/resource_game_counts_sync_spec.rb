@@ -8,23 +8,27 @@ RSpec.describe ResourceGameCountsSync, type: :service do
   let(:engine) { create(:engine) }
   let(:series) { create(:series) }
   let(:empty_genre) { create(:genre) }
+  let(:company) { create(:company) }
 
   before(:each) do
-    create_list(:game, 2, genres: [genre], platforms: [platform], engines: [engine], series: series)
+    create_list(:game, 2, genres: [genre], platforms: [platform], engines: [engine], series: series, developers: [company])
+    create(:game, developers: [company], publishers: [company])
     empty_genre
   end
 
   # Simulate drift in both directions, as raw SQL or old code mid-deploy would cause.
   def drift!
     # rubocop:disable Rails/SkipsModelValidations
-    [Genre, Platform, Engine, Series].each { |model| model.update_all(games_count: 9) }
+    [Genre, Platform, Engine, Series, Company].each { |model| model.update_all(games_count: 9) }
     # rubocop:enable Rails/SkipsModelValidations
   end
 
   it 'recalculates every table', :aggregate_failures do
     drift!
-    expect(described_class.call).to eq(5)
+    expect(described_class.call).to eq(6)
     expect([genre, platform, engine, series].map { |record| record.reload.games_count }).to eq([2, 2, 2, 2])
+    # The game it both developed and published counts once.
+    expect(company.reload.games_count).to eq(3)
     expect(empty_genre.reload.games_count).to eq(0)
   end
 

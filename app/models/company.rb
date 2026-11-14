@@ -11,14 +11,9 @@ class Company < ApplicationRecord
   has_many :game_publishers, dependent: :destroy
   has_many :published_games, through: :game_publishers, source: :game
 
-  # A game counts once even if the company both developed and published it.
-  game_count_scopes <<~SQL.squish, with_games_count: true
-    (SELECT COUNT(*) FROM (
-      SELECT game_id FROM game_developers WHERE game_developers.company_id = companies.id
-      UNION
-      SELECT game_id FROM game_publishers WHERE game_publishers.company_id = companies.id
-    ) company_games)
-  SQL
+  # games_count counts a game once even if the company both developed and
+  # published it. See CompanyGamesCount.
+  game_count_scopes 'companies.games_count'
 
   has_paper_trail ignore: [:updated_at, :created_at],
                   versions: {
