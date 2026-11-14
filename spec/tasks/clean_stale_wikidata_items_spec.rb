@@ -12,15 +12,15 @@ RSpec.describe 'vglist:wikidata:clean_stale_items', type: :task do
   end
 
   # Runs the task against a fake Wikidata and returns the CSV rows (without the
-  # header) as arrays.
-  def run_task(env: {}, **items)
+  # header) as arrays. Pass a StringIO as `log` to capture stderr.
+  def run_task(env: {}, log: StringIO.new, **items)
     fake = FakeWikidataItems.new(**items)
     allow(WikidataSparql).to receive(:query) { |sparql| fake.query(sparql) }
 
     original_stdout = $stdout
     original_stderr = $stderr
     $stdout = StringIO.new
-    $stderr = StringIO.new
+    $stderr = log
     with_environment(env) { Rake::Task['vglist:wikidata:clean_stale_items'].invoke }
     $stdout.string.lines(chomp: true).drop(1).map { |line| line.split(',', -1) }
   ensure
@@ -121,6 +121,36 @@ RSpec.describe 'vglist:wikidata:clean_stale_items', type: :task do
 
     expect(Game.where(id: games.map(&:id)).count).to eq(3)
     expect(merged.reload.wikidata_id).to eq(110)
+  end
+
+  it 'works through games in batches and says where to resume' do
+    games = Array.new(3) { |i| create(:game, wikidata_id: 100 + i) }
+    log = StringIO.new
+
+    rows = run_task(env: { 'BATCH_SIZE' => '2' }, log: log, deleted: [100, 102])
+
+    expect(rows.map { |row| row[1].to_i }).to eq([games[0].id, games[2].id])
+    expect(log.string).to include("To resume from here, rerun with MIN_ID=#{games[1].id + 1}.")
+  end
+
+  it 'keeps earlier batches when a later batch would pass MAX_DELETIONS' do
+    games = Array.new(4) { |i| create(:game, wikidata_id: 100 + i) }
+
+    expect do
+      run_task(env: { 'BATCH_SIZE' => '2', 'MAX_DELETIONS' => '2' }, deleted: [100, 101, 102, 103])
+    end.to raise_error(SystemExit)
+
+    expect(Game.where(id: games.map(&:id)).pluck(:id)).to contain_exactly(games[2].id, games[3].id)
+  end
+
+  it 'reports a game merged into an item an earlier batch claimed as a duplicate' do
+    first = create(:game, wikidata_id: 100)
+    second = create(:game, wikidata_id: 101)
+
+    rows = run_task(env: { 'BATCH_SIZE' => '1', 'DRY_RUN' => '1' }, redirects: { 100 => 200, 101 => 200 })
+
+    expect(rows.map { |row| row.values_at(0, 5) }).to eq([['update_id', ''], ['duplicate', first.id.to_s]])
+    expect(second.reload.wikidata_id).to eq(101)
   end
 
   it 'leaves games without a Wikidata ID alone' do
