@@ -102,6 +102,8 @@ module Types
         **filters
       )
 
+      purchases = batch_status_count(purchases, **filters.slice(:completion_status, :no_completion_status))
+
       # Order by ID when no sort was requested: cursor-based pagination walks
       # the relation by offset, so an unordered relation can repeat or skip
       # rows between pages.
@@ -169,6 +171,16 @@ module Types
       purchases = purchases.from_any_store(store_ids) if store_ids.present?
       purchases = purchases.rated_between(min_rating, max_rating) unless min_rating.nil? && max_rating.nil?
       purchases
+    end
+
+    # A connection filtered to one completion status (or to no status) counts
+    # its games together with the response's other such connections, see
+    # `GamePurchaseStatusCounts`. Asking for both a status and no status
+    # matches nothing, so that's left to count on its own.
+    def batch_status_count(purchases, completion_status: nil, no_completion_status: false)
+      return purchases if completion_status.nil? == !no_completion_status
+
+      purchases.extending(GamePurchaseStatusCounts.extension(completion_status))
     end
 
     # What a library's statistics look like when the viewer isn't allowed to see

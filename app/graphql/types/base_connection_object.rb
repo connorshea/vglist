@@ -15,6 +15,11 @@ class Types::BaseConnectionObject < GraphQL::Types::Relay::BaseConnection
     # rather than counting the whole table again. See `CachedRowCount`.
     return items.cached_total_count if items.respond_to?(:cached_total_count)
 
+    # The resolver marked this relation as one of several that differ only in
+    # a column the counts can be grouped by, so count them all in one query.
+    # See `GamePurchaseStatusCounts`.
+    return items.batched_total_count(context) if items.respond_to?(:batched_total_count)
+
     unless items.group_values.any?
       # A relation that selects extra computed columns (e.g.
       # `Series.with_game_stats`) can't be counted by its select list, which
