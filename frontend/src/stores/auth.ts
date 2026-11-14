@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { UserRole } from "@/types/graphql";
 import { clearQueryCache } from "@/graphql/query-cache";
+import { safeLocalStorage } from "@/utils/safe-storage";
 
 export const REVIEW_DRAFT_KEY_PREFIX = "vglist-review-draft-";
 
@@ -21,9 +22,9 @@ interface AuthUser {
 
 function loadStoredUser(): AuthUser | null {
   try {
-    return JSON.parse(localStorage.getItem("auth_user") || "null");
+    return JSON.parse(safeLocalStorage.getItem("auth_user") || "null");
   } catch {
-    localStorage.removeItem("auth_user");
+    safeLocalStorage.removeItem("auth_user");
     return null;
   }
 }
@@ -48,14 +49,14 @@ export function isTokenExpired(token: string, now = Date.now()): boolean {
 // Unsaved review text from GameLibraryForm shouldn't survive sign-out on a
 // shared machine.
 function clearReviewDrafts() {
-  const draftKeys = Object.keys(localStorage).filter((key) => key.startsWith(REVIEW_DRAFT_KEY_PREFIX));
+  const draftKeys = safeLocalStorage.keys().filter((key) => key.startsWith(REVIEW_DRAFT_KEY_PREFIX));
   for (const key of draftKeys) {
-    localStorage.removeItem(key);
+    safeLocalStorage.removeItem(key);
   }
 }
 
 export const useAuthStore = defineStore("auth", () => {
-  const token = ref(localStorage.getItem("auth_token"));
+  const token = ref(safeLocalStorage.getItem("auth_token"));
   const user = ref(loadStoredUser());
 
   const isAuthenticated = computed(() => token.value !== null);
@@ -69,23 +70,23 @@ export const useAuthStore = defineStore("auth", () => {
     clearQueryCache();
     token.value = newToken;
     user.value = newUser;
-    localStorage.setItem("auth_token", newToken);
-    localStorage.setItem("auth_user", JSON.stringify(newUser));
+    safeLocalStorage.setItem("auth_token", newToken);
+    safeLocalStorage.setItem("auth_user", JSON.stringify(newUser));
   }
 
   function clearAuth() {
     clearQueryCache();
     token.value = null;
     user.value = null;
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
+    safeLocalStorage.removeItem("auth_token");
+    safeLocalStorage.removeItem("auth_user");
     clearReviewDrafts();
   }
 
   function updateUser(updates: Partial<AuthUser>) {
     if (user.value) {
       user.value = { ...user.value, ...updates };
-      localStorage.setItem("auth_user", JSON.stringify(user.value));
+      safeLocalStorage.setItem("auth_user", JSON.stringify(user.value));
     }
   }
 
@@ -112,7 +113,7 @@ export const useAuthStore = defineStore("auth", () => {
       if (event.key !== null && event.key !== "auth_token" && event.key !== "auth_user") {
         return;
       }
-      const storedToken = localStorage.getItem("auth_token");
+      const storedToken = safeLocalStorage.getItem("auth_token");
       if (storedToken !== token.value) {
         clearQueryCache();
         token.value = storedToken;
