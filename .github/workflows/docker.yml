@@ -300,6 +300,12 @@ jobs:
             echo "::error::The CSP nonce was reused across requests"
             exit 1
           fi
+          # A 304 would pair a new nonce with the cached page's old one.
+          html_headers="$(curl -sS -o /dev/null -D - http://127.0.0.1:8080/)"
+          if printf '%s' "$html_headers" | grep -iE '^(etag|last-modified):'; then
+            echo "::error::HTML responses must not send ETag or Last-Modified (see frontend/Caddyfile)"
+            exit 1
+          fi
           status="$(curl -sS -o /dev/null -w '%{http_code}' -X POST \
             -H 'Content-Type: application/csp-report' --data '{}' http://127.0.0.1:8080/csp-report)"
           if [ "$status" != "204" ]; then
