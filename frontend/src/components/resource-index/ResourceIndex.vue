@@ -46,7 +46,11 @@
       </li>
     </ul>
     <div v-else-if="loaded && items.length === 0" class="empty-state">
-      <p v-if="nameFilter">No {{ kindPlural }} match &ldquo;{{ nameFilter }}&rdquo;.</p>
+      <p v-if="page !== undefined && page > 1">
+        There&rsquo;s nothing on page {{ page }}.
+        <button type="button" class="link-btn" @click="emit('goToPage', 1)">Go to the first page</button>
+      </p>
+      <p v-else-if="nameFilter">No {{ kindPlural }} match &ldquo;{{ nameFilter }}&rdquo;.</p>
       <p v-else>No {{ kindPlural }} yet.</p>
     </div>
 
@@ -66,7 +70,19 @@
       </li>
     </ul>
 
-    <div v-if="hasNextPage" ref="sentinelRef" class="loading-more">
+    <template v-if="page !== undefined">
+      <PaginationNav
+        v-if="items.length && (page > 1 || hasNextPage)"
+        class="pagination"
+        :current-page="page"
+        :has-next-page="hasNextPage"
+        :loading="loading"
+        @prev="emit('goToPage', page - 1)"
+        @next="emit('goToPage', page + 1)"
+      />
+    </template>
+
+    <div v-else-if="hasNextPage" ref="sentinelRef" class="loading-more">
       <template v-if="loadingMore">
         <span class="spinner" aria-hidden="true"></span>
         <span role="status">Loading more {{ kindPlural }}&hellip;</span>
@@ -97,6 +113,7 @@ import type { RouteLocationRaw } from "vue-router";
 import { CircleAlert, Plus, Search } from "@lucide/vue";
 import { countLabel } from "@/components/games-index/format";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import PaginationNav from "@/components/PaginationNav.vue";
 import type { ResourceIndexSortLink } from "@/composables/useResourceIndex";
 import ResourceTile from "./ResourceTile.vue";
 import ResourceTileSkeleton from "./ResourceTileSkeleton.vue";
@@ -129,12 +146,19 @@ const props = defineProps<{
   loadingMore: boolean;
   refreshing: boolean;
   hasNextPage: boolean;
+  /**
+   * With a page number, the grid shows that one page with Previous/Next
+   * buttons (`goToPage`). Without one, more tiles load as the reader
+   * scrolls (`loadMore`).
+   */
+  page?: number;
   deleting: boolean;
   error: Error | null;
 }>();
 
 const emit = defineEmits<{
   loadMore: [];
+  goToPage: [page: number];
   delete: [item: ResourceIndexItem, done: () => void];
 }>();
 
@@ -413,6 +437,28 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 
 .load-more-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.resource-index .pagination {
+  margin: 32px 0 64px;
+}
+
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.link-btn:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }

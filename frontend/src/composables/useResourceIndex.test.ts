@@ -12,15 +12,16 @@ interface Data {
   genres: Connection<Node> | null;
 }
 
-const { state, replace, mockRequest } = vi.hoisted(() => ({
+const { state, replace, push, mockRequest } = vi.hoisted(() => ({
   state: { route: { query: {} } },
   replace: vi.fn<(location: { query: Record<string, string> }) => Promise<void>>(),
+  push: vi.fn<(location: { query: Record<string, string> }) => Promise<void>>(),
   mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>()
 }));
 
 vi.mock("vue-router", () => ({
   useRoute: () => state.route,
-  useRouter: () => ({ replace })
+  useRouter: () => ({ replace, push })
 }));
 
 vi.mock("@/graphql/client", () => ({
@@ -47,7 +48,7 @@ function range(from: number, to: number): number[] {
 
 let wrapper: ReturnType<typeof mount> | null = null;
 
-function mountIndex(pageSize = 3) {
+function mountIndex(pageSize = 3, { paginated = false } = {}) {
   let result: ReturnType<typeof useResourceIndex<Data, Node>> | null = null;
   wrapper = mount(
     defineComponent({
@@ -56,7 +57,8 @@ function mountIndex(pageSize = 3) {
           document,
           connection: (data) => data.genres,
           withConnection: (data, genres) => ({ ...data, genres }),
-          pageSize
+          pageSize,
+          paginated
         });
         return () => null;
       }
@@ -73,6 +75,7 @@ describe("useResourceIndex", () => {
   beforeEach(() => {
     state.route = reactive({ query: {} });
     replace.mockReset();
+    push.mockReset();
     mockRequest.mockReset();
     mockRequest.mockResolvedValue(page([1, 2, 3]));
   });
@@ -178,6 +181,22 @@ describe("useResourceIndex", () => {
       await nextTick();
       expect(index.searchText.value).toBe("rpg ");
     });
+
+    it("doesn't rewrite the URL after putting the text back, so `?page` survives", async () => {
+      vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+      try {
+        state.route.query = { q: "rpg" };
+        const index = mountIndex(24, { paginated: true });
+        state.route.query = { page: "2" };
+        await nextTick();
+        expect(index.searchText.value).toBe("");
+        await nextTick();
+        vi.advanceTimersByTime(250);
+        expect(replace).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   describe("loadMore", () => {
@@ -271,6 +290,65 @@ describe("useResourceIndex", () => {
       const index = mountIndex();
       await index.removeNode("1");
       expect(mockRequest).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("paginated", () => {
+    it("ignores `?page` without `paginated`", async () => {
+      state.route.query = { page: "3" };
+      const index = mountIndex(3);
+      await flushPromises();
+      expect(lastVariables()).toMatchObject({ after: null });
+      expect(index.page.value).toBe(1);
+    });
+
+    it("fetches page 1 from the start of the list", async () => {
+      const index = mountIndex(24, { paginated: true });
+      await flushPromises();
+      expect(lastVariables()).toEqual({ first: 24, after: null, sortBy: "MOST_GAMES", nameContains: null });
+      expect(index.page.value).toBe(1);
+    });
+
+    it("jumps straight to the page in the URL with an offset cursor", async () => {
+      state.route.query = { page: "3", sort: "name" };
+      const index = mountIndex(24, { paginated: true });
+      await flushPromises();
+      // Two pages of 24 in: btoa("48").
+      expect(lastVariables()).toEqual({ first: 24, after: "NDg", sortBy: "NAME", nameContains: null });
+      expect(index.page.value).toBe(3);
+    });
+
+    it("pushes the new page to the URL, keeping the sort and search", () => {
+      state.route.query = { sort: "name", q: "rpg" };
+      mountIndex(24, { paginated: true }).goToPage(2);
+      expect(push).toHaveBeenCalledWith({ query: { sort: "name", q: "rpg", page: "2" } });
+    });
+
+    it("leaves the page out of the sort links and the search URL, so both start from page 1", async () => {
+      vi.useFakeTimers();
+      try {
+        state.route.query = { page: "4", q: "rpg" };
+        const index = mountIndex(24, { paginated: true });
+        expect(index.sortLinks.value[1]?.to).toEqual({ query: { sort: "name", q: "rpg" } });
+
+        index.searchText.value = "jrpg";
+        await nextTick();
+        vi.advanceTimersByTime(250);
+        expect(replace).toHaveBeenCalledWith({ query: { q: "jrpg" } });
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("refetches the page on screen after a delete", async () => {
+      state.route.query = { page: "2" };
+      const index = mountIndex(3, { paginated: true });
+      await flushPromises();
+      mockRequest.mockResolvedValueOnce(page([5, 6, 7]));
+      await index.removeNode("4");
+      expect(mockRequest).toHaveBeenCalledTimes(2);
+      expect(lastVariables()).toEqual({ first: 3, after: "Mw", sortBy: "MOST_GAMES", nameContains: null });
+      expect(index.nodes.value.map((n) => n.id)).toEqual(["5", "6", "7"]);
     });
   });
 });
