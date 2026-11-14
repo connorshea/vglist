@@ -56,7 +56,7 @@ describe("persistedGetUrl", () => {
   });
 
   it("keeps operations without a persisted document ID as POST", () => {
-    expect(persistedGetUrl(postInit({ operationName: "GetGame", variables: { id: "1" } }))).toBeNull();
+    expect(persistedGetUrl(postInit({ operationName: "GetGamePurchase", variables: { id: "1" } }))).toBeNull();
     expect(persistedGetUrl(postInit({ operationName: "toString" }))).toBeNull();
   });
 
@@ -114,7 +114,7 @@ describe("persistedQueryFetch", () => {
   it("POSTs everything else unchanged", async () => {
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(new Response("{}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
-    const init = postInit({ operationName: "GetGame" });
+    const init = postInit({ operationName: "GetGamePurchase" });
 
     await persistedQueryFetch(endpoint, init);
 

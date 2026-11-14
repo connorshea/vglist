@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # Caches whole GraphQL responses for the few operations every visitor to the
-# home page sends, as long as the response can't depend on who is asking.
+# home page or a game page sends, as long as the response can't depend on
+# who is asking.
 #
 # Each response is cached for a few minutes in Rails.cache, so new games,
 # library additions and cover changes show up on the home page after at most
@@ -13,7 +14,8 @@
 # the first page of the games index send. Anything else (other filters, later
 # pages, a signed-in user's game tiles) runs normally, so a client can't fill
 # the cache with arbitrary variations and evict the Rack::Attack counters that
-# share the store.
+# share the store. A game page's queries have one key per game, so they're
+# left to Cloudflare and never stored here (see CDN_ONLY_OPERATIONS).
 module PublicResponseCache
   EXPIRES_IN = 5.minutes
 
@@ -22,7 +24,20 @@ module PublicResponseCache
   # them too (see GraphqlController#allow_shared_caching). The SPA gets their
   # persisted document IDs from codegen, whose config in frontend/codegen.ts
   # must list the same operations.
-  OPERATIONS = %w[GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases GetUpcomingReleases].freeze
+  OPERATIONS = %w[
+    GetGame GetGameActivity GetGameReviews GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases GetUpcomingReleases
+  ].freeze
+
+  # Operations whose responses only Cloudflare caches. There's one response
+  # per game, far more than the home page's handful, and crawlers walk
+  # through all of them, so keeping them in Rails.cache would churn the
+  # memory store and could evict the Rack::Attack counters that share it.
+  CDN_ONLY_OPERATIONS = %w[GetGame GetGameActivity GetGameReviews].freeze
+
+  # Game IDs as the SPA sends them. The server also reads "0123" or
+  # "123-portal" as game 123, but those aren't cached, so each game has one
+  # cacheable URL per variant of its queries.
+  GAME_ID = /\A[1-9]\d{0,9}\z/
 
   # The largest `first` that's cached for GetGamesIndex: the games index's
   # page size. The home page shelves ask for 6.
@@ -65,6 +80,12 @@ module PublicResponseCache
       games_index_parts(variables, user)
     when 'GetNewReleases', 'GetUpcomingReleases'
       release_shelf_parts(variables, user)
+    when 'GetGame'
+      game_parts(variables, user)
+    when 'GetGameActivity'
+      game_connection_parts(variables, user)
+    when 'GetGameReviews'
+      game_reviews_parts(variables, user)
     end
   end
 
@@ -94,6 +115,42 @@ module PublicResponseCache
 
     first = variables['first']
     [first] if first.is_a?(Integer) && first.between?(1, NewReleases::MAX)
+  end
+
+  # Whether a cacheable response is also kept in Rails.cache, rather than
+  # only by Cloudflare.
+  def store_at_origin?(operation_name)
+    CDN_ONLY_OPERATIONS.exclude?(operation_name)
+  end
+
+  # A game page's queries. GetGame says whether the game is in the signed-in
+  # user's library or favorites, so only signed-out responses are cached;
+  # reviews and activity are the same for everyone, and only signed-out
+  # visitors send GET requests anyway.
+  def game_parts(variables, user)
+    return nil unless user.nil?
+
+    id = variables['id']
+    [id] if id.is_a?(String) && GAME_ID.match?(id)
+  end
+
+  def game_connection_parts(variables, user)
+    parts = game_parts(variables, user)
+    return nil if parts.nil?
+
+    first = variables['first']
+    [*parts, first] if first.is_a?(Integer) && first.between?(1, VideoGameListSchema.default_max_page_size)
+  end
+
+  # The game page shows more reviews by asking for a larger `first`.
+  def game_reviews_parts(variables, user)
+    parts = game_connection_parts(variables, user)
+    return nil if parts.nil?
+
+    sort_by = variables['sortBy']
+    return nil unless sort_by.nil? || Types::Enums::GameReviewSortType.values.key?(sort_by)
+
+    [*parts, sort_by || 'default']
   end
 
   def canonical_document(operation_name)

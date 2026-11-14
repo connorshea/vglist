@@ -120,6 +120,43 @@ RSpec.describe "GraphQL GET requests with persisted documents", type: :request d
     expect(ids).to eq(PublicResponseCache::OPERATIONS.index_with { |name| document_id(name) })
   end
 
+  describe "a game page's queries" do
+    let(:public_cache_control) { 'max-age=60, public, stale-while-revalidate=600, s-maxage=300' }
+
+    it "lets Cloudflare cache a signed-out game page", :aggregate_failures do
+      body = graphql_get('GetGame', variables: { id: game.id.to_s })
+      expect(body.dig('data', 'game', 'name')).to eq('Before')
+      expect(body.dig('data', 'game', 'isInLibrary')).to be_nil
+      expect(response.headers['Cache-Control']).to eq(public_cache_control)
+
+      graphql_get('GetGameActivity', variables: { id: game.id.to_s, first: 6 })
+      expect(response.headers['Cache-Control']).to eq(public_cache_control)
+
+      graphql_get('GetGameReviews', variables: { id: game.id.to_s, sortBy: 'RECENT', first: 10 })
+      expect(response.headers['Cache-Control']).to eq(public_cache_control)
+    end
+
+    it "leaves the caching to Cloudflare, with nothing kept in Rails.cache" do
+      graphql_get('GetGame', variables: { id: game.id.to_s })
+      game.update!(name: 'After')
+      expect(graphql_get('GetGame', variables: { id: game.id.to_s }).dig('data', 'game', 'name')).to eq('After')
+    end
+
+    it "only lets the canonical game ID be cached, so each game has one URL", :aggregate_failures do
+      ["0#{game.id}", "#{game.id}-portal"].each do |id|
+        expect(graphql_get('GetGame', variables: { id: id }).dig('data', 'game', 'name')).to eq('Before')
+        expect(response.headers['Cache-Control']).to eq('no-store')
+      end
+    end
+
+    it "doesn't let reviews with odd variables be cached", :aggregate_failures do
+      [{ first: 500 }, { first: nil }, { sortBy: 'OLDEST', first: 5 }].each do |variables|
+        graphql_get('GetGameReviews', variables: { id: game.id.to_s, **variables })
+        expect(response.headers['Cache-Control']).to eq('no-store')
+      end
+    end
+  end
+
   it "never lets a POST response be cached, even a cacheable one" do
     post graphql_path, params: { query: operations['GetHeroCovers'], operationName: 'GetHeroCovers' }
     expect(response.headers['Cache-Control']).to eq('no-store')
