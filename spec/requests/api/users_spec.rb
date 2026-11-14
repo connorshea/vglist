@@ -133,6 +133,29 @@ RSpec.describe "Users API", type: :request do
       )
     end
 
+    it "returns a private user's library to a user they follow" do
+      create(:relationship, follower: private_user, followed: user)
+      game_purchase = create(:game_purchase, user: private_user)
+
+      query_string = <<-GRAPHQL
+        query($id: ID!) {
+          user(id: $id) {
+            id
+            gamePurchases {
+              nodes {
+                id
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      result = api_request(query_string, variables: { id: private_user.id }, token: access_token)
+
+      expect(result.to_h['errors']).to be_nil
+      expect(result.graphql_dig(:user, :game_purchases, :nodes)).to eq([{ id: game_purchase.id.to_s }])
+    end
+
     it "returns only public data for private user" do
       query_string = <<-GRAPHQL
         query($id: ID!) {

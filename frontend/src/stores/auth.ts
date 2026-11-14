@@ -28,6 +28,23 @@ function loadStoredUser(): AuthUser | null {
   }
 }
 
+// Whether a JWT's `exp` claim has passed. Only the payload is read; the
+// signature is the API's business. A token that can't be read is left for the
+// API to reject (see REJECTED_TOKEN_HEADER in graphql/client.ts).
+export function isTokenExpired(token: string, now = Date.now()): boolean {
+  const payload = token.split(".")[1];
+  if (!payload) {
+    return false;
+  }
+  try {
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const { exp } = JSON.parse(atob(base64)) as { exp?: unknown };
+    return typeof exp === "number" && exp * 1000 <= now;
+  } catch {
+    return false;
+  }
+}
+
 // Unsaved review text from GameLibraryForm shouldn't survive sign-out on a
 // shared machine.
 function clearReviewDrafts() {
@@ -72,6 +89,38 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  // The API rejected `sentToken` (expired, or revoked by signing out or
+  // changing the password elsewhere) and treated the request as signed out.
+  // Only sign out if it's still the current token: the user may have signed
+  // in again while that request was in flight.
+  function handleRejectedToken(sentToken: string) {
+    if (token.value === sentToken) {
+      clearAuth();
+    }
+  }
+
+  // A stored token that has already expired would only be rejected, so start
+  // signed out instead of showing the user as signed in.
+  if (token.value && isTokenExpired(token.value)) {
+    clearAuth();
+  }
+
+  // Keep tabs in step: signing in or out in one tab updates the others.
+  // `storage` events only fire in the tabs that didn't make the change.
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", (event) => {
+      if (event.key !== null && event.key !== "auth_token" && event.key !== "auth_user") {
+        return;
+      }
+      const storedToken = localStorage.getItem("auth_token");
+      if (storedToken !== token.value) {
+        clearQueryCache();
+        token.value = storedToken;
+      }
+      user.value = storedToken ? loadStoredUser() : null;
+    });
+  }
+
   return {
     token,
     user,
@@ -80,6 +129,7 @@ export const useAuthStore = defineStore("auth", () => {
     isModerator,
     setAuth,
     clearAuth,
+    handleRejectedToken,
     updateUser
   };
 });

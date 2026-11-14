@@ -15,17 +15,21 @@ class GameMergeService
     # Cannot merge a game into itself, return early.
     return false if @game_a.id == @game_b.id
 
-    # Update all relevant game purchases and favorites, delete game purchases
-    # and favorites if a user has both of these games owned/favorited.
-    handle_purchases
-    handle_favorites
+    # Run the whole merge atomically so a failure partway through doesn't
+    # leave purchases/favorites moved while Game B still exists.
+    Game.transaction do
+      # Update all relevant game purchases and favorites, delete game purchases
+      # and favorites if a user has both of these games owned/favorited.
+      handle_purchases
+      handle_favorites
 
-    # Reload to make sure that destroying game_b doesn't attempt to destroy
-    # favorites or game purchases that are no longer associated with it.
-    @game_b.reload
+      # Reload to make sure that destroying game_b doesn't attempt to destroy
+      # favorites or game purchases that are no longer associated with it.
+      @game_b.reload
 
-    # Delete Game B.
-    @game_b.destroy!
+      # Delete Game B.
+      @game_b.destroy!
+    end
 
     return true
   end

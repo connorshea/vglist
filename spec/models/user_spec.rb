@@ -103,6 +103,12 @@ RSpec.describe User, type: :model do
       expect(user).to be_invalid
       expect(user.errors[:username]).to include('is reserved by the system')
     end
+
+    it 'reports a blank username rather than raising when the username is nil' do
+      user = build(:user, username: nil)
+      expect(user).to be_invalid
+      expect(user.errors[:username]).to include("can't be blank")
+    end
   end
 
   describe "Associations" do

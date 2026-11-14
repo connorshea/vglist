@@ -129,6 +129,31 @@ RSpec.describe GamePurchasePolicy, type: :policy do
     end
   end
 
+  describe 'A normal user followed by the private user that is being viewed' do
+    let(:private_user) { create(:private_user) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: private_user) }
+
+    before(:each) { create(:relationship, follower: private_user, followed: user) }
+
+    it "is allowed to see the game purchases but not modify them" do
+      expect(game_purchase_policy).to permit_actions([:index, :show, :create])
+      expect(game_purchase_policy).to forbid_actions([:update, :bulk_update, :destroy])
+    end
+  end
+
+  describe 'A normal user who follows (but is not followed by) the private user that is being viewed' do
+    let(:private_user) { create(:private_user) }
+    let(:user) { create(:confirmed_user) }
+    let(:game_purchase) { create(:game_purchase, user: private_user) }
+
+    before(:each) { create(:relationship, follower: user, followed: private_user) }
+
+    it "is not allowed to see the game purchases" do
+      expect(game_purchase_policy).to forbid_actions([:index, :show, :update, :bulk_update, :destroy])
+    end
+  end
+
   describe 'A normal user when the user that is being viewed is banned' do
     let(:banned_user) { create(:banned_user) }
     let(:user) { create(:confirmed_user) }

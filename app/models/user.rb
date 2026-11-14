@@ -229,7 +229,7 @@ class User < ApplicationRecord
 
   # Validate that the username isn't reserved for use by the system.
   def username_not_reserved
-    errors.add(:username, "is reserved by the system") if RESERVED_USERNAMES.include?(username.downcase)
+    errors.add(:username, "is reserved by the system") if RESERVED_USERNAMES.include?(username.to_s.downcase)
   end
 
   def on_user_creation

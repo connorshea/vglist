@@ -115,8 +115,30 @@ export const persistedQueryFetch: typeof fetch = async (input, init) => {
   return fetch(input, init);
 };
 
+/**
+ * Set by the API on responses to requests whose bearer token it rejected
+ * (expired, revoked, or invalid). It treats those requests as signed out, so
+ * this is the only sign the SPA gets that the stored token is no good.
+ */
+export const REJECTED_TOKEN_HEADER = "x-auth-token-rejected";
+
+/**
+ * `persistedQueryFetch`, plus signing out when the API rejects the token the
+ * request carried.
+ */
+export const authAwareFetch: typeof fetch = async (input, init) => {
+  const response = await persistedQueryFetch(input, init);
+  if (response.headers.get(REJECTED_TOKEN_HEADER) === "true") {
+    const sentToken = new Headers(init?.headers).get("authorization")?.replace(/^Bearer\s+/i, "");
+    if (sentToken) {
+      useAuthStore().handleRejectedToken(sentToken);
+    }
+  }
+  return response;
+};
+
 export const gqlClient = new GraphQLClient(endpoint, {
-  fetch: persistedQueryFetch,
+  fetch: authAwareFetch,
   headers: () => {
     const authStore = useAuthStore();
     const token = authStore.token;

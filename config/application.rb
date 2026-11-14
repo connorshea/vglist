@@ -72,7 +72,7 @@ module VideoGameList
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
           credentials: true,
-          expose: ['Authorization']
+          expose: ['Authorization', 'X-Auth-Token-Rejected']
       end
     end
 

@@ -640,6 +640,16 @@ onMounted(() => {
 
 onBeforeUnmount(() => phoneMedia?.removeEventListener("change", updateIsPhone));
 
+// The page component is reused when navigating between games (e.g. browser
+// Back), so close the library form and remove confirmation. Otherwise the open
+// form keeps the previous game's values and saving or confirming acts on the
+// new game's library entry.
+watch(gameId, () => {
+  showAddForm.value = false;
+  showRemoveConfirm.value = false;
+  inLibraryHovered.value = false;
+});
+
 // When the drawer or sheet closes, put focus back on the button that opened it.
 watch(showAddForm, (open, wasOpen) => {
   if (wasOpen && !open) {
