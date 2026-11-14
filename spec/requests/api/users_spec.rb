@@ -582,7 +582,7 @@ RSpec.describe "Users API", type: :request do
           result.graphql_dig(:user).transform_values { |shelf| shelf[:totalCount] }
         end
 
-        before do
+        before(:each) do
           create(:game_purchase, user: user, game: create(:game, name: 'Celeste 64'), completion_status: :unplayed)
           create(:game_purchase, user: user, game: create(:game, name: 'Hades'), completion_status: nil)
           # Another user's library doesn't count.
