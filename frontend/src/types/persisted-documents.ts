@@ -5,5 +5,6 @@ export const persistedDocumentIds: Readonly<Record<string, string>> = {
   GetGamesIndex: "sha256:fedeb7a2faf50cd4c8efb577491585835eba92958d32d1111e106f1128a283f3",
   GetGamesIndexFilters: "sha256:6be649a4c79461bdc21f452cf0bcc44996fe34aefc016e4da8ef83656a2a2832",
   GetHeroCovers: "sha256:d186fad09bc27d53172640c51e9852d66b12b370ee5f2216d40e594b3eecc328",
-  GetNewReleases: "sha256:43cc716a463c18de48e209a2e2686b7e1e50d718d2f5f64b0b88bd75108f92fe"
+  GetNewReleases: "sha256:43cc716a463c18de48e209a2e2686b7e1e50d718d2f5f64b0b88bd75108f92fe",
+  GetUpcomingReleases: "sha256:c8ca44be2266e89766930875091b6def4f7dd23388719245fae5d6fc75876e16"
 };

@@ -37,7 +37,7 @@ const config: CodegenConfig = {
     "src/types/persisted-documents.ts": {
       plugins: ["./codegen/persisted-documents.mjs"],
       config: {
-        operations: ["GetGamesIndex", "GetGamesIndexFilters", "GetHeroCovers", "GetNewReleases"]
+        operations: ["GetGamesIndex", "GetGamesIndexFilters", "GetHeroCovers", "GetNewReleases", "GetUpcomingReleases"]
       }
     }
   }

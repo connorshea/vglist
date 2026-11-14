@@ -22,7 +22,7 @@ module PublicResponseCache
   # them too (see GraphqlController#allow_shared_caching). The SPA gets their
   # persisted document IDs from codegen, whose config in frontend/codegen.ts
   # must list the same operations.
-  OPERATIONS = %w[GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases].freeze
+  OPERATIONS = %w[GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases GetUpcomingReleases].freeze
 
   # The largest `first` that's cached for GetGamesIndex: the games index's
   # page size. The home page shelves ask for 6.
