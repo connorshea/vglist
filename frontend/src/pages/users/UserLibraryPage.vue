@@ -168,17 +168,7 @@
                     Show all {{ shelf.totalCount }}
                   </button>
                 </div>
-                <div v-if="shelf.status.key === 'IN_PROGRESS'" class="library-playing">
-                  <LibraryPlayingCard
-                    v-for="purchase in playing"
-                    :key="purchase.id"
-                    :purchase="purchase"
-                    :hide-hours="user.hideDaysPlayed"
-                    :editable="isOwner"
-                    @edit="openEditor(purchase)"
-                  />
-                </div>
-                <div v-else class="library-grid">
+                <div class="library-grid">
                   <LibraryGameTile
                     v-for="purchase in shelf.purchases"
                     :key="purchase.id"
@@ -268,13 +258,10 @@ import LibraryFilterRail from "@/components/library/LibraryFilterRail.vue";
 import LibraryGameTile from "@/components/library/LibraryGameTile.vue";
 import LibraryPhoneRow from "@/components/library/LibraryPhoneRow.vue";
 import LibraryPageSkeleton from "@/components/library/LibraryPageSkeleton.vue";
-import LibraryPlayingCard from "@/components/library/LibraryPlayingCard.vue";
 import LibrarySkeleton from "@/components/library/LibrarySkeleton.vue";
 import "@/assets/stylesheets/library.scss";
 
 const SHELF_SIZE = 12;
-// The Playing shelf's cards are larger, so it shows a row's worth at most.
-const PLAYING_SIZE = 6;
 const PAGE_SIZE = 48;
 const PHONE_QUERY = "(max-width: 768px)";
 
@@ -497,13 +484,10 @@ const shelves = computed(() => {
     return {
       status: [...LIBRARY_STATUSES, NO_STATUS].find((s) => s.key === shelfStatus) as LibraryStatus<LibraryStatusFilter>,
       totalCount: shelvesUser?.[key].totalCount ?? 0,
-      // What the shelf shows, so "Show all" appears whenever games are left out.
-      purchases: key === "inProgress" ? nodes.slice(0, PLAYING_SIZE) : nodes
+      purchases: nodes
     };
   });
 });
-
-const playing = computed(() => (shelvesData.value?.user?.inProgress.nodes ?? []).slice(0, PLAYING_SIZE));
 
 // ── Single grid ─────────────────────────────────────────────────────────────
 const gamesVariables = computed(() => ({

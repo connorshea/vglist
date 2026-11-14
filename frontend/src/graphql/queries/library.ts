@@ -138,10 +138,7 @@ export const GET_LIBRARY_SHELVES = gql`
         minRating: $minRating
         maxRating: $maxRating
       ) {
-        totalCount
-        nodes {
-          ...LibraryPlayingPurchaseFields
-        }
+        ...LibraryShelfFields
       }
       paused: gamePurchases(
         first: $first
@@ -235,7 +232,7 @@ export const GET_LIBRARY_SHELVES = gql`
       ...LibraryGamePurchaseFields
     }
   }
-  ${LIBRARY_PLAYING_PURCHASE_FIELDS}
+  ${LIBRARY_GAME_PURCHASE_FIELDS}
 `;
 
 // The game's platforms, which the library entry form offers when it's opened

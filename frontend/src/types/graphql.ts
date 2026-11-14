@@ -1394,13 +1394,10 @@ export interface GetLibraryShelvesQuery {
     inProgress: {
       totalCount: number;
       nodes: Array<{
-        startDate: string | null;
         id: string;
         hoursPlayed: number | null;
         completionStatus: GamePurchaseCompletionStatus | null;
         rating: number | null;
-        platforms: { nodes: Array<{ id: string; name: string }> };
-        stores: { nodes: Array<{ id: string; name: string }> };
         game: { id: string; name: string; coverUrl: string | null };
       }>;
     };
