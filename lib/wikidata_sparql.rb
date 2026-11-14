@@ -43,6 +43,7 @@ module WikidataSparql
     PREFIX psv: <http://www.wikidata.org/prop/statement/value/>
     PREFIX wikibase: <http://wikiba.se/ontology#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
   SPARQL
 
   # Seconds to pause before every request, to proactively stay under QLever's
