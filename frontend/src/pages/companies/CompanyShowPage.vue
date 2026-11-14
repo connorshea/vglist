@@ -18,12 +18,8 @@
         @delete="showDeleteConfirm = true"
       >
         <template #facts>
-          <span
-            ><b>{{ data.company.developedCount.totalCount.toLocaleString() }}</b> developed</span
-          >
-          <span
-            ><b>{{ data.company.publishedCount.totalCount.toLocaleString() }}</b> published</span
-          >
+          <span><b>{{ data.company.developedCount.totalCount.toLocaleString() }}</b> developed</span>
+          <span><b>{{ data.company.publishedCount.totalCount.toLocaleString() }}</b> published</span>
         </template>
         <template #tabs>
           <ResourceTabs label="Company games" :tabs="tabs" />

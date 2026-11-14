@@ -220,8 +220,7 @@
       <template #icon>
         <CircleAlert :size="22" :stroke-width="1.8" />
       </template>
-      <strong>{{ user?.username }}</strong
-      >'s avatar will be removed and replaced with the default.
+      <strong>{{ user?.username }}</strong>'s avatar will be removed and replaced with the default.
     </ConfirmDialog>
 
     <ConfirmDialog
@@ -235,8 +234,7 @@
       <template #icon>
         <UserMinus :size="22" :stroke-width="1.8" />
       </template>
-      You will no longer see <strong>{{ user?.username }}</strong
-      >'s activity in your feed.
+      You will no longer see <strong>{{ user?.username }}</strong>'s activity in your feed.
     </ConfirmDialog>
   </div>
 </template>

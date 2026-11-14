@@ -42,9 +42,7 @@
 
     <hr />
 
-    <h3 class="hero-panel-label">
-      Owners <span>{{ owners.totalCount.toLocaleString() }}</span>
-    </h3>
+    <h3 class="hero-panel-label">Owners <span>{{ owners.totalCount.toLocaleString() }}</span></h3>
     <div v-if="owners.nodes.length" class="hero-avatars">
       <router-link
         v-for="user in owners.nodes"

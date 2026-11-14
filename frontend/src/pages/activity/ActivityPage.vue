@@ -81,8 +81,7 @@
                 <span class="a-verb">to their library</span>
               </template>
               <template v-else-if="event.eventCategory === 'CHANGE_COMPLETION_STATUS' && 'game' in event.eventable">
-                <span class="a-verb">{{ completionStatusVerb(event) }}</span
-                >{{ " " }}
+                <span class="a-verb">{{ completionStatusVerb(event) }}</span>{{ " " }}
                 <router-link :to="`/games/${event.eventable.game.id}`" class="a-game-link">{{
                   event.eventable.game.name
                 }}</router-link>
