@@ -73,7 +73,13 @@ class WikidataTypeCheck
     )
   end
 
-  # Fetch every P31 value of the given items, with each class's English label.
+  # Fetch every non-deprecated P31 value of the given items, with each class's
+  # English label.
+  #
+  # This reads the statements rather than the truthy `wdt:P31` values, which
+  # only include the best rank: an item with a preferred P31 (e.g. "video game
+  # remaster") would otherwise hide its normal-rank "video game" and be
+  # reported by mistake. Deprecated values are still ignored.
   #
   # @param [Array<Integer>] wikidata_ids
   # @return [Hash{Integer => Hash{Integer => String, nil}}] item ID => { class
@@ -96,7 +102,10 @@ class WikidataTypeCheck
     <<~SPARQL
       SELECT ?item ?class ?classLabel WHERE {
         VALUES ?item { #{wikidata_ids.map { |id| "wd:Q#{id}" }.join(' ')} }
-        ?item wdt:P31 ?class.
+        ?item p:P31 ?statement.
+        ?statement ps:P31 ?class;
+          wikibase:rank ?rank.
+        FILTER(?rank != wikibase:DeprecatedRank)
         OPTIONAL { ?class rdfs:label ?classLabel. FILTER(LANG(?classLabel) = "en") }
       }
     SPARQL

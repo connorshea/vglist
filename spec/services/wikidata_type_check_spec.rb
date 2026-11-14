@@ -86,6 +86,18 @@ RSpec.describe WikidataTypeCheck do
     expect(WikidataSparql).to have_received(:query).twice
   end
 
+  it 'reads non-deprecated statements, not just the best-ranked truthy values' do
+    create(:game, wikidata_id: 100)
+    allow(WikidataSparql).to receive(:query).and_return([])
+
+    results
+
+    expect(WikidataSparql).to have_received(:query).with(
+      a_string_including('?item p:P31 ?statement.', 'FILTER(?rank != wikibase:DeprecatedRank)')
+    )
+    expect(WikidataSparql).not_to have_received(:query).with(a_string_including('wdt:P31'))
+  end
+
   it 'never writes to the games' do
     game = create(:game, wikidata_id: 100)
     allow(WikidataSparql).to receive(:query).and_return([class_row(100, 11_424, 'film')])
