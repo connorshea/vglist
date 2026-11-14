@@ -127,12 +127,7 @@
               </button>
 
               <!-- Mod/admin actions -->
-              <div
-                v-if="authStore.isModerator"
-                ref="adminMenuRef"
-                class="hero-admin"
-                @keydown.esc="closeAdminMenu(true)"
-              >
+              <div v-if="authStore.isModerator" ref="adminMenuRef" class="hero-admin" @focusout="onAdminMenuFocusout">
                 <button
                   ref="adminButtonRef"
                   class="hero-btn icon"
@@ -141,10 +136,18 @@
                   aria-controls="game-admin-menu"
                   :aria-expanded="adminMenuOpen"
                   @click="toggleAdminMenu"
+                  @keydown="onAdminButtonKeydown"
                 >
                   <Ellipsis :size="18" aria-hidden="true" />
                 </button>
-                <div v-if="adminMenuOpen" id="game-admin-menu" class="hero-admin-menu" role="menu">
+                <div
+                  v-if="adminMenuOpen"
+                  id="game-admin-menu"
+                  ref="adminMenuListRef"
+                  class="hero-admin-menu"
+                  role="menu"
+                  @keydown="onAdminMenuKeydown"
+                >
                   <router-link class="hero-admin-item" role="menuitem" :to="`/games/${game.id}/edit`">Edit</router-link>
                   <button
                     v-if="game.coverUrl"
@@ -402,6 +405,7 @@ import type {
 import { Check, CircleAlert, Ellipsis, Heart, Plus } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
 import { useSnackbar } from "@/composables/useSnackbar";
+import { useMenuButton } from "@/composables/useMenuButton";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import MergeGameDialog from "@/components/game/MergeGameDialog.vue";
 import GameLibraryForm from "@/components/game/GameLibraryForm.vue";
@@ -753,39 +757,17 @@ const showDeleteGameConfirm = ref(false);
 const deletingGame = ref(false);
 const showMergeGameDialog = ref(false);
 
-const adminMenuOpen = ref(false);
-const adminMenuRef = ref<HTMLElement | null>(null);
-const adminButtonRef = ref<HTMLButtonElement | null>(null);
-
-function onDocumentPointerDown(event: PointerEvent) {
-  if (adminMenuRef.value && !adminMenuRef.value.contains(event.target as Node)) {
-    closeAdminMenu(false);
-  }
-}
-
-function toggleAdminMenu() {
-  if (adminMenuOpen.value) {
-    closeAdminMenu(false);
-    return;
-  }
-  adminMenuOpen.value = true;
-  document.addEventListener("pointerdown", onDocumentPointerDown);
-  // Move focus into the menu so keyboard users land on the first action.
-  nextTick(() => adminMenuRef.value?.querySelector<HTMLElement>("[role='menuitem']")?.focus());
-}
-
-function closeAdminMenu(restoreFocus: boolean) {
-  if (!adminMenuOpen.value) {
-    return;
-  }
-  adminMenuOpen.value = false;
-  document.removeEventListener("pointerdown", onDocumentPointerDown);
-  if (restoreFocus) {
-    adminButtonRef.value?.focus();
-  }
-}
-
-onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPointerDown));
+const {
+  isOpen: adminMenuOpen,
+  wrapRef: adminMenuRef,
+  buttonRef: adminButtonRef,
+  menuRef: adminMenuListRef,
+  close: closeAdminMenu,
+  toggle: toggleAdminMenu,
+  onButtonKeydown: onAdminButtonKeydown,
+  onMenuKeydown: onAdminMenuKeydown,
+  onFocusout: onAdminMenuFocusout
+} = useMenuButton();
 
 function openAdminDialog(dialog: "removeCover" | "wikidataBlocklist" | "mergeGame" | "deleteGame") {
   closeAdminMenu(false);
