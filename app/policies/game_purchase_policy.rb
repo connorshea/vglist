@@ -43,10 +43,22 @@ class GamePurchasePolicy < ApplicationPolicy
   end
 
   # Game purchases are only visible to other users if their owner has a public
-  # account and hasn't been banned, matching UserPolicy#user_profile_is_visible?.
+  # account and hasn't been banned, or if the (unbanned) owner follows the
+  # viewer. This must match UserPolicy#user_profile_is_visible?, otherwise
+  # resolvers hand out purchases that GamePurchaseType.authorized? rejects.
   def user_profile_is_visible?
     owner = game_purchase&.user
-    (owner&.public_account? && !owner&.banned?) || game_purchase_belongs_to_user? || user&.admin?
+    (owner&.public_account? && !owner&.banned?) ||
+      game_purchase_belongs_to_user? ||
+      user&.admin? ||
+      owner_follows_user?
+  end
+
+  def owner_follows_user?
+    owner = game_purchase&.user
+    return false if user.nil? || owner.nil? || owner.banned?
+
+    owner.following.exists?(id: user.id)
   end
 
   def user_signed_in?
