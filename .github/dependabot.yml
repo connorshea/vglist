@@ -20,6 +20,14 @@ updates:
         versions: [">= 0"]
     cooldown:
       default-days: 1
+    # One PR for all minor/patch gem bumps. Majors still get their own PR
+    # so a breaking upgrade can't hold the rest back.
+    groups:
+      bundler-minor-patch:
+        update-types: [minor, patch]
+      bundler-security:
+        applies-to: security-updates
+        update-types: [minor, patch]
   - package-ecosystem: npm
     directory: "frontend/"
     schedule:
@@ -40,6 +48,16 @@ updates:
         versions: [">= 0"]
     cooldown:
       default-days: 3
+    # A single group (rather than prod/dev groups) keeps every minor/patch
+    # change to pnpm-lock.yaml in one PR. Separate PRs touching the same
+    # transitive deps can merge cleanly yet leave duplicate lockfile keys
+    # (see #5068). Majors still get their own PR.
+    groups:
+      frontend-minor-patch:
+        update-types: [minor, patch]
+      frontend-security:
+        applies-to: security-updates
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -51,6 +69,10 @@ updates:
       - connorshea
     cooldown:
       default-days: 3
+    # Actions are SHA-pinned, so bumps are mechanical; group majors too.
+    groups:
+      github-actions:
+        patterns: ["*"]
   # Base images in Dockerfile and frontend/Dockerfile (pinned by digest).
   # A Ruby bump here must also update mise.toml, Gemfile and the CI
   # workflows' ruby-version.
@@ -67,3 +89,9 @@ updates:
       - connorshea
     cooldown:
       default-days: 3
+    # One PR across both Dockerfiles for minor/patch/digest bumps. Majors
+    # (e.g. a new Ruby or Node line) stay separate since they need manual
+    # follow-up elsewhere.
+    groups:
+      docker-minor-patch:
+        update-types: [minor, patch]
