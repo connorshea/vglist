@@ -71,7 +71,7 @@
             ref="actionsMenu"
             class="profile-menu"
             :class="{ 'is-phone-only': !hasAdminActions }"
-            @keydown.esc="closeActions"
+            @focusout="onActionsFocusout"
           >
             <button
               ref="actionsToggle"
@@ -80,11 +80,18 @@
               aria-label="More actions"
               aria-haspopup="menu"
               :aria-expanded="actionsOpen"
-              @click="actionsOpen = !actionsOpen"
+              @click="toggleActions"
+              @keydown="onActionsButtonKeydown"
             >
               <Ellipsis :size="16" aria-hidden="true" />
             </button>
-            <div v-if="actionsOpen" class="profile-menu-list" role="menu">
+            <div
+              v-if="actionsOpen"
+              ref="actionsList"
+              class="profile-menu-list"
+              role="menu"
+              @keydown="onActionsMenuKeydown"
+            >
               <!-- On a phone, Compare moves in here from the header. -->
               <router-link
                 v-if="compareLink"
@@ -235,7 +242,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from "vue";
+import { computed, provide, reactive, ref, watch } from "vue";
 import { useRoute, useRouter, type RouteRecordName } from "vue-router";
 import { notFoundLocation } from "@/utils/not-found";
 import {
@@ -269,6 +276,7 @@ import UserProfileHeaderSkeleton from "@/components/users/UserProfileHeaderSkele
 import UserOverviewSkeleton from "@/components/users/UserOverviewSkeleton.vue";
 import UserFavoritesSkeleton from "@/components/users/UserFavoritesSkeleton.vue";
 import { roleChanges, type RoleChange } from "@/utils/user-roles";
+import { useMenuButton } from "@/composables/useMenuButton";
 import "@/assets/stylesheets/library.scss";
 
 const route = useRoute();
@@ -431,26 +439,16 @@ const canBan = computed(() => canModerate.value && (currentRole.value === "ADMIN
 const canUpdateRole = computed(() => canFollow.value && currentRole.value === "ADMIN");
 const hasAdminActions = computed(() => canModerate.value || canUpdateRole.value);
 
-const actionsOpen = ref(false);
-const actionsMenu = ref<HTMLElement | null>(null);
-const actionsToggle = ref<HTMLButtonElement | null>(null);
-
-function closeActions() {
-  if (!actionsOpen.value) {
-    return;
-  }
-  actionsOpen.value = false;
-  actionsToggle.value?.focus();
-}
-
-function closeActionsOnClickOutside(event: MouseEvent) {
-  if (actionsMenu.value && event.target instanceof Node && !actionsMenu.value.contains(event.target)) {
-    actionsOpen.value = false;
-  }
-}
-
-onMounted(() => document.addEventListener("click", closeActionsOnClickOutside));
-onBeforeUnmount(() => document.removeEventListener("click", closeActionsOnClickOutside));
+const {
+  isOpen: actionsOpen,
+  wrapRef: actionsMenu,
+  buttonRef: actionsToggle,
+  menuRef: actionsList,
+  toggle: toggleActions,
+  onButtonKeydown: onActionsButtonKeydown,
+  onMenuKeydown: onActionsMenuKeydown,
+  onFocusout: onActionsFocusout
+} = useMenuButton();
 
 // Each dialog's open state, in an object so the menu can open any of them.
 const showBanConfirm = reactive({ value: false });
