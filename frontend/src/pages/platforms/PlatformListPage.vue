@@ -16,9 +16,10 @@
     :loading-more="index.loadingMore.value"
     :refreshing="index.refreshing.value"
     :has-next-page="index.hasNextPage.value"
+    :page="index.page.value"
     :deleting="deleting"
     :error="index.error.value"
-    @load-more="index.loadMore"
+    @go-to-page="index.goToPage"
     @delete="onDelete"
   />
 </template>
@@ -45,7 +46,8 @@ const index = useResourceIndex<
 >({
   document: GET_PLATFORMS_INDEX,
   connection: (data) => data.platforms,
-  withConnection: (data, connection) => ({ ...data, platforms: connection })
+  withConnection: (data, connection) => ({ ...data, platforms: connection }),
+  paginated: true
 });
 
 const items = computed<ResourceIndexItem[]>(() =>
