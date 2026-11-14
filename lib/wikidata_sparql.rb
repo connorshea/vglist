@@ -4,15 +4,17 @@ require 'sparql/client'
 
 # Shared configuration for querying Wikidata over SPARQL.
 #
-# We query QLever's hosted Wikidata mirror
-# (https://qlever.dev/wikidata) rather than the official Wikidata Query
-# Service (WDQS). QLever is dramatically faster and has no query timeout. Its
-# mirror is continuously updated and tracks Wikidata within hours (verified via
-# the newest schema:dateModified in its data), so freshness is a non-issue for
-# our import tasks.
+# We query WDQS v2 (https://query-next.wikidata.org), the QLever instance that
+# Wikidata hosts itself, rather than the legacy Blazegraph-based Wikidata Query
+# Service. QLever is dramatically faster than Blazegraph and has no practical
+# query timeout for our imports.
 #
-# Two things differ from WDQS, and the queries in lib/tasks/import are written
-# with them in mind:
+# Programmatic access requires a specific User-Agent header, which we keep out
+# of the codebase: it's read from the WIKIDATA_QUERY_USER_AGENT env var, and
+# querying without it raises MissingUserAgentError.
+#
+# Two things differ from legacy WDQS, and the queries in lib/tasks/import are
+# written with them in mind:
 #
 #   * QLever does not implicitly define the standard Wikidata prefixes, so every
 #     query is prefixed with PREFIXES below (WDQS injects these for you).
@@ -20,18 +22,16 @@ require 'sparql/client'
 #     `wikibase:label` service and `with { ... } as %name` named subqueries.
 module WikidataSparql
   # The SPARQL endpoint to query. Override with the WIKIDATA_SPARQL_ENDPOINT env
-  # var to fall back to WDQS ("https://query.wikidata.org/sparql") without a
-  # deploy if QLever is ever unavailable.
-  ENDPOINT = ENV.fetch('WIKIDATA_SPARQL_ENDPOINT', 'https://qlever.dev/api/wikidata')
+  # var to point at another QLever Wikidata endpoint without a deploy.
+  ENDPOINT = ENV.fetch('WIKIDATA_SPARQL_ENDPOINT', 'https://query-next.wikidata.org/sparql')
 
-  # Contact email advertised in the User-Agent per Wikimedia's user-agent
-  # policy. Optional and unset by default — set WIKIDATA_CONTACT_EMAIL to
-  # include a contact address (recommended when running imports in production).
-  USER_AGENT = [
-    'vglist Data Fetcher/1.0',
-    ENV['WIKIDATA_CONTACT_EMAIL'].present? ? "(#{ENV['WIKIDATA_CONTACT_EMAIL']})" : nil,
-    "Ruby #{RUBY_VERSION}"
-  ].compact.join(' ')
+  # Env var holding the User-Agent header sent with every query. The endpoint
+  # only accepts programmatic requests with this header, and its value must
+  # never be committed, so there's deliberately no default.
+  USER_AGENT_ENV_VAR = 'WIKIDATA_QUERY_USER_AGENT'
+
+  # Raised when a query is attempted without WIKIDATA_QUERY_USER_AGENT set.
+  class MissingUserAgentError < StandardError; end
 
   # Standard Wikidata prefixes. WDQS provides these implicitly; QLever requires
   # them to be declared explicitly on every query.
@@ -70,10 +70,13 @@ module WikidataSparql
   # @param [String] sparql the query body (without prefix declarations)
   # @return [Array<RDF::Query::Solution>]
   def self.query(sparql)
+    # Fail fast, before pacing, if the User-Agent isn't configured.
+    agent = user_agent
+
     # Pace requests to stay under QLever's rate limit even when we're not
     # actively being throttled.
     sleep(INTER_QUERY_DELAY_SECONDS)
-    with_retry { client.query(PREFIXES + sparql) }
+    with_retry { client(user_agent: agent).query(PREFIXES + sparql) }
   end
 
   # Retry a SPARQL request with exponential backoff when the endpoint tells us
@@ -119,18 +122,31 @@ module WikidataSparql
   end
   private_class_method :retryable_error
 
+  # The User-Agent header to send, from WIKIDATA_QUERY_USER_AGENT.
+  #
+  # @raise [MissingUserAgentError] if the env var is unset or blank
+  # @return [String]
+  def self.user_agent
+    ENV[USER_AGENT_ENV_VAR].presence || raise(
+      MissingUserAgentError,
+      "#{USER_AGENT_ENV_VAR} is not set. The Wikidata query service (#{ENDPOINT}) " \
+      "requires it as the User-Agent header for programmatic access. Set it and try again."
+    )
+  end
+
   # Build a SPARQL client pointed at the Wikidata endpoint.
   #
   # Queries are sent via POST so they aren't constrained by the URL-length
   # ceiling a GET query string imposes on the VALUES clauses in the import
   # tasks. This lets us hydrate larger chunks per round-trip.
   #
+  # @param [String] user_agent the User-Agent header to send
   # @return [SPARQL::Client]
-  def self.client
+  def self.client(user_agent: self.user_agent)
     SPARQL::Client.new(
       ENDPOINT,
       method: :post,
-      headers: { 'User-Agent': USER_AGENT },
+      headers: { 'User-Agent': user_agent },
       read_timeout: 300
     )
   end
