@@ -43,6 +43,9 @@ class WikidataStaleGameCleanup
   def initialize(games: Game.all, item_status: WikidataItemStatus.new)
     @games = games.where.not(wikidata_id: nil)
     @item_status = item_status
+    # Redirect targets an earlier batch already planned to give a game, so a
+    # game in a later batch redirecting to the same item is a duplicate.
+    @claimed_targets = {}
   end
 
   # The number of games that will be checked.
@@ -54,34 +57,23 @@ class WikidataStaleGameCleanup
   # @param [Proc] on_chunk see WikidataItemStatus#stale
   # @return [Array<Result>] one per game with a deleted or redirected item
   def plan(on_chunk: nil)
-    statuses = @item_status.stale(@games.pluck(:wikidata_id), on_chunk: on_chunk)
-    return [] if statuses.empty?
+    plan_games(@games, on_chunk: on_chunk)
+  end
 
-    games = @games.where(wikidata_id: statuses.keys).order(:id).to_a
-    favorite_counts = FavoriteGame.where(game_id: games.map(&:id)).group(:game_id).count
-    owner_counts = GamePurchase.where(game_id: games.map(&:id)).group(:game_id).count
-
-    targets = statuses.values.filter_map(&:redirect_target)
-    games_by_target = Game.where(wikidata_id: targets).pluck(:wikidata_id, :id).to_h
-    blocklisted = WikidataBlocklist.where(wikidata_id: targets).pluck(:wikidata_id).to_set
-
-    games.map do |game|
-      status = statuses[game.wikidata_id]
-      result = Result.new(
-        game_id: game.id,
-        game_name: game.name,
-        wikidata_id: game.wikidata_id,
-        owners: owner_counts.fetch(game.id, 0),
-        favorites: favorite_counts.fetch(game.id, 0)
-      )
-
-      if status.state == :redirected
-        plan_redirect(result, status.redirect_target, games_by_target, blocklisted)
-      else
-        result.action = result.owners.zero? && result.favorites.zero? ? :delete : :keep
-      end
-
-      result
+  # Like #plan, but a batch of games at a time, in ID order, so the caller can
+  # apply and report each batch before the next one is checked. A long run
+  # then keeps its progress if it's interrupted, and can be resumed from the
+  # game after `last_game_id` (e.g. with the task's MIN_ID).
+  #
+  # @param [Integer] batch_size games per batch
+  # @param [Proc] on_chunk see WikidataItemStatus#stale
+  # @yieldparam [Array<Result>] results the batch's stale games
+  # @yieldparam [Integer] last_game_id the highest game ID in the batch
+  # @return [void]
+  def each_batch(batch_size:, on_chunk: nil)
+    @games.in_batches(of: batch_size) do |batch|
+      ids = batch.pluck(:id)
+      yield plan_games(@games.where(id: ids), on_chunk: on_chunk), ids.max
     end
   end
 
@@ -108,6 +100,39 @@ class WikidataStaleGameCleanup
 
   private
 
+  # @return [Array<Result>]
+  def plan_games(games, on_chunk: nil)
+    statuses = @item_status.stale(games.pluck(:wikidata_id), on_chunk: on_chunk)
+    return [] if statuses.empty?
+
+    games = games.where(wikidata_id: statuses.keys).order(:id).to_a
+    favorite_counts = FavoriteGame.where(game_id: games.map(&:id)).group(:game_id).count
+    owner_counts = GamePurchase.where(game_id: games.map(&:id)).group(:game_id).count
+
+    targets = statuses.values.filter_map(&:redirect_target)
+    games_by_target = Game.where(wikidata_id: targets).pluck(:wikidata_id, :id).to_h.merge(@claimed_targets.slice(*targets))
+    blocklisted = WikidataBlocklist.where(wikidata_id: targets).pluck(:wikidata_id).to_set
+
+    games.map do |game|
+      status = statuses[game.wikidata_id]
+      result = Result.new(
+        game_id: game.id,
+        game_name: game.name,
+        wikidata_id: game.wikidata_id,
+        owners: owner_counts.fetch(game.id, 0),
+        favorites: favorite_counts.fetch(game.id, 0)
+      )
+
+      if status.state == :redirected
+        plan_redirect(result, status.redirect_target, games_by_target, blocklisted)
+      else
+        result.action = result.owners.zero? && result.favorites.zero? ? :delete : :keep
+      end
+
+      result
+    end
+  end
+
   def plan_redirect(result, target, games_by_target, blocklisted)
     result.new_wikidata_id = target
 
@@ -121,6 +146,7 @@ class WikidataStaleGameCleanup
       # A second game redirecting to the same target is then a duplicate of
       # this one, rather than a uniqueness error at apply time.
       games_by_target[target] = result.game_id
+      @claimed_targets[target] = result.game_id
     end
   end
 
