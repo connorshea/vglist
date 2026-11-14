@@ -2,6 +2,8 @@ import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { useRoute, useRouter, type RouteLocationRaw } from "vue-router";
 import type { DocumentNode } from "graphql";
 import { useQuery } from "@/composables/useGraphQL";
+import { useUrlPage } from "@/composables/useUrlPage";
+import { offsetCursor } from "@/utils/pagination";
 
 /** The `sortBy` values shared by `SeriesSort` and `ResourceSort`. */
 export type ResourceIndexSortValue = "MOST_GAMES" | "NAME" | "RECENTLY_ADDED";
@@ -38,6 +40,11 @@ interface Options<TData, TNode> {
   /** A copy of the response with the connection replaced. */
   withConnection: (data: TData, connection: Connection<TNode>) => TData;
   pageSize?: number;
+  /**
+   * Show one page at a time, numbered in the URL as `?page=` (see
+   * `useUrlPage`), instead of appending pages with `loadMore`.
+   */
+  paginated?: boolean;
 }
 
 const SEARCH_DEBOUNCE_MS = 250;
@@ -48,7 +55,8 @@ const MAX_PAGE_SIZE = 100;
  * State for a resource index page (series, genres, platforms, companies,
  * engines): the sort and name search (kept in the URL as `?sort=` and `?q=`,
  * so a view can be reloaded, shared and navigated back to), the list query,
- * and loading more pages.
+ * and either loading more pages or, with `paginated`, the page number. A new
+ * sort or search starts again from page 1.
  */
 export function useResourceIndex<TData, TNode extends { id: string }>(options: Options<TData, TNode>) {
   const route = useRoute();
@@ -92,14 +100,18 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
 
   onBeforeUnmount(() => clearTimeout(searchTimer));
 
+  const pageSize = options.pageSize ?? 24;
+  const { page, goToPage } = useUrlPage();
+  const currentPage = computed(() => (options.paginated ? page.value : 1));
+
   const variables = computed(() => ({
-    first: options.pageSize ?? 24,
-    after: null as string | null,
+    first: pageSize,
+    after: offsetCursor((currentPage.value - 1) * pageSize),
     sortBy: sort.value.value,
     nameContains: nameFilter.value || null
   }));
 
-  const { data, loading, error, fetchMore } = useQuery<TData>(options.document, {
+  const { data, loading, error, fetchMore, refetch } = useQuery<TData>(options.document, {
     variables: () => variables.value
   });
 
@@ -146,9 +158,15 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
    * so far are reloaded as one page. The rendered tiles are keyed by ID, so
    * the grid and the scroll position stay put. (Removing the record locally
    * isn't enough: cursors are offsets, so the next page would skip one.)
+   * With `paginated`, the page on screen is fetched again instead, and the
+   * records after it move up to fill the gap.
    */
   async function removeNode(id: string) {
     if (!data.value || !list.value) {
+      return;
+    }
+    if (options.paginated) {
+      await refetch();
       return;
     }
     // Counted when the page is fetched, as with `loadMore`.
@@ -174,6 +192,8 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
     refreshing,
     error,
     loadMore,
-    removeNode
+    removeNode,
+    page: currentPage,
+    goToPage
   };
 }
