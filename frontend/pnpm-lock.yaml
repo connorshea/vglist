@@ -52,8 +52,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(graphql@16.14.2)
       '@graphql-codegen/typescript-operations':
-        specifier: ^6.2.0
-        version: 6.2.0(graphql@16.14.2)
+        specifier: ^7.0.1
+        version: 7.0.1(graphql@16.14.2)
       '@sentry/vite-plugin':
         specifier: 11.12.0
         version: 11.12.0
@@ -311,6 +311,16 @@ packages:
     engines: {node: '>=16'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+      graphql-sock: ^1.0.0
+    peerDependenciesMeta:
+      graphql-sock:
+        optional: true
+
+  '@graphql-codegen/typescript-operations@7.0.1':
+    resolution: {integrity: sha512-qdn7Ya7TbdOkanNeZULW4rF6+q7F5dTgOX2oxE48bm+zULqSQ7UlTe3jCOVxEVKtooi6TpVNnnmhttFVB0R1EA==}
+    engines: {node: '>=22.18.0'}
+    peerDependencies:
+      graphql: ^16.0.0 || ^17.0.0
       graphql-sock: ^1.0.0
     peerDependenciesMeta:
       graphql-sock:
@@ -3441,6 +3451,15 @@ snapshots:
       '@graphql-codegen/plugin-helpers': 7.4.2(graphql@16.14.2)
       '@graphql-codegen/schema-ast': 6.1.1(graphql@16.14.2)
       '@graphql-codegen/visitor-plugin-common': 7.5.0(graphql@16.14.2)
+      auto-bind: 5.0.1
+      graphql: 16.14.2
+      tslib: 2.9.1
+
+  '@graphql-codegen/typescript-operations@7.0.1(graphql@16.14.2)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 8.0.0(graphql@16.14.2)
+      '@graphql-codegen/schema-ast': 7.0.0(graphql@16.14.2)
+      '@graphql-codegen/visitor-plugin-common': 8.0.1(graphql@16.14.2)
       auto-bind: 5.0.1
       graphql: 16.14.2
       tslib: 2.9.1
