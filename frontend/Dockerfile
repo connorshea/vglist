@@ -19,7 +19,7 @@ ARG PNPM_VERSION=11.10.0
 # Build the static bundle.
 # ---------------------------------------------------------------------------
 # Base images are pinned by digest; Dependabot bumps tag and digest together.
-FROM node:24.22.3-trixie-slim@sha256:4978434c68742013476a14d5d7d8c0e77c35fd13627d1a0048cfc8957725748e AS build
+FROM node:26.13.0-trixie-slim@sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072 AS build
 
 ARG PNPM_VERSION
 RUN npm install -g "pnpm@${PNPM_VERSION}"
