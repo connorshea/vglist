@@ -162,4 +162,22 @@ describe("query cache across reloads", () => {
     setItem.mockRestore();
     expect(readQueryCache("a")).toEqual({ n: 1 });
   });
+
+  it("works in memory when storage is blocked", async () => {
+    const blocked = () => {
+      throw new DOMException("The operation is insecure.", "SecurityError");
+    };
+    const session = vi.spyOn(window, "sessionStorage", "get").mockImplementation(blocked);
+    const local = vi.spyOn(window, "localStorage", "get").mockImplementation(blocked);
+    try {
+      const fresh = await reload();
+      fresh.writeQueryCache("a", { n: 1 }, fresh.queryCacheGeneration());
+      expect(fresh.readQueryCache("a")).toEqual({ n: 1 });
+      fresh.clearQueryCache();
+      expect(fresh.readQueryCache("a")).toBeNull();
+    } finally {
+      session.mockRestore();
+      local.mockRestore();
+    }
+  });
 });

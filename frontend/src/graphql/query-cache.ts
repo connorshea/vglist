@@ -1,4 +1,5 @@
 import type { DocumentNode } from "graphql";
+import { type SafeStorage, safeLocalStorage, safeSessionStorage } from "@/utils/safe-storage";
 
 /**
  * A cache of query results, so `useQuery` can show what a page looked like
@@ -53,7 +54,7 @@ let hydrated = false;
 // the auth store imports this module.
 function currentViewer(): string {
   try {
-    const user = JSON.parse(localStorage.getItem("auth_user") ?? "null") as { id?: unknown } | null;
+    const user = JSON.parse(safeLocalStorage.getItem("auth_user") ?? "null") as { id?: unknown } | null;
     return typeof user?.id === "string" ? user.id : "";
   } catch {
     return "";
@@ -61,32 +62,18 @@ function currentViewer(): string {
 }
 
 // Storage can be missing or throw (private windows, blocked site data), and
-// the cache must work the same without it.
-function storage(): Storage | null {
-  try {
-    return window.sessionStorage;
-  } catch {
-    return null;
-  }
+// the cache must work the same without it. The wrapper's in-memory fallback
+// would only duplicate `entries`, so skip it.
+function storage(): SafeStorage | null {
+  return safeSessionStorage.isPersistent() ? safeSessionStorage : null;
 }
 
-function storedKeys(store: Storage): string[] {
-  const keys: string[] = [];
-  for (let i = 0; i < store.length; i++) {
-    const key = store.key(i);
-    if (key?.startsWith(STORAGE_PREFIX)) {
-      keys.push(key);
-    }
-  }
-  return keys;
+function storedKeys(store: SafeStorage): string[] {
+  return store.keys().filter((key) => key.startsWith(STORAGE_PREFIX));
 }
 
 function removeStored(key: string): void {
-  try {
-    storage()?.removeItem(STORAGE_PREFIX + key);
-  } catch {
-    // Nothing to do: it'll be dropped on load once it expires.
-  }
+  storage()?.removeItem(STORAGE_PREFIX + key);
 }
 
 // Loads what an earlier page load stored, oldest first so LRU order holds.
@@ -99,28 +86,24 @@ function hydrate(): void {
   if (!store) {
     return;
   }
-  try {
-    const viewer = currentViewer();
-    const loaded: [string, Entry][] = [];
-    for (const storageKey of storedKeys(store)) {
-      let stored: StoredEntry | null = null;
-      try {
-        stored = JSON.parse(store.getItem(storageKey) ?? "null") as StoredEntry | null;
-      } catch {
-        stored = null;
-      }
-      if (!stored || stored.viewer !== viewer || stored.build !== BUILD || Date.now() - stored.storedAt > MAX_AGE_MS) {
-        store.removeItem(storageKey);
-        continue;
-      }
-      loaded.push([storageKey.slice(STORAGE_PREFIX.length), { data: stored.data, storedAt: stored.storedAt }]);
+  const viewer = currentViewer();
+  const loaded: [string, Entry][] = [];
+  for (const storageKey of storedKeys(store)) {
+    let stored: StoredEntry | null = null;
+    try {
+      stored = JSON.parse(store.getItem(storageKey) ?? "null") as StoredEntry | null;
+    } catch {
+      stored = null;
     }
-    loaded.sort(([, a], [, b]) => a.storedAt - b.storedAt);
-    for (const [key, entry] of loaded) {
-      entries.set(key, entry);
+    if (!stored || stored.viewer !== viewer || stored.build !== BUILD || Date.now() - stored.storedAt > MAX_AGE_MS) {
+      store.removeItem(storageKey);
+      continue;
     }
-  } catch {
-    // Unreadable storage just means a cold start.
+    loaded.push([storageKey.slice(STORAGE_PREFIX.length), { data: stored.data, storedAt: stored.storedAt }]);
+  }
+  loaded.sort(([, a], [, b]) => a.storedAt - b.storedAt);
+  for (const [key, entry] of loaded) {
+    entries.set(key, entry);
   }
 }
 
@@ -139,18 +122,13 @@ function persist(key: string, entry: Entry): void {
     return;
   }
   const evictable = [...entries.keys()].filter((k) => k !== key);
-  for (;;) {
-    try {
-      store.setItem(STORAGE_PREFIX + key, value);
+  while (!store.setItem(STORAGE_PREFIX + key, value)) {
+    const oldest = evictable.shift();
+    if (oldest === undefined) {
+      removeStored(key);
       return;
-    } catch {
-      const oldest = evictable.shift();
-      if (oldest === undefined) {
-        removeStored(key);
-        return;
-      }
-      removeStored(oldest);
     }
+    removeStored(oldest);
   }
 }
 
@@ -242,14 +220,9 @@ export function clearQueryCache(): void {
   // Nothing stored by an earlier page load is wanted now either.
   hydrated = true;
   const store = storage();
-  if (!store) {
-    return;
-  }
-  try {
+  if (store) {
     for (const storageKey of storedKeys(store)) {
       store.removeItem(storageKey);
     }
-  } catch {
-    // Can't clear it, but entries for another viewer are dropped on load.
   }
 }

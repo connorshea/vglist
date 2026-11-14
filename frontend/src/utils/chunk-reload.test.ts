@@ -46,4 +46,16 @@ describe("reloadForStaleChunk", () => {
     expect(reloadForStaleChunk("/games/2", 111_000)).toBeTruthy();
     expect(assign).toHaveBeenLastCalledWith("/games/2");
   });
+
+  it("still reloads when storage is blocked", () => {
+    const session = vi.spyOn(window, "sessionStorage", "get").mockImplementation(() => {
+      throw new DOMException("The operation is insecure.", "SecurityError");
+    });
+    try {
+      expect(reloadForStaleChunk("/games/1", 100_000)).toBeTruthy();
+      expect(assign).toHaveBeenCalledWith("/games/1");
+    } finally {
+      session.mockRestore();
+    }
+  });
 });

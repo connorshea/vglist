@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { REVIEW_DRAFT_KEY_PREFIX, isTokenExpired, useAuthStore } from "./auth";
 
@@ -68,6 +68,33 @@ describe("useAuthStore", () => {
 
       expect(store.isAuthenticated).toBeFalsy();
       expect(store.user).toBeNull();
+    });
+  });
+
+  describe("blocked storage", () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it.each([
+      [
+        "throws on access",
+        () => {
+          throw new DOMException("The operation is insecure.", "SecurityError");
+        }
+      ],
+      ["is null", () => null as unknown as Storage]
+    ])("still starts, signs in, and signs out when localStorage %s", (_label, getter) => {
+      vi.spyOn(window, "localStorage", "get").mockImplementation(getter);
+
+      const store = useAuthStore();
+      expect(store.isAuthenticated).toBeFalsy();
+
+      store.setAuth("token", { id: "1", username: "user", email: "user@example.com", role: "MEMBER", slug: "user" });
+      expect(store.isAuthenticated).toBeTruthy();
+
+      store.clearAuth();
+      expect(store.isAuthenticated).toBeFalsy();
     });
   });
 });

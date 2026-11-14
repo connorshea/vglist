@@ -380,7 +380,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router";
 import { notFoundLocation } from "@/utils/not-found";
 import { useQuery } from "@/composables/useGraphQL";
-import { useAuthStore } from "@/stores/auth";
+import { REVIEW_DRAFT_KEY_PREFIX, useAuthStore } from "@/stores/auth";
 import { useImageColors } from "@/composables/useImageColors";
 import { usePageTitle } from "@/composables/usePageTitle";
 import { gqlClient } from "@/graphql/client";
@@ -404,6 +404,7 @@ import type {
 } from "@/types/graphql";
 import { Check, CircleAlert, Ellipsis, Heart, Plus } from "@lucide/vue";
 import { extractGqlError } from "@/utils/graphql-errors";
+import { safeLocalStorage } from "@/utils/safe-storage";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { useMenuButton } from "@/composables/useMenuButton";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
@@ -682,7 +683,7 @@ async function confirmRemoveFromLibrary() {
     actionIsError.value = false;
     showAddForm.value = false;
     showRemoveConfirm.value = false;
-    localStorage.removeItem(`vglist-review-draft-${gameId.value}`);
+    safeLocalStorage.removeItem(`${REVIEW_DRAFT_KEY_PREFIX}${gameId.value}`);
     refetch();
     refetchCommunity();
   } catch (err) {
