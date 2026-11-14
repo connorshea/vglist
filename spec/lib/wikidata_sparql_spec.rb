@@ -79,4 +79,58 @@ RSpec.describe WikidataSparql do
       expect(described_class).not_to have_received(:sleep)
     end
   end
+
+  describe '.user_agent' do
+    around(:each) do |example|
+      original = ENV.fetch('WIKIDATA_QUERY_USER_AGENT', nil)
+      example.run
+    ensure
+      ENV['WIKIDATA_QUERY_USER_AGENT'] = original
+    end
+
+    it 'returns WIKIDATA_QUERY_USER_AGENT when set' do
+      ENV['WIKIDATA_QUERY_USER_AGENT'] = 'test-agent'
+
+      expect(described_class.user_agent).to eq('test-agent')
+    end
+
+    it 'raises a clear error when WIKIDATA_QUERY_USER_AGENT is blank' do
+      ENV['WIKIDATA_QUERY_USER_AGENT'] = ' '
+
+      expect { described_class.user_agent }
+        .to raise_error(described_class::MissingUserAgentError, /WIKIDATA_QUERY_USER_AGENT is not set/)
+    end
+  end
+
+  describe '.query' do
+    around(:each) do |example|
+      original = ENV.fetch('WIKIDATA_QUERY_USER_AGENT', nil)
+      example.run
+    ensure
+      ENV['WIKIDATA_QUERY_USER_AGENT'] = original
+    end
+
+    before(:each) { allow(described_class).to receive(:sleep) }
+
+    it 'sends the configured User-Agent' do
+      ENV['WIKIDATA_QUERY_USER_AGENT'] = 'test-agent'
+      client = instance_double(SPARQL::Client, query: [])
+      allow(SPARQL::Client).to receive(:new).and_return(client)
+
+      described_class.query('SELECT * WHERE { ?s ?p ?o } LIMIT 1')
+
+      expect(SPARQL::Client).to have_received(:new)
+        .with(described_class::ENDPOINT, hash_including(headers: { 'User-Agent': 'test-agent' }))
+    end
+
+    it 'fails before sending anything when WIKIDATA_QUERY_USER_AGENT is unset' do
+      ENV.delete('WIKIDATA_QUERY_USER_AGENT')
+      allow(SPARQL::Client).to receive(:new)
+
+      expect { described_class.query('SELECT * WHERE { ?s ?p ?o } LIMIT 1') }
+        .to raise_error(described_class::MissingUserAgentError)
+      expect(SPARQL::Client).not_to have_received(:new)
+      expect(described_class).not_to have_received(:sleep)
+    end
+  end
 end

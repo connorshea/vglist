@@ -6,8 +6,8 @@
 # This is a standalone client — it does NOT need the Rails app or a database.
 # It pulls every game from vglist.co's GraphQL API — name, wikidataId, release
 # date, and external IDs (IGDB, Steam App IDs, MobyGames), all saved to the
-# dataset JSON — then asks QLever's Wikidata mirror (the same endpoint the import
-# rake tasks use) which of those Wikidata items have since been deleted or
+# dataset JSON — then asks Wikidata's QLever query service (the same endpoint the
+# import rake tasks use) which of those Wikidata items have since been deleted or
 # merged/redirected into another item. Both cases mean the stored wikidataId is
 # stale.
 #
@@ -28,15 +28,16 @@
 #
 # Usage:
 #   VGLIST_EMAIL=you@example.com VGLIST_TOKEN=your_api_token \
+#   WIKIDATA_QUERY_USER_AGENT=... \
 #     ruby script/find_stale_wikidata_ids.rb
 #
 # Environment variables:
 #   VGLIST_EMAIL              (required) email of your vglist account
 #   VGLIST_TOKEN              (required) your vglist API token (Settings -> API)
 #   VGLIST_ENDPOINT           GraphQL endpoint (default https://vglist.co/graphql)
-#   WIKIDATA_SPARQL_ENDPOINT  SPARQL endpoint (default https://qlever.dev/api/wikidata;
-#                             set to https://query.wikidata.org/sparql to use WDQS)
-#   WIKIDATA_CONTACT_EMAIL    optional contact address added to the SPARQL User-Agent
+#   WIKIDATA_QUERY_USER_AGENT (required) User-Agent header the Wikidata query service
+#                             requires for programmatic access (never commit it)
+#   WIKIDATA_SPARQL_ENDPOINT  SPARQL endpoint (default https://query-next.wikidata.org/sparql)
 #   CHUNK_SIZE                Wikidata IDs per SPARQL query (default 100)
 #   OUTPUT_CSV                optional path; also writes the findings as CSV
 #   VGLIST_GAMES_JSON         where to save the fetched dataset (default vglist_games.json)
@@ -70,7 +71,7 @@ require 'digest'
 
 module FindStaleWikidataIds
   VGLIST_ENDPOINT = ENV.fetch('VGLIST_ENDPOINT', 'https://vglist.co/graphql')
-  SPARQL_ENDPOINT = ENV.fetch('WIKIDATA_SPARQL_ENDPOINT', 'https://qlever.dev/api/wikidata')
+  SPARQL_ENDPOINT = ENV.fetch('WIKIDATA_SPARQL_ENDPOINT', 'https://query-next.wikidata.org/sparql')
   CHUNK_SIZE = Integer(ENV.fetch('CHUNK_SIZE', '100'))
   PAGE_SIZE = 100 # vglist caps connections at 100 records per page.
 
@@ -99,18 +100,15 @@ module FindStaleWikidataIds
     OpenSSL::SSL::SSLError, EOFError, SocketError, IOError
   ].freeze
 
-  USER_AGENT = [
-    'vglist stale-wikidata checker/1.0',
-    ENV['WIKIDATA_CONTACT_EMAIL'].to_s.empty? ? nil : "(#{ENV['WIKIDATA_CONTACT_EMAIL']})",
-    "Ruby #{RUBY_VERSION}"
-  ].compact.join(' ')
-
   # A game from vglist whose wikidataId turned out to be stale.
   Finding = Struct.new(:game_id, :name, :wikidata_id, :state, :merged_into, keyword_init: true)
 
   module_function
 
   def run
+    # Check this up front so a missing value fails before the long vglist fetch.
+    require_env('WIKIDATA_QUERY_USER_AGENT')
+
     games =
       if reuse_cache?
         warn "Loading cached dataset from #{GAMES_JSON} (USE_CACHE set) ..."
@@ -462,7 +460,7 @@ module FindStaleWikidataIds
       request = Net::HTTP::Post.new(uri)
       request['Accept'] = 'application/sparql-results+json'
       request['Content-Type'] = 'application/x-www-form-urlencoded'
-      request['User-Agent'] = USER_AGENT
+      request['User-Agent'] = require_env('WIKIDATA_QUERY_USER_AGENT')
       request.set_form_data('query' => query)
 
       response = perform_http(uri, request, description: 'SPARQL')

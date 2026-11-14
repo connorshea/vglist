@@ -10,8 +10,9 @@ require 'wikidata_sparql'
 # multilingual (`mul`) label, which Wikidata uses for names that are the same
 # in every language and which some items now carry instead of an `en` label.
 #
-# Labels are fetched in bulk from QLever (see WikidataSparql), a chunk of games
-# per query, rather than with one API call per item.
+# Labels are fetched in bulk from Wikidata's QLever query service (see
+# WikidataSparql), a chunk of games per query, rather than with one API call
+# per item.
 class WikidataNameCheck
   # Games per SPARQL round-trip. Each row is just an item and up to two labels,
   # so chunks can be large, which cuts down on the per-query pacing sleep.

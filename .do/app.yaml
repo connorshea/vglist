@@ -222,7 +222,11 @@ services:
         type: SECRET
       - key: TWITCH_CLIENT_SECRET
         type: SECRET
-      - key: WIKIDATA_CONTACT_EMAIL
+      # User-Agent header for Wikidata's query service
+      # (https://query-next.wikidata.org), which only accepts programmatic
+      # requests that send it. Keep the value out of the repo; Wikidata
+      # import rake tasks fail until it's set.
+      - key: WIKIDATA_QUERY_USER_AGENT
         type: SECRET
       # Cloudflare R2 (Active Storage). R2_BUCKET and R2_PUBLIC_HOST default
       # to "vglist" and https://files.vglist.co in config/storage.yml.
