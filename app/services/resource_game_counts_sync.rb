@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-# Recalculates the `games_count` counter caches on genres, platforms, engines
-# and series and fixes any that have drifted.
+# Recalculates the `games_count` counter caches on genres, platforms, engines,
+# series and companies, and fixes any that have drifted.
 #
-# The join models' (and Game's belongs_to :series) counter caches keep them
-# right for normal edits, but they can drift: games edited by the old code
-# while a deploy's migrations run, or rows changed with raw SQL. This runs
-# from the daily `vglist:update:stats` job.
+# The join models' counter caches (Game's belongs_to :series for series,
+# CompanyGamesCount for companies) keep them right for normal edits, but they
+# can drift: games edited by the old code while a deploy's migrations run, or
+# rows changed with raw SQL. This runs from the daily `vglist:update:stats`
+# job.
 #
 # These tables are small (thousands of rows), so each is fixed with a single
 # UPDATE that only writes the rows that are wrong.
@@ -16,7 +17,11 @@ class ResourceGameCountsSync
     genres: 'SELECT genre_id AS id, COUNT(*) AS count FROM game_genres GROUP BY genre_id',
     platforms: 'SELECT platform_id AS id, COUNT(*) AS count FROM game_platforms GROUP BY platform_id',
     engines: 'SELECT engine_id AS id, COUNT(*) AS count FROM game_engines GROUP BY engine_id',
-    series: 'SELECT series_id AS id, COUNT(*) AS count FROM games WHERE series_id IS NOT NULL GROUP BY series_id'
+    series: 'SELECT series_id AS id, COUNT(*) AS count FROM games WHERE series_id IS NOT NULL GROUP BY series_id',
+    # A game the company both developed and published counts once.
+    companies: 'SELECT company_id AS id, COUNT(*) AS count FROM (' \
+               'SELECT company_id, game_id FROM game_developers UNION SELECT company_id, game_id FROM game_publishers' \
+               ') company_games GROUP BY company_id'
   }.freeze
 
   # @return [Integer] How many records were corrected, across all tables.
