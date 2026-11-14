@@ -113,6 +113,7 @@ import { LibraryBig, Search } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
 import { useSearchOverlay } from "@/composables/useSearchOverlay";
 import { useSaveData } from "@/composables/useSaveData";
+import { useReducedMotion } from "@/composables/useReducedMotion";
 import { useAuthStore } from "@/stores/auth";
 import { GET_BASIC_SITE_STATISTICS } from "@/graphql/queries/resources";
 import { GET_HERO_COVERS } from "@/graphql/queries/games";
@@ -486,15 +487,42 @@ onMounted(() => {
   );
 });
 
-// Start flipping once covers are visible
-watch(coversReady, (ready) => {
-  if (ready && !flipTimer) {
-    startTimers.push(
-      setTimeout(() => {
-        scheduleFlips();
-        flipTimer = setInterval(scheduleFlips, 2000);
-      }, 300)
-    );
+// With "reduce motion" on, the mosaic holds still (WCAG 2.2.2): no tile flips
+// here, and the CSS stops the rows scrolling.
+const reducedMotion = useReducedMotion();
+let flipStartPending = false;
+
+function startFlipping() {
+  if (flipTimer || flipStartPending || reducedMotion.value || !coversReady.value) {
+    return;
+  }
+  flipStartPending = true;
+  startTimers.push(
+    setTimeout(() => {
+      flipStartPending = false;
+      if (reducedMotion.value) {
+        return;
+      }
+      scheduleFlips();
+      flipTimer = setInterval(scheduleFlips, 2000);
+    }, 300)
+  );
+}
+
+function stopFlipping() {
+  if (flipTimer) {
+    clearInterval(flipTimer);
+    flipTimer = null;
+  }
+}
+
+// Start flipping once covers are visible, and stop or resume if the motion
+// setting changes while the page is open.
+watch([coversReady, reducedMotion], () => {
+  if (reducedMotion.value) {
+    stopFlipping();
+  } else {
+    startFlipping();
   }
 });
 
@@ -613,6 +641,13 @@ onUnmounted(() => {
   }
   100% {
     transform: rotateY(0deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosaic-row,
+  .cover-tile.flipping {
+    animation: none;
   }
 }
 
