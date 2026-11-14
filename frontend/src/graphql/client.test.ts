@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import gql from "graphql-tag";
 import { createPinia, setActivePinia } from "pinia";
 import { persistedDocumentIds } from "@/types/persisted-documents";
-import { gqlClient, persistedGetUrl, persistedQueryFetch, tracedApiUrls } from "./client";
+import { REJECTED_TOKEN_HEADER, gqlClient, persistedGetUrl, persistedQueryFetch, tracedApiUrls } from "./client";
+import { useAuthStore } from "@/stores/auth";
 import { queryCacheGeneration, readQueryCache, writeQueryCache } from "./query-cache";
 
 // client.ts reads the API URL when it's imported.
@@ -236,5 +237,67 @@ describe("gqlClient", () => {
       }
     `);
     expect(readQueryCache("GetThing:{}")).toEqual({ thing: 1 });
+  });
+});
+
+describe("rejected tokens", () => {
+  const authUser = { id: "1", username: "user", email: "user@example.com", role: "MEMBER", slug: "user" } as const;
+  const query = gql`
+    query GetOther {
+      thing
+    }
+  `;
+
+  function respondWithRejection(onRequest?: () => void) {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        onRequest?.();
+        return new Response(JSON.stringify({ data: { thing: null } }), {
+          status: 200,
+          headers: { "content-type": "application/json", [REJECTED_TOKEN_HEADER]: "true" }
+        });
+      })
+    );
+  }
+
+  beforeEach(() => {
+    localStorage.clear();
+    setActivePinia(createPinia());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("signs out when the API rejects the token", async () => {
+    const authStore = useAuthStore();
+    authStore.setAuth("stale.token.value", authUser);
+    respondWithRejection();
+
+    await gqlClient.request(query);
+
+    expect(authStore.isAuthenticated).toBeFalsy();
+    expect(localStorage.getItem("auth_token")).toBeNull();
+  });
+
+  it("stays signed in when the response doesn't flag the token", async () => {
+    const authStore = useAuthStore();
+    authStore.setAuth("good.token.value", authUser);
+    respondWith({ data: { thing: 1 } });
+
+    await gqlClient.request(query);
+
+    expect(authStore.isAuthenticated).toBeTruthy();
+  });
+
+  it("keeps a token set while the rejected request was in flight", async () => {
+    const authStore = useAuthStore();
+    authStore.setAuth("stale.token.value", authUser);
+    respondWithRejection(() => authStore.setAuth("fresh.token.value", authUser));
+
+    await gqlClient.request(query);
+
+    expect(authStore.token).toBe("fresh.token.value");
   });
 });

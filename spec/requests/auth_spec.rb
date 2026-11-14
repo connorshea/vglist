@@ -145,6 +145,17 @@ RSpec.describe "Api::Auth", type: :request do
       expect(json['errors']).to be_present
     end
 
+    it "returns errors instead of crashing when the username is missing", :aggregate_failures do
+      post api_auth_sign_up_path, params: {
+        email: "newuser@example.com",
+        password: "password123",
+        password_confirmation: "password123"
+      }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(JSON.parse(response.body)['errors']).to include("Username can't be blank")
+    end
+
     it "returns errors for a duplicate email" do
       existing_user = create(:confirmed_user)
       post api_auth_sign_up_path, params: {
@@ -214,6 +225,41 @@ RSpec.describe "Api::Auth", type: :request do
       get api_auth_me_path, headers: { 'Authorization': "Bearer #{token}" }
 
       expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
+  describe "rejected token header" do
+    let(:user) { create(:confirmed_user) }
+    let(:header) { ApplicationController::REJECTED_TOKEN_HEADER }
+
+    it "is set when a revoked token is sent" do
+      token = JwtService.encode(user)
+      JwtService.revoke_all!(user)
+
+      get api_auth_me_path, headers: { 'Authorization': "Bearer #{token}" }
+
+      expect(response.headers[header]).to eq('true')
+    end
+
+    it "is set when an expired token is sent to the GraphQL endpoint" do
+      payload = { user_id: user.id, jwt_version: user.jwt_version, exp: 1.day.ago.to_i, iat: 2.days.ago.to_i }
+      expired_token = JWT.encode(payload, Rails.application.secret_key_base, 'HS256')
+
+      post graphql_path, params: { query: "query { currentUser { id } }" }, headers: { 'Authorization': "Bearer #{expired_token}" }
+
+      expect(response.headers[header]).to eq('true')
+    end
+
+    it "is not set for a valid token" do
+      get api_auth_me_path, headers: { 'Authorization': "Bearer #{JwtService.encode(user)}" }
+
+      expect(response.headers[header]).to be_nil
+    end
+
+    it "is not set when no token is sent" do
+      get api_auth_me_path
+
+      expect(response.headers[header]).to be_nil
     end
   end
 

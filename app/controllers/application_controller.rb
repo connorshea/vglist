@@ -3,8 +3,14 @@
 class ApplicationController < ActionController::API
   include Pundit::Authorization
 
+  # Set on responses to requests whose bearer token was rejected. Exposed to
+  # the SPA via CORS in config/application.rb.
+  REJECTED_TOKEN_HEADER = 'X-Auth-Token-Rejected'
+
   # If the user has been banned, reject the request.
   before_action :reject_banned_users
+  # Tell the client when the token it sent was rejected.
+  before_action :flag_rejected_token
   # Send context with error messages to Sentry.
   before_action :set_sentry_context
   # Set PaperTrail whodunnit to the current user.
@@ -37,6 +43,16 @@ class ApplicationController < ActionController::API
 
     token = auth_header.sub(/\ABearer\s+/i, '')
     token.count('.') == 2 ? token : nil
+  end
+
+  # Requests with an expired, revoked, or otherwise invalid token are treated
+  # as signed out rather than failing, so without this header the SPA would
+  # keep showing the user as signed in. See `REJECTED_TOKEN_HEADER`.
+  def flag_rejected_token
+    return unless request.headers['Authorization']&.match?(/\ABearer\s+/i)
+    return unless current_user.nil?
+
+    response.set_header(REJECTED_TOKEN_HEADER, 'true')
   end
 
   # Reject requests from banned users.
