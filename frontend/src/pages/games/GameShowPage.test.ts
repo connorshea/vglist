@@ -155,6 +155,26 @@ describe("GameShowPage loading skeleton", () => {
     expect(wrapper.find(".game-title").text()).toBe("Game 2");
   });
 
+  it("closes the library form when moving to another game", async () => {
+    authState.isAuthenticated = true;
+    const wrapper = mountPage();
+    await resolveGames();
+
+    const libraryButton = wrapper.find("button[aria-haspopup='dialog']");
+    await libraryButton.trigger("click");
+    expect(libraryButton.attributes("aria-expanded")).toBe("true");
+    expect(wrapper.findComponent({ name: "GameLibrarySheet" }).exists()).toBeTruthy();
+
+    // e.g. browser Back to another game's page, which reuses this component.
+    reactive(mockRoute).params.id = "2";
+    await nextTick();
+    await resolveGames();
+
+    expect(wrapper.find(".game-title").text()).toBe("Game 2");
+    expect(wrapper.findComponent({ name: "GameLibrarySheet" }).exists()).toBeFalsy();
+    expect(wrapper.find("button[aria-haspopup='dialog']").attributes("aria-expanded")).toBe("false");
+  });
+
   it("keeps the page in place while the same game refetches", async () => {
     authState.isAuthenticated = true;
     const wrapper = mountPage();
