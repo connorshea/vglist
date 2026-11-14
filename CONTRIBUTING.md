@@ -6,7 +6,7 @@
 
 - Ruby 4.0
 - Postgres 18.x
-- Node.js 24.x
+- Node.js 26.x
 - pnpm
 - libvips (for images, like avatars or game covers)
 
