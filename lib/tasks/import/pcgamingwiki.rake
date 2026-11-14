@@ -74,7 +74,7 @@ namespace :import do
       # Identify ourselves. PCGamingWiki sits behind Cloudflare, which serves an
       # HTML challenge/error page (not JSON) to requests without a User-Agent or
       # sent too quickly.
-      req['User-Agent'] = WikidataSparql::USER_AGENT
+      req['User-Agent'] = "vglist Data Fetcher/1.0 (https://vglist.co) Ruby #{RUBY_VERSION}"
 
       # Pace requests so we stay under PCGamingWiki's rate limit rather than
       # hammering it back-to-back (which is what gets us served the Cloudflare
