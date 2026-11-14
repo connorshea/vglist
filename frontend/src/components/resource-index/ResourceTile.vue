@@ -21,7 +21,7 @@
       <ChevronRight v-if="!canEdit" class="tile-chevron" :size="18" aria-hidden="true" />
     </router-link>
 
-    <div v-if="canEdit" ref="menuWrapRef" class="tile-actions">
+    <div v-if="canEdit" ref="menuWrapRef" class="tile-actions" @focusout="onMenuFocusout">
       <button
         ref="menuButtonRef"
         type="button"
@@ -31,7 +31,7 @@
         :aria-controls="menuId"
         :aria-label="`Actions for ${name}`"
         @click="toggleMenu"
-        @keydown.down.prevent="openMenu"
+        @keydown="onButtonKeydown"
       >
         <Ellipsis :size="18" aria-hidden="true" />
       </button>
@@ -50,11 +50,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed } from "vue";
 import { ChevronRight, Ellipsis, Pencil, Trash2 } from "@lucide/vue";
 import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
 import type { RouteLocationRaw } from "vue-router";
 import { useSaveData } from "@/composables/useSaveData";
+import { useMenuButton } from "@/composables/useMenuButton";
 
 interface CoverGame {
   id: string;
@@ -106,88 +107,22 @@ function initials(name: string): string {
 
 // ── Actions menu (moderators and admins only) ──
 const menuId = `${props.kind}-menu-${props.id}`;
-const menuOpen = ref(false);
-const menuWrapRef = ref<HTMLElement | null>(null);
-const menuButtonRef = ref<HTMLButtonElement | null>(null);
-const menuRef = ref<HTMLElement | null>(null);
-
-function menuItems(): HTMLElement[] {
-  return Array.from(menuRef.value?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
-}
-
-function openMenu() {
-  menuOpen.value = true;
-  void nextTick(() => menuItems()[0]?.focus());
-}
-
-function closeMenu(returnFocus = true) {
-  if (!menuOpen.value) {
-    return;
-  }
-  menuOpen.value = false;
-  if (returnFocus) {
-    menuButtonRef.value?.focus();
-  }
-}
-
-function toggleMenu() {
-  if (menuOpen.value) {
-    closeMenu();
-  } else {
-    openMenu();
-  }
-}
-
-function onMenuKeydown(e: KeyboardEvent) {
-  const items = menuItems();
-  const index = items.indexOf(document.activeElement as HTMLElement);
-  switch (e.key) {
-    case "ArrowDown":
-      e.preventDefault();
-      items[(index + 1) % items.length]?.focus();
-      break;
-    case "ArrowUp":
-      e.preventDefault();
-      items[(index - 1 + items.length) % items.length]?.focus();
-      break;
-    case "Home":
-      e.preventDefault();
-      items[0]?.focus();
-      break;
-    case "End":
-      e.preventDefault();
-      items[items.length - 1]?.focus();
-      break;
-    case "Escape":
-      e.preventDefault();
-      closeMenu();
-      break;
-    case "Tab":
-      closeMenu(false);
-      break;
-  }
-}
+const {
+  isOpen: menuOpen,
+  wrapRef: menuWrapRef,
+  buttonRef: menuButtonRef,
+  menuRef,
+  close: closeMenu,
+  toggle: toggleMenu,
+  onButtonKeydown,
+  onMenuKeydown,
+  onFocusout: onMenuFocusout
+} = useMenuButton();
 
 function requestDelete() {
   closeMenu(false);
   emit("delete");
 }
-
-function onDocumentPointerDown(e: PointerEvent) {
-  if (menuWrapRef.value && !menuWrapRef.value.contains(e.target as Node)) {
-    closeMenu(false);
-  }
-}
-
-watch(menuOpen, (open) => {
-  if (open) {
-    document.addEventListener("pointerdown", onDocumentPointerDown);
-  } else {
-    document.removeEventListener("pointerdown", onDocumentPointerDown);
-  }
-});
-
-onBeforeUnmount(() => document.removeEventListener("pointerdown", onDocumentPointerDown));
 </script>
 
 <style scoped>

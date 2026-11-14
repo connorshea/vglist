@@ -3,6 +3,7 @@ import { mount, flushPromises, RouterLinkStub, enableAutoUnmount } from "@vue/te
 import type { DocumentNode } from "graphql";
 import HomePage from "./HomePage.vue";
 import { resetSaveDataForTests } from "@/composables/useSaveData";
+import { resetReducedMotionForTests } from "@/composables/useReducedMotion";
 
 // ── Hoisted mocks ─────────────────────────────────────────────────
 
@@ -101,6 +102,7 @@ describe("HomePage", () => {
     auth.isAuthenticated = false;
     Reflect.deleteProperty(navigator, "connection");
     resetSaveDataForTests();
+    resetReducedMotionForTests();
   });
 
   it("puts the game count in the search box", async () => {
@@ -339,6 +341,39 @@ describe("HomePage", () => {
     } finally {
       vi.useRealTimers();
       vi.restoreAllMocks();
+    }
+  });
+
+  it("holds the mosaic still when the OS asks for reduced motion", async () => {
+    const query = Object.assign(new EventTarget(), { matches: true });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => query)
+    );
+    vi.useFakeTimers({ toFake: ["setTimeout", "setInterval", "clearTimeout", "clearInterval"] });
+    try {
+      const wrapper = await mountPage();
+      // Past the 5s reveal and the 300ms delay before flips would start.
+      await vi.advanceTimersByTimeAsync(5000 + 300 + 2000);
+      expect(wrapper.findAll(".cover-tile.flipping")).toHaveLength(0);
+
+      // Turning the setting off lets the flips start.
+      query.matches = false;
+      query.dispatchEvent(Object.assign(new Event("change"), { matches: false }));
+      await vi.advanceTimersByTimeAsync(300 + 600);
+      expect(wrapper.findAll(".cover-tile.flipping").length).toBeGreaterThan(0);
+
+      // And turning it back on stops them.
+      query.dispatchEvent(Object.assign(new Event("change"), { matches: true }));
+      await vi.advanceTimersByTimeAsync(1000);
+      const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+      await vi.advanceTimersByTimeAsync(4000);
+      expect(setTimeoutSpy).not.toHaveBeenCalled();
+      expect(wrapper.findAll(".cover-tile.flipping")).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
     }
   });
 
