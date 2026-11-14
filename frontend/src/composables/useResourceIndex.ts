@@ -86,6 +86,11 @@ export function useResourceIndex<TData, TNode extends { id: string }>(options: O
 
   watch(searchText, (text) => {
     clearTimeout(searchTimer);
+    // Already in the URL, e.g. put back by Back/Forward below. Rewriting the
+    // URL then would drop its `?page`.
+    if (text.trim() === nameFilter.value) {
+      return;
+    }
     searchTimer = setTimeout(() => {
       void router.replace({ query: queryFor(sort.value, text.trim()) });
     }, SEARCH_DEBOUNCE_MS);

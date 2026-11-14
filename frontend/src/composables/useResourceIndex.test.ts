@@ -181,6 +181,22 @@ describe("useResourceIndex", () => {
       await nextTick();
       expect(index.searchText.value).toBe("rpg ");
     });
+
+    it("doesn't rewrite the URL after putting the text back, so `?page` survives", async () => {
+      vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+      try {
+        state.route.query = { q: "rpg" };
+        const index = mountIndex(24, { paginated: true });
+        state.route.query = { page: "2" };
+        await nextTick();
+        expect(index.searchText.value).toBe("");
+        await nextTick();
+        vi.advanceTimersByTime(250);
+        expect(replace).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   describe("loadMore", () => {
