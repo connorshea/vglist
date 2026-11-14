@@ -25,6 +25,7 @@
       type="button"
       class="library-row-edit"
       :aria-label="`Edit library entry for ${purchase.game.name}`"
+      :data-edit-purchase-id="purchase.id"
       @click="emit('edit')"
     >
       <Pencil :size="16" :stroke-width="2" aria-hidden="true" />

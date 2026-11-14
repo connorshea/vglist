@@ -22,6 +22,7 @@
       type="button"
       class="playing-card-edit"
       :aria-label="`Edit library entry for ${purchase.game.name}`"
+      :data-edit-purchase-id="purchase.id"
       @click="emit('edit')"
     >
       <Pencil :size="15" :stroke-width="2" aria-hidden="true" />

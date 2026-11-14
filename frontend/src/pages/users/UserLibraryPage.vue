@@ -588,11 +588,13 @@ function openEditor(purchase: LibraryGamePurchaseFieldsFragment) {
   editing.value = purchase;
 }
 
-// Focus goes back to the button that opened the drawer, unless the game has
-// left the page (removed, or moved to another shelf). After a save it waits
+// Focus goes back to the button that opened the drawer. After a save it waits
 // for the refreshed library, since re-sorting moves the tile and that drops
-// focus.
+// focus. If the game moved to another shelf (say Playing to Completed), that
+// button was replaced, so the game's new edit button gets focus instead.
+// Nothing is focused if the game has left the page (removed, or filtered out).
 async function closeEditor() {
+  const purchaseId = editing.value?.id;
   editing.value = null;
   const trigger = editTrigger;
   editTrigger = null;
@@ -601,6 +603,8 @@ async function closeEditor() {
   await nextTick();
   if (trigger?.isConnected) {
     trigger.focus();
+  } else if (trigger && purchaseId) {
+    document.querySelector<HTMLElement>(`[data-edit-purchase-id="${purchaseId}"]`)?.focus();
   }
 }
 
