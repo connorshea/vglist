@@ -284,6 +284,22 @@ jobs:
               exit 1
               ;;
           esac
+          # Cloudflare adds the nonce to its injected JavaScript Detections
+          # script, so it must be present and new on every request.
+          nonce_of() {
+            curl -sS -o /dev/null -D - http://127.0.0.1:8080/ | tr -d '\r' \
+              | grep -i "^$1:" | grep -o "'nonce-[^']*'" || true
+          }
+          enforced="$(nonce_of content-security-policy)"
+          report_only="$(nonce_of content-security-policy-report-only)"
+          if [ -z "$enforced" ] || [ -z "$report_only" ]; then
+            echo "::error::Both CSP headers need a script-src nonce for Cloudflare's JavaScript Detections. See frontend/Caddyfile."
+            exit 1
+          fi
+          if [ "$enforced" = "$report_only" ]; then
+            echo "::error::The CSP nonce was reused across requests"
+            exit 1
+          fi
           status="$(curl -sS -o /dev/null -w '%{http_code}' -X POST \
             -H 'Content-Type: application/csp-report' --data '{}' http://127.0.0.1:8080/csp-report)"
           if [ "$status" != "204" ]; then
