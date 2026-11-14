@@ -560,6 +560,59 @@ RSpec.describe "Users API", type: :request do
         expect(purchase_ids(search: 'lie')).to eq([in_progress_purchase.id.to_s])
       end
 
+      context 'when asking for one shelf per completion status' do
+        let(:shelves_query) do
+          <<-GRAPHQL
+            query($id: ID!, $search: String) {
+              user(id: $id) {
+                completed: gamePurchases(completionStatus: COMPLETED, search: $search) { totalCount }
+                unplayed: gamePurchases(completionStatus: UNPLAYED, search: $search) { totalCount }
+                inProgress: gamePurchases(completionStatus: IN_PROGRESS, search: $search) { totalCount }
+                dropped: gamePurchases(completionStatus: DROPPED, search: $search) { totalCount }
+                noStatus: gamePurchases(noCompletionStatus: true, search: $search) { totalCount }
+                everything: gamePurchases(search: $search) { totalCount }
+                nothing: gamePurchases(completionStatus: COMPLETED, noCompletionStatus: true, search: $search) { totalCount }
+              }
+            }
+          GRAPHQL
+        end
+
+        def shelf_counts(**variables)
+          result = api_request(shelves_query, variables: { id: user.id, **variables }, token: access_token)
+          result.graphql_dig(:user).transform_values { |shelf| shelf[:totalCount] }
+        end
+
+        before do
+          create(:game_purchase, user: user, game: create(:game, name: 'Celeste 64'), completion_status: :unplayed)
+          create(:game_purchase, user: user, game: create(:game, name: 'Hades'), completion_status: nil)
+          # Another user's library doesn't count.
+          create(:game_purchase, completion_status: :unplayed)
+        end
+
+        it "counts each shelf" do
+          expect(shelf_counts).to eq(
+            completed: 1, unplayed: 2, inProgress: 1, dropped: 0, noStatus: 1, everything: 5, nothing: 0
+          )
+        end
+
+        it "applies the shared filters to every shelf's count" do
+          expect(shelf_counts(search: 'cele')).to eq(
+            completed: 0, unplayed: 2, inProgress: 0, dropped: 0, noStatus: 0, everything: 2, nothing: 0
+          )
+        end
+
+        it "counts the status shelves in one query" do
+          count_queries = []
+          callback = ->(*, payload) { count_queries << payload[:sql] if payload[:sql].include?('COUNT(') }
+          ActiveSupport::Notifications.subscribed(callback, 'sql.active_record') { shelf_counts }
+
+          # One grouped count for the five status shelves, plus one each for
+          # the unfiltered and contradictory connections.
+          expect(count_queries.length).to eq(3)
+          expect(count_queries).to include(a_string_including('GROUP BY "game_purchases"."completion_status"'))
+        end
+      end
+
       it "treats the search string as a literal, not as a LIKE pattern" do
         expect(purchase_ids(search: '%')).to eq([])
       end
