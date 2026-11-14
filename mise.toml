@@ -1,6 +1,6 @@
 [tools]
 ruby = "4.0.9"
-node = "24"
+node = "26"
 pnpm = "11.10.0"
 
 [settings]
