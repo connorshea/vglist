@@ -235,7 +235,12 @@ nav.navbar {
       &:hover,
       &:focus {
         --bulma-navbar-item-background-a: 0.05;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+
+        // Dropdown triggers (the More menus) open on hover, so an
+        // underline would sit on top of the open menu.
+        &:not(.has-dropdown) {
+          border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+        }
       }
     }
 
