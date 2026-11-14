@@ -109,7 +109,7 @@
             </span>
 
             <button
-              v-if="canDeleteEvent(event)"
+              v-if="canDeleteEvent(event, authStore.user)"
               class="a-delete-btn"
               aria-label="Delete event"
               :disabled="deletingEventId === event.id"
@@ -163,7 +163,7 @@ import { useQuery, useMutation } from "@/composables/useGraphQL";
 import { useCursorPages, withoutPage } from "@/composables/useCursorPages";
 import { GET_ACTIVITY } from "@/graphql/queries/resources";
 import { DELETE_EVENT } from "@/graphql/mutations/events";
-import type { GetActivityQuery, GamePurchaseCompletionStatus, DeleteEventMutation } from "@/types/graphql";
+import type { GetActivityQuery, DeleteEventMutation } from "@/types/graphql";
 import ActivityFeedSkeleton from "@/components/activity/ActivityFeedSkeleton.vue";
 import PaginationNav from "@/components/PaginationNav.vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
@@ -172,6 +172,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useSnackbar } from "@/composables/useSnackbar";
 import { timeAgo } from "@/utils/time";
 import { coverPlaceholderStyle } from "@/utils/cover-placeholder";
+import { canDeleteEvent, completionStatusVerb, eventBadge, eventGame, eventRating } from "@/utils/activity";
 
 const authStore = useAuthStore();
 const { show: showSnackbar } = useSnackbar();
@@ -234,108 +235,6 @@ function nextPage() {
 
 function prevPage() {
   goToPrevPage(data.value?.activity?.pageInfo.startCursor);
-}
-
-type ActivityEvent = GetActivityQuery["activity"] extends { nodes: Array<infer N> } | null | undefined ? N : never;
-
-function eventGame(event: ActivityEvent): { id: string; name: string; coverUrl?: string | null } | null {
-  if (
-    (event.eventCategory === "ADD_TO_LIBRARY" ||
-      event.eventCategory === "CHANGE_COMPLETION_STATUS" ||
-      event.eventCategory === "FAVORITE_GAME") &&
-    "game" in event.eventable
-  ) {
-    return event.eventable.game;
-  }
-  return null;
-}
-
-function eventRating(event: ActivityEvent): number | null {
-  if (
-    (event.eventCategory === "ADD_TO_LIBRARY" || event.eventCategory === "CHANGE_COMPLETION_STATUS") &&
-    "rating" in event.eventable &&
-    event.eventable.rating != null
-  ) {
-    return event.eventable.rating;
-  }
-  return null;
-}
-
-const completionStatusLabels: Record<GamePurchaseCompletionStatus, string> = {
-  UNPLAYED: "Unplayed",
-  IN_PROGRESS: "In Progress",
-  DROPPED: "Dropped",
-  COMPLETED: "Completed",
-  FULLY_COMPLETED: "100%",
-  NOT_APPLICABLE: "N/A",
-  PAUSED: "Paused"
-};
-
-const completionStatusVerbs: Record<GamePurchaseCompletionStatus, string> = {
-  UNPLAYED: "set",
-  IN_PROGRESS: "is playing",
-  DROPPED: "dropped",
-  COMPLETED: "completed",
-  FULLY_COMPLETED: "100%'d",
-  NOT_APPLICABLE: "set",
-  PAUSED: "paused"
-};
-
-// The status a completion status event changed the game to. Uses the status
-// recorded on the event, so older events don't show the game's current status.
-// Falls back to the current status for events with no recorded change.
-function eventCompletionStatus(event: ActivityEvent): GamePurchaseCompletionStatus | null {
-  if (event.completionStatusChange) {
-    return event.completionStatusChange.after;
-  }
-  if ("completionStatus" in event.eventable && event.eventable.completionStatus) {
-    return event.eventable.completionStatus;
-  }
-  return null;
-}
-
-function completionStatusVerb(event: ActivityEvent): string {
-  const status = eventCompletionStatus(event);
-  return status ? completionStatusVerbs[status] : "changed the status of";
-}
-
-interface BadgeInfo {
-  label: string;
-  cssClass: string;
-}
-
-function eventBadge(event: ActivityEvent): BadgeInfo | null {
-  if (event.eventCategory === "ADD_TO_LIBRARY") {
-    return { label: "Added", cssClass: "badge-added" };
-  }
-  if (event.eventCategory === "FAVORITE_GAME") {
-    return { label: "Favorited", cssClass: "badge-favorited" };
-  }
-  const status = event.eventCategory === "CHANGE_COMPLETION_STATUS" ? eventCompletionStatus(event) : null;
-  if (status) {
-    return {
-      label: completionStatusLabels[status],
-      cssClass: `badge-${status.toLowerCase().replace("_", "-")}`
-    };
-  }
-  if (event.eventCategory === "NEW_USER") {
-    return { label: "New User", cssClass: "badge-new-user" };
-  }
-  if (event.eventCategory === "FOLLOWING") {
-    return { label: "Followed", cssClass: "badge-followed" };
-  }
-  return null;
-}
-
-function canDeleteEvent(event: ActivityEvent): boolean {
-  if (!authStore.user) {
-    return false;
-  }
-  const role = authStore.user.role;
-  if (role === "MODERATOR" || role === "ADMIN") {
-    return true;
-  }
-  return event.user.id === authStore.user.id;
 }
 
 const showDeleteEventConfirm = ref(false);
