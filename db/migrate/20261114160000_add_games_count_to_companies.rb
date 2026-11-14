@@ -30,6 +30,13 @@ class AddGamesCountToCompanies < ActiveRecord::Migration[8.1]
           changed_company_ids := ARRAY[OLD.company_id, NEW.company_id];
         END IF;
 
+        -- Lock the companies first. Otherwise two transactions that add games to
+        -- the same company at once each recount without seeing the other's row,
+        -- and the second one to commit overwrites the first one's count. Once
+        -- the lock is free, the UPDATE below takes a fresh snapshot that sees
+        -- the other transaction's rows.
+        PERFORM 1 FROM public.companies WHERE id = ANY(changed_company_ids) ORDER BY id FOR UPDATE;
+
         UPDATE public.companies
         SET games_count = (
           SELECT COUNT(*) FROM (
