@@ -222,6 +222,56 @@ RSpec.describe "Global Search API", type: :request do
       end
     end
 
+    context 'with short queries' do
+      let(:query_string) do
+        <<-GRAPHQL
+          query($query: String!) {
+            globalSearch(query: $query) {
+              nodes {
+                ... on GameSearchResult {
+                  content
+                }
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      it "matches the start of any word in the name" do
+        create(:game, name: 'Tomb Raider')
+        create(:game, name: 'Tony Hawk')
+        create(:game, name: 'Return to Castle Wolfenstein')
+        create(:game, name: 'Half-Life')
+
+        result = api_request(query_string, variables: { query: 'to' }, token: access_token)
+
+        expect(result.graphql_dig(:global_search, :nodes).pluck(:content)).to contain_exactly(
+          'Tomb Raider', 'Tony Hawk', 'Return to Castle Wolfenstein'
+        )
+      end
+
+      it "doesn't match in the middle of a word" do
+        create(:game, name: 'Elf')
+        create(:game, name: 'Hotel')
+
+        result = api_request(query_string, variables: { query: 'el' }, token: access_token)
+
+        expect(result.graphql_dig(:global_search, :nodes).pluck(:content)).to eq(['Elf'])
+      end
+
+      it "ranks shorter names first when matches tie" do
+        create(:game, name: 'Iconoclasts')
+        create(:game, name: 'ICO and Shadow of the Colossus Collection')
+        create(:game, name: 'Ico')
+
+        result = api_request(query_string, variables: { query: 'ico' }, token: access_token)
+
+        expect(result.graphql_dig(:global_search, :nodes).pluck(:content)).to eq(
+          ['Ico', 'Iconoclasts', 'ICO and Shadow of the Colossus Collection']
+        )
+      end
+    end
+
     context 'with per-type result limits' do
       it "caps results at 25 per type to ensure type diversity" do
         create_list(:genre, 30, name: 'PerTypeCap')
