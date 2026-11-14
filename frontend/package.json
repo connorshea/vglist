@@ -42,7 +42,7 @@
     "graphql-schema-linter": "^3.0.1",
     "jsdom": "^30.0.1",
     "oxfmt": "^0.76.0",
-    "oxlint": "^1.91.0",
+    "oxlint": "^1.93.0",
     "oxlint-tsgolint": "^7.0.2006",
     "typescript": "~6.0.3",
     "vite": "^8.3.5",
