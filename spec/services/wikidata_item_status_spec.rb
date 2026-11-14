@@ -33,6 +33,16 @@ RSpec.describe WikidataItemStatus do
     expect(stale([1], redirects: { 1 => 2 }, deleted: [2])).to eq(1 => { wikidata_id: 1, state: :deleted, redirect_target: nil })
   end
 
+  it 'raises instead of trusting a chunk where most items look deleted' do
+    ids = (1..10).to_a
+
+    expect { stale(ids, deleted: ids.first(6)) }.to raise_error(described_class::SuspiciousResultError)
+  end
+
+  it 'allows a small chunk where most items are deleted' do
+    expect(stale([1, 2], deleted: [1, 2]).keys).to eq([1, 2])
+  end
+
   it 'queries in chunks' do
     fake = FakeWikidataItems.new(deleted: [5])
     allow(WikidataSparql).to receive(:query) { |sparql| fake.query(sparql) }

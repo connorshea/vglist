@@ -31,6 +31,17 @@ class WikidataItemStatus
   # redirects, so more than one hop is rare.
   MAX_REDIRECT_HOPS = 3
 
+  # Raised when a chunk comes back with most of its items looking deleted.
+  # Real deletions are rare, so this almost certainly means the endpoint
+  # returned an empty or partial result, and trusting it would delete games
+  # whose items are fine.
+  class SuspiciousResultError < StandardError; end
+
+  # Chunks at least this big are checked for a suspicious share of deletions.
+  # Smaller ones (e.g. the last chunk, or a handful of redirect targets) can
+  # legitimately be mostly deleted.
+  SUSPICIOUS_CHUNK_MIN_SIZE = 10
+
   # `state` is :deleted or :redirected. `redirect_target` is the Wikidata ID
   # the item now redirects to (after following any further redirects), for
   # :redirected only.
@@ -68,6 +79,13 @@ class WikidataItemStatus
     # Only items without statements are worth a label lookup, and there are
     # very few of them, so this is usually skipped or tiny.
     deleted = missing.empty? ? [] : missing - fetch_ids_with_labels(missing)
+
+    if chunk.length >= SUSPICIOUS_CHUNK_MIN_SIZE && deleted.length * 2 > chunk.length
+      raise SuspiciousResultError,
+            "#{deleted.length} of #{chunk.length} Wikidata items in one chunk look deleted " \
+            "(Q#{chunk.first}..Q#{chunk.last}). The query service probably returned a partial result; " \
+            "refusing to trust it."
+    end
 
     targets.map { |id, target| Status.new(wikidata_id: id, state: :redirected, redirect_target: target) } +
       deleted.map { |id| Status.new(wikidata_id: id, state: :deleted) }
