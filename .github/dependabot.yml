@@ -19,7 +19,7 @@ updates:
       - dependency-name: aws-sdk-s3
         versions: [">= 0"]
     cooldown:
-      default-days: 3
+      default-days: 1
   - package-ecosystem: npm
     directory: "frontend/"
     schedule:
