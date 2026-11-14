@@ -69,10 +69,7 @@
 
           <!-- No results -->
           <div v-else-if="hasSearched && totalResults === 0" class="search-empty">
-            <p>
-              No results found for "<span class="search-query-highlight">{{ trimmedQuery }}</span
-              >"
-            </p>
+            <p>No results found for "<span class="search-query-highlight">{{ trimmedQuery }}</span>"</p>
             <p class="search-empty-hint">Try a different search term</p>
           </div>
 

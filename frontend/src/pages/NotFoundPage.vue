@@ -9,8 +9,7 @@
       <div class="not-found-text">
         <h1 class="not-found-heading">This one’s not on the shelf</h1>
         <p class="not-found-lede">
-          We couldn’t find <code class="not-found-path">{{ route.path }}</code
-          >. Try searching for it instead.
+          We couldn’t find <code class="not-found-path">{{ route.path }}</code>. Try searching for it instead.
         </p>
       </div>
 

@@ -16,10 +16,7 @@
             <X :size="18" aria-hidden="true" />
           </button>
         </div>
-        <p class="cu-desc">
-          Pick someone to compare <strong>{{ username }}</strong
-          >'s library with.
-        </p>
+        <p class="cu-desc">Pick someone to compare <strong>{{ username }}</strong>'s library with.</p>
 
         <label class="cu-search">
           <span class="is-sr-only">Search users</span>

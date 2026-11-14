@@ -37,9 +37,7 @@
         <div v-else class="history-table-box">
           <table class="table is-fullwidth is-narrow history-table">
             <caption class="is-sr-only">
-              {{
-                currentGroup.label
-              }}
+              {{ currentGroup.label }}
               statistics, newest first
             </caption>
             <thead>

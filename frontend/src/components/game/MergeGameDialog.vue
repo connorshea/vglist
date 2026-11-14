@@ -109,9 +109,9 @@
             <TriangleAlert :size="16" aria-hidden="true" />
             <p>
               Library entries and favorites for <strong>{{ game.name }}</strong> move to
-              <strong>{{ target.name }}</strong
-              >. Anyone who has both keeps their <strong>{{ target.name }}</strong> entry. Then
-              <strong>{{ game.name }}</strong> is deleted. This can't be undone.
+              <strong>{{ target.name }}</strong>. Anyone who has both keeps their
+              <strong>{{ target.name }}</strong> entry. Then <strong>{{ game.name }}</strong> is deleted. This can't be
+              undone.
             </p>
           </div>
 
