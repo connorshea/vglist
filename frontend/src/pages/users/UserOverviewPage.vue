@@ -87,6 +87,7 @@
         :loading="false"
         :error="null"
         :library-empty="true"
+        :own-library="isOwnProfile"
       />
     </template>
   </div>
@@ -115,7 +116,7 @@ const PLAYING_COUNT = 3;
 const TOP_RATED_COUNT = 12;
 
 const route = useRoute("user");
-const { user } = useUserProfile();
+const { user, isOwnProfile } = useUserProfile();
 
 const slug = computed(() => route.params.slug);
 const hideHours = computed(() => user.value?.hideDaysPlayed ?? false);
