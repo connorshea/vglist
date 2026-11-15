@@ -242,6 +242,20 @@ export const GET_CURRENT_USER_STEAM_ACCOUNT = gql`
   }
 `;
 
+// Whether to show the signed-in user the "import from Steam" banner on the home
+// page: only while their library is empty and no Steam account is connected.
+export const GET_STEAM_IMPORT_PROMPT = gql`
+  query GetSteamImportPrompt {
+    currentUser {
+      id
+      steamProfileUrl
+      gamePurchases {
+        totalCount
+      }
+    }
+  }
+`;
+
 // Just the avatar for the navbar's user menu. SMALL is the 80px variant.
 export const GET_CURRENT_USER_AVATAR = gql`
   query GetCurrentUserAvatar {

@@ -82,6 +82,7 @@
     </section>
 
     <div class="home-body">
+      <SteamImportBanner v-if="authStore.isAuthenticated" />
       <GameShelf :sort="POPULAR" />
 
       <aside v-if="!authStore.isAuthenticated" class="home-banner" aria-label="Create an account">
@@ -120,6 +121,7 @@ import { GET_HERO_COVERS } from "@/graphql/queries/games";
 import { GET_GAMES_INDEX_FILTERS } from "@/graphql/queries/games-index";
 import type { GetBasicSiteStatisticsQuery, GetGamesIndexFiltersQuery } from "@/types/graphql";
 import GameShelf from "@/components/home/GameShelf.vue";
+import SteamImportBanner from "@/components/home/SteamImportBanner.vue";
 import SkeletonBlock from "@/components/SkeletonBlock.vue";
 import { countLabel, gameSortFromSlug } from "@/components/games-index/format";
 

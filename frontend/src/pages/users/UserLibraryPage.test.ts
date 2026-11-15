@@ -77,7 +77,8 @@ async function mountLibrary(path = "/users/connorshea/library") {
     history: createMemoryHistory(),
     routes: [
       { path: "/users/:slug/library", name: "userLibrary", component: UserLibraryPage },
-      { path: "/games/:id", name: "game", component: { template: "<div />" } }
+      { path: "/games/:id", name: "game", component: { template: "<div />" } },
+      { path: "/settings/import", name: "settingsImport", component: { template: "<div />" } }
     ]
   });
   await router.push(path);
@@ -107,12 +108,12 @@ describe("UserLibraryPage loading state", () => {
     await resolve(GET_LIBRARY_PAGE, PAGE);
     expect(wrapper.findComponent(LibraryPageSkeleton).exists()).toBeFalsy();
     expect(wrapper.findComponent(LibrarySkeleton).props("variant")).toBe("shelves");
-    expect(wrapper.text()).not.toContain("No games in this library yet");
+    expect(wrapper.text()).not.toContain("Your library is empty");
 
     await resolve(GET_LIBRARY_SHELVES, SHELVES);
     expect(wrapper.findComponent(LibrarySkeleton).exists()).toBeFalsy();
     expect(status.text()).toBe("");
-    expect(wrapper.text()).toContain("No games in this library yet");
+    expect(wrapper.text()).toContain("Your library is empty");
   });
 
   it("outlines the shelves again while new filters load after an empty result", async () => {
@@ -120,16 +121,16 @@ describe("UserLibraryPage loading state", () => {
     const wrapper = await mountLibrary();
     await resolve(GET_LIBRARY_PAGE, PAGE);
     await resolve(GET_LIBRARY_SHELVES, SHELVES);
-    expect(wrapper.text()).toContain("No games in this library yet");
+    expect(wrapper.text()).toContain("Your library is empty");
 
     await wrapper.vm.$router.push("/users/connorshea/library?platforms=1");
     await flushPromises();
     expect(wrapper.findComponent(LibrarySkeleton).props("variant")).toBe("shelves");
-    expect(wrapper.text()).not.toContain("No games in this library yet");
+    expect(wrapper.text()).not.toContain("Your library is empty");
 
     await resolve(GET_LIBRARY_SHELVES, SHELVES);
     expect(wrapper.findComponent(LibrarySkeleton).exists()).toBeFalsy();
-    expect(wrapper.text()).toContain("No games in this library yet");
+    expect(wrapper.text()).toContain("Your library is empty");
   });
 
   it("outlines a single grid when a status is picked", async () => {

@@ -83,6 +83,7 @@
           v-if="!games.length && !gamesLoading"
           :error="gamesError"
           :library-empty="gamesCount === 0"
+          :own-library="isOwner"
         />
         <div v-if="gamesHasNextPage" class="library-load-more">
           <button type="button" class="library-button" :disabled="gamesLoading" @click="loadMoreGames">
@@ -181,7 +182,12 @@
               </section>
             </template>
             <LibrarySkeleton v-if="shelvesSkeleton" variant="shelves" />
-            <LibraryEmptyState v-else-if="!hasShelvedGames" :error="shelvesError" :library-empty="gamesCount === 0" />
+            <LibraryEmptyState
+              v-else-if="!hasShelvedGames"
+              :error="shelvesError"
+              :library-empty="gamesCount === 0"
+              :own-library="isOwner"
+            />
           </template>
 
           <!-- One status, or everything in one grid -->
@@ -204,6 +210,7 @@
               v-if="!games.length && !gamesLoading"
               :error="gamesError"
               :library-empty="gamesCount === 0"
+              :own-library="isOwner"
             />
             <div v-if="gamesHasNextPage" class="library-load-more">
               <button type="button" class="library-button" :disabled="gamesLoading" @click="loadMoreGames">
