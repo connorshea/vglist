@@ -2153,6 +2153,12 @@ export interface GetCurrentUserSteamAccountQuery {
   currentUser: { id: string; steamProfileUrl: string | null } | null;
 }
 
+export type GetSteamImportPromptQueryVariables = Exact<{ [key: string]: never }>;
+
+export interface GetSteamImportPromptQuery {
+  currentUser: { id: string; steamProfileUrl: string | null; gamePurchases: { totalCount: number } } | null;
+}
+
 export type GetCurrentUserAvatarQueryVariables = Exact<{ [key: string]: never }>;
 
 export interface GetCurrentUserAvatarQuery {
