@@ -3,7 +3,7 @@
     <span class="steam-banner-logo" aria-hidden="true"><span class="steam-banner-logo-mark"></span></span>
     <div class="steam-banner-text">
       <p id="steam-banner-title" class="steam-banner-title">Get your library started</p>
-      <p>Import the games you own on Steam, along with your hours played. You can add anything else by hand later.</p>
+      <p>Import the games you own on Steam. You can add anything else by hand later.</p>
     </div>
     <router-link :to="{ name: 'settingsImport' }" class="steam-banner-btn">Import from Steam</router-link>
     <button type="button" class="steam-banner-close" aria-label="Dismiss" @click="dismiss">
