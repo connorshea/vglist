@@ -16,6 +16,7 @@
 import { computed, ref, watch } from "vue";
 import { X } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
+import { focusMainContent } from "@/composables/useRouteFocus";
 import { GET_STEAM_IMPORT_PROMPT } from "@/graphql/queries/users";
 import { useAuthStore } from "@/stores/auth";
 import type { GetSteamImportPromptQuery } from "@/types/graphql";
@@ -63,6 +64,9 @@ function dismiss() {
     safeLocalStorage.setItem(dismissedKey.value, new Date().toISOString());
   }
   dismissed.value = true;
+  // The button goes away with the banner, which would drop focus to <body>.
+  // Hand it to <main> instead, so Tab carries on from inside the page.
+  focusMainContent();
 }
 </script>
 

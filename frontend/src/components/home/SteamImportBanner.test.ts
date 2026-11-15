@@ -7,16 +7,21 @@ interface MockAuth {
   user: { id: string } | null;
 }
 
-const { mockRequest, auth } = vi.hoisted(() => {
+const { mockRequest, mockFocusMain, auth } = vi.hoisted(() => {
   const auth: MockAuth = { isAuthenticated: true, user: { id: "7" } };
   return {
     mockRequest: vi.fn<(query: unknown, variables?: Record<string, unknown>) => Promise<unknown>>(),
+    mockFocusMain: vi.fn<() => void>(),
     auth
   };
 });
 
 vi.mock("@/graphql/client", () => ({
   gqlClient: { request: mockRequest }
+}));
+
+vi.mock("@/composables/useRouteFocus", () => ({
+  focusMainContent: mockFocusMain
 }));
 
 vi.mock("@/stores/auth", () => ({
@@ -46,6 +51,7 @@ enableAutoUnmount(afterEach);
 describe("SteamImportBanner", () => {
   beforeEach(() => {
     mockRequest.mockReset();
+    mockFocusMain.mockReset();
     localStorage.clear();
     auth.isAuthenticated = true;
     auth.user = { id: "7" };
@@ -78,6 +84,8 @@ describe("SteamImportBanner", () => {
     await wrapper.find("button[aria-label='Dismiss']").trigger("click");
     expect(wrapper.find("aside").exists()).toBeFalsy();
     expect(localStorage.getItem(DISMISSED_KEY)).not.toBeNull();
+    // Focus moves to <main> rather than falling to <body> with the button.
+    expect(mockFocusMain).toHaveBeenCalledOnce();
 
     mockRequest.mockClear();
     const remounted = await mountBanner();
