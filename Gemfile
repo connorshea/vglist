@@ -12,7 +12,7 @@ gem 'rails', '~> 8.1.0'
 gem 'pg', '~> 1.7'
 
 # Use Puma as the app server
-gem 'puma', '~> 8.0'
+gem 'puma', '~> 8.1'
 
 # Use devise for Users and authentication.
 gem 'devise', '~> 5.0'
