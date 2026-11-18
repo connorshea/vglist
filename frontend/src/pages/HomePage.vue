@@ -899,6 +899,11 @@ onUnmounted(() => {
   text-align: center;
 }
 
+.home-stats a:hover,
+.home-stats a:focus-visible {
+  text-decoration: underline;
+}
+
 @media (prefers-color-scheme: dark) {
   .home-banner {
     background: var(--p-800);
