@@ -50,7 +50,7 @@ jobs:
           persist-credentials: false
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: bundle exec rubocop
@@ -179,7 +179,7 @@ jobs:
           version: "1.0"
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
@@ -232,7 +232,7 @@ jobs:
           version: "1.0"
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
@@ -276,7 +276,7 @@ jobs:
           version: "1.0"
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
@@ -332,7 +332,7 @@ jobs:
           version: "1.0"
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
