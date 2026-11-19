@@ -48,9 +48,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: bundle exec rubocop
@@ -177,9 +177,9 @@ jobs:
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
@@ -230,9 +230,9 @@ jobs:
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
@@ -274,9 +274,9 @@ jobs:
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
@@ -330,9 +330,9 @@ jobs:
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: "4.0.9"
+          ruby-version: "4.0.10"
           rubygems: "4.0.24"
           bundler-cache: true
       - run: cp config/database.yml.ci config/database.yml
