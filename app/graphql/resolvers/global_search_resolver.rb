@@ -17,7 +17,7 @@ module Resolvers
     # since asking for more than one of each type is meaningless.
     DEFAULT_SEARCHABLE_TYPES = %w[Game Series Company Platform Engine Genre User].freeze
 
-    argument :query, String, required: true, description: 'The query to search for records with.'
+    search_query_argument 'The query to search for records with.'
     argument :searchable_types, [Types::Enums::SearchableEnum], required: false do
       description 'The types of records that multisearch should return. By default, it will return all types of searchable records. Duplicate types are ignored.'
       # `resolve` runs one full-text query per type, so cap the list at the
@@ -51,10 +51,11 @@ module Resolvers
     # the length tiebreak an exact title like "Ico" sorts by id behind
     # "Iconoclasts" and can fall outside the per-type cap.
     def search(query, types)
-      matches = PgSearch.multisearch(query)
-                        .where(searchable_type: types)
-                        .with_pg_search_rank
-                        .unscope(:order)
+      matches = PgSearch.multisearch(query).where(searchable_type: types)
+      # Banned users are left out of every user listing (see
+      # `UserResolvers::ListResolver`), search included.
+      matches = matches.where.not(searchable_type: 'User', searchable_id: User.where(banned: true).select(:id)) if types.include?('User')
+      matches = matches.with_pg_search_rank.unscope(:order)
 
       positioned = PgSearch::Document
                    .from(matches, :pg_search_documents)

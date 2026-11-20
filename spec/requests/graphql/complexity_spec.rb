@@ -8,7 +8,10 @@ RSpec.describe "GraphQL complexity and depth limits", type: :request do
   let(:spa_page_sizes) do
     Hash.new(100).merge(
       # UserLibraryPage.vue: each status' shelf shows its first 12 games.
-      'GetLibraryShelves' => 12
+      'GetLibraryShelves' => 12,
+      # SearchPage.vue: every tab's list is asked for at once, and the biggest
+      # page is 25 rows (utils/search.ts PAGE_SIZE).
+      'SearchTab' => 25
     )
   end
 

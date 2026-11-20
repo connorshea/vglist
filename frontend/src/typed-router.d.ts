@@ -6,6 +6,7 @@ declare module "vue-router" {
       // Public
       home: RouteRecordInfo<"home", "/", Record<never, never>, Record<never, never>>;
       about: RouteRecordInfo<"about", "/about", Record<never, never>, Record<never, never>>;
+      search: RouteRecordInfo<"search", "/search", Record<never, never>, Record<never, never>>;
 
       // Auth
       login: RouteRecordInfo<"login", "/login", Record<never, never>, Record<never, never>>;
