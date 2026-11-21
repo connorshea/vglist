@@ -68,5 +68,32 @@ RSpec.describe "Add to Steam Blocklist Mutation API", type: :request do
         expect(UnmatchedGame.where(external_service_id: '123').count).to eq(1)
       end
     end
+
+    [:moderator, :user].each do |role|
+      context "when the current user is a(n) #{role}" do
+        let(:user) { create("confirmed_#{role}".to_sym) }
+
+        it "does not create a Steam blocklist entry or touch the Steam App ID and Unmatched Games entries", :aggregate_failures do
+          create(:steam_app_id, app_id: 123)
+          create(:unmatched_game, external_service_id: '123')
+
+          expect do
+            result = api_request(query_string, variables: { name: 'foobar', steam_app_id: 123 }, token: access_token)
+            expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to add this game to the Steam Blocklist.")
+          end.not_to change(SteamBlocklist, :count)
+          expect(SteamAppId.where(app_id: 123).count).to eq(1)
+          expect(UnmatchedGame.where(external_service_id: '123').count).to eq(1)
+        end
+      end
+    end
+
+    context 'when there is no current user' do
+      it "does not create a Steam blocklist entry" do
+        expect do
+          result = api_request(query_string, variables: { name: 'foobar', steam_app_id: 123 }, token: nil)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to add this game to the Steam Blocklist.")
+        end.not_to change(SteamBlocklist, :count)
+      end
+    end
   end
 end

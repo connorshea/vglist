@@ -38,5 +38,27 @@ RSpec.describe "Add to Wikidata Blocklist Mutation API", type: :request do
         )
       end
     end
+
+    [:moderator, :user].each do |role|
+      context "when the current user is a(n) #{role}" do
+        let(:user) { create("confirmed_#{role}".to_sym) }
+
+        it "does not create a Wikidata blocklist entry" do
+          expect do
+            result = api_request(query_string, variables: { name: 'foobar', wikidata_id: 123 }, token: access_token)
+            expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to add this game to the Wikidata Blocklist.")
+          end.not_to change(WikidataBlocklist, :count)
+        end
+      end
+    end
+
+    context 'when there is no current user' do
+      it "does not create a Wikidata blocklist entry" do
+        expect do
+          result = api_request(query_string, variables: { name: 'foobar', wikidata_id: 123 }, token: nil)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to add this game to the Wikidata Blocklist.")
+        end.not_to change(WikidataBlocklist, :count)
+      end
+    end
   end
 end
