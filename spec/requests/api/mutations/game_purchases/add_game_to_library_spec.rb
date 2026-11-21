@@ -137,4 +137,26 @@ RSpec.describe "AddGameToLibrary Mutation API", type: :request do
       )
     end
   end
+
+  describe "Mutation refuses to create a GamePurchase without a current user" do
+    let!(:game) { create(:game) }
+    let(:query_string) do
+      <<-GRAPHQL
+        mutation($id: ID!) {
+          addGameToLibrary(gameId: $id) {
+            gamePurchase {
+              id
+            }
+          }
+        }
+      GRAPHQL
+    end
+
+    it "does not create a GamePurchase record" do
+      expect do
+        result = api_request(query_string, variables: { id: game.id }, token: nil)
+        expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to add this game to your library.")
+      end.not_to change(GamePurchase, :count)
+    end
+  end
 end

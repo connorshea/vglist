@@ -50,5 +50,22 @@ RSpec.describe "UnfollowUser Mutation API", type: :request do
         api_request(query_string, variables: { id: user2.id }, token: access_token)
       end.to change(Relationship, :count).by(-1)
     end
+
+    it "does not let a user unfollow themselves" do
+      result = api_request(query_string, variables: { id: user.id }, token: access_token)
+
+      expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to unfollow this user.")
+    end
+
+    context 'when there is no current user' do
+      it "does not remove any relationships" do
+        relationship
+
+        expect do
+          result = api_request(query_string, variables: { id: user2.id }, token: nil)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to unfollow this user.")
+        end.not_to change(Relationship, :count)
+      end
+    end
   end
 end
