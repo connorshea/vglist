@@ -33,5 +33,30 @@ RSpec.describe "Remove from Steam Blocklist Mutation API", type: :request do
         expect(result.graphql_dig(:remove_from_steam_blocklist, :deleted)).to eq(true)
       end
     end
+
+    [:moderator, :user].each do |role|
+      context "when the current user is a(n) #{role}" do
+        let(:user) { create("confirmed_#{role}".to_sym) }
+        let!(:steam_blocklist_entry) { create(:steam_blocklist) }
+
+        it "does not remove the Steam blocklist entry" do
+          expect do
+            result = api_request(query_string, variables: { id: steam_blocklist_entry.id }, token: access_token)
+            expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to remove a Steam blocklist entry.")
+          end.not_to change(SteamBlocklist, :count)
+        end
+      end
+    end
+
+    context 'when there is no current user' do
+      let!(:steam_blocklist_entry) { create(:steam_blocklist) }
+
+      it "does not remove the Steam blocklist entry" do
+        expect do
+          result = api_request(query_string, variables: { id: steam_blocklist_entry.id }, token: nil)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to remove a Steam blocklist entry.")
+        end.not_to change(SteamBlocklist, :count)
+      end
+    end
   end
 end

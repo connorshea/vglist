@@ -43,5 +43,16 @@ RSpec.describe "UnfavoriteGame Mutation API", type: :request do
         }
       )
     end
+
+    context 'when there is no current user' do
+      it "does not remove any FavoriteGame records" do
+        favorite_game
+
+        expect do
+          result = api_request(query_string, variables: { id: game.id }, token: nil)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to unfavorite this game.")
+        end.not_to change(FavoriteGame, :count)
+      end
+    end
   end
 end

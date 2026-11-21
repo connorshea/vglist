@@ -40,5 +40,25 @@ RSpec.describe "CreatePlatform Mutation API", type: :request do
         end
       end
     end
+
+    context 'when the current user is a normal member' do
+      let(:user) { create(:confirmed_user) }
+
+      it "does not create a new platform" do
+        expect do
+          result = api_request(query_string, variables: { name: 'Nintendo Switch', wikidata_id: 123 }, token: access_token)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to create a platform.")
+        end.not_to change(Platform, :count)
+      end
+    end
+
+    context 'when there is no current user' do
+      it "does not create a new platform" do
+        expect do
+          result = api_request(query_string, variables: { name: 'Nintendo Switch', wikidata_id: 123 }, token: nil)
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to create a platform.")
+        end.not_to change(Platform, :count)
+      end
+    end
   end
 end

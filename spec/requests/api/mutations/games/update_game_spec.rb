@@ -259,5 +259,41 @@ RSpec.describe "UpdateGame Mutation API", type: :request do
         )
       end
     end
+
+    context 'when the current user is not allowed to update games' do
+      let!(:game) { create(:game, name: 'Half-Life') }
+      let(:query_string) do
+        <<-GRAPHQL
+          mutation($gameId: ID!, $name: String!) {
+            updateGame(gameId: $gameId, name: $name) {
+              game {
+                id
+                name
+              }
+            }
+          }
+        GRAPHQL
+      end
+
+      context 'when the current user is a normal member' do
+        let(:user) { create(:confirmed_user) }
+
+        it "does not update the game" do
+          result = api_request(query_string, variables: { game_id: game.id, name: 'Portal' }, token: access_token)
+
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to update this game.")
+          expect(game.reload.name).to eq('Half-Life')
+        end
+      end
+
+      context 'when there is no current user' do
+        it "does not update the game" do
+          result = api_request(query_string, variables: { game_id: game.id, name: 'Portal' }, token: nil)
+
+          expect(result.to_h['errors'].first['message']).to eq("You aren't allowed to update this game.")
+          expect(game.reload.name).to eq('Half-Life')
+        end
+      end
+    end
   end
 end
