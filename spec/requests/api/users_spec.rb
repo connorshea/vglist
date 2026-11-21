@@ -785,6 +785,10 @@ RSpec.describe "Users API", type: :request do
         create(:game_purchase, user: user, completion_status: :completed, rating: 100, hours_played: 10.0)
         create(:game_purchase, user: user, completion_status: :fully_completed, rating: 80, hours_played: 5.5)
         create(:game_purchase, user: user, completion_status: :in_progress, hours_played: 4.5)
+        create(:game_purchase, user: user, completion_status: :dropped)
+        create(:game_purchase, user: user, completion_status: :not_applicable)
+        create(:game_purchase, user: user, completion_status: :unplayed)
+        create(:game_purchase, user: user, completion_status: :paused)
         # No completion status, so it counts towards the library's size but not
         # towards any of the status counts.
         create(:game_purchase, user: user, completion_status: nil)
@@ -793,10 +797,11 @@ RSpec.describe "Users API", type: :request do
         statistics = result.graphql_dig(:user, :library_statistics)
 
         expect(statistics).to include(
-          gamesCount: 4,
+          gamesCount: 8,
           totalHoursPlayed: 20.0,
-          completedCount: 2,
-          # 2 of 4 games completed.
+          # Completed, 100%, dropped, and N/A all count as done.
+          completedCount: 4,
+          # 4 of 8 games done.
           completionPercentage: 50,
           # Only the two rated games are averaged.
           averageRating: 90.0
@@ -804,7 +809,11 @@ RSpec.describe "Users API", type: :request do
         expect(statistics[:statusCounts]).to contain_exactly(
           { status: 'COMPLETED', count: 1 },
           { status: 'FULLY_COMPLETED', count: 1 },
-          { status: 'IN_PROGRESS', count: 1 }
+          { status: 'IN_PROGRESS', count: 1 },
+          { status: 'DROPPED', count: 1 },
+          { status: 'NOT_APPLICABLE', count: 1 },
+          { status: 'UNPLAYED', count: 1 },
+          { status: 'PAUSED', count: 1 }
         )
       end
 
