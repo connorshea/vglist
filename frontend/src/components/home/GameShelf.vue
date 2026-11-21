@@ -9,7 +9,7 @@
     <div class="game-shelf-head">
       <h2 :id="headingId" class="game-shelf-title">{{ sort.label }}</h2>
       <router-link :to="seeAllLink" class="game-shelf-more">
-        See all<span class="is-sr-only"> {{ sort.label.toLowerCase() }}</span>
+        {{ moreText }}<span class="is-sr-only"> {{ moreSuffix }}</span>
         <ArrowRight :size="14" aria-hidden="true" />
       </router-link>
     </div>
@@ -36,8 +36,18 @@
 import { computed } from "vue";
 import { ArrowRight } from "@lucide/vue";
 import { useQuery } from "@/composables/useGraphQL";
-import { GET_GAMES_INDEX, GET_NEW_RELEASES, GET_UPCOMING_RELEASES } from "@/graphql/queries/games-index";
-import type { GetGamesIndexQuery, GetNewReleasesQuery, GetUpcomingReleasesQuery } from "@/types/graphql";
+import {
+  GET_GAMES_INDEX,
+  GET_NEW_RELEASES,
+  GET_RECENT_LIBRARY_ADDITIONS,
+  GET_UPCOMING_RELEASES
+} from "@/graphql/queries/games-index";
+import type {
+  GetGamesIndexQuery,
+  GetNewReleasesQuery,
+  GetRecentLibraryAdditionsQuery,
+  GetUpcomingReleasesQuery
+} from "@/types/graphql";
 import GameTile from "@/components/games-index/GameTile.vue";
 import GameTileSkeleton from "@/components/games-index/GameTileSkeleton.vue";
 import {
@@ -45,32 +55,42 @@ import {
   EMPTY_FILTERS,
   filterVariables,
   tileMeta,
-  type GameSortOption
+  type ShelfOption
 } from "@/components/games-index/format";
 
 // One or two rows of games on the home page: the first few games under one of
-// the games index's sorts, with a link to the rest of them there.
+// the games index's sorts, with a link to the rest of them there, or the games
+// people have just added to their libraries, with a link to the activity feed.
 
 // Games per row on a desktop. Narrower screens show 4 per row and hide the
 // rest, and phones scroll the rows sideways.
 const ROW_SIZE = 6;
 
-const props = withDefaults(defineProps<{ sort: GameSortOption; rows?: 1 | 2 }>(), { rows: 1 });
+const props = withDefaults(defineProps<{ sort: ShelfOption; rows?: 1 | 2 }>(), { rows: 1 });
 
 const shelfSize = computed(() => ROW_SIZE * props.rows);
 
 const headingId = computed(() => `shelf-${props.sort.slug}`);
 
-const seeAllLink = computed(() => ({
-  path: "/games",
-  query: props.sort === DEFAULT_GAME_SORT ? {} : { sort: props.sort.slug }
-}));
+const seeAllLink = computed(() => {
+  if (source.value === "library") {
+    return { path: "/activity" };
+  }
+  return { path: "/games", query: props.sort === DEFAULT_GAME_SORT ? {} : { sort: props.sort.slug } };
+});
+
+// The activity feed has more than library additions, so that link says where
+// it goes rather than "See all".
+const moreText = computed(() => (source.value === "library" ? "See activity" : "See all"));
+const moreSuffix = computed(() => (source.value === "library" ? "from the community" : props.sort.label.toLowerCase()));
 
 // The new releases and upcoming releases shelves have their own queries, which
 // put games with covers and more external IDs ahead of sparse entries. "See
 // all" still links to the index's plain release-date sorts.
-const source = computed<"new" | "upcoming" | "sorted">(() => {
+const source = computed<"new" | "upcoming" | "library" | "sorted">(() => {
   switch (props.sort.value) {
+    case "LIBRARY_ADDITIONS":
+      return "library";
     case "RECENTLY_RELEASED":
       return "new";
     case "UPCOMING":
@@ -88,6 +108,11 @@ const newReleases = useQuery<GetNewReleasesQuery>(GET_NEW_RELEASES, {
 const upcomingReleases = useQuery<GetUpcomingReleasesQuery>(GET_UPCOMING_RELEASES, {
   variables: () => ({ first: shelfSize.value }),
   enabled: () => source.value === "upcoming"
+});
+
+const libraryAdditions = useQuery<GetRecentLibraryAdditionsQuery>(GET_RECENT_LIBRARY_ADDITIONS, {
+  variables: () => ({ first: shelfSize.value }),
+  enabled: () => source.value === "library"
 });
 
 // The other shelves use the games index's own query, so the home page sends
@@ -109,6 +134,8 @@ const games = computed(() => {
       return newReleases.data.value?.newReleases ?? [];
     case "upcoming":
       return upcomingReleases.data.value?.upcomingReleases ?? [];
+    case "library":
+      return libraryAdditions.data.value?.recentLibraryAdditions ?? [];
     default:
       return sorted.data.value?.games?.nodes ?? [];
   }
@@ -116,7 +143,9 @@ const games = computed(() => {
 
 // A shelf that failed to load is left out rather than shown broken.
 const loaded = computed(() => {
-  const { data, error } = { new: newReleases, upcoming: upcomingReleases, sorted }[source.value];
+  const { data, error } = { new: newReleases, upcoming: upcomingReleases, library: libraryAdditions, sorted }[
+    source.value
+  ];
   return data.value !== null || error.value !== null;
 });
 </script>
@@ -142,6 +171,8 @@ const loaded = computed(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 4px;

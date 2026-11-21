@@ -2557,6 +2557,13 @@ CREATE INDEX index_game_purchase_stores_on_store_id ON public.game_purchase_stor
 
 
 --
+-- Name: index_game_purchases_on_created_at_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_game_purchases_on_created_at_and_id ON public.game_purchases USING btree (created_at, id);
+
+
+--
 -- Name: index_game_purchases_on_extant_rating_and_game_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3198,6 +3205,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261121170000'),
 ('20261114160000'),
 ('20261112000000'),
 ('20261109030000'),

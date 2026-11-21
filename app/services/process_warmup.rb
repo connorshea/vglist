@@ -41,6 +41,7 @@ module ProcessWarmup
     },
     'GetNewReleases' => { 'first' => 12 },
     'GetUpcomingReleases' => { 'first' => 6 },
+    'GetRecentLibraryAdditions' => { 'first' => 6 },
     'GetGamesIndex' => { 'first' => 36, 'sortBy' => 'MOST_OWNERS', 'withCount' => true },
     'GetGame' => lambda {
       id = GAME_ID.call

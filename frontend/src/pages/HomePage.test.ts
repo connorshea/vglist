@@ -75,6 +75,8 @@ function respond(document: DocumentNode, variables?: Record<string, unknown>) {
       return Promise.resolve({
         upcomingReleases: [{ ...game("upcoming-1", "Hollow Knight: Silksong"), releaseDate: "2099-02-24" }]
       });
+    case "GetRecentLibraryAdditions":
+      return Promise.resolve({ recentLibraryAdditions: [game("added-1", "Celeste")] });
     default:
       return Promise.resolve({ games: { nodes: [] } });
   }
@@ -179,25 +181,25 @@ describe("HomePage", () => {
     }
   });
 
-  it("shows popular games, new and upcoming releases and recently added games, linking to the games index", async () => {
+  it("shows popular games, new and upcoming releases and recent library additions", async () => {
     const wrapper = await mountPage();
     expect(wrapper.findAll(".game-shelf-title").map((h) => h.text())).toEqual([
       "Popular",
       "New releases",
       "Upcoming releases",
-      "Recently added to vglist"
+      "Recently added to libraries"
     ]);
     const seeAll = wrapper.findAllComponents(RouterLinkStub).filter((link) => link.classes("game-shelf-more"));
     expect(seeAll.map((link) => link.props("to"))).toEqual([
       { path: "/games", query: {} },
       { path: "/games", query: { sort: "new" } },
       { path: "/games", query: { sort: "upcoming" } },
-      { path: "/games", query: { sort: "added" } }
+      { path: "/activity" }
     ]);
     const sorts = mockRequest.mock.calls
       .filter(([document]) => operationName(document) === "GetGamesIndex")
       .map(([, variables]) => variables?.sortBy);
-    expect(sorts).toEqual(["MOST_OWNERS", "NEWEST"]);
+    expect(sorts).toEqual(["MOST_OWNERS"]);
     const newReleases = mockRequest.mock.calls.filter(([document]) => operationName(document) === "GetNewReleases");
     expect(newReleases.map(([, variables]) => variables)).toEqual([{ first: 12 }]);
     expect(wrapper.findAll(".game-shelf")[1].text()).toContain("Hades II");
@@ -206,6 +208,13 @@ describe("HomePage", () => {
     // Upcoming games show the day they come out.
     const upcomingShelf = wrapper.findAll(".game-shelf")[2];
     expect(upcomingShelf.find(".game-tile-meta").text()).toBe("Feb 24, 2099");
+    const additions = mockRequest.mock.calls.filter(
+      ([document]) => operationName(document) === "GetRecentLibraryAdditions"
+    );
+    expect(additions.map(([, variables]) => variables)).toEqual([{ first: 6 }]);
+    const additionsShelf = wrapper.findAll(".game-shelf")[3];
+    expect(additionsShelf.text()).toContain("Celeste");
+    expect(additionsShelf.find(".game-shelf-more").text()).toContain("See activity");
   });
 
   it("leaves out a shelf with no games", async () => {
@@ -217,7 +226,10 @@ describe("HomePage", () => {
           : respond(document, variables)
     );
     const wrapper = await mountPage();
-    expect(wrapper.findAll(".game-shelf-title").map((h) => h.text())).toEqual(["Popular", "Recently added to vglist"]);
+    expect(wrapper.findAll(".game-shelf-title").map((h) => h.text())).toEqual([
+      "Popular",
+      "Recently added to libraries"
+    ]);
   });
 
   it("asks signed-out visitors to create an account", async () => {
