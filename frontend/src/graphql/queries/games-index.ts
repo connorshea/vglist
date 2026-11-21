@@ -79,7 +79,7 @@ export const GET_UPCOMING_RELEASES = gql`
 
 // The home page's "Recently added to libraries" shelf: games public users have
 // most recently added to their libraries, each once and at most a couple per
-// user. The server recomputes the list every few minutes.
+// user. The server recomputes the list every hour.
 export const GET_RECENT_LIBRARY_ADDITIONS = gql`
   ${GAME_TILE_FIELDS}
   query GetRecentLibraryAdditions($first: Int!) {

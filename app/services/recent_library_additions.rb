@@ -11,10 +11,10 @@
 # most PER_USER games, so the shelf shows what several people have been
 # adding.
 #
-# The IDs are cached for EXPIRES_IN, the same as the public response cache in
-# front of them. The games themselves are loaded fresh on every request, so a
-# signed-in user's library badges are always current and a deleted game just
-# drops out of the list.
+# The IDs are cached for EXPIRES_IN: the shelf doesn't need to change by the
+# minute, and the walk over recent entries is the costliest part. The games
+# themselves are loaded fresh on every request, so a signed-in user's library
+# badges are always current and a deleted game just drops out of the list.
 module RecentLibraryAdditions
   # The most games that can be asked for at once: two rows of six on the home
   # page.
@@ -34,7 +34,7 @@ module RecentLibraryAdditions
   BATCH_SIZE = 500
   MAX_SCANNED = 10_000
 
-  EXPIRES_IN = 5.minutes
+  EXPIRES_IN = 1.hour
 
   CACHE_KEY = 'home_recent_library_additions/v1'
 

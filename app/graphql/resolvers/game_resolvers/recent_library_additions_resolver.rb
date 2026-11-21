@@ -8,8 +8,7 @@ module Resolvers
       description <<~DESC.squish
         Games recently added to public users' libraries for the home page,
         most recently added first. Each game appears once, and each user
-        contributes only a couple of games. The list is recomputed every few
-        minutes.
+        contributes only a couple of games. The list is recomputed every hour.
       DESC
 
       argument :first, Integer,
