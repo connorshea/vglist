@@ -45,6 +45,7 @@ const config: CodegenConfig = {
           "GetGamesIndexFilters",
           "GetHeroCovers",
           "GetNewReleases",
+          "GetRecentLibraryAdditions",
           "GetUpcomingReleases"
         ]
       }

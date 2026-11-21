@@ -10,12 +10,13 @@
 # to cache.
 #
 # The set of keys is small and fixed: an operation is only cacheable with the
-# variables the home page (including its new and upcoming releases shelves) and
-# the first page of the games index send. Anything else (other filters, later
-# pages, a signed-in user's game tiles) runs normally, so a client can't fill
-# the cache with arbitrary variations and evict the Rack::Attack counters that
-# share the store. A game page's queries have one key per game, so they're
-# left to Cloudflare and never stored here (see CDN_ONLY_OPERATIONS).
+# variables the home page (including its new releases, upcoming releases and
+# recently added shelves) and the first page of the games index send. Anything
+# else (other filters, later pages, a signed-in user's game tiles) runs
+# normally, so a client can't fill the cache with arbitrary variations and
+# evict the Rack::Attack counters that share the store. A game page's queries
+# have one key per game, so they're left to Cloudflare and never stored here
+# (see CDN_ONLY_OPERATIONS).
 module PublicResponseCache
   EXPIRES_IN = 5.minutes
 
@@ -25,7 +26,8 @@ module PublicResponseCache
   # persisted document IDs from codegen, whose config in frontend/codegen.ts
   # must list the same operations.
   OPERATIONS = %w[
-    GetGame GetGameActivity GetGameReviews GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases GetUpcomingReleases
+    GetGame GetGameActivity GetGameReviews GetGamesIndex GetGamesIndexFilters GetHeroCovers GetNewReleases GetRecentLibraryAdditions
+    GetUpcomingReleases
   ].freeze
 
   # Operations whose responses only Cloudflare caches. There's one response
@@ -80,6 +82,8 @@ module PublicResponseCache
       games_index_parts(variables, user)
     when 'GetNewReleases', 'GetUpcomingReleases'
       release_shelf_parts(variables, user)
+    when 'GetRecentLibraryAdditions'
+      recent_library_additions_parts(variables, user)
     when 'GetGame'
       game_parts(variables, user)
     when 'GetGameActivity'
@@ -115,6 +119,15 @@ module PublicResponseCache
 
     first = variables['first']
     [first] if first.is_a?(Integer) && first.between?(1, NewReleases::MAX)
+  end
+
+  # The recently added shelf's tiles also carry the signed-in user's library
+  # status, so only signed-out responses are cached.
+  def recent_library_additions_parts(variables, user)
+    return nil unless user.nil?
+
+    first = variables['first']
+    [first] if first.is_a?(Integer) && first.between?(1, RecentLibraryAdditions::MAX)
   end
 
   # Whether a cacheable response is also kept in Rails.cache, rather than
