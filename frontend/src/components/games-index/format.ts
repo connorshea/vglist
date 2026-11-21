@@ -93,6 +93,18 @@ export type GameSortOption = (typeof GAME_SORTS)[number];
 
 export const DEFAULT_GAME_SORT: GameSortOption = GAME_SORTS[0];
 
+/**
+ * The home page's shelf of games recently added to people's libraries. It
+ * isn't one of the games index's sorts, so its link goes to the activity feed.
+ */
+export const LIBRARY_ADDITIONS_SHELF = {
+  slug: "library-additions",
+  label: "Recently added to libraries",
+  value: "LIBRARY_ADDITIONS"
+} as const;
+
+export type ShelfOption = GameSortOption | typeof LIBRARY_ADDITIONS_SHELF;
+
 export function gameSortFromSlug(slug: unknown): GameSortOption {
   return GAME_SORTS.find((sort) => sort.slug === slug) ?? DEFAULT_GAME_SORT;
 }

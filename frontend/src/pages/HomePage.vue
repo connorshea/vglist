@@ -96,7 +96,7 @@
 
       <GameShelf :sort="NEW_RELEASES" :rows="2" />
       <GameShelf :sort="UPCOMING_RELEASES" />
-      <GameShelf :sort="RECENTLY_ADDED" />
+      <GameShelf :sort="LIBRARY_ADDITIONS_SHELF" />
 
       <p v-if="siteStats" class="home-stats">
         <template v-for="(stat, i) in siteStats" :key="stat.path">
@@ -123,7 +123,7 @@ import type { GetBasicSiteStatisticsQuery, GetGamesIndexFiltersQuery } from "@/t
 import GameShelf from "@/components/home/GameShelf.vue";
 import SteamImportBanner from "@/components/home/SteamImportBanner.vue";
 import SkeletonBlock from "@/components/SkeletonBlock.vue";
-import { countLabel, gameSortFromSlug } from "@/components/games-index/format";
+import { countLabel, gameSortFromSlug, LIBRARY_ADDITIONS_SHELF } from "@/components/games-index/format";
 
 const authStore = useAuthStore();
 const { open: openSearch } = useSearchOverlay();
@@ -133,7 +133,6 @@ const isMac = navigator.platform.toUpperCase().includes("MAC");
 const POPULAR = gameSortFromSlug("popular");
 const NEW_RELEASES = gameSortFromSlug("new");
 const UPCOMING_RELEASES = gameSortFromSlug("upcoming");
-const RECENTLY_ADDED = gameSortFromSlug("added");
 
 // ── Search ──
 
