@@ -36,9 +36,11 @@ class GamePurchase < ApplicationRecord
     paused: 6
   }
 
-  # The completion statuses that count as 'the user finished this game', used
-  # for the completion stats on a user's profile.
-  COMPLETED_STATUSES = [:completed, :fully_completed].freeze
+  # The completion statuses that count as 'the user is done with this game',
+  # used for the completion stats on a user's profile. Dropped and N/A count
+  # too: there's nothing left for the user to do with those games, so leaving
+  # them out made a library full of them look barely touched.
+  COMPLETED_STATUSES = [:completed, :fully_completed, :dropped, :not_applicable].freeze
 
   # Every sort below breaks ties on `id`, so that the ordering is total.
   # Cursor-based pagination walks the relation by offset, so a partial ordering
