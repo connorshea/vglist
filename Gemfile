@@ -49,7 +49,7 @@ gem 'friendly_id', '~> 5.7.0'
 gem 'sparql', '~> 3.3.2', require: false
 
 # Use Addressable for use with the Wikidata API.
-gem 'addressable', '~> 2.9.2', require: false
+gem 'addressable', '~> 2.10.0', require: false
 
 # Use the AWS SDK S3 gem for Cloudflare R2, which is S3-compatible.
 gem 'aws-sdk-s3', '~> 1.208', require: false
@@ -141,7 +141,7 @@ end
 
 group :test do
   # Mock network requests and prevent outgoing requests from occuring in the test suite.
-  gem 'webmock', '~> 3.35'
+  gem 'webmock', '~> 3.39'
   # Retry failed tests to reduce flakiness.
   gem 'rspec-rebound', '~> 0.2.1'
 end
