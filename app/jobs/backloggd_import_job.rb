@@ -6,11 +6,14 @@ class BackloggdImportJob < ApplicationJob
   queue_as :default
 
   def perform(backloggd_import_id)
-    backloggd_import = BackloggdImport.find_by(id: backloggd_import_id)
-    return if backloggd_import.nil? || !backloggd_import.queued?
+    # Claim the import in one statement, so a second copy of the job (or one
+    # for an import that's already finished) does nothing.
+    now = Time.current
+    claimed = BackloggdImport.where(id: backloggd_import_id, status: :queued)
+                             .update_all(status: BackloggdImport.statuses[:running], started_at: now, updated_at: now, error_message: nil) # rubocop:disable Rails/SkipsModelValidations
+    return if claimed.zero?
 
-    backloggd_import.update!(status: :running, started_at: Time.current, error_message: nil)
-
+    backloggd_import = BackloggdImport.find(backloggd_import_id)
     entries = Backloggd::ListFetcher.new(backloggd_import.username).entries
     return fail!(backloggd_import, no_games_message(backloggd_import.username)) if entries.empty?
 
