@@ -58,6 +58,7 @@ class User < ApplicationRecord
   # External accounts, e.g. Steam. Can be changed to a has_many association if
   # other external account types are added later.
   has_one :external_account, dependent: :destroy
+  has_one :backloggd_import, dependent: :destroy
 
   # Passkeys the user can sign in with.
   has_many :webauthn_credentials, dependent: :delete_all
