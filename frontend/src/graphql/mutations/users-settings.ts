@@ -104,3 +104,14 @@ export const IMPORT_STEAM_LIBRARY = gql`
     }
   }
 `;
+
+export const IMPORT_BACKLOGGD_LIBRARY = gql`
+  mutation ImportBackloggdLibrary($userId: ID!, $backloggdUsername: String!) {
+    importBackloggdLibrary(userId: $userId, backloggdUsername: $backloggdUsername) {
+      backloggdImport {
+        id
+        status
+      }
+    }
+  }
+`;
