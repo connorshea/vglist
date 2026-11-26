@@ -80,8 +80,11 @@ module Backloggd
       entries = []
       (1..MAX_PAGES_PER_STATUS).each do |page|
         parser = fetch_page(status, page)
-        entries.concat(parser.entries)
-        break unless parser.next_page?
+        page_entries = parser.entries
+        entries.concat(page_entries)
+        # An empty page means we've run off the end, whatever the page's
+        # links say.
+        break if page_entries.empty? || !parser.next_page?
       end
       entries
     end

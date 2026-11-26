@@ -70,6 +70,17 @@ RSpec.describe Backloggd::ListFetcher, type: :service do
       expect(a_request(:get, /type:playing/)).to have_been_made.times(2)
     end
 
+    it 'stops at an empty page even if it links to another' do
+      stub_list('playing', played_page)
+      stub_list('playing', "#{empty_page}<a rel=\"next\" href=\"?page=3\">Next</a>", page: 2)
+      stub_list('played', empty_page)
+      stub_list('backlog', empty_page)
+
+      fetcher.entries
+
+      expect(a_request(:get, /type:playing/)).to have_been_made.times(2)
+    end
+
     it 'raises when the user does not exist' do
       stub_list('playing', 'Not found', status_code: 404)
 
