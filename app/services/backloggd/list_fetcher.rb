@@ -54,9 +54,12 @@ module Backloggd
 
     # sleeper: called with the number of seconds to wait between requests, so
     # tests don't have to.
-    def initialize(username, sleeper: ->(seconds) { sleep(seconds) })
+    # on_page: called after each page is fetched, e.g. to show the import is
+    # still alive.
+    def initialize(username, sleeper: ->(seconds) { sleep(seconds) }, on_page: nil)
       @username = self.class.username_from(username)
       @sleeper = sleeper
+      @on_page = on_page
       @requests = 0
     end
 
@@ -81,6 +84,7 @@ module Backloggd
       (1..MAX_PAGES_PER_STATUS).each do |page|
         parser = fetch_page(status, page)
         page_entries = parser.entries
+        @on_page&.call
         entries.concat(page_entries)
         # An empty page means we've run off the end, whatever the page's
         # links say.

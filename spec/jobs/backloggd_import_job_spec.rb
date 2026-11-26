@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe BackloggdImportJob, type: :job do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:user) { create(:user) }
   let(:backloggd_import) { BackloggdImport.create!(user: user, username: 'Example') }
   let(:empty_page) { '<html><body></body></html>' }
@@ -62,6 +64,19 @@ RSpec.describe BackloggdImportJob, type: :job do
     described_class.perform_now(backloggd_import.id)
 
     expect(backloggd_import.reload.error_message).to include("Couldn't find a Backloggd user called Example")
+  end
+
+  it 'keeps a slow import from looking abandoned' do
+    stub_lists(played: file_fixture('backloggd/games_backlog_last_page.html').read)
+    still_in_progress = []
+    allow_any_instance_of(Backloggd::ListFetcher).to receive(:sleep) do # rubocop:disable RSpec/AnyInstance
+      travel 20.minutes
+      still_in_progress << backloggd_import.reload.in_progress?
+    end
+
+    described_class.perform_now(backloggd_import.id)
+
+    expect(still_in_progress).to eq([true, true])
   end
 
   it 'does nothing for an import that is not queued' do

@@ -14,7 +14,10 @@ class BackloggdImportJob < ApplicationJob
     return if claimed.zero?
 
     backloggd_import = BackloggdImport.find(backloggd_import_id)
-    entries = Backloggd::ListFetcher.new(backloggd_import.username).entries
+    # Touch the import after each page, so a long but healthy import isn't
+    # mistaken for an abandoned one (see BackloggdImport::STALE_AFTER).
+    fetcher = Backloggd::ListFetcher.new(backloggd_import.username, on_page: -> { backloggd_import.touch }) # rubocop:disable Rails/SkipsModelValidations
+    entries = fetcher.entries
     return fail!(backloggd_import, no_games_message(backloggd_import.username)) if entries.empty?
 
     result = Backloggd::ImportService.new(user: backloggd_import.user, entries: entries).call
