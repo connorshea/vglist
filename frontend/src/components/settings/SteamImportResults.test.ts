@@ -71,7 +71,7 @@ describe("SteamImportResults", () => {
     const wrapper = mountResults(result({ unmatchedGames: unmatched }));
 
     expect(wrapper.findAll(".import-unmatched-row")).toHaveLength(2);
-    expect(wrapper.get(".import-steam-link").attributes("href")).toBe("https://store.steampowered.com/app/340");
+    expect(wrapper.get(".import-external-link").attributes("href")).toBe("https://store.steampowered.com/app/340");
     expect(wrapper.find("button").exists()).toBeFalsy();
   });
 
