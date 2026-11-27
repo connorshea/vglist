@@ -915,7 +915,7 @@ CREATE TABLE public.unmatched_games (
     name text,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT validate_external_service_name CHECK ((external_service_name = ANY (ARRAY['Steam'::text, 'Backloggd'::text])))
+    CONSTRAINT validate_external_service_name CHECK ((external_service_name = 'Steam'::text))
 );
 
 
@@ -3205,6 +3205,7 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261127051000'),
 ('20261127050000'),
 ('20261126210000'),
 ('20261126200000'),

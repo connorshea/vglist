@@ -135,12 +135,10 @@ export type SeriesSort =
   /** Sorted with the series most recently added to vglist first. */
   | "RECENTLY_ADDED";
 
-/** External services that an Unmatched Game can come from. */
+/** External services that an Unmatched Game can come from, currently only Steam. */
 export type UnmatchedGameExternalService =
-  /** Imported from a Backloggd profile. */
-  | "BACKLOGGD"
   /** Imported from the Steam store. */
-  | "STEAM";
+  "STEAM";
 
 /** An enum describing the privacy level of a given user. Most users will be `PUBLIC_ACCOUNT`. */
 export type UserPrivacy =
