@@ -196,6 +196,66 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: backloggd_imports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.backloggd_imports (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    username text NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    error_message text,
+    added_game_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    updated_game_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    unmatched_games jsonb DEFAULT '[]'::jsonb NOT NULL,
+    started_at timestamp(6) without time zone,
+    finished_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE backloggd_imports; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.backloggd_imports IS 'A user''s most recent import from Backloggd, which runs in a background job.';
+
+
+--
+-- Name: COLUMN backloggd_imports.username; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.backloggd_imports.username IS 'The Backloggd username the games were imported from.';
+
+
+--
+-- Name: COLUMN backloggd_imports.unmatched_games; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.backloggd_imports.unmatched_games IS 'The games that could not be matched, as [{ name, slug }].';
+
+
+--
+-- Name: backloggd_imports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.backloggd_imports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: backloggd_imports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.backloggd_imports_id_seq OWNED BY public.backloggd_imports.id;
+
+
+--
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -915,7 +975,7 @@ CREATE TABLE public.unmatched_games (
     name text,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT validate_external_service_name CHECK ((external_service_name = 'Steam'::text))
+    CONSTRAINT validate_external_service_name CHECK ((external_service_name = ANY (ARRAY['Steam'::text, 'Backloggd'::text])))
 );
 
 
@@ -1576,6 +1636,13 @@ ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: backloggd_imports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.backloggd_imports ALTER COLUMN id SET DEFAULT nextval('public.backloggd_imports_id_seq'::regclass);
+
+
+--
 -- Name: companies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1843,6 +1910,14 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: backloggd_imports backloggd_imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.backloggd_imports
+    ADD CONSTRAINT backloggd_imports_pkey PRIMARY KEY (id);
 
 
 --
@@ -2183,6 +2258,13 @@ CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_b
 --
 
 CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.active_storage_variant_records USING btree (blob_id, variation_digest);
+
+
+--
+-- Name: index_backloggd_imports_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_backloggd_imports_on_user_id ON public.backloggd_imports USING btree (user_id);
 
 
 --
@@ -3095,6 +3177,14 @@ ALTER TABLE ONLY public.relationships
 
 
 --
+-- Name: backloggd_imports fk_rails_8cde75192f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.backloggd_imports
+    ADD CONSTRAINT fk_rails_8cde75192f FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3205,6 +3295,8 @@ ALTER TABLE ONLY public.game_engines
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261126210000'),
+('20261126200000'),
 ('20261121170000'),
 ('20261114160000'),
 ('20261112000000'),

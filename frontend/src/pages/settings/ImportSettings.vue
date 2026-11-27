@@ -91,6 +91,8 @@
 
     <SteamImportResults v-if="importResult" :result="importResult" />
 
+    <BackloggdImportCard v-if="userId" :user-id="userId" />
+
     <ConfirmDialog
       v-model="showDisconnectConfirm"
       title="Disconnect Steam?"
@@ -107,6 +109,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import BackloggdImportCard from "@/components/settings/BackloggdImportCard.vue";
 import SteamImportResults from "@/components/settings/SteamImportResults.vue";
 import { useMutation, useQuery } from "@/composables/useGraphQL";
 import { useSnackbar } from "@/composables/useSnackbar";

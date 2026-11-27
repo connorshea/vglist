@@ -9,6 +9,17 @@ export type ActivityFeed =
   /** Events from everyone. */
   | "GLOBAL";
 
+/** Where a Backloggd import is up to. */
+export type BackloggdImportStatus =
+  /** Stopped early. `errorMessage` says why. */
+  | "FAILED"
+  /** Waiting to start. */
+  | "QUEUED"
+  /** Fetching the Backloggd list and adding its games. */
+  | "RUNNING"
+  /** Finished. The results are ready. */
+  | "SUCCEEDED";
+
 /** Category types for events in the Activity Feed. */
 export type EventCategory =
   /** Event for a user adding a game to their library. */
@@ -135,10 +146,12 @@ export type SeriesSort =
   /** Sorted with the series most recently added to vglist first. */
   | "RECENTLY_ADDED";
 
-/** External services that an Unmatched Game can come from, currently only Steam. */
+/** External services that an Unmatched Game can come from. */
 export type UnmatchedGameExternalService =
+  /** Imported from a Backloggd profile. */
+  | "BACKLOGGD"
   /** Imported from the Steam store. */
-  "STEAM";
+  | "STEAM";
 
 /** An enum describing the privacy level of a given user. Most users will be `PUBLIC_ACCOUNT`. */
 export type UserPrivacy =
@@ -705,6 +718,15 @@ export interface ImportSteamLibraryMutation {
     updatedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
     unmatchedGames: Array<{ name: string; steamAppId: number }>;
   } | null;
+}
+
+export type ImportBackloggdLibraryMutationVariables = Exact<{
+  userId: string;
+  backloggdUsername: string;
+}>;
+
+export interface ImportBackloggdLibraryMutation {
+  importBackloggdLibrary: { backloggdImport: { id: string; status: BackloggdImportStatus } } | null;
 }
 
 export type FollowUserMutationVariables = Exact<{
@@ -2194,5 +2216,23 @@ export interface GetCurrentUserPasskeysQuery {
       lastUsedAt: string | null;
       createdAt: string;
     }> | null;
+  } | null;
+}
+
+export type GetBackloggdImportQueryVariables = Exact<{ [key: string]: never }>;
+
+export interface GetBackloggdImportQuery {
+  currentUser: {
+    id: string;
+    backloggdImport: {
+      id: string;
+      username: string;
+      status: BackloggdImportStatus;
+      errorMessage: string | null;
+      finishedAt: string | null;
+      addedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+      updatedGames: Array<{ id: string; name: string; coverUrl: string | null }>;
+      unmatchedGames: Array<{ name: string; slug: string; url: string }>;
+    } | null;
   } | null;
 }

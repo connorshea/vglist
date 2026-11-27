@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Model for tracking games that were imported via Steam Import (and potentially
-# other importers later) that couldn't be matched to a game on vglist.
+# Model for tracking games that were imported via Steam Import or Backloggd
+# Import that couldn't be matched to a game on vglist.
 class UnmatchedGame < ApplicationRecord
   belongs_to :user, optional: true
 
@@ -17,5 +17,5 @@ class UnmatchedGame < ApplicationRecord
     length: { maximum: 120 }
 
   validates :external_service_id, presence: true
-  validates :external_service_name, presence: true, inclusion: { in: ['Steam'] }
+  validates :external_service_name, presence: true, inclusion: { in: ['Steam', 'Backloggd'] }
 end
