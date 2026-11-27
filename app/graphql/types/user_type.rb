@@ -41,7 +41,6 @@ module Types
     field :hide_days_played, Boolean, null: false, description: "Whether to hide the 'Days Played' value on the this user's profile."
     field :steam_profile_url, String, null: true, description: "URL of the Steam profile connected to this user's account. Only visible to the user themselves, `null` for anyone else or when no Steam account is connected."
     field :passkeys, [PasskeyType], null: true, description: "Passkeys this user can sign in with, newest first. Only visible to the user themselves, `null` for anyone else."
-    field :backloggd_import, BackloggdImportType, null: true, description: "The user's most recent import from Backloggd. Only visible to the user themselves, `null` for anyone else or when they haven't imported from Backloggd."
 
     def activity
       return [] unless user_visible?
@@ -153,13 +152,6 @@ module Types
       return nil unless @context[:current_user]&.id == @object.id
 
       @object.external_account&.steam_profile_url
-    end
-
-    # What someone imported, and from which Backloggd account, is theirs alone.
-    def backloggd_import
-      return nil unless @context[:current_user]&.id == @object.id
-
-      @object.backloggd_import
     end
 
     # Only the user themselves can see (and manage) their passkeys.
