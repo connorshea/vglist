@@ -48,10 +48,6 @@ class UserPolicy < ApplicationPolicy
     user_is_current_user?
   end
 
-  def backloggd_import?
-    user_is_current_user?
-  end
-
   def connect_steam?
     user_is_current_user?
   end

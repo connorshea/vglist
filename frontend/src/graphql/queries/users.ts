@@ -281,34 +281,3 @@ export const GET_CURRENT_USER_PASSKEYS = gql`
     }
   }
 `;
-
-// The signed-in user's latest Backloggd import, polled while it runs.
-export const GET_BACKLOGGD_IMPORT = gql`
-  query GetBackloggdImport {
-    currentUser {
-      id
-      backloggdImport {
-        id
-        username
-        status
-        errorMessage
-        finishedAt
-        addedGames {
-          id
-          name
-          coverUrl(size: SMALL)
-        }
-        updatedGames {
-          id
-          name
-          coverUrl(size: SMALL)
-        }
-        unmatchedGames {
-          name
-          slug
-          url
-        }
-      }
-    }
-  }
-`;
