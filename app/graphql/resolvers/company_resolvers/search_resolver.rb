@@ -7,7 +7,7 @@ module Resolvers
 
       description "Find a company by searching based on its name."
 
-      argument :query, String, required: true, description: "Name to search by."
+      search_query_argument "Name to search by."
 
       def resolve(query:)
         Company.search(query)

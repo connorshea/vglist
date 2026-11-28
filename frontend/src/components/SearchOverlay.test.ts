@@ -178,6 +178,14 @@ describe("SearchOverlay", () => {
       document.body.removeChild(container);
     });
 
+    it("keeps the scrollable results container out of the Tab order", async () => {
+      const wrapper = mountOverlay();
+      mockIsOpen.value = true;
+      await nextTick();
+
+      expect(wrapper.find(".search-results").attributes("tabindex")).toBe("-1");
+    });
+
     it("starts searching for the query it was opened with", async () => {
       mockRequest.mockResolvedValueOnce({ globalSearch: { nodes: [] } });
       const wrapper = mountOverlay();
@@ -779,6 +787,106 @@ describe("SearchOverlay", () => {
 
       await wrapper.find(".search-close").trigger("click");
       expect(mockClose).toHaveBeenCalled();
+    });
+  });
+
+  // ── Results page entry points ──
+
+  describe("results page", () => {
+    const game = (id: string, content: string) => ({
+      searchableId: id,
+      searchableType: "GAME",
+      content,
+      coverUrl: null,
+      developerName: null,
+      releaseDate: null
+    });
+
+    it("goes straight to the result when Enter is pressed with exactly one result", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], "portal");
+
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).toHaveBeenCalledWith("/games/7");
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    it("does nothing on Enter when the query is too short", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+      await input.setValue("a");
+      await input.trigger("keydown", { key: "Enter" });
+
+      expect(pushMock).not.toHaveBeenCalled();
+      expect(wrapper.find(".see-all-results").exists()).toBeFalsy();
+    });
+
+    it("offers a See all results button that opens the results page", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], "portal");
+
+      const button = wrapper.find(".see-all-results");
+      expect(button.text()).toContain('See all results for "portal"');
+
+      await button.trigger("click");
+
+      expect(pushMock).toHaveBeenCalledWith({ name: "search", query: { query: "portal" } });
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    it("ignores Enter while an input method is composing", async () => {
+      const wrapper = await mountWithSearchResults([game("1", "ファイナル"), game("2", "ファイナル2")], "ファイ");
+
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter", isComposing: true });
+
+      expect(pushMock).not.toHaveBeenCalled();
+    });
+
+    it("searches, gates, and navigates with the same trimmed query", async () => {
+      const wrapper = await mountWithSearchResults([game("7", "Portal")], " portal  ");
+
+      expect(mockRequest).toHaveBeenCalledWith(searchRequest("portal"));
+
+      // Results for "portal" are current for " portal  ", so Enter opens the one result.
+      await wrapper.find(".search-input").trigger("keydown", { key: "Enter" });
+      expect(pushMock).toHaveBeenCalledWith("/games/7");
+    });
+
+    it("doesn't search for a query that's only long enough with spaces", async () => {
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+      await input.setValue("a ");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(mockRequest).not.toHaveBeenCalled();
+    });
+
+    it("shows the API's error message rather than the raw response", async () => {
+      mockRequest.mockRejectedValueOnce(
+        Object.assign(new Error('{"response":{"errors":[{"message":"query is too long"}]}}'), {
+          response: { errors: [{ message: "query is too long" }] }
+        })
+      );
+      mockIsOpen.value = true;
+      await nextTick();
+      const wrapper = mountOverlay();
+      await nextTick();
+
+      const input = wrapper.find(".search-input");
+      await input.setValue("portal");
+      await input.trigger("input");
+      await vi.advanceTimersByTimeAsync(550);
+      await flushPromises();
+
+      expect(wrapper.find(".search-error-text").text()).toBe("Search failed: query is too long");
     });
   });
 });
