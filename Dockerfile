@@ -25,7 +25,7 @@
 # Pinned by digest so every build uses the exact same base. Dependabot
 # (docker ecosystem) bumps the tag and digest together; keep the Ruby
 # version in step with mise.toml, Gemfile and the CI workflows.
-FROM ruby:4.0.10-slim-trixie@sha256:a4b3e62bfe56bd267a3aeacc1b89aea96be919faa0c7d77c6346e2ac14f6c175 AS base
+FROM ruby:4.0.10-slim-trixie@sha256:67fb5dbef860bb2205a3c69799f7f1c4f5b01c943ae089de436bc266ea8c102e AS base
 
 WORKDIR /rails
 
