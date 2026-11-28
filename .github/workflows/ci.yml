@@ -33,7 +33,7 @@ jobs:
       # as annotations and fail the job (no SARIF upload, so no
       # security-events permission needed). Online audits use the default
       # read-only token to check for impostor commits / known-vulnerable actions.
-      - uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+      - uses: zizmorcore/zizmor-action@1b4550e929643b8b26a62303c6bd64814271a4f1 # v0.9.2
         with:
           advanced-security: false
           annotations: true
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+      - uses: ruby/setup-ruby@78c62f2208e480ce3d5ae4dfd9b9e181acf48b63 # v1.344.0
         with:
           ruby-version: "4.0.10"
           rubygems: "4.0.24"
@@ -173,11 +173,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Install system dependencies (cached)
-        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
+        uses: awalsh128/cache-apt-pkgs-action@009d70260b0f2e115cfa77447f8bd04c8e797064 # v2.0.0
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+      - uses: ruby/setup-ruby@78c62f2208e480ce3d5ae4dfd9b9e181acf48b63 # v1.344.0
         with:
           ruby-version: "4.0.10"
           rubygems: "4.0.24"
@@ -226,11 +226,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Install system dependencies (cached)
-        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
+        uses: awalsh128/cache-apt-pkgs-action@009d70260b0f2e115cfa77447f8bd04c8e797064 # v2.0.0
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+      - uses: ruby/setup-ruby@78c62f2208e480ce3d5ae4dfd9b9e181acf48b63 # v1.344.0
         with:
           ruby-version: "4.0.10"
           rubygems: "4.0.24"
@@ -270,11 +270,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Install system dependencies (cached)
-        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
+        uses: awalsh128/cache-apt-pkgs-action@009d70260b0f2e115cfa77447f8bd04c8e797064 # v2.0.0
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+      - uses: ruby/setup-ruby@78c62f2208e480ce3d5ae4dfd9b9e181acf48b63 # v1.344.0
         with:
           ruby-version: "4.0.10"
           rubygems: "4.0.24"
@@ -326,11 +326,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Install system dependencies (cached)
-        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
+        uses: awalsh128/cache-apt-pkgs-action@009d70260b0f2e115cfa77447f8bd04c8e797064 # v2.0.0
         with:
           packages: libvips-tools
           version: "1.0"
-      - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
+      - uses: ruby/setup-ruby@78c62f2208e480ce3d5ae4dfd9b9e181acf48b63 # v1.344.0
         with:
           ruby-version: "4.0.10"
           rubygems: "4.0.24"
