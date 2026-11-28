@@ -253,7 +253,7 @@ jobs:
       - name: Finalize the Sentry release
         if: steps.sentry.outputs.enabled == 'true'
         continue-on-error: true
-        uses: getsentry/action-release@d55c8c3b7375607e972b710f12926b676d89d7d2 # v3.8.0
+        uses: getsentry/action-release@2e505a70ff06dac263413242aa3617fec90134e5 # v3.9.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: vglist
